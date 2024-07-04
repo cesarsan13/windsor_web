@@ -24,20 +24,21 @@ export const getLastProduct = async () => {
 }
 
 export const guardarProductos = async (data, accion) => {
+    console.log('data desde modal si no', data);
     let url = ""
     let met = ""
     if (accion === "Alta") {
-        url = `http://127.0.0.1:8000/api/consultorios/Post`;
-        data.baja = "";
+        url = `http://127.0.0.1:8000/api/product/save`;
+        data.baja = "n";
         met = "post";
     }
     if (accion === "Eliminar" || accion === "Editar") {
         if (accion === "Eliminar") {
             data.baja = "*";
         } else {
-            data.baja = "";
+            data.baja = "n";
         }
-        url = `http://127.0.0.1:8000/api/consultorios/${data.id}`;
+        url = `http://127.0.0.1:8000/api/product/update/${data.id}`;
         met = "put";
     }
     const res = await fetch(`${url}`, {
@@ -53,6 +54,7 @@ export const guardarProductos = async (data, accion) => {
             cond_1: data.cond_1,
             cam_precio: data.cam_precio,
             precio: data.precio,
+            ref: data.ref,
             baja: data.baja,
         }),
         headers: new Headers({
