@@ -34,7 +34,6 @@ function ModalProductos({
             iva: producto.iva,
             cond_1: producto.cond_1,
             cam_precio: producto.cam_precio,
-            precio: producto.precio,
             ref: producto.ref,
         },
     });
@@ -56,6 +55,8 @@ function ModalProductos({
                 return;
             }
         }
+        const camprecio = data.cam_precio;
+        data.cam_precio = camprecio;
         res = await guardarProductos(data, accion);
         if (res.status) {
             if (res.status) {
@@ -186,6 +187,15 @@ function ModalProductos({
                                                 type="double"
                                             />
                                             <TextComponent
+                                                titulo="Referencia"
+                                                name="ref"
+                                                message={"Referencia requerida"}
+                                                register={register}
+                                                errors={errors}
+                                                requerido={true}
+                                                type="text"
+                                            />
+                                            <TextComponent
                                                 titulo="Condición"
                                                 name="cond_1"
                                                 message={"Condicion requerida"}
@@ -195,22 +205,13 @@ function ModalProductos({
                                                 type="number"
                                             />
                                             <TextComponent
-                                                titulo="Precio"
+                                                titulo="Cambia precio"
                                                 name="cam_precio"
-                                                message={"Precio requerida"}
+                                                message={"Cambia precio requerida"}
                                                 register={register}
                                                 errors={errors}
-                                                requerido={true}
-                                                type="number"
-                                            />
-                                            <TextComponent
-                                                titulo="Referencia"
-                                                name="ref"
-                                                message={"Referencia requerida"}
-                                                register={register}
-                                                errors={errors}
-                                                requerido={true}
-                                                type="text"
+                                                requerido={false}
+                                                type="checkbox"
                                             />
                                         </div>
                                     </fieldset>

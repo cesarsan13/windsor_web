@@ -19,8 +19,8 @@ function TextComponent({
                     name={name}
                     className="p-3 rounded block bg-neutral-900 text-white w-full"
                     placeholder={titulo}
-                    step={type === "double" ? "any" : undefined}
-                    min={type === "double" ? "0" : undefined}
+                    step="any"
+                    min="0"
                     {...register(name, {
                         ...(requerido && { required: message }),
                     })}
@@ -37,14 +37,14 @@ function TextComponent({
                     {titulo}
                 </label>
                 <input
-                    type={type}
+                    type="number"
                     name={name}
                     className="p-3 rounded block bg-neutral-900 text-white w-full"
                     placeholder={titulo}
-                    step={type === "number" ? "any" : undefined}
-                    min={type === "number" ? "0" : undefined}
+                    step="any"
+                    min="0"
                     onKeyPress={(event) => {
-                        if (type === "number" && !/[0-9.]/.test(event.key)) {
+                        if (!/[0-9.]/.test(event.key)) {
                             event.preventDefault();
                         }
                     }}
@@ -56,12 +56,35 @@ function TextComponent({
                     <span className="text-red-500 text-sm">{errors[name].message}</span>
                 )}
             </div>
-
+        );
+    } if (type === "checkbox") {
+        return (
+            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                <label className="text-slate-500 mb-2 block" htmlFor={name}>
+                    {titulo}
+                </label>
+                <div className="form-control bg-neutral-900 flex items-center space-x-2 rounded p-3">
+                    <label className="label cursor-pointer flex items-center gap-2">
+                        <input
+                            type="checkbox"
+                            name={name}
+                            className="checkbox border-2 border-neutral-300"
+                            {...register(name, {
+                                ...(requerido && { required: message }),
+                            })}
+                        />
+                        <span className="label-text text-white text-left">{titulo}</span>
+                    </label>
+                </div>
+                {errors[name] && requerido && (
+                    <span className="text-red-500 text-sm">{errors[name].message}</span>
+                )}
+            </div>
         );
     } else {
         return (
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                <label className="text-slate-500 mb-2 block" htmlFor="username">
+                <label className="text-slate-500 mb-2 block" htmlFor={name}>
                     {titulo}
                 </label>
                 <input
@@ -79,6 +102,9 @@ function TextComponent({
             </div>
         );
     }
+
+
+    
 }
 
 export default TextComponent;
