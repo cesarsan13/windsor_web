@@ -2,9 +2,9 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import {
-    getCajeros,
-    guardaCajero, //insert
-    siguiente,
+  getCajeros,
+  guardaCajero, //insert
+  siguiente,
 } from "@/app/utils/api/cajeros/cajeros";
 import ModalCajero from "@/app/cajeros/components/modalCajeros";
 import { showSwal } from "@/app/utils/alerts";
@@ -12,80 +12,80 @@ import { Tooltip } from "react-tooltip";
 import TablaCajeros from "@/app/cajeros/components/tablaCajeros";
 
 function Cajeros() {
-    const { data: session, status } = useSession();
-    const [cajero, setCajero] = useState({});
-    const [cajeros, setCajeros] = useState([]);
-    const [cajerosFiltrados, setCajerosFiltrados] = useState([]);
-    const [error, setError] = useState(null);
-    const [currentID, setCurrentId] = useState(0);
-    const [openModal, setModal] = useState(false);
-    const [isLoading, setisLoading] = useState(false);
-    const [accion, setAccion] = useState("");
-    const [baja, setBaja] = useState(false);
+  const { data: session, status } = useSession();
+  const [cajero, setCajero] = useState({});
+  const [cajeros, setCajeros] = useState([]);
+  const [cajerosFiltrados, setCajerosFiltrados] = useState([]);
+  const [error, setError] = useState(null);
+  const [currentID, setCurrentId] = useState(0);
+  const [openModal, setModal] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
+  const [accion, setAccion] = useState("");
+  const [baja, setBaja] = useState(false);
 
-    useEffect(() => {
-        if (status === "loading" || !session) {
-            return;
-        }
-        const fetchCajeros = async () => {
-            try {
-                setisLoading(true);
-                const { token } = session.user;
-                const data = await getCajeros(token, baja);
-                setCajeros(data);
-                setCajerosFiltrados(data);
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setisLoading(false);
-            }
-        };
-        fetchCajeros();
-    }, [session, status, baja]);
-    if (!session) {
-        return <></>;
+  useEffect(() => {
+    if (status === "loading" || !session) {
+      return;
     }
-    const Alta = async (event) => {
-        setCurrentId("");
-        setCajero({});
-        setModal(!openModal);
-        setAccion("Alta");
+    const fetchCajeros = async () => {
+      try {
+        setisLoading(true);
         const { token } = session.user;
-        let siguienteId = await siguiente(token);
-        siguienteId = Number(siguienteId) + 1;
-        setCurrentId(siguienteId);
+        const data = await getCajeros(token, baja);
+        setCajeros(data);
+        setCajerosFiltrados(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setisLoading(false);
+      }
     };
-    const maxId = cajeros.reduce((max, obj) => {
-        return obj.numero > max ? obj.numero : max;
-    }, 0);
-    const handleModal = () => {
-        setModal(!openModal);
-    };
-    const showInfo = (acc, numero) => {
-        const cajero = cajeros.find((cajero) => cajero.numero === numero);
-        if (cajero) {
-            setCurrentId(numero);
-            setModal(!openModal);
-            setAccion(acc);
-            setCajero(cajero);
-        }
-    };
-    const handleBusquedaChange = (event) => {
-        event.preventDefault();
-        const valorBusqueda = event.target.value;
-        if (valorBusqueda === "") {
-          setCajerosFiltrados(cajeros);
-        }
-        const infoFiltrada = cajeros.filter((cajero) =>
-          Object.values(cajero).some(
-            (valor) =>
-              typeof valor === "string" &&
-              valor.toLowerCase().includes(valorBusqueda.toLowerCase())
-          )
-        );
+    fetchCajeros();
+  }, [session, status, baja]);
+  if (!session) {
+    return <></>;
+  }
+  const Alta = async (event) => {
+    setCurrentId("");
+    setCajero({});
+    setModal(!openModal);
+    setAccion("Alta");
+    const { token } = session.user;
+    let siguienteId = await siguiente(token);
+    siguienteId = Number(siguienteId) + 1;
+    setCurrentId(siguienteId);
+  };
+  const maxId = cajeros.reduce((max, obj) => {
+    return obj.numero > max ? obj.numero : max;
+  }, 0);
+  const handleModal = () => {
+    setModal(!openModal);
+  };
+  const showInfo = (acc, numero) => {
+    const cajero = cajeros.find((cajero) => cajero.numero === numero);
+    if (cajero) {
+      setCurrentId(numero);
+      setModal(!openModal);
+      setAccion(acc);
+      setCajero(cajero);
+    }
+  };
+  const handleBusquedaChange = (event) => {
+    event.preventDefault();
+    const valorBusqueda = event.target.value;
+    if (valorBusqueda === "") {
+      setCajerosFiltrados(cajeros);
+    }
+    const infoFiltrada = cajeros.filter((cajero) =>
+      Object.values(cajero).some(
+        (valor) =>
+          typeof valor === "string" &&
+          valor.toLowerCase().includes(valorBusqueda.toLowerCase())
+      )
+    );
     setCajerosFiltrados(infoFiltrada);
-};
-const buscarCajeros = async () => {
+  };
+  const buscarCajeros = async () => {
     try {
       setisLoading(true);
       const { token } = session.user;
@@ -100,7 +100,7 @@ const buscarCajeros = async () => {
   };
 
   return (
-    <div className="flex h-5/6  lg:h-auto lg:w-5/6 bg-white  m-3 rounded-xl shadow-md shadow-slate-700 ">
+    <div className="flex  w-full h-full bg-white  m-3 rounded-xl shadow-md shadow-slate-700 ">
       <div className="flex w-full h-[calc(100%-30%)]">
         {openModal && (
           <ModalCajero

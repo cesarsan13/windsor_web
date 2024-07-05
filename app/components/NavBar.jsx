@@ -25,7 +25,7 @@ function NavBar() {
           <Menu vertical={true}></Menu>
         </div>
         <Link className="btn btn-ghost text-xl" href="/">
-          Windsor Web
+          Sistema Escolar
         </Link>
       </div>
 

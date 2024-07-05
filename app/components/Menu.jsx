@@ -16,6 +16,9 @@ function Menu({ vertical }) {
             <li>
               <Link href="/formapago">Forma de Pago</Link>
             </li>
+            <li>
+              <Link href="/cajeros">Cajeros</Link>
+            </li>
           </ul>
         </details>
       </li>
@@ -34,6 +37,9 @@ function Menu({ vertical }) {
             </li>
             <li>
               <Link href="/formapago">Forma de Pago</Link>
+            </li>
+            <li>
+              <Link href="/cajeros">Cajeros</Link>
             </li>
           </ul>
         </details>
