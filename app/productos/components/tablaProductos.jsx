@@ -11,7 +11,10 @@ function TablaProductos({ productosFiltrados, isLoading, showInfo }) {
             name: "Acciones",
             cell: (row) => (
                 <>
-                    <button className="btn btn-outline btn-info w-14"
+                    <button className="btn btn-outline mr-2 btn-info w-14"
+                        data-tooltip-place="right"
+                        data-tooltip-id={`toolEdit${row.id}`}
+                        data-tooltip-content="Editar"
                         onClick={() => showInfo("Editar", row.id)}
                     >
                         <svg
@@ -25,7 +28,11 @@ function TablaProductos({ productosFiltrados, isLoading, showInfo }) {
                             />
                         </svg>
                     </button>
+                    <Tooltip id={`toolEdit${row.id}`} />
                     <button className="btn btn-outline btn-error w-14"
+                        data-tooltip-place="left"
+                        data-tooltip-id={`toolDelete${row.id}`}
+                        data-tooltip-content="Eliminar"
                         onClick={() => showInfo("Eliminar", row.id)}
                     >
                         <svg
@@ -39,9 +46,10 @@ function TablaProductos({ productosFiltrados, isLoading, showInfo }) {
                             />
                         </svg>
                     </button>
+                    <Tooltip id={`toolDelete${row.id}`} />
                 </>
             ),
-        },        
+        },
         {
             name: "ID",
             selector: (productosFiltrados) => productosFiltrados.id,
@@ -103,31 +111,31 @@ function TablaProductos({ productosFiltrados, isLoading, showInfo }) {
                             header: {
                                 style: {
                                     minHeight: '56px',
-                                    backgroundColor: '#171717',
-                                    color: "#ffff",
+                                    backgroundColor: '#efefef',
+                                    color: "#000000",
                                 },
                             },
                             headRow: {
                                 style: {
-                                    backgroundColor: '#171717',
+                                    backgroundColor: '#efefef',
                                     borderBottomWidth: '1px',
-                                    borderBottomColor: '#171717',
+                                    borderBottomColor: '#efefef',
                                     fontSize: "16px",
                                     fontWeight: "bold",
                                 },
                             },
                             headCells: {
                                 style: {
-                                    color: '#ffff',
+                                    color: '#000000',
                                 },
                             },
                             rows: {
                                 style: {
-                                    backgroundColor: '#171717',
-                                    borderBottomColor: '#171717',
-                                    color: '#ffff',
+                                    backgroundColor: '#efefef',
+                                    borderBottomColor: '#efefef',
+                                    color: '#000000',
                                     '&:nth-of-type(odd)': {
-                                        backgroundColor: '#171717',
+                                        backgroundColor: '#efefef',
                                     },
                                     paddingBottom: "10px",
                                     paddingTop: "10px"
@@ -135,8 +143,8 @@ function TablaProductos({ productosFiltrados, isLoading, showInfo }) {
                             },
                             pagination: {
                                 style: {
-                                    backgroundColor: '#27272',
-                                    color: '#ffff',
+                                    backgroundColor: '#efefef',
+                                    color: '#000000',
                                 },
                             },
                         }}

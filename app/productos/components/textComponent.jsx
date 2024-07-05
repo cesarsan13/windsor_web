@@ -7,7 +7,18 @@ function TextComponent({
     errors,
     requerido,
     type,
+    textAlign,
 }) {
+    const handleInput = (e) => {
+        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    };
+    const handleInputDecimal = (e) => {
+        const value = e.target.value;
+        e.target.value = value.replace(/[^0-9.]/g, '');
+        if ((value.match(/\./g) || []).length > 1) {
+            e.target.value = value.substring(0, value.length - 1);
+        }
+    };
     if (type === "double") {
         return (
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
@@ -15,14 +26,23 @@ function TextComponent({
                     {titulo}
                 </label>
                 <input
-                    type="number"
+                    type="text"
                     name={name}
-                    className="p-3 rounded block bg-neutral-900 text-white w-full"
+                    className="p-3 rounded block bg-neutral-900 text-white w-full text-right"
                     placeholder={titulo}
                     step="any"
                     min="0"
+                    onInput={handleInputDecimal}
                     {...register(name, {
                         ...(requerido && { required: message }),
+                        minLength: {
+                            value: 0,
+                            message: `Debe tener al menos 0 caracteres`,
+                        },
+                        maxLength: {
+                            value: 8,
+                            message: `Debe tener como máximo 8 caracteres`,
+                        }
                     })}
                 />
                 {errors[name] && requerido && (
@@ -37,19 +57,23 @@ function TextComponent({
                     {titulo}
                 </label>
                 <input
-                    type="number"
+                    type="text"
                     name={name}
-                    className="p-3 rounded block bg-neutral-900 text-white w-full"
+                    className="p-3 rounded block bg-neutral-900 text-white w-full text-right"
                     placeholder={titulo}
                     step="any"
                     min="0"
-                    onKeyPress={(event) => {
-                        if (!/[0-9.]/.test(event.key)) {
-                            event.preventDefault();
-                        }
-                    }}
+                    onInput={handleInput}
                     {...register(name, {
                         ...(requerido && { required: message }),
+                        minLength: {
+                            value: 0,
+                            message: `Debe tener al menos 0 caracteres`,
+                        },
+                        maxLength: {
+                            value: 8,
+                            message: `Debe tener como máximo 8 caracteres`,
+                        }
                     })}
                 />
                 {errors[name] && requerido && (
@@ -104,7 +128,7 @@ function TextComponent({
     }
 
 
-    
+
 }
 
 export default TextComponent;
