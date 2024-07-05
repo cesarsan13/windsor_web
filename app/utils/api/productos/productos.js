@@ -23,6 +23,20 @@ export const getLastProduct = async () => {
     return resJson.data
 }
 
+export const filtroProductos = async (tipo, valor) => {
+    if (!tipo) { tipo = "nothing" }
+    if (!valor) { valor = "nothing" }
+    let url = `http://127.0.0.1:8000/api/product/filter/${tipo}/${valor}`;
+    const res = await fetch(url, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    const resJson = await res.json();
+    return resJson.data;
+}
+
 export const guardarProductos = async (data, accion) => {
     console.log('data desde modal si no', data);
     let url = ""
