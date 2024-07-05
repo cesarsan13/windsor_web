@@ -21,7 +21,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className="">
         <SessionAuthProvider>
-          <div className="bg-slate-100 flex flex-col h-[calc(100vh)]">
+          <div className="bg-slate-100 dark:bg-slate-900 flex flex-col h-[calc(100vh)]">
             <div className="h-[calc(10%)]">
               <NavBar></NavBar>
             </div>

@@ -11,7 +11,7 @@ function Menu({ vertical }) {
           <summary>Catalogos</summary>
           <ul>
             <li>
-              <Link href="/alumnos">Alumnos</Link>
+              <Link href="/productos">Productos</Link>
             </li>
             <li>
               <Link href="/formapago">Forma de Pago</Link>
@@ -24,13 +24,13 @@ function Menu({ vertical }) {
       </li>
     </ul>
   ) : (
-    <ul className="menu menu-horizontal px-1 ">
+    <ul className="menu menu-horizontal px-1 z-[2] ">
       <li>
         <details>
           <summary>Catalogos</summary>
           <ul className="p-5 mt-3 w-52 ">
             <li>
-              <Link href="/alumnos">Alumnos</Link>
+              <Link href="/productos">Productos</Link>
             </li>
             <li>
               <Link href="/formapago">Forma de Pago</Link>

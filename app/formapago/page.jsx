@@ -1,294 +1,79 @@
+"use client";
 import React from "react";
 import Link from "next/link";
+import ModalFormaPago from "@/app/formapago/components/ModalFormaPago";
+import TablaFormaPago from "@/app/formapago/components/TablaFormaPAgo";
+import Busqueda from "@/app/formapago/components/Busqueda";
+import Acciones from "@/app/formapago/components/Acciones";
+import { getFormasPago } from "@/app/utils/api/formapago/formapago";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 function FormaPago() {
+  const { data: session, status } = useSession();
+  const [formasPago, setFormasPago] = useState([]);
+  const [formaPago, setFormaPago] = useState({});
+  const [formaPagosFiltrados, setFormaPagosFiltrados] = useState([]);
+  const [bajas, setBajas] = useState(false);
+  const [openModal, setModal] = useState(false);
+  const [accion, setAccion] = useState("");
+  const [isLoading, setisLoading] = useState(false);
+  const [currentID, setCurrentId] = useState("");
+  const [TB_Busqueda, setTB_Busqueda] = useState("");
+  useEffect(() => {
+    if (status === "loading" || !session) {
+      return;
+    }
+    const fetchData = async () => {
+      setisLoading(true);
+      const { token } = session.user;
+      const data = await getFormasPago(token, bajas);
+      setFormasPago(data);
+      setFormaPagosFiltrados(data);
+      setisLoading(false);
+    };
+    fetchData();
+  }, [session, status, bajas]);
+
+  const Buscar = (event) => {
+    event.preventDefault();
+    alert("esyas buscando");
+    // const valorBusqueda = event.target.value;
+    // if (valorBusqueda === "") {
+    //   setFormaPagosFiltrados(formasPago);
+    // }
+    // const infoFiltrada = formasPago.filter((proveedor) =>
+    //   Object.values(proveedor).some(
+    //     (valor) =>
+    //       typeof valor === "string" &&
+    //       valor.toLowerCase().includes(valorBusqueda.toLowerCase())
+    //   )
+    // );
+    // setFormaPagosFiltrados(infoFiltrada);
+  };
+
+  if (!session) {
+    return <></>;
+  }
   return (
     <div className="container h-full">
+      <ModalFormaPago></ModalFormaPago>
       <div className="flex justify-center p-3 ">
-        <h1 className="text-4xl font-bold">Formas de Pago</h1>
+        <h1 className="text-4xl font-thin text-black">Formas de Pagos</h1>
       </div>
-      <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
+      <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] z-0">
         <div className="col-span-1  ">
-          <div className="join join-vertical ml-2">
-            <div className="tooltip tooltip-top my-12" data-tip="Buscar">
-              <kbd className="kbd">
-                <i className="fa-solid fa-magnifying-glass"></i>
-              </kbd>
-            </div>
-            <div className="tooltip tooltip-top my-5" data-tip="Añadir">
-              <kbd className="kbd">
-                <i className="fa-regular fa-square-plus"></i>
-              </kbd>
-            </div>
-            <div className="tooltip tooltip-top my-5" data-tip="Guardar">
-              <kbd className="kbd">
-                <i className="fa-regular fa-floppy-disk"></i>
-              </kbd>
-            </div>
-            <div className="tooltip tooltip-top my-5" data-tip="Regresar">
-              <kbd className="kbd">
-                <i className="fa-regular fa-circle-xmark"></i>
-              </kbd>
-            </div>
-          </div>
+          <Acciones Buscar={Buscar}></Acciones>
         </div>
         <div className="col-span-7  ">
           <div className="flex flex-col h-[calc(100%)]">
-            <div className="join w-full flex justify-start h-1/8">
-              <input
-                className="input input-bordered join-item w-full md:w-3/6"
-                placeholder="Buscar..."
-              />
-              <select className="select select-bordered join-item">
-                <option disabled selected>
-                  Filtros
-                </option>
-                <option>Numero</option>
-                <option>Descripcion</option>
-              </select>
-            </div>
-            <div className="overflow-x-auto mt-3  h-7/8">
-              <table className="table table-xs table-pin-rows table-pin-cols  ">
-                <thead>
-                  <tr>
-                    <th></th>
-                    <td>Name</td>
-                    <td>Job</td>
-                    <td>company</td>
-                    <td>location</td>
-                    <td>Last Login</td>
-                    <td>Favorite Color</td>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th>1</th>
-                    <td>Cy Ganderton</td>
-                    <td>Quality Control Specialist</td>
-                    <td>Littel, Schaden and Vandervort</td>
-                    <td>Canada</td>
-                    <td>12/16/2020</td>
-                    <td>Blue</td>
-                    <th>1</th>
-                  </tr>
-                  <tr>
-                    <th>2</th>
-                    <td>Hart Hagerty</td>
-                    <td>Desktop Support Technician</td>
-                    <td>Zemlak, Daniel and Leannon</td>
-                    <td>United States</td>
-                    <td>12/5/2020</td>
-                    <td>Purple</td>
-                    <th>2</th>
-                  </tr>
-                  <tr>
-                    <th>3</th>
-                    <td>Brice Swyre</td>
-                    <td>Tax Accountant</td>
-                    <td>Carroll Group</td>
-                    <td>China</td>
-                    <td>8/15/2020</td>
-                    <td>Red</td>
-                    <th>3</th>
-                  </tr>
-                  <tr>
-                    <th>4</th>
-                    <td>Marjy Ferencz</td>
-                    <td>Office Assistant I</td>
-                    <td>Rowe-Schoen</td>
-                    <td>Russia</td>
-                    <td>3/25/2021</td>
-                    <td>Crimson</td>
-                    <th>4</th>
-                  </tr>
-                  <tr>
-                    <th>5</th>
-                    <td>Yancy Tear</td>
-                    <td>Community Outreach Specialist</td>
-                    <td>Wyman-Ledner</td>
-                    <td>Brazil</td>
-                    <td>5/22/2020</td>
-                    <td>Indigo</td>
-                    <th>5</th>
-                  </tr>
-                  <tr>
-                    <th>6</th>
-                    <td>Irma Vasilik</td>
-                    <td>Editor</td>
-                    <td>Wiza, Bins and Emard</td>
-                    <td>Venezuela</td>
-                    <td>12/8/2020</td>
-                    <td>Purple</td>
-                    <th>6</th>
-                  </tr>
-                  <tr>
-                    <th>7</th>
-                    <td>Meghann Durtnal</td>
-                    <td>Staff Accountant IV</td>
-                    <td>Schuster-Schimmel</td>
-                    <td>Philippines</td>
-                    <td>2/17/2021</td>
-                    <td>Yellow</td>
-                    <th>7</th>
-                  </tr>
-                  <tr>
-                    <th>8</th>
-                    <td>Sammy Seston</td>
-                    <td>Accountant I</td>
-                    <td>Hara, Welch and Keebler</td>
-                    <td>Indonesia</td>
-                    <td>5/23/2020</td>
-                    <td>Crimson</td>
-                    <th>8</th>
-                  </tr>
-                  <tr>
-                    <th>9</th>
-                    <td>Lesya Tinham</td>
-                    <td>Safety Technician IV</td>
-                    <td>Turner-Kuhlman</td>
-                    <td>Philippines</td>
-                    <td>2/21/2021</td>
-                    <td>Maroon</td>
-                    <th>9</th>
-                  </tr>
-                  <tr>
-                    <th>10</th>
-                    <td>Zaneta Tewkesbury</td>
-                    <td>VP Marketing</td>
-                    <td>Sauer LLC</td>
-                    <td>Chad</td>
-                    <td>6/23/2020</td>
-                    <td>Green</td>
-                    <th>10</th>
-                  </tr>
-                  <tr>
-                    <th>11</th>
-                    <td>Andy Tipple</td>
-                    <td>Librarian</td>
-                    <td>Hilpert Group</td>
-                    <td>Poland</td>
-                    <td>7/9/2020</td>
-                    <td>Indigo</td>
-                    <th>11</th>
-                  </tr>
-                  <tr>
-                    <th>12</th>
-                    <td>Sophi Biles</td>
-                    <td>Recruiting Manager</td>
-                    <td>Gutmann Inc</td>
-                    <td>Indonesia</td>
-                    <td>2/12/2021</td>
-                    <td>Maroon</td>
-                    <th>12</th>
-                  </tr>
-                  <tr>
-                    <th>13</th>
-                    <td>Florida Garces</td>
-                    <td>Web Developer IV</td>
-                    <td>Gaylord, Pacocha and Baumbach</td>
-                    <td>Poland</td>
-                    <td>5/31/2020</td>
-                    <td>Purple</td>
-                    <th>13</th>
-                  </tr>
-                  <tr>
-                    <th>14</th>
-                    <td>Maribeth Popping</td>
-                    <td>Analyst Programmer</td>
-                    <td>Deckow-Pouros</td>
-                    <td>Portugal</td>
-                    <td>4/27/2021</td>
-                    <td>Aquamarine</td>
-                    <th>14</th>
-                  </tr>
-                  <tr>
-                    <th>15</th>
-                    <td>Moritz Dryburgh</td>
-                    <td>Dental Hygienist</td>
-                    <td>Schiller, Cole and Hackett</td>
-                    <td>Sri Lanka</td>
-                    <td>8/8/2020</td>
-                    <td>Crimson</td>
-                    <th>15</th>
-                  </tr>
-                  <tr>
-                    <th>16</th>
-                    <td>Reid Semiras</td>
-                    <td>Teacher</td>
-                    <td>Sporer, Sipes and Rogahn</td>
-                    <td>Poland</td>
-                    <td>7/30/2020</td>
-                    <td>Green</td>
-                    <th>16</th>
-                  </tr>
-                  <tr>
-                    <th>17</th>
-                    <td>Alec Lethby</td>
-                    <td>Teacher</td>
-                    <td>Reichel, Glover and Hamill</td>
-                    <td>China</td>
-                    <td>2/28/2021</td>
-                    <td>Khaki</td>
-                    <th>17</th>
-                  </tr>
-                  <tr>
-                    <th>18</th>
-                    <td>Aland Wilber</td>
-                    <td>Quality Control Specialist</td>
-                    <td>Kshlerin, Rogahn and Swaniawski</td>
-                    <td>Czech Republic</td>
-                    <td>9/29/2020</td>
-                    <td>Purple</td>
-                    <th>18</th>
-                  </tr>
-                  <tr>
-                    <th>19</th>
-                    <td>Teddie Duerden</td>
-                    <td>Staff Accountant III</td>
-                    <td>Pouros, Ullrich and Windler</td>
-                    <td>France</td>
-                    <td>10/27/2020</td>
-                    <td>Aquamarine</td>
-                    <th>19</th>
-                  </tr>
-                  <tr>
-                    <th>20</th>
-                    <td>Lorelei Blackstone</td>
-                    <td>Data Coordinator</td>
-                    <td>Witting, Kutch and Greenfelder</td>
-                    <td>Kazakhstan</td>
-                    <td>6/3/2020</td>
-                    <td>Red</td>
-                    <th>20</th>
-                  </tr>
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <th></th>
-                    <td>Name</td>
-                    <td>Job</td>
-                    <td>company</td>
-                    <td>location</td>
-                    <td>Last Login</td>
-                    <td>Favorite Color</td>
-                    <th></th>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
+            <Busqueda setBajas={setBajas} />
+            <TablaFormaPago
+              isLoading={isLoading}
+              formaPagosFiltrados={formaPagosFiltrados}
+            />
           </div>
         </div>
       </div>
-      {/* botones laterales */}
-      {/* <div className="container grid grid-cols-8 gap-4 bg-black ">
-        <div className=" col-span-1 w-full  flex justify-center place-content-center h-auto">
-          
-        </div>
-
-        <div className=" col-span-7 pt-10 h-auto ">
-          
-        </div>
-      </div> */}
     </div>
   );
 }
