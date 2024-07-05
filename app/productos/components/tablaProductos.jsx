@@ -88,7 +88,7 @@ function TablaProductos({ productosFiltrados, isLoading, showInfo }) {
             </div>
         ) : (
             <>
-                <div className="overflow-x-auto mt-8 rounded h-[calc(83 %)]">
+                <div className="overflow-x-auto mt-8 rounded">
                     <DataTable
                         columns={columns}
                         data={productosFiltrados}

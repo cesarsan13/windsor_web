@@ -64,7 +64,6 @@ function Productos() {
     const [valorBusqueda, setValorBusqueda] = useState("");
     const Buscar = () => {
         setisLoading(true);
-        console.log('sepa que esta haciendo ', valorBusqueda);
         if (valorBusqueda === "") {
             setProductosFiltrados(productos);
         }
@@ -115,8 +114,8 @@ function Productos() {
 
                 <div className='top-4 left-4'>
                     <button onClick={goToHome} className="btn btn-xs rounded-full mr-2">
-                        <svg class="w-3 h-3 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                            <path fill-rule="evenodd" d="M11.293 3.293a1 1 0 0 1 1.414 0l6 6 2 2a1 1 0 0 1-1.414 1.414L19 12.414V19a2 2 0 0 1-2 2h-3a1 1 0 0 1-1-1v-3h-2v3a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2v-6.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2 6-6Z" clip-rule="evenodd" />
+                        <svg className="w-3 h-3 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path fillRule="evenodd" d="M11.293 3.293a1 1 0 0 1 1.414 0l6 6 2 2a1 1 0 0 1-1.414 1.414L19 12.414V19a2 2 0 0 1-2 2h-3a1 1 0 0 1-1-1v-3h-2v3a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2v-6.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2 6-6Z" clipRule="evenodd" />
                         </svg>
                     </button>
 
@@ -131,7 +130,7 @@ function Productos() {
                 <div className="p-6 bg-zinc-800 shadow-lg rounded-lg border border-gray-200 mt-4 lg:h-[calc(93%)] sm:h-[calc(93%)]">
                     {/* catalogo */}
                     <h1 className="text-3xl text-white font-semibold mb-4 text-left">Productos</h1>
-                    <div className='flex'>
+                    <div className='flex pb-3'>
                         <label className="relative w-full md:w-1/3">
                             <input
                                 type="search"
@@ -171,7 +170,7 @@ function Productos() {
                         </div>
                         <button className="btn btn-outline btn-success ml-4 rounded-xl flex items-center space-x-2" onClick={Alta}>Alta</button>
                     </div>
-                    <div className='h-[calc(90%)] w-[calc(100%)]'>
+                    <div className='h-[calc(80%)] w-[calc(100%)] overflow-auto'>
                         <TablaProductos
                             productosFiltrados={productosFiltrados}
                             showInfo={showInfo}
@@ -182,6 +181,8 @@ function Productos() {
             </div>
         </div>
     );
+
+
 
 }
 export default Productos;
