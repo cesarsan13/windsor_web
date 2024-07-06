@@ -6,75 +6,97 @@ import NoData from "@/app/components/noData";
 
 function TablaCajeros({ cajerosFiltrados, isLoading, showInfo }) {
     const columns = [
-      {
-        name: "Acciones",
-        cell: (row) => (
-          <>
-            <button
-              data-tooltip-place="right"
-              data-tooltip-id={`toolEdit${row.numero}`}
-              data-tooltip-content="Editar"
-              onClick={() => showInfo("Editar", row.numero)}
-              className={`fas fa-edit py-2 px-4 ms-2 text-md font-medium text-white focus:outline-none bg-green-500 rounded-lg border border-green-200 hover:bg-green-100 hover:text-white-700  focus:ring-4 focus:ring-green-100 dark:focus:ring-green-700 dark:bg-green-800 dark:text-green-400 dark:border-green-600 dark:hover:text-white dark:hover:bg-green-700`}
-            ></button>
-            <Tooltip numero={`toolEdit${row.numero}`} />
-            <button
-              data-tooltip-place="left"
-              data-tooltip-id={`toolDelete${row.numero}`}
-              data-tooltip-content="Eliminar"
-              onClick={() => showInfo("Eliminar", row.numero)}
-              className={`fas fa-trash py-2 px-4 ms-2 text-md font-medium text-white focus:outline-none bg-red-500 rounded-lg border border-red-200 hover:bg-red-100 hover:text-white-700  focus:ring-4 focus:ring-red-100 dark:focus:ring-red-700 dark:bg-red-800 dark:text-red-400 dark:border-red-600 dark:hover:text-white dark:hover:bg-red-700`}
-            ></button>
-            <Tooltip numero={`toolDelete${row.numero}`} />
-          </>
-        ),
-      },
-      {
-        name: "Numero",
-        selector: (cajerosFiltrados) => cajerosFiltrados.numero,
-        sortable: true,
-      },
-      ,
-      {
-        name: "Nombre",
-        selector: (cajerosFiltrados) => cajerosFiltrados.nombre,
-        sortable: true,
-      },
-      {
-        name: "Clave_Cajero",
-        selector: (cajerosFiltrados) => cajerosFiltrados.clave_cajero,
-        sortable: true,
-      },
-      {
-        name: "Mail",
-        selector: (cajerosFiltrados) => cajerosFiltrados.mail,
-        sortable: true,
-      },
+        {
+            name: "Acciones",
+            cell: (row) => (
+                <div className="flex space-x-1">
+                    <button
+                        data-tooltip-place="right"
+                        data-tooltip-id={`toolEdit${row.numero}`}
+                        data-tooltip-content="Editar"
+                        onClick={() => showInfo("Editar", row.numero)}
+                        className="fas fa-edit py-1 px-2 text-sm font-medium text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
+                    ></button>
+                    <Tooltip id={`toolEdit${row.numero}`} />
+                    <button
+                        data-tooltip-place="left"
+                        data-tooltip-id={`toolDelete${row.numero}`}
+                        data-tooltip-content="Eliminar"
+                        onClick={() => showInfo("Eliminar", row.numero)}
+                        className="fas fa-trash py-1 px-2 text-sm font-medium text-white bg-red-500 rounded hover:bg-red-600 focus:outline-none"
+                    ></button>
+                    <Tooltip id={`toolDelete${row.numero}`} />
+                </div>
+            ),
+            minWidth: '10px', 
+            maxWidth: '100px', 
+
+        },
+        {
+            name: "Numero",
+            selector: (cajerosFiltrados) => cajerosFiltrados.numero,
+            sortable: true,
+            minWidth: '60px', 
+            maxWidth: '100px', 
+        },
+        {
+            name: "Nombre",
+            selector: (cajerosFiltrados) => cajerosFiltrados.nombre,
+            sortable: true,
+            minWidth: '100px',
+            maxWidth: '170px',
+        },
+        {
+            name: "Clave_Cajero",
+            selector: (cajerosFiltrados) => cajerosFiltrados.clave_cajero,
+            sortable: true,
+            minWidth: '100px',
+            maxWidth: '150px',
+        },
     ];
 
-    const paginationComponentOptions = {
-      rowsPerPageText: "Filas por página",
-      rangeSeparatorText: "de",
-      selectAllRowsItem: true,
-      selectAllRowsItemText: "Todos",
+    const customStyles = {
+        rows: {
+            style: {
+                minHeight: '32px',
+                padding: '2px 0', 
+            },
+        },
+        headCells: {
+            style: {
+                paddingLeft: '8px',
+                paddingRight: '8px',
+            },
+        },
+        cells: {
+            style: {
+                paddingLeft: '8px',
+                paddingRight: '8px',
+            },
+        },
     };
+
+    const paginationComponentOptions = {
+        rowsPerPageText: "Filas por página",
+        rangeSeparatorText: "de",
+        selectAllRowsItem: true,
+        selectAllRowsItemText: "Todos",
+    };
+
     return (
-      <DataTable
-        title="Cajeros"
-        columns={columns}
-        data={cajerosFiltrados}
-        pagination
-        paginationPerPage={5}
-        paginationComponentOptions={paginationComponentOptions}
-        fixedHeader
-        progressPending={isLoading}
-        progressComponent={<Loading />}
-        noDataComponent={<NoData />}
-        highlightOnHover
-        pointerOnHover
-      />
+        <DataTable
+            columns={columns}
+            data={cajerosFiltrados}
+            pagination
+            paginationPerPage={5}
+            paginationComponentOptions={paginationComponentOptions}
+            fixedHeader
+            progressPending={isLoading}
+            progressComponent={<Loading />}
+            noDataComponent={<NoData />}
+            customStyles={customStyles}
+        />
     );
-  }
-  
-  export default TablaCajeros;
-  
+}
+
+export default TablaCajeros;

@@ -195,17 +195,17 @@ function ModalCajeros({
               </fieldset>
               <div className="border-t border-gray-300 flex justify-between items-center px-4 pt-2 mt-5">
                 <button
-                  type="submit"
-                  className=" bg-green-800 text-white text-md h-8 px-3 rounded-md"
-                >
-                  Guardar
-                </button>
-                <button
                   type="button"
                   className="h-8 px-2 text-md rounded-md bg-red-700 text-white "
                   onClick={handleModal}
                 >
                   Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className=" bg-green-800 text-white text-md h-8 px-3 rounded-md"
+                >
+                  Guardar
                 </button>
               </div>
             </form>
