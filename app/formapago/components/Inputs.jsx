@@ -13,6 +13,8 @@ function Inputs({
   errors,
   tamañolabel,
   maxLenght,
+  defaultValue,
+  isDisabled,
 }) {
   return (
     <div className="flex flex-col">
@@ -21,14 +23,17 @@ function Inputs({
       >
         {Titulo}
         <input
+          // defaultValue={defaultValue}
           {...(maxLenght !== 0 && { maxLength: maxLenght })}
           name={name}
+          id={name}
           type={type}
           className={className}
           {...(isNumero && { onKeyDown: soloEnteros })}
           {...register(name, {
             ...(requerido && { required: message }),
           })}
+          disabled={isDisabled}
         />
       </label>
       {errors[name] && (
