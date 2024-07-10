@@ -91,8 +91,9 @@ function FormaPago() {
     setFormaPagosFiltrados(infoFiltrada);
   };
 
-  const limpiarBusqueda = () => {
-    setFiltro("");
+  const limpiarBusqueda = (evt) => {
+    evt.preventDefault;
+    // document.getElementById("TB_Busqueda").value = "";
     setTB_Busqueda("");
   };
 
@@ -116,9 +117,7 @@ function FormaPago() {
 
     document.getElementById("descripcion").focus();
   };
-  // const handleModal = () => {
-  //   setModal(!openModal);
-  // };
+
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
     const dataj = JSON.stringify(data);
@@ -137,10 +136,8 @@ function FormaPago() {
         showModal(true);
         return;
       }
-      // showModal(true);
     }
     res = await guardaFormaPAgo(session.user.token, data, accion);
-    // console.log(res.status + " " + res);
     if (res.status) {
       if (accion === "Alta") {
         const nuevaFormaPago = { currentID, ...data };
@@ -186,6 +183,7 @@ function FormaPago() {
   const handleBusquedaChange = (event) => {
     event.preventDefault;
     setTB_Busqueda(event.target.value);
+    console.log(event.target.value);
   };
   if (status === "loading") {
     return (
@@ -221,6 +219,8 @@ function FormaPago() {
                 limpiarBusqueda={limpiarBusqueda}
                 Buscar={Buscar}
                 handleBusquedaChange={handleBusquedaChange}
+                TB_Busqueda={TB_Busqueda}
+                setTB_Busqueda={setTB_Busqueda}
               />
               <TablaFormaPago
                 isLoading={isLoading}

@@ -6,6 +6,8 @@ function Busqueda({
   limpiarBusqueda,
   Buscar,
   handleBusquedaChange,
+  TB_Busqueda,
+  setTB_Busqueda,
 }) {
   const handleFiltroChange = (event) => {
     const selectedValue = event.target.value;
@@ -23,6 +25,7 @@ function Busqueda({
         placeholder="Buscar..."
         onChange={(event) => handleBusquedaChange(event)}
         onKeyDown={(evt) => handleKeyDown(evt)}
+        value={TB_Busqueda}
       />
       <select
         className="select select-bordered join-item dark:bg-slate-100 w-20 md:w-32"
@@ -40,7 +43,7 @@ function Busqueda({
       <div className="tooltip " data-tip="Limpiar">
         <button
           className="btn join-item  bg-blue-500 hover:bg-blue-700 text-white input-bordered"
-          onClick={limpiarBusqueda}
+          onClick={(evt) => limpiarBusqueda(evt)}
         >
           <i className="fa-solid fa-broom"></i>
         </button>

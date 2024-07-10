@@ -34,25 +34,9 @@ function TablaFormaPago({
           <tbody>
             {formaPagosFiltrados.map((item) => (
               <tr key={item.id} className="hover:cursor-pointer">
-                <th
-                  className={
-                    typeof item.comision === "number"
-                      ? "text-right"
-                      : "text-left"
-                  }
-                >
-                  {item.id}
-                </th>
+                <th className={"text-right"}>{item.id}</th>
                 <td>{item.descripcion}</td>
-                <td
-                  className={`${
-                    typeof item.comision === "number"
-                      ? "text-right"
-                      : "text-left"
-                  } w-11`}
-                >
-                  {item.comision}
-                </td>
+                <td className={`text-right w-11`}>{item.comision}</td>
                 <td>{item.aplicacion}</td>
                 <td>{item.cue_banco}</td>
                 <th>
