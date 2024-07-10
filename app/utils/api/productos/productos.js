@@ -1,4 +1,4 @@
-export const getProductos = async (baja) => {
+export const getProductos = async (token, baja) => {
     let url = ""
     baja
         ? (url = `http://127.0.0.1:8000/api/product/bajas`)
@@ -12,7 +12,7 @@ export const getProductos = async (baja) => {
     return resJson.data;
 }
 
-export const getLastProduct = async () => {
+export const getLastProduct = async (token) => {
     let url = `http://127.0.0.1:8000/api/product/last`
     const res = await fetch(url, {
         headers: {
@@ -23,7 +23,7 @@ export const getLastProduct = async () => {
     return resJson.data
 }
 
-export const filtroProductos = async (tipo, valor) => {
+export const filtroProductos = async (token, tipo, valor) => {
     if (!tipo) { tipo = "nothing" }
     if (!valor) { valor = "nothing" }
     let url = `http://127.0.0.1:8000/api/product/filter/${tipo}/${valor}`;
@@ -37,7 +37,7 @@ export const filtroProductos = async (tipo, valor) => {
     return resJson.data;
 }
 
-export const guardarProductos = async (data, accion) => {
+export const guardarProductos = async (token, data, accion) => {
     console.log('data desde modal si no', data);
     let url = ""
     let met = ""

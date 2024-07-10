@@ -1,20 +1,25 @@
 "use client";
-// import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useRouter } from "next/navigation";
+import { showSwal, confirmSwal } from "../utils/alerts";
+import ModalProductos from "@/app/productos/components/ModalProductos";
+import TablaProductos from "@/app/productos/components/TablaProductos";
+import Busqueda from "@/app/productos/components/Busqueda";
+import Acciones from "@/app/productos/components/Acciones";
+import { useForm } from "react-hook-form";
 import {
     getProductos,
-    getLastProduct,
     guardarProductos,
-    filtroProductos,
-} from '@/app/utils/api/productos/productos';
-import { Tooltip } from "react-tooltip";
-import TablaProductos from "@/app//productos/components/tablaProductos";
-import ModalProductos from "@/app/productos/components/modalProductos";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-function Productos() {
+    getLastProduct,
+} from "@/app/utils/api/productos/productos";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import * as XLSX from "xlsx";
+function FormaPago() {
     const router = useRouter();
-    // const { data: session, status } = useSession();
+    const { data: session, status } = useSession();
     const [productos, setProductos] = useState([]);
     const [producto, setProducto] = useState({});
     const [productosFiltrados, setProductosFiltrados] = useState([]);
@@ -22,213 +27,408 @@ function Productos() {
     const [openModal, setModal] = useState(false);
     const [accion, setAccion] = useState("");
     const [isLoading, setisLoading] = useState(false);
-    const [currentID, setCurrentId] = useState('');
-    const [valueSelected, setValueSelected] = useState('');
-    const [selected, setSelected] = useState(false);
-    const [valorBusqueda, setValorBusqueda] = useState("");
+    const [currentID, setCurrentId] = useState("");
+    const [filtro, setFiltro] = useState("");
+    const [TB_Busqueda, setTB_Busqueda] = useState("");
 
-    const goToHome = () => {
-        router.push('/');
-    };
-    const goBack = () => {
-        router.back();
-    };
     useEffect(() => {
+        if (status === "loading" || !session) {
+            return;
+        }
         const fetchData = async () => {
             setisLoading(true);
-            const data = await getProductos(bajas);
-            console.log(data);
+            const { token } = session.user;
+            const data = await getProductos(token, bajas);
             setProductos(data);
             setProductosFiltrados(data);
+            if (filtro !== "" && TB_Busqueda !== "") {
+                Buscar();
+            }
             setisLoading(false);
         };
         fetchData();
-    }, [bajas]);
-    const showInfo = (acc, id) => {
-        const producto = productos.find((producto) => producto.id === id);
-        if (producto) {
-            setCurrentId(id);
-            setModal(!openModal);
-            setAccion(acc);
-            setProducto(producto);
+    }, [session, status, bajas]);
+
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm({
+        defaultValues: {
+            id: producto.id,
+            descripcion: producto.descripcion,
+            costo: producto.costo,
+            frecuencia: producto.frecuencia,
+            pro_recargo: producto.pro_recargo,
+            aplicacion: producto.aplicacion,
+            iva: producto.iva,
+            cond_1: producto.cond_1,
+            cam_precio: producto.cam_precio,
+            ref: producto.ref,
+        },
+    });
+    useEffect(() => {
+        reset({
+            id: producto.id,
+            descripcion: producto.descripcion,
+            costo: producto.costo,
+            frecuencia: producto.frecuencia,
+            pro_recargo: producto.pro_recargo,
+            aplicacion: producto.aplicacion,
+            iva: producto.iva,
+            cond_1: producto.cond_1,
+            cam_precio: producto.cam_precio,
+            ref: producto.ref,
+        });
+    }, [producto, reset]);
+
+    const Buscar = () => {
+        if (TB_Busqueda === "" || filtro === "") {
+            setProductosFiltrados(productos);
+            return;
         }
+        const infoFiltrada = productos.filter((producto) => {
+            const valorCampo = producto[filtro];
+            if (typeof valorCampo === "number") {
+                return valorCampo.toString().includes(TB_Busqueda);
+            }
+            return valorCampo
+                ?.toString()
+                .toLowerCase()
+                .includes(TB_Busqueda.toLowerCase());
+        });
+        setProductosFiltrados(infoFiltrada);
     };
+
+    const formatNumber = (num) => {
+        if (!num) return "";
+        const numStr = typeof num === 'string' ? num : num.toString();
+        const floatNum = parseFloat(numStr.replace(/,/g, "").replace(/[^\d.-]/g, ''));
+        if (isNaN(floatNum)) return "";
+        return floatNum.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    };
+
     const Alta = async (event) => {
         setCurrentId("");
-        setProducto({});
-        setModal(!openModal);
-        setAccion("Alta");
-        // const { token } = session.user;
-        let siguienteId = await getLastProduct();
+        const { token } = session.user;
+        reset({
+            id: "",
+            descripcion: "",
+            costo: 0,
+            frecuencia: "",
+            pro_recargo: 0,
+            aplicacion: "",
+            iva: 0,
+            cond_1: 0,
+            cam_precio: false,
+            ref: "",
+        });
+        let siguienteId = await getLastProduct(token);
         siguienteId = Number(siguienteId + 1);
         setCurrentId(siguienteId);
-    };
-    const handleModal = () => {
+        setProducto({ id: siguienteId });
         setModal(!openModal);
+        setAccion("Alta");
+        showModal(true);
+
+        document.getElementById("descripcion").focus();
     };
-    const Buscar = async () => {
-        setisLoading(true);
-        if (selected) {
-            const data = await filtroProductos(valueSelected, valorBusqueda);
-            setProductosFiltrados(data);
-        } else {
-            if (valorBusqueda === "") {
-                setProductosFiltrados(productos);
+    const Elimina_Comas = (data) => {
+        const convertir = (producto) => {
+            const productoConvertido = { ...producto };
+
+            for (const key in productoConvertido) {
+                if (
+                    typeof productoConvertido[key] === "string" &&
+                    productoConvertido[key].match(/^\d{1,3}(,\d{3})*(\.\d+)?$/)
+                ) {
+                    productoConvertido[key] = parseFloat(
+                        productoConvertido[key].replace(/,/g, "")
+                    );
+                }
             }
-            const infoFiltrada = productos.filter((producto) =>
-                Object.values(producto).some(
-                    (valor) =>
-                        typeof valor === "string" &&
-                        valor.toLowerCase().includes(valorBusqueda.toLowerCase())
-                )
-            );
-            setProductosFiltrados(infoFiltrada);
+
+            return productoConvertido;
+        };
+
+        if (Array.isArray(data)) {
+            return data.map(convertir);
+        } else {
+            return convertir(data);
         }
-        setisLoading(false);
     };
-    const handleSelectChange = (event) => {
-        setValueSelected(event.target.value);
-        setSelected(!selected);
+
+    const onSubmitModal = handleSubmit(async (data) => {
+        event.preventDefault;
+        console.log(data);
+        const dataj = JSON.stringify(data);
+        data.id = currentID;
+        let res = null;
+        if (accion === "Eliminar") {
+            showModal(false);
+            const confirmed = await confirmSwal(
+                "¿Desea Continuar?",
+                "Se eliminara el producto seleccionado",
+                "warning",
+                "Aceptar",
+                "Cancelar"
+            );
+            if (!confirmed) {
+                showModal(true);
+                return;
+            }
+        }
+        data = await Elimina_Comas(data);
+        console.log(data);
+        res = await guardarProductos(session.user.token, data, accion);
+        if (res.status) {
+            if (accion === "Alta") {
+                const nuevosProductos = { currentID, ...data };
+                setProductos([...productos, nuevosProductos]);
+                if (!bajas) {
+                    setProductosFiltrados([...productosFiltrados, nuevosProductos]);
+                }
+            }
+            if (accion === "Eliminar" || accion === "Editar") {
+                const index = productos.findIndex((p) => p.id === data.id);
+                if (index !== -1) {
+                    if (accion === "Eliminar") {
+                        const pFiltrados = productos.filter((p) => p.id !== data.id);
+                        setProductos(pFiltrados);
+                        setProductosFiltrados(pFiltrados);
+                    } else {
+                        if (bajas) {
+                            const pFiltrados = productos.filter((p) => p.id !== data.id);
+                            setProductos(pFiltrados);
+                            setProductosFiltrados(pFiltrados);
+                        } else {
+                            const pActualizadas = productos.map((p) =>
+                                p.id === currentID ? { ...p, ...data } : p
+                            );
+                            setProductos(pActualizadas);
+                            setProductosFiltrados(pActualizadas);
+                        }
+                    }
+                }
+            }
+            showSwal(res.alert_title, res.alert_text, res.alert_icon);
+            showModal(false);
+        }
+    });
+    const limpiarBusqueda = (evt) => {
+        evt.preventDefault;
+        setTB_Busqueda("");
+    };
+
+    const imprimirPDF = () => {
+        try {
+            const doc = new jsPDF();
+            const { name } = session.user;
+            doc.setFontSize(14);
+            doc.text("Sistema de Control de Escolar", 14, 16);
+            doc.setFontSize(10);
+            doc.text("Reporte Datos de Productos", 14, 22);
+            doc.setFontSize(10);
+            doc.text(`Usuario: ${name}`, 14, 28);
+            const date = new Date();
+            const dateStr = `${date.getFullYear()}/${(
+                "0" +
+                (date.getMonth() + 1)
+            ).slice(-2)}/${("0" + date.getDate()).slice(-2)}`;
+            const timeStr = `${("0" + date.getHours()).slice(-2)}:${(
+                "0" + date.getMinutes()
+            ).slice(-2)}:${("0" + date.getSeconds()).slice(-2)}`;
+            doc.text(`Fecha: ${dateStr}`, 150, 16);
+            doc.text(`Hora: ${timeStr}`, 150, 22);
+            doc.text(`Hoja: 1`, 150, 28);
+
+            const columns = [
+                { header: "Número", dataKey: "id" },
+                { header: "Descripción", dataKey: "descripcion" },
+                { header: "Costo", dataKey: "costo" },
+                { header: "Frecuencia", dataKey: "frecuencia" },
+                { header: "Recargo", dataKey: "pro_recargo" },
+                { header: "Aplicación", dataKey: "aplicacion" },
+                { header: "IVA", dataKey: "iva" },
+                { header: "Condición", dataKey: "cond_1" },
+                { header: "Cambio Precio", dataKey: "cam_precio" },
+                { header: "Referencia", dataKey: "ref" },
+            ];
+
+            doc.autoTable({
+                startY: 40,
+                head: [columns.map((col) => col.header)],
+                body: productosFiltrados.map((row) =>
+                    columns.map((col) => {
+                        if (col.dataKey === 'iva' || col.dataKey === 'costo' || col.dataKey === 'pro_recargo') {
+                            return `${row[col.dataKey].toFixed(2)}`;
+                        }
+                        if (col.dataKey === 'cam_precio') {
+                            return row[col.dataKey] ? 'Si' : 'No';
+                        }
+                        return row[col.dataKey] || '';
+                    })
+                ),
+                styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
+                headStyles: { fillColor: [230, 230, 230], textColor: [0, 0, 0] },
+                alternateRowStyles: { fillColor: [240, 240, 240] },
+                theme: "plain",
+                margin: { top: 40, left: 0 },
+                columnStyles: {
+                    0: { halign: "right", cellWidth: 20 },
+                    1: { halign: "left", cellWidth: 30 },
+                    2: { halign: "right", cellWidth: 15 },
+                    3: { halign: "left", cellWidth: 25 },
+                    4: { halign: "right", cellWidth: 20 },
+                    5: { halign: "left", cellWidth: 25 },
+                    6: { halign: "right", cellWidth: 12 },
+                    7: { halign: "right", cellWidth: 22 },
+                    8: { halign: "left", cellWidth: 18 },
+                    9: { halign: "left", cellWidth: 23 },
+                },
+            });
+
+            const pageCount = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setFontSize(10);
+                const pageText = `Página ${i} de ${pageCount}`;
+                const textWidth = doc.getTextWidth(pageText);
+                const pageHeight = doc.internal.pageSize.height;
+                const pageWidth = doc.internal.pageSize.width;
+                doc.text(pageText, pageWidth - textWidth - 10, pageHeight - 10);
+            }
+            doc.save("Productos.pdf");
+        } catch (error) {
+            console.error("Error al generar PDF:", error);
+        }
+    };
+
+    const imprimirEXCEL = () => {
+        const { name } = session.user;
+        const date = new Date();
+        const dateStr = `${date.getFullYear()}/${(
+            "0" +
+            (date.getMonth() + 1)
+        ).slice(-2)}/${("0" + date.getDate()).slice(-2)}`;
+        const timeStr = `${("0" + date.getHours()).slice(-2)}:${(
+            "0" + date.getMinutes()
+        ).slice(-2)}:${("0" + date.getSeconds()).slice(-2)}`;
+
+        const headerInfo = [
+            ["Sistema de Control de Escolar", "", "", "", `Fecha: ${dateStr}`],
+            ["Reporte Datos de Cajero", "", "", "", `Hora: ${timeStr}`],
+            [`Usuario: ${name}`, "", "", "", "Hoja: 1"],
+            [],
+        ];
+
+        const columns = [
+            { header: "Número", dataKey: "id" },
+            { header: "Descripción", dataKey: "descripcion" },
+            { header: "Costo", dataKey: "costo" },
+            { header: "Frecuencia", dataKey: "frecuencia" },
+            { header: "Recargo", dataKey: "pro_recargo" },
+            { header: "Aplicación", dataKey: "aplicacion" },
+            { header: "IVA", dataKey: "iva" },
+            { header: "Condición", dataKey: "cond_1" },
+            { header: "Cambio Precio", dataKey: "cam_precio" },
+            { header: "Referencia", dataKey: "ref" },
+        ];
+
+        const data = productosFiltrados.map((row) => {
+            let rowData = {};
+            columns.forEach((col) => {
+                if (col.dataKey === 'iva' || col.dataKey === 'costo' || col.dataKey === 'pro_recargo') {
+                    rowData[col.header] = row[col.dataKey].toFixed(2);
+                } else if (col.dataKey === 'cam_precio') {
+                    rowData[col.header] = row[col.dataKey] ? 'Si' : 'No';
+                } else {
+                    rowData[col.header] = row[col.dataKey] || "";
+                }
+            });
+            return rowData;
+        });
+
+        const worksheetData = headerInfo.concat(
+            XLSX.utils.sheet_to_json(XLSX.utils.json_to_sheet(data), { header: 1 })
+        );
+        const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Productos");
+        XLSX.writeFile(workbook, "Productos.xlsx");
+    };
+    const showModal = (show) => {
+        show
+            ? document.getElementById("my_modal_3").showModal()
+            : document.getElementById("my_modal_3").close();
+    };
+    const home = () => {
+        router.push("/");
     };
     const handleBusquedaChange = (event) => {
-        event.preventDefault();
-        setValorBusqueda(event.target.value);
-        // const valorBusqueda = event.target.value;
-        // if (valorBusqueda === "") {
-        //     setProductosFiltrados(productos);
-        // }
-        // const infoFiltrada = productos.filter((producto) =>
-        //     Object.values(producto).some(
-        //         (valor) =>
-        //             typeof valor === "string" &&
-        //             valor.toLowerCase().includes(valorBusqueda.toLowerCase())
-        //     )
-        // );
-        // setProductosFiltrados(infoFiltrada);
+        event.preventDefault;
+        setTB_Busqueda(event.target.value);
     };
-
+    if (status === "loading") {
+        return (
+            <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
+        );
+    }
     return (
-        <div className="flex w-full h-full bg-white min-h-screen">
-            <div className="p-4 w-full">
-                {openModal && (
-                    <ModalProductos
-                        accion={accion}
-                        handleModal={handleModal}
-                        id={currentID}
-                        guardarProductos={guardarProductos}
-                        producto={producto}
-                        productos={productos}
-                        productosFiltrados={productosFiltrados}
-                        setProductosFiltrados={setProductosFiltrados}
-                        setProductos={setProductos}
-                        bajas={bajas}
-                    />
-                )}
-
-                <div className='top-4 left-4'>
-                    <button onClick={goToHome} className="btn btn-xs rounded-full mr-2 bg-[#efefef] hover:bg-black"
-                        data-tooltip-id={`toolHome`}
-                        data-tooltip-content="Ir al inicio"
-                    >
-                        <svg className="w-4 h-4 text-gray-800 dark:text-black hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                            <path fillRule="evenodd" d="M11.293 3.293a1 1 0 0 1 1.414 0l6 6 2 2a1 1 0 0 1-1.414 1.414L19 12.414V19a2 2 0 0 1-2 2h-3a1 1 0 0 1-1-1v-3h-2v3a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2v-6.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2 6-6Z" clipRule="evenodd" />
-                        </svg>
-                    </button>
-                    <Tooltip id="toolHome"></Tooltip>
-                    <button onClick={goBack} className="btn btn-xs rounded-full mr-2 bg-[#efefef] hover:bg-black"
-                        data-tooltip-id={`toolBack`}
-                        data-tooltip-content="Regresar"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-neutral-900 hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </button>
-                    <Tooltip id="toolBack"></Tooltip>
+        <>
+            <ModalProductos
+                accion={accion}
+                onSubmit={onSubmitModal}
+                currentID={currentID}
+                errors={errors}
+                register={register}
+                setProducto={setProducto}
+                producto={producto}
+                formatNumber={formatNumber}
+            />
+            <div className="container  w-full  max-w-screen-xl bg-slate-100 shadow-xl rounded-xl px-3 ">
+                <div className="flex justify-start p-3 ">
+                    <h1 className="text-4xl font-xthin text-black md:px-12">
+                        Productos.
+                    </h1>
                 </div>
-
-
-                {/* container */}
-                <div className="p-6 bg-[#ffff] shadow-lg rounded-lg border border-gray-200 mt-4 lg:h-[calc(93%)] sm:h-[calc(93%)]">
-                    {/* catalogo */}
-                    <h1 className="text-3xl text-neutral-900 font-semibold mb-4 text-left">Productos</h1>
-
-                    <div className='flex pb-3'>
-                        <label className="relative w-full md:w-1/3">
-                            <input
-                                type="search"
-                                className="w-full p-3 pl-10 bg-[#efefef] text-neutral-900 rounded"
-                                placeholder="Buscar..."
-                                value={valorBusqueda}
-                                onChange={handleBusquedaChange}
-                            />
-
-                            <button
-                                className="absolute top-0 right-0 h-full px-5 mr-10 bg-transparent"
-                                type="button"
-                                onClick={Buscar}
-                                data-tooltip-id={`toolBuscar`}
-                                data-tooltip-content="Buscar"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 16 16"
-                                    fill="black"
-                                    className="h-4 w-4 opacity-70"
-                                >
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                                        clipRule="evenodd"
-                                    />
-                                </svg>
-                            </button>
-
-                            <Tooltip id="toolBuscar"></Tooltip>
-                        </label>
-                        <div className="relative ml-4">
-                            <select className="bg-[#efefef] text-neutral-900 rounded p-3"
-                                onChange={handleSelectChange}
-                            >
-                                <option value="">Filtro</option>
-                                <option value="id">ID</option>
-                                <option value="descripcion">Descripción</option>
-                                <option value="frecuencia">Frecuencia</option>
-                                <option value="pro_recargo">Recargos</option>
-                                <option value="aplicacion">Aplicacion</option>
-                                <option value="iva">IVA</option>
-                                <option value="cond_1">Condición</option>
-                                <option value="ref">Referencia</option>
-                            </select>
-                        </div>
-                        <div className="form-control bg-[#efefef] ml-4 w-32 rounded-xl flex items-center space-x-2">
-                            <label className="label cursor-pointer flex items-center gap-2 pt-3">
-                                <span className="label-text text-neutral-900 text-left">Bajas</span>
-                                <input type="checkbox" className="checkbox checkbox-bordered border-2 border-neutral-300"
-                                    onChange={(evt) => {
-                                        setBajas(evt.target.checked);
-                                    }}
-                                />
-                            </label>
-                        </div>
-                        <button className="btn btn-outline btn-success ml-4 rounded-xl flex items-center space-x-2" onClick={Alta}
-                            data-tooltip-id={`toolAlta`}
-                            data-tooltip-content="Alta">Alta</button>
-                        <Tooltip id="toolAlta"></Tooltip>
+                <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] ">
+                    <div className="col-span-1 flex flex-col ">
+                        <Acciones
+                            Buscar={Buscar}
+                            Alta={Alta}
+                            home={home}
+                            imprimirEXCEL={imprimirEXCEL}
+                            imprimirPDF={imprimirPDF}
+                        ></Acciones>
                     </div>
-
-                    <div className='h-[calc(80%)] w-[calc(100%)] overflow-auto'>
-                        <TablaProductos
-                            productosFiltrados={productosFiltrados}
-                            showInfo={showInfo}
-                            isLoading={isLoading}
-                        />
+                    <div className="col-span-7  ">
+                        <div className="flex flex-col h-[calc(100%)]">
+                            <Busqueda
+                                setBajas={setBajas}
+                                setFiltro={setFiltro}
+                                limpiarBusqueda={limpiarBusqueda}
+                                Buscar={Buscar}
+                                handleBusquedaChange={handleBusquedaChange}
+                                TB_Busqueda={TB_Busqueda}
+                                setTB_Busqueda={setTB_Busqueda}
+                            />
+                            <TablaProductos
+                                isLoading={isLoading}
+                                productosFiltrados={productosFiltrados}
+                                showModal={showModal}
+                                setProducto={setProducto}
+                                setAccion={setAccion}
+                                setCurrentId={setCurrentId}
+                                formatNumber={formatNumber}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
-
-
-
 }
-export default Productos;
+
+export default FormaPago;
