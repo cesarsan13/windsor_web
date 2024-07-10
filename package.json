@@ -9,13 +9,20 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2",
     "next": "14.2.4",
     "next-auth": "^4.24.7",
     "react": "^18",
+    "react-data-table-component": "^7.6.2",
     "react-dom": "^18",
-    "react-hook-form": "^7.52.1"
+    "react-hook-form": "^7.52.1",
+    "react-select": "^5.8.0",
+    "react-tooltip": "^5.27.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "daisyui": "^4.12.10",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
     "postcss": "^8",
