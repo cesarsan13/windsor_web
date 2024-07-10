@@ -19,13 +19,13 @@ function Busqueda({
     <div className="join w-full max-w-3/4 flex justify-start items-center h-1/8 p-1">
       <input
         id="TB_Busqueda"
-        className="input input-bordered input-md join-item w-full md:w-3/6 dark:bg-slate-100 "
+        className="input input-bordered input-md join-item w-full max-w-lg dark:bg-slate-100 "
         placeholder="Buscar..."
         onChange={(event) => handleBusquedaChange(event)}
         onKeyDown={(evt) => handleKeyDown(evt)}
       />
       <select
-        className="select select-bordered join-item dark:bg-slate-100"
+        className="select select-bordered join-item dark:bg-slate-100 w-20 md:w-32"
         onChange={(event) => handleFiltroChange(event)}
       >
         <option disabled defaultValue={""}>
@@ -39,7 +39,7 @@ function Busqueda({
       </select>
       <div className="tooltip " data-tip="Limpiar">
         <button
-          className="btn btn-square join-item  bg-blue-500 hover:bg-blue-700 text-white input-bordered"
+          className="btn join-item  bg-blue-500 hover:bg-blue-700 text-white input-bordered"
           onClick={limpiarBusqueda}
         >
           <i className="fa-solid fa-broom"></i>
