@@ -70,3 +70,21 @@ const isControlKey = (key) => {
     key === "ArrowDown"
   );
 };
+
+export const pone_ceros = (number, decimalPlaces = 2, useCommas = true) => {
+  // Asegúrate de que el número tenga el número especificado de decimales
+  let formattedNumber = parseFloat(number).toFixed(decimalPlaces);
+
+  // Divide el número en parte entera y parte decimal
+  let parts = formattedNumber.split(".");
+  let integerPart = parts[0];
+  let decimalPart = parts[1];
+
+  // Agrega comas como separadores de miles si se especifica
+  if (useCommas) {
+    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  // Junta la parte entera y la parte decimal
+  return integerPart + "." + decimalPart;
+};

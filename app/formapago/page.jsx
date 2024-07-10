@@ -14,6 +14,8 @@ import {
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/formapago/formapago";
+import { eventNames } from "process";
+import { NEXT_CACHE_REVALIDATE_TAG_TOKEN_HEADER } from "next/dist/lib/constants";
 function FormaPago() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -26,6 +28,7 @@ function FormaPago() {
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState("");
   const [filtro, setFiltro] = useState("");
+  const [TB_Busqueda, setTB_Busqueda] = useState("");
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -37,6 +40,9 @@ function FormaPago() {
       const data = await getFormasPago(token, bajas);
       setFormasPago(data);
       setFormaPagosFiltrados(data);
+      if (filtro !== "" && TB_Busqueda !== "") {
+        Buscar();
+      }
       setisLoading(false);
     };
     fetchData();
@@ -65,40 +71,41 @@ function FormaPago() {
       cue_banco: formaPago.cue_banco,
     });
   }, [formaPago, reset]);
-  const Buscar = (event) => {
-    event.preventDefault();
-    console.log(filtro);
-    const valorBusqueda = document.getElementById("TB_Busqueda").value;
-    if (valorBusqueda === "" || filtro === "") {
+  const Buscar = () => {
+    // alert(filtro);
+    console.log(TB_Busqueda, filtro);
+    if (TB_Busqueda === "" || filtro === "") {
       setFormaPagosFiltrados(formasPago);
       return;
     }
     const infoFiltrada = formasPago.filter((formapago) => {
       const valorCampo = formapago[filtro];
-      // alert(formapago[filtro]);
       if (typeof valorCampo === "number") {
-        return valorCampo.toString().includes(valorBusqueda);
+        return valorCampo.toString().includes(TB_Busqueda);
       }
       return valorCampo
         ?.toString()
         .toLowerCase()
-        .includes(valorBusqueda.toLowerCase());
+        .includes(TB_Busqueda.toLowerCase());
     });
     setFormaPagosFiltrados(infoFiltrada);
   };
-  const handleFiltroChange = (evt) => {
-    evt.preventDefault();
-    setFiltro(evt.target.value);
-  };
+
   const limpiarBusqueda = () => {
     setFiltro("");
-    document.getElementById("TB_Busqueda").value = "";
+    setTB_Busqueda("");
   };
 
   const Alta = async (event) => {
     setCurrentId("");
     const { token } = session.user;
-    reset();
+    reset({
+      id: "",
+      descripcion: "",
+      comision: "",
+      aplicacion: "",
+      cue_banco: "",
+    });
     let siguienteId = await siguiente(token);
     siguienteId = Number(siguienteId) + 1;
     setCurrentId(siguienteId);
@@ -109,9 +116,9 @@ function FormaPago() {
 
     document.getElementById("descripcion").focus();
   };
-  const handleModal = () => {
-    setModal(!openModal);
-  };
+  // const handleModal = () => {
+  //   setModal(!openModal);
+  // };
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
     const dataj = JSON.stringify(data);
@@ -176,36 +183,29 @@ function FormaPago() {
   const home = () => {
     router.push("/");
   };
+  const handleBusquedaChange = (event) => {
+    event.preventDefault;
+    setTB_Busqueda(event.target.value);
+  };
   if (status === "loading") {
-    return <div>Cargando</div>;
+    return (
+      <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
+    );
   }
   return (
     <>
-      {/* {openModal && ( */}
       <ModalFormaPago
-        currentID={currentID}
         accion={accion}
-        handleModal={handleModal}
-        numero={currentID}
-        // guardaCajero={guardaCajero}
-        session={session}
-        formaPago={formaPago}
-        formasPago={formasPago}
-        formaPagosFiltrados={formaPagosFiltrados}
-        setFormaPagosFiltrados={setFormaPagosFiltrados}
-        setFormasPago={setFormasPago}
-        bajas={bajas}
         onSubmit={onSubmitModal}
+        currentID={currentID}
         errors={errors}
         register={register}
-        reset={reset}
+        setFormaPago={setFormaPago}
+        formaPago={formaPago}
       />
-      {/* )} */}
-      <div className="container h-[calc(100%-5%)] m-5 w-full max-w-screen-xl bg-slate-100 shadow-xl rounded-xl ">
-        {/* {openModal && ( */}
-        {/* )} */}
-        <div className="flex justify-start p-3 ">
-          <h1 className="text-4xl font-thin text-black">Formas de Pagos.</h1>
+      <div className="container  w-full  max-w-screen-xl bg-slate-100 shadow-xl rounded-xl px-6 ">
+        <div className="flex justify-start p-3 ml-12">
+          <h1 className="text-4xl font-xthin text-black">Formas de Pagos.</h1>
         </div>
         <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] ">
           <div className="col-span-1 flex flex-col ">
@@ -216,9 +216,9 @@ function FormaPago() {
               <Busqueda
                 setBajas={setBajas}
                 setFiltro={setFiltro}
-                handleFiltroChange={handleFiltroChange}
                 limpiarBusqueda={limpiarBusqueda}
                 Buscar={Buscar}
+                handleBusquedaChange={handleBusquedaChange}
               />
               <TablaFormaPago
                 isLoading={isLoading}

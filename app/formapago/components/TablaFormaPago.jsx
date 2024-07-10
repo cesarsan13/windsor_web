@@ -1,3 +1,4 @@
+"use client";
 import Loading from "@/app/components/loading";
 import NoData from "@/app/components/noData";
 import React from "react";
@@ -10,7 +11,6 @@ function TablaFormaPago({
   setCurrentId,
 }) {
   const tableAction = (evt, formaPago, accion) => {
-    console.log("filtrados", evt);
     setFormaPago(formaPago);
     setAccion(accion);
     setCurrentId(formaPago.id);
@@ -18,9 +18,9 @@ function TablaFormaPago({
   };
 
   return !isLoading ? (
-    <div className="overflow-x-auto mt-3  h-5/8 text-black bg-white m-2 ">
+    <div className="overflow-x-auto mt-3  h-7/8 text-black bg-white m-2 w-full  lg:w-6/8 ">
       {formaPagosFiltrados.length > 0 ? (
-        <table className="table table-xs table-zebra table-pin-rows table-pin-cols">
+        <table className="table table-xs table-zebra table-pin-rows table-pin-cols max-h-[calc(50%)]">
           <thead className=" relative z-[1] md:static">
             <tr>
               <th></th>
@@ -34,14 +34,22 @@ function TablaFormaPago({
           <tbody>
             {formaPagosFiltrados.map((item) => (
               <tr key={item.id} className="hover:cursor-pointer">
-                <th>{item.id}</th>
-                <td>{item.descripcion}</td>
-                <td
+                <th
                   className={
                     typeof item.comision === "number"
                       ? "text-right"
                       : "text-left"
                   }
+                >
+                  {item.id}
+                </th>
+                <td>{item.descripcion}</td>
+                <td
+                  className={`${
+                    typeof item.comision === "number"
+                      ? "text-right"
+                      : "text-left"
+                  } w-11`}
                 >
                   {item.comision}
                 </td>
@@ -50,22 +58,22 @@ function TablaFormaPago({
                 <th>
                   <div className="flex flex-row space-x-3">
                     <div
-                      className="kbd tooltip tooltip-left hover:cursor-pointer"
-                      data-tip="Ver"
-                      onClick={(evt) => tableAction(evt, item, "Ver")}
+                      className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                      data-tip={`Ver ${item.id}`}
+                      onClick={(evt) => tableAction(evt, item, `Ver`)}
                     >
                       <i className="fa-solid fa-eye"></i>
                     </div>
                     <div
-                      className="kbd tooltip tooltip-left hover:cursor-pointer"
-                      data-tip="Editar"
-                      onClick={(evt) => tableAction(evt, item, "Editar")}
+                      className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                      data-tip={`Editar ${item.id}`}
+                      onClick={(evt) => tableAction(evt, item, `Editar`)}
                     >
                       <i className="fa-solid fa-file"></i>
                     </div>
                     <div
-                      className="kbd tooltip tooltip-left hover:cursor-pointer"
-                      data-tip="Eliminar"
+                      className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                      data-tip={`Eliminar  ${item.id}`}
                       onClick={(evt) => tableAction(evt, item, "Eliminar")}
                     >
                       <i className="fa-solid fa-trash"></i>

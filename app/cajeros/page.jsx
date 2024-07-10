@@ -199,7 +199,9 @@ function Cajeros() {
       setCajerosFiltrados(infoFiltrada);
     }
   };
-
+  const handleModal = () => {
+    setModal(!openModal);
+  };
   const buscarCajeros = async () => {
     try {
       setisLoading(true);

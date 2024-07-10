@@ -1,4 +1,4 @@
-import { soloEnteros } from "@/app/utils/globalfn";
+import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
 import React from "react";
 
 function Inputs({
@@ -6,7 +6,7 @@ function Inputs({
   name,
   type,
   requerido,
-  isNumero,
+  dataType,
   className,
   register,
   message,
@@ -15,6 +15,7 @@ function Inputs({
   maxLenght,
   defaultValue,
   isDisabled,
+  handleBlur,
 }) {
   return (
     <div className="flex flex-col">
@@ -29,10 +30,15 @@ function Inputs({
           id={name}
           type={type}
           className={className}
-          {...(isNumero && { onKeyDown: soloEnteros })}
+          {...(dataType === "int" && { onKeyDown: soloEnteros })}
+          {...(dataType === "float" && { onKeyDown: soloDecimales })}
           {...register(name, {
             ...(requerido && { required: message }),
           })}
+          {...(dataType === "int" ||
+            (dataType === "float" && {
+              onBlur: (event) => handleBlur(event, dataType),
+            }))}
           disabled={isDisabled}
         />
       </label>

@@ -1,10 +1,18 @@
-import { soloEnteros, soloDecimales } from "@/app/utils/globalfn";
+import { soloEnteros, soloDecimales, pone_ceros } from "@/app/utils/globalfn";
 import React from "react";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import { useState, useEffect } from "react";
 import Inputs from "@/app/formaPago/components/Inputs";
 
-function ModalFormaPago({ accion, onSubmit, currentID, register, errors }) {
+function ModalFormaPago({
+  accion,
+  onSubmit,
+  currentID,
+  register,
+  errors,
+  setFormaPago,
+  formaPago,
+}) {
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
@@ -17,7 +25,6 @@ function ModalFormaPago({ accion, onSubmit, currentID, register, errors }) {
     if (accion === "Alta" || accion === "Editar") {
       // alert(accion);
       setIsDisabled(false);
-      document.getElementById("id").setAttribute("disabled", true);
     }
     setTitulo(
       accion === "Alta"
@@ -29,6 +36,18 @@ function ModalFormaPago({ accion, onSubmit, currentID, register, errors }) {
         : `Ver Forma de Pago: ${currentID}`
     );
   }, [accion]);
+  const handleBlur = (evt, datatype) => {
+    if (evt.target.value === "") return;
+    datatype === "int"
+      ? setFormaPago((formaPago) => ({
+          ...formaPago,
+          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+        }))
+      : setFormaPago((formaPago) => ({
+          ...formaPago,
+          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+        }));
+  };
   return (
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box">
@@ -44,20 +63,21 @@ function ModalFormaPago({ accion, onSubmit, currentID, register, errors }) {
           <fieldset id="fs_formapago">
             <div className="container flex flex-col space-y-5">
               <Inputs
+                dataType={"int"}
                 name={"id"}
                 tamañolabel={"w-2/6"}
                 className={"w-3/6 text-right"}
                 Titulo={"Numero: "}
                 type={"text"}
                 requerido={true}
-                isNumero={true}
                 errors={errors}
                 register={register}
                 message={"idRequerido"}
-                isDisabled={isDisabled}
+                isDisabled={true}
                 //defaultValue={formaPago.id}
               />
               <Inputs
+                dataType={"string"}
                 name={"descripcion"}
                 tamañolabel={""}
                 className={"grow"}
@@ -74,21 +94,23 @@ function ModalFormaPago({ accion, onSubmit, currentID, register, errors }) {
               />
 
               <Inputs
+                dataType={"float"}
                 name={"comision"}
                 tamañolabel={"w-3/6"}
                 className={" w-2/6 grow text-right"}
                 Titulo={"Comision:"}
                 type={"text"}
                 requerido={true}
-                isNumero={true}
                 errors={errors}
                 register={register}
                 message={"comision requerid"}
                 maxLength={50}
                 isDisabled={isDisabled}
+                handleBlur={handleBlur}
                 //defaultValue={formaPago.comision}
               />
               <Inputs
+                dataType={"string"}
                 name={"aplicacion"}
                 tamañolabel={""}
                 className={"grow"}
@@ -104,6 +126,7 @@ function ModalFormaPago({ accion, onSubmit, currentID, register, errors }) {
                 //defaultValue={formaPago.aplicacion}
               />
               <Inputs
+                dataType={"string"}
                 name={"cue_banco"}
                 tamañolabel={""}
                 className={"grow"}
@@ -129,11 +152,13 @@ function ModalFormaPago({ accion, onSubmit, currentID, register, errors }) {
               }`}
               data-tip="Guardar"
             >
-              <kbd className="kbd">
-                <button type="submit" id="btn_guardar">
-                  <i className="fa-regular fa-floppy-disk mx-2"></i> Guardar
-                </button>
-              </kbd>
+              <button
+                type="submit"
+                id="btn_guardar"
+                className="btn  bg-blue-500 hover:bg-blue-700 text-white"
+              >
+                <i className="fa-regular fa-floppy-disk mx-2"></i> Guardar
+              </button>
             </div>
           </div>
         </form>

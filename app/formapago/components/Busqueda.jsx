@@ -1,23 +1,34 @@
 import React from "react";
 
-function Busqueda({ setBajas, handleFiltroChange, limpiarBusqueda, Buscar }) {
+function Busqueda({
+  setBajas,
+  setFiltro,
+  limpiarBusqueda,
+  Buscar,
+  handleBusquedaChange,
+}) {
+  const handleFiltroChange = (event) => {
+    const selectedValue = event.target.value;
+    setFiltro(selectedValue);
+  };
   const handleKeyDown = (evt) => {
     if (evt.key !== "Enter") return;
-    Buscar(evt);
+    Buscar();
   };
   return (
-    <div className="join w-full flex justify-start h-1/8 p-1">
+    <div className="join w-full max-w-3/4 flex justify-start items-center h-1/8 p-1">
       <input
         id="TB_Busqueda"
         className="input input-bordered input-md join-item w-full md:w-3/6 dark:bg-slate-100 "
         placeholder="Buscar..."
+        onChange={(event) => handleBusquedaChange(event)}
         onKeyDown={(evt) => handleKeyDown(evt)}
       />
       <select
         className="select select-bordered join-item dark:bg-slate-100"
-        onChange={handleFiltroChange}
+        onChange={(event) => handleFiltroChange(event)}
       >
-        <option disabled selected>
+        <option disabled defaultValue={""}>
           Filtros
         </option>
         <option value={"id"}>Numero</option>
@@ -28,7 +39,7 @@ function Busqueda({ setBajas, handleFiltroChange, limpiarBusqueda, Buscar }) {
       </select>
       <div className="tooltip " data-tip="Limpiar">
         <button
-          className="btn btn-square join-item bg-gray-300 hover:bg-gray-500 input-bordered"
+          className="btn btn-square join-item  bg-blue-500 hover:bg-blue-700 text-white input-bordered"
           onClick={limpiarBusqueda}
         >
           <i className="fa-solid fa-broom"></i>
@@ -46,6 +57,19 @@ function Busqueda({ setBajas, handleFiltroChange, limpiarBusqueda, Buscar }) {
           <span className="label-text font-bold md:block hidden ">Bajas</span>
         </label>
       </div>
+      {/* <div className="lg:flex hidden justify-end w-full">
+        <div className="stats stats-vertical lg:stats-horizontal shadow  ">
+          <div className="stat">
+            <div className="stat-title ">Activos</div>
+            <div className="stat-value text-2xl text-green-500">31K</div>
+          </div>
+
+          <div className="stat">
+            <div className="stat-title">Bajas</div>
+            <div className="stat-value text-2xl text-red-500">4,200</div>
+          </div>
+        </div>
+      </div> */}
     </div>
   );
 }

@@ -23,17 +23,15 @@ export default function RootLayout({ children }) {
       <body className="">
         <SessionAuthProvider>
           <div className="bg-white dark:bg-slate-900 flex flex-col h-[calc(100vh)]">
-            <div className="drawer">
+            <div className="drawer h-full">
               <input
                 id="my-drawer-3"
                 type="checkbox"
                 className="drawer-toggle"
               />
-              <div className="drawer-content flex flex-col">
-                <div className="h-[calc(10%)]">
-                  <NavBar></NavBar>
-                </div>
-                <div className="flex justify-center  h-[calc(90%)] ">
+              <div className="drawer-content flex flex-col ">
+                <NavBar></NavBar>
+                <div className="flex justify-center  h-[calc(80%)] md:h-[calc(90%)] p-3 m-3 ">
                   {children}
                 </div>
               </div>
