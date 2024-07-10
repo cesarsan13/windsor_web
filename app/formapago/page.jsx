@@ -203,9 +203,11 @@ function FormaPago() {
         setFormaPago={setFormaPago}
         formaPago={formaPago}
       />
-      <div className="container  w-full  max-w-screen-xl bg-slate-100 shadow-xl rounded-xl px-6 ">
-        <div className="flex justify-start p-3 ml-12">
-          <h1 className="text-4xl font-xthin text-black">Formas de Pagos.</h1>
+      <div className="container  w-full  max-w-screen-xl bg-slate-100 shadow-xl rounded-xl px-3 ">
+        <div className="flex justify-start p-3 ">
+          <h1 className="text-4xl font-xthin text-black md:px-12">
+            Formas de Pagos.
+          </h1>
         </div>
         <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] ">
           <div className="col-span-1 flex flex-col ">

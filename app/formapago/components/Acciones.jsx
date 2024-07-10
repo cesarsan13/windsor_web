@@ -7,7 +7,7 @@ function Acciones({ Buscar, Alta, home }) {
         data-tip="Buscar"
         onClick={(evt) => Buscar(evt)}
       >
-        <button className="btn btn-square  bg-blue-500 hover:bg-blue-700 text-white">
+        <button className=" w-10 h-10  bg-blue-500 hover:bg-blue-700 text-white rounded-lg btn">
           <i className="fa-solid fa-magnifying-glass"></i>
         </button>
       </div>
@@ -16,7 +16,7 @@ function Acciones({ Buscar, Alta, home }) {
         data-tip="Añadir"
         onClick={Alta}
       >
-        <button className="btn btn-square  bg-blue-500 hover:bg-blue-700 text-white">
+        <button className=" w-10 h-10   bg-blue-500 hover:bg-blue-700 text-white rounded-lg btn">
           <i className="fa-regular fa-square-plus"></i>
         </button>
       </div>
@@ -25,7 +25,7 @@ function Acciones({ Buscar, Alta, home }) {
         data-tip="Regresar"
         onClick={home}
       >
-        <button className="btn btn-square bg-blue-500 hover:bg-blue-700 text-white">
+        <button className=" w-10 h-10  bg-blue-500 hover:bg-blue-700 text-white rounded-lg btn">
           <i className="fas fa-home"></i>
         </button>
       </div>
