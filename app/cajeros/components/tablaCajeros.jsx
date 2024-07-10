@@ -1,102 +1,97 @@
-import React from "react";
-import { Tooltip } from "react-tooltip";
-import DataTable from "react-data-table-component";
+"use client";
 import Loading from "@/app/components/loading";
 import NoData from "@/app/components/noData";
+import React from "react";
 
-function TablaCajeros({ cajerosFiltrados, isLoading, showInfo }) {
-    const columns = [
-        {
-            name: "Acciones",
-            cell: (row) => (
-                <div className="flex space-x-1">
-                    <button
-                        data-tooltip-place="right"
-                        data-tooltip-id={`toolEdit${row.numero}`}
-                        data-tooltip-content="Editar"
-                        onClick={() => showInfo("Editar", row.numero)}
-                        className="fas fa-edit py-1 px-2 text-sm font-medium text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
-                    ></button>
-                    <Tooltip id={`toolEdit${row.numero}`} />
-                    <button
-                        data-tooltip-place="left"
-                        data-tooltip-id={`toolDelete${row.numero}`}
-                        data-tooltip-content="Eliminar"
-                        onClick={() => showInfo("Eliminar", row.numero)}
-                        className="fas fa-trash py-1 px-2 text-sm font-medium text-white bg-red-500 rounded hover:bg-red-600 focus:outline-none"
-                    ></button>
-                    <Tooltip id={`toolDelete${row.numero}`} />
-                </div>
-            ),
-            minWidth: '10px', 
-            maxWidth: '100px', 
+function TablaCajeros({
+  cajerosFiltrados,
+  isLoading,
+  showModal,
+  setCajero,
+  setAccion,
+  setCurrentId,
+}) {
+  const tableAction = (evt, cajero, accion) => {
+    setCajero(cajero);
+    setAccion(accion);
+    setCurrentId(cajero.numero);
+    showModal(true);
+  };
 
-        },
-        {
-            name: "Numero",
-            selector: (cajerosFiltrados) => cajerosFiltrados.numero,
-            sortable: true,
-            minWidth: '60px', 
-            maxWidth: '100px', 
-        },
-        {
-            name: "Nombre",
-            selector: (cajerosFiltrados) => cajerosFiltrados.nombre,
-            sortable: true,
-            minWidth: '100px',
-            maxWidth: '170px',
-        },
-        {
-            name: "Clave_Cajero",
-            selector: (cajerosFiltrados) => cajerosFiltrados.clave_cajero,
-            sortable: true,
-            minWidth: '100px',
-            maxWidth: '150px',
-        },
-    ];
-
-    const customStyles = {
-        rows: {
-            style: {
-                minHeight: '32px',
-                padding: '2px 0', 
-            },
-        },
-        headCells: {
-            style: {
-                paddingLeft: '8px',
-                paddingRight: '8px',
-            },
-        },
-        cells: {
-            style: {
-                paddingLeft: '8px',
-                paddingRight: '8px',
-            },
-        },
-    };
-
-    const paginationComponentOptions = {
-        rowsPerPageText: "Filas por página",
-        rangeSeparatorText: "de",
-        selectAllRowsItem: true,
-        selectAllRowsItemText: "Todos",
-    };
-
-    return (
-        <DataTable
-            columns={columns}
-            data={cajerosFiltrados}
-            pagination
-            paginationPerPage={5}
-            paginationComponentOptions={paginationComponentOptions}
-            fixedHeader
-            progressPending={isLoading}
-            progressComponent={<Loading />}
-            noDataComponent={<NoData />}
-            customStyles={customStyles}
-        />
-    );
+  return !isLoading ? (
+    <>
+      <div className="tabla-cajeros-container overflow-x-auto mt-3 bg-white m-3 w-full lg:w-5/8">
+        {cajerosFiltrados.length > 0 ? (
+          <table className="table table-xs table-zebra table-compact w-full">
+            <thead className="relative z-[1] md:static">
+              <tr>
+                <th></th>
+                <td>Nombre</td>
+                <td>Clave Cajero</td>
+                <td>Telefono</td>
+                <td>Correo</td>
+                <th className="w-[calc(20%)]">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cajerosFiltrados.map((item) => (
+                <tr key={item.numero} className="hover:cursor-pointer">
+                  <th className="text-left">
+                    {item.numero}
+                  </th>
+                  <td className="text-left w-50">
+                    {item.nombre}
+                  </td>
+                  <td>{item.clave_cajero}</td>
+                  <td>{item.telefono}</td>
+                  <td>{item.mail}</td>
+                  <th>
+                    <div className="flex flex-row space-x-1">
+                      <div
+                        className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                        data-tip={`Ver ${item.numero}`}
+                        onClick={(evt) => tableAction(evt, item, `Ver`)}
+                      >
+                        <i className="fa-solid fa-eye"></i>
+                      </div>
+                      <div
+                        className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                        data-tip={`Editar ${item.numero}`}
+                        onClick={(evt) => tableAction(evt, item, `Editar`)}
+                      >
+                        <i className="fa-solid fa-file"></i>
+                      </div>
+                      <div
+                        className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                        data-tip={`Eliminar ${item.numero}`}
+                        onClick={(evt) => tableAction(evt, item, "Eliminar")}
+                      >
+                        <i className="fa-solid fa-trash"></i>
+                      </div>
+                    </div>
+                  </th>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th></th>
+                <td>Nombre</td>
+                <td>Clave Cajero</td>
+                <td>Telefono</td>
+                <td>Correo</td>
+                <th>Acciones</th>
+              </tr>
+            </tfoot>
+          </table>
+        ) : (
+          <NoData />
+        )}
+      </div>
+    </>
+  ) : (
+    <Loading />
+  );
 }
 
 export default TablaCajeros;
