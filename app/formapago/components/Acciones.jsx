@@ -1,34 +1,21 @@
 import React from "react";
+import Tooltip from "@/app/components/tooltip";
+import Button from "@/app/components/button";
 function Acciones({ Buscar, Alta, home }) {
   return (
     <div className="join join-vertical ">
-      <div
-        className="tooltip tooltip-top my-1 mb-5  hover:cursor-pointer "
-        data-tip="Buscar"
-        onClick={(evt) => Buscar(evt)}
-      >
-        <button className=" w-10 h-10  bg-blue-500 hover:bg-blue-700 text-white rounded-lg btn">
-          <i className="fa-solid fa-magnifying-glass"></i>
-        </button>
-      </div>
-      <div
-        className="tooltip tooltip-top my-5 hover:cursor-pointer "
-        data-tip="Añadir"
-        onClick={Alta}
-      >
-        <button className=" w-10 h-10   bg-blue-500 hover:bg-blue-700 text-white rounded-lg btn">
-          <i className="fa-regular fa-square-plus"></i>
-        </button>
-      </div>
-      <div
-        className="tooltip tooltip-top my-5 hover:cursor-pointer "
-        data-tip="Regresar"
-        onClick={home}
-      >
-        <button className=" w-10 h-10  bg-blue-500 hover:bg-blue-700 text-white rounded-lg btn">
-          <i className="fas fa-home"></i>
-        </button>
-      </div>
+      <Tooltip Titulo={"Buscar"} posicion={"tooltip-top"}>
+        <Button
+          icono={"fa-solid fa-magnifying-glass"}
+          onClick={Buscar}
+        ></Button>
+      </Tooltip>
+      <Tooltip Titulo={"Alta"} posicion={"tooltip-top"}>
+        <Button icono={"fa-regular fa-square-plus"} onClick={Alta}></Button>
+      </Tooltip>
+      <Tooltip Titulo={"Inicio"} posicion={"tooltip-top"}>
+        <Button icono={"fas fa-home"} onClick={home}></Button>
+      </Tooltip>
     </div>
   );
 }

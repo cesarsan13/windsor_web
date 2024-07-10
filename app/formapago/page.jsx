@@ -93,7 +93,6 @@ function FormaPago() {
 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
-    // document.getElementById("TB_Busqueda").value = "";
     setTB_Busqueda("");
   };
 
