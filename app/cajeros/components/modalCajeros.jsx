@@ -69,7 +69,7 @@ function ModalCajeros({
                 requerido={true}
                 errors={errors}
                 register={register}
-                message={"idRequerido"}
+                message={"numero requerido"}
                 isDisabled={true}
                 //defaultValue={formaPago.id}
               />
@@ -84,7 +84,7 @@ function ModalCajeros({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"nombre requerid"}
+                message={"nombre requerido"}
                 maxLength={50}
                 isDisabled={isDisabled}
                 //defaultValue={formaPago.descripcion}
@@ -100,7 +100,7 @@ function ModalCajeros({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"direccion requerid"}
+                message={"direccion requerida"}
                 maxLength={50}
                 isDisabled={isDisabled}
                 //defaultValue={formaPago.descripcion}
@@ -116,7 +116,7 @@ function ModalCajeros({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"colonia requerid"}
+                message={"colonia requerida"}
                 maxLength={50}
                 isDisabled={isDisabled}
                 //defaultValue={formaPago.descripcion}
@@ -132,7 +132,7 @@ function ModalCajeros({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"estado requerid"}
+                message={"estado requerido"}
                 maxLength={50}
                 isDisabled={isDisabled}
                 //defaultValue={formaPago.descripcion}
@@ -148,7 +148,7 @@ function ModalCajeros({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"telefono requerid"}
+                message={"telefono requerido"}
                 maxLength={50}
                 isDisabled={isDisabled}
                 //defaultValue={formaPago.descripcion}
@@ -164,7 +164,7 @@ function ModalCajeros({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"fax requerid"}
+                message={"fax requerido"}
                 maxLength={50}
                 isDisabled={isDisabled}
                 //defaultValue={formaPago.descripcion}
@@ -180,7 +180,7 @@ function ModalCajeros({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"correo requerid"}
+                message={"correo requerido"}
                 maxLength={50}
                 isDisabled={isDisabled}
                 //defaultValue={formaPago.descripcion}
@@ -196,7 +196,7 @@ function ModalCajeros({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"Clave requerid"}
+                message={"Clave requerida"}
                 maxLength={50}
                 isDisabled={isDisabled}
                 //defaultValue={formaPago.descripcion}
