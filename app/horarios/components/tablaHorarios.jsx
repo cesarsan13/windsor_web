@@ -36,7 +36,7 @@ function TablaHorarios({
                     </thead>
                     <tbody>
                         {HorariosFiltrados.map((item) => (
-                            <tr>
+                            <tr key={item.numero}>
                                 <th className={
                                     typeof item.numero === "number"
                                         ? "text-right"
