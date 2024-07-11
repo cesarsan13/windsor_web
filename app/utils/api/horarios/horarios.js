@@ -1,26 +1,26 @@
-export const getHorarios = async (baja) => {
+export const getHorarios = async (token,baja) => {
     let url = ""
     baja ? (url=`${process.env.DOMAIN_API}api/horarios/baja`)
     : (url=`${process.env.DOMAIN_API}api/horarios`)
     const res = await fetch(url,{
-        headers:{
-            "Content-Type": "application/json"
-        }
+        headers: {
+            Authorization: `Bearer ${token}`,
+          },
     })
     const resJson = await res.json();
     return resJson.data;
 }
-export const getUltimoHorario = async () =>{
+export const getUltimoHorario = async (token) =>{
     let url = `${process.env.DOMAIN_API}api/horarios/ultimo`
     const res = await fetch(url,{
-        headers:{
-            "Content-Type": "application/json"
-        }
+        headers: {
+            Authorization: `Bearer ${token}`,
+          },
     })
     const resJson = await res.json();
     return resJson.data;
 }
-export const guardarHorario = async (data,accion) => {
+export const guardarHorario = async (token,data,accion) => {
     let url = ""
     let met = ""
     if (accion==='Alta'){
@@ -35,9 +35,8 @@ export const guardarHorario = async (data,accion) => {
             data.baja=""    
         }
         url = `${process.env.DOMAIN_API}api/horarios/update`
-        met = "post"
-    }
-    console.log(url)
+        met = "put"
+    }    
     const res = await fetch(`${url}`,{
         method:met,
         body: JSON.stringify({
@@ -52,8 +51,9 @@ export const guardarHorario = async (data,accion) => {
             baja:data.baja
         }),
         headers: new Headers({
+            Authorization: "Bearer " + token,
             "Content-Type": "application/json",
-        })
+          })
     })
     const resJson = await res.json();
     return resJson;
