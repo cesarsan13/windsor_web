@@ -60,19 +60,6 @@ function Busqueda({
           <span className="label-text font-bold md:block hidden ">Bajas</span>
         </label>
       </div>
-      {/* <div className="lg:flex hidden justify-end w-full">
-        <div className="stats stats-vertical lg:stats-horizontal shadow  ">
-          <div className="stat">
-            <div className="stat-title ">Activos</div>
-            <div className="stat-value text-2xl text-green-500">31K</div>
-          </div>
-
-          <div className="stat">
-            <div className="stat-title">Bajas</div>
-            <div className="stat-value text-2xl text-red-500">4,200</div>
-          </div>
-        </div>
-      </div> */}
     </div>
   );
 }

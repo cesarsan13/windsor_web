@@ -23,7 +23,7 @@ function TablaFormaPago({
         <table className="table table-xs table-zebra table-pin-rows table-pin-cols max-h-[calc(50%)]">
           <thead className=" relative z-[1] md:static">
             <tr>
-              <th></th>
+              <th>id</th>
               <td>Descripcion</td>
               <td>Comision</td>
               <td>Aplicacion</td>
