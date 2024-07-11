@@ -1,7 +1,13 @@
+"use client"
 import React from "react";
 import Link from "next/link";
 import Menu from "@/app/components/Menu";
+import { useSession } from "next-auth/react";
 function NavBar() {
+  const { data: session, status } = useSession();
+  if (!session) {
+    return <></>;
+  }
   return (
     <div className="navbar sticky top-0 h-full max-h-7 bg-slate-100 z-[2]">
       <div className="navbar-start">
