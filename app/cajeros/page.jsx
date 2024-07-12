@@ -2,7 +2,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
-import ModalCajero from "@/app/cajeros/components/modalCajeros";
+import ModalCajeros from "@/app/cajeros/components/modalCajeros";
 import TablaCajeros from "@/app/cajeros/components/tablaCajeros";
 import Busqueda from "@/app/cajeros/components/Busqueda";
 import Acciones from "@/app/cajeros/components/Acciones";
@@ -10,16 +10,15 @@ import { useForm } from "react-hook-form";
 import {
   getCajeros,
   guardaCajero,
+  Imprimir,
+  ImprimirExcel
 } from "@/app/utils/api/cajeros/cajeros";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/cajeros/cajeros";
 import { eventNames } from "process";
 import { NEXT_CACHE_REVALIDATE_TAG_TOKEN_HEADER } from "next/dist/lib/constants";
-import jsPDF from "jspdf";
 import "jspdf-autotable";
-import * as XLSX from "xlsx";
-import ModalCajeros from "@/app/cajeros/components/modalCajeros";
 
 function Cajeros() {
   const router = useRouter();
@@ -131,120 +130,6 @@ function Cajeros() {
     document.getElementById("nombre").focus();
   };
 
-  const imprimir = () => {
-    const doc = new jsPDF();
-    const { name } = session.user;
-
-    doc.setFontSize(14);
-    doc.text("Sistema de Control de Escolar", 14, 16);
-
-    doc.setFontSize(10);
-    doc.text("Reporte Datos de Cajero", 14, 22);
-
-    doc.setFontSize(10);
-    doc.text(`Usuario: ${name}`, 14, 28);
-
-    const date = new Date();
-    const dateStr = `${date.getFullYear()}/${(
-      "0" +
-      (date.getMonth() + 1)
-    ).slice(-2)}/${("0" + date.getDate()).slice(-2)}`;
-    const timeStr = `${("0" + date.getHours()).slice(-2)}:${(
-      "0" + date.getMinutes()
-    ).slice(-2)}:${("0" + date.getSeconds()).slice(-2)}`;
-    doc.text(`Fecha: ${dateStr}`, 150, 16);
-    doc.text(`Hora: ${timeStr}`, 150, 22);
-    doc.text(`Hoja: 1`, 150, 28);
-
-    const columns = [
-      { header: "Número", dataKey: "numero" },
-      { header: "Nombre", dataKey: "nombre" },
-      //{ header: "Clave_Cajero", dataKey: "clave_cajero" },
-      { header: "Dirección", dataKey: "direccion" },
-      { header: "Colonia", dataKey: "colonia" },
-      //{ header: "Fax", dataKey: "fax" },
-      { header: "Teléfono", dataKey: "telefono" },
-      { header: "Mail", dataKey: "mail" },
-      //{ header: "Estado", dataKey: "estado" },
-    ];
-
-    // Agregar tabla
-    doc.autoTable({
-      startY: 40,
-      head: [columns.map((col) => col.header)],
-      body: cajerosFiltrados.map((row) =>
-        columns.map((col) => row[col.dataKey] || "")
-      ),
-      styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
-      headStyles: { fillColor: [230, 230, 230], textColor: [0, 0, 0] },
-      alternateRowStyles: { fillColor: [240, 240, 240] },
-      theme: "plain",
-      margin: { top: 40 },
-      columnStyles: {
-        0: { halign: "right" },
-      },
-    });
-
-    // Agregar número de página al pie de página
-    const pageCount = doc.internal.getNumberOfPages();
-    for (let i = 1; i <= pageCount; i++) {
-      doc.setPage(i);
-      doc.setFontSize(10);
-      const pageText = `Página ${i} de ${pageCount}`;
-      const textWidth = doc.getTextWidth(pageText);
-      const pageHeight = doc.internal.pageSize.height;
-      const pageWidth = doc.internal.pageSize.width;
-      doc.text(pageText, pageWidth - textWidth - 10, pageHeight - 10);
-    }
-
-    doc.save("cajeros.pdf");
-  };
-
-  const excel = () => {
-    const { name } = session.user;
-    const date = new Date();
-    const dateStr = `${date.getFullYear()}/${(
-      "0" +
-      (date.getMonth() + 1)
-    ).slice(-2)}/${("0" + date.getDate()).slice(-2)}`;
-    const timeStr = `${("0" + date.getHours()).slice(-2)}:${(
-      "0" + date.getMinutes()
-    ).slice(-2)}:${("0" + date.getSeconds()).slice(-2)}`;
-
-    const headerInfo = [
-      ["Sistema de Control de Escolar", "", "", "", `Fecha: ${dateStr}`],
-      ["Reporte Datos de Cajero", "", "", "", `Hora: ${timeStr}`],
-      [`Usuario: ${name}`, "", "", "", "Hoja: 1"],
-      [],
-    ];
-
-    const columns = [
-      { header: "Número", dataKey: "numero" },
-      { header: "Nombre", dataKey: "nombre" },
-      { header: "Dirección", dataKey: "direccion" },
-      { header: "Colonia", dataKey: "colonia" },
-      { header: "Teléfono", dataKey: "telefono" },
-      { header: "Mail", dataKey: "mail" },
-    ];
-
-    const data = cajerosFiltrados.map((row) => {
-      let rowData = {};
-      columns.forEach((col) => {
-        rowData[col.header] = row[col.dataKey] || "";
-      });
-      return rowData;
-    });
-
-    const worksheetData = headerInfo.concat(
-      XLSX.utils.sheet_to_json(XLSX.utils.json_to_sheet(data), { header: 1 })
-    );
-    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Cajeros");
-    XLSX.writeFile(workbook, "cajeros.xlsx");
-  };
-
-
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
     const dataj = JSON.stringify(data);
@@ -313,6 +198,36 @@ function Cajeros() {
     event.preventDefault;
     setTB_Busqueda(event.target.value);
   };
+  const ImprimePDF = () => {
+    const configuracion = {
+      Encabezado: {
+        Nombre_Aplicacion: "Sistema de Control Escolar",
+        Nombre_Reporte: "Reporte Datos Cajero",
+        Nombre_Usuario: `Usuario: ${session.user.name}`,
+      },
+      body: cajerosFiltrados,
+    };
+    Imprimir(configuracion);
+  };
+  const ImprimeExcel = () =>{
+    const configuracion ={
+        Encabezado:{
+            Nombre_Aplicacion: "Sistema de Control Escolar",
+        Nombre_Reporte: "Reporte Datos Cajeros",
+        Nombre_Usuario: `Usuario: ${session.user.name}`,
+        },
+        body:cajerosFiltrados,
+        columns:[
+            {header:"Numero",dataKey:"numero"},
+            {header:"Nombre",dataKey:"nombre"},
+            {header:"Clave Cajero",dataKey:"clave_cajero"},
+            {header:"Telefono",dataKey:"telefono"},
+            {header:"Correo",dataKey:"mail"},
+        ],
+        nombre:"Cajeros"
+    }
+    ImprimirExcel(configuracion)        
+}
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -337,7 +252,7 @@ function Cajeros() {
         </div>
         <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] ">
           <div className="col-span-1 flex flex-col ">
-            <Acciones Buscar={Buscar} Alta={Alta} home={home} imprimir={imprimir} excel={excel}></Acciones>
+            <Acciones Buscar={Buscar} Alta={Alta} home={home} imprimir={ImprimePDF} excel={ImprimeExcel}></Acciones>
           </div>
           <div className="col-span-7  ">
             <div className="flex flex-col h-[calc(100%)]">
