@@ -13,14 +13,14 @@ function Acciones({ Buscar, Alta, home, imprimir, excel }) {
       <Tooltip Titulo={"Alta"} posicion={"tooltip-top"}>
         <Button icono={"fa-regular fa-square-plus"} onClick={Alta}></Button>
       </Tooltip>
-      <Tooltip Titulo={"Inicio"} posicion={"tooltip-top"}>
-        <Button icono={"fas fa-home"} onClick={home}></Button>
-      </Tooltip>
       <Tooltip Titulo={"Imprimir"} posicion={"tooltip-top"}>
         <Button icono={"fas fa-print"} onClick={imprimir}></Button>
       </Tooltip>
       <Tooltip Titulo={"Excel"} posicion={"tooltip-top"}>
         <Button icono={"fas fa-file-excel"} onClick={excel}></Button>
+      </Tooltip>
+      <Tooltip Titulo={"Inicio"} posicion={"tooltip-top"}>
+        <Button icono={"fas fa-home"} onClick={home}></Button>
       </Tooltip>
     </div>
   );
