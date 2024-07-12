@@ -116,8 +116,11 @@ function Cajeros() {
       nombre: "",
       direccion: "",
       colonia: "",
+      estado: "",
       telefono: "",
+      fax: "",
       mail: "",
+      clave_cajero: "",
     });
     let siguienteId = await siguiente(token);
     siguienteId = Number(siguienteId) + 1;

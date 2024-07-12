@@ -128,7 +128,7 @@ function ModalCajeros({
                 className={"grow"}
                 Titulo={"Estado: "}
                 type={"text"}
-                requerido={false}
+                requerido={true}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -191,7 +191,7 @@ function ModalCajeros({
                 tamañolabel={""}
                 className={"grow"}
                 Titulo={"Clave Cajero: "}
-                type={"text"}
+                type={"password"}
                 requerido={false}
                 isNumero={false}
                 errors={errors}
