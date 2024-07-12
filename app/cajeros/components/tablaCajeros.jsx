@@ -27,7 +27,6 @@ function TablaCajeros({
               <tr>
                 <th></th>
                 <td>Nombre</td>
-                <td>Clave Cajero</td>
                 <td>Telefono</td>
                 <td>Correo</td>
                 <th className="w-[calc(20%)]">Acciones</th>
@@ -42,7 +41,6 @@ function TablaCajeros({
                   <td className="text-left w-50">
                     {item.nombre}
                   </td>
-                  <td>{item.clave_cajero}</td>
                   <td>{item.telefono}</td>
                   <td>{item.mail}</td>
                   <th>
@@ -77,7 +75,6 @@ function TablaCajeros({
               <tr>
                 <th></th>
                 <td>Nombre</td>
-                <td>Clave Cajero</td>
                 <td>Telefono</td>
                 <td>Correo</td>
                 <th>Acciones</th>
