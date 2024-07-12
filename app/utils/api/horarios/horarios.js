@@ -1,3 +1,4 @@
+import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
 
 export const getHorarios = async (token, baja) => {
@@ -105,3 +106,12 @@ export const Imprimir = (configuracion) => {
   });
   newPDF.guardaReporte("datos")
 };
+export const ImprimirExcel = (configuracion)=>{
+  const newExcel = new ReporteExcel(configuracion)
+  const {columns} = configuracion
+  const {body} = configuracion
+  const {nombre}=configuracion
+  newExcel.setColumnas(columns);
+  newExcel.addData(body);
+  newExcel.guardaReporte(nombre);
+}

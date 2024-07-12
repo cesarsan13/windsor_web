@@ -10,7 +10,8 @@ import { useForm } from "react-hook-form";
 import {
     getHorarios,
     guardarHorario,
-    Imprimir
+    Imprimir,
+    ImprimirExcel
 } from "@/app/utils/api/horarios/horarios"
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -208,6 +209,28 @@ function Horarios() {
         }
         Imprimir(configuracion)
     }
+    const ImprimeExcel = () =>{
+        const configuracion ={
+            Encabezado:{
+                Nombre_Aplicacion: "Sistema de Control Escolar",
+            Nombre_Reporte: "Reporte Datos Horario",
+            Nombre_Usuario: `Usuario: ${session.user.name}`,
+            },
+            body:horariosFiltrados,
+            columns:[
+                {header:"Numero",dataKey:"numero"},
+                {header:"Cancha",dataKey:"cancha"},
+                {header:"Dia",dataKey:"dia"},
+                {header:"Horario",dataKey:"horario"},
+                {header:"Niños",dataKey:"max_niños"},
+                {header:"Sexo",dataKey:"sexo"},
+                {header:"Edad Ini",dataKey:"edad_ini"},
+                {header:"Edad Fin",dataKey:"edad_fin"},
+            ],
+            nombre:"Horarios"
+        }
+        ImprimirExcel(configuracion)        
+    }
     return (
         <>
             <ModalHorario
@@ -227,7 +250,7 @@ function Horarios() {
                 </div>
                 <div className='container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] '>
                     <div className='col-span-1 flex flex-col'>
-                        <Acciones Buscar={Buscar} Alta={Alta} home={home} PDF={ImprimePDF}></Acciones>
+                        <Acciones Buscar={Buscar} Alta={Alta} home={home} PDF={ImprimePDF} Excel={ImprimeExcel}></Acciones>
                     </div>
                     <div className='col-span-7'>
                         <div className='flex flex-col h-[calc(100%)]'>
