@@ -19,6 +19,9 @@ function Menu({ vertical }) {
             <li>
               <Link href="/cajeros">Cajeros</Link>
             </li>
+            <li>
+            <Link href="/comentarios">Comentarios</Link>
+            </li>
           </ul>
         </details>
       </li>
@@ -40,6 +43,9 @@ function Menu({ vertical }) {
             </li>
             <li>
               <Link href="/cajeros">Cajeros</Link>
+            </li>
+            <li>
+            <Link href="/comentarios">Comentarios</Link>
             </li>
           </ul>
         </details>
