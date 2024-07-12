@@ -9,7 +9,8 @@ import Acciones from "@/app/horarios/components/Acciones";
 import { useForm } from "react-hook-form";
 import {
     getHorarios,
-    guardarHorario
+    guardarHorario,
+    Imprimir
 } from "@/app/utils/api/horarios/horarios"
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -196,6 +197,17 @@ function Horarios() {
             <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
         );
     }
+    const ImprimePDF  = () => {
+        const configuracion ={
+            Encabezado:{
+                Nombre_Aplicacion: "Sistema de Control Escolar",
+            Nombre_Reporte: "Reporte Datos Horario",
+            Nombre_Usuario: `Usuario: ${session.user.name}`,
+            },
+            body : horariosFiltrados
+        }
+        Imprimir(configuracion)
+    }
     return (
         <>
             <ModalHorario
@@ -215,7 +227,7 @@ function Horarios() {
                 </div>
                 <div className='container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] '>
                     <div className='col-span-1 flex flex-col'>
-                        <Acciones Buscar={Buscar} Alta={Alta} home={home}></Acciones>
+                        <Acciones Buscar={Buscar} Alta={Alta} home={home} PDF={ImprimePDF}></Acciones>
                     </div>
                     <div className='col-span-7'>
                         <div className='flex flex-col h-[calc(100%)]'>
