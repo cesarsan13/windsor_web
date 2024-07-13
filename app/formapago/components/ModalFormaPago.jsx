@@ -2,7 +2,7 @@ import { soloEnteros, soloDecimales, pone_ceros } from "@/app/utils/globalfn";
 import React from "react";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import { useState, useEffect } from "react";
-import Inputs from "@/app/formaPago/components/Inputs";
+import Inputs from "@/app/formapago/components/Inputs";
 
 function ModalFormaPago({
   accion,

@@ -14,13 +14,17 @@ function Menu({ vertical }) {
               <Link href="/productos">Productos</Link>
             </li>
             <li>
-              <Link href="/formapago">Forma de Pago</Link>
+              <Link href="/comentarios">Comentarios</Link>
             </li>
             <li>
               <Link href="/cajeros">Cajeros</Link>
             </li>
             <li>
-            <Link href="/comentarios">Comentarios</Link>
+              <Link href="/horarios ">Horarios</Link>
+            </li>
+
+            <li>
+              <Link href="/formapago">Forma de Pago</Link>
             </li>
           </ul>
         </details>
@@ -39,13 +43,20 @@ function Menu({ vertical }) {
               <Link href="/productos">Productos</Link>
             </li>
             <li>
-              <Link href="/formapago">Forma de Pago</Link>
+              <Link href="/comentarios">Comentarios</Link>
             </li>
             <li>
               <Link href="/cajeros">Cajeros</Link>
             </li>
             <li>
-            <Link href="/comentarios">Comentarios</Link>
+              <Link href="/horarios ">Horarios</Link>
+            </li>
+
+            <li>
+              <Link href="/formapago">Forma de Pago</Link>
+            </li>
+            <li>
+              <Link href="/formafact">Formato Variable</Link>
             </li>
           </ul>
         </details>

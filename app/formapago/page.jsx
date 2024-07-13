@@ -3,7 +3,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalFormaPago from "@/app/formapago/components/ModalFormaPago";
-import TablaFormaPago from "@/app/formapago/components/TablaFormaPAgo";
+import TablaFormaPago from "@/app/formapago/components/TablaFormaPago";
 import Busqueda from "@/app/formapago/components/Busqueda";
 import Acciones from "@/app/formapago/components/Acciones";
 import { useForm } from "react-hook-form";
