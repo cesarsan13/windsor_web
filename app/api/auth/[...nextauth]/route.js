@@ -53,9 +53,6 @@ export const authOptions = {
       session.user = token;
       return session;
     },
-    redirect: async (url, baseUrl) => {
-      return url.startsWith(baseUrl) ? url : baseUrl;
-    },
   },
   pages: {
     signIn: "/windsor/auth/login",
