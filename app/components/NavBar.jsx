@@ -1,16 +1,16 @@
-"use client"
+"use client";
 import React from "react";
 import Link from "next/link";
 import Menu from "@/app/components/Menu";
-import { useSession,signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 function NavBar() {
   const { data: session, status } = useSession();
   if (!session) {
     return <></>;
   }
   const handleSingOut = async () => {
-    await signOut({redirect:true,callbackUrl:"/"})
-  }
+    await signOut({ redirect: true, callbackUrl: "/" });
+  };
   return (
     <div className="navbar sticky top-0 h-full max-h-7 bg-slate-100 z-[2]">
       <div className="navbar-start">
