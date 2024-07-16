@@ -14,7 +14,7 @@ function Acciones({ Buscar, Alta, home, imprimir, excel }) {
         <Button icono={"fa-regular fa-square-plus"} onClick={Alta}></Button>
       </Tooltip>
       <Tooltip Titulo={"Imprimir"} posicion={"tooltip-top"}>
-        <Button icono={"fas fa-print"} onClick={imprimir}></Button>
+        <Button icono={"fa-solid fa-file-pdf"} onClick={imprimir}></Button>
       </Tooltip>
       <Tooltip Titulo={"Excel"} posicion={"tooltip-top"}>
         <Button icono={"fas fa-file-excel"} onClick={excel}></Button>
