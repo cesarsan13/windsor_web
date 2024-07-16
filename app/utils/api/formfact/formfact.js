@@ -3,8 +3,8 @@ import { useSession } from "next-auth/react";
 export const getFormFact = async (token, baja) => {
     let url = "";
     baja
-      ? (url = "http://localhost:8000/api/FormFact/baja")
-      : (url = "http://localhost:8000/api/FormFact/");
+      ? (url = `${process.env.DOMAIN_API}api/FormFact/baja`)
+      : (url = `${process.env.DOMAIN_API}api/FormFact/`);
   
     const res = await fetch(url, {
       headers: {
@@ -15,7 +15,7 @@ export const getFormFact = async (token, baja) => {
     return resJson.data;
   };
   export const siguiente = async (token) => {
-    const res = await fetch(`http://localhost:8000/api/FormFact/siguiente`, {
+    const res = await fetch(`${process.env.DOMAIN_API}api/FormFact/siguiente`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -26,7 +26,7 @@ export const getFormFact = async (token, baja) => {
   export const guardaFormFact = async (token, data, accion) => {
     let url_api = "";
     if (accion === "Alta") {
-      url_api = "http://localhost:8000/api/FormFact/";
+      url_api = `${process.env.DOMAIN_API}api/FormFact/`;
       data.baja = "";
     }
     if (accion === "Eliminar" || accion === "Editar") {
@@ -35,7 +35,7 @@ export const getFormFact = async (token, baja) => {
       } else {
         data.baja = "";
       }
-      url_api = "http://localhost:8000/api/FormFact/UpdateFormFact/";
+      url_api = `${process.env.DOMAIN_API}api/FormFact/UpdateFormFact/`;
     }
   
     const res = await fetch(`${url_api}`, {
