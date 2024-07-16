@@ -11,6 +11,7 @@ import {
   getFormasPago,
   guardaFormaPAgo,
   Imprimir,
+  ImprimirExcel,
 } from "@/app/utils/api/formapago/formapago";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -197,7 +198,26 @@ function FormaPago() {
     };
     Imprimir(configuracion);
   };
-
+  const ImprimeExcel = () =>{
+    const configuracion ={
+      Encabezado:{
+        Nombre_Aplicacion: "Sistema de Control Escolar",
+    Nombre_Reporte: "Reporte Datos Forma Pagos",
+    Nombre_Usuario: `Usuario: ${session.user.name}`,
+    },
+    body:formaPagosFiltrados,
+    columns:[
+        {header:"Numero",dataKey:"id"},
+        {header:"Descripcion",dataKey:"descripcion"},
+        {header:"Comision",dataKey:"comision"},
+        {header:"Aplicacion",dataKey:"aplicacion"},
+        {header:"Cue. Banco",dataKey:"cue_banco"},
+        
+    ],
+    nombre:"Forma Pagos"
+    }
+    ImprimirExcel(configuracion)
+  }
   if (status === "loading") {
     return (
       <div className="container skeleton w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -227,6 +247,7 @@ function FormaPago() {
               Alta={Alta}
               home={home}
               PDF={ImprimePDF}
+              Excel={ImprimeExcel}
             ></Acciones>
           </div>
           <div className="col-span-7  ">

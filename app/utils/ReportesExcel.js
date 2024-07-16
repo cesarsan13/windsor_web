@@ -5,6 +5,8 @@ export class ReporteExcel {
   constructor(configuracion) {
     this.configuracion = configuracion;
     this.worksheetData = [];
+    this.condition = null; // Inicializa condition como propiedad de la clase
+    this.conditionColumn = null; // Inicializa conditionColumn como propiedad de la clase
     this.imprimeEncabezadoPrincipal();
   }
   imprimeEncabezadoPrincipal() {
@@ -33,7 +35,12 @@ export class ReporteExcel {
   }
   addData(data) {
     data.forEach((row) => {
-      let rowData = this.columnas.map((col) => row[col.dataKey] || "");
+      let rowData = this.columnas.map((col) => {
+        if (col.dataKey === this.conditionColumn && this.condition) {
+          return this.condition(row[col.dataKey]) ? 'Si' : 'No';
+        }
+        return row[col.dataKey] || "";
+      });
       this.addRow(rowData);
     });
   }
@@ -42,5 +49,9 @@ export class ReporteExcel {
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Reporte");
     XLSX.writeFile(workbook, `${Nombre}.xlsx`);
+  }
+  setCondition(conditionColumn, conditionFunction) {
+    this.conditionColumn = conditionColumn;
+    this.condition = conditionFunction;
   }
 }
