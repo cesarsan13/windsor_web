@@ -1,3 +1,4 @@
+import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
 export const getFormasPago = async (token, baja) => {
   let url = "";
@@ -94,3 +95,13 @@ export const Imprimir = (configuracion) => {
 
   newPDF.guardaReporte("PruebaEncabezado");
 };
+
+export const ImprimirExcel=(configuracion)=>{
+  const newExcel=new ReporteExcel(configuracion)
+  const {columns} = configuracion
+  const {body} = configuracion
+  const {nombre}=configuracion
+  newExcel.setColumnas(columns);
+  newExcel.addData(body);
+  newExcel.guardaReporte(nombre);
+}

@@ -56,7 +56,7 @@ function Menu({ vertical }) {
               <Link href="/formapago">Forma de Pago</Link>
             </li>
             <li>
-              <Link href="/formafact">Formato Variable</Link>
+              <Link href="/formfact">Formato Variable</Link>
             </li>
           </ul>
         </details>

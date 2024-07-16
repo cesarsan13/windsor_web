@@ -51,7 +51,7 @@ function Cajeros() {
     };
     fetchData();
   }, [session, status, bajas]);
-
+  
   const {
     register,
     handleSubmit,
