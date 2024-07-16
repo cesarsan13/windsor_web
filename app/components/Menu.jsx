@@ -4,7 +4,7 @@ function Menu({ vertical }) {
   return vertical ? (
     <ul
       tabIndex={0}
-      className="menu menu-md dropdown-content bg-base-100 rounded-box  mt-3 w-52 p-2 shadow z-50"
+      className="menu menu-md dropdown-content bg-base-100 rounded-box  text-black dark:text-white mt-3 w-52 p-2 shadow z-50"
     >
       <li>
         <details>
@@ -34,7 +34,7 @@ function Menu({ vertical }) {
       </li>
     </ul>
   ) : (
-    <ul className="menu menu-horizontal px-1 z-[2] ">
+    <ul className="menu menu-horizontal px-1 z-[2] text-black dark:text-white">
       <li>
         <details>
           <summary>Catalogos</summary>
