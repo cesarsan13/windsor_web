@@ -6,7 +6,7 @@ function Loading() {
   <div class="bg-salte-100 rounded-3xl">
     <div class=" md:p-52 p-10 flex flex-col rounded-3xl h-5/6">
       <div class="flex items-center justify-center">
-        <span class="loading loading-ring h-52 w-52"></span>
+        <span class="loading loading-ring h-52 w-52 text-black dark:text-white"></span>
       </div>
     </div>
   </div>
