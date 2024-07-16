@@ -4,8 +4,8 @@ import { ReportePDF } from "../../ReportesPDF";
 export const getProductos = async (token, baja) => {
   let url = "";
   baja
-    ? (url = `http://127.0.0.1:8000/api/product/bajas`)
-    : (url = `http://127.0.0.1:8000/api/product`);
+    ? (url = `${process.env.DOMAIN_API}api/product/bajas`)
+    : (url = `${process.env.DOMAIN_API}api/product`);
   const res = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
@@ -16,7 +16,7 @@ export const getProductos = async (token, baja) => {
 };
 
 export const getLastProduct = async (token) => {
-  let url = `http://127.0.0.1:8000/api/product/last`;
+  let url = `${process.env.DOMAIN_API}api/product/last`;
   const res = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
@@ -33,7 +33,7 @@ export const filtroProductos = async (token, tipo, valor) => {
   if (!valor) {
     valor = "nothing";
   }
-  let url = `http://127.0.0.1:8000/api/product/filter/${tipo}/${valor}`;
+  let url = `${process.env.DOMAIN_API}api/product/filter/${tipo}/${valor}`;
   const res = await fetch(url, {
     method: "GET",
     headers: {
@@ -49,7 +49,7 @@ export const guardarProductos = async (token, data, accion) => {
   let url = "";
   let met = "";
   if (accion === "Alta") {
-    url = `http://127.0.0.1:8000/api/product/save`;
+    url = `${process.env.DOMAIN_API}api/product/save`;
     data.baja = "n";
     met = "post";
   }
@@ -59,7 +59,7 @@ export const guardarProductos = async (token, data, accion) => {
     } else {
       data.baja = "n";
     }
-    url = `http://127.0.0.1:8000/api/product/update/${data.id}`;
+    url = `${process.env.DOMAIN_API}api/product/update/${data.id}`;
     met = "put";
   }
   const res = await fetch(`${url}`, {
