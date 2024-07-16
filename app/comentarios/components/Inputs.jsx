@@ -1,6 +1,7 @@
 import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
 import React from "react";
 
+
 function Inputs({
   Titulo,
   name,
@@ -13,10 +14,8 @@ function Inputs({
   errors,
   tamañolabel,
   maxLenght,
-  defaultValue,
   isDisabled,
   handleBlur,
-  options,
 }) {
 
   if (type === 'select') {
@@ -30,12 +29,10 @@ function Inputs({
             className={className}
             {...register(name, {
               ...(requerido && { required: message }),
-              onBlur: (event) => handleBlur(event, dataType),
-            })}
-
-            disabled={isDisabled}>
-            <option value={"S"}>Si</option>
-            <option value={"N"}>No</option>
+            })}>
+            <option value="">--Seleccione una opcion--</option>
+            <option value="S">Si</option>
+            <option value="N">No</option>
           </select>
         </label>
         {errors[name] && (
@@ -44,17 +41,15 @@ function Inputs({
           </span>
         )}
       </div>
-    );
+    )
 
-  } else {
-
-  return (
+  } if (type === 'text'){
+  return ( 
     <div className="flex flex-col">
       <label
         className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel}`}>
         {Titulo}
         <input
-          // defaultValue={defaultValue}
           {...(maxLenght !== 0 && { maxLength: maxLenght })}
           name={name}
           id={name}
@@ -78,8 +73,8 @@ function Inputs({
         </span>
       )}
     </div>
-  );
-}
+    );
+  }
 }
 
 export default Inputs;
