@@ -99,7 +99,7 @@ function ModalHorario({
                                 isDisabled={true}
                             />
                             <Inputs
-                                dataType={"string"}
+                                dataType={"int"}
                                 name={"cancha"}
                                 tamañolabel={""}
                                 className={"grow"}

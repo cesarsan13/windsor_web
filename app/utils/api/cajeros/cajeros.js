@@ -5,8 +5,8 @@ import { ReporteExcel } from "../../ReportesExcel";
 export const getCajeros = async (token, baja) => {
   let url = "";
   baja
-    ? (url = "http://localhost:8000/api/Cajero/baja")
-    : (url = "http://localhost:8000/api/Cajero/");
+    ? (url = `${process.env.DOMAIN_API}api/Cajero/baja`)
+    : (url = `${process.env.DOMAIN_API}api/Cajero/`);
 
   const res = await fetch(url, {
     headers: {
@@ -17,7 +17,7 @@ export const getCajeros = async (token, baja) => {
   return resJson.data;
 };
 export const siguiente = async (token) => {
-  const res = await fetch(`http://localhost:8000/api/Cajero/siguiente`, {
+  const res = await fetch(`${process.env.DOMAIN_API}api/Cajero/siguiente`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -28,7 +28,7 @@ export const siguiente = async (token) => {
 export const guardaCajero = async (token, data, accion) => {
     let url_api = "";
     if (accion === "Alta") {
-      url_api = "http://localhost:8000/api/Cajero/";
+      url_api = `${process.env.DOMAIN_API}api/Cajero/`;
       data.baja = "";
     }
     if (accion === "Eliminar" || accion === "Editar") {
@@ -37,7 +37,7 @@ export const guardaCajero = async (token, data, accion) => {
       } else {
         data.baja = "";
       }
-      url_api = "http://localhost:8000/api/Cajero/UpdateCajeros/";
+      url_api = `${process.env.DOMAIN_API}api/Cajero/UpdateCajeros/`;
     }
   
     const res = await fetch(`${url_api}`, {
