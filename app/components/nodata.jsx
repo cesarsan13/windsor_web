@@ -3,11 +3,11 @@ import React from "react";
 function NoData() {
   return (
     <div
-      className="flex items-center m-9  bg-red-100 border-l-4 border-orange-500 text-orange-700 dark:bg-red-900 dark:border-orange-700 dark:text-orange-300 text-2xl font-bold px-4 py-3"
+      className="flex items-center m-9  bg-red-100 border-l-4 border-orange-500 text-orange-700 text-2xl font-bold px-4 py-3"
       role="alert"
     >
       <svg
-        className="fill-current w-4 h-4 mr-2  hidden sm:flex"
+        className="fill-current w-4 h-4 mr-2"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 20 20"
       >
