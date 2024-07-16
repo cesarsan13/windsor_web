@@ -18,7 +18,7 @@ function TablaHorarios({
         showModal(true)
     }
     return !isLoading ? (
-        <div className='overflow-x-auto mt-3  h-6/8 text-white bg-white  m-2 w-full  lg:w-5/8 '>
+        <div className='overflow-x-auto mt-3  h-6/8 text-black bg-white  m-2 w-full  lg:w-5/8 '>
             {HorariosFiltrados.length > 0 ? (
                 <table className='table table-xs table-zebra  table-pin-rows table-pin-cols max-h-[calc(50%)]'>
                     <thead className='relative z-[1] md:static'>
