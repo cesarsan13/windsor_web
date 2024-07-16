@@ -25,7 +25,7 @@ function Inputs({
   if (type === 'multi-select') {    
     return (
       <div className='flex flex-col'>
-        <label htmlFor={name} className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel}`}>
+        <label htmlFor={name} className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
           {Titulo}
           <Controller
             name={name}
@@ -36,7 +36,7 @@ function Inputs({
                 isMulti
                 isDisabled={isDisabled}
                 options={options}
-                className={className}
+                className={`text-black dark:text-white ${className}`}
                 classNamePrefix='select'
                 value={value}
                 onChange={onChange}                              
@@ -53,11 +53,11 @@ function Inputs({
   } if (type === "select") {
     return (
       <div className='flex flex-col'>
-        <label htmlFor={name} className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel}`}>
+        <label htmlFor={name} className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
           {Titulo}
           <select
           name={name}
-          className={className}
+          className={`text-black dark:text-white ${className}`}
           id={name}
           disabled={isDisabled}
           {...register(name, {
@@ -80,7 +80,7 @@ function Inputs({
     return (
       <div className="flex flex-col">
         <label
-          className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel}`}
+          className={`input input-bordered text-black dark:text-white input-md flex items-center gap-3 ${tamañolabel}`}
         >
           {Titulo}
           <input
@@ -89,7 +89,7 @@ function Inputs({
             name={name}
             id={name}
             type={type}
-            className={className}
+            className={`text-black dark:text-white ${className}`}
             {...(dataType === "int" && { onKeyDown: soloEnteros })}
             {...(dataType === "float" && { onKeyDown: soloDecimales })}
             {...register(name, {

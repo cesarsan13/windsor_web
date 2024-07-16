@@ -5,6 +5,10 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  "darkMode":'class',
+  daisyui: {
+    themes: ["light","dark",],
+  },
   theme: {
     extend: {
       backgroundImage: {

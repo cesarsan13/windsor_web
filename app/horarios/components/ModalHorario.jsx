@@ -76,13 +76,13 @@ function ModalHorario({
         <dialog id='my_modal_3' className='modal'>
             <div className='modal-box'>
                 <button
-                    className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'
+                    className='btn btn-sm btn-circle btn-ghost text-black dark:text-white absolute right-2 top-2'
                     onClick={() => document.getElementById("my_modal_3").close()}
                 >
                     ✕
                 </button>
                 <form onSubmit={onSubmit}>
-                    <h3 className='font-bold text-lg mb-5'>{titulo}</h3>
+                    <h3 className='font-bold text-lg mb-5 text-black dark:text-white'>{titulo}</h3>
                     <fieldset id='fs_horario'>
                         <div className='container flex flex-col space-y-5'>
                             <Inputs
