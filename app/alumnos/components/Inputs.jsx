@@ -19,7 +19,7 @@ function Inputs({
 }) {
   if (type === 'select') {
     return (
-      <div className="flex flex-col">
+      <div className="w-full md:w-1/2 px-0.5 py-2 mb-6 md:mb-0">
         <label className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel}`}>
           {Titulo}
           <select
@@ -51,7 +51,7 @@ function Inputs({
 
   } else {
     return (
-      <div className="flex flex-col">
+      <div className="w-full md:w-1/2 px-0.5 py-2 mb-6 md:mb-0">
         <label
           className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel}`}
         >

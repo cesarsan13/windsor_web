@@ -11,6 +11,8 @@ import {
   getAlumnos,
   guardarAlumnos,
   getLastAlumnos,
+  Imprimir,
+  ImprimirExcel,
 } from "@/app/utils/api/alumnos/alumnos";
 import { getFormasPago } from "@/app/utils/api/formapago/formapago"
 import { useState, useEffect } from "react";
@@ -585,128 +587,6 @@ function Alumnos() {
     evt.preventDefault;
     setTB_Busqueda("");
   };
-
-  const imprimirPDF = () => {
-    try {
-      const doc = new jsPDF();
-      const { name } = session.user;
-      doc.setFontSize(14);
-      doc.text("Sistema de Control de Escolar", 14, 16);
-      doc.setFontSize(10);
-      doc.text("Reporte Datos de Alumnos", 14, 22);
-      doc.setFontSize(10);
-      doc.text(`Usuario: ${name}`, 14, 28);
-      const date = new Date();
-      const dateStr = `${date.getFullYear()}/${("0" + (date.getMonth() + 1)).slice(-2)}/${("0" + date.getDate()).slice(-2)}`;
-      const timeStr = `${("0" + date.getHours()).slice(-2)}:${("0" + date.getMinutes()).slice(-2)}:${("0" + date.getSeconds()).slice(-2)}`;
-      doc.text(`Fecha: ${dateStr}`, 150, 16);
-      doc.text(`Hora: ${timeStr}`, 150, 22);
-      doc.text(`Hoja: 1`, 150, 28);
-
-      const columns = [
-        { header: "Número", dataKey: "id" },
-        { header: "Nombre", dataKey: "nombre" },
-        { header: "Dirección", dataKey: "direccion" },
-        { header: "Colonia", dataKey: "colonia" },
-        { header: "Fecha Nac", dataKey: "fecha_nac" },
-        { header: "Fecha Alta", dataKey: "fecha_inscripcion" },
-        { header: "Telefono", dataKey: "telefono" },
-      ];
-
-      doc.autoTable({
-        startY: 40,
-        head: [columns.map((col) => col.header)],
-        body: alumnosFiltrados.map((row) =>
-          columns.map((col) => {
-            return row[col.dataKey] || '';
-          })
-        ),
-        styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
-        headStyles: { fillColor: [230, 230, 230], textColor: [0, 0, 0] },
-        alternateRowStyles: { fillColor: [240, 240, 240] },
-        theme: "plain",
-        margin: { top: 40, left: 0 },
-        columnStyles: {
-          0: { halign: "right", cellWidth: 20 },
-          1: { halign: "left", cellWidth: 50 },
-          2: { halign: "left", cellWidth: 40 },
-          3: { halign: "left", cellWidth: 30 },
-          4: { halign: "left", cellWidth: 25 },
-          5: { halign: "left", cellWidth: 25 },
-          6: { halign: "right", cellWidth: 20 },
-        },
-      });
-
-      const pageCount = doc.internal.getNumberOfPages();
-      for (let i = 1; i <= pageCount; i++) {
-        doc.setPage(i);
-        doc.setFontSize(10);
-        const pageText = `Página ${i} de ${pageCount}`;
-        const textWidth = doc.getTextWidth(pageText);
-        const pageHeight = doc.internal.pageSize.height;
-        const pageWidth = doc.internal.pageSize.width;
-        doc.text(pageText, pageWidth - textWidth - 10, pageHeight - 10);
-      }
-      doc.save("Alumnos.pdf");
-    } catch (error) {
-      console.error("Error al generar PDF:", error);
-    }
-  };
-
-
-  const imprimirEXCEL = () => {
-    const { name } = session.user;
-    const date = new Date();
-    const dateStr = `${date.getFullYear()}/${(
-      "0" +
-      (date.getMonth() + 1)
-    ).slice(-2)}/${("0" + date.getDate()).slice(-2)}`;
-    const timeStr = `${("0" + date.getHours()).slice(-2)}:${(
-      "0" + date.getMinutes()
-    ).slice(-2)}:${("0" + date.getSeconds()).slice(-2)}`;
-
-    const headerInfo = [
-      ["Sistema de Control de Escolar", "", "", "", `Fecha: ${dateStr}`],
-      ["Reporte Datos de Cajero", "", "", "", `Hora: ${timeStr}`],
-      [`Usuario: ${name}`, "", "", "", "Hoja: 1"],
-      [],
-    ];
-
-    const columns = [
-      { header: "Número", dataKey: "id" },
-      { header: "Descripción", dataKey: "descripcion" },
-      { header: "Costo", dataKey: "costo" },
-      { header: "Frecuencia", dataKey: "frecuencia" },
-      { header: "Recargo", dataKey: "pro_recargo" },
-      { header: "Aplicación", dataKey: "aplicacion" },
-      { header: "IVA", dataKey: "iva" },
-      { header: "Condición", dataKey: "cond_1" },
-      { header: "Cambio Precio", dataKey: "cam_precio" },
-      { header: "Referencia", dataKey: "ref" },
-    ];
-
-    const data = alumnosFiltrados.map((row) => {
-      let rowData = {};
-      columns.forEach((col) => {
-        if (col.dataKey === 'iva' || col.dataKey === 'costo' || col.dataKey === 'pro_recargo') {
-          rowData[col.header] = row[col.dataKey].toFixed(2);
-        } else if (col.dataKey === 'cam_precio') {
-          rowData[col.header] = row[col.dataKey] ? 'Si' : 'No';
-        } else {
-          rowData[col.header] = row[col.dataKey] || "";
-        }
-      });
-      return rowData;
-    });
-
-    const worksheetData = headerInfo.concat(
-      XLSX.utils.sheet_to_json(XLSX.utils.json_to_sheet(data), { header: 1 })
-    );
-    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Alumnos");
-    XLSX.writeFile(workbook, "Alumnos.xlsx");
-  };
   const showModal = (show) => {
     show
       ? document.getElementById("my_modal_3").showModal()
@@ -719,6 +599,41 @@ function Alumnos() {
     event.preventDefault;
     setTB_Busqueda(event.target.value);
   };
+
+  const imprimePDF = () => {
+    const configuracion = {
+      Encabezado: {
+        Nombre_Aplicacion: "Sistema de Control Escolar",
+        Nombre_Reporte: "Reporte Datos Alumnos",
+        Nombre_Usuario: `Usuario: ${session.user.name}`,
+      },
+      body: alumnosFiltrados,
+    };
+    Imprimir(configuracion);
+  };
+
+  const ImprimeExcel = () => {
+    const configuracion = {
+      Encabezado: {
+        Nombre_Aplicacion: "Sistema de Control Escolar",
+        Nombre_Reporte: "Reporte Datos Alumnos",
+        Nombre_Usuario: `Usuario: ${session.user.name}`,
+      },
+      body: alumnosFiltrados,
+      columns: [
+        { header: "Número", dataKey: "id" },
+        { header: "Nombre", dataKey: "nombre" },
+        { header: "Dirección", dataKey: "direccion" },
+        { header: "Colonia", dataKey: "colonia" },
+        { header: "Fecha Nac", dataKey: "fecha_nac" },
+        { header: "Fecha Alta", dataKey: "fecha_inscripcion" },
+        { header: "Telefono", dataKey: "telefono_1" },
+      ],
+      nombre: "Alumnos",
+    };
+    ImprimirExcel(configuracion);
+  };
+
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -753,8 +668,8 @@ function Alumnos() {
               Buscar={Buscar}
               Alta={Alta}
               home={home}
-              imprimirEXCEL={imprimirEXCEL}
-              imprimirPDF={imprimirPDF}
+              PDF={imprimePDF}
+              Excel={ImprimeExcel}
             ></Acciones>
           </div>
           <div className="col-span-7  ">

@@ -60,7 +60,7 @@ function TablaAlumnos({
                                 >
                                     {item.id}
                                 </th>
-                                <td>{item.nombre}</td>
+                                <td>{`${item.nombre} ${item.a_paterno} ${item.a_materno}`}</td>
                                 <td>{item.hora_1}</td>
                                 {/* <td>{item.grado}</td> */}
                                 <th>

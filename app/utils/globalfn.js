@@ -71,24 +71,18 @@ const isControlKey = (key) => {
   );
 };
 
-// Función para agregar ceros a la izquierda hasta alcanzar una longitud específica
 export const poneCeros = (importe, longitud) => {
-  console.log(importe)
-  console.log(longitud)
-  let twTrabajoString = importe.toString(); // Convierte el importe a string
-  twTrabajoString = twTrabajoString.trim(); // Elimina espacios en blanco al inicio y final
+  let twTrabajoString = importe.toString();
+  twTrabajoString = twTrabajoString.trim();
   const twLen = twTrabajoString.length;
-
   if (twLen >= longitud) {
-    return twTrabajoString; // Si ya tiene la longitud deseada, devuelve el importe sin cambios
+    return twTrabajoString;
   }
-
   let poneCeros = '';
   for (let i = 0; i < longitud - twLen; i++) {
-    poneCeros += '0'; // Agrega ceros a la izquierda hasta alcanzar la longitud deseada
+    poneCeros += '0';
   }
-  poneCeros += twTrabajoString; // Agrega el importe al final de los ceros
-
+  poneCeros += twTrabajoString;
   return poneCeros;
 };
 
@@ -108,4 +102,53 @@ export const pone_ceros = (number, decimalPlaces = 2, useCommas = true) => {
 
   // Junta la parte entera y la parte decimal
   return integerPart + "." + decimalPart;
+};
+
+export function formatDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}/${month}/${day}`;
+}
+
+export function formatTime(date) {
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+  return `${hours}:${minutes}:${seconds}`;
+}
+
+export const calculaDigitoBvba = (twInfo) => {
+  const allTrim = (str) => str.trim();
+  const val = (str) => parseInt(str, 10);
+  let txwCar = '';
+  let camMul = 2;
+  twInfo = allTrim(twInfo);
+  let txwLen = twInfo.length;
+  let txwRes;
+  let txwDiez;
+  for (let twCount = txwLen - 1; twCount >= 0; twCount--) {
+    txwRes = val(twInfo[twCount]) * camMul;
+    if (txwRes >= 10) {
+      txwDiez = txwRes.toString();
+      txwDiez = allTrim(txwDiez);
+      txwRes = val(txwDiez[0]) + val(txwDiez[1]);
+    }
+    txwCar = allTrim(txwCar) + txwRes.toString();
+    txwCar = allTrim(txwCar);
+    camMul = camMul === 1 ? 2 : 1;
+  }
+  txwLen = txwCar.length;
+  txwRes = 0;
+  for (let twCount = 0; twCount < txwLen; twCount++) {
+    txwRes += val(txwCar[twCount]);
+  }
+  txwCar = txwRes.toString();
+  txwCar = allTrim(txwCar);
+  txwRes = parseInt(txwCar[txwCar.length - 1], 10);
+  if (txwRes === 0) {
+    return 0;
+  } else {
+    return 10 - txwRes;
+  }
 };

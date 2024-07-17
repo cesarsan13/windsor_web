@@ -5,8 +5,8 @@ function Acciones({
   Buscar,
   Alta,
   home,
-  imprimirEXCEL,
-  imprimirPDF,
+  PDF,
+  Excel,
 }) {
   return (
     <div className="join join-vertical ">
@@ -20,10 +20,10 @@ function Acciones({
         <Button icono={"fa-regular fa-square-plus"} onClick={Alta}></Button>
       </Tooltip>
       <Tooltip Titulo={"Imprimir PDF"} posicion={"tooltip-top"}>
-        <Button icono={"fa-solid fa-file-pdf"} onClick={imprimirPDF}></Button>
+        <Button icono={"fa-solid fa-file-pdf"} onClick={PDF}></Button>
       </Tooltip>
       <Tooltip Titulo={"Imprimir Excel"} posicion={"tooltip-top"}>
-        <Button icono={"fa-solid fa-file-excel"} onClick={imprimirEXCEL}></Button>
+        <Button icono={"fa-solid fa-file-excel"} onClick={Excel}></Button>
       </Tooltip>
       <Tooltip Titulo={"Inicio"} posicion={"tooltip-top"}>
         <Button icono={"fas fa-home"} onClick={home}></Button>
