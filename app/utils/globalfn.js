@@ -71,6 +71,27 @@ const isControlKey = (key) => {
   );
 };
 
+// Función para agregar ceros a la izquierda hasta alcanzar una longitud específica
+export const poneCeros = (importe, longitud) => {
+  console.log(importe)
+  console.log(longitud)
+  let twTrabajoString = importe.toString(); // Convierte el importe a string
+  twTrabajoString = twTrabajoString.trim(); // Elimina espacios en blanco al inicio y final
+  const twLen = twTrabajoString.length;
+
+  if (twLen >= longitud) {
+    return twTrabajoString; // Si ya tiene la longitud deseada, devuelve el importe sin cambios
+  }
+
+  let poneCeros = '';
+  for (let i = 0; i < longitud - twLen; i++) {
+    poneCeros += '0'; // Agrega ceros a la izquierda hasta alcanzar la longitud deseada
+  }
+  poneCeros += twTrabajoString; // Agrega el importe al final de los ceros
+
+  return poneCeros;
+};
+
 export const pone_ceros = (number, decimalPlaces = 2, useCommas = true) => {
   // Asegúrate de que el número tenga el número especificado de decimales
   let formattedNumber = parseFloat(number).toFixed(decimalPlaces);
@@ -87,4 +108,44 @@ export const pone_ceros = (number, decimalPlaces = 2, useCommas = true) => {
 
   // Junta la parte entera y la parte decimal
   return integerPart + "." + decimalPart;
+};
+
+export const calculaDigitoBvba = (twInfo) => {
+  const allTrim = (str) => str.trim();
+  const val = (str) => parseInt(str, 10);
+
+  twInfo = allTrim(twInfo);
+  let txwLen = twInfo.length;
+  let camMul = 2;
+  let txwCar = '';
+  let txwRes;
+  let txwDiez;
+
+  for (let twCount = txwLen - 1; twCount >= 0; twCount--) {
+    txwRes = val(twInfo[twCount]) * camMul;
+    if (txwRes >= 10) {
+      txwDiez = txwRes.toString();
+      txwDiez = allTrim(txwDiez);
+      txwRes = val(txwDiez[0]) + val(txwDiez[1]);
+    }
+    txwCar = allTrim(txwCar) + txwRes.toString();
+    txwCar = allTrim(txwCar);
+    camMul = camMul === 1 ? 2 : 1;
+  }
+
+  txwLen = txwCar.length;
+  txwRes = 0;
+  for (let twCount = 0; twCount < txwLen; twCount++) {
+    txwRes += val(txwCar[twCount]);
+  }
+
+  txwCar = txwRes.toString();
+  txwCar = allTrim(txwCar);
+  txwRes = parseInt(txwCar[txwCar.length - 1], 10);
+
+  if (txwRes === 0) {
+    return 0;
+  } else {
+    return 10 - txwRes;
+  }
 };
