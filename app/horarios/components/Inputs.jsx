@@ -36,7 +36,7 @@ function Inputs({
                 isMulti
                 isDisabled={isDisabled}
                 options={options}
-                className={`text-black dark:text-white ${className}`}
+                className={`text-black ${className}`}
                 classNamePrefix='select'
                 value={value}
                 onChange={onChange}                              
