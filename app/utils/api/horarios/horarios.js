@@ -104,7 +104,7 @@ export const Imprimir = (configuracion) => {
       Enca1(newPDF);
     }
   });
-  newPDF.guardaReporte("datos")
+  newPDF.guardaReporte("Horarios")
 };
 export const ImprimirExcel = (configuracion)=>{
   const newExcel = new ReporteExcel(configuracion)
