@@ -245,7 +245,7 @@ function Comentarios(){
       <div className="container  w-full  max-w-screen-xl bg-slate-100 shadow-xl rounded-xl px-3 ">
         <div className="flex justify-start p-3 ">
           <h1 className="text-4xl font-xthin text-black md:px-12">
-            Forma de Comentarios.
+           Comentarios.
           </h1>
         </div>
         <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] ">
