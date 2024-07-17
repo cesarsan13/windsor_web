@@ -31,6 +31,17 @@ function Menu({ vertical }) {
             </li>
           </ul>
         </details>
+        
+      </li>
+      <li>
+      <details>
+          <summary>Reportes</summary>
+          <ul>
+          <li>
+            <Link href="/AlumnosPorClase">Lista de Alumnos por clase</Link>
+            </li>
+          </ul>
+        </details>
       </li>
       <li>
         <a>Item 3</a>
@@ -63,12 +74,23 @@ function Menu({ vertical }) {
             </li>
           </ul>
         </details>
+        </li>
+        <li>
+        <details>
+          <summary>Reportes</summary>
+          <ul>
+          <li>
+            <Link href="/AlumnosPorClase">Lista de Alumnos por clase</Link>
+            </li>
+          </ul>
+        </details>
       </li>
       <li>
         <a>Item 3</a>
       </li>
     </ul>
   );
+
 }
 
 export default Menu;

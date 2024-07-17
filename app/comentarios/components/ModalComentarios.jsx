@@ -1,6 +1,5 @@
 import { soloEnteros, soloDecimales, pone_ceros } from "@/app/utils/globalfn";
 import React from "react";
-import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import { useState, useEffect } from "react";
 import Inputs from "@/app/comentarios/components/Inputs";
 
@@ -12,7 +11,6 @@ function ModalComentarios({
   register,
   errors,
   setFormaComentarios,
-  comentarios,
 }) {
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
@@ -128,18 +126,15 @@ function ModalComentarios({
               />
 
               <Inputs
-                dataType={"string"}
                 name={"generales"}
                 tamañolabel={"w-3/6"}
                 className={" w-1/6 grow text-right"}
                 Titulo={"Generales:"}
                 type={"select"}
                 requerido={true}
-                isNumero={false}
                 errors={errors}
                 register={register}
                 message={"General requerido"}
-                maxLength={1}
                 isDisabled={isDisabled}
               />
 

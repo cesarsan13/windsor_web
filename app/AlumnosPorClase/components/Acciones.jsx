@@ -1,18 +1,9 @@
 import React from "react";
 import Tooltip from "@/app/components/tooltip";
 import Button from "@/app/components/button";
-function Acciones({ Buscar, Alta, ImprimePDF, ImprimeExcel, home }) {
+function Acciones({ImprimePDF, ImprimeExcel, home }) {
   return (
     <div className="join join-vertical ">
-      <Tooltip Titulo={"Buscar"} posicion={"tooltip-top"}>
-        <Button
-          icono={"fa-solid fa-magnifying-glass"}
-          onClick={Buscar}
-        ></Button>
-      </Tooltip>
-      <Tooltip Titulo={"Alta"} posicion={"tooltip-top"}>
-        <Button icono={"fa-regular fa-square-plus"} onClick={Alta}></Button>
-      </Tooltip>
       <Tooltip Titulo={"Imprimir"} posicion={"tooltip-top"}>
         <Button icono={"fas fa-file-pdf"} onClick={ImprimePDF}></Button>
       </Tooltip>
