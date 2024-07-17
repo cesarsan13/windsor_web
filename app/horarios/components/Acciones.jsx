@@ -1,7 +1,8 @@
-import React from "react";
-import Tooltip from "@/app/components/tooltip";
-import Button from "@/app/components/button";
-function Acciones({ Buscar, Alta, home, PDF,Excel }) {
+import Button from '@/app/components/button'
+import Tooltip from '@/app/components/tooltip'
+import React from 'react'
+
+function Acciones({Buscar,Alta,home,PDF,Excel}) {
   return (
     <div className="join join-vertical ">
       <Tooltip Titulo={"Buscar"} posicion={"tooltip-top"}>
@@ -23,7 +24,7 @@ function Acciones({ Buscar, Alta, home, PDF,Excel }) {
         <Button icono={"fas fa-home"} onClick={home}></Button>
       </Tooltip>
     </div>
-  );
+  )
 }
 
-export default Acciones;
+export default Acciones

@@ -7,7 +7,6 @@ function Busqueda({
   Buscar,
   handleBusquedaChange,
   TB_Busqueda,
-  setTB_Busqueda,
 }) {
   const handleFiltroChange = (event) => {
     const selectedValue = event.target.value;
@@ -34,16 +33,13 @@ function Busqueda({
         <option disabled defaultValue={""}>
           Filtros
         </option>
-        <option value={"id"}>Numero</option>
-        <option value={"descripcion"}>Descripcion</option>
-        <option value={"comision"}>Comision</option>
-        <option value={"aplicacion"}>Aplicacion</option>
-        <option value={"cue_banco"}>Cuenta Banco</option>
+        <option value={"numero"}>Numero</option>
+        <option value={"nombre"}>Nombre</option>
       </select>
       <div className="tooltip " data-tip="Limpiar">
         <button
           className="btn join-item  bg-blue-500 hover:bg-blue-700 text-white input-bordered"
-          onClick={(evt) => limpiarBusqueda(evt)}
+          onClick={limpiarBusqueda}
         >
           <i className="fa-solid fa-broom"></i>
         </button>
@@ -60,6 +56,7 @@ function Busqueda({
           <span className="label-text font-bold md:block hidden ">Bajas</span>
         </label>
       </div>
+      {}
     </div>
   );
 }

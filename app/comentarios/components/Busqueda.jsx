@@ -34,11 +34,11 @@ function Busqueda({
         <option disabled defaultValue={""}>
           Filtros
         </option>
-        <option value={"id"}>Numero</option>
-        <option value={"descripcion"}>Descripcion</option>
-        <option value={"comision"}>Comision</option>
-        <option value={"aplicacion"}>Aplicacion</option>
-        <option value={"cue_banco"}>Cuenta Banco</option>
+        <option value={"id"}>Id</option>
+        <option value={"comentario_1"}>Comentario 1</option>
+        <option value={"comentario_2"}>Comentario 2</option>
+        <option value={"comentario_3"}>Comentario 3</option>
+        <option value={"generales"}>Generales</option>
       </select>
       <div className="tooltip " data-tip="Limpiar">
         <button

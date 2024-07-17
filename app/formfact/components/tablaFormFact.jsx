@@ -3,37 +3,36 @@ import Loading from "@/app/components/loading";
 import NoData from "@/app/components/noData";
 import React from "react";
 
-function TablaCajeros({
-  cajerosFiltrados,
+function TablaFormFact({
+  formFactsFiltrados,
   isLoading,
   showModal,
-  setCajero,
+  setFormFact,
   setAccion,
   setCurrentId,
 }) {
-  const tableAction = (evt, cajero, accion) => {
-    setCajero(cajero);
+  const tableAction = (evt, formFact, accion) => {
+    setFormFact(formFact);
     setAccion(accion);
-    setCurrentId(cajero.numero);
+    setCurrentId(formFact.numero);
     showModal(true);
   };
 
   return !isLoading ? (
     <>
-      <div className="tabla-cajeros-container overflow-x-auto mt-3 bg-white m-3 w-full lg:w-5/8">
-        {cajerosFiltrados.length > 0 ? (
+      <div className="tabla-formfact-container overflow-x-auto mt-3 bg-white m-3 w-full lg:w-5/8">
+        {formFactsFiltrados.length > 0 ? (
           <table className="table table-xs table-zebra table-compact w-full">
             <thead className="relative z-[1] md:static">
               <tr>
                 <th></th>
                 <td>Nombre</td>
-                <td>Telefono</td>
-                <td>Correo</td>
+                <td>Longitud</td>
                 <th className="w-[calc(20%)]">Acciones</th>
               </tr>
             </thead>
             <tbody>
-              {cajerosFiltrados.map((item) => (
+              {formFactsFiltrados.map((item) => (
                 <tr key={item.numero} className="hover:cursor-pointer">
                   <th className="text-left">
                     {item.numero}
@@ -41,8 +40,7 @@ function TablaCajeros({
                   <td className="text-left w-50">
                     {item.nombre}
                   </td>
-                  <td>{item.telefono}</td>
-                  <td>{item.mail}</td>
+                  <td>{item.longitud}</td>
                   <th>
                     <div className="flex flex-row space-x-1">
                       <div
@@ -75,8 +73,7 @@ function TablaCajeros({
               <tr>
                 <th></th>
                 <td>Nombre</td>
-                <td>Telefono</td>
-                <td>Correo</td>
+                <td>Longitud</td>
                 <th>Acciones</th>
               </tr>
             </tfoot>
@@ -91,4 +88,4 @@ function TablaCajeros({
   );
 }
 
-export default TablaCajeros;
+export default TablaFormFact;

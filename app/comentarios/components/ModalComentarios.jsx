@@ -2,16 +2,17 @@ import { soloEnteros, soloDecimales, pone_ceros } from "@/app/utils/globalfn";
 import React from "react";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import { useState, useEffect } from "react";
-import Inputs from "@/app/formapago/components/Inputs";
+import Inputs from "@/app/comentarios/components/Inputs";
 
-function ModalFormaPago({
+
+function ModalComentarios({
   accion,
   onSubmit,
   currentID,
   register,
   errors,
-  setFormaPago,
-  formaPago,
+  setFormaComentarios,
+  comentarios,
 }) {
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
@@ -28,23 +29,23 @@ function ModalFormaPago({
     }
     setTitulo(
       accion === "Alta"
-        ? `Nueva Forma de Pago: ${currentID}`
+        ? `Nuevos Comentarios: ${currentID}`
         : accion === "Editar"
-        ? `Editar Forma de Pago: ${currentID}`
+        ? `Editar Comentarios: ${currentID}`
         : accion === "Eliminar"
-        ? `Eliminar Forma de Pago: ${currentID}`
-        : `Ver Forma de Pago: ${currentID}`
+        ? `Eliminar Comentarios: ${currentID}`
+        : `Ver Comentarios: ${currentID}`
     );
   }, [accion]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
-      ? setFormaPago((formaPago) => ({
-          ...formaPago,
+      ? setFormaComentarios((comentarios) => ({
+          ...comentarios,
           [evt.target.name]: pone_ceros(evt.target.value, 0, true),
         }))
-      : setFormaPago((formaPago) => ({
-          ...formaPago,
+      : setFormaComentarios((comentarios) => ({
+          ...comentarios,
           [evt.target.name]: pone_ceros(evt.target.value, 2, true),
         }));
   };
@@ -60,7 +61,7 @@ function ModalFormaPago({
         {/* if there is a button in form, it will close the modal */}
         <form onSubmit={onSubmit}>
           <h3 className="font-bold text-lg mb-5">{titulo}</h3>
-          <fieldset id="fs_formapago">
+          <fieldset id="fs_comentario">
             <div className="container flex flex-col space-y-5">
               <Inputs
                 dataType={"int"}
@@ -72,75 +73,76 @@ function ModalFormaPago({
                 requerido={true}
                 errors={errors}
                 register={register}
-                message={"idRequerido"}
+                message={"id Requerido"}
                 isDisabled={true}
-                //defaultValue={formaPago.id}
+
               />
               <Inputs
                 dataType={"string"}
-                name={"descripcion"}
+                name={"comentario_1"}
                 tamañolabel={""}
                 className={"grow"}
-                Titulo={"Descripcion: "}
+                Titulo={"Comentario 1: "}
                 type={"text"}
                 requerido={true}
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"descripcion requerid"}
+                message={"Comentario requerido"}
                 maxLength={50}
                 isDisabled={isDisabled}
-                //defaultValue={formaPago.descripcion}
+
               />
 
               <Inputs
-                dataType={"float"}
-                name={"comision"}
-                tamañolabel={"w-3/6"}
-                className={" w-2/6 grow text-right"}
-                Titulo={"Comision:"}
+                dataType={"string"}
+                name={"comentario_2"}
+                tamañolabel={""}
+                className={"grow"}
+                Titulo={"Comentario 2: "}
                 type={"text"}
                 requerido={true}
+                isNumero={false}
                 errors={errors}
                 register={register}
-                message={"comision requerid"}
+                message={"Comentario requerido"}
                 maxLength={50}
                 isDisabled={isDisabled}
-                handleBlur={handleBlur}
-                //defaultValue={formaPago.comision}
+                
               />
+
               <Inputs
                 dataType={"string"}
-                name={"aplicacion"}
+                name={"comentario_3"}
                 tamañolabel={""}
                 className={"grow"}
-                Titulo={"Aplicacion:"}
+                Titulo={"Comentario 3: "}
                 type={"text"}
                 requerido={true}
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"Aplicacion requerida"}
-                maxLength={34}
+                message={"Comentario requerido"}
+                maxLength={50}
                 isDisabled={isDisabled}
-                //defaultValue={formaPago.aplicacion}
               />
+
               <Inputs
                 dataType={"string"}
-                name={"cue_banco"}
-                tamañolabel={""}
-                className={"grow"}
-                Titulo={"Cuenta Banco:"}
-                type={"text"}
+                name={"generales"}
+                tamañolabel={"w-3/6"}
+                className={" w-1/6 grow text-right"}
+                Titulo={"Generales:"}
+                type={"select"}
                 requerido={true}
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"Cuenta Banco requerida"}
-                maxLength={30}
+                message={"General requerido"}
+                maxLength={1}
                 isDisabled={isDisabled}
-                //defaultValue={formaPago.cue_banco}
               />
+
             </div>
           </fieldset>
           <div className=" modal-action">
@@ -167,4 +169,4 @@ function ModalFormaPago({
   );
 }
 
-export default ModalFormaPago;
+export default ModalComentarios;

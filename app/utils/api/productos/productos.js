@@ -1,3 +1,6 @@
+import { ReporteExcel } from "../../ReportesExcel";
+import { ReportePDF } from "../../ReportesPDF";
+
 export const getProductos = async (token, baja) => {
     let url = ""
     baja
@@ -5,7 +8,6 @@ export const getProductos = async (token, baja) => {
         : (url = `http://127.0.0.1:8000/api/product`)
     const res = await fetch(url, {
         headers: {
-            Authorization: "Bearer " + token,
             "Content-Type": "application/json"
         }
     })
@@ -17,7 +19,6 @@ export const getLastProduct = async (token) => {
     let url = `http://127.0.0.1:8000/api/product/last`
     const res = await fetch(url, {
         headers: {
-            Authorization: "Bearer " + token,
             "Content-Type": "application/json"
         }
     })
@@ -32,7 +33,6 @@ export const filtroProductos = async (token, tipo, valor) => {
     const res = await fetch(url, {
         method: "GET",
         headers: {
-            Authorization: "Bearer " + token,
             "Content-Type": "application/json"
         }
     })
@@ -75,7 +75,7 @@ export const guardarProductos = async (token, data, accion) => {
             baja: data.baja,
         }),
         headers: new Headers({
-            Authorization: "Bearer " + token,
+            // Authorization: "Bearer " + token,
             "Content-Type": "application/json",
         }),
     })

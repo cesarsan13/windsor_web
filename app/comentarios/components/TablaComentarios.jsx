@@ -2,44 +2,44 @@
 import Loading from "@/app/components/loading";
 import NoData from "@/app/components/noData";
 import React from "react";
-function TablaFormaPago({
-  formaPagosFiltrados,
+function TablaComentarios({
+  formaComentariosFiltrados,
   isLoading,
   showModal,
-  setFormaPago,
+  setFormaComentarios,
   setAccion,
   setCurrentId,
 }) {
-  const tableAction = (evt, formaPago, accion) => {
-    setFormaPago(formaPago);
+  const tableAction = (evt, formaComentarios, accion) => {
+    setFormaComentarios(formaComentarios);
     setAccion(accion);
-    setCurrentId(formaPago.id);
+    setCurrentId(formaComentarios.id);
     showModal(true);
   };
 
   return !isLoading ? (
     <div className="overflow-x-auto mt-3  h-6/8 text-black bg-white m-2 w-full  lg:w-5/8 ">
-      {formaPagosFiltrados.length > 0 ? (
+      {formaComentariosFiltrados.length > 0 ? (
         <table className="table table-xs table-zebra table-pin-rows table-pin-cols max-h-[calc(50%)]">
           <thead className=" relative z-[1] md:static">
             <tr>
-              <th>id</th>
-              <td>Descripcion</td>
-              <td>Comision</td>
-              <td>Aplicacion</td>
-              <td>Cuenta Banco</td>
+              <th></th>
+              <td>Comentario 1</td>
+              <td>Comentario 2</td>
+              <td>Comentario 3</td>
+              <td>Generales</td>
               <th className="w-[calc(10%)]">Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {formaPagosFiltrados.map((item) => (
-              <tr key={item.id} className="hover:cursor-pointer">
-                <th className={"text-right"}>{item.id}</th>
-                <td>{item.descripcion}</td>
-                <td className={`text-right w-11`}>{item.comision}</td>
-                <td>{item.aplicacion}</td>
-                <td>{item.cue_banco}</td>
-                <th>
+            {formaComentariosFiltrados.map((item) => (
+              <tr key = {item.id} class="hover: cursor-pointer">
+                  <th className={"text-right"}>{item.id}</th>
+                  <td> {item.comentario_1 } </td>
+                  <td> {item.comentario_2 } </td>
+                  <td> {item.comentario_3 } </td>
+                  <td> {item.generales} </td>
+                  <th>
                   <div className="flex flex-row space-x-3">
                     <div
                       className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
@@ -63,17 +63,18 @@ function TablaFormaPago({
                       <i className="fa-solid fa-trash"></i>
                     </div>
                   </div>
-                </th>
+                </th>  
+
               </tr>
             ))}
           </tbody>
           <tfoot>
             <tr>
               <th></th>
-              <td>Descripcion</td>
-              <td>Comision</td>
-              <td>Aplicacion</td>
-              <td>Cuenta Banco</td>
+              <td>Comentario 1</td>
+              <td>Comentario 2</td>
+              <td>Comentario 3</td>
+              <td>Generales</td>
               <th>Acciones</th>
             </tr>
           </tfoot>
@@ -84,10 +85,7 @@ function TablaFormaPago({
     </div>
   ) : (
     <Loading></Loading>
-    // <div className="flex justify-center items-center pt-10">
-    //   <span className="loading loading-ring loading-lg text-4xl"></span>
-    // </div>
   );
 }
 
-export default TablaFormaPago;
+export default TablaComentarios;
