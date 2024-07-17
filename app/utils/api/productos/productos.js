@@ -135,6 +135,7 @@ export const Imprimir = (configuracion) => {
     }
   });
   newPDF.guardaReporte("Productos");
+  // console.log("cambios")
 };
 
 export const ImprimirExcel = (configuracion)=>{
