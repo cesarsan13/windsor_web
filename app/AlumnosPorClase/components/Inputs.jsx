@@ -1,7 +1,6 @@
 import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
 import React from "react";
 
-
 function Inputs({
   Titulo,
   name,
@@ -9,13 +8,13 @@ function Inputs({
   requerido,
   dataType,
   className,
-  register,
   message,
   errors,
   tamañolabel,
   maxLenght,
   isDisabled,
   handleBlur,
+  setFormaHorarioAPC,
 }) {
 
   if (type === 'select') {
@@ -27,12 +26,13 @@ function Inputs({
             name={name}
             id={name}
             className={className}
-            {...register(name, {
-              ...(requerido && { required: message }),
-            })}>
+          >
             <option value="">&nbsp;&nbsp; ... &nbsp;&nbsp;</option>
-            <option value="S">Si</option>
-            <option value="N">No</option>
+            { setFormaHorarioAPC.map((option) => (
+              <option key={option.numero} value={option.numero}>
+                {option.horario}
+              </option>
+            ))}
           </select>
         </label>
         {errors[name] && (

@@ -1,3 +1,6 @@
+import { ReporteExcel } from "../../ReportesExcel";
+import { ReportePDF } from "../../ReportesPDF";
+
 export const getProductos = async (token, baja) => {
     let url = ""
     baja

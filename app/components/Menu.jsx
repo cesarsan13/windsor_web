@@ -4,12 +4,15 @@ function Menu({ vertical }) {
   return vertical ? (
     <ul
       tabIndex={0}
-      className="menu menu-md dropdown-content bg-base-100 rounded-box  mt-3 w-52 p-2 shadow z-50"
+      className="menu menu-md dropdown-content bg-base-100 rounded-box  text-black dark:text-white mt-3 w-52 p-2 shadow z-50"
     >
       <li>
         <details>
           <summary>Catalogos</summary>
           <ul>
+            <li>
+              <Link href="/alumnos">Alumnos</Link>
+            </li>
             <li>
               <Link href="/productos">Productos</Link>
             </li>
@@ -28,13 +31,24 @@ function Menu({ vertical }) {
             </li>
           </ul>
         </details>
+        
+      </li>
+      <li>
+      <details>
+          <summary>Reportes</summary>
+          <ul>
+          <li>
+            <Link href="/AlumnosPorClase">Lista de Alumnos por clase</Link>
+            </li>
+          </ul>
+        </details>
       </li>
       <li>
         <a>Item 3</a>
       </li>
     </ul>
   ) : (
-    <ul className="menu menu-horizontal px-1 z-[2] ">
+    <ul className="menu menu-horizontal px-1 z-[2] text-black dark:text-white">
       <li>
         <details>
           <summary>Catalogos</summary>
@@ -60,12 +74,23 @@ function Menu({ vertical }) {
             </li>
           </ul>
         </details>
+        </li>
+        <li>
+        <details>
+          <summary>Reportes</summary>
+          <ul>
+          <li>
+            <Link href="/AlumnosPorClase">Lista de Alumnos por clase</Link>
+            </li>
+          </ul>
+        </details>
       </li>
       <li>
         <a>Item 3</a>
       </li>
     </ul>
   );
+
 }
 
 export default Menu;

@@ -24,12 +24,12 @@ function ModalProductos({
         }
         setTitulo(
             accion === "Alta"
-                ? `Nueva Forma de Pago: ${currentID}`
+                ? `Nuevo Producto: ${currentID}`
                 : accion === "Editar"
-                    ? `Editar Forma de Pago: ${currentID}`
+                    ? `Editar Producto: ${currentID}`
                     : accion === "Eliminar"
-                        ? `Eliminar Forma de Pago: ${currentID}`
-                        : `Ver Forma de Pago: ${currentID}`
+                        ? `Eliminar Producto: ${currentID}`
+                        : `Ver Producto: ${currentID}`
         );
     }, [accion]);
     const handleBlur = (evt, datatype) => {

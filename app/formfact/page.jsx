@@ -16,7 +16,7 @@ import { NEXT_CACHE_REVALIDATE_TAG_TOKEN_HEADER } from "next/dist/lib/constants"
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
-
+import styles from "@/app/formfact/styles.module.css";
 function FormFact() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -185,6 +185,13 @@ function FormFact() {
     event.preventDefault;
     setTB_Busqueda(event.target.value);
   };
+
+  const onDragStart = (evt) => {
+    evt.dataTransfer.setData("text/plain", evt.target.id);
+
+    evt.currentTarget.style.backgroundColor = "yellow";
+  };
+
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -237,6 +244,19 @@ function FormFact() {
           </div>
         </div>
       </div>
+      {/* <div className={styles.example_parent}>
+        <div className={styles.example_origin}>
+          <div
+            id="draggable-1"
+            className={styles.example_draggable}
+            onDragStart={(evt) => alert(evt)}
+          >
+            draggable
+          </div>
+        </div>
+
+        <div className={styles.example_dropzone}>dropzone</div>
+      </div> */}
     </>
   );
 }

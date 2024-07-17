@@ -1,41 +1,55 @@
 "use client";
 import Loading from "@/app/components/loading";
 import NoData from "@/app/components/noData";
+import { getFotoAlumno } from "@/app/utils/api/alumnos/alumnos";
+import { calculaDigitoBvba, poneCeros } from "@/app/utils/globalfn";
 import React from "react";
-function TablaProductos({
-    productosFiltrados,
+function TablaAlumnos({
+    session,
+    alumnosFiltrados,
     isLoading,
     showModal,
-    setProducto,
+    setAlumno,
     setAccion,
     setCurrentId,
     formatNumber,
+    setCapturedImage,
+    setcondicion,
 }) {
-    const tableAction = (evt, producto, accion) => {
-        setProducto(producto);
+    const tableAction = async (evt, alumno, accion) => {
+        const imagenUrl = await getFotoAlumno(
+            session.user.token,
+            alumno.imagen
+        );
+        if (imagenUrl) {
+            setCapturedImage(imagenUrl);
+        }
+        let ref = "100910" + poneCeros(alumno.id, 4);
+        let digitoBvba = calculaDigitoBvba(ref);
+        let resultado = `${ref}${digitoBvba}`;
+        alumno.referencia = resultado;
+        setAlumno(alumno);
         setAccion(accion);
-        setCurrentId(producto.id);
+        setCurrentId(alumno.id);
         showModal(true);
+        setcondicion(false);
     };
 
     return !isLoading ? (
-        <div className="overflow-x-auto mt-3  h-6/8 text-black  m-2 w-full  lg:w-5/8 ">
-            {productosFiltrados.length > 0 ? (
-                <table className="table table-xs bg-white table-pin-rows table-pin-cols max-h-[calc(50%)]">
+        <div className="overflow-x-auto mt-3  h-6/8 text-white bg-white m-2 w-full  lg:w-5/8 ">
+            {alumnosFiltrados.length > 0 ? (
+                <table className="table table-xs bg-[#1d232a] table-pin-rows table-pin-cols max-h-[calc(50%)]">
                     <thead className=" relative z-[1] md:static">
                         <tr>
                             <th></th>
-                            <td>Descripcion</td>
-                            <td>Aplicacion</td>
-                            <td>Costo</td>
-                            <td>Recargo</td>
-                            <td>Condición</td>
-                            <td>IVA</td>
+                            <td>Nombre</td>
+                            <td>Grado</td>
+                            {/* <td>Grado</td> */}
                             <th className="w-[calc(10%)]">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {productosFiltrados.map((item) => (
+                        {alumnosFiltrados.map((item) => (
                             <tr key={item.id} className="hover:cursor-pointer">
                                 <th
                                     className={
@@ -46,12 +60,9 @@ function TablaProductos({
                                 >
                                     {item.id}
                                 </th>
-                                <td>{item.descripcion}</td>
-                                <td>{item.aplicacion}</td>
-                                <td>{formatNumber(item.costo)}</td>
-                                <td>{formatNumber(item.pro_recargo)}</td>
-                                <td>{item.cond_1}</td>
-                                <td>{formatNumber(item.iva)}</td>
+                                <td>{`${item.nombre} ${item.a_paterno} ${item.a_materno}`}</td>
+                                <td>{item.hora_1}</td>
+                                {/* <td>{item.grado}</td> */}
                                 <th>
                                     <div className="flex flex-row space-x-3">
                                         <div
@@ -83,12 +94,9 @@ function TablaProductos({
                     <tfoot>
                         <tr>
                             <th></th>
-                            <td>Descripcion</td>
-                            <td>Aplicacion</td>
-                            <td>Costo</td>
-                            <td>Recargo</td>
-                            <td>Condición</td>
-                            <td>IVA</td>
+                            <td>Nombre</td>
+                            <td>Grado</td>
+                            {/* <td>Grado</td>*/}
                             <th>Acciones</th>
                         </tr>
                     </tfoot>
@@ -99,10 +107,7 @@ function TablaProductos({
         </div>
     ) : (
         <Loading></Loading>
-        // <div className="flex justify-center items-center pt-10">
-        //   <span className="loading loading-ring loading-lg text-4xl"></span>
-        // </div>
     );
 }
 
-export default TablaProductos;
+export default TablaAlumnos;

@@ -11,6 +11,8 @@ import {
   getProductos,
   guardarProductos,
   getLastProduct,
+  Imprimir,
+  ImprimirExcel,
 } from "@/app/utils/api/productos/productos";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -18,18 +20,18 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
 function FormaPago() {
-  const router = useRouter();
-  const { data: session, status } = useSession();
-  const [productos, setProductos] = useState([]);
-  const [producto, setProducto] = useState({});
-  const [productosFiltrados, setProductosFiltrados] = useState([]);
-  const [bajas, setBajas] = useState(false);
-  const [openModal, setModal] = useState(false);
-  const [accion, setAccion] = useState("");
-  const [isLoading, setisLoading] = useState(false);
-  const [currentID, setCurrentId] = useState("");
-  const [filtro, setFiltro] = useState("");
-  const [TB_Busqueda, setTB_Busqueda] = useState("");
+    const router = useRouter();
+    const { data: session, status } = useSession();
+    const [productos, setProductos] = useState([]);
+    const [producto, setProducto] = useState({});
+    const [productosFiltrados, setProductosFiltrados] = useState([]);
+    const [bajas, setBajas] = useState(false);
+    const [openModal, setModal] = useState(false);
+    const [accion, setAccion] = useState("");
+    const [isLoading, setisLoading] = useState(false);
+    const [currentID, setCurrentId] = useState("");
+    const [filtro, setFiltro] = useState("");
+    const [TB_Busqueda, setTB_Busqueda] = useState("");
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -227,149 +229,40 @@ function FormaPago() {
   };
 
   const imprimirPDF = () => {
-    try {
-      const doc = new jsPDF();
-      const { name } = session.user;
-      doc.setFontSize(14);
-      doc.text("Sistema de Control de Escolar", 14, 16);
-      doc.setFontSize(10);
-      doc.text("Reporte Datos de Productos", 14, 22);
-      doc.setFontSize(10);
-      doc.text(`Usuario: ${name}`, 14, 28);
-      const date = new Date();
-      const dateStr = `${date.getFullYear()}/${(
-        "0" +
-        (date.getMonth() + 1)
-      ).slice(-2)}/${("0" + date.getDate()).slice(-2)}`;
-      const timeStr = `${("0" + date.getHours()).slice(-2)}:${(
-        "0" + date.getMinutes()
-      ).slice(-2)}:${("0" + date.getSeconds()).slice(-2)}`;
-      doc.text(`Fecha: ${dateStr}`, 150, 16);
-      doc.text(`Hora: ${timeStr}`, 150, 22);
-      doc.text(`Hoja: 1`, 150, 28);
-
-      const columns = [
-        { header: "Número", dataKey: "id" },
-        { header: "Descripción", dataKey: "descripcion" },
-        { header: "Costo", dataKey: "costo" },
-        { header: "Frecuencia", dataKey: "frecuencia" },
-        { header: "Recargo", dataKey: "pro_recargo" },
-        { header: "Aplicación", dataKey: "aplicacion" },
-        { header: "IVA", dataKey: "iva" },
-        { header: "Condición", dataKey: "cond_1" },
-        { header: "Cambio Precio", dataKey: "cam_precio" },
-        { header: "Referencia", dataKey: "ref" },
-      ];
-
-      doc.autoTable({
-        startY: 40,
-        head: [columns.map((col) => col.header)],
-        body: productosFiltrados.map((row) =>
-          columns.map((col) => {
-            if (
-              col.dataKey === "iva" ||
-              col.dataKey === "costo" ||
-              col.dataKey === "pro_recargo"
-            ) {
-              return `${row[col.dataKey].toFixed(2)}`;
-            }
-            if (col.dataKey === "cam_precio") {
-              return row[col.dataKey] ? "Si" : "No";
-            }
-            return row[col.dataKey] || "";
-          })
-        ),
-        styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0] },
-        headStyles: { fillColor: [230, 230, 230], textColor: [0, 0, 0] },
-        alternateRowStyles: { fillColor: [240, 240, 240] },
-        theme: "plain",
-        margin: { top: 40, left: 0 },
-        columnStyles: {
-          0: { halign: "right", cellWidth: 20 },
-          1: { halign: "left", cellWidth: 30 },
-          2: { halign: "right", cellWidth: 15 },
-          3: { halign: "left", cellWidth: 25 },
-          4: { halign: "right", cellWidth: 20 },
-          5: { halign: "left", cellWidth: 25 },
-          6: { halign: "right", cellWidth: 12 },
-          7: { halign: "right", cellWidth: 22 },
-          8: { halign: "left", cellWidth: 18 },
-          9: { halign: "left", cellWidth: 23 },
-        },
-      });
-
-      const pageCount = doc.internal.getNumberOfPages();
-      for (let i = 1; i <= pageCount; i++) {
-        doc.setPage(i);
-        doc.setFontSize(10);
-        const pageText = `Página ${i} de ${pageCount}`;
-        const textWidth = doc.getTextWidth(pageText);
-        const pageHeight = doc.internal.pageSize.height;
-        const pageWidth = doc.internal.pageSize.width;
-        doc.text(pageText, pageWidth - textWidth - 10, pageHeight - 10);
-      }
-      doc.save("Productos.pdf");
-    } catch (error) {
-      console.error("Error al generar PDF:", error);
-    }
+    const configuracion = {
+      Encabezado: {
+        Nombre_Aplicacion: "Sistema de Control Escolar",
+        Nombre_Reporte: "Reporte Datos Productos",
+        Nombre_Usuario: `Usuario: ${session.user.name}`,
+      },
+      body: productosFiltrados,
+    };
+    Imprimir(configuracion);
   };
 
   const imprimirEXCEL = () => {
-    const { name } = session.user;
-    const date = new Date();
-    const dateStr = `${date.getFullYear()}/${(
-      "0" +
-      (date.getMonth() + 1)
-    ).slice(-2)}/${("0" + date.getDate()).slice(-2)}`;
-    const timeStr = `${("0" + date.getHours()).slice(-2)}:${(
-      "0" + date.getMinutes()
-    ).slice(-2)}:${("0" + date.getSeconds()).slice(-2)}`;
-
-    const headerInfo = [
-      ["Sistema de Control de Escolar", "", "", "", `Fecha: ${dateStr}`],
-      ["Reporte Datos de Cajero", "", "", "", `Hora: ${timeStr}`],
-      [`Usuario: ${name}`, "", "", "", "Hoja: 1"],
-      [],
-    ];
-
-    const columns = [
-      { header: "Número", dataKey: "id" },
-      { header: "Descripción", dataKey: "descripcion" },
-      { header: "Costo", dataKey: "costo" },
-      { header: "Frecuencia", dataKey: "frecuencia" },
-      { header: "Recargo", dataKey: "pro_recargo" },
-      { header: "Aplicación", dataKey: "aplicacion" },
-      { header: "IVA", dataKey: "iva" },
-      { header: "Condición", dataKey: "cond_1" },
-      { header: "Cambio Precio", dataKey: "cam_precio" },
-      { header: "Referencia", dataKey: "ref" },
-    ];
-
-    const data = productosFiltrados.map((row) => {
-      let rowData = {};
-      columns.forEach((col) => {
-        if (
-          col.dataKey === "iva" ||
-          col.dataKey === "costo" ||
-          col.dataKey === "pro_recargo"
-        ) {
-          rowData[col.header] = row[col.dataKey].toFixed(2);
-        } else if (col.dataKey === "cam_precio") {
-          rowData[col.header] = row[col.dataKey] ? "Si" : "No";
-        } else {
-          rowData[col.header] = row[col.dataKey] || "";
-        }
-      });
-      return rowData;
-    });
-
-    const worksheetData = headerInfo.concat(
-      XLSX.utils.sheet_to_json(XLSX.utils.json_to_sheet(data), { header: 1 })
-    );
-    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Productos");
-    XLSX.writeFile(workbook, "Productos.xlsx");
+    const configuracion = {
+      Encabezado: {
+        Nombre_Aplicacion: "Sistema de Control Escolar",
+        Nombre_Reporte: "Reporte Datos Productos",
+        Nombre_Usuario: `Usuario: ${session.user.name}`,
+      },
+      body: productosFiltrados,
+      columns: [
+        { header: "Numero", dataKey: "id" },
+        { header: "Descripcion", dataKey: "descripcion" },
+        { header: "Costo", dataKey: "costo" },
+        { header: "Frecuencia", dataKey: "frecuencia" },
+        { header: "Recargo", dataKey: "pro_recargo" },
+        { header: "Aplicacion", dataKey: "aplicacion" },
+        { header: "IVA", dataKey: "iva" },
+        { header: "Condicion", dataKey: "cond_1" },
+        { header: "Cambio Precio", dataKey: "cam_precio" },
+        { header: "Referencia", dataKey: "ref" },
+      ],
+      nombre: "Productos",
+    };
+    ImprimirExcel(configuracion);
   };
   const showModal = (show) => {
     show
@@ -444,4 +337,4 @@ function FormaPago() {
   );
 }
 
-export default FormaPago;
+export default Productos;

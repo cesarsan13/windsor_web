@@ -21,31 +21,29 @@ function Busqueda({
     <div className="join w-full max-w-3/4 flex justify-start items-center h-1/8 p-1">
       <input
         id="TB_Busqueda"
-        className="input input-bordered input-md join-item w-full max-w-lg dark:bg-slate-100 text-neutral-600 "
+        className="input input-bordered input-md join-item w-full max-w-lg dark:bg-slate-100 "
         placeholder="Buscar..."
         onChange={(event) => handleBusquedaChange(event)}
         onKeyDown={(evt) => handleKeyDown(evt)}
         value={TB_Busqueda}
       />
       <select
-        className="select select-bordered join-item dark:bg-slate-100 w-20 md:w-32 text-neutral-600"
+        className="select select-bordered join-item dark:bg-slate-100 w-20 md:w-32"
         onChange={(event) => handleFiltroChange(event)}
       >
-        <option disabled defaultValue={"id"}>
+        <option disabled defaultValue={""}>
           Filtros
         </option>
-        <option value={"id"}>Numero</option>
-        <option value={"descripcion"}>Descripción</option>
-        <option value={"aplicacion"}>Aplicación</option>
-        <option value={"costo"}>Costo</option>
-        <option value={"pro_recargo"}>Recargos</option>
-        <option value={"iva"}>IVA</option>
-        <option value={"cond_1"}>Condicion</option>
+        <option value={"id"}>Id</option>
+        <option value={"comentario_1"}>Comentario 1</option>
+        <option value={"comentario_2"}>Comentario 2</option>
+        <option value={"comentario_3"}>Comentario 3</option>
+        <option value={"generales"}>Generales</option>
       </select>
       <div className="tooltip " data-tip="Limpiar">
         <button
           className="btn join-item  bg-blue-500 hover:bg-blue-700 text-white input-bordered"
-          onClick={limpiarBusqueda}
+          onClick={(evt) => limpiarBusqueda(evt)}
         >
           <i className="fa-solid fa-broom"></i>
         </button>
@@ -58,23 +56,10 @@ function Busqueda({
             className=" checkbox mx-2 checkbox-md"
             onClick={(evt) => setBajas(evt.target.checked)}
           />
-          <span className="fa-solid fa-trash block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600"></span>
-          <span className="label-text font-bold md:block hidden text-neutral-600 ">Bajas</span>
+          <span className="fas fa-trash block sm:hidden md:hidden lg:hidden xl:hidden"></span>
+          <span className="label-text font-bold md:block hidden ">Bajas</span>
         </label>
       </div>
-      {/* <div className="lg:flex hidden justify-end w-full">
-        <div className="stats stats-vertical lg:stats-horizontal shadow  ">
-          <div className="stat">
-            <div className="stat-title ">Activos</div>
-            <div className="stat-value text-2xl text-green-500">31K</div>
-          </div>
-
-          <div className="stat">
-            <div className="stat-title">Bajas</div>
-            <div className="stat-value text-2xl text-red-500">4,200</div>
-          </div>
-        </div>
-      </div> */}
     </div>
   );
 }
