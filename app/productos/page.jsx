@@ -19,19 +19,19 @@ import { useSession } from "next-auth/react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
-function FormaPago() {
-    const router = useRouter();
-    const { data: session, status } = useSession();
-    const [productos, setProductos] = useState([]);
-    const [producto, setProducto] = useState({});
-    const [productosFiltrados, setProductosFiltrados] = useState([]);
-    const [bajas, setBajas] = useState(false);
-    const [openModal, setModal] = useState(false);
-    const [accion, setAccion] = useState("");
-    const [isLoading, setisLoading] = useState(false);
-    const [currentID, setCurrentId] = useState("");
-    const [filtro, setFiltro] = useState("");
-    const [TB_Busqueda, setTB_Busqueda] = useState("");
+function Productos() {
+  const router = useRouter();
+  const { data: session, status } = useSession();
+  const [productos, setProductos] = useState([]);
+  const [producto, setProducto] = useState({});
+  const [productosFiltrados, setProductosFiltrados] = useState([]);
+  const [bajas, setBajas] = useState(false);
+  const [openModal, setModal] = useState(false);
+  const [accion, setAccion] = useState("");
+  const [isLoading, setisLoading] = useState(false);
+  const [currentID, setCurrentId] = useState("");
+  const [filtro, setFiltro] = useState("");
+  const [TB_Busqueda, setTB_Busqueda] = useState("");
 
   useEffect(() => {
     if (status === "loading" || !session) {
