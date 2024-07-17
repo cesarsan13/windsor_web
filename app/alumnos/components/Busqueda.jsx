@@ -35,12 +35,8 @@ function Busqueda({
           Filtros
         </option>
         <option value={"id"}>Numero</option>
-        <option value={"descripcion"}>Descripción</option>
-        <option value={"aplicacion"}>Aplicación</option>
-        <option value={"costo"}>Costo</option>
-        <option value={"pro_recargo"}>Recargos</option>
-        <option value={"iva"}>IVA</option>
-        <option value={"cond_1"}>Condicion</option>
+        <option value={"nombre"}>Nombre</option>
+        <option value={"grado"}>Grado</option>
       </select>
       <div className="tooltip " data-tip="Limpiar">
         <button

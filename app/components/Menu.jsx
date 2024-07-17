@@ -11,6 +11,9 @@ function Menu({ vertical }) {
           <summary>Catalogos</summary>
           <ul>
             <li>
+              <Link href="/alumnos">Alumnos</Link>
+            </li>
+            <li>
               <Link href="/productos">Productos</Link>
             </li>
             <li>
