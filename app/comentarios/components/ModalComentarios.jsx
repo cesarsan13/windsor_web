@@ -51,14 +51,14 @@ function ModalComentarios({
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box">
         <button
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+          className="btn btn-sm btn-circle btn-ghost  text-black dark:text-white absolute right-2 top-2"
           onClick={() => document.getElementById("my_modal_3").close()}
         >
           ✕
         </button>
         {/* if there is a button in form, it will close the modal */}
         <form onSubmit={onSubmit}>
-          <h3 className="font-bold text-lg mb-5">{titulo}</h3>
+          <h3 className="font-bold text-lg mb-5  text-black dark:text-white">{titulo}</h3>
           <fieldset id="fs_comentario">
             <div className="container flex flex-col space-y-5">
               <Inputs

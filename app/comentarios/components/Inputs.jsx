@@ -21,12 +21,12 @@ function Inputs({
   if (type === 'select') {
     return (
       <div className="flex flex-col">
-        <label className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel}`}>
+        <label className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
           {Titulo}
           <select
             name={name}
             id={name}
-            className={className}
+            className={`text-black dark:text-white ${className}`}
             {...register(name, {
               ...(requerido && { required: message }),
             })}>
@@ -47,14 +47,14 @@ function Inputs({
   return ( 
     <div className="flex flex-col">
       <label
-        className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel}`}>
+        className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
         {Titulo}
         <input
           {...(maxLenght !== 0 && { maxLength: maxLenght })}
           name={name}
           id={name}
           type={type}
-          className={className}
+          className={`text-black dark:text-white ${className}`}
           {...(dataType === "int" && { onKeyDown: soloEnteros })}
           {...(dataType === "float" && { onKeyDown: soloDecimales })}
           {...register(name, {
