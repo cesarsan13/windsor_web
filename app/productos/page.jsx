@@ -19,7 +19,7 @@ import { useSession } from "next-auth/react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
-function FormaPago() {
+function Productos() {
     const router = useRouter();
     const { data: session, status } = useSession();
     const [productos, setProductos] = useState([]);
