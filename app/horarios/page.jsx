@@ -237,8 +237,7 @@ function Horarios() {
         }
         ImprimirExcel(configuracion)        
     } 
-    const fieldsToShow = ["id","descripcion"]
-    console.log(da)
+    const fieldsToShow = ["id","descripcion"]    
     return (
         <>
             <ModalHorario
@@ -271,7 +270,7 @@ function Horarios() {
                                 TB_Busqueda={TB_Busqueda}
                                 setTB_Busqueda={setTB_Busqueda}
                             />
-                            <BuscarCat data={data}  fieldsToShow={fieldsToShow} setItem={setDa}/>
+                            <BuscarCat table={"productos"} token={session.user.token} fieldsToShow={fieldsToShow} setItem={setDa}/>
                             <TablaHorarios
                                 isLoading={isLoading}
                                 HorariosFiltrados={horariosFiltrados}

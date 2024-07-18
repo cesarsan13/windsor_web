@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ModalBuscarCat from './ModalBuscarCat';
+import { getProductos } from '../utils/api/productos/productos';
 
-function BuscarCat({ data, fieldsToShow, setItem }) {
+function BuscarCat({ table, fieldsToShow, setItem,token }) {
   const [inputValue, setInputValue] = useState(''); // Estado para el valor del input
+  const [data, setData] = useState([]); // Estado para los datos de la tabla
+  const [filteredData, setFilteredData] = useState([]);
 
   const Buscar = async (event) => {
     showModal(true);
@@ -14,16 +17,51 @@ function BuscarCat({ data, fieldsToShow, setItem }) {
       : document.getElementById("my_modal_4").close();
   };
 
+  useEffect(()=>{
+    switch (table) {
+      case 'productos':
+          const data = getProductos(token,"")
+          setData(data)
+          setFilteredData(data)
+        break;
+    
+      default:
+        break;
+    }
+  },[table])
+
   // Función para actualizar el valor del input
   const handleSetItem = (item) => {
     const descripcion = item[fieldsToShow[0]]; // Obtener el valor del campo 'descripcion'
     setInputValue(descripcion); // Ajusta el input con 'descripcion'
     setItem(item);
   };
+  
   const handleKeyDown = (evt) => {
     if (evt.key !== "Enter") return;
-    handleSetItem()
+    BuscarInfo()
   };
+
+  const BuscarInfo = () => {
+    if (inputValue === "") {
+      setFilteredData(data);
+      return;
+    }
+
+    const infoFiltrada = data.filter((item) => {
+      return fieldsToShow.some((field) => {
+        const valorCampo = item[field];
+        if (typeof valorCampo === "number") {
+          return valorCampo.toString().includes(inputValue);
+        }
+        return valorCampo?.toString().toLowerCase().includes(inputValue.toLowerCase());
+      });
+    });
+
+    console.log("Datos filtrados:", infoFiltrada); // Agrega un log para verificar los datos filtrados
+    setFilteredData(infoFiltrada);    
+  };
+
   return (
     <div className='join w-full max-w-3/4 flex justify-start items-center h-1/8 p-1'>
       <input 
