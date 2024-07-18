@@ -33,8 +33,8 @@ function Horarios() {
     const [filtro, setFiltro] = useState("");
     const [dia, setDia] = useState("")
     const [TB_Busqueda, setTB_Busqueda] = useState("");
-    const [data,setData] = useState([]);
-    const [da,setDa]=useState({})
+    const [data, setData] = useState({});
+    const [da, setDa] = useState({})
 
     useEffect(() => {
         if (status === "loading" || !session) {
@@ -44,8 +44,8 @@ function Horarios() {
             setisLoading(true)
             const { token } = session.user
             const data = await getHorarios(token, bajas)
-            const data1 = await getProductos(token,"")
-            setData(data1)            
+            // const data1 = await getProductos(token,"")
+            // setData(data1)            
             setHorarios(data)
             setHorariosFiltrados(data)
             if (filtro !== "" && TB_Busqueda !== "") {
@@ -85,7 +85,7 @@ function Horarios() {
             edad_fin: horario.edad_fin,
         })
     }, [horario, reset])
-    const Buscar = () => {        
+    const Buscar = () => {
         if (TB_Busqueda === "" || filtro === "") {
             setHorariosFiltrados(horarios);
             return;
@@ -146,12 +146,12 @@ function Horarios() {
                 showModal(true);
                 return;
             }
-        }        
+        }
         if (Array.isArray(dia)) {
             data.dia = dia.join("/")
         } else {
             data.dia = dia;
-        }        
+        }
         res = await guardarHorario(session.user.token, data, accion)
         if (res.status) {
             if (accion === "Alta") {
@@ -173,10 +173,10 @@ function Horarios() {
                             const fpFiltrados = horarios.filter((fp) => fp.numero !== data.numero);
                             setHorarios(fpFiltrados);
                             setHorariosFiltrados(fpFiltrados);
-                        } else {                            
+                        } else {
                             const fpActualizadas = horarios.map((fp) =>
                                 fp.nuemro === currentID ? { ...fp, ...data } : fp
-                            );                            
+                            );
                             setHorarios(fpActualizadas);
                             setHorariosFiltrados(fpActualizadas);
                         }
@@ -204,40 +204,43 @@ function Horarios() {
             <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
         );
     }
-    const ImprimePDF  = () => {
-        const configuracion ={
-            Encabezado:{
+    const ImprimePDF = () => {
+        const configuracion = {
+            Encabezado: {
                 Nombre_Aplicacion: "Sistema de Control Escolar",
-            Nombre_Reporte: "Reporte Datos Horario",
-            Nombre_Usuario: `Usuario: ${session.user.name}`,
+                Nombre_Reporte: "Reporte Datos Horario",
+                Nombre_Usuario: `Usuario: ${session.user.name}`,
             },
-            body : horariosFiltrados
+            body: horariosFiltrados
         }
         Imprimir(configuracion)
     }
-    const ImprimeExcel = () =>{
-        const configuracion ={
-            Encabezado:{
+    const ImprimeExcel = () => {
+        const configuracion = {
+            Encabezado: {
                 Nombre_Aplicacion: "Sistema de Control Escolar",
-            Nombre_Reporte: "Reporte Datos Horario",
-            Nombre_Usuario: `Usuario: ${session.user.name}`,
+                Nombre_Reporte: "Reporte Datos Horario",
+                Nombre_Usuario: `Usuario: ${session.user.name}`,
             },
-            body:horariosFiltrados,
-            columns:[
-                {header:"Numero",dataKey:"numero"},
-                {header:"Cancha",dataKey:"cancha"},
-                {header:"Dia",dataKey:"dia"},
-                {header:"Horario",dataKey:"horario"},
-                {header:"Niños",dataKey:"max_niños"},
-                {header:"Sexo",dataKey:"sexo"},
-                {header:"Edad Ini",dataKey:"edad_ini"},
-                {header:"Edad Fin",dataKey:"edad_fin"},
+            body: horariosFiltrados,
+            columns: [
+                { header: "Numero", dataKey: "numero" },
+                { header: "Cancha", dataKey: "cancha" },
+                { header: "Dia", dataKey: "dia" },
+                { header: "Horario", dataKey: "horario" },
+                { header: "Niños", dataKey: "max_niños" },
+                { header: "Sexo", dataKey: "sexo" },
+                { header: "Edad Ini", dataKey: "edad_ini" },
+                { header: "Edad Fin", dataKey: "edad_fin" },
             ],
-            nombre:"Horarios"
+            nombre: "Horarios"
         }
-        ImprimirExcel(configuracion)        
-    } 
-    const fieldsToShow = ["id","descripcion"]    
+        ImprimirExcel(configuracion)
+    }
+    const fieldsToShow = ["numero", "horario"]
+    const fieldsToShow2 = ["id", "descripcion"]
+    console.log("horario", da, "producto", data)
+    console.log("datos filtrados de horarios",da)
     return (
         <>
             <ModalHorario
@@ -270,7 +273,10 @@ function Horarios() {
                                 TB_Busqueda={TB_Busqueda}
                                 setTB_Busqueda={setTB_Busqueda}
                             />
-                            <BuscarCat table={"productos"} token={session.user.token} fieldsToShow={fieldsToShow} setItem={setDa}/>
+                            <BuscarCat table="horarios" titulo={"horarios: "} token={session.user.token} fieldsToShow={fieldsToShow} setItem={setDa} modalId="modal_horarios" />
+                            <BuscarCat table="productos" titulo={"productos: "} token={session.user.token} fieldsToShow={fieldsToShow2} setItem={setData} modalId="modal_productos" />
+
+
                             <TablaHorarios
                                 isLoading={isLoading}
                                 HorariosFiltrados={horariosFiltrados}
