@@ -4,8 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import Inputs from "@/app/alumnos/components/Inputs";
 import Webcam from 'react-webcam';
 import Image from "next/image";
+import BuscarCat from "@/app/components/BuscarCat";
 
 function ModalAlumnos({
+    session,
     accion,
     onSubmit,
     currentID,
@@ -14,17 +16,25 @@ function ModalAlumnos({
     setAlumno,
     alumno,
     formatNumber,
-    formaPagos,
     capturedImage,
     setCapturedImage,
     condicion,
     setcondicion,
+    setGrado,
+    setGrado2,
+    setcond1,
+    setcond2,
 }) {
     const [error, setError] = useState(null);
     const [titulo, setTitulo] = useState("");
     const [isDisabled, setIsDisabled] = useState(true);
     const [activeTab, setActiveTab] = useState(1);
-
+    const columnasBuscaCat = ["numero", "horario"];
+    const nameInputs = ["horario_1", "horario_1_nombre"];
+    const nameInputs2 = ["horario_2", "horario_2_nombre"];
+    const columnasBuscaCat1 = ["id", "descripcion"];
+    const nameInputs3 = ["cond_1", "descripcion"];
+    const nameInputs4 = ["cond_2", "descripcion"];
     const webcamRef = useRef(null);
     const [isCameraOn, setIsCameraOn] = useState(false);
 
@@ -514,71 +524,25 @@ function ModalAlumnos({
                                 className={`tab-content p-6 rounded-box ${activeTab === 4 ? "tab-active " : ""}`}
                             >
                                 <div className="flex flex-wrap -mx-3 mb-6">
-                                    <Inputs
-                                        dataType={"string"}
-                                        name={"hora_1"}
-                                        tamañolabel={""}
-                                        className={"form-select p-1.5 grow bg-[#1d232a] "}
-                                        Titulo={"Grado: "}
-                                        type={"select"}
-                                        requerido={true}
-                                        isNumero={false}
-                                        errors={errors}
-                                        register={register}
-                                        message={"Grado requerido"}
-                                        maxLength={30}
-                                        isDisabled={isDisabled}
-                                        handleBlur={handleBlur}
-                                        arreglos={[
-                                            { id: "PREMATERNAL", descripcion: "PREMATERNAL" },
-                                            { id: "MATERNAL", descripcion: "MATERNAL" },
-                                            { id: "KINDER I", descripcion: "KINDER I" },
-                                            { id: "KINDER II", descripcion: "KINDER II" },
-                                            { id: "PREPRIMARIA", descripcion: "PREPRIMARIA" },
-                                            { id: "1° PRIMARIA", descripcion: "1° PRIMARIA" },
-                                            { id: "2° PRIMARIA", descripcion: "2° PRIMARIA" },
-                                            { id: "3° PRIMARIA", descripcion: "3° PRIMARIA" },
-                                            { id: "4° PRIMARIA", descripcion: "4° PRIMARIA" },
-                                            { id: "5° PRIMARIA", descripcion: "5° PRIMARIA" },
-                                            { id: "6° PRIMARIA", descripcion: "6° PRIMARIA" },
-                                            { id: "1° SECUNDARIA", descripcion: "1° SECUNDARIA" },
-                                            { id: "2° SECUNDARIA", descripcion: "2° SECUNDARIA" },
-                                            { id: "3° SECUNDARIA", descripcion: "3° SECUNDARIA" },
-                                            { id: "DEUDOR", descripcion: "DEUDOR" },
-                                        ]}
+                                    <BuscarCat
+                                        table="horarios"
+                                        itemData={alumno}
+                                        fieldsToShow={columnasBuscaCat}
+                                        nameInput={nameInputs}
+                                        titulo={"Grado: "}
+                                        setItem={setGrado}
+                                        token={session.user.token}
+                                        modalId="modal_horarios"
                                     />
-                                    <Inputs
-                                        dataType={"string"}
-                                        name={"hora_1"}
-                                        tamañolabel={""}
-                                        className={"form-select p-1.5 grow bg-[#1d232a] "}
-                                        Titulo={"Grado: "}
-                                        type={"select"}
-                                        requerido={true}
-                                        isNumero={false}
-                                        errors={errors}
-                                        register={register}
-                                        message={"Grado requerido"}
-                                        maxLength={30}
-                                        isDisabled={isDisabled}
-                                        handleBlur={handleBlur}
-                                        arreglos={[
-                                            { id: "PREMATERNAL", descripcion: "PREMATERNAL" },
-                                            { id: "MATERNAL", descripcion: "MATERNAL" },
-                                            { id: "KINDER I", descripcion: "KINDER I" },
-                                            { id: "KINDER II", descripcion: "KINDER II" },
-                                            { id: "PREPRIMARIA", descripcion: "PREPRIMARIA" },
-                                            { id: "1° PRIMARIA", descripcion: "1° PRIMARIA" },
-                                            { id: "2° PRIMARIA", descripcion: "2° PRIMARIA" },
-                                            { id: "3° PRIMARIA", descripcion: "3° PRIMARIA" },
-                                            { id: "4° PRIMARIA", descripcion: "4° PRIMARIA" },
-                                            { id: "5° PRIMARIA", descripcion: "15° PRIMARIA" },
-                                            { id: "6° PRIMARIA", descripcion: "6° PRIMARIA" },
-                                            { id: "1° SECUNDARIA", descripcion: "1° SECUNDARIA" },
-                                            { id: "2° SECUNDARIA", descripcion: "2° SECUNDARIA" },
-                                            { id: "3° SECUNDARIA", descripcion: "3° SECUNDARIA" },
-                                            { id: "DEUDOR", descripcion: "DEUDOR" },
-                                        ]}
+                                    <BuscarCat
+                                        table="horarios"
+                                        itemData={alumno}
+                                        fieldsToShow={columnasBuscaCat}
+                                        nameInput={nameInputs2}
+                                        titulo={"Grado: "}
+                                        setItem={setGrado2}
+                                        token={session.user.token}
+                                        modalId="modal_horarios2"
                                     />
                                 </div>
                             </div>
@@ -624,7 +588,27 @@ function ModalAlumnos({
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
-                                    <Inputs
+                                    <BuscarCat
+                                        table="formaPago"
+                                        itemData={alumno}
+                                        fieldsToShow={columnasBuscaCat1}
+                                        nameInput={nameInputs3}
+                                        titulo={"Grado: "}
+                                        setItem={setcond1}
+                                        token={session.user.token}
+                                        modalId="modal_formaPago"
+                                    />
+                                    <BuscarCat
+                                        table="formaPago"
+                                        itemData={alumno}
+                                        fieldsToShow={columnasBuscaCat1}
+                                        nameInput={nameInputs4}
+                                        titulo={"Grado: "}
+                                        setItem={setcond2}
+                                        token={session.user.token}
+                                        modalId="modal_formaPago2"
+                                    />
+                                    {/* <Inputs
                                         dataType={"string"}
                                         name={"cond_1"}
                                         tamañolabel={""}
@@ -639,10 +623,9 @@ function ModalAlumnos({
                                         maxLength={50}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
-                                        // arreglos={[
-                                        //     { label: "PENDIENTE", value: "PENDIENTE" },
-                                        // ]}
-                                        arreglos={formaPagos}
+                                        arreglos={[
+                                            { label: "PENDIENTE", value: "PENDIENTE" },
+                                        ]}
                                     />
                                     <Inputs
                                         dataType={"string"}
@@ -659,11 +642,10 @@ function ModalAlumnos({
                                         maxLength={50}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
-                                        // arreglos={[
-                                        //     { label: "PENDIENTE", value: "PENDIENTE" },
-                                        // ]}
-                                        arreglos={formaPagos}
-                                    />
+                                        arreglos={[
+                                            { label: "PENDIENTE", value: "PENDIENTE" },
+                                        ]}
+                                    /> */}
                                 </div>
                             </div>
 

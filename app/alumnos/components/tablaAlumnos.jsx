@@ -61,7 +61,7 @@ function TablaAlumnos({
                                     {item.id}
                                 </th>
                                 <td>{`${item.nombre} ${item.a_paterno} ${item.a_materno}`}</td>
-                                <td>{item.hora_1}</td>
+                                <td>{item.horario_1_nombre}</td>
                                 {/* <td>{item.grado}</td> */}
                                 <th>
                                     <div className="flex flex-row space-x-3">

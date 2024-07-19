@@ -14,7 +14,6 @@ import {
   Imprimir,
   ImprimirExcel,
 } from "@/app/utils/api/alumnos/alumnos";
-import { getFormasPago } from "@/app/utils/api/formapago/formapago"
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import jsPDF from "jspdf";
@@ -26,7 +25,6 @@ function Alumnos() {
   const [alumnos, setAlumnos] = useState([]);
   const [alumno, setAlumno] = useState({});
   const [alumnosFiltrados, setAlumnosFiltrados] = useState([]);
-  const [formaPagos, setFormaPagos] = useState([]);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
@@ -36,23 +34,10 @@ function Alumnos() {
   const [TB_Busqueda, setTB_Busqueda] = useState("");
   const [capturedImage, setCapturedImage] = useState(null);
   const [condicion, setcondicion] = useState(false);
-  const grados = [
-    { id: "PREMATERNAL", grado: "1" },
-    { id: "MATERNAL", grado: "2" },
-    { id: "KINDER I", grado: "3" },
-    { id: "KINDER II", grado: "4" },
-    { id: "PREPRIMARIA", grado: "5" },
-    { id: "1° PRIMARIA", grado: "6" },
-    { id: "2° PRIMARIA", grado: "7" },
-    { id: "3° PRIMARIA", grado: "8" },
-    { id: "4° PRIMARIA", grado: "9" },
-    { id: "5° PRIMARIA", grado: "10" },
-    { id: "6° PRIMARIA", grado: "11" },
-    { id: "1° SECUNDARIA", grado: "12" },
-    { id: "2° SECUNDARIA", grado: "13" },
-    { id: "3° SECUNDARIA", grado: "14" },
-    { id: "DEUDOR", grado: "15" }
-  ];
+  const [grado, setGrado] = useState({});
+  const [grado2, setGrado2] = useState({});
+  const [cond1, setcond1] = useState({});
+  const [cond2, setcond2] = useState({});
 
   const Buscar = (() => {
     if (TB_Busqueda === "" || filtro === "") {
@@ -79,8 +64,6 @@ function Alumnos() {
       setisLoading(true);
       const { token } = session.user;
       const data = await getAlumnos(token, bajas);
-      const dataForm = await getFormasPago(token, false);
-      setFormaPagos(dataForm);
       setAlumnos(data);
       setAlumnosFiltrados(data);
       if (filtro !== "" && TB_Busqueda !== "") {
@@ -318,10 +301,10 @@ function Alumnos() {
       dia_2: "",
       dia_3: "",
       dia_4: "",
-      hora_1: "",
-      hora_2: "",
-      hora_3: "",
-      hora_4: "",
+      hora_1: 0,
+      hora_2: 0,
+      hora_3: 0,
+      hora_4: 0,
       cancha_1: 0,
       cancha_2: 0,
       cancha_3: 0,
@@ -437,8 +420,7 @@ function Alumnos() {
         return;
       }
     }
-    const gradoFiltrado = grados.find((p) => p.id === data.hora_1);
-    data.horario_1 = gradoFiltrado.grado
+
     const formData = new FormData();
     formData.append('id', data.id || '');
     formData.append('nombre', data.nombre || '');
@@ -462,16 +444,16 @@ function Alumnos() {
     formData.append('dia_2', data.dia_2 || '');
     formData.append('dia_3', data.dia_3 || '');
     formData.append('dia_4', data.dia_4 || '');
-    formData.append('hora_1', data.hora_1 || '');
-    formData.append('hora_2', data.hora_2 || '');
-    formData.append('hora_3', data.hora_3 || '');
-    formData.append('hora_4', data.hora_4 || '');
+    formData.append('hora_1', data.hora_1 || 0);
+    formData.append('hora_2', data.hora_2 || 0);
+    formData.append('hora_3', data.hora_3 || 0);
+    formData.append('hora_4', data.hora_4 || 0);
     formData.append('cancha_1', data.cancha_1 || '');
     formData.append('cancha_2', data.cancha_2 || '');
     formData.append('cancha_3', data.cancha_3 || '');
     formData.append('cancha_4', data.cancha_4 || '');
-    formData.append('horario_1', data.horario_1 || '');
-    formData.append('horario_2', data.horario_2 || '');
+    formData.append('horario_1', grado.numero || '');
+    formData.append('horario_2', grado2.numero || '');
     formData.append('horario_3', data.horario_3 || '');
     formData.append('horario_4', data.horario_4 || '');
     formData.append('horario_5', data.horario_5 || '');
@@ -490,8 +472,8 @@ function Alumnos() {
     formData.append('horario_18', data.horario_18 || '');
     formData.append('horario_19', data.horario_19 || '');
     formData.append('horario_20', data.horario_20 || '');
-    formData.append('cond_1', data.cond_1 || '');
-    formData.append('cond_2', data.cond_2 || '');
+    formData.append('cond_1', cond1.id || '');
+    formData.append('cond_2', cond2.id || '');
     formData.append('cond_3', data.cond_3 || '');
     formData.append('nom_pediatra', data.nom_pediatra || '');
     formData.append('tel_p_1', data.tel_p_1 || '');
@@ -642,6 +624,7 @@ function Alumnos() {
   return (
     <>
       <ModalAlumnos
+        session={session}
         accion={accion}
         onSubmit={onSubmitModal}
         currentID={currentID}
@@ -650,11 +633,14 @@ function Alumnos() {
         setAlumno={setAlumno}
         alumno={alumno}
         formatNumber={formatNumber}
-        formaPagos={formaPagos}
         capturedImage={capturedImage}
         setCapturedImage={setCapturedImage}
         condicion={condicion}
         setcondicion={setcondicion}
+        setGrado={setGrado}
+        setGrado2={setGrado2}
+        setcond1={setcond1}
+        setcond2={setcond2}
       />
       <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
         <div className="flex justify-start p-3 ">
