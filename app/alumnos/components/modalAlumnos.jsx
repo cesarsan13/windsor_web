@@ -77,13 +77,13 @@ function ModalAlumnos({
         <dialog id="my_modal_3" className="modal">
             <div className="modal-box w-full max-w-3xl h-full">
                 <button
-                    className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                    className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black"
                     onClick={() => document.getElementById("my_modal_3").close()}
                 >
                     ✕
                 </button>
                 <form onSubmit={onSubmit} encType="multipart/form-data">
-                    <h3 className="font-bold text-lg mb-5">{titulo}</h3>
+                    <h3 className="font-bold text-lg mb-5 dark:text-white text-black">{titulo}</h3>
                     <fieldset id="fs_alumnos">
                         <div role="tablist" class="tabs tabs-lifted">
                             <input type="radio" name="my_tabs" role="tab" className="tab " aria-label="Alumno"

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalFormFact from "@/app/formfact/components/modalFormFact";
@@ -7,16 +7,19 @@ import TablaFormFact from "@/app/formfact/components/tablaFormFact";
 import Busqueda from "@/app/formfact/components/Busqueda";
 import Acciones from "@/app/formfact/components/Acciones";
 import { useForm } from "react-hook-form";
-import { getFormFact, guardaFormFact } from "@/app/utils/api/formfact/formfact";
+import {
+  getFacturasFormato,
+  getFormFact,
+  guardaFormFact,
+} from "@/app/utils/api/formfact/formfact";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/formfact/formfact";
-import { eventNames } from "process";
-import { NEXT_CACHE_REVALIDATE_TAG_TOKEN_HEADER } from "next/dist/lib/constants";
-import jsPDF from "jspdf";
 import "jspdf-autotable";
-import * as XLSX from "xlsx";
-import styles from "@/app/formfact/styles.module.css";
+import { Worker, Viewer } from "@react-pdf-viewer/core";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
+import ConfigReporte from "./components/configReporte";
+import Sheet from "./components/sheet";
 function FormFact() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -30,7 +33,17 @@ function FormFact() {
   const [currentID, setCurrentId] = useState("");
   const [filtro, setFiltro] = useState("");
   const [TB_Busqueda, setTB_Busqueda] = useState("");
-
+  const [pdfPreview, setPdfPreview] = useState(false);
+  const [pdfData, setPdfData] = useState("");
+  const [showSheet, setShowSheet] = useState(false);
+  const [configuracion, setConfiguracion] = useState({
+    Encabezado: {
+      Nombre_Aplicacion: "Sistema de Control Escolar",
+      Nombre_Reporte: "Reporte Alumnos Mensual",
+      Nombre_Usuario: `Usuario: ${"prueb"}`,
+    },
+    body: {},
+  });
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
@@ -48,6 +61,15 @@ function FormFact() {
     };
     fetchData();
   }, [session, status, bajas]);
+
+  useEffect(() => {
+    const reporte = new ReportePDF(configuracion, "portrait");
+    reporte.imprimeEncabezadoPrincipalV();
+
+    const pdfData = reporte.doc.output("datauristring");
+    setPdfData(pdfData);
+    setPdfPreview(true);
+  }, [configuracion]);
 
   const {
     register,
@@ -185,11 +207,17 @@ function FormFact() {
     event.preventDefault;
     setTB_Busqueda(event.target.value);
   };
-
   const onDragStart = (evt) => {
     evt.dataTransfer.setData("text/plain", evt.target.id);
 
     evt.currentTarget.style.backgroundColor = "yellow";
+  };
+
+  const [labels, setLabels] = useState([{ x: 150, y: 3, text: "Prueba" }]);
+  const fetchFacturasFormato = async (id) => {
+    const { token } = session.user;
+    const facturasx = await getFacturasFormato(token, id);
+    console.log("estas son las facturas perrillo", facturas);
   };
 
   if (status === "loading") {
@@ -232,31 +260,39 @@ function FormFact() {
                 handleBusquedaChange={handleBusquedaChange}
                 TB_Busqueda={TB_Busqueda}
               />
-              <TablaFormFact
-                isLoading={isLoading}
-                formFactsFiltrados={formFactsFiltrados}
-                showModal={showModal}
-                setFormFact={setFormFact}
-                setAccion={setAccion}
-                setCurrentId={setCurrentId}
-              />
+              {showSheet ? (
+                <ConfigReporte
+                  labels={labels}
+                  setLabels={setLabels}
+                ></ConfigReporte>
+              ) : (
+                <TablaFormFact
+                  isLoading={isLoading}
+                  formFactsFiltrados={formFactsFiltrados}
+                  showModal={showModal}
+                  setFormFact={setFormFact}
+                  setAccion={setAccion}
+                  setCurrentId={setCurrentId}
+                  setShowSheet={setShowSheet}
+                  fetchFacturasFormato={fetchFacturasFormato}
+                />
+              )}
+
+              {/* {pdfPreview && pdfData && (
+                <div className="pdf-preview">
+                  <Worker
+                    workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
+                  >
+                    <div style={{ height: "600px" }}>
+                      <Viewer fileUrl={pdfData} />
+                    </div>
+                  </Worker>
+                </div>
+              )} */}
             </div>
           </div>
         </div>
       </div>
-      {/* <div className={styles.example_parent}>
-        <div className={styles.example_origin}>
-          <div
-            id="draggable-1"
-            className={styles.example_draggable}
-            onDragStart={(evt) => alert(evt)}
-          >
-            draggable
-          </div>
-        </div>
-
-        <div className={styles.example_dropzone}>dropzone</div>
-      </div> */}
     </>
   );
 }
