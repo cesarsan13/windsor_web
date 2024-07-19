@@ -1,8 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ModalBuscarCat from './ModalBuscarCat';
+import { getProductos } from '../utils/api/productos/productos';
+import { getHorarios } from '../utils/api/horarios/horarios';
 
-function BuscarCat({ data, fieldsToShow, setItem }) {
+function BuscarCat({ table, fieldsToShow,titulo, setItem, token, modalId }) {
   const [inputValue, setInputValue] = useState(''); // Estado para el valor del input
+  const [inputValueDesc, setInputValueDesc] = useState('');
+  const [data, setData] = useState([]); // Estado para los datos de la tabla
+  const [filteredData, setFilteredData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let fetchedData = [];
+      switch (table) {
+        case 'productos':
+          fetchedData = await getProductos(token, "");
+          break;
+        case 'horarios':
+          fetchedData = await getHorarios(token, "");
+          break;
+        default:
+          fetchedData = [];
+          break;
+      }
+      setData(fetchedData);
+      setFilteredData(fetchedData);
+    };
+
+    fetchData();
+  }, [table, token]);
 
   const Buscar = async (event) => {
     showModal(true);
@@ -10,38 +36,84 @@ function BuscarCat({ data, fieldsToShow, setItem }) {
 
   const showModal = (show) => {
     show
-      ? document.getElementById("my_modal_4").showModal()
-      : document.getElementById("my_modal_4").close();
+      ? document.getElementById(modalId).showModal()
+      : document.getElementById(modalId).close();
   };
 
-  // Función para actualizar el valor del input
   const handleSetItem = (item) => {
-    const descripcion = item[fieldsToShow[0]]; // Obtener el valor del campo 'descripcion'
-    setInputValue(descripcion); // Ajusta el input con 'descripcion'
+    const id = item[fieldsToShow[0]]; // Obtener el valor del campo 'id'
+    const description = item[fieldsToShow[1]]
+    setInputValue(id); // Ajusta el input con 'descripcion'
+    setInputValueDesc(description)
     setItem(item);
   };
+
   const handleKeyDown = (evt) => {
     if (evt.key !== "Enter") return;
-    handleSetItem()
+    BuscarInfo();
   };
+
+  const BuscarInfo = () => {
+    if (inputValue === "") {
+      setFilteredData(data);
+      setInputValue(""); 
+      setInputValueDesc(""); 
+      return;
+    }
+
+    const infoFiltrada = data.filter((item) => {
+      return fieldsToShow.some((field) => {
+        const valorCampo = item[field];
+        if (typeof valorCampo === "number") {
+          return valorCampo.toString().includes(inputValue);
+        }
+        return valorCampo?.toString().toLowerCase().includes(inputValue.toLowerCase());
+      });
+    });
+
+    console.log("Datos filtrados:", infoFiltrada); // Agrega un log para verificar los datos filtrados
+    setFilteredData(infoFiltrada);
+    setItem(infoFiltrada)
+    if (infoFiltrada.length > 0) {
+      const item = infoFiltrada[0];
+      const id = item[fieldsToShow[0]]; // Obtener el valor del campo 'id'
+      const description = item[fieldsToShow[1]]; // Obtener el valor del campo 'description'
+      setInputValue(id); // Ajusta el input con 'id'
+      setInputValueDesc(description); // Ajusta el input con 'description'
+      setItem(item); // Establece el item
+    }
+  };
+
   return (
-    <div className='join w-full max-w-3/4 flex justify-start items-center h-1/8 p-1'>
-      <input 
-        type="text"
-        onKeyDown={(evt)=> handleKeyDown(evt)}
-        value={inputValue} // Asignar el valor del estado al input
-        onChange={(e) => setInputValue(e.target.value)} // Manejar cambios en el input
-        className='input input-bordered input-md join-item w-1/4 max-w-lg dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 '
-      />
-      <div className="tooltip" data-tip="Limpiar">
+    <div className='  flex justify-start items-center'>
+      <label className='input input-bordered text-black dark:text-white input-md flex items-center gap-3  w-2/12'>
+        {titulo} 
+        <input
+          type="text"
+          onKeyDown={(evt) => handleKeyDown(evt)}
+          value={inputValue} // Asignar el valor del estado al input
+          onChange={(e) => setInputValue(e.target.value)} // Manejar cambios en el input
+          className='grow dark:text-neutral-200 text-neutral-600  rounded-r-none'
+        />
+
+      </label>
+      <div className="tooltip" data-tip="Buscar">
         <button
-          className="btn join-item bg-blue-500 hover:bg-blue-700 text-white input-bordered"
+          className="bg-blue-500 hover:bg-blue-700 text-white btn rounded-r-lg "
           onClick={Buscar}
         >
           <i className="fa-solid fa-magnifying-glass"></i>
         </button>
       </div>
-      <ModalBuscarCat data={data} fieldsToShow={fieldsToShow} setItem={handleSetItem} />
+      <input
+          type="text"
+          readOnly={true}
+          onKeyDown={(evt) => handleKeyDown(evt)}
+          value={inputValueDesc} // Asignar el valor del estado al input
+          // onChange={(e) => setInputValue(e.target.value)} // Manejar cambios en el input
+          className='input input-bordered bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md flex items-center gap-3'
+        />
+      <ModalBuscarCat data={data} titulo={table} fieldsToShow={fieldsToShow} setItem={handleSetItem} modalId={modalId} />
     </div>
   );
 }
