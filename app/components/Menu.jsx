@@ -38,7 +38,7 @@ function Menu({ vertical }) {
           <summary>Reportes</summary>
           <ul>
           <li>
-            <Link href="/AlumnosPorClase">Lista de Alumnos por clase</Link>
+            <Link href="/Rep_Femac_2">Lista de Alumnos por clase</Link>
             </li>
           </ul>
         </details>
@@ -80,7 +80,7 @@ function Menu({ vertical }) {
           <summary>Reportes</summary>
           <ul>
           <li>
-            <Link href="/AlumnosPorClase">Lista de Alumnos por clase</Link>
+            <Link href="/Rep_Femac_2">Lista de Alumnos por clase</Link>
             </li>
           </ul>
         </details>

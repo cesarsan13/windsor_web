@@ -79,8 +79,6 @@ function Comentarios(){
     });
   }, [formaComentarios, reset]);
   const Buscar = () => {
-    // alert(filtro);
-    console.log(TB_Busqueda, filtro);
     if (TB_Busqueda === "" || filtro === "") {
       setFormaComentariosFiltrados(formasComentarios);
       return;
@@ -242,9 +240,9 @@ function Comentarios(){
         setFormaComentarios={setFormaComentarios}
         formaComentarios={formaComentarios}
       />
-      <div className="container  w-full  max-w-screen-xl bg-slate-100 shadow-xl rounded-xl px-3 ">
+      <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
         <div className="flex justify-start p-3 ">
-          <h1 className="text-4xl font-xthin text-black md:px-12">
+          <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
            Comentarios.
           </h1>
         </div>
