@@ -2,7 +2,7 @@ import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
 
 export const getHorariosAPC = async (token) => {
-    const res = await fetch(`${process.env.DOMAIN_API}api/HorariosAPC`, {
+    const res = await fetch(`${process.env.DOMAIN_API}api/AlumnosPC/HorariosAPC`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

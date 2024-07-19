@@ -14,36 +14,8 @@ function Inputs({
   maxLenght,
   isDisabled,
   handleBlur,
-  setFormaHorarioAPC,
 }) {
-
-  if (type === 'select') {
-    return (
-      <div className="flex flex-col">
-        <label className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
-          {Titulo}
-          <select
-            name={name}
-            id={name}
-            className={`text-black dark:text-white ${className}`}
-          >
-            <option value="">&nbsp;&nbsp; ... &nbsp;&nbsp;</option>
-            { setFormaHorarioAPC.map((option) => (
-              <option key={option.numero} value={option.numero}>
-                {option.horario}
-              </option>
-            ))}
-          </select>
-        </label>
-        {errors[name] && (
-          <span className="text-red-500 text-sm mt-2">
-            {errors[name].message}
-          </span>
-        )}
-      </div>
-    )
-
-  } if (type === 'text'){
+  if (type === 'text'){
   return ( 
     <div className="flex flex-col">
       <label

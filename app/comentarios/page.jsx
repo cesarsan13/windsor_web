@@ -79,8 +79,6 @@ function Comentarios(){
     });
   }, [formaComentarios, reset]);
   const Buscar = () => {
-    // alert(filtro);
-    console.log(TB_Busqueda, filtro);
     if (TB_Busqueda === "" || filtro === "") {
       setFormaComentariosFiltrados(formasComentarios);
       return;
