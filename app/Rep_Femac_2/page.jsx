@@ -9,11 +9,14 @@ import {
   ImprimirPDF,
   ImprimirExcel,
   getHorariosAPC,
+  getRepDosSel,
 } from "../utils/api/Rep_Femac_2/Rep_Femac_2";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 
-import jsPDF from "jspdf";
+import { Worker, Viewer } from "@react-pdf-viewer/core";
+import "@react-pdf-viewer/core/lib/styles/index.css";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
 
@@ -25,6 +28,10 @@ function AlumnosPorClase(){
   const [shorario1, ssethorario1] = useState('');
   const [shorario2, ssethorario2] = useState('');
   const [sOrdenar, ssetordenar] = useState('');
+  const [FormaRepDosSel, setFormaRepDosSel] =  useState([]);
+
+  const [pdfPreview, setPdfPreview] = useState(false);
+  const [pdfData, setPdfData] = useState("");
 
 
   useEffect(()=> {
@@ -37,10 +44,15 @@ function AlumnosPorClase(){
       const data = await getHorariosAPC(token);
       setFormaHorarioAPC(data);
 
-      setisLoading(false);
+      //const dataImp = await getRepDosSel(token, shorario1, shorario2, sOrdenar);
+      //console.log(dataImp, shorario1, shorario2, sOrdenar);
+      //setFormaRepDosSel(dataImp);
+      //setisLoading(false);
     };
     fetchData();
   }, [session, status]);
+  //}, [session, status, shorario1, shorario2, sOrdenar]);
+
 
 
   const ImprimePDF = () => {
@@ -50,7 +62,7 @@ function AlumnosPorClase(){
         Nombre_Reporte: "Reporte de Alumnos por clase",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
-      //body: formaComentariosFiltrados
+      body: FormaRepDosSel,
     }
     ImprimirPDF(configuracion)
   }
@@ -63,16 +75,22 @@ function AlumnosPorClase(){
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
       
-      //body: formaComentariosFiltrados,
+      body: FormaRepDosSel,
       columns:[
-        { header: "Nombre", dataKey: "nombre" },
-        { header: "Id", dataKey: "id" },
-        { header: "Año", dataKey: "fecha_nac" },
-        { header: "mes", dataKey: "fecha_nac" },
+        { header: "No.", dataKey: "numero" },
+        { header: "Nombre", dataKey: "nombre_1" },
+        { header: "No. 1", dataKey: "numero_1" },
+        { header: "Año", dataKey: "año_nac_1" },
+        { header: "mes", dataKey: "mes_nac_1" },
         { header: "Telefono", dataKey: "telefono_1" },
+        { header: "Nombre", dataKey: "nombre_2" },
+        { header: "No. 1", dataKey: "numero_2" },
+        { header: "Año", dataKey: "año_nac_2" },
+        { header: "mes", dataKey: "mes_nac_2" },
+        { header: "Telefono", dataKey: "telefono_2" },
     ],
 
-    nombre: "Comentarios"
+    nombre: "RepDosSec"
   }
   ImprimirExcel(configuracion)
 }
@@ -88,6 +106,23 @@ function AlumnosPorClase(){
     ssethorario1(event.target.value);
     console.log(event.target.value);
   }
+
+  const handleVerClick = () => {
+    const configuracion = {
+      Encabezado: {
+        Nombre_Aplicacion: "Nombre de la Aplicación",
+        Nombre_Reporte: "Reporte de Alumnos",
+        Nombre_Usuario: `Usuario: ${session.user.name}`,
+      },
+    };
+    const reporte = new ReportePDF(configuracion);
+    reporte.imprimeEncabezadoPrincipalH();
+    const table = document.getElementById("table");
+    reporte.doc.autoTable({ html: table });
+    const pdfData = reporte.doc.output("datauristring");
+    setPdfData(pdfData);
+    setPdfPreview(true);
+  };
 
   const handleCheckChange = (event) =>{
     event.preventDefault;
@@ -110,7 +145,7 @@ function AlumnosPorClase(){
         </div>
         <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] ">
           <div className="col-span-1 flex flex-col ">
-            <Acciones ImprimePDF={ImprimePDF} ImprimeExcel={ImprimeExcel} home={home}></Acciones>
+            <Acciones Ver={handleVerClick} ImprimePDF={ImprimePDF} ImprimeExcel={ImprimeExcel} home={home}></Acciones>
           </div>
         
         <div className="col-span-7 ">

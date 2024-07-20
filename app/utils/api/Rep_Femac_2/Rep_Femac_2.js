@@ -10,6 +10,15 @@ export const getHorariosAPC = async (token) => {
     const resJson = await res.json();
     return resJson.data;
 };
+export const getRepDosSel = async (token, horario1, horario2, orden) => {
+    const res = await fetch (`${process.env.DOMAIN_API}api/AlumnosPC/Lista/${horario1}/${horario2}/${orden}`,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const resJson = await res.json();
+    return resJson.data;
+}
 
 
     //Para imprimir
@@ -49,6 +58,7 @@ export const getHorariosAPC = async (token) => {
         });
         newPDF.guardaReporte("Comentarios")
       };
+      
       export const ImprimirExcel = (configuracion)=>{
         const newExcel = new ReporteExcel(configuracion)
         const {columns} = configuracion

@@ -42,7 +42,7 @@ function ImpElementos({
                 </label>
                 <label className={` input-md text-black dark:text-white flex items-center gap-3`} onChange={(event) => handleCheckChange(event)}>
                     <span className="text-black dark:text-white">Número</span>
-                    <input type="radio" name="ordenar" value="numero" className="radio" />
+                    <input type="radio" name="ordenar" value="id" className="radio" />
                 </label>
             </label>
         </div>
