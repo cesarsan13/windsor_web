@@ -3,7 +3,7 @@ import ModalBuscarCat from './ModalBuscarCat';
 import { getProductos } from '../utils/api/productos/productos';
 import { getHorarios } from '../utils/api/horarios/horarios';
 import { getFormasPago } from "@/app/utils/api/formapago/formapago"
-
+import { getAlumnos } from '@/app/utils/api/alumnos/alumnos';
 function BuscarCat({ table, itemData, fieldsToShow, nameInput, titulo, setItem, token, modalId }) {
   const [inputValue, setInputValue] = useState('');
   const [inputValueDesc, setInputValueDesc] = useState('');
@@ -14,6 +14,9 @@ function BuscarCat({ table, itemData, fieldsToShow, nameInput, titulo, setItem, 
     const fetchData = async () => {
       let fetchedData = [];
       switch (table) {
+        case 'alumnos':
+          fetchedData = await getAlumnos(token, false);
+          break;
         case 'productos':
           fetchedData = await getProductos(token, "");
           break;
