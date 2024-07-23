@@ -49,6 +49,7 @@ function ModalBuscarCat({ data, fieldsToShow, setItem, modalId, titulo }) {
     <dialog id={modalId} className='modal'>
       <div className='modal-box w-full h-full'>
         <button
+        type='button'
           className='btn btn-sm btn-circle btn-ghost text-black dark:text-white absolute right-2 top-2'
           onClick={handleclosemodal}
         >
@@ -70,6 +71,7 @@ function ModalBuscarCat({ data, fieldsToShow, setItem, modalId, titulo }) {
           ))}
           <div className="tooltip" data-tip="Buscar">
             <button
+            type='button'
               className="bg-blue-500 ml-2 hover:bg-blue-700 text-white btn rounded-r-lg"
               onClick={handleSearch}
             >

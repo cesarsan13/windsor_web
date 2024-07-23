@@ -99,8 +99,8 @@ function BuscarCat({ table, fieldsToShow, titulo, setItem, token, modalId }) {
       <label className="input input-bordered text-black dark:text-white input-md flex items-center gap-3  w-4/12">
         {titulo}
         <input
-          id={nameInput[0]}
-          name={nameInput[0]}
+          id={fieldsToShow[0]}
+          name={fieldsToShow[0]}
           type="text"
           onKeyDown={(evt) => handleKeyDown(evt)}
           value={inputValue}
@@ -118,8 +118,8 @@ function BuscarCat({ table, fieldsToShow, titulo, setItem, token, modalId }) {
         </button>
       </div>
       <input
-        id={nameInput[1]}
-        name={nameInput[1]}
+        id={fieldsToShow[1]}
+        name={fieldsToShow[1]}
         type="text"
         readOnly={true}
         onKeyDown={(evt) => handleKeyDown(evt)}
