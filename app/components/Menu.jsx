@@ -31,14 +31,17 @@ function Menu({ vertical }) {
             </li>
           </ul>
         </details>
-        
+
       </li>
       <li>
-      <details>
+        <details>
           <summary>Reportes</summary>
           <ul>
-          <li>
-            <Link href="/Rep_Femac_2">Lista de Alumnos por clase</Link>
+            <li>
+              <Link href="/Rep_Femac_2">Lista de Alumnos por clase</Link>
+            </li>
+            <li>
+              <Link href="/rep_femac_1">Relacion General de Alumnos</Link>
             </li>
           </ul>
         </details>
@@ -74,13 +77,13 @@ function Menu({ vertical }) {
             </li>
           </ul>
         </details>
-        </li>
-        <li>
+      </li>
+      <li>
         <details>
           <summary>Reportes</summary>
           <ul>
-          <li>
-            <Link href="/Rep_Femac_2">Lista de Alumnos por clase</Link>
+            <li>
+              <Link href="/Rep_Femac_2">Lista de Alumnos por clase</Link>
             </li>
           </ul>
         </details>

@@ -1,5 +1,5 @@
 
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import NoData from "@/app/components/noData";
 
 function ModalBuscarCat({ data, fieldsToShow, setItem, modalId, titulo }) {
@@ -40,12 +40,11 @@ function ModalBuscarCat({ data, fieldsToShow, setItem, modalId, titulo }) {
     setInputValues({});
     document.getElementById(modalId).close();
   };
-  const handleclosemodal = () =>{
+  const handleclosemodal = () => {
     setFilteredData(data)
     setInputValues({});
     document.getElementById(modalId).close()
   }
-  console.log(data)
   return (
     <dialog id={modalId} className='modal'>
       <div className='modal-box w-full h-full'>
