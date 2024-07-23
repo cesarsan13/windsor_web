@@ -31,7 +31,6 @@ function Menu({ vertical }) {
             </li>
           </ul>
         </details>
-
       </li>
       <li>
         <details>
@@ -59,6 +58,9 @@ function Menu({ vertical }) {
         <details>
           <summary>Catalogos</summary>
           <ul className="p-5 mt-3 w-52 ">
+            <li>
+              <Link href="/alumnos">Alumnos</Link>
+            </li>
             <li>
               <Link href="/productos">Productos</Link>
             </li>
@@ -99,7 +101,6 @@ function Menu({ vertical }) {
       </li>
     </ul>
   );
-
 }
 
 export default Menu;
