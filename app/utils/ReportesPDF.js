@@ -14,7 +14,7 @@ export class ReportePDF {
     this.tw_ren = 0;
     this.tw_endRen = 280;
     this.tiene_encabezado = false;
-    this.doc = new jsPDF(orientacion,"px");
+    this.doc = new jsPDF(orientacion);
   }
 
   //Imprime un texto, recibe como parametro el texto, la cordenada x y la cordenada y
