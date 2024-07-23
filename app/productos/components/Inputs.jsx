@@ -19,7 +19,7 @@ function Inputs({
   return (
     <div className="flex flex-col">
       <label
-        className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel}`}
+        className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
       >
         {Titulo}
         <input
@@ -28,7 +28,7 @@ function Inputs({
           name={name}
           id={name}
           type={type}
-          className={className}
+          className={`text-black dark:text-white ${className}`}
           {...(dataType === "int" && { onKeyDown: soloEnteros })}
           {...(dataType === "float" && { onKeyDown: soloDecimales })}
           {...register(name, {
