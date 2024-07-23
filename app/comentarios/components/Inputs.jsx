@@ -1,6 +1,7 @@
 import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
 import React from "react";
 
+
 function Inputs({
   Titulo,
   name,
@@ -13,29 +14,25 @@ function Inputs({
   errors,
   tamañolabel,
   maxLenght,
-  defaultValue,
   isDisabled,
   handleBlur,
-  options,
 }) {
 
   if (type === 'select') {
     return (
       <div className="flex flex-col">
-        <label className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel}`}>
+        <label className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
           {Titulo}
           <select
             name={name}
             id={name}
-            className={className}
+            className={`text-black dark:text-white ${className}`}
             {...register(name, {
               ...(requerido && { required: message }),
-              onBlur: (event) => handleBlur(event, dataType),
-            })}
-
-            disabled={isDisabled}>
-            <option value={"S"}>Si</option>
-            <option value={"N"}>No</option>
+            })}>
+            <option value="">&nbsp;&nbsp; ... &nbsp;&nbsp;</option>
+            <option value="S">Si</option>
+            <option value="N">No</option>
           </select>
         </label>
         {errors[name] && (
@@ -44,22 +41,20 @@ function Inputs({
           </span>
         )}
       </div>
-    );
+    )
 
-  } else {
-
-  return (
+  } if (type === 'text'){
+  return ( 
     <div className="flex flex-col">
       <label
-        className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel}`}>
+        className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
         {Titulo}
         <input
-          // defaultValue={defaultValue}
           {...(maxLenght !== 0 && { maxLength: maxLenght })}
           name={name}
           id={name}
           type={type}
-          className={className}
+          className={`text-black dark:text-white ${className}`}
           {...(dataType === "int" && { onKeyDown: soloEnteros })}
           {...(dataType === "float" && { onKeyDown: soloDecimales })}
           {...register(name, {
@@ -78,8 +73,8 @@ function Inputs({
         </span>
       )}
     </div>
-  );
-}
+    );
+  }
 }
 
 export default Inputs;

@@ -1,10 +1,11 @@
-import { useSession } from "next-auth/react";
+import { ReporteExcel } from "../../ReportesExcel";
+import { ReportePDF } from "../../ReportesPDF";
 
 export const getComentarios = async (token, baja) => {
   let url = "";
   baja
-    ? (url = "http://localhost:8000/api/comentarios/baja")
-    : (url = "http://localhost:8000/api/comentarios");
+    ? (url = `${process.env.DOMAIN_API}api/comentarios/baja`)
+    : (url = `${process.env.DOMAIN_API}api/comentarios`);
 
   const res = await fetch(url, {
     headers: {
@@ -15,7 +16,7 @@ export const getComentarios = async (token, baja) => {
   return resJson.data;
 };
 export const siguiente = async (token) => {
-  const res = await fetch(`http://localhost:8000/api/comentarios/siguiente`, {
+  const res = await fetch(`${process.env.DOMAIN_API}api/comentarios/siguiente`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -26,7 +27,7 @@ export const siguiente = async (token) => {
 export const guardaComentarios = async (token, data, accion) => {
     let url_api = "";
     if (accion === "Alta") {
-      url_api = "http://localhost:8000/api/comentarios";
+      url_api = `${process.env.DOMAIN_API}api/comentarios`;
       data.baja = "";
     }
     if (accion === "Eliminar" || accion === "Editar") {
@@ -35,7 +36,7 @@ export const guardaComentarios = async (token, data, accion) => {
       } else {
         data.baja = "";
       }
-      url_api = "http://localhost:8000/api/comentarios/update";
+      url_api = `${process.env.DOMAIN_API}api/comentarios/update`;
     }
   
     const res = await fetch(`${url_api}`, {
@@ -56,3 +57,53 @@ export const guardaComentarios = async (token, data, accion) => {
     const resJson = await res.json();
     return resJson;
   };
+
+
+  const Enca1 = (doc) => {
+    if (!doc.tiene_encabezado) {
+      doc.imprimeEncabezadoPrincipalH();
+      doc.nextRow(12);
+      doc.ImpPosX("id", 15, doc.tw_ren);
+      doc.ImpPosX("Comentario 1", 30, doc.tw_ren);
+      doc.ImpPosX("Comentario 2", 110, doc.tw_ren);
+      doc.ImpPosX("Comentario 3", 190, doc.tw_ren);
+      doc.ImpPosX("Generales", 270, doc.tw_ren);
+
+      doc.nextRow(4);
+      doc.printLineH();
+      doc.nextRow(4);
+      doc.tiene_encabezado = true;
+    } else {
+      doc.nextRow(6);
+      doc.tiene_encabezado = true;
+    }
+  };
+  
+  export const ImprimirPDF = (configuracion) => {
+    const orientacion = 'Landscape'  //Aqui se agrega la orientacion del documento PDF puede ser Landscape(Horizontal) o Portrait (Vertical)
+    const newPDF = new ReportePDF(configuracion, orientacion);
+    const { body } = configuracion;
+    Enca1(newPDF);
+    body.forEach((comentarios) => {
+      newPDF.ImpPosX(comentarios.id.toString(),15,newPDF.tw_ren, 10)
+      newPDF.ImpPosX(comentarios.comentario_1.toString(),30,newPDF.tw_ren, 40)
+      newPDF.ImpPosX(comentarios.comentario_2.toString(),110,newPDF.tw_ren, 40)
+      newPDF.ImpPosX(comentarios.comentario_3.toString(),190,newPDF.tw_ren, 40)
+      newPDF.ImpPosX(comentarios.generales.toString(),270,newPDF.tw_ren, 5)
+      Enca1(newPDF);
+      if (newPDF.tw_ren >= newPDF.tw_endRen) {
+        newPDF.pageBreak();
+        Enca1(newPDF);
+      }
+    });
+    newPDF.guardaReporte("Comentarios")
+  };
+  export const ImprimirExcel = (configuracion)=>{
+    const newExcel = new ReporteExcel(configuracion)
+    const {columns} = configuracion
+    const {body} = configuracion
+    const {nombre}=configuracion
+    newExcel.setColumnas(columns);
+    newExcel.addData(body);
+    newExcel.guardaReporte(nombre);
+  }

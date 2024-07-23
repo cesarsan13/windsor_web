@@ -16,6 +16,8 @@ import {
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { getUltimoHorario } from "@/app/utils/api/horarios/horarios";
+import BuscarCat from "../components/BuscarCat";
+import { getProductos } from "../utils/api/productos/productos";
 
 function Horarios() {
   const router = useRouter();
@@ -31,6 +33,8 @@ function Horarios() {
   const [filtro, setFiltro] = useState("");
   const [dia, setDia] = useState("");
   const [TB_Busqueda, setTB_Busqueda] = useState("");
+  const [data, setData] = useState({});
+  const [da, setDa] = useState({});
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -40,6 +44,8 @@ function Horarios() {
       setisLoading(true);
       const { token } = session.user;
       const data = await getHorarios(token, bajas);
+      // const data1 = await getProductos(token,"")
+      // setData(data1)
       setHorarios(data);
       setHorariosFiltrados(data);
       if (filtro !== "" && TB_Busqueda !== "") {
@@ -235,6 +241,10 @@ function Horarios() {
     };
     ImprimirExcel(configuracion);
   };
+  const fieldsToShow = ["numero", "horario"];
+  const fieldsToShow2 = ["id", "descripcion"];
+  console.log("horario", da, "producto", data);
+  console.log("datos filtrados de horarios", da);
   return (
     <>
       <ModalHorario
@@ -275,6 +285,23 @@ function Horarios() {
                 TB_Busqueda={TB_Busqueda}
                 setTB_Busqueda={setTB_Busqueda}
               />
+              <BuscarCat
+                table="horarios"
+                titulo={"horarios: "}
+                token={session.user.token}
+                fieldsToShow={fieldsToShow}
+                setItem={setDa}
+                modalId="modal_horarios"
+              />
+              <BuscarCat
+                table="productos"
+                titulo={"productos: "}
+                token={session.user.token}
+                fieldsToShow={fieldsToShow2}
+                setItem={setData}
+                modalId="modal_productos"
+              />
+
               <TablaHorarios
                 isLoading={isLoading}
                 HorariosFiltrados={horariosFiltrados}

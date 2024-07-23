@@ -4,8 +4,8 @@ import { ReportePDF } from "../../ReportesPDF";
 export const getProductos = async (token, baja) => {
   let url = "";
   baja
-    ? (url = `${process.env.DOMAIN_API}api/product/bajas`)
-    : (url = `${process.env.DOMAIN_API}api/product`);
+    ? (url = `http://127.0.0.1:8000/api/product/bajas`)
+    : (url = `http://127.0.0.1:8000/api/product`);
   const res = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
@@ -16,7 +16,7 @@ export const getProductos = async (token, baja) => {
 };
 
 export const getLastProduct = async (token) => {
-  let url = `${process.env.DOMAIN_API}api/product/last`;
+  let url = `http://127.0.0.1:8000/api/product/last`;
   const res = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
@@ -33,7 +33,7 @@ export const filtroProductos = async (token, tipo, valor) => {
   if (!valor) {
     valor = "nothing";
   }
-  let url = `${process.env.DOMAIN_API}api/product/filter/${tipo}/${valor}`;
+  let url = `http://127.0.0.1:8000/api/product/filter/${tipo}/${valor}`;
   const res = await fetch(url, {
     method: "GET",
     headers: {
@@ -124,9 +124,9 @@ export const Imprimir = (configuracion) => {
     newPDF.ImpPosX(producto.aplicacion.toString(), 117, newPDF.tw_ren);
     newPDF.ImpPosX(producto.iva.toString(), 139, newPDF.tw_ren);
     newPDF.ImpPosX(producto.cond_1.toString(), 149, newPDF.tw_ren);
-    const cam_precio = producto.cam_precio ? 'Si' : 'No'
-    newPDF.ImpPosX(cam_precio.toString(), 169,newPDF.tw_ren);
-    console.log(cam_precio)
+    const cam_precio = producto.cam_precio ? "Si" : "No";
+    newPDF.ImpPosX(cam_precio.toString(), 169, newPDF.tw_ren);
+    console.log(cam_precio);
     newPDF.ImpPosX(producto.ref.toString(), 184, newPDF.tw_ren);
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
@@ -135,15 +135,16 @@ export const Imprimir = (configuracion) => {
     }
   });
   newPDF.guardaReporte("Productos");
+  // console.log("cambios")
 };
 
-export const ImprimirExcel = (configuracion)=>{
-  const newExcel = new ReporteExcel(configuracion)
-  const {columns} = configuracion
-  const {body} = configuracion
-  const {nombre}=configuracion
+export const ImprimirExcel = (configuracion) => {
+  const newExcel = new ReporteExcel(configuracion);
+  const { columns } = configuracion;
+  const { body } = configuracion;
+  const { nombre } = configuracion;
   newExcel.setColumnas(columns);
-  newExcel.setCondition("cam_precio", (value) => value === 1)
+  newExcel.setCondition("cam_precio", (value) => value === 1);
   newExcel.addData(body);
   newExcel.guardaReporte(nombre);
-}
+};

@@ -8,17 +8,26 @@ export class ReportePDF {
   //tw_endRen = al valor limite de la hoja en alto
   //tiene_encabezado = indica si la pagina ya se imprimio el encabezado del reporte
   //doc = instancia de jsPDF
-  constructor(configuracion) {
+
+  constructor(configuracion, orientacion) {
     this.configuracion = configuracion;
     this.tw_ren = 0;
     this.tw_endRen = 280;
     this.tiene_encabezado = false;
-    this.doc = new jsPDF();
+    this.doc = new jsPDF(orientacion,"px");
   }
+
   //Imprime un texto, recibe como parametro el texto, la cordenada x y la cordenada y
-  ImpPosX(texto, x, y) {
-    this.doc.text(texto, x, y);
+  ImpPosX(texto, x, y, maxLength) {
+    var textoC = texto.substring(0, maxLength);
+
+    if (texto.length >= maxLength) {
+      this.doc.text(textoC, x, y);
+    } else {
+      this.doc.text(texto, x, y);
+    }
   }
+
   //Obtiene el numero de paginas
   getNumberPages() {
     return this.doc.internal.getNumberOfPages();
@@ -36,8 +45,11 @@ export class ReportePDF {
     this.tw_ren = value;
   }
   //Imprime una linea en el valor que se encuentre Tw_Ren
-  printLine() {
+  printLineV() {
     this.doc.line(14, this.tw_ren, 200, this.tw_ren);
+  }
+  printLineH() {
+    this.doc.line(14, this.tw_ren, 286, this.tw_ren);
   }
   //añade una nueva pagina al documento
   addPage() {
@@ -50,22 +62,26 @@ export class ReportePDF {
       this.tw_ren = 0;
       this.addPage();
       this.doc.setPage(this.getNumberPages());
-      //   this.imprimeEncabezadoPrincipal();
     }
   }
+
   //Imprime el encabezado principal de todos los reportes
-  imprimeEncabezadoPrincipal() {
+  //Para la impresion Vertical
+  imprimeEncabezadoPrincipalV() {
     const { Encabezado } = this.configuracion;
+    const ImagenL = "resources/Logo_Interaccion.png";
+
     if (!this.tiene_encabezado) {
+      this.doc.addImage(ImagenL, "PNG", 10, 10, 26, 25);
       this.setFontSize(14);
       this.setTw_Ren(16);
-      this.ImpPosX(Encabezado.Nombre_Aplicacion, 14, this.tw_ren);
+      this.ImpPosX(Encabezado.Nombre_Aplicacion, 35, this.tw_ren);
       this.setFontSize(10);
       this.nextRow(6);
-      this.ImpPosX(Encabezado.Nombre_Reporte, 14, this.tw_ren);
+      this.ImpPosX(Encabezado.Nombre_Reporte, 35, this.tw_ren);
       this.nextRow(6);
       this.setFontSize(10);
-      this.ImpPosX(Encabezado.Nombre_Usuario, 14, this.tw_ren);
+      this.ImpPosX(Encabezado.Nombre_Usuario, 35, this.tw_ren);
       const date = new Date();
       const dateStr = formatDate(date);
       const timeStr = formatTime(date);
@@ -77,6 +93,36 @@ export class ReportePDF {
       this.ImpPosX(`Hoja: ${this.getNumberPages()}`, 150, this.tw_ren);
     }
   }
+
+  //Para la impresion Horizontal
+  imprimeEncabezadoPrincipalH() {
+    const { Encabezado } = this.configuracion;
+
+    //la imagen tiene que ser en png para que la imprima
+    const ImagenL = "resources/Logo_Interaccion.png";
+    if (!this.tiene_encabezado) {
+      this.doc.addImage(ImagenL, "PNG", 10, 10, 26, 25);
+      this.setFontSize(14);
+      this.setTw_Ren(16);
+      this.ImpPosX(Encabezado.Nombre_Aplicacion, 35, this.tw_ren);
+      this.setFontSize(10);
+      this.nextRow(6);
+      this.ImpPosX(Encabezado.Nombre_Reporte, 35, this.tw_ren);
+      this.nextRow(6);
+      this.setFontSize(10);
+      this.ImpPosX(Encabezado.Nombre_Usuario, 35, this.tw_ren);
+      const date = new Date();
+      const dateStr = formatDate(date);
+      const timeStr = formatTime(date);
+      this.setTw_Ren(16);
+      this.ImpPosX(`Fecha: ${dateStr}`, 250, this.tw_ren);
+      this.nextRow(6);
+      this.ImpPosX(`Hora: ${timeStr}`, 250, this.tw_ren);
+      this.nextRow(6);
+      this.ImpPosX(`Hoja: ${this.getNumberPages()}`, 250, this.tw_ren);
+    }
+  }
+
   //Guarda el reporte (rrecibe como parametro el nombre del reporte)
   guardaReporte(Nombre) {
     this.doc.save(`${Nombre}.pdf`);

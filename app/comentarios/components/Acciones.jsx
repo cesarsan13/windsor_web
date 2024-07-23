@@ -1,7 +1,7 @@
 import React from "react";
 import Tooltip from "@/app/components/tooltip";
 import Button from "@/app/components/button";
-function Acciones({ Buscar, Alta, Imprimir, excel, home }) {
+function Acciones({ Buscar, Alta, ImprimePDF, ImprimeExcel, home }) {
   return (
     <div className="join join-vertical ">
       <Tooltip Titulo={"Buscar"} posicion={"tooltip-top"}>
@@ -14,10 +14,10 @@ function Acciones({ Buscar, Alta, Imprimir, excel, home }) {
         <Button icono={"fa-regular fa-square-plus"} onClick={Alta}></Button>
       </Tooltip>
       <Tooltip Titulo={"Imprimir"} posicion={"tooltip-top"}>
-        <Button icono={"fas fa-print"} onClick={Imprimir}></Button>
+        <Button icono={"fas fa-file-pdf"} onClick={ImprimePDF}></Button>
       </Tooltip>
       <Tooltip Titulo={"Excel"} posicion={"tooltip-top"}>
-        <Button icono={"fas fa-file-excel"} onClick={excel}></Button>
+        <Button icono={"fas fa-file-excel"} onClick={ImprimeExcel}></Button>
       </Tooltip>
       <Tooltip Titulo={"Inicio"} posicion={"tooltip-top"}>
         <Button icono={"fas fa-home"} onClick={home}></Button>

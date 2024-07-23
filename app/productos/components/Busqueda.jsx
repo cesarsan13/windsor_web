@@ -31,7 +31,7 @@ function Busqueda({
         className="select select-bordered join-item dark:bg-slate-100 w-20 md:w-32 text-neutral-600"
         onChange={(event) => handleFiltroChange(event)}
       >
-        <option disabled defaultValue={""}>
+        <option disabled defaultValue={"id"}>
           Filtros
         </option>
         <option value={"id"}>Numero</option>

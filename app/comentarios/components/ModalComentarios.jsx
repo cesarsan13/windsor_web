@@ -1,6 +1,5 @@
 import { soloEnteros, soloDecimales, pone_ceros } from "@/app/utils/globalfn";
 import React from "react";
-import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import { useState, useEffect } from "react";
 import Inputs from "@/app/comentarios/components/Inputs";
 
@@ -12,7 +11,6 @@ function ModalComentarios({
   register,
   errors,
   setFormaComentarios,
-  comentarios,
 }) {
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
@@ -53,14 +51,14 @@ function ModalComentarios({
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box">
         <button
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+          className="btn btn-sm btn-circle btn-ghost  text-black dark:text-white absolute right-2 top-2"
           onClick={() => document.getElementById("my_modal_3").close()}
         >
           ✕
         </button>
         {/* if there is a button in form, it will close the modal */}
         <form onSubmit={onSubmit}>
-          <h3 className="font-bold text-lg mb-5">{titulo}</h3>
+          <h3 className="font-bold text-lg mb-5  text-black dark:text-white">{titulo}</h3>
           <fieldset id="fs_comentario">
             <div className="container flex flex-col space-y-5">
               <Inputs
@@ -128,18 +126,15 @@ function ModalComentarios({
               />
 
               <Inputs
-                dataType={"string"}
                 name={"generales"}
                 tamañolabel={"w-3/6"}
                 className={" w-1/6 grow text-right"}
                 Titulo={"Generales:"}
                 type={"select"}
                 requerido={true}
-                isNumero={false}
                 errors={errors}
                 register={register}
                 message={"General requerido"}
-                maxLength={1}
                 isDisabled={isDisabled}
               />
 

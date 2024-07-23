@@ -10,12 +10,20 @@ function TablaFormFact({
   setFormFact,
   setAccion,
   setCurrentId,
+  setShowSheet,
+  fetchFacturasFormato,
 }) {
   const tableAction = (evt, formFact, accion) => {
     setFormFact(formFact);
     setAccion(accion);
     setCurrentId(formFact.numero);
-    showModal(true);
+
+    if (evt.target.attributes.name.value !== "btn_actualiza_formato") {
+      showModal(true);
+    } else {
+      fetchFacturasFormato(formFact.numero);
+      setShowSheet(true);
+    }
   };
 
   return !isLoading ? (
@@ -34,12 +42,8 @@ function TablaFormFact({
             <tbody>
               {formFactsFiltrados.map((item) => (
                 <tr key={item.numero} className="hover:cursor-pointer">
-                  <th className="text-left">
-                    {item.numero}
-                  </th>
-                  <td className="text-left w-50">
-                    {item.nombre}
-                  </td>
+                  <th className="text-left">{item.numero}</th>
+                  <td className="text-left w-50">{item.nombre}</td>
                   <td>{item.longitud}</td>
                   <th>
                     <div className="flex flex-row space-x-1">
@@ -63,6 +67,19 @@ function TablaFormFact({
                         onClick={(evt) => tableAction(evt, item, "Eliminar")}
                       >
                         <i className="fa-solid fa-trash"></i>
+                      </div>
+                      <div
+                        className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                        data-tip={`Actualizar Formato`}
+                        name="btn_actualiza_formato"
+                        onClick={(evt) =>
+                          tableAction(evt, item, "ActualizaFormato")
+                        }
+                      >
+                        <i
+                          className="fa-regular fa-file-lines"
+                          name="btn_actualiza_formato"
+                        ></i>
                       </div>
                     </div>
                   </th>
