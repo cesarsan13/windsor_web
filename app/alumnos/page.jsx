@@ -2,8 +2,8 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
-import ModalAlumnos from "@/app/alumnos/components/ModalAlumnos";
-import TablaAlumnos from "@/app/alumnos/components/TablaAlumnos";
+import ModalAlumnos from "@/app/alumnos/components/modalAlumnos";
+import TablaAlumnos from "@/app/alumnos/components/tablaAlumnos";
 import Busqueda from "@/app/alumnos/components/Busqueda";
 import Acciones from "@/app/alumnos/components/Acciones";
 import { useForm } from "react-hook-form";
