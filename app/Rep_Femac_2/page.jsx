@@ -43,17 +43,18 @@ function AlumnosPorClase(){
       const { token } = session.user;
       const data = await getHorariosAPC(token);
       setFormaHorarioAPC(data);
-
-      //const dataImp = await getRepDosSel(token, shorario1, shorario2, sOrdenar);
-      //console.log(dataImp, shorario1, shorario2, sOrdenar);
-      //setFormaRepDosSel(dataImp);
-      //setisLoading(false);
+      setisLoading(false); 
     };
+    const fetchDataImp = async () =>{
+      const { token } = session.user;
+      const dataImp = await getRepDosSel(token, shorario1, shorario2, sOrdenar);
+      console.log(dataImp, shorario1, shorario2, sOrdenar);
+      setFormaRepDosSel(dataImp);
+    };
+    fetchDataImp();
     fetchData();
-  }, [session, status]);
-  //}, [session, status, shorario1, shorario2, sOrdenar]);
-
-
+    
+  }, [session, status, shorario1, shorario2, sOrdenar]);
 
   const ImprimePDF = () => {
     const configuracion = {
@@ -68,6 +69,7 @@ function AlumnosPorClase(){
   }
 
   const ImprimeExcel = () => {
+
     const configuracion = {
       Encabezado:{
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -81,12 +83,12 @@ function AlumnosPorClase(){
         { header: "Nombre", dataKey: "nombre_1" },
         { header: "No. 1", dataKey: "numero_1" },
         { header: "Año", dataKey: "año_nac_1" },
-        { header: "mes", dataKey: "mes_nac_1" },
+        { header: "Mes", dataKey: "mes_nac_1" },
         { header: "Telefono", dataKey: "telefono_1" },
         { header: "Nombre", dataKey: "nombre_2" },
-        { header: "No. 1", dataKey: "numero_2" },
+        { header: "No. 2", dataKey: "numero_2" },
         { header: "Año", dataKey: "año_nac_2" },
-        { header: "mes", dataKey: "mes_nac_2" },
+        { header: "Mes", dataKey: "mes_nac_2" },
         { header: "Telefono", dataKey: "telefono_2" },
     ],
 
@@ -99,11 +101,14 @@ function AlumnosPorClase(){
     router.push("/");
   };
 
-  const handleSelectionChange = (event) =>{
-    event.preventDefault;
-    ssetordenar(event.target.value);
-    ssethorario2(event.target.value);
+  const handleSelectionChange1 = (event) =>{
+    event.preventDefault;    
     ssethorario1(event.target.value);
+    console.log(event.target.value);
+  }
+  const handleSelectionChange2 = (event) =>{
+    event.preventDefault;    
+    ssethorario2(event.target.value);
     console.log(event.target.value);
   }
 
@@ -114,11 +119,58 @@ function AlumnosPorClase(){
         Nombre_Reporte: "Reporte de Alumnos",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
+      body: FormaRepDosSel,
     };
-    const reporte = new ReportePDF(configuracion);
+    const reporte = new ReportePDF(configuracion, "Landscape");
     reporte.imprimeEncabezadoPrincipalH();
-    const table = document.getElementById("table");
-    reporte.doc.autoTable({ html: table });
+    
+    /*const table = document.getElementById("table");
+
+      reporte.doc.autoTable({
+        head: [FormaRepDosSel[0]], // Encabezado de la tabla
+        body: FormaRepDosSel.slice(1) // Datos de la tabla
+    });*/
+
+   /* Enca1(newPDF);
+        body.forEach((repdossel) => {
+        
+          newPDF.ImpPosX(repdossel.numero.toString(),15,newPDF.tw_ren, 10);
+          newPDF.ImpPosX(repdossel.nombre_1.toString(),30,newPDF.tw_ren, 50);
+          newPDF.ImpPosX(repdossel.numero_1.toString(),80,newPDF.tw_ren, 10);
+          newPDF.ImpPosX(repdossel.año_nac_1.toString(),95,newPDF.tw_ren, 15);
+          newPDF.ImpPosX(repdossel.mes_nac_1.toString(),110,newPDF.tw_ren, 15);
+          newPDF.ImpPosX(repdossel.telefono_1.toString(),130,newPDF.tw_ren, 10);
+          newPDF.ImpPosX(repdossel.nombre_2.toString(),155,newPDF.tw_ren, 50);
+          newPDF.ImpPosX(repdossel.numero_2.toString(),205,newPDF.tw_ren, 10);
+          newPDF.ImpPosX(repdossel.año_nac_2.toString(),220,newPDF.tw_ren, 15);
+          newPDF.ImpPosX(repdossel.mes_nac_2.toString(),235,newPDF.tw_ren, 15);
+          newPDF.ImpPosX(repdossel.telefono_2.toString(),250,newPDF.tw_ren, 10);
+
+
+          Enca1(newPDF);
+          if (newPDF.tw_ren >= newPDF.tw_endRen) {
+            newPDF.pageBreak();
+            Enca1(newPDF);
+          }
+        });*/
+
+        reporte.doc.autoTable({
+          head: [["No.","Nombre","No. 1","Año","Mes","Telefono","Nombre","No. 2","Año","Mes","Telefono"]],
+          body: FormaRepDosSel.slice(1),
+          styles: {
+            fillColor: [255, 255, 255], // Color de fondo de las celdas
+            textColor: [0, 0, 0], // Color del texto
+            fontSize: 10, // Tamaño de la fuente
+            halign: 'center', // Alineación horizontal
+            valign: 'left' // Alineación vertical
+        },
+        headStyles: {
+          fillColor: [255, 255, 255], // Color de fondo de las celdas
+          textColor: [0, 0, 0], // Color del texto
+          margin: 34 ,
+        },
+      });
+
     const pdfData = reporte.doc.output("datauristring");
     setPdfData(pdfData);
     setPdfPreview(true);
@@ -148,15 +200,30 @@ function AlumnosPorClase(){
             <Acciones Ver={handleVerClick} ImprimePDF={ImprimePDF} ImprimeExcel={ImprimeExcel} home={home}></Acciones>
           </div>
         
-        <div className="col-span-7 ">
+        <div className="col-span-7">
+        <div className="flex flex-col h-[calc(100%)]">
             <ImpElementos
               setFormaHorarioAPC={formaHorarioAPC}
               sOrdenar={sOrdenar}
               shorario1={shorario1}
               shorario2={shorario2}
-              handleSelectionChange = {handleSelectionChange}
+              handleSelectionChange1 = {handleSelectionChange1}
+              handleSelectionChange2 = {handleSelectionChange2}
               handleCheckChange = {handleCheckChange}
             />
+
+            {pdfPreview && pdfData && (
+                <div className="pdf-preview">
+                  <Worker
+                    workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
+                  >
+                    <div style={{ height: "600px"}}>
+                      <Viewer fileUrl={pdfData}  />
+                    </div>
+                  </Worker>
+                </div>
+            )}
+          </div>
         </div>
         </div>
       </div>
