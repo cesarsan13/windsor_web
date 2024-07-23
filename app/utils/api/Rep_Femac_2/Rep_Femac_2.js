@@ -53,20 +53,25 @@ export const getRepDosSel = async (token, horario1, horario2, orden) => {
         const newPDF = new ReportePDF(configuracion, orientacion);
         const { body } = configuracion;
         Enca1(newPDF);
-        body.forEach((repdossel) => {
-        
-          newPDF.ImpPosX(repdossel.numero.toString(),15,newPDF.tw_ren, 10);
-          newPDF.ImpPosX(repdossel.nombre_1.toString(),30,newPDF.tw_ren, 50);
-          newPDF.ImpPosX(repdossel.numero_1.toString(),80,newPDF.tw_ren, 10);
-          newPDF.ImpPosX(repdossel.año_nac_1.toString(),95,newPDF.tw_ren, 15);
-          newPDF.ImpPosX(repdossel.mes_nac_1.toString(),110,newPDF.tw_ren, 15);
-          newPDF.ImpPosX(repdossel.telefono_1.toString(),130,newPDF.tw_ren, 10);
-          newPDF.ImpPosX(repdossel.nombre_2.toString(),155,newPDF.tw_ren, 50);
-          newPDF.ImpPosX(repdossel.numero_2.toString(),205,newPDF.tw_ren, 10);
-          newPDF.ImpPosX(repdossel.año_nac_2.toString(),220,newPDF.tw_ren, 15);
-          newPDF.ImpPosX(repdossel.mes_nac_2.toString(),235,newPDF.tw_ren, 15);
-          newPDF.ImpPosX(repdossel.telefono_2.toString(),250,newPDF.tw_ren, 10);
+        body.data1.forEach((h1) => {
+          newPDF.ImpPosX(h1.nombre.toString(),30,newPDF.tw_ren, 50);
+          newPDF.ImpPosX(h1.id.toString(),80,newPDF.tw_ren, 10);
+          newPDF.ImpPosX(h1.año_nac.toString(),95,newPDF.tw_ren, 15);
+          newPDF.ImpPosX(h1.mes_nac.toString(),110,newPDF.tw_ren, 15);
+          newPDF.ImpPosX(h1.telefono_1.toString(),130,newPDF.tw_ren, 10);
+          Enca1(newPDF);
+          if (newPDF.tw_ren >= newPDF.tw_endRen) {
+            newPDF.pageBreak();
+            Enca1(newPDF);
+          }
+        });
 
+        body.data2.forEach((h2) => {
+          newPDF.ImpPosX(h2.nombre.toString(),155,newPDF.tw_ren, 50);
+          newPDF.ImpPosX(h2.id.toString(),205,newPDF.tw_ren, 10);
+          newPDF.ImpPosX(h2.año_nac.toString(),220,newPDF.tw_ren, 15);
+          newPDF.ImpPosX(h2.mes_nac.toString(),235,newPDF.tw_ren, 15);
+          newPDF.ImpPosX(h2.telefono_1.toString(),250,newPDF.tw_ren, 10);
 
           Enca1(newPDF);
           if (newPDF.tw_ren >= newPDF.tw_endRen) {

@@ -13,7 +13,7 @@ import {
 } from "../utils/api/Rep_Femac_2/Rep_Femac_2";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-
+import jsPDF from "jspdf";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
@@ -29,15 +29,18 @@ function AlumnosPorClase(){
   const [shorario2, ssethorario2] = useState('');
   const [sOrdenar, ssetordenar] = useState('');
   const [FormaRepDosSel, setFormaRepDosSel] =  useState([]);
-
+  const [accion, setAccion] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const [reporte, setReporte] = useState({});
+  const [reportes, setReportes] = useState([]);
 
 
   useEffect(()=> {
     if(status === "loading" || !session) {
       return;
     }
+    
     const fetchData = async () => {
       setisLoading(true);
       const { token } = session.user;
@@ -50,12 +53,54 @@ function AlumnosPorClase(){
       const dataImp = await getRepDosSel(token, shorario1, shorario2, sOrdenar);
       console.log(dataImp, shorario1, shorario2, sOrdenar);
       setFormaRepDosSel(dataImp);
+      console.log("set", FormaRepDosSel);
     };
     fetchDataImp();
     fetchData();
     
   }, [session, status, shorario1, shorario2, sOrdenar]);
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      numero: reporte.numero,
+      numero_1: reporte.numero_1,
+      nombre_1: reporte.nombre_1,
+      año_nac_1: reporte.año_nac_1,
+      mes_nac_1: reporte.mes_nac_1,
+      telefono_1: reporte.telefono_1,
+      numero_2: reporte.numero_2,
+      nombre_2: reporte.nombre_2,
+      año_nac_2: reporte.año_nac_2,
+      mes_nac_2: reporte.mes_nac_2,
+      telefono_2: reporte.telefono_2,
+    },
+  });
+
+  const onSubmitModal = handleSubmit(async (data) => {
+    event.preventDefault;
+    const dataj = JSON.stringify(data);
+    data.id = currentID;
+    let res = null;
+    res = await guardaRep(session.user.token, data, accion);
+    if (res.status) {
+      if (accion === "Alta") {
+        const nuevaRep = { currentID, ...data };
+        setReportes([...reportes, nuevaRep]);
+        if (!bajas) {
+          setFormaRepDosSel([...FormaRepDosSel, nuevaRep]);
+        }
+      }
+      showSwal(res.alert_title, res.alert_text, res.alert_icon);
+      showModal(false);
+    }
+  });
+
+  
   const ImprimePDF = () => {
     const configuracion = {
       Encabezado:{
@@ -64,6 +109,7 @@ function AlumnosPorClase(){
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
       body: FormaRepDosSel,
+
     }
     ImprimirPDF(configuracion)
   }
@@ -77,11 +123,11 @@ function AlumnosPorClase(){
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
       
-      body: FormaRepDosSel,
+      body: FormaRepDosSel1,
       columns:[
         { header: "No.", dataKey: "numero" },
-        { header: "Nombre", dataKey: "nombre_1" },
-        { header: "No. 1", dataKey: "numero_1" },
+        { header: "Nombre", dataKey: "nombre" },
+        { header: "No. 1", dataKey: "id" },
         { header: "Año", dataKey: "año_nac_1" },
         { header: "Mes", dataKey: "mes_nac_1" },
         { header: "Telefono", dataKey: "telefono_1" },
@@ -90,6 +136,7 @@ function AlumnosPorClase(){
         { header: "Año", dataKey: "año_nac_2" },
         { header: "Mes", dataKey: "mes_nac_2" },
         { header: "Telefono", dataKey: "telefono_2" },
+
     ],
 
     nombre: "RepDosSec"
@@ -115,61 +162,67 @@ function AlumnosPorClase(){
   const handleVerClick = () => {
     const configuracion = {
       Encabezado: {
-        Nombre_Aplicacion: "Nombre de la Aplicación",
+        Nombre_Aplicacion: "Lista de Alumnos por clase",
         Nombre_Reporte: "Reporte de Alumnos",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
       body: FormaRepDosSel,
     };
     const reporte = new ReportePDF(configuracion, "Landscape");
-    reporte.imprimeEncabezadoPrincipalH();
     
-    /*const table = document.getElementById("table");
+    const Enca1 = (doc) => {
+      if (!doc.tiene_encabezado) {
+        doc.imprimeEncabezadoPrincipalH();
+        doc.nextRow(12);
+        doc.ImpPosX("No.",15,doc.tw_ren),
+        doc.ImpPosX("Nombre",30,doc.tw_ren),
+        doc.ImpPosX("No. 1",80,doc.tw_ren),
+        doc.ImpPosX("Año",95,doc.tw_ren),
+        doc.ImpPosX("Mes",110,doc.tw_ren),
+        doc.ImpPosX("Telefono",130,doc.tw_ren),
+        doc.ImpPosX("Nombre",155,doc.tw_ren),
+        doc.ImpPosX("No. 2",205,doc.tw_ren),
+        doc.ImpPosX("Año",220,doc.tw_ren),
+        doc.ImpPosX("Mes",235,doc.tw_ren),
+        doc.ImpPosX("Telefono",250,doc.tw_ren),
 
-      reporte.doc.autoTable({
-        head: [FormaRepDosSel[0]], // Encabezado de la tabla
-        body: FormaRepDosSel.slice(1) // Datos de la tabla
-    });*/
+        doc.nextRow(4);
+        doc.printLineH();
+        doc.nextRow(4);
+        doc.tiene_encabezado = true;
+      } else {
+        doc.nextRow(6);
+        doc.tiene_encabezado = true;
+      }
+    };
 
-   /* Enca1(newPDF);
-        body.forEach((repdossel) => {
-        
-          newPDF.ImpPosX(repdossel.numero.toString(),15,newPDF.tw_ren, 10);
-          newPDF.ImpPosX(repdossel.nombre_1.toString(),30,newPDF.tw_ren, 50);
-          newPDF.ImpPosX(repdossel.numero_1.toString(),80,newPDF.tw_ren, 10);
-          newPDF.ImpPosX(repdossel.año_nac_1.toString(),95,newPDF.tw_ren, 15);
-          newPDF.ImpPosX(repdossel.mes_nac_1.toString(),110,newPDF.tw_ren, 15);
-          newPDF.ImpPosX(repdossel.telefono_1.toString(),130,newPDF.tw_ren, 10);
-          newPDF.ImpPosX(repdossel.nombre_2.toString(),155,newPDF.tw_ren, 50);
-          newPDF.ImpPosX(repdossel.numero_2.toString(),205,newPDF.tw_ren, 10);
-          newPDF.ImpPosX(repdossel.año_nac_2.toString(),220,newPDF.tw_ren, 15);
-          newPDF.ImpPosX(repdossel.mes_nac_2.toString(),235,newPDF.tw_ren, 15);
-          newPDF.ImpPosX(repdossel.telefono_2.toString(),250,newPDF.tw_ren, 10);
-
-
-          Enca1(newPDF);
-          if (newPDF.tw_ren >= newPDF.tw_endRen) {
-            newPDF.pageBreak();
-            Enca1(newPDF);
-          }
-        });*/
-
-        reporte.doc.autoTable({
-          head: [["No.","Nombre","No. 1","Año","Mes","Telefono","Nombre","No. 2","Año","Mes","Telefono"]],
-          body: FormaRepDosSel.slice(1),
-          styles: {
-            fillColor: [255, 255, 255], // Color de fondo de las celdas
-            textColor: [0, 0, 0], // Color del texto
-            fontSize: 10, // Tamaño de la fuente
-            halign: 'center', // Alineación horizontal
-            valign: 'left' // Alineación vertical
-        },
-        headStyles: {
-          fillColor: [255, 255, 255], // Color de fondo de las celdas
-          textColor: [0, 0, 0], // Color del texto
-          margin: 34 ,
-        },
-      });
+    Enca1(reporte);
+    configuracion.body.data1.foreach((reporte) => {
+      //reporte.ImpPosX(reporte.numero.toString(),15,reporte.tw_ren, 10);
+      reporte.ImpPosX(reporte.nombre.toString(),30,reporte.tw_ren, 50);
+      reporte.ImpPosX(reporte.id.toString(),80,reporte.tw_ren, 10);
+      reporte.ImpPosX(reporte.año_nac.toString(),95,reporte.tw_ren, 15);
+      reporte.ImpPosX(reporte.mes_nac.toString(),110,reporte.tw_ren, 15);
+      reporte.ImpPosX(reporte.telefono_1.toString(),130,reporte.tw_ren, 10);
+     
+      Enca1(reporte);
+      if (reporte.tw_ren >= reporte.tw_endRen) {
+        reporte.pageBreak();
+        Enca1(reporte);
+      }
+    });
+    configuracion.body.data2.foreach((reporte) => {
+      reporte.ImpPosX(reporte.nombre.toString(),155,reporte.tw_ren, 50);
+      reporte.ImpPosX(reporte.id.toString(),205,reporte.tw_ren, 10);
+      reporte.ImpPosX(reporte.año_nac.toString(),220,reporte.tw_ren, 15);
+      reporte.ImpPosX(reporte.mes_nac.toString(),235,reporte.tw_ren, 15);
+      reporte.ImpPosX(reporte.telefono_1.toString(),250,reporte.tw_ren, 10);
+      Enca1(reporte);
+      if (reporte.tw_ren >= reporte.tw_endRen) {
+        reporte.pageBreak();
+        Enca1(reporte);
+      }
+    });
 
     const pdfData = reporte.doc.output("datauristring");
     setPdfData(pdfData);
@@ -212,16 +265,17 @@ function AlumnosPorClase(){
               handleCheckChange = {handleCheckChange}
             />
 
+            
             {pdfPreview && pdfData && (
                 <div className="pdf-preview">
                   <Worker
                     workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
                   >
-                    <div style={{ height: "600px"}}>
+                    <div style={{ height: "600px" }}>
                       <Viewer fileUrl={pdfData}  />
                     </div>
                   </Worker>
-                </div>
+                </div> 
             )}
           </div>
         </div>
