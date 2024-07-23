@@ -40,6 +40,9 @@ function Menu({ vertical }) {
           <li>
             <Link href="/Rep_Femac_2">Lista de Alumnos por clase</Link>
             </li>
+            <li>
+              <Link href={"/rep_femac_6"}>Cobranza</Link>
+            </li>
           </ul>
         </details>
       </li>
@@ -81,6 +84,9 @@ function Menu({ vertical }) {
           <ul>
           <li>
             <Link href="/Rep_Femac_2">Lista de Alumnos por clase</Link>
+            </li>
+            <li>
+              <Link href={"/rep_femac_6"}>Cobranza</Link>
             </li>
           </ul>
         </details>

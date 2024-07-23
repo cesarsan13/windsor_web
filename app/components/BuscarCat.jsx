@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ModalBuscarCat from './ModalBuscarCat';
 import { getProductos } from '../utils/api/productos/productos';
 import { getHorarios } from '../utils/api/horarios/horarios';
+import { getCajeros } from '../utils/api/cajeros/cajeros';
 
 function BuscarCat({ table, fieldsToShow,titulo, setItem, token, modalId }) {
   const [inputValue, setInputValue] = useState(''); // Estado para el valor del input
@@ -19,6 +20,9 @@ function BuscarCat({ table, fieldsToShow,titulo, setItem, token, modalId }) {
         case 'horarios':
           fetchedData = await getHorarios(token, "");
           break;
+          case 'cajeros':
+            fetchedData= await getCajeros(token,"")
+            break
         default:
           fetchedData = [];
           break;
@@ -58,6 +62,8 @@ function BuscarCat({ table, fieldsToShow,titulo, setItem, token, modalId }) {
       setFilteredData(data);
       setInputValue(""); 
       setInputValueDesc(""); 
+      
+      setItem({})
       return;
     }
 
@@ -86,7 +92,7 @@ function BuscarCat({ table, fieldsToShow,titulo, setItem, token, modalId }) {
 
   return (
     <div className='  flex justify-start items-center'>
-      <label className='input input-bordered text-black dark:text-white input-md flex items-center gap-3  w-2/12'>
+      <label className='input input-bordered text-black dark:text-white input-md flex items-center gap-3  w-4/12'>
         {titulo} 
         <input
           type="text"
