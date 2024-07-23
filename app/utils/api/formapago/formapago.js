@@ -77,16 +77,26 @@ const Enca1 = (doc) => {
   }
 };
 export const Imprimir = (configuracion) => {
-  const orientacion = 'Portrait'
+  const orientacion = "Portrait";
   const newPDF = new ReportePDF(configuracion, orientacion);
   const { body } = configuracion;
+  // newPDF.setFontSize(12);
+  // newPDF.ImpPosX("-", 0, 0, 10);
+  // newPDF.ImpPosX("-", 1, 1, 10);
+  // newPDF.ImpPosX("-", 1, 2, 10);
+  // newPDF.ImpPosX("-", 1, 3, 10);
+  // newPDF.ImpPosX("-", 1, 4, 10);
+  // newPDF.ImpPosX("-", 1, 5, 10);
+  // newPDF.ImpPosX("-", 1, 6, 10);
+  // newPDF.guardaReporte("PruebaEncabezado");
+  // return;
   Enca1(newPDF);
   body.forEach((cajero) => {
-    newPDF.ImpPosX(cajero.id.toString(), 14, newPDF.tw_ren,10);
-    newPDF.ImpPosX(cajero.descripcion.toString(), 28, newPDF.tw_ren,50);
-    newPDF.ImpPosX(cajero.comision.toString(), 62, newPDF.tw_ren,50);
-    newPDF.ImpPosX(cajero.aplicacion.toString(), 82, newPDF.tw_ren,50);
-    newPDF.ImpPosX(cajero.cue_banco.toString(), 112, newPDF.tw_ren,50);
+    newPDF.ImpPosX(cajero.id.toString(), 14, newPDF.tw_ren, 10);
+    newPDF.ImpPosX(cajero.descripcion.toString(), 28, newPDF.tw_ren, 50);
+    newPDF.ImpPosX(cajero.comision.toString(), 62, newPDF.tw_ren, 50);
+    newPDF.ImpPosX(cajero.aplicacion.toString(), 82, newPDF.tw_ren, 50);
+    newPDF.ImpPosX(cajero.cue_banco.toString(), 112, newPDF.tw_ren, 50);
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
       newPDF.pageBreak();
@@ -97,12 +107,12 @@ export const Imprimir = (configuracion) => {
   newPDF.guardaReporte("PruebaEncabezado");
 };
 
-export const ImprimirExcel=(configuracion)=>{
-  const newExcel=new ReporteExcel(configuracion)
-  const {columns} = configuracion
-  const {body} = configuracion
-  const {nombre}=configuracion
+export const ImprimirExcel = (configuracion) => {
+  const newExcel = new ReporteExcel(configuracion);
+  const { columns } = configuracion;
+  const { body } = configuracion;
+  const { nombre } = configuracion;
   newExcel.setColumnas(columns);
   newExcel.addData(body);
   newExcel.guardaReporte(nombre);
-}
+};

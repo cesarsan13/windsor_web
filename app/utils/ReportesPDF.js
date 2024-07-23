@@ -3,31 +3,27 @@ import "jspdf-autotable";
 import { formatDate, formatTime } from "@/app/utils/globalfn";
 
 export class ReportePDF {
-  
   //constructor del nuevo reporte, acepta un JSON de configuracion
   //tw_ren = al valor de la cordenada Y ese aumenta para pasar de renglon
   //tw_endRen = al valor limite de la hoja en alto
   //tiene_encabezado = indica si la pagina ya se imprimio el encabezado del reporte
   //doc = instancia de jsPDF
-  
 
   constructor(configuracion, orientacion) {
     this.configuracion = configuracion;
     this.tw_ren = 0;
     this.tw_endRen = 280;
     this.tiene_encabezado = false;
-    this.doc = new jsPDF(orientacion);
-
+    this.doc = new jsPDF(orientacion,"px");
   }
 
   //Imprime un texto, recibe como parametro el texto, la cordenada x y la cordenada y
   ImpPosX(texto, x, y, maxLength) {
-    var textoC = texto.substring(0,maxLength);
+    var textoC = texto.substring(0, maxLength);
 
     if (texto.length >= maxLength) {
       this.doc.text(textoC, x, y);
-    }
-    else{
+    } else {
       this.doc.text(texto, x, y);
     }
   }
@@ -40,8 +36,8 @@ export class ReportePDF {
   setFontSize(fontSize) {
     this.doc.setFontSize(fontSize);
   }
-   //Aumenta el valor en la variable tw_ren(y) para escribir un nuevo renglon
-   nextRow(value) {
+  //Aumenta el valor en la variable tw_ren(y) para escribir un nuevo renglon
+  nextRow(value) {
     this.tw_ren += value;
   }
   //Establece un valor especifico a tw_ren(y)
@@ -69,16 +65,14 @@ export class ReportePDF {
     }
   }
 
-
   //Imprime el encabezado principal de todos los reportes
   //Para la impresion Vertical
   imprimeEncabezadoPrincipalV() {
-
     const { Encabezado } = this.configuracion;
-    const ImagenL ="resources/Logo_Interaccion.png";
-    
+    const ImagenL = "resources/Logo_Interaccion.png";
+
     if (!this.tiene_encabezado) {
-      this.doc.addImage(ImagenL,'PNG', 10, 10, 26, 25);
+      this.doc.addImage(ImagenL, "PNG", 10, 10, 26, 25);
       this.setFontSize(14);
       this.setTw_Ren(16);
       this.ImpPosX(Encabezado.Nombre_Aplicacion, 35, this.tw_ren);
@@ -105,9 +99,9 @@ export class ReportePDF {
     const { Encabezado } = this.configuracion;
 
     //la imagen tiene que ser en png para que la imprima
-    const ImagenL ="resources/Logo_Interaccion.png";
+    const ImagenL = "resources/Logo_Interaccion.png";
     if (!this.tiene_encabezado) {
-      this.doc.addImage(ImagenL,'PNG', 10, 10, 26, 25);
+      this.doc.addImage(ImagenL, "PNG", 10, 10, 26, 25);
       this.setFontSize(14);
       this.setTw_Ren(16);
       this.ImpPosX(Encabezado.Nombre_Aplicacion, 35, this.tw_ren);
@@ -128,8 +122,6 @@ export class ReportePDF {
       this.ImpPosX(`Hoja: ${this.getNumberPages()}`, 250, this.tw_ren);
     }
   }
-
-  
 
   //Guarda el reporte (rrecibe como parametro el nombre del reporte)
   guardaReporte(Nombre) {

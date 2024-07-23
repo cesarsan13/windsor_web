@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import ModalBuscarCat from './ModalBuscarCat';
-import { getProductos } from '../utils/api/productos/productos';
-import { getHorarios } from '../utils/api/horarios/horarios';
-import { getFormasPago } from "@/app/utils/api/formapago/formapago"
-import { getAlumnos } from '@/app/utils/api/alumnos/alumnos';
-function BuscarCat({ table, itemData, fieldsToShow, nameInput, titulo, setItem, token, modalId }) {
-  const [inputValue, setInputValue] = useState('');
-  const [inputValueDesc, setInputValueDesc] = useState('');
+import React, { useState, useEffect } from "react";
+import ModalBuscarCat from "./ModalBuscarCat";
+import { getProductos } from "../utils/api/productos/productos";
+import { getHorarios } from "../utils/api/horarios/horarios";
+import { getCajeros } from "../utils/api/cajeros/cajeros";
+import { getFormasPago } from "@/app/utils/api/formapago/formapago";
+import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
+
+function BuscarCat({ table, fieldsToShow, titulo, setItem, token, modalId }) {
+  const [inputValue, setInputValue] = useState(""); // Estado para el valor del input
+
+  const [inputValueDesc, setInputValueDesc] = useState("");
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
 
@@ -14,19 +17,22 @@ function BuscarCat({ table, itemData, fieldsToShow, nameInput, titulo, setItem, 
     const fetchData = async () => {
       let fetchedData = [];
       switch (table) {
-        case 'alumnos':
+        case "alumnos":
           fetchedData = await getAlumnos(token, false);
           break;
-        case 'productos':
+        case "productos":
           fetchedData = await getProductos(token, "");
           break;
-        case 'horarios':
+        case "horarios":
           fetchedData = await getHorarios(token, "");
           break;
-        case 'formaPago':
+        case "cajeros":
+          fetchedData = await getCajeros(token, "");
+          break;
+        case "formaPago":
           fetchedData = await getFormasPago(token, false);
           break;
-        case 'proveedores':
+        case "proveedores":
         default:
           fetchedData = [];
           break;
@@ -46,9 +52,9 @@ function BuscarCat({ table, itemData, fieldsToShow, nameInput, titulo, setItem, 
   };
   const handleSetItem = (item) => {
     const id = item[fieldsToShow[0]];
-    const description = item[fieldsToShow[1]]
+    const description = item[fieldsToShow[1]];
     setInputValue(id);
-    setInputValueDesc(description)
+    setInputValueDesc(description);
     setItem(item);
   };
   const handleKeyDown = (evt) => {
@@ -60,6 +66,8 @@ function BuscarCat({ table, itemData, fieldsToShow, nameInput, titulo, setItem, 
       setFilteredData(data);
       setInputValue("");
       setInputValueDesc("");
+
+      setItem({});
       return;
     }
     const infoFiltrada = data.filter((item) => {
@@ -68,11 +76,14 @@ function BuscarCat({ table, itemData, fieldsToShow, nameInput, titulo, setItem, 
         if (typeof valorCampo === "number") {
           return valorCampo.toString().includes(inputValue);
         }
-        return valorCampo?.toString().toLowerCase().includes(inputValue.toLowerCase());
+        return valorCampo
+          ?.toString()
+          .toLowerCase()
+          .includes(inputValue.toLowerCase());
       });
     });
     setFilteredData(infoFiltrada);
-    setItem(infoFiltrada)
+    setItem(infoFiltrada);
     if (infoFiltrada.length > 0) {
       const item = infoFiltrada[0];
       const id = item[fieldsToShow[0]];
@@ -84,8 +95,8 @@ function BuscarCat({ table, itemData, fieldsToShow, nameInput, titulo, setItem, 
   };
 
   return (
-    <div className='  flex justify-start items-center'>
-      <label className='input input-bordered text-black dark:text-white input-md flex items-center gap-3  w-4/12'>
+    <div className="  flex justify-start items-center">
+      <label className="input input-bordered text-black dark:text-white input-md flex items-center gap-3  w-4/12">
         {titulo}
         <input
           id={nameInput[0]}
@@ -94,7 +105,7 @@ function BuscarCat({ table, itemData, fieldsToShow, nameInput, titulo, setItem, 
           onKeyDown={(evt) => handleKeyDown(evt)}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          className='grow dark:text-neutral-200 text-neutral-600  rounded-r-none'
+          className="grow dark:text-neutral-200 text-neutral-600  rounded-r-none"
         />
       </label>
       <div className="tooltip" data-tip="Buscar">
@@ -114,7 +125,7 @@ function BuscarCat({ table, itemData, fieldsToShow, nameInput, titulo, setItem, 
         onKeyDown={(evt) => handleKeyDown(evt)}
         value={inputValueDesc}
         // onChange={(e) => setInputValue(e.target.value)}
-        className='input input-bordered bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md flex items-center gap-3'
+        className="input input-bordered bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md flex items-center gap-3"
       />
       <ModalBuscarCat
         data={data}
