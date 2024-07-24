@@ -535,7 +535,7 @@ function ModalAlumnos({
                                         modalId="modal_horarios"
                                         array={alumno.horario_1}
                                     />
-                                    <BuscarCat
+                                    {/* <BuscarCat
                                         table="horarios"
                                         itemData={alumno}
                                         fieldsToShow={columnasBuscaCat}
@@ -545,7 +545,7 @@ function ModalAlumnos({
                                         token={session.user.token}
                                         modalId="modal_horarios2"
                                         array={alumno.horario_2}
-                                    />
+                                    /> */}
                                 </div>
                             </div>
 
@@ -591,24 +591,24 @@ function ModalAlumnos({
                                         handleBlur={handleBlur}
                                     />
                                     <BuscarCat
-                                    table={"formaPago"}
-                                    fieldsToShow={columnasBuscaCat1}
-                                    nameInput={nameInputs3}
-                                    setItem={setcond1}
-                                    token={session.user.token}
-                                    modalId="modal_formaPago1"
-                                    array={alumno.cond_1}
-                                    titulo={"forma pago: "}
+                                        table={"formaPago"}
+                                        fieldsToShow={columnasBuscaCat1}
+                                        nameInput={nameInputs3}
+                                        setItem={setcond1}
+                                        token={session.user.token}
+                                        modalId="modal_formaPago1"
+                                        array={alumno.cond_1}
+                                        titulo={"Forma pago: "}
                                     />
                                     <BuscarCat
-                                    table={"formaPago"}
-                                    fieldsToShow={columnasBuscaCat1}
-                                    nameInput={nameInputs4}
-                                    setItem={setcond2}
-                                    token={session.user.token}
-                                    modalId="modal_formaPago1"
-                                    array={alumno.cond_2}
-                                    titulo={"forma pago: "}
+                                        table={"formaPago"}
+                                        fieldsToShow={columnasBuscaCat1}
+                                        nameInput={nameInputs4}
+                                        setItem={setcond2}
+                                        token={session.user.token}
+                                        modalId="modal_formaPago2"
+                                        array={alumno.cond_2}
+                                        titulo={"Forma pago: "}
                                     />
                                     {/* <Inputs
                                         dataType={"string"}
