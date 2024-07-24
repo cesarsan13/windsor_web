@@ -130,6 +130,7 @@ function Rep_Femac_6() {
                                     titulo={"Cajeros: "}
                                     token={session.user.token}
                                     fieldsToShow={["numero", "nombre"]}
+                                    nameInput={["numero", "nombre"]}
                                     setItem={setCajero}
                                     modalId={"modal_Cajeros"}
                                 />

@@ -13,13 +13,14 @@ function Inputs({
   errors,
   tamañolabel,
   maxLenght,
+  defaultValue,
   isDisabled,
   handleBlur,
 }) {
   return (
     <div className="flex flex-col">
       <label
-        className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
+        className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel}`}
       >
         {Titulo}
         <input
@@ -28,7 +29,7 @@ function Inputs({
           name={name}
           id={name}
           type={type}
-          className={`text-black dark:text-white ${className}`}
+          className={className}
           {...(dataType === "int" && { onKeyDown: soloEnteros })}
           {...(dataType === "float" && { onKeyDown: soloDecimales })}
           {...register(name, {
