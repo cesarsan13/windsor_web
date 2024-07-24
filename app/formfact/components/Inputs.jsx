@@ -16,15 +16,14 @@ function Inputs({
   defaultValue,
   isDisabled,
   handleBlur,
+  handleChange,
 }) {
   return type !== "select" ? (
     <div className="flex flex-col">
-      <label
-        className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel}`}
-      >
+      <label className={`input   flex items-center  ${tamañolabel}`}>
         {Titulo}
         <input
-          // defaultValue={defaultValue}
+          {...(handleChange && { onChangeCapture: (evt) => handleChange(evt) })}
           {...(maxLenght !== 0 && { maxLength: maxLenght })}
           name={name}
           id={name}
@@ -51,7 +50,7 @@ function Inputs({
   ) : (
     <div className="flex flex-col">
       <label
-        className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}
+        className={`input  text-black dark:text-white flex items-center ${tamañolabel}`}
       >
         {Titulo}
         <select

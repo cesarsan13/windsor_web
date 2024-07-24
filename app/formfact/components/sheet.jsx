@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 
-function Sheet({ labels, setLabels, setSelectedLabel }) {
+function Sheet({ labels, setLabels, setSelectedLabel, setSelectedIndex }) {
   // console.log(labels);
   const handleDoubleClick = (event) => {
     event.preventDefault();
@@ -23,6 +23,7 @@ function Sheet({ labels, setLabels, setSelectedLabel }) {
     evt.preventDefault();
     // console.log(evt.target);
     setSelectedLabel(labels[index]);
+    setSelectedIndex(index);
   };
   const handleDragStart = (event, index) => {
     event.dataTransfer.setData("index", index);
@@ -35,19 +36,19 @@ function Sheet({ labels, setLabels, setSelectedLabel }) {
     const index = evt.dataTransfer.getData("index");
     const x = evt.clientX - evt.currentTarget.offsetLeft - 15;
     const y = evt.clientY - evt.currentTarget.offsetTop - 15;
-    setSelectedLabel(labels[index]);
     const resultado = labels.map((lbl, idx) => {
       return idx === parseInt(index)
         ? { ...lbl, columna_impresion: x, renglon_impresion: y }
         : lbl;
     });
     setLabels(resultado);
-    console.log(
-      "este es el resultaod de la iteracion",
-      resultado[index],
-      labels[index],
-      index
-    );
+    setSelectedLabel(labels[index]);
+    // console.log(
+    //   "este es el resultaod de la iteracion",
+    //   resultado[index],
+    //   labels[index],
+    //   index
+    // );
   };
 
   return (
@@ -62,6 +63,7 @@ function Sheet({ labels, setLabels, setSelectedLabel }) {
           draggable
           onDragStart={(evt) => handleDragStart(evt, index)}
           key={index}
+          data-key={index}
           name={`texto_${label.numero_dato}`}
           id={`texto_${label.numero_dato}`}
           className="hover:cursor-move"

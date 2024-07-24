@@ -212,60 +212,8 @@ function FormFact() {
 
     evt.currentTarget.style.backgroundColor = "yellow";
   };
-  //renglon es la y
-  //columna la x
 
-  // this.setFontSize(14);
-  // this.setTw_Ren(16);
-  // this.ImpPosX(Encabezado.Nombre_Aplicacion, 35, this.tw_ren);
-  // this.setFontSize(10);
-  // this.nextRow(6);
-  // this.ImpPosX(Encabezado.Nombre_Reporte, 35, this.tw_ren);
-  // this.nextRow(6);
-  // this.setFontSize(10);
-  // this.ImpPosX(Encabezado.Nombre_Usuario, 35, this.tw_ren);
-  // const date = new Date();
-  // const dateStr = formatDate(date);
-  // const timeStr = formatTime(date);
-  // this.setTw_Ren(16);
-  // this.ImpPosX(`Fecha: ${dateStr}`, 150, this.tw_ren);
-  // this.nextRow(6);
-  // this.ImpPosX(`Hora: ${timeStr}`, 150, this.tw_ren);
-  // this.nextRow(6);
-  // this.ImpPosX(`Hoja: ${this.getNumberPages()}`, 150, this.tw_ren);
-
-  const [labels, setLabels] = useState([
-    // {
-    //   renglon_impresion: 16,
-    //   columna_impresion: 35,
-    //   descripcion_campo: "Sistema de Control Escolar",
-    //   font_size: 14,
-    // },
-    // {
-    //   renglon_impresion: 16,
-    //   columna_impresion: 150,
-    //   descripcion_campo: "Fecha: 2024/04/13",
-    //   font_size: 10,
-    // },
-    // {
-    //   renglon_impresion: 22,
-    //   columna_impresion: 35,
-    //   descripcion_campo: "Reporte Datos Cajero",
-    //   font_size: 10,
-    // },
-    // {
-    //   renglon_impresion: 28,
-    //   columna_impresion: 35,
-    //   descripcion_campo: "Usuario: Alfonso",
-    //   font_size: 10,
-    // },
-    // {
-    //   renglon_impresion: 3,
-    //   columna_impresion: 1,
-    //   descripcion_campo: "-",
-    //   font_size: 14 * 1.333,
-    // },
-  ]);
+  const [labels, setLabels] = useState([]);
   const fetchFacturasFormato = async (id) => {
     const { token } = session.user;
     const facturas = await getFacturasFormato(token, id);
