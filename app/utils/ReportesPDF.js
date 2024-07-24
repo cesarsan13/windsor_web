@@ -51,6 +51,10 @@ export class ReportePDF {
   printLineH() {
     this.doc.line(14, this.tw_ren, 286, this.tw_ren);
   }
+
+  printLineF() {
+    this.doc.line(5, this.tw_ren, 200, this.tw_ren);
+  }
   //añade una nueva pagina al documento
   addPage() {
     this.doc.addPage();

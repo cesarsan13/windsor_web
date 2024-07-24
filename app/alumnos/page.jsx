@@ -453,7 +453,7 @@ function Alumnos() {
     formData.append('cancha_3', data.cancha_3 || '');
     formData.append('cancha_4', data.cancha_4 || '');
     formData.append('horario_1', grado.numero || '');
-    formData.append('horario_2', grado2.numero || '');
+    formData.append('horario_2', data.horario_2 || '');
     formData.append('horario_3', data.horario_3 || '');
     formData.append('horario_4', data.horario_4 || '');
     formData.append('horario_5', data.horario_5 || '');
