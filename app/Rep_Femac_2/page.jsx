@@ -2,14 +2,11 @@
 import React from "react"
 import { useRouter } from "next/navigation";
 import Acciones from "./components/Acciones";
-import Inputs from "./components/Inputs";
-import ImpElementos from "./components/ImpElementos";
 import { useForm } from "react-hook-form";
 import { 
   ImprimirPDF,
   ImprimirExcel,
   getHorariosAPC,
-  getRepDosSel,
 } from "../utils/api/Rep_Femac_2/Rep_Femac_2";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -20,13 +17,16 @@ import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
 
+import BuscarCat from "../components/BuscarCat";
+import ModalHorario from "@/app/horarios/components/ModalHorario";
+
 function AlumnosPorClase(){
   const router = useRouter();
   const {data: session, status} = useSession();
   const [isLoading, setisLoading] = useState(false);
   const [formaHorarioAPC, setFormaHorarioAPC] = useState([]);
-  const [shorario1, ssethorario1] = useState('');
-  const [shorario2, ssethorario2] = useState('');
+  //const [shorario1, ssethorario1] = useState('');
+  //const [shorario2, ssethorario2] = useState('');
   const [sOrdenar, ssetordenar] = useState('');
   const [FormaRepDosSel, setFormaRepDosSel] =  useState([]);
   const [accion, setAccion] = useState("");
@@ -35,6 +35,14 @@ function AlumnosPorClase(){
   const [reporte, setReporte] = useState({});
   const [reportes, setReportes] = useState([]);
 
+
+  const [data, setData] = useState({});
+  const [da, setDa] = useState({});
+  const [dia, setDia] = useState("");
+  const [openModal, setModal] = useState(false);
+  const [horarios, setHorarios] = useState([]);
+  const [horario, setHorario] = useState({});
+  const [currentID, setCurrentId] = useState("");
 
   useEffect(()=> {
     if(status === "loading" || !session) {
@@ -48,22 +56,16 @@ function AlumnosPorClase(){
       setFormaHorarioAPC(data);
       setisLoading(false); 
     };
-    const fetchDataImp = async () =>{
-      const { token } = session.user;
-      const dataImp = await getRepDosSel(token, shorario1, shorario2, sOrdenar);
-      console.log(dataImp, shorario1, shorario2, sOrdenar);
-      setFormaRepDosSel(dataImp);
-      console.log("set", FormaRepDosSel);
-    };
-    fetchDataImp();
+    
     fetchData();
     
-  }, [session, status, shorario1, shorario2, sOrdenar]);
+  }, [session, status]);
 
   const {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -240,8 +242,22 @@ function AlumnosPorClase(){
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
     );
   }
+
+  const fieldsToShow = ["numero", "horario"];
+
   return (
     <>
+    <ModalHorario
+        accion={accion}
+        onSubmit={onSubmitModal}
+        currentID={currentID}
+        errors={errors}
+        register={register}
+        setHorarios={setHorario}
+        horarios={horario}
+        control={control}
+        setDia={setDia}
+      />
       <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
         <div className="flex justify-start p-3 ">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
@@ -255,17 +271,15 @@ function AlumnosPorClase(){
         
         <div className="col-span-7">
         <div className="flex flex-col h-[calc(100%)]">
-            <ImpElementos
-              setFormaHorarioAPC={formaHorarioAPC}
-              sOrdenar={sOrdenar}
-              shorario1={shorario1}
-              shorario2={shorario2}
-              handleSelectionChange1 = {handleSelectionChange1}
-              handleSelectionChange2 = {handleSelectionChange2}
-              handleCheckChange = {handleCheckChange}
-            />
+              <BuscarCat
+                table="horarios"
+                titulo={"horarios: "}
+                token={session.user.token}
+                fieldsToShow={fieldsToShow}
+                setItem={setDa}
+                modalId="modal_horarios"
+              />
 
-            
             {pdfPreview && pdfData && (
                 <div className="pdf-preview">
                   <Worker
