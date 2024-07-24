@@ -65,7 +65,7 @@ export const guardaCajero = async (token, data, accion) => {
   };
   const Enca1 = (doc) => {
     if (!doc.tiene_encabezado) {
-      doc.imprimeEncabezadoPrincipal();
+      doc.imprimeEncabezadoPrincipalV();
       doc.nextRow(12);
       doc.ImpPosX("Numero", 14, doc.tw_ren);
       doc.ImpPosX("Nombre", 28, doc.tw_ren);
@@ -73,7 +73,7 @@ export const guardaCajero = async (token, data, accion) => {
       doc.ImpPosX("Telefono", 82, doc.tw_ren);
       doc.ImpPosX("Correo", 112, doc.tw_ren);
       doc.nextRow(4);
-      doc.printLine();
+      doc.printLineV();
       doc.nextRow(4);
       doc.tiene_encabezado = true;
     } else {
