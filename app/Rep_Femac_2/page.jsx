@@ -2,37 +2,30 @@
 import React from "react"
 import { useRouter } from "next/navigation";
 import Acciones from "./components/Acciones";
-import Inputs from "./components/Inputs";
-import ImpElementos from "./components/ImpElementos";
-import { useForm } from "react-hook-form";
 import { 
   ImprimirPDF,
   ImprimirExcel,
-  getHorariosAPC,
   getRepDosSel,
 } from "../utils/api/Rep_Femac_2/Rep_Femac_2";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "jspdf-autotable";
-import * as XLSX from "xlsx";
+import BuscarCat from "../components/BuscarCat";
 
 function AlumnosPorClase(){
   const router = useRouter();
   const {data: session, status} = useSession();
-  const [isLoading, setisLoading] = useState(false);
-  const [formaHorarioAPC, setFormaHorarioAPC] = useState([]);
-  const [shorario1, ssethorario1] = useState('');
-  const [shorario2, ssethorario2] = useState('');
   const [sOrdenar, ssetordenar] = useState('');
   const [FormaRepDosSel, setFormaRepDosSel] =  useState([]);
-
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
-
+  const [isLoading, setisLoading] = useState(false);
+  //guarda el valor
+  const [horario1, setHorario1] = useState({});
+  const [horario2, setHorario2] = useState({});
 
   useEffect(()=> {
     if(status === "loading" || !session) {
@@ -40,21 +33,17 @@ function AlumnosPorClase(){
     }
     const fetchData = async () => {
       setisLoading(true);
-      const { token } = session.user;
-      const data = await getHorariosAPC(token);
-      setFormaHorarioAPC(data);
-      setisLoading(false); 
-    };
-    const fetchDataImp = async () =>{
-      const { token } = session.user;
-      const dataImp = await getRepDosSel(token, shorario1, shorario2, sOrdenar);
-      console.log(dataImp, shorario1, shorario2, sOrdenar);
-      setFormaRepDosSel(dataImp);
-    };
-    fetchDataImp();
-    fetchData();
-    
-  }, [session, status, shorario1, shorario2, sOrdenar]);
+      const { token } = session.user
+      const data = await getRepDosSel(token, horario1, horario2, sOrdenar);
+      setFormaRepDosSel(data.data);
+      setisLoading(false);
+    }
+    fetchData()
+  }, [session, status, horario1, horario2, sOrdenar]);
+
+  const home = () => {
+    router.push("/");
+  };
 
   const ImprimePDF = () => {
     const configuracion = {
@@ -69,119 +58,96 @@ function AlumnosPorClase(){
   }
 
   const ImprimeExcel = () => {
-
     const configuracion = {
       Encabezado:{
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte de Alumnos por clase",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
-      
       body: FormaRepDosSel,
       columns:[
-        { header: "No.", dataKey: "numero" },
-        { header: "Nombre", dataKey: "nombre_1" },
-        { header: "No. 1", dataKey: "numero_1" },
-        { header: "Año", dataKey: "año_nac_1" },
-        { header: "Mes", dataKey: "mes_nac_1" },
-        { header: "Telefono", dataKey: "telefono_1" },
-        { header: "Nombre", dataKey: "nombre_2" },
-        { header: "No. 2", dataKey: "numero_2" },
-        { header: "Año", dataKey: "año_nac_2" },
-        { header: "Mes", dataKey: "mes_nac_2" },
-        { header: "Telefono", dataKey: "telefono_2" },
+        { header: "No.", dataKey: "Num_Renglon" },
+        { header: "No. 1", dataKey: "Numero_1" },
+        { header: "Nombre", dataKey: "Nombre_1" },
+        { header: "Año", dataKey: "Año_Nac_1" },
+        { header: "Mes", dataKey: "Mes_Nac_1" },
+        { header: "Telefono", dataKey: "Telefono_1" },
+        { header: "No. 2", dataKey: "Numero_2" },
+        { header: "Nombre", dataKey: "Nombre_2" },
+        { header: "Año", dataKey: "Año_Nac_2" },
+        { header: "Mes", dataKey: "Mes_Nac_2" },
+        { header: "Telefono", dataKey: "Telefono_2" },
     ],
-
     nombre: "RepDosSec"
   }
-  ImprimirExcel(configuracion)
-}
-
-  const home = () => {
-    router.push("/");
-  };
-
-  const handleSelectionChange1 = (event) =>{
-    event.preventDefault;    
-    ssethorario1(event.target.value);
-    console.log(event.target.value);
+    ImprimirExcel(configuracion)
   }
-  const handleSelectionChange2 = (event) =>{
-    event.preventDefault;    
-    ssethorario2(event.target.value);
-    console.log(event.target.value);
+
+  const handleCheckChange = (event) =>{
+    event.preventDefault;
+    ssetordenar(event.target.value);
   }
 
   const handleVerClick = () => {
     const configuracion = {
       Encabezado: {
-        Nombre_Aplicacion: "Nombre de la Aplicación",
+        Nombre_Aplicacion: "Lista de Alumnos por clase",
         Nombre_Reporte: "Reporte de Alumnos",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
       body: FormaRepDosSel,
     };
     const reporte = new ReportePDF(configuracion, "Landscape");
-    reporte.imprimeEncabezadoPrincipalH();
-    
-    /*const table = document.getElementById("table");
+    const { body } = configuracion;
+    const Enca1 = (doc) => {
+      if (!doc.tiene_encabezado) {
+        doc.imprimeEncabezadoPrincipalH();
+        doc.nextRow(12);
+        doc.ImpPosX("No.",15,doc.tw_ren),
+        doc.ImpPosX("No. 1",25,doc.tw_ren),
+        doc.ImpPosX("Nombre",35,doc.tw_ren),
+        doc.ImpPosX("Año",120,doc.tw_ren),
+        doc.ImpPosX("Mes",130,doc.tw_ren),
+        doc.ImpPosX("Telefono",140,doc.tw_ren),
+        doc.ImpPosX("No. 2",155,doc.tw_ren),
+        doc.ImpPosX("Nombre",165,doc.tw_ren),
+        doc.ImpPosX("Año",250,doc.tw_ren),
+        doc.ImpPosX("Mes",260,doc.tw_ren),
+        doc.ImpPosX("Telefono",270,doc.tw_ren),
+        doc.nextRow(4);
+        doc.printLineH();
+        doc.nextRow(4);
+        doc.tiene_encabezado = true;
+      } else {
+        doc.nextRow(6);
+        doc.tiene_encabezado = true;
+      }
+    };
 
-      reporte.doc.autoTable({
-        head: [FormaRepDosSel[0]], // Encabezado de la tabla
-        body: FormaRepDosSel.slice(1) // Datos de la tabla
-    });*/
-
-   /* Enca1(newPDF);
-        body.forEach((repdossel) => {
-        
-          newPDF.ImpPosX(repdossel.numero.toString(),15,newPDF.tw_ren, 10);
-          newPDF.ImpPosX(repdossel.nombre_1.toString(),30,newPDF.tw_ren, 50);
-          newPDF.ImpPosX(repdossel.numero_1.toString(),80,newPDF.tw_ren, 10);
-          newPDF.ImpPosX(repdossel.año_nac_1.toString(),95,newPDF.tw_ren, 15);
-          newPDF.ImpPosX(repdossel.mes_nac_1.toString(),110,newPDF.tw_ren, 15);
-          newPDF.ImpPosX(repdossel.telefono_1.toString(),130,newPDF.tw_ren, 10);
-          newPDF.ImpPosX(repdossel.nombre_2.toString(),155,newPDF.tw_ren, 50);
-          newPDF.ImpPosX(repdossel.numero_2.toString(),205,newPDF.tw_ren, 10);
-          newPDF.ImpPosX(repdossel.año_nac_2.toString(),220,newPDF.tw_ren, 15);
-          newPDF.ImpPosX(repdossel.mes_nac_2.toString(),235,newPDF.tw_ren, 15);
-          newPDF.ImpPosX(repdossel.telefono_2.toString(),250,newPDF.tw_ren, 10);
-
-
-          Enca1(newPDF);
-          if (newPDF.tw_ren >= newPDF.tw_endRen) {
-            newPDF.pageBreak();
-            Enca1(newPDF);
-          }
-        });*/
-
-        reporte.doc.autoTable({
-          head: [["No.","Nombre","No. 1","Año","Mes","Telefono","Nombre","No. 2","Año","Mes","Telefono"]],
-          body: FormaRepDosSel.slice(1),
-          styles: {
-            fillColor: [255, 255, 255], // Color de fondo de las celdas
-            textColor: [0, 0, 0], // Color del texto
-            fontSize: 10, // Tamaño de la fuente
-            halign: 'center', // Alineación horizontal
-            valign: 'left' // Alineación vertical
-        },
-        headStyles: {
-          fillColor: [255, 255, 255], // Color de fondo de las celdas
-          textColor: [0, 0, 0], // Color del texto
-          margin: 34 ,
-        },
-      });
-
+    Enca1(reporte);
+    body.forEach((reporte1) => {
+      reporte.ImpPosX(reporte1.Num_Renglon.toString(),15, reporte.tw_ren);
+      reporte.ImpPosX(reporte1.Numero_1.toString(),25, reporte.tw_ren);
+      reporte.ImpPosX(reporte1.Nombre_1.toString(),35, reporte.tw_ren);
+      reporte.ImpPosX(reporte1.Año_Nac_1.toString().substring(0,4),120, reporte.tw_ren);
+      reporte.ImpPosX(reporte1.Mes_Nac_1.toString().substring(4,2),130, reporte.tw_ren);
+      reporte.ImpPosX(reporte1.Telefono_1.toString(),140, reporte.tw_ren);
+      reporte.ImpPosX(reporte1.Numero_2.toString(),155, reporte.tw_ren);
+      reporte.ImpPosX(reporte1.Nombre_2.toString(),165, reporte.tw_ren);
+      reporte.ImpPosX(reporte1.Año_Nac_2.toString().substring(0,4),250, reporte.tw_ren);
+      reporte.ImpPosX(reporte1.Mes_Nac_2.toString().substring(4,2),260, reporte.tw_ren);
+      reporte.ImpPosX(reporte1.Telefono_2.toString(),270, reporte.tw_ren);
+      Enca1(reporte);
+      if (reporte.tw_ren >= reporte.tw_endRenH) {
+        reporte.pageBreakH();
+        Enca1(reporte);
+      }
+    });
     const pdfData = reporte.doc.output("datauristring");
     setPdfData(pdfData);
     setPdfPreview(true);
   };
 
-  const handleCheckChange = (event) =>{
-    event.preventDefault;
-    ssetordenar(event.target.value);
-    console.log(event.target.value);
-  }
-  
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -197,31 +163,57 @@ function AlumnosPorClase(){
         </div>
         <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] ">
           <div className="col-span-1 flex flex-col ">
-            <Acciones Ver={handleVerClick} ImprimePDF={ImprimePDF} ImprimeExcel={ImprimeExcel} home={home}></Acciones>
+            <Acciones 
+              Ver={handleVerClick} 
+              ImprimePDF={ImprimePDF}
+              ImprimeExcel={ImprimeExcel}
+              home={home}>  
+            </Acciones>
           </div>
         
         <div className="col-span-7">
         <div className="flex flex-col h-[calc(100%)]">
-            <ImpElementos
-              setFormaHorarioAPC={formaHorarioAPC}
-              sOrdenar={sOrdenar}
-              shorario1={shorario1}
-              shorario2={shorario2}
-              handleSelectionChange1 = {handleSelectionChange1}
-              handleSelectionChange2 = {handleSelectionChange2}
-              handleCheckChange = {handleCheckChange}
-            />
-
+              <BuscarCat
+                table="horarios"
+                titulo={"horario 1: "}
+                token={session.user.token}
+                nameInput={["horario_1", "horario_1_nombre"]}
+                fieldsToShow={["numero", "horario"]}
+                setItem={setHorario1}
+                modalId="modal_horarios"
+              />
+              <BuscarCat
+                table="horarios"
+                titulo={"horario 2: "}
+                token={session.user.token}
+                nameInput={["horario_2", "horario_2_nombre"]}
+                fieldsToShow={["numero", "horario"]}
+                setItem={setHorario2}
+                modalId="modal_horarios2"
+              />
+              <div className=" col-8">
+                <label className={` input-md text-black dark:text-white flex items-center gap-3`}>
+                    <span className="text-black dark:text-white">Ordenar por:</span>
+                    <label className={` input-md text-black dark:text-white flex items-center gap-3`} onChange={(event) => handleCheckChange(event)} >
+                        <span className="text-black dark:text-white">Nombre</span>
+                        <input type="radio" name="ordenar" value="nombre" className="radio" />
+                    </label>
+                    <label className={` input-md text-black dark:text-white flex items-center gap-3`} onChange={(event) => handleCheckChange(event)}>
+                        <span className="text-black dark:text-white">Número</span>
+                        <input type="radio" name="ordenar" value="id" className="radio" />
+                    </label>
+                </label>
+              </div>
             {pdfPreview && pdfData && (
                 <div className="pdf-preview">
                   <Worker
                     workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
                   >
-                    <div style={{ height: "600px"}}>
+                    <div style={{ height: "600px" }}>
                       <Viewer fileUrl={pdfData}  />
                     </div>
                   </Worker>
-                </div>
+                </div> 
             )}
           </div>
         </div>
@@ -229,7 +221,6 @@ function AlumnosPorClase(){
       </div>
     </>
   );
-
 }
 
 export default AlumnosPorClase;

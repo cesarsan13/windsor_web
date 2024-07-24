@@ -1,19 +1,18 @@
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
 
-export const getHorariosAPC = async (token) => {
-    const res = await fetch(`${process.env.DOMAIN_API}api/AlumnosPC/HorariosAPC`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const resJson = await res.json();
-    return resJson.data;
-};
+
 export const getRepDosSel = async (token, horario1, horario2, orden) => {
-    const res = await fetch (`${process.env.DOMAIN_API}api/AlumnosPC/Lista/${horario1}/${horario2}/${orden}`,{
+    const res = await fetch (`${process.env.DOMAIN_API}api/reportes/rep_femac_2`,{
+      method: "post",
+      body: JSON.stringify({
+        horario1: horario1,
+        horario2: horario2,
+        orden: orden,
+      }),
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
       },
     });
     const resJson = await res.json();
@@ -27,17 +26,16 @@ export const getRepDosSel = async (token, horario1, horario2, orden) => {
           doc.imprimeEncabezadoPrincipalH();
           doc.nextRow(12);
           doc.ImpPosX("No.",15,doc.tw_ren),
-          doc.ImpPosX("Nombre",30,doc.tw_ren),
-          doc.ImpPosX("No. 1",80,doc.tw_ren),
-          doc.ImpPosX("Año",95,doc.tw_ren),
-          doc.ImpPosX("Mes",110,doc.tw_ren),
-          doc.ImpPosX("Telefono",130,doc.tw_ren),
-          doc.ImpPosX("Nombre",155,doc.tw_ren),
-          doc.ImpPosX("No. 2",205,doc.tw_ren),
-          doc.ImpPosX("Año",220,doc.tw_ren),
-          doc.ImpPosX("Mes",235,doc.tw_ren),
-          doc.ImpPosX("Telefono",250,doc.tw_ren),
-
+          doc.ImpPosX("No. 1",25,doc.tw_ren),
+          doc.ImpPosX("Nombre",35,doc.tw_ren),
+          doc.ImpPosX("Año",120,doc.tw_ren),
+          doc.ImpPosX("Mes",130,doc.tw_ren),
+          doc.ImpPosX("Telefono",140,doc.tw_ren),
+          doc.ImpPosX("No. 2",155,doc.tw_ren),
+          doc.ImpPosX("Nombre",165,doc.tw_ren),
+          doc.ImpPosX("Año",250,doc.tw_ren),
+          doc.ImpPosX("Mes",260,doc.tw_ren),
+          doc.ImpPosX("Telefono",270,doc.tw_ren),
           doc.nextRow(4);
           doc.printLineH();
           doc.nextRow(4);
@@ -50,27 +48,27 @@ export const getRepDosSel = async (token, horario1, horario2, orden) => {
       
       export const ImprimirPDF = (configuracion) => {
         const orientacion = 'Landscape'  //Aqui se agrega la orientacion del documento PDF puede ser Landscape(Horizontal) o Portrait (Vertical)
-        const newPDF = new ReportePDF(configuracion, orientacion);
+        const newPDF = new ReportePDF(configuracion, orientacion,);
         const { body } = configuracion;
+        console.log('body', body);
         Enca1(newPDF);
-        body.forEach((repdossel) => {
-        
-          newPDF.ImpPosX(repdossel.numero.toString(),15,newPDF.tw_ren, 10);
-          newPDF.ImpPosX(repdossel.nombre_1.toString(),30,newPDF.tw_ren, 50);
-          newPDF.ImpPosX(repdossel.numero_1.toString(),80,newPDF.tw_ren, 10);
-          newPDF.ImpPosX(repdossel.año_nac_1.toString(),95,newPDF.tw_ren, 15);
-          newPDF.ImpPosX(repdossel.mes_nac_1.toString(),110,newPDF.tw_ren, 15);
-          newPDF.ImpPosX(repdossel.telefono_1.toString(),130,newPDF.tw_ren, 10);
-          newPDF.ImpPosX(repdossel.nombre_2.toString(),155,newPDF.tw_ren, 50);
-          newPDF.ImpPosX(repdossel.numero_2.toString(),205,newPDF.tw_ren, 10);
-          newPDF.ImpPosX(repdossel.año_nac_2.toString(),220,newPDF.tw_ren, 15);
-          newPDF.ImpPosX(repdossel.mes_nac_2.toString(),235,newPDF.tw_ren, 15);
-          newPDF.ImpPosX(repdossel.telefono_2.toString(),250,newPDF.tw_ren, 10);
+        body.forEach((horarios) => {
 
+          newPDF.ImpPosX(horarios.Num_Renglon.toString(),15, newPDF.tw_ren);
+          newPDF.ImpPosX(horarios.Numero_1.toString(),25, newPDF.tw_ren);
+          newPDF.ImpPosX(horarios.Nombre_1.toString(),35, newPDF.tw_ren);
+          newPDF.ImpPosX(horarios.Año_Nac_1.toString().substring(0,4),120, newPDF.tw_ren);
+          newPDF.ImpPosX(horarios.Mes_Nac_1.toString().substring(4,2),130, newPDF.tw_ren);
+          newPDF.ImpPosX(horarios.Telefono_1.toString(),140, newPDF.tw_ren);
+          newPDF.ImpPosX(horarios.Numero_2.toString(),155, newPDF.tw_ren);
+          newPDF.ImpPosX(horarios.Nombre_2.toString(),165, newPDF.tw_ren);
+          newPDF.ImpPosX(horarios.Año_Nac_2.toString().substring(0,4),250, newPDF.tw_ren);
+          newPDF.ImpPosX(horarios.Mes_Nac_2.toString().substring(4,2),260, newPDF.tw_ren);
+          newPDF.ImpPosX(horarios.Telefono_2.toString(),270, newPDF.tw_ren);
 
           Enca1(newPDF);
-          if (newPDF.tw_ren >= newPDF.tw_endRen) {
-            newPDF.pageBreak();
+          if (newPDF.tw_ren >= newPDF.tw_endRenH) {
+            newPDF.pageBreakH();
             Enca1(newPDF);
           }
         });
