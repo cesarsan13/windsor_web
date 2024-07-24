@@ -33,8 +33,8 @@ function ModalAlumnos({
     const nameInputs = ["horario_1", "horario_1_nombre"];
     const nameInputs2 = ["horario_2", "horario_2_nombre"];
     const columnasBuscaCat1 = ["id", "descripcion"];
-    const nameInputs3 = ["cond_1", "descripcion"];
-    const nameInputs4 = ["cond_2", "descripcion"];
+    const nameInputs3 = ["cond_1", "cond_1_nombre"];
+    const nameInputs4 = ["cond_2", "cond_2_nombre"];
     const webcamRef = useRef(null);
     const [isCameraOn, setIsCameraOn] = useState(false);
 
@@ -533,8 +533,9 @@ function ModalAlumnos({
                                         setItem={setGrado}
                                         token={session.user.token}
                                         modalId="modal_horarios"
+                                        array={alumno.horario_1}
                                     />
-                                    <BuscarCat
+                                    {/* <BuscarCat
                                         table="horarios"
                                         itemData={alumno}
                                         fieldsToShow={columnasBuscaCat}
@@ -543,7 +544,8 @@ function ModalAlumnos({
                                         setItem={setGrado2}
                                         token={session.user.token}
                                         modalId="modal_horarios2"
-                                    />
+                                        array={alumno.horario_2}
+                                    /> */}
                                 </div>
                             </div>
 
@@ -589,24 +591,24 @@ function ModalAlumnos({
                                         handleBlur={handleBlur}
                                     />
                                     <BuscarCat
-                                        table="formaPago"
-                                        itemData={alumno}
+                                        table={"formaPago"}
                                         fieldsToShow={columnasBuscaCat1}
                                         nameInput={nameInputs3}
-                                        titulo={"Grado: "}
                                         setItem={setcond1}
                                         token={session.user.token}
-                                        modalId="modal_formaPago"
+                                        modalId="modal_formaPago1"
+                                        array={alumno.cond_1}
+                                        titulo={"Forma pago: "}
                                     />
                                     <BuscarCat
-                                        table="formaPago"
-                                        itemData={alumno}
+                                        table={"formaPago"}
                                         fieldsToShow={columnasBuscaCat1}
                                         nameInput={nameInputs4}
-                                        titulo={"Grado: "}
                                         setItem={setcond2}
                                         token={session.user.token}
                                         modalId="modal_formaPago2"
+                                        array={alumno.cond_2}
+                                        titulo={"Forma pago: "}
                                     />
                                     {/* <Inputs
                                         dataType={"string"}

@@ -7,15 +7,19 @@ import { useForm } from "react-hook-form";
 import {
     Imprimir,
     ImprimirExcel,
+    verImprimir,
 } from "@/app/utils/api/rep_femac_1/rep_femac_1";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import BuscarCat from "@/app/components/BuscarCat";
 import { getreportAlumn } from "@/app/utils/api/rep_femac_1/rep_femac_1";
 import { showSwal } from "@/app/utils/alerts";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
+import { Worker, Viewer } from "@react-pdf-viewer/core";
+// import { calculaDigitoBvba } from "@/app/utils/globalfn";
 
 function AlumnosPorClase() {
     const router = useRouter();
@@ -27,6 +31,8 @@ function AlumnosPorClase() {
     const columnasBuscaCat = ["id", "nombre_completo"];
     const [bajas, setBajas] = useState(false);
     const [selectedOption, setSelectedOption] = useState('Nombre');
+    const [pdfPreview, setPdfPreview] = useState(false);
+    const [pdfData, setPdfData] = useState("");
 
     const handleOptionChange = (event) => {
         setSelectedOption(event.target.value);
@@ -39,6 +45,7 @@ function AlumnosPorClase() {
         console.log('alumnos 1', alumnos1);
         console.log('alumnos 2', alumnos2);
         if (alumnos1) {
+            if (!alumnos2.id) { alumnos2.id = 0 }
             data = await getreportAlumn(token, bajas, selectedOption, alumnos1.id, alumnos2.id);
         } else {
             showSwal("Oppss!", "Para imprimir, minimo debe estar seleccionado un alumno en 'Inicio' ", "error");
@@ -86,6 +93,27 @@ function AlumnosPorClase() {
         router.push("/");
     };
 
+    const handleVerClick = async () => {
+        console.log(session);
+        const alumnosFiltrados = await formaImprime();
+        const configuracion = {
+            Encabezado: {
+                Nombre_Aplicacion: "Sistema de Control Escolar",
+                Nombre_Reporte: "Reporte Relación General de Alumnos",
+                Nombre_Usuario: `Usuario: ${session.user.name}`,
+            },
+            body: alumnosFiltrados,
+        };
+        const pdfData = await verImprimir(configuracion);
+        setPdfData(pdfData);
+        setPdfPreview(true);
+    };
+
+    const CerrarView = () => {
+        setPdfPreview(false);
+        setPdfData('');
+    };
+
     if (status === "loading") {
         return (
             <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -100,7 +128,13 @@ function AlumnosPorClase() {
             </div>
             <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
                 <div className="col-span-1 flex flex-col">
-                    <Acciones ImprimePDF={ImprimePDF} ImprimeExcel={ImprimeExcel} home={home} />
+                    <Acciones
+                        ImprimePDF={ImprimePDF}
+                        ImprimeExcel={ImprimeExcel}
+                        home={home}
+                        Ver={handleVerClick}
+                        CerrarView={CerrarView}
+                    />
                 </div>
                 <div className="col-span-7">
                     <div className="flex flex-col h-full space-y-4">
@@ -168,11 +202,28 @@ function AlumnosPorClase() {
                                 modalId="modal_alumnos2"
                             />
                         </div>
+
+                        <div className="col-span-7">
+                            <div className="flex flex-col h-[calc(95%)] w-full bg-white dark:bg-white">
+                                {pdfPreview && pdfData && (
+                                    <div className="pdf-preview flex overflow-auto border border-gray-300 rounded-lg shadow-lg">
+                                        <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}>
+                                            <div style={{ height: "500px", width: "100%" }}>
+                                                <Viewer fileUrl={pdfData} />
+                                            </div>
+                                        </Worker>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     );
+
+
 
 }
 

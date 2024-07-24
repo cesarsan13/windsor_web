@@ -16,14 +16,15 @@ function Inputs({
   defaultValue,
   isDisabled,
   handleBlur,
-  handleChange,
 }) {
-  return type !== "select" ? (
+  return (
     <div className="flex flex-col">
-      <label className={`input   flex items-center  ${tamañolabel}`}>
+      <label
+        className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel}`}
+      >
         {Titulo}
         <input
-          {...(handleChange && { onChangeCapture: (evt) => handleChange(evt) })}
+          // defaultValue={defaultValue}
           {...(maxLenght !== 0 && { maxLength: maxLenght })}
           name={name}
           id={name}
@@ -40,31 +41,6 @@ function Inputs({
             }))}
           disabled={isDisabled}
         />
-      </label>
-      {errors[name] && (
-        <span className="text-red-500 text-sm mt-2">
-          {errors[name].message}
-        </span>
-      )}
-    </div>
-  ) : (
-    <div className="flex flex-col">
-      <label
-        className={`input  text-black dark:text-white flex items-center ${tamañolabel}`}
-      >
-        {Titulo}
-        <select
-          name={name}
-          id={name}
-          className={`text-black dark:text-white ${className}`}
-          {...register(name, {
-            ...(requerido && { required: message }),
-          })}
-        >
-          <option value="">&nbsp;&nbsp; ... &nbsp;&nbsp;</option>
-          <option value="S">Si</option>
-          <option value="N">No</option>
-        </select>
       </label>
       {errors[name] && (
         <span className="text-red-500 text-sm mt-2">
