@@ -65,7 +65,7 @@ function AltasBajasAlumnos() {
         const configuracion = {
             Encabezado: {
                 Nombre_Aplicacion: "Sistema de Control Escolar",
-                Nombre_Reporte: "Reporte Relación General de Alumnos",
+                Nombre_Reporte: "Reporte Altas Bajas de Alumnos por Periodo",
                 Nombre_Usuario: `Usuario: ${session.user.name}`,
             },
             body: alumnosFiltrados,
@@ -78,19 +78,17 @@ function AltasBajasAlumnos() {
         const configuracion = {
             Encabezado: {
                 Nombre_Aplicacion: "Sistema de Control Escolar",
-                Nombre_Reporte: "Reporte Relación General de Alumnos",
+                Nombre_Reporte: "Reporte Altas Bajas de Alumnos por Periodo",
                 Nombre_Usuario: `Usuario: ${session.user.name}`,
             },
             body: alumnosFiltrados,
             columns: [
-                { header: "No", dataKey: "id" },
                 { header: "Nombre", dataKey: "nombre_completo" },
-                { header: "Estatus", dataKey: "estatus" },
-                { header: "Fecha", dataKey: "fecha_nac" },
-                { header: "Horario", dataKey: "horario_1_nombre" },
-                { header: "Telefono", dataKey: "telefono_1" },
+                { header: "Dia", dataKey: "dia" },
+                { header: "Mes", dataKey: "mes" },
+                { header: "Año", dataKey: "año" },
             ],
-            nombre: "Alumnos",
+            nombre: "Reporte Altas Bajas Alumnos por Periodo",
         };
         ImprimirExcel(configuracion);
     };
@@ -105,7 +103,7 @@ function AltasBajasAlumnos() {
         const configuracion = {
             Encabezado: {
                 Nombre_Aplicacion: "Sistema de Control Escolar",
-                Nombre_Reporte: "Reporte Relación General de Alumnos",
+                Nombre_Reporte: "Reporte Altas Bajas de Alumnos por Periodo",
                 Nombre_Usuario: `Usuario: ${session.user.name}`,
             },
             body: alumnosFiltrados,

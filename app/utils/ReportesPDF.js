@@ -53,7 +53,7 @@ export class ReportePDF {
   }
 
   printLineF() {
-    this.doc.line(5, this.tw_ren, 200, this.tw_ren);
+    this.doc.line(5, this.tw_ren, 295, this.tw_ren);
   }
   //añade una nueva pagina al documento
   addPage() {

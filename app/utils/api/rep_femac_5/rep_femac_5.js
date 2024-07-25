@@ -106,33 +106,26 @@ export const Imprimir = (configuracion, impr) => {
             Enca1(newPDF);
         }
     });
-    newPDF.guardaReporte("Alumnos")
+    newPDF.guardaReporte("Reporte Altas Bajas Alumnos por Periodo")
 };
 
 export const ImprimirExcel = (configuracion) => {
     const newExcel = new ReporteExcel(configuracion);
-    const { columns } = configuracion;
-    const { body } = configuracion;
-    const { nombre } = configuracion;
+    const { columns, body, nombre } = configuracion;
     const newBody = [];
     body.forEach((alumno) => {
+        let fecha = new Date(alumno.fecha_nac);
+        const diaFor = fecha.getDate().toString().padStart(2, '0');
+        const mesFor = (fecha.getMonth() + 1).toString().padStart(2, '0');
+        const añoFor = fecha.getFullYear().toString();
         newBody.push({
             ...alumno,
-            id: `${alumno.id}-${calculaDigitoBvba(alumno.id.toString())}`
+            dia: diaFor,
+            mes: mesFor,
+            año: añoFor
         });
-        if (alumno.baja === '*') {
-            newBody.push({
-                id: '',
-                nombre: '',
-                estatus: '',
-                fecha_nac: ((`Fecha de Baja: ${alumno.fecha_baja}` || '')).toString(),
-                horario_1_nombre: '',
-                telefono_1: ''
-            });
-        }
     });
     newExcel.setColumnas(columns);
     newExcel.addData(newBody);
     newExcel.guardaReporte(nombre);
 };
-
