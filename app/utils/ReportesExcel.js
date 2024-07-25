@@ -19,7 +19,8 @@ export class ReporteExcel {
       [Encabezado.Nombre_Aplicacion, "", "", "", `Fecha: ${dateStr}`],
       [Encabezado.Nombre_Reporte, "", "", "", `Hora: ${timeStr}`],
       [`Usuario: ${Encabezado.Nombre_Usuario}`, "", "", "", "Hoja: 1"],
-      []
+      [Encabezado.Clase,"", Encabezado. Profesor, "", Encabezado.FechaE],
+      [ ]
     );
   }
   addRow(rowData) {

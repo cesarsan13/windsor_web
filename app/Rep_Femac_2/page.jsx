@@ -91,8 +91,8 @@ function AlumnosPorClase(){
   const handleVerClick = () => {
     const configuracion = {
       Encabezado: {
-        Nombre_Aplicacion: "Lista de Alumnos por clase",
-        Nombre_Reporte: "Reporte de Alumnos",
+        Nombre_Aplicacion: "Sistema de Control Escolar",
+        Nombre_Reporte: "Reporte de Alumnos por clase",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
       body: FormaRepDosSel,
