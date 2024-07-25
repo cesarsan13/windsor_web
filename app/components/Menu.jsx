@@ -43,7 +43,7 @@ function Menu({ vertical }) {
               <Link href="/Rep_Femac_2">Lista de Alumnos por clase</Link>
             </li>
             <li>
-              <Link href="/rep_femac_13">
+              <Link href="/rep_femac_1 de3">
                 Lista de alumnos por clase semanal
               </Link>{" "}
             </li>
@@ -53,9 +53,7 @@ function Menu({ vertical }) {
               </Link>
             </li>
             <li>
-              <Link href="/rep_femac_5">
-                Lista de alumnos altas y bajas en un determinado periodo
-              </Link>
+              <Link href="/rep_femac_8_anexo_1">Relacion de Recibos</Link>
             </li>
             <li>
               <Link href="/rep_femac_1">Relacion General de Alumnos</Link>
@@ -116,7 +114,9 @@ function Menu({ vertical }) {
                 Lista de alumnos altas y bajas en un determinado periodo
               </Link>
             </li>
-
+            <li>
+              <Link href="/rep_femac_8_anexo_1">Relacion de Recibos</Link>
+            </li>
             <li>
               <Link href="/rep_femac_13">
                 Lista de alumnos por clase semanal

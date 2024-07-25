@@ -84,7 +84,7 @@ function AlumnosPorClase() {
                 { header: "Horario", dataKey: "horario_1_nombre" },
                 { header: "Telefono", dataKey: "telefono_1" },
             ],
-            nombre: "Alumnos",
+            nombre: "Relación General de Alumnos",
         };
         ImprimirExcel(configuracion);
     };

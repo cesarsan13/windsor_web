@@ -125,7 +125,7 @@ export const Imprimir = (configuracion) => {
       Enca1(newPDF);
     }
   });
-  newPDF.guardaReporte("Alumnos")
+  newPDF.guardaReporte("Relación general de alumnos")
 };
 
 export const ImprimirExcel = (configuracion) => {
