@@ -5,6 +5,7 @@ import PropertyPage from "@/app/formfact/components/PropertyPage";
 function ConfigReporte({ labels, setLabels }) {
   const { data: session, status } = useSession();
   const [selectedLabel, setSelectedLabel] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(null);
   return (
     // <dialog id="modal_formato" className="modal ">
     <div className=" w-11/12 max-w-5xl">
@@ -14,21 +15,28 @@ function ConfigReporte({ labels, setLabels }) {
       >
         ✕
       </button>
-      <form>
+      <>
         <h1 className="font-bold text-2xl mb-5">Actualizacion de formato</h1>
         <fieldset id="fs_formapago" className="flex flex-row">
           <Sheet
             labels={labels}
             setLabels={setLabels}
             setSelectedLabel={setSelectedLabel}
+            setSelectedIndex={setSelectedIndex}
           ></Sheet>
           {selectedLabel && (
             <div className="pt-5">
-              <PropertyPage selectedLabel={selectedLabel}></PropertyPage>
+              <PropertyPage
+                labels={labels}
+                setLabels={setLabels}
+                selectedLabel={selectedLabel}
+                setSelectedLabel={setSelectedLabel}
+                selectedIndex={selectedIndex}
+              ></PropertyPage>
             </div>
           )}
         </fieldset>
-      </form>
+      </>
     </div>
     // </dialog>
   );

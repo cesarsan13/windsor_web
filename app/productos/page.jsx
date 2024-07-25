@@ -168,7 +168,6 @@ function Productos() {
 
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
-    console.log(data);
     const dataj = JSON.stringify(data);
     data.id = currentID;
     let res = null;
@@ -187,7 +186,6 @@ function Productos() {
       }
     }
     data = await Elimina_Comas(data);
-    console.log(data);
     res = await guardarProductos(session.user.token, data, accion);
     if (res.status) {
       if (accion === "Alta") {
@@ -293,9 +291,9 @@ function Productos() {
         producto={producto}
         formatNumber={formatNumber}
       />
-      <div className="container  w-full  max-w-screen-xl bg-slate-100 shadow-xl rounded-xl px-3 ">
+      <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
         <div className="flex justify-start p-3 ">
-          <h1 className="text-4xl font-xthin text-black md:px-12">
+          <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Productos.
           </h1>
         </div>

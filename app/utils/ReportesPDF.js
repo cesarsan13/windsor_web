@@ -13,6 +13,7 @@ export class ReportePDF {
     this.configuracion = configuracion;
     this.tw_ren = 0;
     this.tw_endRen = 280;
+    this.tw_endRenH = 200;
     this.tiene_encabezado = false;
     this.doc = new jsPDF(orientacion);
   }
@@ -56,8 +57,19 @@ export class ReportePDF {
     this.doc.addPage();
   }
   //Hace un salto de pagina y prepara las variables para empezar desde el encabezado
+  //Para hoja vertical
   pageBreak() {
     if (this.tw_ren >= this.tw_endRen) {
+      this.tiene_encabezado = false;
+      this.tw_ren = 0;
+      this.addPage();
+      this.doc.setPage(this.getNumberPages());
+    }
+  }
+
+  //Para hoja Horizontal
+  pageBreakH() {
+    if (this.tw_ren >= this.tw_endRenH) {
       this.tiene_encabezado = false;
       this.tw_ren = 0;
       this.addPage();

@@ -31,21 +31,24 @@ function Menu({ vertical }) {
             </li>
           </ul>
         </details>
-
       </li>
       <li>
         <details>
           <summary>Reportes</summary>
           <ul>
             <li>
+              <Link href={"/rep_femac_6"}>Cobranza</Link>
+            </li>
+            <li>
               <Link href="/Rep_Femac_2">Lista de Alumnos por clase</Link>
+            </li>
+            <li>
+              <Link href = "/rep_femac_13">Lista de alumnos por clase semanal</Link>
             </li>
             <li>
               <Link href="/rep_femac_1">Relacion General de Alumnos</Link>
             </li>
-            <li>
-              <Link href={"/rep_femac_6"}>Cobranza</Link>
-            </li>
+            
           </ul>
         </details>
       </li>
@@ -59,6 +62,9 @@ function Menu({ vertical }) {
         <details>
           <summary>Catalogos</summary>
           <ul className="p-5 mt-3 w-52 ">
+            <li>
+              <Link href="/alumnos">Alumnos</Link>
+            </li>
             <li>
               <Link href="/productos">Productos</Link>
             </li>
@@ -86,10 +92,13 @@ function Menu({ vertical }) {
           <summary>Reportes</summary>
           <ul>
             <li>
+              <Link href={"/rep_femac_6"}>Cobranza</Link>
+            </li>
+            <li>
               <Link href="/Rep_Femac_2">Lista de Alumnos por clase</Link>
             </li>
             <li>
-              <Link href={"/rep_femac_6"}>Cobranza</Link>
+              <Link href = "/rep_femac_13">Lista de alumnos por clase semanal</Link>
             </li>
           </ul>
         </details>
@@ -99,7 +108,6 @@ function Menu({ vertical }) {
       </li>
     </ul>
   );
-
 }
 
 export default Menu;
