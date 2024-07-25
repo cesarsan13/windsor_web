@@ -37,13 +37,18 @@ function Menu({ vertical }) {
           <summary>Reportes</summary>
           <ul>
             <li>
+              <Link href={"/rep_femac_6"}>Cobranza</Link>
+            </li>
+            <li>
               <Link href="/Rep_Femac_2">Lista de Alumnos por clase</Link>
             </li>
             <li>
-              <Link href="/rep_femac_1">Relacion General de Alumnos</Link>
+              <Link href="/rep_femac_13">
+                Lista de alumnos por clase semanal
+              </Link>
             </li>
             <li>
-              <Link href={"/rep_femac_6"}>Cobranza</Link>
+              <Link href="/rep_femac_1">Relacion General de Alumnos</Link>
             </li>
           </ul>
         </details>
@@ -88,13 +93,18 @@ function Menu({ vertical }) {
           <summary>Reportes</summary>
           <ul>
             <li>
+              <Link href={"/rep_femac_6"}>Cobranza</Link>
+            </li>
+            <li>
               <Link href="/Rep_Femac_2">Lista de Alumnos por clase</Link>
             </li>
             <li>
               <Link href="/rep_femac_1">Relacion General de Alumnos</Link>
             </li>
             <li>
-              <Link href={"/rep_femac_6"}>Cobranza</Link>
+              <Link href="/rep_femac_13">
+                Lista de alumnos por clase semanal
+              </Link>
             </li>
           </ul>
         </details>

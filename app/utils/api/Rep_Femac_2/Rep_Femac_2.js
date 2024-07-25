@@ -30,12 +30,12 @@ export const getRepDosSel = async (token, horario1, horario2, orden) => {
           doc.ImpPosX("Nombre",35,doc.tw_ren),
           doc.ImpPosX("Año",120,doc.tw_ren),
           doc.ImpPosX("Mes",130,doc.tw_ren),
-          doc.ImpPosX("Telefono",140,doc.tw_ren),
+          doc.ImpPosX("Telefono",138,doc.tw_ren),
           doc.ImpPosX("No. 2",155,doc.tw_ren),
           doc.ImpPosX("Nombre",165,doc.tw_ren),
           doc.ImpPosX("Año",250,doc.tw_ren),
           doc.ImpPosX("Mes",260,doc.tw_ren),
-          doc.ImpPosX("Telefono",270,doc.tw_ren),
+          doc.ImpPosX("Telefono",268,doc.tw_ren),
           doc.nextRow(4);
           doc.printLineH();
           doc.nextRow(4);
@@ -59,12 +59,12 @@ export const getRepDosSel = async (token, horario1, horario2, orden) => {
           newPDF.ImpPosX(horarios.Nombre_1.toString(),35, newPDF.tw_ren);
           newPDF.ImpPosX(horarios.Año_Nac_1.toString().substring(0,4),120, newPDF.tw_ren);
           newPDF.ImpPosX(horarios.Mes_Nac_1.toString().substring(4,2),130, newPDF.tw_ren);
-          newPDF.ImpPosX(horarios.Telefono_1.toString(),140, newPDF.tw_ren);
+          newPDF.ImpPosX(horarios.Telefono_1.toString(),138, newPDF.tw_ren);
           newPDF.ImpPosX(horarios.Numero_2.toString(),155, newPDF.tw_ren);
           newPDF.ImpPosX(horarios.Nombre_2.toString(),165, newPDF.tw_ren);
           newPDF.ImpPosX(horarios.Año_Nac_2.toString().substring(0,4),250, newPDF.tw_ren);
           newPDF.ImpPosX(horarios.Mes_Nac_2.toString().substring(4,2),260, newPDF.tw_ren);
-          newPDF.ImpPosX(horarios.Telefono_2.toString(),270, newPDF.tw_ren);
+          newPDF.ImpPosX(horarios.Telefono_2.toString(),268, newPDF.tw_ren);
 
           Enca1(newPDF);
           if (newPDF.tw_ren >= newPDF.tw_endRenH) {
