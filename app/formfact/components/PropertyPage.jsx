@@ -2,13 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import Inputs from "@/app/formfact/components/Inputs";
 import { useEffect } from "react";
-function PropertyPage({
-  selectedLabel,
-  setSelectedLabel,
-  setLabels,
-  selectedIndex,
-  labels,
-}) {
+function PropertyPage({ setLabels, selectedIndex, labels, propertyData }) {
   const {
     register,
     handleSubmit,
@@ -16,65 +10,48 @@ function PropertyPage({
     formState: { errors },
   } = useForm({
     defaultValues: {
-      columna: selectedLabel.columna_impresion,
-      campo: selectedLabel.numero_archivo,
-      font: selectedLabel.font_nombre,
-      formato: selectedLabel.formato,
-      renglon: selectedLabel.renglon_impresion,
-      texto: selectedLabel.descripcion_campo,
-      area: selectedLabel.tipo_campo,
+      columna_impresion: labels[selectedIndex].columna_impresion,
+      numero_archivo: labels[selectedIndex].numero_archivo,
+      font_nombre: labels[selectedIndex].font_nombre,
+      formato: labels[selectedIndex].formato,
+      renglon_impresion: labels[selectedIndex].renglon_impresion,
+      descripcion_campo: labels[selectedIndex].descripcion_campo,
+      tipo_campo: labels[selectedIndex].tipo_campo,
     },
   });
   useEffect(() => {
     reset({
-      columna: selectedLabel.columna_impresion,
-      campo: selectedLabel.numero_archivo,
-      font: selectedLabel.font_nombre,
-      formato: selectedLabel.formato,
-      renglon: selectedLabel.renglon_impresion,
-      texto: selectedLabel.descripcion_campo,
-      area: selectedLabel.tipo_campo,
+      columna_impresion: labels[selectedIndex].columna_impresion,
+      numero_archivo: labels[selectedIndex].numero_archivo,
+      font_nombre: labels[selectedIndex].font_nombre,
+      formato: labels[selectedIndex].formato,
+      renglon_impresion: labels[selectedIndex].renglon_impresion,
+      descripcion_campo: labels[selectedIndex].descripcion_campo,
+      tipo_campo: labels[selectedIndex].tipo_campo,
     });
-  }, [selectedLabel, reset]);
+  }, [selectedIndex, labels, reset]);
   const handleChange = (evt) => {
-    const antes = selectedLabel.columna_impresion;
-    const name = evt.target.attributes.name.value;
-    const { value } = evt.target;
-    console.log("antes", name, antes, value);
-    switch (name) {
-      case "columna":
-        // alert(value);
-
-        const resultado = labels.map((lbl, idx) => {
-          return idx === parseInt(selectedIndex)
-            ? { ...lbl, columna_impresion: parseInt(value) }
-            : lbl;
-        });
-        setLabels(resultado);
-        setSelectedLabel(labels[selectedIndex]);
-
-        // selectedLabel.columna_impresion = value;
-        break;
-      default:
-        break;
-    }
-    const despues = selectedLabel;
-    console.log("despues", despues);
-    // reset(selectedLabel);
+    const { name, value } = evt.target;
+    const resultado = [...labels];
+    resultado[selectedIndex] = {
+      ...resultado[selectedIndex],
+      [name]: parseInt(value),
+    };
+    setLabels(resultado);
   };
 
   return (
     <div className="flex flex-col card bg-white rounded-lg ">
       <div className=" bg-slate-400 w-full p-2 rounded-lg rounde">
         <h3 className="text-center font-bold">
-          Propiedades de Texto {selectedLabel.numero_dato}
+          Propiedades de Texto {labels[selectedIndex].numero_dato}
         </h3>
       </div>
       <div className="flex flex-col p-2">
         <form action="">
           <Inputs
             dataType={"int"}
-            name={"columna"}
+            name={"columna_impresion"}
             tamañolabel={"w-full input-xs"}
             className={"w-full text-right input-xs"}
             Titulo={"Columna: "}
@@ -89,7 +66,7 @@ function PropertyPage({
           <div className="divider mt-0 mb-0"></div>
           <Inputs
             dataType={"string"}
-            name={"campo"}
+            name={"numero_archivo"}
             tamañolabel={"w-full input-xs"}
             className={"w-full text-left input-xs"}
             Titulo={"Campo: "}
@@ -99,12 +76,13 @@ function PropertyPage({
             register={register}
             message={"Campo requerido"}
             isDisabled={false}
+            data={propertyData.campo}
             //defaultValue={formaPago.id}
           />
           <div className="divider mt-0 mb-0"></div>
           <Inputs
             dataType={"string"}
-            name={"font"}
+            name={"font_nombre"}
             tamañolabel={"w-full input-xs"}
             className={"w-full text-left input-xs"}
             Titulo={"Fuente: "}
@@ -114,6 +92,7 @@ function PropertyPage({
             register={register}
             message={"Fuente requerido"}
             isDisabled={false}
+            data={propertyData.fuente}
             //defaultValue={formaPago.id}
           />
           <div className="divider mt-0 mb-0"></div>
@@ -129,12 +108,13 @@ function PropertyPage({
             register={register}
             message={"Formato requerido"}
             isDisabled={false}
+            data={propertyData.formato}
             //defaultValue={formaPago.id}
           />
           <div className="divider mt-0 mb-0"></div>
           <Inputs
             dataType={"int"}
-            name={"renglon"}
+            name={"renglon_impresion"}
             tamañolabel={"w-full input-xs"}
             className={"w-full text-right input-xs"}
             Titulo={"Renglon: "}
@@ -144,11 +124,12 @@ function PropertyPage({
             register={register}
             message={"Renglon requerido"}
             isDisabled={false}
+            handleChange={handleChange}
           />
           <div className="divider mt-0 mb-0"></div>
           <Inputs
             dataType={"string"}
-            name={"texto"}
+            name={"descripcion_campo"}
             tamañolabel={"w-full input-xs"}
             className={"w-full text-left input-xs"}
             Titulo={"Texto: "}
@@ -162,7 +143,7 @@ function PropertyPage({
           <div className="divider mt-0 mb-0"></div>
           <Inputs
             dataType={"string"}
-            name={"area"}
+            name={"tipo_campo"}
             tamañolabel={"w-full input-xs"}
             className={"w-full text-left input-xs"}
             Titulo={"Area: "}
@@ -170,8 +151,9 @@ function PropertyPage({
             requerido={true}
             errors={errors}
             register={register}
-            message={"Area requerido"}
+            message={"Area requerida"}
             isDisabled={false}
+            data={propertyData.area}
             //defaultValue={formaPago.id}
           />
           <div className="divider mt-0 mb-0"></div>

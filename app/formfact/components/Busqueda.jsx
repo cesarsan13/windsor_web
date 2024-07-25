@@ -7,6 +7,7 @@ function Busqueda({
   Buscar,
   handleBusquedaChange,
   TB_Busqueda,
+  setFormato,
 }) {
   const handleFiltroChange = (event) => {
     const selectedValue = event.target.value;
@@ -56,7 +57,45 @@ function Busqueda({
           <span className="label-text font-bold md:block hidden ">Bajas</span>
         </label>
       </div>
-      {}
+      <div className="ml-2 p-2 flex justify-between">
+        <div className="form-control">
+          <label className="label cursor-pointer">
+            <span className="label-text">Facturas</span>
+            <input
+              type="radio"
+              name="r_tipo"
+              className="radio checked:bg-blue-500"
+              value={"Facturas"}
+              onChange={(evt) => setFormato(evt.target.value)}
+              defaultChecked
+            />
+          </label>
+        </div>
+        <div className="form-control">
+          <label className="label cursor-pointer">
+            <span className="label-text">Recibo</span>
+            <input
+              type="radio"
+              name="r_tipo"
+              className="radio checked:bg-blue-500"
+              onChange={(evt) => setFormato(evt.target.value)}
+              value={"Recibo"}
+            />
+          </label>
+        </div>
+        <div className="form-control">
+          <label className="label cursor-pointer">
+            <span className="label-text">Credencial</span>
+            <input
+              type="radio"
+              name="r_tipo"
+              value={"Credencial"}
+              className="radio checked:bg-blue-500"
+              onChange={(evt) => setFormato(evt.target.value)}
+            />
+          </label>
+        </div>
+      </div>
     </div>
   );
 }

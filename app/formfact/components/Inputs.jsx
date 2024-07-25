@@ -17,6 +17,7 @@ function Inputs({
   isDisabled,
   handleBlur,
   handleChange,
+  data,
 }) {
   return type !== "select" ? (
     <div className="flex flex-col">
@@ -61,9 +62,12 @@ function Inputs({
             ...(requerido && { required: message }),
           })}
         >
-          <option value="">&nbsp;&nbsp; ... &nbsp;&nbsp;</option>
-          <option value="S">Si</option>
-          <option value="N">No</option>
+          {data &&
+            Object.entries(data).map(([key, value]) => (
+              <option key={key} value={key}>
+                {value}
+              </option>
+            ))}
         </select>
       </label>
       {errors[name] && (

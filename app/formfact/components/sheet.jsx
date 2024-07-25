@@ -2,8 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 
-function Sheet({ labels, setLabels, setSelectedLabel, setSelectedIndex }) {
-  // console.log(labels);
+function Sheet({ labels, setLabels, selectedIndex, setSelectedIndex }) {
   const handleDoubleClick = (event) => {
     event.preventDefault();
     const rect = event.target.getBoundingClientRect();
@@ -21,8 +20,6 @@ function Sheet({ labels, setLabels, setSelectedLabel, setSelectedIndex }) {
 
   const handleClick = (evt, index) => {
     evt.preventDefault();
-    // console.log(evt.target);
-    setSelectedLabel(labels[index]);
     setSelectedIndex(index);
   };
   const handleDragStart = (event, index) => {
@@ -42,13 +39,7 @@ function Sheet({ labels, setLabels, setSelectedLabel, setSelectedIndex }) {
         : lbl;
     });
     setLabels(resultado);
-    setSelectedLabel(labels[index]);
-    // console.log(
-    //   "este es el resultaod de la iteracion",
-    //   resultado[index],
-    //   labels[index],
-    //   index
-    // );
+    setSelectedIndex(index);
   };
 
   return (
