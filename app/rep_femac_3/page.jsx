@@ -1,252 +1,180 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "../utils/alerts";
-import Busqueda from "@/app/rep_femac_3/components/Busqueda";
 import Acciones from "@/app/rep_femac_3/components/Acciones";
-import { useForm } from "react-hook-form";
 import {
-  guardaRep,
+  getAlumnosPorMes,
   Imprimir,
-  ImprimirExcel,
+  ImprimirExcel
 } from "@/app/utils/api/rep_femac_3/rep_femac_3";
 import { useSession } from "next-auth/react";
-import { siguiente } from "@/app/utils/api/rep_femac_3/rep_femac_3";
-import "jspdf-autotable";
-import jsPDF from "jspdf";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
+import "jspdf-autotable";
+import BuscarCat from "../components/BuscarCat";
 
-function Reportes() {
+function Rep_Femac_3() {
   const router = useRouter();
-  const { data: session, status } = useSession();
-  const [reportes, setReportes] = useState([]);
-  const [reporte, setReporte] = useState({});
-  const [reportesFiltrados, setReportesFiltrados] = useState([]);
-  const [bajas, setBajas] = useState(false);
-  const [openModal, setModal] = useState(false);
-  const [accion, setAccion] = useState("");
-  const [isLoading, setisLoading] = useState(false);
-  const [currentID, setCurrentId] = useState("");
-  const [filtro, setFiltro] = useState("");
-  const [TB_Busqueda, setTB_Busqueda] = useState("");
+  const {data: session, status} = useSession();
+  const [sOrdenar, ssetordenar] = useState('');
+  const [FormaRepDosSel, setFormaRepDosSel] =  useState([]);
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const [isLoading, setisLoading] = useState(false);
+  const [horario, setHorario] = useState({});
+  const [token, setToken] = useState("");
 
-  useEffect(() => {
-    if (status === "loading" || !session) {
+  useEffect(()=> {
+    if(status === "loading" || !session) {
       return;
     }
-  }, [session, status, bajas]);
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      numero: reporte.numero,
-      numero_1: reporte.numero_1,
-      nombre_1: reporte.nombre_1,
-      año_nac_1: reporte.año_nac_1,
-      mes_nac_1: reporte.mes_nac_1,
-      telefono_1: reporte.telefono_1,
-      numero_2: reporte.numero_2,
-      nombre_2: reporte.nombre_2,
-      año_nac_2: reporte.año_nac_2,
-      mes_nac_2: reporte.mes_nac_2,
-      telefono_2: reporte.telefono_2,
-    },
-  });
-
-  useEffect(() => {
-    reset({
-      numero: reporte.numero,
-      numero_1: reporte.numero_1,
-      nombre_1: reporte.nombre_1,
-      año_nac_1: reporte.año_nac_1,
-      mes_nac_1: reporte.mes_nac_1,
-      telefono_1: reporte.telefono_1,
-      numero_2: reporte.numero_2,
-      nombre_2: reporte.nombre_2,
-      año_nac_2: reporte.año_nac_2,
-      mes_nac_2: reporte.mes_nac_2,
-      telefono_2: reporte.telefono_2,
-    });
-  }, [reporte, reset]);
-
-  const Buscar = () => {
-    console.log(TB_Busqueda, filtro);
-    if (TB_Busqueda === "" || filtro === "") {
-      setReportesFiltrados(reportes);
-      return;
+    const fetchData = async () => {
+      setisLoading(true);
+      const { token } = session.user
+      setToken(token);
+      const data = await getAlumnosPorMes(token, horario, sOrdenar);
+      setFormaRepDosSel(data.data);
+      setisLoading(false);
     }
-    const infoFiltrada = reportes.filter((reporte) => {
-      const valorCampo = reporte[filtro];
-      if (typeof valorCampo === "number") {
-        return valorCampo.toString().includes(TB_Busqueda);
-      }
-      return valorCampo
-        ?.toString()
-        .toLowerCase()
-        .includes(TB_Busqueda.toLowerCase());
-    });
-    setReportesFiltrados(infoFiltrada);
-  };
-
-  const limpiarBusqueda = (evt) => {
-    evt.preventDefault;
-    setTB_Busqueda("");
-  };
-
-  const Alta = async (event) => {
-    setCurrentId("");
-    const { token } = session.user;
-    reset({
-      numero: "",
-      numero_1: "",
-      nombre_1: "",
-      año_nac_1: "",
-      mes_nac_1: "",
-      telefono_1: "",
-      numero_2: "",
-      nombre_2: "",
-      año_nac_2: "",
-      mes_nac_2: "",
-      telefono_2: "",
-    });
-    let siguienteId = await siguiente(token);
-    siguienteId = Number(siguienteId) + 1;
-    setCurrentId(siguienteId);
-    setReporte({ numero: siguienteId });
-    setModal(!openModal);
-    setAccion("Alta");
-    showModal(true);
-
-    document.getElementById("nombre").focus();
-  };
-
-  const onSubmitModal = handleSubmit(async (data) => {
-    event.preventDefault;
-    const dataj = JSON.stringify(data);
-    data.id = currentID;
-    let res = null;
-    if (accion === "Eliminar") {
-      showModal(false);
-      const confirmed = await confirmSwal(
-        "¿Desea Continuar?",
-        "Se eliminara el cajero seleccionado",
-        "warning",
-        "Aceptar",
-        "Cancelar"
-      );
-      if (!confirmed) {
-        showModal(true);
-        return;
-      }
-    }
-    res = await guardaRep(session.user.token, data, accion);
-    if (res.status) {
-      if (accion === "Alta") {
-        const nuevaRep = { currentID, ...data };
-        setReportes([...reportes, nuevaRep]);
-        if (!bajas) {
-          setReportesFiltrados([...reportesFiltrados, nuevaRep]);
-        }
-      }
-      showSwal(res.alert_title, res.alert_text, res.alert_icon);
-      showModal(false);
-    }
-  });
+    fetchData()
+  }, [session, status, horario, sOrdenar]);
 
   const home = () => {
     router.push("/");
   };
 
-  const handleBusquedaChange = (event) => {
-    event.preventDefault;
-    setTB_Busqueda(event.target.value);
-  };
-
   const ImprimePDF = () => {
     const configuracion = {
-      Encabezado: {
+      Encabezado:{
         Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: "Reporte Alumnos Mensual",
+        Nombre_Reporte: "Reporte de Alumnos por clase",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
-      body: reportesFiltrados,
-    };
-    Imprimir(configuracion);
-  };
+      body: FormaRepDosSel,
+    }
+    Imprimir(configuracion)
+  }
 
-  /*const handleVerClick = () => {
-        const doc = new jsPDF();
-        doc.text("Reporte de Alumnosde", 10, 10);
-        doc.autoTable({ html: '#table' });
-        const pdfData = doc.output('datauristring');
-        setPdfData(pdfData);
-        setPdfPreview(true);
-    };*/
+  const ImprimeExcel = () => {
+    const configuracion = {
+      Encabezado:{
+        Nombre_Aplicacion: "Sistema de Control Escolar",
+        Nombre_Reporte: "Reporte de Alumnos por clase",
+        Nombre_Usuario: `Usuario: ${session.user.name}`,
+      },
+      body: FormaRepDosSel,
+      columns:[
+        { header: "No.", dataKey: "Num_Renglon" },
+        { header: "No. 1", dataKey: "Numero_1" },
+        { header: "Nombre", dataKey: "Nombre_1" },
+        { header: "Año", dataKey: "Año_Nac_1" },
+        { header: "Mes", dataKey: "Mes_Nac_1" },
+        { header: "Telefono", dataKey: "Telefono_1" },
+    ],
+    nombre: "RepDosSec"
+  }
+    ImprimirExcel(configuracion)
+  }
+
+  const handleCheckChange = (event) =>{
+    event.preventDefault;
+    ssetordenar(event.target.value);
+  }
+
   const handleVerClick = () => {
     const configuracion = {
       Encabezado: {
-        Nombre_Aplicacion: "Nombre de la Aplicación",
+        Nombre_Aplicacion: "Lista de Alumnos por clase",
         Nombre_Reporte: "Reporte de Alumnos",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
+      body: FormaRepDosSel,
     };
-    const reporte = new ReportePDF(configuracion);
-    reporte.imprimeEncabezadoPrincipalV();
-    const table = document.getElementById("table");
-    reporte.doc.autoTable({ html: table });
+    const reporte = new ReportePDF(configuracion, "Landscape");
+    const { body } = configuracion;
+    const Enca1 = (doc) => {
+      if (!doc.tiene_encabezado) {
+        doc.imprimeEncabezadoPrincipalH();
+        doc.nextRow(12);
+        doc.ImpPosX("No.",15,doc.tw_ren),
+        doc.ImpPosX("No. 1",25,doc.tw_ren),
+        doc.ImpPosX("Nombre",35,doc.tw_ren),
+        doc.ImpPosX("Año",120,doc.tw_ren),
+        doc.ImpPosX("Mes",130,doc.tw_ren),
+        doc.nextRow(4);
+        doc.printLineH();
+        doc.nextRow(4);
+        doc.tiene_encabezado = true;
+      } else {
+        doc.nextRow(6);
+        doc.tiene_encabezado = true;
+      }
+    };
+
+    Enca1(reporte);
+    body.forEach((reporte1) => {
+      reporte.ImpPosX(reporte1.Num_Renglon.toString() !== "0" ? reporte1.Num_Renglon.toString() : "", 15, reporte.tw_ren);
+      reporte.ImpPosX(reporte1.Numero_1.toString() !== "0" ? reporte1.Numero_1.toString() : "", 25, reporte.tw_ren);
+      reporte.ImpPosX(reporte1.Nombre_1.toString() !== "0" ? reporte1.Nombre_1.toString() : "", 35, reporte.tw_ren);
+      reporte.ImpPosX(reporte1.Año_Nac_1.toString().substring(0, 4) !== "0" ? reporte1.Año_Nac_1.toString().substring(0, 4) : "", 120, reporte.tw_ren);
+      reporte.ImpPosX(reporte1.Mes_Nac_1.toString().substring(4, 2) !== "0" ? reporte1.Mes_Nac_1.toString().substring(4, 2) : "", 130, reporte.tw_ren);
+      
+      Enca1(reporte);
+      if (reporte.tw_ren >= reporte.tw_endRenH) {
+        reporte.pageBreakH();
+        Enca1(reporte);
+      }
+    });
+    
     const pdfData = reporte.doc.output("datauristring");
     setPdfData(pdfData);
     setPdfPreview(true);
+    
   };
-
-  if (status === "loading") {
-    return (
-      <div className="container skeleton w-full max-w-screen-xl shadow-xl rounded-xl"></div>
-    );
-  }
-
   return (
     <>
-      <div className="container w-full max-w-screen-xl bg-slate-100 shadow-xl rounded-xl px-3">
+<div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
         <div className="flex justify-start p-3">
-          <h1 className="text-4xl font-xthin text-black md:px-12">
-            Reporte de Alumnos por Mes.
+          <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
+            Reporte de Alumnos por clase mensual.
           </h1>
         </div>
         <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
           <div className="col-span-1 flex flex-col">
-            <Acciones
-              Buscar={Buscar}
-              Alta={Alta}
-              home={home}
-              Ver={handleVerClick}
-              imprimir={ImprimePDF}
-            />
+          <Acciones Ver={handleVerClick} imprimir={ImprimePDF} excel={ImprimeExcel} home={home}></Acciones>
           </div>
           <div className="col-span-7">
             <div className="flex flex-col h-[calc(100%)]">
-              <Busqueda
-                setBajas={setBajas}
-                setFiltro={setFiltro}
-                limpiarBusqueda={limpiarBusqueda}
-                Buscar={Buscar}
-                handleBusquedaChange={handleBusquedaChange}
-                TB_Busqueda={TB_Busqueda}
-              />
+              {token &&
+              <BuscarCat
+                table="horarios"
+                titulo={"Horario: "}
+                token={token}
+                fieldsToShow={["numero", "horario"]}
+                setItem={setHorario}
+                modalId="modal_horarios"
+                />
+              }
+               <div className=" col-8">
+                <label className={` input-md text-black dark:text-white flex items-center gap-3`}>
+                    <span className="text-black dark:text-white">Ordenar por:</span>
+                    <label className={` input-md text-black dark:text-white flex items-center gap-3`} onChange={(event) => handleCheckChange(event)} >
+                        <span className="text-black dark:text-white">Nombre</span>
+                        <input type="radio" name="ordenar" value="nombre" className="radio" />
+                    </label>
+                    <label className={` input-md text-black dark:text-white flex items-center gap-3`} onChange={(event) => handleCheckChange(event)}>
+                        <span className="text-black dark:text-white">Número</span>
+                        <input type="radio" name="ordenar" value="id" className="radio" />
+                    </label>
+                </label>
+              </div>
               {pdfPreview && pdfData && (
                 <div className="pdf-preview">
                   <Worker
                     workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
                   >
-                    <div style={{ height: "600px" }}>
+                    <div style={{ height: "700px" }}>
                       <Viewer fileUrl={pdfData} />
                     </div>
                   </Worker>
@@ -260,4 +188,4 @@ function Reportes() {
   );
 }
 
-export default Reportes;
+export default Rep_Femac_3;

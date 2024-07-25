@@ -1,59 +1,34 @@
 import { ReportePDF } from "../../ReportesPDF";
+import { ReporteExcel } from "../../ReportesExcel";
 
-export const siguiente = async (token) => {
-    const res = await fetch(`${process.env.DOMAIN_API}api/RepDosSel/siguiente`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const resJson = await res.json();
-    return resJson.data;
-  };
-  export const guardaRep = async (token, data, accion) => {
-    if (accion === "Eliminar" || accion === "Editar") {
-      if (accion === "Eliminar") {
-        data.baja = "*";
-      } else {
-        data.baja = "";
-      }
-      url_api = `${process.env.DOMAIN_API}api/RepDosSel/UpdateRepDosSel/`;
-    }
-  
-    const res = await fetch(`${url_api}`, {
-      method: "post",
-      body: JSON.stringify({
-        numero: data.numero,
-        numero_1: data.numero_1,
-        nombre_1: data.nombre_1,
-        año_nac_1: data.año_nac_1,
-        mes_nac_1: data.mes_nac_1,
-        telefono_1: data.telefono_1,
-        numero_2: data.numero_2,
-        nombre_2: data.nombre_2,
-        año_nac_2: data.año_nac_2,
-        mes_nac_2: data.mes_nac_2,
-        telefono_2: data.telefono_2,
-        baja: data.baja,
-      }),
-      headers: new Headers({
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      }),
-    });
-    const resJson = await res.json();
-    return resJson;
-  };
+
+export const getAlumnosPorMes = async (token, horario, orden) => {
+  const res = await fetch (`${process.env.DOMAIN_API}api/reportes/rep_femac_3`,{
+    method: "post",
+    body: JSON.stringify({
+      horario: horario,
+      orden: orden,
+    }),
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+  });
+  const resJson = await res.json();
+  return resJson.data;
+};
+
   const Enca1 = (doc) => {
     if (!doc.tiene_encabezado) {
-      doc.imprimeEncabezadoPrincipal();
+      doc.imprimeEncabezadoPrincipalV();
       doc.nextRow(12);
-      doc.ImpPosX("Numero", 14, doc.tw_ren);
-      doc.ImpPosX("Nombre", 28, doc.tw_ren);
-      doc.ImpPosX("Clave", 62, doc.tw_ren);
-      doc.ImpPosX("Telefono", 82, doc.tw_ren);
-      doc.ImpPosX("Correo", 112, doc.tw_ren);
+      doc.ImpPosX("No", 14, doc.tw_ren);
+      doc.ImpPosX("No.", 28, doc.tw_ren);
+      doc.ImpPosX("Nombre", 42, doc.tw_ren);
+      doc.ImpPosX("Año", 92, doc.tw_ren);
+      doc.ImpPosX("Mes", 122, doc.tw_ren);
       doc.nextRow(4);
-      doc.printLine();
+      doc.printLineV();
       doc.nextRow(4);
       doc.tiene_encabezado = true;
     } else {
@@ -61,16 +36,18 @@ export const siguiente = async (token) => {
       doc.tiene_encabezado = true;
     }
   };
-  export const Imprimir = (configuracion) =>{
+  export const Imprimir = (configuracion) => {
     const newPDF = new ReportePDF(configuracion);
     const { body } = configuracion;
     Enca1(newPDF);
+  
     body.forEach((reporte) => {
-      newPDF.ImpPosX(reporte.numero.toString(), 14, newPDF.tw_ren);
-      newPDF.ImpPosX(reporte.numero_1.toString(), 28, newPDF.tw_ren);
-      newPDF.ImpPosX(reporte.nombre_1.toString(), 62, newPDF.tw_ren);
-      newPDF.ImpPosX(reporte.numero_2.toString(), 82, newPDF.tw_ren);
-      newPDF.ImpPosX(reporte.nombre_2.toString(), 112, newPDF.tw_ren);
+      newPDF.ImpPosX(reporte.Num_Renglon.toString() !== "0" ? reporte.Num_Renglon.toString() : "", 14, newPDF.tw_ren);
+      newPDF.ImpPosX(reporte.Numero_1.toString() !== "0" ? reporte.Numero_1.toString() : "", 28, newPDF.tw_ren);
+      newPDF.ImpPosX(reporte.Nombre_1.toString() !== "0" ? reporte.Nombre_1.toString() : "", 42, newPDF.tw_ren);
+      newPDF.ImpPosX(reporte.Año_Nac_1.toString().substring(0, 4) !== "0" ? reporte.Año_Nac_1.toString().substring(0, 4) : "", 92, newPDF.tw_ren);
+      newPDF.ImpPosX(reporte.Mes_Nac_1.toString().substring(4, 2) !== "0" ? reporte.Mes_Nac_1.toString().substring(4, 2) : "", 122, newPDF.tw_ren);
+  
       Enca1(newPDF);
       if (newPDF.tw_ren >= newPDF.tw_endRen) {
         newPDF.pageBreak();
@@ -78,5 +55,15 @@ export const siguiente = async (token) => {
       }
     });
   
-    newPDF.guardaReporte("Reporte");
+    newPDF.guardaReporte("ReportePorMes");
+  }
+  
+  export const ImprimirExcel = (configuracion)=>{
+    const newExcel = new ReporteExcel(configuracion)
+    const {columns} = configuracion
+    const {body} = configuracion
+    const {nombre}=configuracion
+    newExcel.setColumnas(columns);
+    newExcel.addData(body);
+    newExcel.guardaReporte(nombre);
   }
