@@ -99,7 +99,7 @@ function Menu({ vertical }) {
       <li>
         <details>
           <summary>Reportes</summary>
-          <ul>
+          <ul className="p-1 mt-3 w-60 ">
             <li>
               <Link href={"/rep_femac_6"}>Cobranza</Link>
             </li>
