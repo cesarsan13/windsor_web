@@ -64,9 +64,9 @@ const Enca1 = (doc) => {
     doc.nextRow(12);
     doc.ImpPosX("Numero", 14, doc.tw_ren);
     doc.ImpPosX("Descripcion", 28, doc.tw_ren);
-    doc.ImpPosX("Comision", 62, doc.tw_ren);
-    doc.ImpPosX("Aplicacion", 82, doc.tw_ren);
-    doc.ImpPosX("Cue. Banco", 112, doc.tw_ren);
+    doc.ImpPosX("Comision", 132, doc.tw_ren);
+    doc.ImpPosX("Aplicacion", 152, doc.tw_ren);
+    doc.ImpPosX("Cue. Banco", 172, doc.tw_ren);
     doc.nextRow(4);
     doc.printLineV();
     doc.nextRow(4);
@@ -94,9 +94,9 @@ export const Imprimir = (configuracion) => {
   body.forEach((cajero) => {
     newPDF.ImpPosX(cajero.id.toString(), 14, newPDF.tw_ren, 10);
     newPDF.ImpPosX(cajero.descripcion.toString(), 28, newPDF.tw_ren, 50);
-    newPDF.ImpPosX(cajero.comision.toString(), 62, newPDF.tw_ren, 50);
-    newPDF.ImpPosX(cajero.aplicacion.toString(), 82, newPDF.tw_ren, 50);
-    newPDF.ImpPosX(cajero.cue_banco.toString(), 112, newPDF.tw_ren, 50);
+    newPDF.ImpPosX(cajero.comision.toString(), 132, newPDF.tw_ren, 50);
+    newPDF.ImpPosX(cajero.aplicacion.toString(), 152, newPDF.tw_ren, 50);
+    newPDF.ImpPosX(cajero.cue_banco.toString(), 172, newPDF.tw_ren, 50);
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
       newPDF.pageBreak();
