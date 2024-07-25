@@ -108,12 +108,12 @@ function AlumnosPorClase(){
         doc.ImpPosX("Nombre",35,doc.tw_ren),
         doc.ImpPosX("Año",120,doc.tw_ren),
         doc.ImpPosX("Mes",130,doc.tw_ren),
-        doc.ImpPosX("Telefono",140,doc.tw_ren),
+        doc.ImpPosX("Telefono",138,doc.tw_ren),
         doc.ImpPosX("No. 2",155,doc.tw_ren),
         doc.ImpPosX("Nombre",165,doc.tw_ren),
         doc.ImpPosX("Año",250,doc.tw_ren),
         doc.ImpPosX("Mes",260,doc.tw_ren),
-        doc.ImpPosX("Telefono",270,doc.tw_ren),
+        doc.ImpPosX("Telefono",268,doc.tw_ren),
         doc.nextRow(4);
         doc.printLineH();
         doc.nextRow(4);
@@ -131,12 +131,12 @@ function AlumnosPorClase(){
       reporte.ImpPosX(reporte1.Nombre_1.toString(),35, reporte.tw_ren);
       reporte.ImpPosX(reporte1.Año_Nac_1.toString().substring(0,4),120, reporte.tw_ren);
       reporte.ImpPosX(reporte1.Mes_Nac_1.toString().substring(4,2),130, reporte.tw_ren);
-      reporte.ImpPosX(reporte1.Telefono_1.toString(),140, reporte.tw_ren);
+      reporte.ImpPosX(reporte1.Telefono_1.toString(),138, reporte.tw_ren);
       reporte.ImpPosX(reporte1.Numero_2.toString(),155, reporte.tw_ren);
       reporte.ImpPosX(reporte1.Nombre_2.toString(),165, reporte.tw_ren);
       reporte.ImpPosX(reporte1.Año_Nac_2.toString().substring(0,4),250, reporte.tw_ren);
       reporte.ImpPosX(reporte1.Mes_Nac_2.toString().substring(4,2),260, reporte.tw_ren);
-      reporte.ImpPosX(reporte1.Telefono_2.toString(),270, reporte.tw_ren);
+      reporte.ImpPosX(reporte1.Telefono_2.toString(),268, reporte.tw_ren);
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRenH) {
         reporte.pageBreakH();
@@ -153,7 +153,7 @@ function AlumnosPorClase(){
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
     );
   }
-  return (
+  return  (
     <>
       <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
         <div className="flex justify-start p-3 ">
@@ -169,6 +169,7 @@ function AlumnosPorClase(){
               ImprimeExcel={ImprimeExcel}
               home={home}>  
             </Acciones>
+
           </div>
         
         <div className="col-span-7">
