@@ -112,6 +112,16 @@ function Menu({ vertical }) {
         </details>
       </li>
       <li>
+        <details>
+          <summary>Pagos</summary>
+          <ul>
+            <li>
+              <Link href="/pagos1">Pagos</Link>
+            </li>
+          </ul>
+        </details>
+      </li>
+      <li>
         <a>Item 3</a>
       </li>
     </ul>

@@ -152,3 +152,33 @@ export const calculaDigitoBvba = (twInfo) => {
     return 10 - txwRes;
   }
 };
+
+export const formatNumber = (num) => {
+  if (!num) return "";
+  const numStr = typeof num === 'string' ? num : num.toString();
+  const floatNum = parseFloat(numStr.replace(/,/g, "").replace(/[^\d.-]/g, ''));
+  if (isNaN(floatNum)) return "";
+  return floatNum.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+};
+
+export const Elimina_Comas = (data) => {
+  const convertir = (value) => {
+    let valueConvertido = value;
+    if (
+      typeof valueConvertido === "string" &&
+      valueConvertido.match(/^\d{1,3}(,\d{3})*(\.\d+)?$/)
+    ) {
+      valueConvertido = parseFloat(
+        valueConvertido.replace(/,/g, "")
+      );
+    }
+
+    return valueConvertido;
+  };
+
+  if (Array.isArray(data)) {
+    return data.map(convertir);
+  } else {
+    return convertir(data);
+  }
+};
