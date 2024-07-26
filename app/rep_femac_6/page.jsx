@@ -50,6 +50,10 @@ function Rep_Femac_6() {
     const home = () => {
         router.push("/");
     };
+    const CerrarView = () => {
+        setPdfPreview(false);
+        setPdfData('');
+    };
     const ImprimePDF = () => {
         const configuracion = {
             Encabezado: {
@@ -298,7 +302,7 @@ function Rep_Femac_6() {
                 </div>
                 <div className='container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] '>
                     <div className='col-span-1 flex flex-col '>
-                        <Acciones home={home} ImprimePDF={ImprimePDF} Ver={handleVerClick} ImprimeExcel={ImprimeExcel} />
+                        <Acciones home={home} ImprimePDF={ImprimePDF} Ver={handleVerClick} ImprimeExcel={ImprimeExcel} CerrarView={CerrarView}/>
                     </div>
                     <div className='col-span-7'>
                         <div className='flex flex-col h-[calc(100%)]'>

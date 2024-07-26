@@ -28,7 +28,7 @@ function TablaFormFact({
 
   return !isLoading ? (
     <>
-      <div className="tabla-formfact-container overflow-x-auto mt-3 bg-white m-3 w-full lg:w-5/8">
+      <div className="tabla-formfact-container overflow-x-auto mt-3 text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-5/8">
         {formFactsFiltrados.length > 0 ? (
           <table className="table table-xs table-zebra table-compact w-full">
             <thead className="relative z-[1] md:static">
