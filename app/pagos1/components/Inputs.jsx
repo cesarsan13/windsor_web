@@ -31,7 +31,7 @@ function Inputs({
             type={type}
             className={`text-black dark:text-white ${className}`}
             disabled={isDisabled}
-            // onChange={(event) => setValue(event.target.value)}
+          // onChange={(event) => setValue(event.target.value)}
           />
         </label>
         {errors[name] && (
@@ -93,6 +93,20 @@ function Inputs({
         )}
       </div>
     );
+  } else if (tipoInput === 'disabledInput') {
+    return (
+      <input
+        name={name}
+        id={name}
+        type={type}
+        className={`input input-bordered bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md flex items-center gap-3 ${className}`}
+        disabled={isDisabled}
+        value={valueInput}
+        {...register(name, {
+          ...(requerido && { required: message }),
+        })}
+      />
+    );
   } else if (tipoInput === 'numberDouble') {
     return (
       <div className="w-full md:w-1/2 px-0.5 py-2 mb-6 md:mb-0">
@@ -139,6 +153,12 @@ function Inputs({
             type={type}
             className={`text-black dark:text-white ${className}`}
             disabled={isDisabled}
+            {...(dataType === "int" && { onKeyDown: soloEnteros })}
+            {...(dataType === "float" && { onKeyDown: soloDecimales })}
+            {...(dataType === "int" ||
+              (dataType === "float" && {
+                onBlur: (event) => eventInput(event, dataType),
+              }))}
             {...register(name, {
               ...(requerido && { required: message }),
             })}
