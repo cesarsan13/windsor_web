@@ -32,7 +32,9 @@ function Menu({ vertical }) {
               <Link href="/formfact">Formato Variable</Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Etiquetas</Link>
+              <Link href="" style={{ color: "red" }}>
+                Etiquetas
+              </Link>
             </li>
           </ul>
         </details>
@@ -42,7 +44,9 @@ function Menu({ vertical }) {
           <summary>Pagos</summary>
           <ul>
             <li>
-              <Link href="" style={{ color: 'red' }}>Pagos</Link>
+              <Link href="" style={{ color: "red" }}>
+                Pagos
+              </Link>
             </li>
           </ul>
         </details>
@@ -52,31 +56,49 @@ function Menu({ vertical }) {
           <summary>Proceso</summary>
           <ul>
             <li>
-              <Link href="" style={{ color: 'red' }}>Adición de Productos a Cartera</Link>
+              <Link href="" style={{ color: "red" }}>
+                Adición de Productos a Cartera
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Emisión de Factura</Link>
+              <Link href="" style={{ color: "red" }}>
+                Emisión de Factura
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Factura Global</Link>
+              <Link href="" style={{ color: "red" }}>
+                Factura Global
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Cancelación de Recibo</Link>
+              <Link href="" style={{ color: "red" }}>
+                Cancelación de Recibo
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Cancelación de Factura</Link>
+              <Link href="" style={{ color: "red" }}>
+                Cancelación de Factura
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Actualiza Cobranza</Link>
+              <Link href="" style={{ color: "red" }}>
+                Actualiza Cobranza
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Cambio de Ciclo Escolar</Link>
+              <Link href="" style={{ color: "red" }}>
+                Cambio de Ciclo Escolar
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Cobranza Diaria</Link>
+              <Link href="" style={{ color: "red" }}>
+                Cobranza Diaria
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Cambio Numero de Alumno</Link>
+              <Link href="" style={{ color: "red" }}>
+                Cambio Numero de Alumno
+              </Link>
             </li>
           </ul>
         </details>
@@ -95,46 +117,70 @@ function Menu({ vertical }) {
               <Link href="/Rep_Femac_2">Lista de Alumnos por clase</Link>
             </li>
             <li>
-              <Link href="/rep_femac_3">Lista de Alumnos por clase del mes</Link>
+              <Link href="/rep_femac_3">
+                Lista de Alumnos por clase del mes
+              </Link>
             </li>
             <li>
-              <Link href="/rep_femac_13">Lista de alumnos por clase semanal </Link>
+              <Link href="/rep_femac_13">
+                Lista de alumnos por clase semanal{" "}
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Credencial </Link>
+              <Link href="" style={{ color: "red" }}>
+                Credencial{" "}
+              </Link>
             </li>
             <li>
               <Link href="/rep_femac_5">Altas y Bajas de Alumnos</Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Cartera </Link>
+              <Link href="" style={{ color: "red" }}>
+                Cartera{" "}
+              </Link>
             </li>
             <li>
               <Link href="/rep_femac_8_anexo_1">Relacion de Recibos</Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Relacion de Facturas</Link>
+              <Link href="" style={{ color: "red" }}>
+                Relacion de Facturas
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Estado de cuenta</Link>
+              <Link href="" style={{ color: "red" }}>
+                Estado de cuenta
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Reporte Cobranza por Alumno</Link>
+              <Link href="" style={{ color: "red" }}>
+                Reporte Cobranza por Alumno
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Reporte Cobranza por Producto</Link>
+              <Link href="" style={{ color: "red" }}>
+                Reporte Cobranza por Producto
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Recibo de pagos</Link>
+              <Link href="" style={{ color: "red" }}>
+                Recibo de pagos
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Reporte Flujo Efectivo</Link>
+              <Link href="" style={{ color: "red" }}>
+                Reporte Flujo Efectivo
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Alumnos con Beca</Link>
+              <Link href="" style={{ color: "red" }}>
+                Alumnos con Beca
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Alumnos Inscritos</Link>
+              <Link href="" style={{ color: "red" }}>
+                Alumnos Inscritos
+              </Link>
             </li>
           </ul>
         </details>
@@ -144,13 +190,19 @@ function Menu({ vertical }) {
           <summary>Seguridad</summary>
           <ul>
             <li>
-              <Link href="" style={{ color: 'red' }}>Usuarios</Link>
+              <Link href="" style={{ color: "red" }}>
+                Usuarios
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Acceso a Usuarios</Link>
+              <Link href="" style={{ color: "red" }}>
+                Acceso a Usuarios
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Utilerias</Link>
+              <Link href="" style={{ color: "red" }}>
+                Utilerias
+              </Link>
             </li>
           </ul>
         </details>
@@ -160,7 +212,9 @@ function Menu({ vertical }) {
           <summary>Propietario</summary>
           <ul>
             <li>
-              <Link href="" style={{ color: 'red' }}>Propietario</Link>
+              <Link href="" style={{ color: "red" }}>
+                Propietario
+              </Link>
             </li>
           </ul>
         </details>
@@ -170,7 +224,9 @@ function Menu({ vertical }) {
           <summary>Video Ayuda</summary>
           <ul>
             <li>
-              <Link href="" style={{ color: 'red' }}>Carga de Cartera</Link>
+              <Link href="" style={{ color: "red" }}>
+                Carga de Cartera
+              </Link>
             </li>
           </ul>
         </details>
@@ -182,7 +238,7 @@ function Menu({ vertical }) {
         <details>
           <summary>Archivos</summary>
           <ul className="p-5 mt-3 w-52 ">
-          <li>
+            <li>
               <Link href="/alumnos">Alumnos</Link>
             </li>
             <li>
@@ -204,7 +260,9 @@ function Menu({ vertical }) {
               <Link href="/formfact">Formato Variable</Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Etiquetas</Link>
+              <Link href="" style={{ color: "red" }}>
+                Etiquetas
+              </Link>
             </li>
           </ul>
         </details>
@@ -214,7 +272,9 @@ function Menu({ vertical }) {
           <summary>Pagos</summary>
           <ul>
             <li>
-              <Link href="" style={{ color: 'red' }}>Pagos</Link>
+              <Link href="" style={{ color: "red" }}>
+                Pagos
+              </Link>
             </li>
           </ul>
         </details>
@@ -224,31 +284,49 @@ function Menu({ vertical }) {
           <summary>Proceso</summary>
           <ul>
             <li>
-              <Link href="" style={{ color: 'red' }}>Adición de Productos a Cartera</Link>
+              <Link href="" style={{ color: "red" }}>
+                Adición de Productos a Cartera
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Emisión de Factura</Link>
+              <Link href="" style={{ color: "red" }}>
+                Emisión de Factura
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Factura Global</Link>
+              <Link href="" style={{ color: "red" }}>
+                Factura Global
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Cancelación de Recibo</Link>
+              <Link href="" style={{ color: "red" }}>
+                Cancelación de Recibo
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Cancelación de Factura</Link>
+              <Link href="" style={{ color: "red" }}>
+                Cancelación de Factura
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Actualiza Cobranza</Link>
+              <Link href="" style={{ color: "red" }}>
+                Actualiza Cobranza
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Cambio de Ciclo Escolar</Link>
+              <Link href="" style={{ color: "red" }}>
+                Cambio de Ciclo Escolar
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Cobranza Diaria</Link>
+              <Link href="" style={{ color: "red" }}>
+                Cobranza Diaria
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Cambio Numero de Alumno</Link>
+              <Link href="" style={{ color: "red" }}>
+                Cambio Numero de Alumno
+              </Link>
             </li>
           </ul>
         </details>
@@ -257,7 +335,7 @@ function Menu({ vertical }) {
         <details>
           <summary>Reportes</summary>
           <ul className="p-1 mt-3 w-60 ">
-          <li>
+            <li>
               <Link href="/rep_femac_6">Cobranza</Link>
             </li>
             <li>
@@ -267,46 +345,70 @@ function Menu({ vertical }) {
               <Link href="/Rep_Femac_2">Lista de Alumnos por clase</Link>
             </li>
             <li>
-              <Link href="/rep_femac_3">Lista de Alumnos por clase del mes</Link>
+              <Link href="/rep_femac_3">
+                Lista de Alumnos por clase del mes
+              </Link>
             </li>
             <li>
-              <Link href="/rep_femac_13">Lista de alumnos por clase semanal </Link>
+              <Link href="/rep_femac_13">
+                Lista de alumnos por clase semanal{" "}
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Credencial </Link>
+              <Link href="" style={{ color: "red" }}>
+                Credencial{" "}
+              </Link>
             </li>
             <li>
               <Link href="/rep_femac_5">Altas y Bajas de Alumnos</Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Cartera </Link>
+              <Link href="" style={{ color: "red" }}>
+                Cartera{" "}
+              </Link>
             </li>
             <li>
               <Link href="/rep_femac_8_anexo_1">Relacion de Recibos</Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Relacion de Facturas</Link>
+              <Link href="" style={{ color: "red" }}>
+                Relacion de Facturas
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Estado de cuenta</Link>
+              <Link href="" style={{ color: "red" }}>
+                Estado de cuenta
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Reporte Cobranza por Alumno</Link>
+              <Link href="" style={{ color: "red" }}>
+                Reporte Cobranza por Alumno
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Reporte Cobranza por Producto</Link>
+              <Link href="" style={{ color: "red" }}>
+                Reporte Cobranza por Producto
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Recibo de pagos</Link>
+              <Link href="" style={{ color: "red" }}>
+                Recibo de pagos
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Reporte Flujo Efectivo</Link>
+              <Link href="" style={{ color: "red" }}>
+                Reporte Flujo Efectivo
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Alumnos con Beca</Link>
+              <Link href="" style={{ color: "red" }}>
+                Alumnos con Beca
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Alumnos Inscritos</Link>
+              <Link href="" style={{ color: "red" }}>
+                Alumnos Inscritos
+              </Link>
             </li>
           </ul>
         </details>
@@ -316,13 +418,19 @@ function Menu({ vertical }) {
           <summary>Seguridad</summary>
           <ul>
             <li>
-              <Link href="" style={{ color: 'red' }}>Usuarios</Link>
+              <Link href="" style={{ color: "red" }}>
+                Usuarios
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Acceso a Usuarios</Link>
+              <Link href="" style={{ color: "red" }}>
+                Acceso a Usuarios
+              </Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Utilerias</Link>
+              <Link href="" style={{ color: "red" }}>
+                Utilerias
+              </Link>
             </li>
           </ul>
         </details>
@@ -332,7 +440,29 @@ function Menu({ vertical }) {
           <summary>Propietario</summary>
           <ul>
             <li>
-              <Link href="" style={{ color: 'red' }}>Propietario</Link>
+              <Link href="" style={{ color: "red" }}>
+                Propietario
+              </Link>
+            </li>
+          </ul>
+        </details>
+      </li>
+      <li>
+        <details>
+          <summary>Pagos</summary>
+          <ul>
+            <li>
+              <Link href="/pagos1">Pagos</Link>
+            </li>
+          </ul>
+        </details>
+      </li>
+      <li>
+        <details>
+          <summary>Pagos</summary>
+          <ul>
+            <li>
+              <Link href="/pagos1">Pagos</Link>
             </li>
           </ul>
         </details>
@@ -342,7 +472,9 @@ function Menu({ vertical }) {
           <summary>Video Ayuda</summary>
           <ul>
             <li>
-              <Link href="" style={{ color: 'red' }}>Carga de Cartera</Link>
+              <Link href="" style={{ color: "red" }}>
+                Carga de Cartera
+              </Link>
             </li>
           </ul>
         </details>

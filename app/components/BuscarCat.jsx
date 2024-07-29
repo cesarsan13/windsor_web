@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import ModalBuscarCat from "./ModalBuscarCat";
 import { useForm } from "react-hook-form";
-import { getProductos } from "../utils/api/productos/productos";
-import { getHorarios } from "../utils/api/horarios/horarios";
-import { getCajeros } from "../utils/api/cajeros/cajeros";
+import { getProductos } from "@/app/utils/api/productos/productos";
+import { getHorarios } from "@/app/utils/api/horarios/horarios";
+import { getCajeros } from "@/app/utils/api/cajeros/cajeros";
 import { getFormasPago } from "@/app/utils/api/formapago/formapago";
 import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
+import { getComentarios } from "@/app/utils/api/comentarios/comentarios";
 
 function BuscarCat({ table, nameInput, fieldsToShow, titulo, setItem, token, modalId, array }) {
   const [data, setData] = useState([]);
@@ -35,6 +36,10 @@ function BuscarCat({ table, nameInput, fieldsToShow, titulo, setItem, token, mod
         case "cajeros":
           fetchedData = await getCajeros(token, "");
           break;
+        case "comentarios":
+          fetchedData = await getComentarios(token, "");
+          break;
+        case "formfact":
         case "formaPago":
           fetchedData = await getFormasPago(token, false);
           break;
@@ -45,7 +50,7 @@ function BuscarCat({ table, nameInput, fieldsToShow, titulo, setItem, token, mod
       }
       setData(fetchedData);
       setFilteredData(fetchedData);
-      
+
       // Establecer los valores predeterminados con la data recibida solo una vez
       if (fetchedData.length > 0) {
         // console.log(fetchedData);
@@ -60,7 +65,7 @@ function BuscarCat({ table, nameInput, fieldsToShow, titulo, setItem, token, mod
       }
     };
     fetchData();
-  }, [table, token,array]);
+  }, [table, token, array]);
 
   const inputValue = watch(nameInput[0]);
   const inputValueDesc = watch(nameInput[1]);
@@ -83,7 +88,7 @@ function BuscarCat({ table, nameInput, fieldsToShow, titulo, setItem, token, mod
     setItem(item);
   };
 
-  const handleKeyDown = (evt) => {    
+  const handleKeyDown = (evt) => {
     if (evt.key !== "Enter") return;
     evt.preventDefault();
     BuscarInfo();
@@ -91,26 +96,26 @@ function BuscarCat({ table, nameInput, fieldsToShow, titulo, setItem, token, mod
 
   const BuscarInfo = () => {
     const inputValueStr = String(inputValue); // Asegura que inputValue sea una cadena
-  
+
     if (inputValueStr === "") {
       setFilteredData(data);
       reset();
       setItem({});
       return;
     }
-  
+
     const infoFiltrada = data.filter((item) => {
       return fieldsToShow.some((field) => {
         const valorCampo = item[field];
         const valorCampoStr = String(valorCampo); // Asegura que valorCampo sea una cadena
-  
+
         if (typeof valorCampo === "number") {
           return valorCampoStr.includes(inputValueStr);
         }
         return valorCampoStr.toLowerCase().includes(inputValueStr.toLowerCase());
       });
     });
-  
+
     setFilteredData(infoFiltrada);
     setItem(infoFiltrada);
     if (infoFiltrada.length > 0) {
@@ -122,7 +127,7 @@ function BuscarCat({ table, nameInput, fieldsToShow, titulo, setItem, token, mod
       setItem(item);
     }
   };
-  
+
 
   return (
     <div className="flex justify-start items-center">

@@ -34,7 +34,7 @@ function TablaAlumnos({
         showModal(true);
         setcondicion(false);
     };
-
+x
     return !isLoading ? (
         <div className="overflow-x-auto mt-3  h-6/8 text-black bg-white dark:bg-[#1d232a] dark:text-white m-2 w-full  lg:w-5/8 ">
             {alumnosFiltrados.length > 0 ? (
