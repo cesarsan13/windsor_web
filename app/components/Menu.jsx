@@ -37,7 +37,7 @@ function Menu({ vertical }) {
           </ul>
         </details>
       </li>
-      <li>
+      <li >
         <details>
           <summary>Pagos</summary>
           <ul>
@@ -47,7 +47,7 @@ function Menu({ vertical }) {
           </ul>
         </details>
       </li>
-      <li>
+      <li className="hidden">
         <details>
           <summary>Proceso</summary>
           <ul>
@@ -119,7 +119,7 @@ function Menu({ vertical }) {
               <Link href="" style={{ color: 'red' }}>Estado de cuenta</Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Reporte Cobranza por Alumno</Link>
+              <Link href="/rep_femac_11_Anexo_3">Reporte Cobranza por Alumno</Link>
             </li>
             <li>
               <Link href="" style={{ color: 'red' }}>Reporte Cobranza por Producto</Link>
@@ -139,7 +139,7 @@ function Menu({ vertical }) {
           </ul>
         </details>
       </li>
-      <li>
+      <li className="hidden">
         <details>
           <summary>Seguridad</summary>
           <ul>
@@ -155,7 +155,7 @@ function Menu({ vertical }) {
           </ul>
         </details>
       </li>
-      <li>
+      <li className="hidden">
         <details>
           <summary>Propietario</summary>
           <ul>
@@ -165,7 +165,7 @@ function Menu({ vertical }) {
           </ul>
         </details>
       </li>
-      <li>
+      <li className="hidden">
         <details>
           <summary>Video Ayuda</summary>
           <ul>
@@ -219,7 +219,7 @@ function Menu({ vertical }) {
           </ul>
         </details>
       </li>
-      <li>
+      <li className="hidden">
         <details>
           <summary>Proceso</summary>
           <ul>
@@ -291,7 +291,7 @@ function Menu({ vertical }) {
               <Link href="" style={{ color: 'red' }}>Estado de cuenta</Link>
             </li>
             <li>
-              <Link href="" style={{ color: 'red' }}>Reporte Cobranza por Alumno</Link>
+              <Link href="/rep_femac_11_Anexo_3">Reporte Cobranza por Alumno</Link>
             </li>
             <li>
               <Link href="" style={{ color: 'red' }}>Reporte Cobranza por Producto</Link>
@@ -311,7 +311,7 @@ function Menu({ vertical }) {
           </ul>
         </details>
       </li>
-      <li>
+      <li className="hidden">
         <details>
           <summary>Seguridad</summary>
           <ul>
@@ -327,7 +327,7 @@ function Menu({ vertical }) {
           </ul>
         </details>
       </li>
-      <li>
+      <li className="hidden">
         <details>
           <summary>Propietario</summary>
           <ul>
@@ -337,7 +337,7 @@ function Menu({ vertical }) {
           </ul>
         </details>
       </li>
-      <li>
+      <li className="hidden">
         <details>
           <summary>Video Ayuda</summary>
           <ul>
