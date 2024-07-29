@@ -92,7 +92,7 @@ export const guardarProductos = async (token, data, accion) => {
 
 const Enca1 = (doc) => {
   if (!doc.tiene_encabezado) {
-    doc.imprimeEncabezadoPrincipal();
+    doc.imprimeEncabezadoPrincipalV();
     doc.nextRow(12);
     doc.ImpPosX("Numero", 14, doc.tw_ren);
     doc.ImpPosX("Descripcion", 28, doc.tw_ren);
@@ -105,7 +105,7 @@ const Enca1 = (doc) => {
     doc.ImpPosX("Cambio \nPrecio", 169, doc.tw_ren);
     doc.ImpPosX("Referencia", 184, doc.tw_ren);
     doc.nextRow(4);
-    doc.printLine();
+    doc.printLineV();
     doc.nextRow(4);
     doc.tiene_encabezado = true;
   } else {
