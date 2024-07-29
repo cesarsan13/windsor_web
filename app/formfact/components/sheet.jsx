@@ -2,8 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 
-function Sheet({ labels, setLabels, setSelectedLabel, setSelectedIndex }) {
-  // console.log(labels);
+function Sheet({ labels, setLabels, selectedIndex, setSelectedIndex }) {
   const handleDoubleClick = (event) => {
     event.preventDefault();
     const rect = event.target.getBoundingClientRect();
@@ -21,8 +20,6 @@ function Sheet({ labels, setLabels, setSelectedLabel, setSelectedIndex }) {
 
   const handleClick = (evt, index) => {
     evt.preventDefault();
-    // console.log(evt.target);
-    setSelectedLabel(labels[index]);
     setSelectedIndex(index);
   };
   const handleDragStart = (event, index) => {
@@ -42,13 +39,7 @@ function Sheet({ labels, setLabels, setSelectedLabel, setSelectedIndex }) {
         : lbl;
     });
     setLabels(resultado);
-    setSelectedLabel(labels[index]);
-    // console.log(
-    //   "este es el resultaod de la iteracion",
-    //   resultado[index],
-    //   labels[index],
-    //   index
-    // );
+    setSelectedIndex(index);
   };
 
   return (
@@ -75,7 +66,7 @@ function Sheet({ labels, setLabels, setSelectedLabel, setSelectedIndex }) {
             // backgroundColor: "rgba(255, 255, 255, 0.8)",
             alignContent: "center",
             padding: "2px 2px",
-            font: `${label.font_nombre}`,
+            fontFamily: `${label.font_nombre}`,
             fontWeight: label.font_bold === "S" ? `bold` : `normal`,
             fontSize: `${label.font_tamaño * 1.3333}px`,
             fontStyle: label.font_italic === "S" ? "italic" : "normal",

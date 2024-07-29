@@ -198,26 +198,25 @@ function FormaPago() {
     };
     Imprimir(configuracion);
   };
-  const ImprimeExcel = () =>{
-    const configuracion ={
-      Encabezado:{
+  const ImprimeExcel = () => {
+    const configuracion = {
+      Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
-    Nombre_Reporte: "Reporte Datos Forma Pagos",
-    Nombre_Usuario: `Usuario: ${session.user.name}`,
-    },
-    body:formaPagosFiltrados,
-    columns:[
-        {header:"Numero",dataKey:"id"},
-        {header:"Descripcion",dataKey:"descripcion"},
-        {header:"Comision",dataKey:"comision"},
-        {header:"Aplicacion",dataKey:"aplicacion"},
-        {header:"Cue. Banco",dataKey:"cue_banco"},
-        
-    ],
-    nombre:"Forma Pagos"
-    }
-    ImprimirExcel(configuracion)
-  }
+        Nombre_Reporte: "Reporte Datos Forma Pagos",
+        Nombre_Usuario: `Usuario: ${session.user.name}`,
+      },
+      body: formaPagosFiltrados,
+      columns: [
+        { header: "Numero", dataKey: "id" },
+        { header: "Descripcion", dataKey: "descripcion" },
+        { header: "Comision", dataKey: "comision" },
+        { header: "Aplicacion", dataKey: "aplicacion" },
+        { header: "Cue. Banco", dataKey: "cue_banco" },
+      ],
+      nombre: "Forma Pagos",
+    };
+    ImprimirExcel(configuracion);
+  };
   if (status === "loading") {
     return (
       <div className="container skeleton w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -234,9 +233,9 @@ function FormaPago() {
         setFormaPago={setFormaPago}
         formaPago={formaPago}
       />
-      <div className="container  w-full  max-w-screen-xl bg-slate-100 shadow-xl rounded-xl px-3 ">
+      <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
         <div className="flex justify-start p-3 ">
-          <h1 className="text-4xl font-xthin text-black md:px-12">
+          <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Formas de Pagos.
           </h1>
         </div>

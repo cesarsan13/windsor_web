@@ -91,8 +91,8 @@ export const guardaComentarios = async (token, data, accion) => {
       newPDF.ImpPosX(comentarios.comentario_3.toString(),190,newPDF.tw_ren, 40)
       newPDF.ImpPosX(comentarios.generales.toString(),270,newPDF.tw_ren, 5)
       Enca1(newPDF);
-      if (newPDF.tw_ren >= newPDF.tw_endRen) {
-        newPDF.pageBreak();
+      if (newPDF.tw_ren >= newPDF.tw_endRenH) {
+        newPDF.pageBreakH();
         Enca1(newPDF);
       }
     });

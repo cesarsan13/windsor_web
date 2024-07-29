@@ -1,5 +1,22 @@
 import Swal from "sweetalert2";
 
+export const showSwalAndWait = (title, text, icon) => {
+  return new Promise((resolve) => {
+    Swal.fire({
+      title: title,
+      text: text,
+      icon: icon,
+      timer: 2000,
+      showConfirmButton: false,
+      customClass: {
+        popup: 'swal-popup'
+      }
+    }).then(() => {
+      resolve();
+    });
+  });
+};
+
 export const showSwal = (titulo, mensaje, icono) => {
   Swal.fire({
     position: "center",

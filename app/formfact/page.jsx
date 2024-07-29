@@ -7,6 +7,7 @@ import TablaFormFact from "@/app/formfact/components/tablaFormFact";
 import Busqueda from "@/app/formfact/components/Busqueda";
 import Acciones from "@/app/formfact/components/Acciones";
 import { useForm } from "react-hook-form";
+import { getPropertyData } from "@/app/utils/api/formfact/formfact";
 import {
   getFacturasFormato,
   getFormFact,
@@ -16,10 +17,8 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/formfact/formfact";
 import "jspdf-autotable";
-import { Worker, Viewer } from "@react-pdf-viewer/core";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import ConfigReporte from "./components/configReporte";
-import Sheet from "./components/sheet";
 function FormFact() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -32,10 +31,14 @@ function FormFact() {
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState("");
   const [filtro, setFiltro] = useState("");
+  const [formato, setFormato] = useState("");
   const [TB_Busqueda, setTB_Busqueda] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [showSheet, setShowSheet] = useState(false);
+  const [labels, setLabels] = useState([]);
+  const [propertyData, setPropertyData] = useState({});
+
   const [configuracion, setConfiguracion] = useState({
     Encabezado: {
       Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -44,6 +47,13 @@ function FormFact() {
     },
     body: {},
   });
+  useEffect(() => {
+    if (formato === "") {
+      return;
+    }
+    const data = getPropertyData(formato);
+    setPropertyData(data);
+  }, [formato]);
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
@@ -60,6 +70,7 @@ function FormFact() {
       setisLoading(false);
     };
     fetchData();
+    setFormato("Facturas");
   }, [session, status, bajas]);
 
   useEffect(() => {
@@ -114,7 +125,6 @@ function FormFact() {
     evt.preventDefault;
     setTB_Busqueda("");
   };
-
   const Alta = async (event) => {
     setCurrentId("");
     const { token } = session.user;
@@ -133,8 +143,6 @@ function FormFact() {
 
     document.getElementById("nombre").focus();
   };
-  //Imprimir
-  //Excel
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
     const dataj = JSON.stringify(data);
@@ -207,18 +215,11 @@ function FormFact() {
     event.preventDefault;
     setTB_Busqueda(event.target.value);
   };
-  const onDragStart = (evt) => {
-    evt.dataTransfer.setData("text/plain", evt.target.id);
 
-    evt.currentTarget.style.backgroundColor = "yellow";
-  };
-
-  const [labels, setLabels] = useState([]);
   const fetchFacturasFormato = async (id) => {
     const { token } = session.user;
     const facturas = await getFacturasFormato(token, id);
     setLabels(facturas);
-    // console.log("estas son las facturas perrillo", facturas);
   };
 
   if (status === "loading") {
@@ -237,9 +238,9 @@ function FormFact() {
         setFormFact={setFormFact}
         formFact={formFact}
       />
-      <div className="container  w-full  max-w-screen-xl bg-slate-100 shadow-xl rounded-xl px-3 ">
-        <div className="flex justify-start p-3 ">
-          <h1 className="text-4xl font-xthin text-black md:px-12">
+      <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
+        <div className="flex justify-start p-3">
+          <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Formas Facturas.
           </h1>
         </div>
@@ -260,11 +261,15 @@ function FormFact() {
                 Buscar={Buscar}
                 handleBusquedaChange={handleBusquedaChange}
                 TB_Busqueda={TB_Busqueda}
+                setFormato={setFormato}
               />
               {showSheet ? (
                 <ConfigReporte
                   labels={labels}
                   setLabels={setLabels}
+                  formato={formato}
+                  propertyData={propertyData}
+                  setShowSheet={setShowSheet}
                 ></ConfigReporte>
               ) : (
                 <TablaFormFact
@@ -276,19 +281,9 @@ function FormFact() {
                   setCurrentId={setCurrentId}
                   setShowSheet={setShowSheet}
                   fetchFacturasFormato={fetchFacturasFormato}
+                  formato={formato}
                 />
               )}
-              {/* {pdfPreview && pdfData && (
-                <div className="pdf-preview">
-                  <Worker
-                    workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
-                  >
-                    <div style={{ height: "600px" }}>
-                      <Viewer fileUrl={pdfData} />
-                    </div>
-                  </Worker>
-                </div>
-              )} */}
             </div>
           </div>
         </div>

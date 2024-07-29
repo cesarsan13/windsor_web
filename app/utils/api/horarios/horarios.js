@@ -39,10 +39,9 @@ export const guardarHorario = async (token, data, accion) => {
       data.baja = "";
     }
     url = `${process.env.DOMAIN_API}api/horarios/update`;
-    met = "put";
   }
   const res = await fetch(`${url}`, {
-    method: met,
+    method: "post",
     body: JSON.stringify({
       numero: data.numero,
       cancha: data.cancha,
@@ -65,7 +64,7 @@ export const guardarHorario = async (token, data, accion) => {
 
 const Enca1 = (doc) => {
   if (!doc.tiene_encabezado) {
-    doc.imprimeEncabezadoPrincipal();
+    doc.imprimeEncabezadoPrincipalV();
     doc.nextRow(12);
     doc.ImpPosX("Numero", 14, doc.tw_ren);
     doc.ImpPosX("Cancha", 28, doc.tw_ren);
@@ -76,7 +75,7 @@ const Enca1 = (doc) => {
     doc.ImpPosX("Edad Ini", 154, doc.tw_ren);
     doc.ImpPosX("Edad Fin", 174, doc.tw_ren);
     doc.nextRow(4);
-    doc.printLine();
+    doc.printLineV();
     doc.nextRow(4);
     doc.tiene_encabezado = true;
   } else {
