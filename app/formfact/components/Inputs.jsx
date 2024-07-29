@@ -18,12 +18,14 @@ function Inputs({
   handleBlur,
   handleChange,
   data,
+  step,
 }) {
   return type !== "select" ? (
     <div className="flex flex-col">
       <label className={`input   flex items-center  ${tamañolabel}`}>
         {Titulo}
         <input
+          {...(step && { step: step })}
           {...(handleChange && { onChangeCapture: (evt) => handleChange(evt) })}
           {...(maxLenght !== 0 && { maxLength: maxLenght })}
           name={name}
@@ -36,9 +38,10 @@ function Inputs({
             ...(requerido && { required: message }),
           })}
           {...(dataType === "int" ||
-            (dataType === "float" && {
-              onBlur: (event) => handleBlur(event, dataType),
-            }))}
+            (dataType === "float" &&
+              handleBlur && {
+                onBlur: (event) => handleBlur(event, dataType),
+              }))}
           disabled={isDisabled}
         />
       </label>
@@ -55,6 +58,7 @@ function Inputs({
       >
         {Titulo}
         <select
+          {...(handleChange && { onChangeCapture: (evt) => handleChange(evt) })}
           name={name}
           id={name}
           className={`text-black dark:text-white ${className}`}
@@ -62,12 +66,17 @@ function Inputs({
             ...(requerido && { required: message }),
           })}
         >
-          {data &&
-            Object.entries(data).map(([key, value]) => (
-              <option key={key} value={key}>
-                {value}
-              </option>
-            ))}
+          {data && name === "font_nombre"
+            ? Object.entries(data).map(([key, value]) => (
+                <option key={key} value={value}>
+                  {value}
+                </option>
+              ))
+            : Object.entries(data).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value}
+                </option>
+              ))}
         </select>
       </label>
       {errors[name] && (

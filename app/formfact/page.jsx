@@ -269,6 +269,7 @@ function FormFact() {
                   setLabels={setLabels}
                   formato={formato}
                   propertyData={propertyData}
+                  setShowSheet={setShowSheet}
                 ></ConfigReporte>
               ) : (
                 <TablaFormFact

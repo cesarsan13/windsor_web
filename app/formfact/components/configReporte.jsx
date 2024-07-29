@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Sheet from "./sheet";
 import PropertyPage from "@/app/formfact/components/PropertyPage";
-function ConfigReporte({ labels, setLabels, propertyData }) {
+function ConfigReporte({ labels, setLabels, propertyData, setShowSheet }) {
   const { data: session, status } = useSession();
   const [selectedIndex, setSelectedIndex] = useState(null);
 
@@ -28,10 +28,13 @@ function ConfigReporte({ labels, setLabels, propertyData }) {
           {selectedIndex && (
             <div className="pt-5">
               <PropertyPage
+                session={session}
                 labels={labels}
                 setLabels={setLabels}
                 selectedIndex={selectedIndex}
                 propertyData={propertyData}
+                setShowSheet={setShowSheet}
+                setSelectedIndex={setSelectedIndex}
               ></PropertyPage>
             </div>
           )}
