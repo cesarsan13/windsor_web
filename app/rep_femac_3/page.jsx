@@ -44,6 +44,11 @@ function Rep_Femac_3() {
     router.push("/");
   };
 
+  const CerrarView = () => {
+    setPdfPreview(false);
+    setPdfData('');
+};
+
   const ImprimePDF = () => {
     const configuracion = {
       Encabezado:{
@@ -142,7 +147,7 @@ function Rep_Femac_3() {
         </div>
         <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
           <div className="col-span-1 flex flex-col">
-          <Acciones Ver={handleVerClick} imprimir={ImprimePDF} excel={ImprimeExcel} home={home}></Acciones>
+          <Acciones Ver={handleVerClick} imprimir={ImprimePDF} excel={ImprimeExcel} home={home} CerrarView={CerrarView}></Acciones>
           </div>
           <div className="col-span-7">
             <div className="flex flex-col h-[calc(100%)]">
@@ -151,21 +156,22 @@ function Rep_Femac_3() {
                 table="horarios"
                 titulo={"Horario: "}
                 token={token}
+                nameInput={["horario_1", "horario_1_nombre"]}
                 fieldsToShow={["numero", "horario"]}
                 setItem={setHorario}
                 modalId="modal_horarios"
                 />
-              }
+                }
                <div className=" col-8">
                 <label className={` input-md text-black dark:text-white flex items-center gap-3`}>
                     <span className="text-black dark:text-white">Ordenar por:</span>
                     <label className={` input-md text-black dark:text-white flex items-center gap-3`} onChange={(event) => handleCheckChange(event)} >
                         <span className="text-black dark:text-white">Nombre</span>
-                        <input type="radio" name="ordenar" value="nombre" className="radio" />
+                        <input type="radio" name="ordenar" value="nombre" className="radio checked:bg-blue-500" />
                     </label>
                     <label className={` input-md text-black dark:text-white flex items-center gap-3`} onChange={(event) => handleCheckChange(event)}>
                         <span className="text-black dark:text-white">Número</span>
-                        <input type="radio" name="ordenar" value="id" className="radio" />
+                        <input type="radio" name="ordenar" value="id" className="radio checked:bg-blue-500" />
                     </label>
                 </label>
               </div>

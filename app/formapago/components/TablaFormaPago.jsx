@@ -18,7 +18,7 @@ function TablaFormaPago({
   };
 
   return !isLoading ? (
-    <div className='overflow-x-auto mt-3  h-6/8 text-black bg-white dark:bg-[#1d232a] dark:text-white m-2 w-full  lg:w-5/8 '>
+    <div className="overflow-x-auto mt-3  h-6/8  text-black bg-white dark:bg-[#1d232a] dark:text-white m-2 w-full  lg:w-5/8 ">
       {formaPagosFiltrados.length > 0 ? (
         <table className="table table-xs table-zebra table-pin-rows table-pin-cols max-h-[calc(50%)]">
           <thead className=" relative z-[1] md:static">

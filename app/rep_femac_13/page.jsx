@@ -53,6 +53,11 @@ function Rep_Femac_13() {
       router.push("/");
     };
 
+    const CerrarView = () => {
+      setPdfPreview(false);
+      setPdfData('');
+  };
+
   const handleClickVer = () => {
 
     const configuracion = {
@@ -212,6 +217,7 @@ function Rep_Femac_13() {
             ImprimePDF={ImprimePDF}
             ImprimeExcel={ImprimeExcel}
             home={home}
+            CerrarView={CerrarView}
             />
           </div>
           <div className="col-span-7">
@@ -241,11 +247,11 @@ function Rep_Femac_13() {
                     <span className="text-black dark:text-white">Ordenar por:</span>
                     <label className={` input-md text-black dark:text-white flex items-center gap-3`} onChange={(event) => handleCheckChange(event)} >
                         <span className="text-black dark:text-white">Nombre</span>
-                        <input type="radio" name="ordenar" value="nombre" className="radio" />
+                        <input type="radio" name="ordenar" value="nombre" className="radio checked:bg-blue-500" />
                     </label>
                     <label className={` input-md text-black dark:text-white flex items-center gap-3`} onChange={(event) => handleCheckChange(event)}>
                         <span className="text-black dark:text-white">Número</span>
-                        <input type="radio" name="ordenar" value="id" className="radio" />
+                        <input type="radio" name="ordenar" value="id" className="radio checked:bg-blue-500" />
                     </label>
                 </label>
               </div>
