@@ -172,7 +172,7 @@ function ModalAlumnos({
                                         dataType={"string"}
                                         name={"estatus"}
                                         tamañolabel={""}
-                                        className={"fyo8m-select p-1.5 grow bg-[#1d232a] "}
+                                        className={"fyo8m-select p-1.5 grow bg-[#ffffff] "}
                                         Titulo={"Estatus: "}
                                         type={"select"}
                                         requerido={true}
@@ -247,7 +247,7 @@ function ModalAlumnos({
                                         dataType={"string"}
                                         name={"sexo"}
                                         tamañolabel={""}
-                                        className={"fyo8m-select p-1.5 grow bg-[#1d232a] "}
+                                        className={"fyo8m-select p-1.5 grow bg-[#ffffff] "}
                                         Titulo={"Sexo: "}
                                         type={"select"}
                                         requerido={true}
@@ -283,11 +283,11 @@ function ModalAlumnos({
                                     />
 
                                     <Inputs
-                                        dataType={"int"}
+                                        dataType={"string"}
                                         name={"telefono_1"}
                                         tamañolabel={""}
-                                        className={"rounded block grow text-right"}
-                                        Titulo={"Telefonos: "}
+                                        className={"rounded block grow text-left"}
+                                        Titulo={"Tels: "}
                                         type={"text"}
                                         requerido={true}
                                         isNumero={true}
@@ -300,10 +300,10 @@ function ModalAlumnos({
                                     />
 
                                     <Inputs
-                                        dataType={"int"}
+                                        dataType={"string"}
                                         name={"telefono_2"}
                                         tamañolabel={""}
-                                        className={"rounded block grow text-right"}
+                                        className={"rounded block grow text-left"}
                                         Titulo={"Tel (opcional)"}
                                         type={"text"}
                                         requerido={false}
@@ -316,10 +316,10 @@ function ModalAlumnos({
                                         handleBlur={handleBlur}
                                     />
                                     <Inputs
-                                        dataType={"int"}
+                                        dataType={"string"}
                                         name={"celular"}
                                         tamañolabel={""}
-                                        className={"rounded block grow text-right"}
+                                        className={"rounded block grow text-left"}
                                         Titulo={"Celular: "}
                                         type={"text"}
                                         requerido={true}
@@ -368,6 +368,7 @@ function ModalAlumnos({
                             <input type="radio" name="my_tabs" role="tab" className="tab" aria-label="Generales"
                                 checked={activeTab === 2}
                                 onChange={() => handleTabs(2)}
+                                
                             />
                             <div
                                 role="tabpanel"
@@ -443,7 +444,7 @@ function ModalAlumnos({
                                         dataType={"string"}
                                         name={"cp"}
                                         tamañolabel={""}
-                                        className={"rounded block grow text-right"}
+                                        className={"rounded block grow text-left"}
                                         Titulo={"CP: "}
                                         type={"text"}
                                         requerido={true}
@@ -534,6 +535,8 @@ function ModalAlumnos({
                                         token={session.user.token}
                                         modalId="modal_horarios"
                                         array={alumno.horario_1}
+                                        alignRight={true}
+                                        inputWidths={{ first: "100px", second: "200px" }}
                                     />
                                     {/* <BuscarCat
                                         table="horarios"
@@ -591,15 +594,17 @@ function ModalAlumnos({
                                         handleBlur={handleBlur}
                                     />
                                     <BuscarCat
-                                        table={"formaPago"}
+                                        table="formaPago"
                                         fieldsToShow={columnasBuscaCat1}
                                         nameInput={nameInputs3}
                                         setItem={setcond1}
                                         token={session.user.token}
                                         modalId="modal_formaPago1"
                                         array={alumno.cond_1}
-                                        titulo={"Forma pago: "}
-                                    />
+                                        titulo="Forma pago: "
+                                        alignRight={true}
+                                        inputWidths={{ first: "100px", second: "380px" }}
+                                        />
                                     <BuscarCat
                                         table={"formaPago"}
                                         fieldsToShow={columnasBuscaCat1}
@@ -609,6 +614,8 @@ function ModalAlumnos({
                                         modalId="modal_formaPago2"
                                         array={alumno.cond_2}
                                         titulo={"Forma pago: "}
+                                        alignRight={true}
+                                        inputWidths={{ first: "100px", second: "380px" }}
                                     />
                                     {/* <Inputs
                                         dataType={"string"}
@@ -677,11 +684,11 @@ function ModalAlumnos({
                                         handleBlur={handleBlur}
                                     />
                                     <Inputs
-                                        dataType={"int"}
+                                        dataType={"string"}
                                         name={"tel_p_1"}
                                         tamañolabel={""}
-                                        className={"rounded block grow text-right"}
-                                        Titulo={"Telefonos del pediatra: "}
+                                        className={"rounded block grow text-left"}
+                                        Titulo={"Tel del pediatra: "}
                                         type={"text"}
                                         requerido={false}
                                         isNumero={true}
@@ -693,10 +700,10 @@ function ModalAlumnos({
                                         handleBlur={handleBlur}
                                     />
                                     <Inputs
-                                        dataType={"int"}
+                                        dataType={"string"}
                                         name={"tel_p_2"}
                                         tamañolabel={""}
-                                        className={"rounded block grow text-right"}
+                                        className={"rounded block grow text-left"}
                                         Titulo={"Tel (opcional)"}
                                         type={"text"}
                                         requerido={false}
@@ -709,10 +716,10 @@ function ModalAlumnos({
                                         handleBlur={handleBlur}
                                     />
                                     <Inputs
-                                        dataType={"int"}
+                                        dataType={"string"}
                                         name={"cel_p_1"}
                                         tamañolabel={""}
-                                        className={"rounded block grow text-right"}
+                                        className={"rounded block grow text-left"}
                                         Titulo={"Celular del pediatra: "}
                                         type={"text"}
                                         requerido={false}
@@ -789,11 +796,11 @@ function ModalAlumnos({
                                         handleBlur={handleBlur}
                                     />
                                     <Inputs
-                                        dataType={"int"}
+                                        dataType={"string"}
                                         name={"tel_ase_1"}
                                         tamañolabel={""}
-                                        className={"rounded block grow text-right"}
-                                        Titulo={"Telefonos de la aseguradora: "}
+                                        className={"rounded block grow text-left"}
+                                        Titulo={"Tels de la aseguradora: "}
                                         type={"text"}
                                         requerido={false}
                                         isNumero={true}
@@ -805,10 +812,10 @@ function ModalAlumnos({
                                         handleBlur={handleBlur}
                                     />
                                     <Inputs
-                                        dataType={"int"}
+                                        dataType={"string"}
                                         name={"tel_ase_2"}
                                         tamañolabel={""}
-                                        className={"rounded block grow text-right"}
+                                        className={"rounded block grow text-left"}
                                         Titulo={"Tel (opcional)"}
                                         type={"text"}
                                         requerido={false}
@@ -932,7 +939,7 @@ function ModalAlumnos({
                                         dataType={"string"}
                                         name={"raz_cp"}
                                         tamañolabel={""}
-                                        className={"rounded block grow text-right"}
+                                        className={"rounded block grow text-left"}
                                         Titulo={"CP: "}
                                         type={"text"}
                                         requerido={false}
@@ -973,11 +980,11 @@ function ModalAlumnos({
                                         handleBlur={handleBlur}
                                     />
                                     <Inputs
-                                        dataType={"int"}
+                                        dataType={"string"}
                                         name={"tel_pad_1"}
                                         tamañolabel={""}
-                                        className={"rounded block grow text-right"}
-                                        Titulo={"Telefonos del padre: "}
+                                        className={"rounded block grow text-left"}
+                                        Titulo={"Tel del padre: "}
                                         type={"text"}
                                         requerido={false}
                                         isNumero={true}
@@ -989,10 +996,10 @@ function ModalAlumnos({
                                         handleBlur={handleBlur}
                                     />
                                     <Inputs
-                                        dataType={"int"}
+                                        dataType={"string"}
                                         name={"tel_pad_2"}
                                         tamañolabel={""}
-                                        className={"rounded block grow text-right"}
+                                        className={"rounded block grow text-left"}
                                         Titulo={"Tel (opcional)"}
                                         type={"text"}
                                         requerido={false}
@@ -1005,10 +1012,10 @@ function ModalAlumnos({
                                         handleBlur={handleBlur}
                                     />
                                     <Inputs
-                                        dataType={"int"}
+                                        dataType={"string"}
                                         name={"cel_pad_1"}
                                         tamañolabel={""}
-                                        className={"rounded block grow text-right"}
+                                        className={"rounded block grow text-left"}
                                         Titulo={"Celular del padre: "}
                                         type={"text"}
                                         requerido={false}
@@ -1037,11 +1044,11 @@ function ModalAlumnos({
                                         handleBlur={handleBlur}
                                     />
                                     <Inputs
-                                        dataType={"int"}
+                                        dataType={"string"}
                                         name={"tel_mad_1"}
                                         tamañolabel={""}
                                         className={"rounded block grow text-right"}
-                                        Titulo={"Telefonos de la madre: "}
+                                        Titulo={"Tel de la madre: "}
                                         type={"text"}
                                         requerido={false}
                                         isNumero={true}
@@ -1053,10 +1060,10 @@ function ModalAlumnos({
                                         handleBlur={handleBlur}
                                     />
                                     <Inputs
-                                        dataType={"int"}
+                                        dataType={"string"}
                                         name={"tel_mad_2"}
                                         tamañolabel={""}
-                                        className={"rounded block grow text-right"}
+                                        className={"rounded block grow text-left"}
                                         Titulo={"Tel (opcional)"}
                                         type={"text"}
                                         requerido={false}
@@ -1069,10 +1076,10 @@ function ModalAlumnos({
                                         handleBlur={handleBlur}
                                     />
                                     <Inputs
-                                        dataType={"int"}
+                                        dataType={"string"}
                                         name={"cel_mad_1"}
                                         tamañolabel={""}
-                                        className={"rounded block grow text-right"}
+                                        className={"rounded block grow text-left"}
                                         Titulo={"Celular de la madre: "}
                                         type={"text"}
                                         requerido={false}
@@ -1101,11 +1108,11 @@ function ModalAlumnos({
                                         handleBlur={handleBlur}
                                     />
                                     <Inputs
-                                        dataType={"int"}
+                                        dataType={"string"}
                                         name={"tel_avi_1"}
                                         tamañolabel={""}
-                                        className={"rounded block grow text-right"}
-                                        Titulo={"Telefonos del aviso: "}
+                                        className={"rounded block grow text-left"}
+                                        Titulo={"Tel del aviso: "}
                                         type={"text"}
                                         requerido={false}
                                         isNumero={true}
@@ -1117,10 +1124,10 @@ function ModalAlumnos({
                                         handleBlur={handleBlur}
                                     />
                                     <Inputs
-                                        dataType={"int"}
+                                        dataType={"string"}
                                         name={"tel_avi_2"}
                                         tamañolabel={""}
-                                        className={"rounded block grow text-right"}
+                                        className={"rounded block grow text-left"}
                                         Titulo={"Tel (opcional)"}
                                         type={"text"}
                                         requerido={false}
@@ -1133,10 +1140,10 @@ function ModalAlumnos({
                                         handleBlur={handleBlur}
                                     />
                                     <Inputs
-                                        dataType={"int"}
+                                        dataType={"string"}
                                         name={"cel_avi_1"}
                                         tamañolabel={""}
-                                        className={"rounded block grow text-right"}
+                                        className={"rounded block grow text-left"}
                                         Titulo={"Celular del aviso: "}
                                         type={"text"}
                                         requerido={false}
