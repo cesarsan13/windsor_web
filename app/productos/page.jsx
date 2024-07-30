@@ -19,6 +19,9 @@ import { useSession } from "next-auth/react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
+import { ReportePDF } from "../utils/ReportesPDF";
+import { Viewer, Worker } from "@react-pdf-viewer/core";
+import '@react-pdf-viewer/core/lib/styles/index.css';
 function Productos() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -32,6 +35,8 @@ function Productos() {
   const [currentID, setCurrentId] = useState("");
   const [filtro, setFiltro] = useState("");
   const [TB_Busqueda, setTB_Busqueda] = useState("");
+  const [pdfPreview, setPdfPreview] = useState(false);
+  const [pdfData, setPdfData] = useState("");
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -274,6 +279,62 @@ function Productos() {
     event.preventDefault;
     setTB_Busqueda(event.target.value);
   };
+  const handleVerClick = () => {
+    const configuracion = {
+      Encabezado: {
+        Nombre_Aplicacion: "Sistema de Control Escolar",
+        Nombre_Reporte: "Reporte Datos Productos",
+        Nombre_Usuario: `Usuario: ${session.user.name}`,
+      },
+    };
+    const Enca1 = (doc) => {
+      if (!doc.tiene_encabezado) {
+        doc.imprimeEncabezadoPrincipalV();
+        doc.nextRow(12);
+        doc.ImpPosX("Numero", 14, doc.tw_ren);
+        doc.ImpPosX("Descripcion", 28, doc.tw_ren);
+        doc.ImpPosX("costo", 58, doc.tw_ren);
+        doc.ImpPosX("Frecuencia", 72, doc.tw_ren);
+        doc.ImpPosX("Recargo", 102, doc.tw_ren);
+        doc.ImpPosX("Aplicacion", 117, doc.tw_ren);
+        doc.ImpPosX("IVA", 139, doc.tw_ren);
+        doc.ImpPosX("Condicion", 149, doc.tw_ren);
+        doc.ImpPosX("Cambio \nPrecio", 169, doc.tw_ren);
+        doc.ImpPosX("Referencia", 184, doc.tw_ren);
+        doc.nextRow(4);
+        doc.printLineV();
+        doc.nextRow(4);
+        doc.tiene_encabezado = true;
+      } else {
+        doc.nextRow(6);
+        doc.tiene_encabezado = true;
+      }
+    };
+    const reporte = new ReportePDF(configuracion)
+    Enca1(reporte);
+    productosFiltrados.forEach((producto) => {
+      reporte.ImpPosX(producto.id.toString(), 14, reporte.tw_ren);
+      reporte.ImpPosX(producto.descripcion.toString(), 28, reporte.tw_ren);
+      reporte.ImpPosX(producto.costo.toString(), 58, reporte.tw_ren);
+      reporte.ImpPosX(producto.frecuencia.toString(), 72, reporte.tw_ren);
+      reporte.ImpPosX(producto.pro_recargo.toString(), 102, reporte.tw_ren);
+      reporte.ImpPosX(producto.aplicacion.toString(), 117, reporte.tw_ren);
+      reporte.ImpPosX(producto.iva.toString(), 139, reporte.tw_ren);
+      reporte.ImpPosX(producto.cond_1.toString(), 149, reporte.tw_ren);
+      const cam_precio = producto.cam_precio ? "Si" : "No";
+      reporte.ImpPosX(cam_precio.toString(), 169, reporte.tw_ren);
+      console.log(cam_precio);
+      reporte.ImpPosX(producto.ref.toString(), 184, reporte.tw_ren);
+      Enca1(reporte);
+      if (reporte.tw_ren >= reporte.tw_endRen) {
+        reporte.pageBreak();
+        Enca1(reporte);
+      }
+    })
+    const pdfData = reporte.doc.output("datauristring")
+    setPdfData(pdfData)
+    setPdfPreview(true)
+  }
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -305,6 +366,7 @@ function Productos() {
               home={home}
               imprimirEXCEL={imprimirEXCEL}
               imprimirPDF={imprimirPDF}
+              Ver={handleVerClick}
             ></Acciones>
           </div>
           <div className="col-span-7  ">
@@ -327,6 +389,21 @@ function Productos() {
                 setCurrentId={setCurrentId}
                 formatNumber={formatNumber}
               />
+              <div className='mt-4'>
+                {pdfPreview && pdfData && (
+                  <div className=''>
+                    <div className='pdf-preview'>
+                      <Worker
+                        workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
+                      >
+                        <div style={{ height: "600px" }}>
+                          <Viewer fileUrl={pdfData} />
+                        </div>
+                      </Worker>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
