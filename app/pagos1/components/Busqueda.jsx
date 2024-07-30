@@ -7,7 +7,7 @@ function Busqueda({
   Buscar,
   handleBusquedaChange,
   TB_Busqueda,
-  setFormato,
+  setTB_Busqueda,
 }) {
   const handleFiltroChange = (event) => {
     const selectedValue = event.target.value;
@@ -31,11 +31,12 @@ function Busqueda({
         className="select select-bordered join-item dark:bg-[#191e24] dark:text-neutral-200 w-20 md:w-32 text-neutral-600"
         onChange={(event) => handleFiltroChange(event)}
       >
-        <option disabled defaultValue={""}>
+        <option disabled defaultValue={"id"}>
           Filtros
         </option>
-        <option value={"numero"}>Numero</option>
+        <option value={"id"}>Numero</option>
         <option value={"nombre"}>Nombre</option>
+        <option value={"grado"}>Grado</option>
       </select>
       <div className="tooltip " data-tip="Limpiar">
         <button
@@ -54,50 +55,22 @@ function Busqueda({
             onClick={(evt) => setBajas(evt.target.checked)}
           />
           <span className="fa-solid fa-trash block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
-          <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
-            Bajas
-          </span>
+          <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">Bajas</span>
         </label>
       </div>
-      <div className="ml-2 p-2 flex justify-between">
-        <div className="form-control">
-          <label className="label cursor-pointer">
-            <span className="label-text">Facturas</span>
-            <input
-              type="radio"
-              name="r_tipo"
-              className="radio checked:bg-blue-500"
-              value={"Facturas"}
-              onChange={(evt) => setFormato(evt.target.value)}
-              defaultChecked
-            />
-          </label>
+      {/* <div className="lg:flex hidden justify-end w-full">
+        <div className="stats stats-vertical lg:stats-horizontal shadow  ">
+          <div className="stat">
+            <div className="stat-title ">Activos</div>
+            <div className="stat-value text-2xl text-green-500">31K</div>
+          </div>
+
+          <div className="stat">
+            <div className="stat-title">Bajas</div>
+            <div className="stat-value text-2xl text-red-500">4,200</div>
+          </div>
         </div>
-        <div className="form-control">
-          <label className="label cursor-pointer">
-            <span className="label-text">Recibo</span>
-            <input
-              type="radio"
-              name="r_tipo"
-              className="radio checked:bg-blue-500"
-              onChange={(evt) => setFormato(evt.target.value)}
-              value={"Recibo"}
-            />
-          </label>
-        </div>
-        <div className="form-control">
-          <label className="label cursor-pointer">
-            <span className="label-text">Credencial</span>
-            <input
-              type="radio"
-              name="r_tipo"
-              value={"Credencial"}
-              className="radio checked:bg-blue-500"
-              onChange={(evt) => setFormato(evt.target.value)}
-            />
-          </label>
-        </div>
-      </div>
+      </div> */}
     </div>
   );
 }

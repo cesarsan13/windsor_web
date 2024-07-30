@@ -198,26 +198,25 @@ function FormaPago() {
     };
     Imprimir(configuracion);
   };
-  const ImprimeExcel = () =>{
-    const configuracion ={
-      Encabezado:{
+  const ImprimeExcel = () => {
+    const configuracion = {
+      Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
-    Nombre_Reporte: "Reporte Datos Forma Pagos",
-    Nombre_Usuario: `Usuario: ${session.user.name}`,
-    },
-    body:formaPagosFiltrados,
-    columns:[
-        {header:"Numero",dataKey:"id"},
-        {header:"Descripcion",dataKey:"descripcion"},
-        {header:"Comision",dataKey:"comision"},
-        {header:"Aplicacion",dataKey:"aplicacion"},
-        {header:"Cue. Banco",dataKey:"cue_banco"},
-        
-    ],
-    nombre:"Forma Pagos"
-    }
-    ImprimirExcel(configuracion)
-  }
+        Nombre_Reporte: "Reporte Datos Forma Pagos",
+        Nombre_Usuario: `Usuario: ${session.user.name}`,
+      },
+      body: formaPagosFiltrados,
+      columns: [
+        { header: "Numero", dataKey: "id" },
+        { header: "Descripcion", dataKey: "descripcion" },
+        { header: "Comision", dataKey: "comision" },
+        { header: "Aplicacion", dataKey: "aplicacion" },
+        { header: "Cue. Banco", dataKey: "cue_banco" },
+      ],
+      nombre: "Forma Pagos",
+    };
+    ImprimirExcel(configuracion);
+  };
   if (status === "loading") {
     return (
       <div className="container skeleton w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>

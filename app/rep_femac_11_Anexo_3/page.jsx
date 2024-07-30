@@ -3,6 +3,7 @@ import React from "react"
 import { useRouter } from "next/navigation";
 import Acciones from "@/app/rep_femac_8_anexo_1/components/Acciones";
 import Inputs from "@/app/rep_femac_8_anexo_1/components/Inputs";
+import { calculaDigitoBvba } from "../utils/globalfn";
 import { useForm } from "react-hook-form";
 import {
     getReporteCobranzaporAlumno,
@@ -116,53 +117,63 @@ function CobranzaPorAlumno(){
             doc.tiene_encabezado = true;
           }
         };
+        let alumno_Ant = "";
+        let total_importe = 0;
+        let total_general = 0;
+
+        const Cambia_Alumno = (doc, total_importe) => {
+            doc.ImpPosX("TOTAL", 108, doc.tw_ren);
+            doc.ImpPosX(total_importe.toString(), 128, doc.tw_ren);
+            doc.nextRow(4);
+        }
 
         Enca1(reporte);
-        let total = 0;
+
         Object.keys(body).forEach((reporte1) => {
             console.log("dentro del foreach",reporte1);
             const arregloA = body[reporte1];
 
             arregloA.forEach((reporte2) => {
 
-            const id = (reporte2.id_al).toString();
-            const nombreAlumno = (reporte2.nom_al).toString();
-            const producto = (reporte2.articulo).toString();
-            const descripcion = (reporte2.descripcion).toString();
-            const documento = (reporte2.numero_doc).toString();
-            const fechaP = (reporte2.fecha).toString();
-            const importe = (reporte2.importe).toString();
-            const recibo = (reporte2.recibo).toString();
-            const TP1 = (reporte2.tipo_pago_1).toString();
-            const TP2 = (reporte2.tipo_pago_2).toString();
-            const cajero = (reporte2.nombre).toString();
-
-            let importe_total = parseFloat(reporte2.importe) || 0;
-            if (importe_total !== 0){
-                total += importe_total;
+            if(reporte2.id !== alumno_Ant && alumno_Ant !== ""){
+                Cambia_Alumno(reporte, total_importe);
+                total_importe = 0;
             }
-            reporte.ImpPosX(id,15, reporte.tw_ren);
-            reporte.ImpPosX(nombreAlumno,50, reporte.tw_ren);
-            reporte.ImpPosX(producto,15, reporte.tw_ren);
-            reporte.ImpPosX(descripcion,30, reporte.tw_ren);
-            reporte.ImpPosX(documento,70, reporte.tw_ren);
-            reporte.ImpPosX(fechaP,90, reporte.tw_ren);
-            reporte.ImpPosX(importe,110, reporte.tw_ren);
-            reporte.ImpPosX(recibo,130, reporte.tw_ren);
-            reporte.ImpPosX(TP1,143, reporte.tw_ren);
-            reporte.ImpPosX(TP2,163, reporte.tw_ren);
-            reporte.ImpPosX(cajero,183, reporte.tw_ren);
-            reporte.ImpPosX(importe_total.toFixed(2),115,reporte.tw_ren);
+
+            if(reporte2.id !== alumno_Ant){
+                reporte.ImpPosX(reporte2.id_al.toString() +"-"+ calculaDigitoBvba(reporte2.id_al.toString()),15, reporte.tw_ren);
+                reporte.ImpPosX(reporte2.toString().nom_al,50, reporte.tw_ren);
+                Enca1(reporte);
+                if (reporte.tw_ren >= reporte.tw_endRen) {
+                    reporte.pageBreak();
+                    Enca1(reporte);
+                }
+            }
+
+            reporte.ImpPosX(reporte2.articulo.toString(),15, reporte.tw_ren);
+            reporte.ImpPosX(reporte2.descripcion.toString(),30, reporte.tw_ren);
+            reporte.ImpPosX(reporte2.numero_doc.toString(),70, reporte.tw_ren);
+            reporte.ImpPosX(reporte2.fecha.toString(),90, reporte.tw_ren);
+            reporte.ImpPosX(reporte2.importe.toString(),110, reporte.tw_ren);
+            reporte.ImpPosX(reporte2.recibo.toString(),130, reporte.tw_ren);
+            reporte.ImpPosX(reporte2.desc_Tipo_Pago_1.toString(),143, reporte.tw_ren);
+            reporte.ImpPosX(reporte2.desc_Tipo_Pago_1.toString(),163, reporte.tw_ren);
+            reporte.ImpPosX(reporte2.nombre.toString(),183, reporte.tw_ren);
+            reporte.nextRow(5);
 
           Enca1(reporte);
           if (reporte.tw_ren >= reporte.tw_endRen) {
             reporte.pageBreak();
             Enca1(reporte);
           }
-        });
-        });
+            total_importe = total_importe + reporte2.importe;
+            total_general = total_general + reporte2.importe;
+            alumno_Ant = reporte2.id_al;
 
-        reporte.ImpPosX(`Total importe: ${total.toFixed(2)}` || '', 88, reporte.tw_ren);
+        });
+        });
+        Cambia_Alumno(reporte, total_importe);
+        reporte.ImpPosX(`Total importe: ${total_general.toString()}` || '', 88, reporte.tw_ren);
         const pdfData = reporte.doc.output("datauristring");
         setPdfData(pdfData);
         setPdfPreview(true);

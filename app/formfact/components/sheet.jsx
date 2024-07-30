@@ -21,6 +21,7 @@ function Sheet({ labels, setLabels, selectedIndex, setSelectedIndex }) {
   const handleClick = (evt, index) => {
     evt.preventDefault();
     setSelectedIndex(index);
+    console.log(labels[selectedIndex]);
   };
   const handleDragStart = (event, index) => {
     event.dataTransfer.setData("index", index);
@@ -66,7 +67,7 @@ function Sheet({ labels, setLabels, selectedIndex, setSelectedIndex }) {
             // backgroundColor: "rgba(255, 255, 255, 0.8)",
             alignContent: "center",
             padding: "2px 2px",
-            font: `${label.font_nombre}`,
+            fontFamily: `${label.font_nombre}`,
             fontWeight: label.font_bold === "S" ? `bold` : `normal`,
             fontSize: `${label.font_tamaño * 1.3333}px`,
             fontStyle: label.font_italic === "S" ? "italic" : "normal",
