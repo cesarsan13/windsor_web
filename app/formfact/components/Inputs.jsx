@@ -13,45 +13,13 @@ function Inputs({
   errors,
   tamañolabel,
   maxLenght,
-  defaultValue,
   isDisabled,
   handleBlur,
   handleChange,
   data,
   step,
 }) {
-  return type !== "select" ? (
-    <div className="flex flex-col">
-      <label className={`input   flex items-center  ${tamañolabel}`}>
-        {Titulo}
-        <input
-          {...(step && { step: step })}
-          {...(handleChange && { onChangeCapture: (evt) => handleChange(evt) })}
-          {...(maxLenght !== 0 && { maxLength: maxLenght })}
-          name={name}
-          id={name}
-          type={type}
-          className={className}
-          {...(dataType === "int" && { onKeyDown: soloEnteros })}
-          {...(dataType === "float" && { onKeyDown: soloDecimales })}
-          {...register(name, {
-            ...(requerido && { required: message }),
-          })}
-          {...(dataType === "int" ||
-            (dataType === "float" &&
-              handleBlur && {
-                onBlur: (event) => handleBlur(event, dataType),
-              }))}
-          disabled={isDisabled}
-        />
-      </label>
-      {errors[name] && (
-        <span className="text-red-500 text-sm mt-2">
-          {errors[name].message}
-        </span>
-      )}
-    </div>
-  ) : (
+  return type === "select" ? (
     <div className="flex flex-col">
       <label
         className={`input  text-black dark:text-white flex items-center ${tamañolabel}`}
@@ -78,6 +46,59 @@ function Inputs({
                 </option>
               ))}
         </select>
+      </label>
+      {errors[name] && (
+        <span className="text-red-500 text-sm mt-2">
+          {errors[name].message}
+        </span>
+      )}
+    </div>
+  ) : type === "checkbox" ? (
+    <div className="flex flex-col">
+      <label className={`flex items-center  ${tamañolabel}`}>
+        {Titulo}
+        <input
+          {...(handleChange && { onChangeCapture: (evt) => handleChange(evt) })}
+          name={name}
+          id={name}
+          type={type}
+          className={className}
+          {...register(name, {
+            ...(requerido && { required: message }),
+          })}
+          disabled={isDisabled}
+        />
+      </label>
+      {errors[name] && (
+        <span className="text-red-500 text-sm mt-2">
+          {errors[name].message}
+        </span>
+      )}
+    </div>
+  ) : (
+    <div className="flex flex-col">
+      <label className={`input   flex items-center  ${tamañolabel}`}>
+        {Titulo}
+        <input
+          {...(step && { step: step })}
+          {...(handleChange && { onChangeCapture: (evt) => handleChange(evt) })}
+          {...(maxLenght !== 0 && { maxLength: maxLenght })}
+          name={name}
+          id={name}
+          type={type}
+          className={className}
+          {...(dataType === "int" && { onKeyDown: soloEnteros })}
+          {...(dataType === "float" && { onKeyDown: soloDecimales })}
+          {...register(name, {
+            ...(requerido && { required: message }),
+          })}
+          {...(dataType === "int" ||
+            (dataType === "float" &&
+              handleBlur && {
+                onBlur: (event) => handleBlur(event, dataType),
+              }))}
+          disabled={isDisabled}
+        />
       </label>
       {errors[name] && (
         <span className="text-red-500 text-sm mt-2">

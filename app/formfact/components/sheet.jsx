@@ -21,6 +21,7 @@ function Sheet({ labels, setLabels, selectedIndex, setSelectedIndex }) {
   const handleClick = (evt, index) => {
     evt.preventDefault();
     setSelectedIndex(index);
+    console.log(labels[selectedIndex]);
   };
   const handleDragStart = (event, index) => {
     event.dataTransfer.setData("index", index);
