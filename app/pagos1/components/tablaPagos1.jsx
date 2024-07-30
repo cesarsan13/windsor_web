@@ -6,16 +6,17 @@ import React from "react";
 function TablaPagos1({
     pagosFiltrados,
     isLoading,
-    showModal,
     setPagos,
     setAccion,
     setCurrentId,
+    deleteRow,
 }) {
     const tableAction = (evt, pago, accion) => {
+        console.log(pago);
         setPagos(pago);
         setAccion(accion);
         setCurrentId(pago.numero);
-        showModal(true);
+        deleteRow(pago);
     };
 
     return !isLoading ? (
@@ -26,7 +27,7 @@ function TablaPagos1({
                         <thead className="relative z-[1] md:static">
                             <tr>
                                 <th></th>
-                                <td>Clave</td>
+                                {/* <td>Clave</td> */}
                                 <td>Descripción</td>
                                 <td>Documento</td>
                                 <td>Cantidad</td>
@@ -42,10 +43,11 @@ function TablaPagos1({
                             {pagosFiltrados.map((item) => (
                                 <tr key={item.numero} className="hover:cursor-pointer">
                                     <th className="text-right">{item.numero}</th>
+                                    {/* <td >{item.numero}</td> */}
                                     <td >{item.descripcion}</td>
                                     <td>{item.documento}</td>
                                     <td>{item.cantidad_producto}</td>
-                                    <td>{item.precio}</td>
+                                    <td>{item.precio_base}</td>
                                     <td>{item.descuento}</td>
                                     <td>{item.neto}</td>
                                     <td>{item.total}</td>
@@ -57,7 +59,14 @@ function TablaPagos1({
                                                 data-tip={`Eliminar ${item.numero}`}
                                                 onClick={(evt) => tableAction(evt, item, "Eliminar")}
                                             >
-                                                <i className="fa-solid fa-trash"></i>
+                                                <i className="fa-solid fa-trash pt-2"></i>
+                                            </div>
+                                            <div
+                                                className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                                                data-tip={`Seleccionar ${item.numero}`}
+                                                onClick={(evt) => tableAction(evt, item, "Seleccionar")}
+                                            >
+                                                <i className="fa-solid fa-trash pt-2"></i>
                                             </div>
                                         </div>
                                     </th>
@@ -67,7 +76,7 @@ function TablaPagos1({
                         <tfoot>
                             <tr>
                                 <th></th>
-                                <td>Clave</td>
+                                {/* <td>Clave</td> */}
                                 <td>Descripción</td>
                                 <td>Documento</td>
                                 <td>Cantidad</td>

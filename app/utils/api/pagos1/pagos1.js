@@ -19,12 +19,12 @@ export const validarClaveCajero = async (token, data) => {
     return resJson;
 }
 
-export const buscarArticulo = async (token, data) => {
+export const buscarArticulo = async (token, numero  ) => {
     let url = `${process.env.DOMAIN_API}api/pagos1/buscar-articulo`
     const res = await fetch(url, {
         method: "POST",
         body: JSON.stringify({
-            cajero: data.numero,
+            articulo: numero,
         }),
         headers: {
             Authorization: "Bearer " + token,

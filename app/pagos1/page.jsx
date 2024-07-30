@@ -12,6 +12,8 @@ import {
     verImprimir,
 } from "@/app/utils/api/pagos1/pagos1";
 import { Elimina_Comas, formatNumber, pone_ceros } from "@/app/utils/globalfn"
+import Button from "@/app/components/button";
+import Tooltip from "@/app/components/tooltip";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import "jspdf-autotable";
@@ -26,7 +28,7 @@ function Pagos_1() {
     const [alumnos1, setAlumnos1] = useState({});
     const [comentarios1, setComentarios1] = useState({});
     const [productos1, setProductos1] = useState({});
-    let [alumnosFiltrados, setAlumnosFiltrados] = useState([]);
+    // let [alumnosFiltrados, setAlumnosFiltrados] = useState([]);
     const nameInputs = ["id", "nombre_completo"];
     const columnasBuscaCat = ["id", "nombre_completo"];
     const nameInputs2 = ["id", "comentario_1"];
@@ -36,7 +38,7 @@ function Pagos_1() {
     // let [fecha, setFecha] = useState("");
     const [pagos, setPagos] = useState([]);
     const [pago, setPago] = useState({});
-    const [pagosFiltrados, setPagosFiltrados] = useState([]);
+    let [pagosFiltrados, setPagosFiltrados] = useState([]);
     const [validar, setValidar] = useState(false);
     const [accion, setAccion] = useState("");
     const [isLoading, setisLoading] = useState(false);
@@ -46,9 +48,18 @@ function Pagos_1() {
     const [pdfData, setPdfData] = useState("");
     const [precio_base, setPrecioBase] = useState("");
     const [colorInput, setColorInput] = useState("");
+    const [h1Total, setH1Total] = useState('0.00');
+    const [muestraRecargos, setMuestraRecargos] = useState(false);
+    const [muestraParciales, setMuestraParciales] = useState(false);
+    const [dRecargo, setDrecargo] = useState('');
+    const [selectedOption, setSelectedOption] = useState('Nombre');
+    const handleOptionChange = (event) => {
+        setSelectedOption(event.target.value);
+    };
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors },
     } = useForm({
         defaultValues: {
@@ -58,12 +69,15 @@ function Pagos_1() {
             fecha: "",
             comentarios: "",
             precio_base: 0,
-            cantidad_producto: 0,
+            cantidad_producto: 1,
             documento: "",
             precio: 0,
             neto: 0,
             total: 0,
             descuento: 0,
+            recargo: 0,
+            // D_Recargo: '',
+            // R_Articulo: '',
         },
     });
 
@@ -96,6 +110,23 @@ function Pagos_1() {
         fetchData();
     }, [productos1]);
 
+    // useEffect(() => {
+    //     reset({
+    //         numero: 0,
+    //         alumno: 0,
+    //         descripcion: "",
+    //         fecha: "",
+    //         comentarios: "",
+    //         precio_base: 0,
+    //         cantidad_producto: 0,
+    //         documento: "",
+    //         precio: 0,
+    //         neto: 0,
+    //         total: 0,
+    //         descuento: 0,
+    //     });
+    // }, [pagos, reset]);
+
     const showModal = (show) => {
         show
             ? document.getElementById("my_modal_3").showModal()
@@ -106,9 +137,77 @@ function Pagos_1() {
         router.push("/");
     };
 
-    const onSubmitPage = handleSubmit(async (data) => {
+    const Documento = () => {
+    }
 
-    });
+    const Recargos = async () => {
+        let recargo;
+        let prod = productos1.id;
+        let alumnoInvalido = alumnos1.id;
+        if (!alumnoInvalido) {
+            showSwal("Oppss!", "Alumno invalido", "error");
+            return;
+        }
+        const [arFind, ar9999] = await Promise.all([
+            BuscaArticulo(prod),
+            BuscaArticulo(9999)
+        ]);
+        let desPr = ar9999.descripcion;
+        console.log(desPr);
+        if (arFind) {
+            recargo = formatNumber(arFind.pro_recargo);
+        } else {
+            recargo = formatNumber(0);
+        }
+        if (desPr) {
+            console.log('true');
+            setDrecargo(desPr);
+            setMuestraRecargos(true);
+            console.log('false');
+            setDrecargo('');
+            setMuestraRecargos(false);
+        }
+    }
+
+    const Parciales = async () => {
+        let alumnoInvalido = alumnos1.id;
+        if (!alumnoInvalido) {
+            showSwal("Oppss!", "Alumno invalido", "error");
+            return;
+        }
+    };
+
+    const btnRecargo = (event) => {
+        event.preventDefault();
+        handleSubmit(sumbitRecargo)();
+    };
+
+    const sumbitRecargo = async (data) => {
+        // if (dRecargo) { return; }
+        const recargo = formatNumber(data.recargo);
+        const total = data.recargo * data.cantidad_producto;
+        const totalFormat = formatNumber(total);
+        const nuevoPago = {
+            precio_base: recargo || 0,
+            neto: recargo || 0,
+            total: totalFormat || 0,
+            alumno: alumnos1.id || 0,
+            numero: 9999,
+            descripcion: dRecargo || '',
+            cantidad_producto: data.cantidad_producto || 0,
+            documento: '',
+            descuento: 0,
+        };
+        const numeroExiste = pagos.some((pago) => pago.numero === nuevoPago.numero);
+        if (numeroExiste) {
+            showSwal("Oppss!", "Numero de articulo existente en recibo' ", "error");
+            setMuestraRecargos(false);
+        }
+        muestraTotal(nuevoPago);
+        setPagos((prevPagos) => [...prevPagos, nuevoPago]);
+        setPagosFiltrados((prevPagos) => [...prevPagos, nuevoPago]);
+        setMuestraRecargos(false);
+    }
 
     const CerrarView = () => {
         setPdfPreview(false);
@@ -182,28 +281,12 @@ function Pagos_1() {
         ImprimirExcel(configuracion);
     };
 
-    const Documento = async () => {
-
-    }
-
-    const Recargos = async () => {
-
-    }
-
-    const Parciales = async () => {
-
-    }
-
     const BuscaArticulo = async (numero) => {
-        try {
-            const { token } = session.user;
-            let res;
-            res = await buscarArticulo(token, numero)
-            console.log(res);
-        } catch (error) {
-            showSwal(res.alert_title, res.alert_text, res.alert_icon);
-            return;
-        }
+        let res;
+        const { token } = session.user;
+        res = await buscarArticulo(token, numero)
+        console.log(res);
+        return res.data;
     };
 
     const handleBlur = (evt, datatype) => {
@@ -219,12 +302,21 @@ function Pagos_1() {
             }));
     };
 
+    const muestraTotal = (data) => {
+        const dataTotal = parseFloat(data.total.replace(/,/g, ''));
+        const nuevoTotal = pagosFiltrados.reduce((acc, pago) => acc + parseFloat(pago.total.replace(/,/g, '')), dataTotal);
+        const formateado = formatNumber(nuevoTotal);
+        setH1Total(formateado);
+    };
+
     const handleEnterKey = async (data) => {
         const precio = Elimina_Comas(precio_base);
+        const total = precio * data.cantidad_producto;
+        const totalFormat = formatNumber(total);
         const nuevoPago = {
             precio_base: precio_base || 0,
             neto: precio_base || 0,
-            total: (precio * data.cantidad_producto),
+            total: totalFormat || 0,
             alumno: alumnos1.id || 0,
             numero: productos1.id || 0,
             descripcion: productos1.descripcion || '',
@@ -232,8 +324,34 @@ function Pagos_1() {
             documento: '',
             descuento: 0,
         };
-        setPagosFiltrados((prevPagos) => Array.isArray(prevPagos) ? [...prevPagos, nuevoPago] : [nuevoPago]);
+        const numeroExiste = pagos.some((pago) => pago.numero === nuevoPago.numero);
+        if (numeroExiste) {
+            showSwal("Oppss!", "Numero de articulo existente en recibo' ", "error");
+            return;
+        }
+        console.log('nuevoPago', nuevoPago);
+        muestraTotal(nuevoPago);
+        setPagos((prevPagos) => [...prevPagos, nuevoPago]);
+        setPagosFiltrados((prevPagos) => [...prevPagos, nuevoPago]);
     };
+
+    const EliminarCampo = (data) => {
+        const index = pagos.findIndex((p) => p.numero === data.numero);
+        if (index !== -1) {
+            const pFiltrados = pagos.filter((p) => p.numero !== data.numero);
+            const fTotal = Elimina_Comas(h1Total);
+            const dTotal = Elimina_Comas(data.total);
+            let restaTotal = fTotal - dTotal;
+            if (!restaTotal) {
+                restaTotal = '0'
+            }
+            const total = formatNumber(restaTotal);
+            setH1Total(total);
+            setPagos(pFiltrados);
+            setPagosFiltrados(pFiltrados);
+        }
+    }
+
 
 
     const handleKeyDown = (event) => {
@@ -256,9 +374,6 @@ function Pagos_1() {
                 showModal={showModal}
                 setValidar={setValidar}
                 home={home}
-                Documento={Documento}
-                Recargos={Recargos}
-                Parciales={Parciales}
             // validar={validar}
             // pago={pago}
             />
@@ -267,7 +382,11 @@ function Pagos_1() {
                     <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
                         Pagos.
                     </h1>
+                    <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12 ml-auto">
+                        {h1Total}
+                    </h1>
                 </div>
+
                 <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
                     <div className="col-span-1 flex flex-col">
                         <Acciones
@@ -276,6 +395,9 @@ function Pagos_1() {
                             home={home}
                             Ver={handleVerClick}
                             CerrarView={CerrarView}
+                            Documento={Documento}
+                            Recargos={Recargos}
+                            Parciales={Parciales}
                         />
                     </div>
 
@@ -377,13 +499,98 @@ function Pagos_1() {
                                     eventInput={handleBlur}
                                 />
                             </div>
+
+                            {muestraRecargos && (
+                                <>
+                                    <div className="flex">
+                                        <Inputs
+                                            tipoInput={"disabledInput"}
+                                            name={"R_Articulo"}
+                                            tamañolabel={""}
+                                            className={""}
+                                            Titulo={"Articulo: "}
+                                            type={"text"}
+                                            requerido={false}
+                                            register={register}
+                                            errors={errors}
+                                            maxLength={15}
+                                            isDisabled={true}
+                                            valueInput={"9999"}
+                                        />
+                                        <Inputs
+                                            tipoInput={"disabledInput"}
+                                            name={"D_Recargo"}
+                                            tamañolabel={""}
+                                            className={""}
+                                            Titulo={"Articulo: "}
+                                            type={"text"}
+                                            requerido={false}
+                                            register={register}
+                                            errors={errors}
+                                            maxLength={15}
+                                            isDisabled={true}
+                                            valueInput={dRecargo}
+                                        />
+                                        <Inputs
+                                            tipoInput={""}
+                                            dataType={"double"}
+                                            name={"recargo"}
+                                            tamañolabel={""}
+                                            className={"rounded block grow text-right"}
+                                            Titulo={" "}
+                                            type={"text"}
+                                            requerido={false}
+                                            register={register}
+                                            errors={errors}
+                                            maxLength={15}
+                                            isDisabled={false}
+                                        />
+                                        <Tooltip Titulo={"Actualiza"} posicion={"tooltip-top"}>
+                                            <Button icono={"fa-solid fa-circle-plus"} onClick={btnRecargo}></Button>
+                                        </Tooltip>
+                                    </div>
+                                </>
+                            )}
+
+                            {muestraRecargos && (
+                                <>
+                                    <div className="w-full max-w-sm p-4 border dark:border-gray-300 border-black rounded-lg">
+                                        <h2 className="text-lg font-bold mb-4 dark:text-white text-black">Ordenado por...</h2>
+                                        <div className="flex flex-col space-y-2">
+                                            <label className="flex items-center space-x-2 dark:text-white text-black">
+                                                <input
+                                                    type="radio"
+                                                    name="options"
+                                                    value="Nombre"
+                                                    checked={selectedOption === 'Nombre'}
+                                                    onChange={handleOptionChange}
+                                                    className="form-radio"
+                                                />
+                                                <span>Nombre</span>
+                                            </label>
+                                            <label className="flex items-center space-x-2 dark:text-white text-black">
+                                                <input
+                                                    type="radio"
+                                                    name="options"
+                                                    value="Numero"
+                                                    checked={selectedOption === 'Numero'}
+                                                    onChange={handleOptionChange}
+                                                    className="form-radio"
+                                                />
+                                                <span>Número</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+
                             <TablaPagos1
                                 isLoading={isLoading}
                                 pagosFiltrados={pagosFiltrados}
-                                showModal={showModal}
                                 setPagos={setPagos}
                                 setAccion={setAccion}
                                 setCurrentId={setCurrentId}
+                                deleteRow={EliminarCampo}
                             />
                             <div className="col-span-7">
                                 <div className="flex flex-col h-[calc(95%)] w-full bg-white dark:bg-white">
