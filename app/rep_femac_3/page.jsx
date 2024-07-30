@@ -75,7 +75,6 @@ function Rep_Femac_3() {
         { header: "Nombre", dataKey: "Nombre_1" },
         { header: "Año", dataKey: "Año_Nac_1" },
         { header: "Mes", dataKey: "Mes_Nac_1" },
-        { header: "Telefono", dataKey: "Telefono_1" },
     ],
     nombre: "RepDosSec"
   }
@@ -96,6 +95,7 @@ function Rep_Femac_3() {
       },
       body: FormaRepDosSel,
     };
+
     const reporte = new ReportePDF(configuracion, "Landscape");
     const { body } = configuracion;
     const Enca1 = (doc) => {
@@ -118,6 +118,7 @@ function Rep_Femac_3() {
     };
 
     Enca1(reporte);
+    
     body.forEach((reporte1) => {
       reporte.ImpPosX(reporte1.Num_Renglon.toString() !== "0" ? reporte1.Num_Renglon.toString() : "", 15, reporte.tw_ren);
       reporte.ImpPosX(reporte1.Numero_1.toString() !== "0" ? reporte1.Numero_1.toString() : "", 25, reporte.tw_ren);
@@ -137,6 +138,7 @@ function Rep_Femac_3() {
     setPdfPreview(true);
     
   };
+  
   return (
     <>
 <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
@@ -162,7 +164,7 @@ function Rep_Femac_3() {
                 modalId="modal_horarios"
                 />
                 }
-               <div className=" col-8">
+              <div className=" col-8">
                 <label className={` input-md text-black dark:text-white flex items-center gap-3`}>
                     <span className="text-black dark:text-white">Ordenar por:</span>
                     <label className={` input-md text-black dark:text-white flex items-center gap-3`} onChange={(event) => handleCheckChange(event)} >

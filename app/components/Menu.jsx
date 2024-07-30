@@ -1,13 +1,47 @@
-import React from "react";
+"use client";
+import React, { useRef, useEffect, useState } from "react";
 import Link from "next/link";
+
 function Menu({ vertical }) {
+  const [isOpen, setIsOpen] = useState({
+    archivos: false,
+    reportes: false,
+    pagos: false,
+  });
+  const menuRef = useRef(null);
+
+  const handleClickOutside = (event) => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setIsOpen({ archivos: false, reportes: false, pagos: false });
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleToggle = (menu) => {
+    setIsOpen((prevState) => {
+      const newState = { archivos: false, reportes: false, pagos: false };
+      newState[menu] = !prevState[menu];
+      return newState;
+    });
+  };
+
   return vertical ? (
     <ul
+      ref={menuRef}
       tabIndex={0}
-      className="menu menu-md dropdown-content bg-base-100 rounded-box  text-black dark:text-white mt-3 w-52 p-2 shadow z-50"
+      className="menu menu-md dropdown-content bg-base-100 rounded-box text-black dark:text-white mt-3 w-52 p-2 shadow z-50"
     >
       <li>
-        <details>
+        <details
+          open={isOpen.archivos}
+          onClick={() => handleToggle("archivos")}
+        >
           <summary>Archivos</summary>
           <ul>
             <li>
@@ -23,18 +57,13 @@ function Menu({ vertical }) {
               <Link href="/cajeros">Cajeros</Link>
             </li>
             <li>
-              <Link href="/horarios ">Horarios</Link>
+              <Link href="/horarios">Horarios</Link>
             </li>
             <li>
               <Link href="/formapago">Forma de Pago</Link>
             </li>
             <li>
               <Link href="/formfact">Formato Variable</Link>
-            </li>
-            <li>
-              {/* <Link href="" style={{ color: "red" }}>
-                Etiquetas
-              </Link> */}
             </li>
           </ul>
         </details>
@@ -104,7 +133,10 @@ function Menu({ vertical }) {
         </details>
       </li>
       <li>
-        <details>
+        <details
+          open={isOpen.reportes}
+          onClick={() => handleToggle("reportes")}
+        >
           <summary>Reportes</summary>
           <ul>
             <li>
@@ -123,25 +155,22 @@ function Menu({ vertical }) {
             </li>
             <li>
               <Link href="/rep_femac_13">
-                Lista de alumnos por clase semanal{" "}
+                Lista de alumnos por clase semanal
               </Link>
-            </li>
-            <li>
-              {/* <Link href="" style={{ color: "red" }}>
-                Credencial{" "}
-              </Link> */}
             </li>
             <li>
               <Link href="/rep_femac_5">Altas y Bajas de Alumnos</Link>
             </li>
             <li>
-              {/* <Link href="" style={{ color: "red" }}>
-                Cartera{" "}
-              </Link> */}
-            </li>
-            <li>
               <Link href="/rep_femac_8_anexo_1">Relacion de Recibos</Link>
             </li>
+          </ul>
+        </details>
+      </li>
+      <li>
+        <details open={isOpen.pagos} onClick={() => handleToggle("pagos")}>
+          <summary>Pagos</summary>
+          <ul className="p-1 mt-3 w-60">
             <li>
               {/* <Link href="" style={{ color: "red" }}>
                 Relacion de Facturas
@@ -233,11 +262,17 @@ function Menu({ vertical }) {
       </li>
     </ul>
   ) : (
-    <ul className="menu menu-horizontal px-1 z-[2] text-black dark:text-white">
+    <ul
+      ref={menuRef}
+      className="menu menu-horizontal px-1 z-[2] text-black dark:text-white"
+    >
       <li>
-        <details>
+        <details
+          open={isOpen.archivos}
+          onClick={() => handleToggle("archivos")}
+        >
           <summary>Archivos</summary>
-          <ul className="p-5 mt-3 w-52 ">
+          <ul className="p-5 mt-3 w-52">
             <li>
               <Link href="/alumnos">Alumnos</Link>
             </li>
@@ -251,18 +286,13 @@ function Menu({ vertical }) {
               <Link href="/cajeros">Cajeros</Link>
             </li>
             <li>
-              <Link href="/horarios ">Horarios</Link>
+              <Link href="/horarios">Horarios</Link>
             </li>
             <li>
               <Link href="/formapago">Forma de Pago</Link>
             </li>
             <li>
               <Link href="/formfact">Formato Variable</Link>
-            </li>
-            <li>
-              {/* <Link href="" style={{ color: "red" }}>
-                Etiquetas
-              </Link> */}
             </li>
           </ul>
         </details>
@@ -279,7 +309,8 @@ function Menu({ vertical }) {
           </ul>
         </details>
       </li>
-      <li className="hidden">
+
+      <li>
         <details>
           <summary>Proceso</summary>
           <ul>
@@ -332,9 +363,12 @@ function Menu({ vertical }) {
         </details>
       </li>
       <li>
-        <details>
+        <details
+          open={isOpen.reportes}
+          onClick={() => handleToggle("reportes")}
+        >
           <summary>Reportes</summary>
-          <ul className="p-1 mt-3 w-60 ">
+          <ul className="p-1 mt-3 w-60">
             <li>
               <Link href="/rep_femac_6">Cobranza</Link>
             </li>
@@ -351,13 +385,8 @@ function Menu({ vertical }) {
             </li>
             <li>
               <Link href="/rep_femac_13">
-                Lista de alumnos por clase semanal{" "}
+                Lista de alumnos por clase semanal
               </Link>
-            </li>
-            <li>
-              {/* <Link href="" style={{ color: "red" }}>
-                Credencial{" "}
-              </Link> */}
             </li>
             <li>
               <Link href="/rep_femac_5">Altas y Bajas de Alumnos</Link>
