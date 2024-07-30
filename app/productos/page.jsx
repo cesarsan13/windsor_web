@@ -33,7 +33,7 @@ function Productos() {
   const [accion, setAccion] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState("");
-  const [filtro, setFiltro] = useState("");
+  const [filtro, setFiltro] = useState("id");
   const [TB_Busqueda, setTB_Busqueda] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
