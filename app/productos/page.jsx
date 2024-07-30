@@ -338,7 +338,7 @@ function Productos() {
   const CerrarView = () => {
     setPdfPreview(false);
     setPdfData('');
-};
+  };
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -385,15 +385,18 @@ function Productos() {
                 TB_Busqueda={TB_Busqueda}
                 setTB_Busqueda={setTB_Busqueda}
               />
-              <TablaProductos
-                isLoading={isLoading}
-                productosFiltrados={productosFiltrados}
-                showModal={showModal}
-                setProducto={setProducto}
-                setAccion={setAccion}
-                setCurrentId={setCurrentId}
-                formatNumber={formatNumber}
-              />
+              {!pdfPreview && !pdfData && (
+                <TablaProductos
+                  isLoading={isLoading}
+                  productosFiltrados={productosFiltrados}
+                  showModal={showModal}
+                  setProducto={setProducto}
+                  setAccion={setAccion}
+                  setCurrentId={setCurrentId}
+                  formatNumber={formatNumber}
+                />
+              )}
+
               <div className='mt-4'>
                 {pdfPreview && pdfData && (
                   <div className=''>
@@ -401,7 +404,7 @@ function Productos() {
                       <Worker
                         workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
                       >
-                        <div style={{ height: "600px" }}>
+                        <div style={{ height: "500px" }}>
                           <Viewer fileUrl={pdfData} />
                         </div>
                       </Worker>
