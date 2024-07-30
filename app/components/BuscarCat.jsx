@@ -8,7 +8,7 @@ import { getFormasPago } from "@/app/utils/api/formapago/formapago";
 import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
 import { getComentarios } from "@/app/utils/api/comentarios/comentarios";
 
-function BuscarCat({ table, nameInput, fieldsToShow, titulo, setItem, token, modalId, array }) {
+function BuscarCat({ table, nameInput, fieldsToShow, titulo, setItem, token, modalId, id }) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
 
@@ -18,7 +18,7 @@ function BuscarCat({ table, nameInput, fieldsToShow, titulo, setItem, token, mod
       [nameInput[1]]: ""
     }
   });
-  // console.log(array);
+  // console.log(id);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,7 +54,7 @@ function BuscarCat({ table, nameInput, fieldsToShow, titulo, setItem, token, mod
       // Establecer los valores predeterminados con la data recibida solo una vez
       if (fetchedData.length > 0) {
         // console.log(fetchedData);
-        const defaultItem = fetchedData.find(item => item[fieldsToShow[0]] === array); // Aquí puedes elegir la lógica para establecer el default item
+        const defaultItem = fetchedData.find(item => item[fieldsToShow[0]] === id); // Aquí puedes elegir la lógica para establecer el default item
         // console.log(defaultItem);
         if (defaultItem) {
           reset({
@@ -65,7 +65,7 @@ function BuscarCat({ table, nameInput, fieldsToShow, titulo, setItem, token, mod
       }
     };
     fetchData();
-  }, [table, token, array]);
+  }, [table, token, id]);
 
   const inputValue = watch(nameInput[0]);
   const inputValueDesc = watch(nameInput[1]);

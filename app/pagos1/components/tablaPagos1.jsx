@@ -1,33 +1,37 @@
 "use client";
 import Loading from "@/app/components/loading";
 import NoData from "@/app/components/noData";
-import React from "react";
+import React, { useState } from "react";
 
 function TablaPagos1({
     pagosFiltrados,
     isLoading,
     setPagos,
     setAccion,
-    setCurrentId,
+    setSelectedTable,
     deleteRow,
+    // tableHeight,
 }) {
+    const [selectedRow, setSelectedRow] = useState(null);
+
     const tableAction = (evt, pago, accion) => {
         console.log(pago);
         setPagos(pago);
         setAccion(accion);
-        setCurrentId(pago.numero);
-        deleteRow(pago);
+        setSelectedTable(pago);
+        setSelectedRow(pago.numero);
+        if (accion === 'Eliminar') { deleteRow(pago); }
     };
 
     return !isLoading ? (
         <>
-            <div className="overflow-x-auto mt-3  h-6/8 text-black bg-white dark:bg-[#1d232a] dark:text-white m-2 w-full  lg:w-5/8 ">
+            <div className="overflow-x-auto mt-3 text-black bg-white dark:bg-[#1d232a] dark:text-white m-2 w-full lg:w-5/8 h-auto" style={{ height: `auto` }}>
                 {pagosFiltrados.length > 0 ? (
-                    <table className='table table-xs table-zebra  table-pin-rows table-pin-cols max-h-[calc(50%)]'>
+                    <table className='table table-xs  table-pin-rows table-pin-cols max-h-full'>
                         <thead className="relative z-[1] md:static">
                             <tr>
                                 <th></th>
-                                {/* <td>Clave</td> */}
+                                <td className="hidden">Clave</td>
                                 <td>Descripción</td>
                                 <td>Documento</td>
                                 <td>Cantidad</td>
@@ -41,10 +45,15 @@ function TablaPagos1({
                         </thead>
                         <tbody>
                             {pagosFiltrados.map((item) => (
-                                <tr key={item.numero} className="hover:cursor-pointer">
+                                <tr
+                                    key={item.numero}
+                                    className={`hover:cursor-pointer ${selectedRow === item.numero ? 'dark:bg-[#334155] bg-[#f1f5f9]' : ''}`}
+                                    // className={`hover:cursor-pointer ${selectedRow === item.numero ? 'selected-row' : ''}`}
+                                    onClick={() => setSelectedRow(item.numero)}
+                                >
                                     <th className="text-right">{item.numero}</th>
-                                    {/* <td >{item.numero}</td> */}
-                                    <td >{item.descripcion}</td>
+                                    <td className="hidden">{item.numero}</td>
+                                    <td>{item.descripcion}</td>
                                     <td>{item.documento}</td>
                                     <td>{item.cantidad_producto}</td>
                                     <td>{item.precio_base}</td>
@@ -66,7 +75,7 @@ function TablaPagos1({
                                                 data-tip={`Seleccionar ${item.numero}`}
                                                 onClick={(evt) => tableAction(evt, item, "Seleccionar")}
                                             >
-                                                <i className="fa-solid fa-trash pt-2"></i>
+                                                <i className="fa-regular fa-hand-pointer pt-2"></i>
                                             </div>
                                         </div>
                                     </th>
@@ -76,7 +85,7 @@ function TablaPagos1({
                         <tfoot>
                             <tr>
                                 <th></th>
-                                {/* <td>Clave</td> */}
+                                <td className="hidden">Clave</td>
                                 <td>Descripción</td>
                                 <td>Documento</td>
                                 <td>Cantidad</td>
