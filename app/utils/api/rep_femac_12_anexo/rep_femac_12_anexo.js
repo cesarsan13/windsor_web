@@ -1,3 +1,4 @@
+import { calculaDigitoBvba } from "../../globalfn";
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
 
@@ -116,7 +117,7 @@ export const ImprimirPDF = async (
         Enca1(newPDF);
       }
     }
-    newPDF.ImpPosX(trabRep.alumno.toString(), 14, newPDF.tw_ren);
+    newPDF.ImpPosX(trabRep.alumno.toString() +"-"+ calculaDigitoBvba(trabRep.alumno.toString()), 14, newPDF.tw_ren);
     newPDF.ImpPosX(trabRep.nombre.toString(), 28, newPDF.tw_ren);
     newPDF.ImpPosX(trabRep.importe.toString(), 128, newPDF.tw_ren);
     newPDF.ImpPosX(trabRep.fecha.toString(), 158, newPDF.tw_ren);
@@ -203,47 +204,49 @@ export const ImprimirExcel = async (
   const { columns2 } = configuracion;
   const { nombre } = configuracion;
   newExcel.setColumnas(columns);
-  newExcel.setColumnas(columns2);
+  newExcel.setColumnas(columns2);  
   let data1 = [];
-  let data2 = [];
 
   dataTrabRepCobr.forEach((trabRep) => {
     if (trabRep.articulo !== Art_Ant && Art_Ant !== "") {
-      Cambia_Articulo_Excel(tot_art, data2);
-      newExcel.addData(data2);
-      data2.pop()
-      console.log(data2);
+      Cambia_Articulo_Excel(tot_art, data1);
+      // newExcel.addData(data1);
+      // data1.pop()
+      console.log(data1);
       tot_art = 0;
     }
     if (trabRep.articulo !== Art_Ant) {
       data1.push({
-        articulo: trabRep.articulo,
-        descripcion: trabRep.descripcion,
+        alumno: trabRep.articulo,
+        nombre: trabRep.descripcion,
+        importe: "",
+        fecha: "",
       });
-      newExcel.addData(data1);
-      data1.pop()
+      // newExcel.addData(data1);
+      // data1.pop()
     }
-    data2.push({
-      alumno: trabRep.alumno,
+    data1.push({
+      alumno: trabRep.alumno+"-"+ calculaDigitoBvba(trabRep.alumno.toString()),
       nombre: trabRep.nombre,
       importe: trabRep.importe,
       fecha: trabRep.fecha,
     });
-    newExcel.addData(data2);
-    data2.pop
+    // newExcel.addData(data1);
+    // data1.pop
     tot_art = tot_art + trabRep.importe;
     total_general = total_general + trabRep.importe;
     Art_Ant = trabRep.articulo;
   });
   Cambia_Articulo_Excel(tot_art, data1);
-  data2.push({
+  data1.push({
     alumno: "",
     nombre: "Total General",
     importe: total_general,
     fecha: "",
   });
+  console.log(data1)
+  // newExcel.addData(data1);
   newExcel.addData(data1);
-  newExcel.addData(data2);
   newExcel.guardaReporte(nombre);
 };
 
