@@ -5,6 +5,8 @@ import { formatDate } from '../utils/globalfn';
 import BuscarCat from '../components/BuscarCat';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import Acciones from './components/Acciones';
+import { ImprimirExcel, ImprimirPDF } from '../utils/api/rep_femac_12_anexo/rep_femac_12_anexo';
 
 function RepFemac12Anexo() {
     const date = new Date();
@@ -23,10 +25,45 @@ function RepFemac12Anexo() {
             <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
         );
     }
-    const handleCheckChange = (event) =>{
+    const handleCheckChange = (event) => {
         event.preventDefault;
         ssetordenar(event.target.value);
-      }
+    }
+    const ImprimePDF = () => {
+        const configuracion = {
+            Encabezado: {
+                Nombre_Aplicacion: "Sistema de Control Escolar",
+                Nombre_Reporte: "Reporte de Alumnos por clase",
+                Nombre_Usuario: `Usuario: ${session.user.name}`,
+            },
+        }
+        const {token}= session.user
+        ImprimirPDF(configuracion,token,fecha1,fecha2,producto1.id,producto2.id,sOrdenar)
+    }
+    const ImprimeExcel = () =>{
+        const configuracion ={
+            Encabezado: {
+                Nombre_Aplicacion: "Sistema de Control Escolar",
+                Nombre_Reporte: "Reporte Datos Horario",
+                Nombre_Usuario: `Usuario: ${session.user.name}`,
+              },
+              columns:[
+                { header: "Producto", dataKey: "articulo" },
+                { header: "Descripcion", dataKey: "descripcion" },
+              ],
+              columns2:[
+                { header: "Producto", dataKey: "articulo" },
+                { header: "Descripcion", dataKey: "descripcion" },
+                { header: "Alumno", dataKey: "alumno" },
+                { header: "Nombre", dataKey: "nombre" },
+                { header: "Importe", dataKey: "importe" },
+                { header: "Fecha Pago", dataKey: "fecha" },
+              ],
+              nombre:"reporte"
+        }
+        const {token}= session.user
+        ImprimirExcel(configuracion,token,fecha1,fecha2,producto1.id,producto2.id,sOrdenar)
+    }
     return (
         <>
             <div className='container w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3'>
@@ -37,7 +74,7 @@ function RepFemac12Anexo() {
                 </div>
                 <div className='container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]'>
                     <div className='col-span-1 flex flex-col'>
-
+                        <Acciones ImprimePDF={ImprimePDF} ImprimeExcel={ImprimeExcel} />
                     </div>
                     <div className='col-span-7'>
                         <div className='flex flex-col h-[calc(100%)]'>
