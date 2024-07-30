@@ -335,6 +335,10 @@ function Productos() {
     setPdfData(pdfData)
     setPdfPreview(true)
   }
+  const CerrarView = () => {
+    setPdfPreview(false);
+    setPdfData('');
+};
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -367,6 +371,7 @@ function Productos() {
               imprimirEXCEL={imprimirEXCEL}
               imprimirPDF={imprimirPDF}
               Ver={handleVerClick}
+              CerrarView={CerrarView}
             ></Acciones>
           </div>
           <div className="col-span-7  ">
