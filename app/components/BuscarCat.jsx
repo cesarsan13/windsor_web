@@ -8,7 +8,18 @@ import { getFormasPago } from "@/app/utils/api/formapago/formapago";
 import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
 import { getComentarios } from "@/app/utils/api/comentarios/comentarios";
 
-function BuscarCat({ table, nameInput, fieldsToShow, titulo, setItem, token, modalId, array }) {
+function BuscarCat({
+  table,
+  nameInput,
+  fieldsToShow,
+  titulo,
+  setItem,
+  token,
+  modalId,
+  array,
+  alignRight = false,
+  inputWidths = { first: "80px", second: "150px" }
+}) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
 
@@ -18,7 +29,6 @@ function BuscarCat({ table, nameInput, fieldsToShow, titulo, setItem, token, mod
       [nameInput[1]]: ""
     }
   });
-  // console.log(array);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,11 +61,8 @@ function BuscarCat({ table, nameInput, fieldsToShow, titulo, setItem, token, mod
       setData(fetchedData);
       setFilteredData(fetchedData);
 
-      // Establecer los valores predeterminados con la data recibida solo una vez
       if (fetchedData.length > 0) {
-        // console.log(fetchedData);
-        const defaultItem = fetchedData.find(item => item[fieldsToShow[0]] === array); // Aquí puedes elegir la lógica para establecer el default item
-        // console.log(defaultItem);
+        const defaultItem = fetchedData.find(item => item[fieldsToShow[0]] === array);
         if (defaultItem) {
           reset({
             [nameInput[0]]: defaultItem[fieldsToShow[0]] || "",
@@ -95,7 +102,7 @@ function BuscarCat({ table, nameInput, fieldsToShow, titulo, setItem, token, mod
   };
 
   const BuscarInfo = () => {
-    const inputValueStr = String(inputValue); // Asegura que inputValue sea una cadena
+    const inputValueStr = String(inputValue);
 
     if (inputValueStr === "") {
       setFilteredData(data);
@@ -107,7 +114,7 @@ function BuscarCat({ table, nameInput, fieldsToShow, titulo, setItem, token, mod
     const infoFiltrada = data.filter((item) => {
       return fieldsToShow.some((field) => {
         const valorCampo = item[field];
-        const valorCampoStr = String(valorCampo); // Asegura que valorCampo sea una cadena
+        const valorCampoStr = String(valorCampo);
 
         if (typeof valorCampo === "number") {
           return valorCampoStr.includes(inputValueStr);
@@ -128,10 +135,9 @@ function BuscarCat({ table, nameInput, fieldsToShow, titulo, setItem, token, mod
     }
   };
 
-
   return (
-    <div className="flex justify-start items-center">
-      <label className="input input-bordered text-black dark:text-white input-md flex items-center gap-3 w-4/12">
+    <div className="flex justify-start items-center gap-2">
+      <label className="input input-bordered text-black dark:text-white input-md flex items-center gap-3">
         {titulo}
         <input
           id={nameInput[0]}
@@ -139,26 +145,25 @@ function BuscarCat({ table, nameInput, fieldsToShow, titulo, setItem, token, mod
           type="text"
           {...register(nameInput[0])}
           onKeyDown={(evt) => handleKeyDown(evt)}
-          className="grow dark:text-neutral-200 text-neutral-600 rounded-r-none"
+          className={`grow dark:text-neutral-200 text-neutral-600 rounded-r-none ${alignRight ? "text-right" : ""}`}
+          style={{ width: inputWidths.first }}
         />
       </label>
-      <div className="tooltip" data-tip="Buscar">
-        <button
-          type="button"
-          className="bg-blue-500 hover:bg-blue-700 text-white btn rounded-r-lg"
-          onClick={Buscar}
-        >
-          <i className="fa-solid fa-magnifying-glass"></i>
-        </button>
-      </div>
+      <button
+        type="button"
+        className="bg-blue-500 hover:bg-blue-700 text-white btn rounded-r-lg"
+        onClick={Buscar}
+      >
+        <i className="fa-solid fa-magnifying-glass"></i>
+      </button>
       <input
         id={nameInput[1]}
         name={nameInput[1]}
         type="text"
         readOnly={true}
         {...register(nameInput[1])}
-        onKeyDown={(evt) => handleKeyDown(evt)}
-        className="input input-bordered bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md flex items-center gap-3"
+        className="input input-bordered bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md"
+        style={{ width: inputWidths.second }}
       />
       <ModalBuscarCat
         data={data}
