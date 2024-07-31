@@ -104,7 +104,7 @@ export const Imprimir = (configuracion) => {
     }
   });
 
-  newPDF.guardaReporte("PruebaEncabezado");
+  newPDF.guardaReporte("FormaPago");
 };
 
 export const ImprimirExcel = (configuracion) => {
