@@ -72,9 +72,7 @@ function Menu({ vertical }) {
         <details>
           <summary>Pagos</summary>
           <ul>
-            <li>
-              <Link href="/pagos1">Pagos</Link>
-            </li>
+            <li>{/* <Link href="/pagos1">Pagos</Link> */}</li>
           </ul>
         </details>
       </li>
@@ -253,9 +251,7 @@ function Menu({ vertical }) {
         <details>
           <summary>Pagos</summary>
           <ul>
-            <li>
-              <Link href="/pagos1">Pagos</Link>
-            </li>
+            <li>{/* <Link href="/pagos1">Pagos</Link> */}</li>
           </ul>
         </details>
       </li>
