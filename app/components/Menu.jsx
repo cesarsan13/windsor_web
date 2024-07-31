@@ -68,7 +68,7 @@ function Menu({ vertical }) {
           </ul>
         </details>
       </li>
-      <li>
+      <li className="hidden">
         <details>
           <summary>Pagos</summary>
           <ul>
@@ -82,47 +82,47 @@ function Menu({ vertical }) {
         <details>
           <summary>Proceso</summary>
           <ul>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Adición de Productos a Cartera
               </Link>
             </li>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Emisión de Factura
               </Link>
             </li>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Factura Global
               </Link>
             </li>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Cancelación de Recibo
               </Link>
             </li>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Cancelación de Factura
               </Link>
             </li>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Actualiza Cobranza
               </Link>
             </li>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Cambio de Ciclo Escolar
               </Link>
             </li>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Cobranza Diaria
               </Link>
             </li>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Cambio Numero de Alumno
               </Link>
@@ -170,17 +170,17 @@ function Menu({ vertical }) {
         <details>
           <summary>Seguridad</summary>
           <ul>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Usuarios
               </Link>
             </li>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Acceso a Usuarios
               </Link>
             </li>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Utilerias
               </Link>
@@ -192,7 +192,7 @@ function Menu({ vertical }) {
         <details>
           <summary>Propietario</summary>
           <ul>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Propietario
               </Link>
@@ -204,7 +204,7 @@ function Menu({ vertical }) {
         <details>
           <summary>Video Ayuda</summary>
           <ul>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Carga de Cartera
               </Link>
@@ -249,7 +249,7 @@ function Menu({ vertical }) {
           </ul>
         </details>
       </li>
-      <li>
+      <li className="hidden">
         <details>
           <summary>Pagos</summary>
           <ul>
@@ -264,47 +264,47 @@ function Menu({ vertical }) {
         <details>
           <summary>Proceso</summary>
           <ul>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Adición de Productos a Cartera
               </Link>
             </li>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Emisión de Factura
               </Link>
             </li>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Factura Global
               </Link>
             </li>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Cancelación de Recibo
               </Link>
             </li>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Cancelación de Factura
               </Link>
             </li>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Actualiza Cobranza
               </Link>
             </li>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Cambio de Ciclo Escolar
               </Link>
             </li>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Cobranza Diaria
               </Link>
             </li>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Cambio Numero de Alumno
               </Link>
@@ -318,7 +318,7 @@ function Menu({ vertical }) {
           onClick={() => handleToggle("reportes")}
         >
           <summary>Reportes</summary>
-          <ul className="p-1 mt-3 w-60">
+          <ul className="p-1 mt-3 w-60" tabIndex={0}>
             <li>
               <Link href="/rep_femac_6">Cobranza</Link>
             </li>
@@ -342,22 +342,20 @@ function Menu({ vertical }) {
               <Link href="/rep_femac_5">Altas y Bajas de Alumnos</Link>
             </li>
             <li>
-              {/* <Link href="" style={{ color: "red" }}>
-                Cartera{" "}
-              </Link> */}
+              <Link href="/rep_femac_7">Cartera </Link>
             </li>
             <li>
               <Link href="/rep_femac_8_anexo_1">Relacion de Recibos</Link>
             </li>
-            <li>
-              {/* <Link href="" style={{ color: "red" }}>
+            <li className="hidden">
+              <Link href="" style={{ color: "red" }}>
                 Relacion de Facturas
-              </Link> */}
+              </Link>
             </li>
-            <li>
-              {/* <Link href="" style={{ color: "red" }}>
+            <li className="hidden">
+              <Link href="" style={{ color: "red" }}>
                 Estado de cuenta
-              </Link> */}
+              </Link>
             </li>
             <li>
               <Link href="/rep_femac_11_Anexo_3">
@@ -365,60 +363,60 @@ function Menu({ vertical }) {
               </Link>
             </li>
             <li>
-              {/* <Link href="" style={{ color: "red" }}>
+              <Link href="/rep_femac_12_anexo">
                 Reporte Cobranza por Producto
-              </Link> */}
+              </Link>
             </li>
-            <li>
-              {/* <Link href="" style={{ color: "red" }}>
+            <li className="hidden">
+              <Link href="" style={{ color: "red" }}>
                 Recibo de pagos
-              </Link> */}
+              </Link>
             </li>
-            <li>
-              {/* <Link href="" style={{ color: "red" }}>
+            <li className="hidden">
+              <Link href="" style={{ color: "red" }}>
                 Reporte Flujo Efectivo
-              </Link> */}
+              </Link>
             </li>
-            <li>
-              {/* <Link href="" style={{ color: "red" }}>
+            <li className="hidden">
+              <Link href="" style={{ color: "red" }}>
                 Alumnos con Beca
-              </Link> */}
+              </Link>
             </li>
-            <li>
-              {/* <Link href="" style={{ color: "red" }}>
+            <li className="hidden">
+              <Link href="" style={{ color: "red" }}>
                 Alumnos Inscritos
-              </Link> */}
+              </Link>
             </li>
           </ul>
         </details>
       </li>
-      <li className="hidden">
+      {/* <li className="hidden">
         <details>
           <summary>Pagos</summary>
           <ul>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Usuarios
               </Link>
             </li>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Acceso a Usuarios
               </Link>
             </li>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Utilerias
               </Link>
             </li>
           </ul>
         </details>
-      </li>
+      </li> */}
       <li className="hidden">
         <details>
           <summary>Propietario</summary>
           <ul>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Propietario
               </Link>
@@ -430,7 +428,7 @@ function Menu({ vertical }) {
         <details>
           <summary>Video Ayuda</summary>
           <ul>
-            <li>
+            <li className="hidden">
               <Link href="" style={{ color: "red" }}>
                 Carga de Cartera
               </Link>

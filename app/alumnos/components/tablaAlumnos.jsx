@@ -36,7 +36,7 @@ function TablaAlumnos({
     <div className="overflow-x-auto mt-3 h-[calc(75vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white m-2 w-full lg:w-3/4">
       {alumnosFiltrados.length > 0 ? (
         <table className="table table-xs table-zebra w-full">
-          <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-10">
+          <thead className="sticky top-0 bg-white dark:bg-[#1d232a] ">
             <tr>
               <th></th>
               <td className="w-[40%]">Nombre</td>
@@ -47,11 +47,19 @@ function TablaAlumnos({
           <tbody>
             {alumnosFiltrados.map((item) => (
               <tr key={item.id} className="hover:cursor-pointer">
-                <th className={typeof item.comision === "number" ? "text-right" : "text-left"}>
+                <th
+                  className={
+                    typeof item.comision === "number"
+                      ? "text-right"
+                      : "text-left"
+                  }
+                >
                   {item.id}
                 </th>
                 <td className="w-[40%]">{`${item.nombre} ${item.a_paterno} ${item.a_materno}`}</td>
-                <td className="hidden sm:table-cell">{item.horario_1_nombre}</td>
+                <td className="hidden sm:table-cell">
+                  {item.horario_1_nombre}
+                </td>
                 <th className="w-[30%] sm:w-[10%]">
                   <div className="flex flex-row space-x-1 sm:space-x-3">
                     <div
