@@ -73,9 +73,7 @@ function Menu({ vertical }) {
           <summary>Pagos</summary>
           <ul>
             <li>
-              <Link href="" style={{ color: "red" }}>
-                Pagos
-              </Link>
+              <Link href="/pagos1">Pagos</Link>
             </li>
           </ul>
         </details>
@@ -167,53 +165,7 @@ function Menu({ vertical }) {
           </ul>
         </details>
       </li>
-      <li>
-        <details open={isOpen.pagos} onClick={() => handleToggle("pagos")}>
-          <summary>Pagos</summary>
-          <ul className="p-1 mt-3 w-60">
-            <li>
-              {/* <Link href="" style={{ color: "red" }}>
-                Relacion de Facturas
-              </Link> */}
-            </li>
-            <li>
-              {/* <Link href="" style={{ color: "red" }}>
-                Estado de cuenta
-              </Link> */}
-            </li>
-            <li>
-              <Link href="/rep_femac_11_Anexo_3">
-                Reporte Cobranza por Alumno
-              </Link>
-            </li>
-            <li>
-              {/* <Link href="" style={{ color: "red" }}>
-                Reporte Cobranza por Producto
-              </Link> */}
-            </li>
-            <li>
-              {/* <Link href="" style={{ color: "red" }}>
-                Recibo de pagos
-              </Link> */}
-            </li>
-            <li>
-              {/* <Link href="" style={{ color: "red" }}>
-                Reporte Flujo Efectivo
-              </Link> */}
-            </li>
-            <li>
-              {/* <Link href="" style={{ color: "red" }}>
-                Alumnos con Beca
-              </Link> */}
-            </li>
-            <li>
-              <Link href="" style={{ color: "red" }}>
-                Alumnos Inscritos
-              </Link>
-            </li>
-          </ul>
-        </details>
-      </li>
+
       <li className="hidden">
         <details>
           <summary>Seguridad</summary>
@@ -302,15 +254,13 @@ function Menu({ vertical }) {
           <summary>Pagos</summary>
           <ul>
             <li>
-              <Link href="" style={{ color: "red" }}>
-                Pagos
-              </Link>
+              <Link href="/pagos1">Pagos</Link>
             </li>
           </ul>
         </details>
       </li>
 
-      <li>
+      <li className="hidden">
         <details>
           <summary>Proceso</summary>
           <ul>

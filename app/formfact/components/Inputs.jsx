@@ -43,7 +43,11 @@ function Inputs({
                 ))
               : name === "idlabel"
               ? data.map((object, index) => (
-                  <option key={index} value={object.numero_dato}>
+                  <option
+                    key={index}
+                    value={object.numero_dato}
+                    data-key={index}
+                  >
                     Texto {object.numero_dato}
                   </option>
                 ))

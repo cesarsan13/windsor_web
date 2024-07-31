@@ -12,6 +12,8 @@ function PropertyPage({
   setShowSheet,
   setSelectedIndex,
   session,
+  setTextoAnterior,
+  changeSelectedLabel,
 }) {
   const {
     register,
@@ -72,7 +74,23 @@ function PropertyPage({
       descripcion_campo: labels[selectedIndex].descripcion_campo,
       tipo_campo: labels[selectedIndex].tipo_campo,
     });
+    const selectLabels = document.getElementById("idlabel");
+    selectLabels.selectedIndex = selectedIndex;
+    setSelectedLabel(selectedIndex);
   }, [selectedIndex, labels, reset]);
+
+  const setSelectedLabel = (idx) => {
+    const idlabel = parseInt(idx) + 1;
+    const lbl = document.getElementById(`texto_${idlabel}`);
+    changeSelectedLabel(lbl.attributes["name"].value);
+    setTextoAnterior(lbl.attributes["name"].value);
+    lbl.classList.add(
+      "border-2",
+      "border-blue-500",
+      "border-dashed",
+      "rounded-lg"
+    );
+  };
   const getValueInput = async (evt) => {
     const { name, value } = evt.target;
     console.log("value input", name);
@@ -131,7 +149,10 @@ function PropertyPage({
     }
   };
 
-  const handleChangeLabel = () => {};
+  const handleLabelChange = (evt) => {
+    const index = evt.target.selectedOptions[0].attributes["data-key"].value;
+    setSelectedIndex(index);
+  };
 
   return (
     <div className="flex flex-col card bg-white rounded-lg ">
@@ -150,8 +171,7 @@ function PropertyPage({
           message={""}
           isDisabled={false}
           data={labels}
-          handleChange={handleChange}
-          //defaultValue={formaPago.id}
+          handleChange={handleLabelChange}
         />
       </div>
       <div className="flex flex-col p-1">
