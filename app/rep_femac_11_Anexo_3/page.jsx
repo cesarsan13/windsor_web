@@ -1,8 +1,8 @@
 "use client"
 import React from "react"
 import { useRouter } from "next/navigation";
-import Acciones from "@/app/rep_femac_8_anexo_1/components/Acciones";
-import Inputs from "@/app/rep_femac_8_anexo_1/components/Inputs";
+import Acciones from "./components/Acciones";
+import Inputs from "./components/Inputs";
 import { calculaDigitoBvba } from "../utils/globalfn";
 import { useForm } from "react-hook-form";
 import {
@@ -17,6 +17,7 @@ import "jspdf-autotable";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
+import ModalVistaPreviaRepFemac11Anexo3 from "./components/modalVistaPreviaRepFemac11Anexo3";
 
 
 function CobranzaPorAlumno(){
@@ -177,12 +178,18 @@ function CobranzaPorAlumno(){
         const pdfData = reporte.doc.output("datauristring");
         setPdfData(pdfData);
         setPdfPreview(true);
+        showModalVista(true);
     };
+
+    const showModalVista = (show) => {
+      show
+        ? document.getElementById("modalVPRepFemac11Anexo3").showModal()
+        : document.getElementById("modalVPRepFemac11Anexo3").close();
+    }
 
     const CerrarView = () => {
         setPdfPreview(false);
         setPdfData('');
-        console.log(fecha_fin,fecha_ini);
     };
 
     const ImprimePDF = async () => {
@@ -257,6 +264,13 @@ function CobranzaPorAlumno(){
         );
     }
     return ( 
+        <>
+        <ModalVistaPreviaRepFemac11Anexo3 
+        pdfPreview={pdfPreview} 
+        pdfData={pdfData} 
+        PDF={ImprimePDF} 
+        Excel = {ImprimeExcel}/>
+
         <div className="container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
         <div className="flex justify-start p-3">
             <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
@@ -266,12 +280,9 @@ function CobranzaPorAlumno(){
         <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
             <div className="col-span-1 flex flex-col">
                 <Acciones
-                    ImprimePDF={ImprimePDF}
-                    ImprimeExcel={ImprimeExcel}
-                    home={home}
-                    Ver={handleVerClick}
-                    CerrarView={CerrarView}
-                />
+                home={home}
+                Ver={handleVerClick}
+                ></Acciones>
             </div>
             <div className="col-span-7">
                 <div className="flex flex-col h-full space-y-4">
@@ -283,7 +294,7 @@ function CobranzaPorAlumno(){
                             Titulo={"Fecha Inicial: "}
                             type={"date"}
                             errors={errors}
-                            maxLength={15}
+                            maxLength={11}
                             isDisabled={false}
                             setValue={setFecha_ini}
                         />
@@ -294,7 +305,7 @@ function CobranzaPorAlumno(){
                             Titulo={"Fecha Final: "}
                             type={"date"}
                             errors={errors}
-                            maxLength={15}
+                            maxLength={11}
                             isDisabled={false}
                             setValue={setFecha_fin}
                         />
@@ -357,20 +368,11 @@ function CobranzaPorAlumno(){
                             modalId="modal_cajeros2"
                         />
                     </div>
-                    {pdfPreview && pdfData && (
-                        <div className="pdf-preview">
-                            <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}>
-                                <div style={{ height: "550px", width: "100%"}}>
-                                    <Viewer fileUrl={pdfData} />
-                                </div>
-                            </Worker>
-                        </div>
-                    )}
                 </div>
             </div>
         </div>
     </div>
-
+    </>
     );
 }
 

@@ -72,8 +72,7 @@ function ModalComentarios({
                 errors={errors}
                 register={register}
                 message={"id Requerido"}
-                isDisabled={true}
-
+                isDisabled={!isDisabled}
               />
               <Inputs
                 dataType={"string"}
@@ -133,6 +132,7 @@ function ModalComentarios({
                 type={"select"}
                 requerido={true}
                 errors={errors}
+                maxLenght={1}
                 register={register}
                 message={"General requerido"}
                 isDisabled={isDisabled}
