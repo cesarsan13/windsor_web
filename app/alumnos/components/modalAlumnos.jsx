@@ -131,7 +131,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Apellido paterno requerido"}
-                                        maxLength={50}
+                                        maxLenght={50}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -147,7 +147,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Apellido materno requerido"}
-                                        maxLength={50}
+                                        maxLenght={50}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -163,7 +163,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Nombre requerido"}
-                                        maxLength={50}
+                                        maxLenght={50}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -180,7 +180,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Estatus requerido"}
-                                        maxLength={25}
+                                        maxLenght={25}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                         arreglos={[
@@ -204,7 +204,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Fecha nacimiento requerido"}
-                                        maxLength={15}
+                                        maxLenght={15}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -221,7 +221,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Fecha inscripción requerido"}
-                                        maxLength={15}
+                                        maxLenght={15}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -238,7 +238,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Fecha baja requerido"}
-                                        maxLength={15}
+                                        maxLenght={15}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -255,7 +255,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Sexo requerido"}
-                                        maxLength={15}
+                                        maxLenght={15}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                         arreglos={[
@@ -277,7 +277,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Escuela requerido"}
-                                        maxLength={50}
+                                        maxLenght={50}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -294,7 +294,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Telefono requerido"}
-                                        maxLength={15}
+                                        maxLenght={15}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -311,7 +311,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Telefono requerido"}
-                                        maxLength={15}
+                                        maxLenght={15}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -327,7 +327,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Celular requerido"}
-                                        maxLength={15}
+                                        maxLenght={15}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -343,7 +343,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Codigo barras requerido"}
-                                        maxLength={255}
+                                        maxLenght={255}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -359,7 +359,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Referencia requerido"}
-                                        maxLength={1}
+                                        maxLenght={20}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -387,7 +387,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Direccion requerida"}
-                                        maxLength={255}
+                                        maxLenght={255}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -404,7 +404,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Colonia requerido"}
-                                        maxLength={100}
+                                        maxLenght={100}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -420,7 +420,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Ciudad requerida"}
-                                        maxLength={100}
+                                        maxLenght={100}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -436,7 +436,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Estado requerida"}
-                                        maxLength={100}
+                                        maxLenght={100}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -452,7 +452,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Codigo postal requerida"}
-                                        maxLength={10}
+                                        maxLenght={10}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -468,7 +468,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Email requerido"}
-                                        maxLength={255}
+                                        maxLenght={255}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -573,7 +573,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Ciclo escolar requerido"}
-                                        maxLength={50}
+                                        maxLenght={50}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -589,7 +589,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Descuento requerido"}
-                                        maxLength={12}
+                                        maxLenght={12}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -629,7 +629,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Pago 1 requerido"}
-                                        maxLength={50}
+                                        maxLenght={50}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                         arreglos={[
@@ -648,7 +648,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Pago 2 requerido"}
-                                        maxLength={50}
+                                        maxLenght={50}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                         arreglos={[
@@ -679,7 +679,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Pediatra requerido"}
-                                        maxLength={50}
+                                        maxLenght={50}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -695,7 +695,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Telefono del pediatra requerido"}
-                                        maxLength={15}
+                                        maxLenght={15}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -711,7 +711,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Pediatra requerido"}
-                                        maxLength={15}
+                                        maxLenght={15}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -727,7 +727,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Celular del pediatra requerido"}
-                                        maxLength={15}
+                                        maxLenght={15}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -743,7 +743,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Tipo sangre requerido"}
-                                        maxLength={20}
+                                        maxLenght={20}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -759,7 +759,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Alergia requerido"}
-                                        maxLength={50}
+                                        maxLenght={50}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -775,7 +775,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Aseguradora requerido"}
-                                        maxLength={100}
+                                        maxLenght={100}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -791,7 +791,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Poliza requerido"}
-                                        maxLength={50}
+                                        maxLenght={50}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -807,7 +807,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Telefono de la aseguradora requerido"}
-                                        maxLength={15}
+                                        maxLenght={15}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -823,7 +823,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Telefonos de la aseguradora requerido"}
-                                        maxLength={15}
+                                        maxLenght={15}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -851,7 +851,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Razon social requerido"}
-                                        maxLength={30}
+                                        maxLenght={30}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -867,7 +867,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"RFC Factura requerido"}
-                                        maxLength={50}
+                                        maxLenght={50}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -883,7 +883,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Dirección requerido"}
-                                        maxLength={255}
+                                        maxLenght={255}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -899,7 +899,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Colonia requerido"}
-                                        maxLength={100}
+                                        maxLenght={100}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -915,7 +915,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Ciudad requerido"}
-                                        maxLength={100}
+                                        maxLenght={100}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -931,7 +931,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Estado requerido"}
-                                        maxLength={100}
+                                        maxLenght={100}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -947,7 +947,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Codigo postal requerido"}
-                                        maxLength={10}
+                                        maxLenght={10}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -975,7 +975,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Nombre del padre requerido"}
-                                        maxLength={100}
+                                        maxLenght={100}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -991,7 +991,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Telefono del padre requerido"}
-                                        maxLength={15}
+                                        maxLenght={15}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -1007,7 +1007,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Telefonos de la aseguradora requerido"}
-                                        maxLength={15}
+                                        maxLenght={15}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -1023,7 +1023,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Celular requerido"}
-                                        maxLength={15}
+                                        maxLenght={15}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -1039,7 +1039,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Nombre de la madre requerido"}
-                                        maxLength={100}
+                                        maxLenght={100}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -1055,7 +1055,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Telefono de la madre requerido"}
-                                        maxLength={15}
+                                        maxLenght={15}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -1071,7 +1071,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Telefonos requerido"}
-                                        maxLength={15}
+                                        maxLenght={15}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -1087,7 +1087,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Celular requerido"}
-                                        maxLength={15}
+                                        maxLenght={15}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -1103,7 +1103,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Avisar requerido"}
-                                        maxLength={100}
+                                        maxLenght={100}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -1119,7 +1119,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Telefono de la madre requerido"}
-                                        maxLength={15}
+                                        maxLenght={15}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -1135,7 +1135,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Telefonos requerido"}
-                                        maxLength={15}
+                                        maxLenght={15}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
@@ -1151,7 +1151,7 @@ function ModalAlumnos({
                                         errors={errors}
                                         register={register}
                                         message={"Celular requerido"}
-                                        maxLength={15}
+                                        maxLenght={15}
                                         isDisabled={isDisabled}
                                         handleBlur={handleBlur}
                                     />
