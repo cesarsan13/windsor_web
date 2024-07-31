@@ -2,7 +2,14 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 
-function Sheet({ labels, setLabels, selectedIndex, setSelectedIndex }) {
+function Sheet({
+  labels,
+  setLabels,
+  selectedIndex,
+  setSelectedIndex,
+  changeSelectedLabel,
+  setTextoAnterior,
+}) {
   const handleDoubleClick = (event) => {
     event.preventDefault();
     const rect = event.target.getBoundingClientRect();
@@ -21,7 +28,19 @@ function Sheet({ labels, setLabels, selectedIndex, setSelectedIndex }) {
   const handleClick = (evt, index) => {
     evt.preventDefault();
     setSelectedIndex(index);
+    const selectedlabel = document.getElementById(
+      evt.target.attributes["name"].value
+    );
+    changeSelectedLabel(evt.target.attributes["name"].value);
+    setTextoAnterior(evt.target.attributes["name"].value);
+    selectedlabel.classList.add(
+      "border-2",
+      "border-blue-500",
+      "border-dashed",
+      "rounded-lg"
+    );
   };
+
   const handleDragStart = (event, index) => {
     event.dataTransfer.setData("index", index);
   };
@@ -44,7 +63,7 @@ function Sheet({ labels, setLabels, selectedIndex, setSelectedIndex }) {
 
   return (
     <div
-      className="w-[calc(8.5in)] h-[calc(11in)] m-5  border-solid border bg-white  shadow-xl flex flex-col relative"
+      className="w-[calc(210mm)] h-[calc(297mm)] m-5  border-solid border bg-white  shadow-xl flex flex-col relative"
       onDoubleClick={(evt) => handleDoubleClick(evt)}
       onDragOver={(evt) => handleDragOver(evt)}
       onDrop={(evt) => handleDrop(evt)}
@@ -57,7 +76,7 @@ function Sheet({ labels, setLabels, selectedIndex, setSelectedIndex }) {
           data-key={index}
           name={`texto_${label.numero_dato}`}
           id={`texto_${label.numero_dato}`}
-          className="hover:cursor-move"
+          className="hover:cursor-move  "
           onClick={(evt) => handleClick(evt, index)}
           style={{
             position: "absolute",

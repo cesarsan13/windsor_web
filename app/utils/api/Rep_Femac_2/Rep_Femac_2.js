@@ -48,7 +48,7 @@ export const getRepDosSel = async (token, horario1, horario2, orden) => {
       
       export const ImprimirPDF = (configuracion) => {
         const orientacion = 'Landscape'  //Aqui se agrega la orientacion del documento PDF puede ser Landscape(Horizontal) o Portrait (Vertical)
-        const newPDF = new ReportePDF(configuracion, orientacion,);
+        const newPDF = new ReportePDF(configuracion, orientacion);
         const { body } = configuracion;
         console.log('body', body);
         Enca1(newPDF);

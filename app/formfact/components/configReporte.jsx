@@ -5,7 +5,18 @@ import PropertyPage from "@/app/formfact/components/PropertyPage";
 function ConfigReporte({ labels, setLabels, propertyData, setShowSheet }) {
   const { data: session, status } = useSession();
   const [selectedIndex, setSelectedIndex] = useState(null);
-
+  const [textoAnterior, setTextoAnterior] = useState("");
+  const changeSelectedLabel = (name) => {
+    if (textoAnterior !== "" && textoAnterior !== name) {
+      const labelAnterior = document.getElementById(textoAnterior);
+      labelAnterior.classList.remove(
+        "border-2",
+        "border-blue-500",
+        "border-dashed",
+        "rounded-lg"
+      );
+    }
+  };
   return (
     <div className=" w-11/12 max-w-5xl">
       <button
@@ -23,6 +34,8 @@ function ConfigReporte({ labels, setLabels, propertyData, setShowSheet }) {
               setLabels={setLabels}
               selectedIndex={selectedIndex}
               setSelectedIndex={setSelectedIndex}
+              changeSelectedLabel={changeSelectedLabel}
+              setTextoAnterior={setTextoAnterior}
             ></Sheet>
           </div>
           {selectedIndex && (
@@ -35,6 +48,9 @@ function ConfigReporte({ labels, setLabels, propertyData, setShowSheet }) {
                 propertyData={propertyData}
                 setShowSheet={setShowSheet}
                 setSelectedIndex={setSelectedIndex}
+                setTextoAnterior={setTextoAnterior}
+                changeSelectedLabel={changeSelectedLabel}
+                textoAnterior={textoAnterior}
               ></PropertyPage>
             </div>
           )}

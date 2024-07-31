@@ -12,10 +12,11 @@ function PropertyPage({
   setShowSheet,
   setSelectedIndex,
   session,
+  setTextoAnterior,
+  changeSelectedLabel,
 }) {
   const {
     register,
-    handleSubmit,
     reset,
     formState: { errors },
   } = useForm({
@@ -23,6 +24,23 @@ function PropertyPage({
       columna_impresion: labels[selectedIndex].columna_impresion,
       numero_archivo: labels[selectedIndex].numero_archivo,
       font_nombre: labels[selectedIndex].font_nombre,
+      font_tamaño: labels[selectedIndex].font_tamaño,
+      font_bold:
+        labels[selectedIndex].font_bold === "S"
+          ? labels[selectedIndex].font_bold
+          : "",
+      font_italic:
+        labels[selectedIndex].font_italic === "S"
+          ? labels[selectedIndex].font_italic
+          : "",
+      font_rallado:
+        labels[selectedIndex].font_rallado === "S"
+          ? labels[selectedIndex].font_rallado
+          : "",
+      font_subrallado:
+        labels[selectedIndex].font_subrallado === "S"
+          ? labels[selectedIndex].font_subrallado
+          : "",
       formato: labels[selectedIndex].formato,
       renglon_impresion: labels[selectedIndex].renglon_impresion,
       descripcion_campo: labels[selectedIndex].descripcion_campo,
@@ -34,27 +52,73 @@ function PropertyPage({
       columna_impresion: labels[selectedIndex].columna_impresion,
       numero_archivo: labels[selectedIndex].numero_archivo,
       font_nombre: labels[selectedIndex].font_nombre,
+      font_tamaño: labels[selectedIndex].font_tamaño,
+      font_bold:
+        labels[selectedIndex].font_bold === "S"
+          ? labels[selectedIndex].font_bold
+          : "",
+      font_italic:
+        labels[selectedIndex].font_italic === "S"
+          ? labels[selectedIndex].font_italic
+          : "",
+      font_rallado:
+        labels[selectedIndex].font_rallado === "S"
+          ? labels[selectedIndex].font_rallado
+          : "",
+      font_subrallado:
+        labels[selectedIndex].font_subrallado === "S"
+          ? labels[selectedIndex].font_subrallado
+          : "",
       formato: labels[selectedIndex].formato,
       renglon_impresion: labels[selectedIndex].renglon_impresion,
       descripcion_campo: labels[selectedIndex].descripcion_campo,
       tipo_campo: labels[selectedIndex].tipo_campo,
     });
+    const selectLabels = document.getElementById("idlabel");
+    selectLabels.selectedIndex = selectedIndex;
+    setSelectedLabel(selectedIndex);
   }, [selectedIndex, labels, reset]);
-  const handleChange = (evt) => {
-    const { name, value } = evt.target;
-    const resultado = [...labels];
 
+  const setSelectedLabel = (idx) => {
+    const idlabel = parseInt(idx) + 1;
+    const lbl = document.getElementById(`texto_${idlabel}`);
+    changeSelectedLabel(lbl.attributes["name"].value);
+    setTextoAnterior(lbl.attributes["name"].value);
+    lbl.classList.add(
+      "border-2",
+      "border-blue-500",
+      "border-dashed",
+      "rounded-lg"
+    );
+  };
+  const getValueInput = async (evt) => {
+    const { name, value } = evt.target;
+    console.log("value input", name);
+    if (
+      name === "columna_impresion" ||
+      name === "renglon_impresion" ||
+      name === "font_tamaño"
+    ) {
+      return parseInt(value);
+    } else if (
+      name === "font_bold" ||
+      name === "font_italic" ||
+      name === "font_rallado" ||
+      name === "font_subrallado"
+    ) {
+      return evt.target.checked ? String("S") : String("");
+    } else {
+      return String(value);
+    }
+  };
+  const handleChange = async (evt) => {
+    const { name } = evt.target;
+    const resultado = [...labels];
+    const value = await getValueInput(evt);
     resultado[selectedIndex] = {
       ...resultado[selectedIndex],
-      [name]:
-        name !== "font_nombre" &&
-        name !== "numero_archivo" &&
-        name !== "formato" &&
-        name !== "tipo_campo"
-          ? parseInt(value)
-          : String(value),
+      [name]: value,
     };
-    console.log(resultado[selectedIndex]);
     setLabels(resultado);
   };
   const handleCancelarClick = (evt) => {
@@ -73,21 +137,44 @@ function PropertyPage({
       "Cancelar"
     );
     if (confirmed) {
-      // console.log("llegamos al update format");
       const res = await updateFormat(session.user.token, labels);
-      console.log(res);
+      if (res.status) {
+        setShowSheet(false);
+        setSelectedIndex(null);
+        setLabels([]);
+        showSwal(res.alert_title, res.message, res.alert_icon);
+      }
     } else {
       return;
     }
   };
+
+  const handleLabelChange = (evt) => {
+    const index = evt.target.selectedOptions[0].attributes["data-key"].value;
+    setSelectedIndex(index);
+  };
+
   return (
     <div className="flex flex-col card bg-white rounded-lg ">
-      <div className=" bg-slate-400 w-full p-2 rounded-lg rounde">
-        <h3 className="text-center font-bold">
-          Propiedades de Texto {labels[selectedIndex].numero_dato}
-        </h3>
+      <div className=" bg-slate-400 w-full p-2 rounded-lg rounde flex flex-row">
+        <h3 className="text-center font-bold ">Propiedades de </h3>
+        <Inputs
+          dataType={"string"}
+          name={"idlabel"}
+          tamañolabel={"w-full input-xs ml-1"}
+          className={"w-full text-left input-xs "}
+          Titulo={""}
+          type={"select"}
+          requerido={true}
+          errors={errors}
+          register={register}
+          message={""}
+          isDisabled={false}
+          data={labels}
+          handleChange={handleLabelChange}
+        />
       </div>
-      <div className="flex flex-col p-2">
+      <div className="flex flex-col p-1">
         <form action="">
           <div className="collapse collapse-arrow bg-base-200">
             <input type="radio" name="my-accordion-2" defaultChecked />
@@ -121,18 +208,16 @@ function PropertyPage({
                 message={"Renglon requerido"}
                 isDisabled={false}
                 handleChange={handleChange}
-                step="10"
+                step="15"
               />
             </div>
           </div>
 
           <div className="divider mt-0 mb-0"></div>
-
-          <div className="divider mt-0 mb-0"></div>
           <div className="collapse collapse-arrow bg-base-200">
             <input type="radio" name="my-accordion-2" defaultChecked />
             <div className="collapse-title text-xl font-medium">Fuente</div>
-            <div className="collapse-content">
+            <div className="collapse-content grid gap-2">
               <Inputs
                 dataType={"string"}
                 name={"font_nombre"}
@@ -149,6 +234,76 @@ function PropertyPage({
                 handleChange={handleChange}
                 //defaultValue={formaPago.id}
               />
+              <Inputs
+                dataType={"int"}
+                name={"font_tamaño"}
+                tamañolabel={"w-full input-xs"}
+                className={"w-full text-right input-xs"}
+                Titulo={"Tamaño: "}
+                type={"number"}
+                requerido={true}
+                errors={errors}
+                register={register}
+                message={"Tamaño requerido"}
+                isDisabled={false}
+                handleChange={handleChange}
+              />
+              <div className="flex flex-row">
+                <Inputs
+                  name={"font_bold"}
+                  tamañolabel={"w-full input-xs"}
+                  className={"toggle toggle-sm toggle-success"}
+                  Titulo={"Bold: "}
+                  type={"checkbox"}
+                  requerido={true}
+                  errors={errors}
+                  register={register}
+                  message={"Tipo fuente requerido"}
+                  isDisabled={false}
+                  handleChange={handleChange}
+                />
+                <Inputs
+                  name={"font_italic"}
+                  tamañolabel={"w-full input-xs"}
+                  className={"toggle toggle-sm toggle-success"}
+                  Titulo={"Itallic: "}
+                  type={"checkbox"}
+                  requerido={true}
+                  errors={errors}
+                  register={register}
+                  message={"Tipo fuente requerido"}
+                  isDisabled={false}
+                  handleChange={handleChange}
+                />
+              </div>
+              <div className="flex flex-row">
+                <Inputs
+                  name={"font_rallado"}
+                  tamañolabel={"w-full input-xs"}
+                  className={"toggle toggle-sm toggle-success"}
+                  Titulo={"Rallado: "}
+                  type={"checkbox"}
+                  requerido={true}
+                  errors={errors}
+                  register={register}
+                  message={"Tipo fuente requerido"}
+                  isDisabled={false}
+                  handleChange={handleChange}
+                />
+                <Inputs
+                  name={"font_subrallado"}
+                  tamañolabel={"w-full input-xs"}
+                  className={"toggle toggle-sm toggle-success"}
+                  Titulo={"Subrallado: "}
+                  type={"checkbox"}
+                  requerido={true}
+                  errors={errors}
+                  register={register}
+                  message={"Tipo fuente requerido"}
+                  isDisabled={false}
+                  handleChange={handleChange}
+                />
+              </div>
             </div>
           </div>
           <div className="divider mt-0 mb-0"></div>
@@ -168,6 +323,7 @@ function PropertyPage({
                 register={register}
                 message={"Texto requerido"}
                 isDisabled={false}
+                handleChange={handleChange}
               />
               <Inputs
                 dataType={"string"}
@@ -220,7 +376,7 @@ function PropertyPage({
           <div className="divider mt-0 mb-0"></div>
         </form>
       </div>
-      <div className="flex flex-row justify-between m-2">
+      <div className="flex flex-row justify-between m-1">
         <div
           className={`tooltip tooltip-top my-5  "hover:cursor-pointer"
               `}

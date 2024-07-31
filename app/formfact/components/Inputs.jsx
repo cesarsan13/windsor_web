@@ -13,14 +13,80 @@ function Inputs({
   errors,
   tamañolabel,
   maxLenght,
-  defaultValue,
   isDisabled,
   handleBlur,
   handleChange,
   data,
   step,
 }) {
-  return type !== "select" ? (
+  return type === "select" ? (
+    <div className="flex flex-col">
+      <label
+        className={`input  text-black dark:text-white flex items-center ${tamañolabel}`}
+      >
+        {Titulo}
+        <select
+          {...(handleChange && { onChangeCapture: (evt) => handleChange(evt) })}
+          name={name}
+          id={name}
+          className={`text-black dark:text-white ${className}`}
+          {...register(name, {
+            ...(requerido && { required: message }),
+          })}
+        >
+          {data &&
+            (name === "font_nombre"
+              ? Object.entries(data).map(([key, value]) => (
+                  <option key={key} value={value}>
+                    {value}
+                  </option>
+                ))
+              : name === "idlabel"
+              ? data.map((object, index) => (
+                  <option
+                    key={index}
+                    value={object.numero_dato}
+                    data-key={index}
+                  >
+                    Texto {object.numero_dato}
+                  </option>
+                ))
+              : Object.entries(data).map(([key, value]) => (
+                  <option key={key} value={key}>
+                    {value}
+                  </option>
+                )))}
+        </select>
+      </label>
+      {errors[name] && (
+        <span className="text-red-500 text-sm mt-2">
+          {errors[name].message}
+        </span>
+      )}
+    </div>
+  ) : type === "checkbox" ? (
+    <div className="flex flex-col">
+      <label className={`flex items-center  ${tamañolabel}`}>
+        {Titulo}
+        <input
+          {...(handleChange && { onChangeCapture: (evt) => handleChange(evt) })}
+          name={name}
+          id={name}
+          type={type}
+          className={className}
+          {...register(name, {
+            ...(requerido && { required: message }),
+          })}
+          disabled={isDisabled}
+        />
+      </label>
+      {errors[name] && (
+        <span className="text-red-500 text-sm mt-2">
+          {errors[name].message}
+        </span>
+      )}
+    </div>
+  ) : (
     <div className="flex flex-col">
       <label className={`input   flex items-center  ${tamañolabel}`}>
         {Titulo}
@@ -44,40 +110,6 @@ function Inputs({
               }))}
           disabled={isDisabled}
         />
-      </label>
-      {errors[name] && (
-        <span className="text-red-500 text-sm mt-2">
-          {errors[name].message}
-        </span>
-      )}
-    </div>
-  ) : (
-    <div className="flex flex-col">
-      <label
-        className={`input  text-black dark:text-white flex items-center ${tamañolabel}`}
-      >
-        {Titulo}
-        <select
-          {...(handleChange && { onChangeCapture: (evt) => handleChange(evt) })}
-          name={name}
-          id={name}
-          className={`text-black dark:text-white ${className}`}
-          {...register(name, {
-            ...(requerido && { required: message }),
-          })}
-        >
-          {data && name === "font_nombre"
-            ? Object.entries(data).map(([key, value]) => (
-                <option key={key} value={value}>
-                  {value}
-                </option>
-              ))
-            : Object.entries(data).map(([key, value]) => (
-                <option key={key} value={key}>
-                  {value}
-                </option>
-              ))}
-        </select>
       </label>
       {errors[name] && (
         <span className="text-red-500 text-sm mt-2">

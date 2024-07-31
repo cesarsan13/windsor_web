@@ -33,16 +33,15 @@ function TablaAlumnos({
   };
 
   return !isLoading ? (
-    <div className="overflow-x-auto mt-3  h-6/8 text-black bg-white dark:bg-[#1d232a] dark:text-white m-2 w-full  lg:w-5/8 ">
+    <div className="overflow-x-auto mt-3 h-[calc(75vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white m-2 w-full lg:w-3/4">
       {alumnosFiltrados.length > 0 ? (
-        <table className="table table-xs table-zebra  table-pin-rows table-pin-cols max-h-[calc(50%)]">
-          <thead className=" relative z-[1] md:static">
+        <table className="table table-xs table-zebra w-full">
+          <thead className="sticky top-0 bg-white dark:bg-[#1d232a] ">
             <tr>
               <th></th>
-              <td>Nombre</td>
-              <td>Grado</td>
-              {/* <td>Grado</td> */}
-              <th className="w-[calc(10%)]">Acciones</th>
+              <td className="w-[40%]">Nombre</td>
+              <td className="hidden sm:table-cell">Grado</td>
+              <th className="w-[30%] sm:w-[10%]">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -57,11 +56,12 @@ function TablaAlumnos({
                 >
                   {item.id}
                 </th>
-                <td>{`${item.nombre} ${item.a_paterno} ${item.a_materno}`}</td>
-                <td>{item.horario_1_nombre}</td>
-                {/* <td>{item.grado}</td> */}
-                <th>
-                  <div className="flex flex-row space-x-3">
+                <td className="w-[40%]">{`${item.nombre} ${item.a_paterno} ${item.a_materno}`}</td>
+                <td className="hidden sm:table-cell">
+                  {item.horario_1_nombre}
+                </td>
+                <th className="w-[30%] sm:w-[10%]">
+                  <div className="flex flex-row space-x-1 sm:space-x-3">
                     <div
                       className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
                       data-tip={`Ver ${item.id}`}
@@ -91,10 +91,9 @@ function TablaAlumnos({
           <tfoot>
             <tr>
               <th></th>
-              <td>Nombre</td>
-              <td>Grado</td>
-              {/* <td>Grado</td>*/}
-              <th>Acciones</th>
+              <td className="w-[40%]">Nombre</td>
+              <td className="hidden sm:table-cell">Grado</td>
+              <th className="w-[30%] sm:w-[10%]">Acciones</th>
             </tr>
           </tfoot>
         </table>

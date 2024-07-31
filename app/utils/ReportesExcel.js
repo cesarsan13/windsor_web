@@ -45,9 +45,21 @@ export class ReporteExcel {
       this.addRow(rowData);
     });
   }
+  calculaAnchos() {
+    const maxColumnWidths = [];
+    this.worksheetData.forEach(row => {
+      row.forEach((cell, index) => {
+        const cellLength = cell ? cell.toString().length : 0;
+        maxColumnWidths[index] = Math.max(maxColumnWidths[index] || 0, cellLength);
+      });
+    });
+    return maxColumnWidths.map(width => ({ wch: width }));
+  }
   guardaReporte(Nombre) {
     const worksheet = XLSX.utils.aoa_to_sheet(this.worksheetData);
     const workbook = XLSX.utils.book_new();
+    
+    worksheet['!cols'] = this.calculaAnchos();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Reporte");
     XLSX.writeFile(workbook, `${Nombre}.xlsx`);
   }

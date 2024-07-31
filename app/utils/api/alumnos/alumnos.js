@@ -65,17 +65,17 @@ export const guardarAlumnos = async (token, formData, accion, id) => {
 
 const Enca1 = (doc) => {
   if (!doc.tiene_encabezado) {
-    doc.imprimeEncabezadoPrincipalV();
+    doc.imprimeEncabezadoPrincipalH();
     doc.nextRow(12);
     doc.ImpPosX("Numero", 10, doc.tw_ren);
     doc.ImpPosX("Nombre", 25, doc.tw_ren);
-    doc.ImpPosX("Dirección", 70, doc.tw_ren);
-    doc.ImpPosX("Colonia", 100, doc.tw_ren);
-    doc.ImpPosX("Fecha Nac", 130, doc.tw_ren);
-    doc.ImpPosX("Fecha Alta", 155, doc.tw_ren);
-    doc.ImpPosX("Telefono", 180, doc.tw_ren);
+    doc.ImpPosX("Dirección", 90, doc.tw_ren);
+    doc.ImpPosX("Colonia", 120, doc.tw_ren);
+    doc.ImpPosX("Fecha Nac", 175, doc.tw_ren);
+    doc.ImpPosX("Fecha Alta", 200, doc.tw_ren);
+    doc.ImpPosX("Telefono", 230, doc.tw_ren);
     doc.nextRow(4);
-    doc.printLineV();
+    doc.printLineH();
     doc.nextRow(4);
     doc.tiene_encabezado = true;
   } else {
@@ -85,7 +85,7 @@ const Enca1 = (doc) => {
 };
 
 export const Imprimir = (configuracion) => {
-  const newPDF = new ReportePDF(configuracion);
+  const newPDF = new ReportePDF(configuracion,"landscape");
   const { body } = configuracion;
   console.log("body", body);
   Enca1(newPDF);
@@ -101,20 +101,20 @@ export const Imprimir = (configuracion) => {
       .toString()
       .substring(0, 15);
     const telefono = alumnos.telefono_1.toString().substring(0, 15);
-    newPDF.ImpPosX(id, 10, newPDF.tw_ren);
-    newPDF.ImpPosX(nombre, 25, newPDF.tw_ren);
-    newPDF.ImpPosX(direccion, 70, newPDF.tw_ren);
-    newPDF.ImpPosX(colonia, 100, newPDF.tw_ren);
-    newPDF.ImpPosX(fecha_nac, 130, newPDF.tw_ren);
-    newPDF.ImpPosX(fecha_inscripcion, 155, newPDF.tw_ren);
-    newPDF.ImpPosX(telefono, 180, newPDF.tw_ren);
+    newPDF.ImpPosX(alumnos.id.toString(), 10, newPDF.tw_ren);
+    newPDF.ImpPosX(alumnos.nombre.toString().substring(0,20), 25, newPDF.tw_ren);
+    newPDF.ImpPosX(alumnos.direccion.toString().substring(0,12), 90, newPDF.tw_ren);
+    newPDF.ImpPosX(alumnos.colonia.toString().substring(0,20), 120, newPDF.tw_ren);
+    newPDF.ImpPosX(alumnos.fecha_nac.toString().substring(0,15), 175, newPDF.tw_ren);
+    newPDF.ImpPosX(alumnos.fecha_inscripcion.toString(), 200, newPDF.tw_ren);
+    newPDF.ImpPosX(alumnos.telefono_1.toString(), 230, newPDF.tw_ren);
     Enca1(newPDF);
-    if (newPDF.tw_ren >= newPDF.tw_endRen) {
-      newPDF.pageBreak();
+    if (newPDF.tw_ren >= newPDF.tw_endRenH) {
+      newPDF.pageBreakH();
       Enca1(newPDF);
     }
   });
-  newPDF.guardaReporte("Horarios");
+  newPDF.guardaReporte("Alumnos");
 };
 
 export const ImprimirExcel = (configuracion) => {

@@ -6,6 +6,7 @@ import ModalFormaPago from "@/app/formapago/components/ModalFormaPago";
 import TablaFormaPago from "@/app/formapago/components/TablaFormaPago";
 import Busqueda from "@/app/formapago/components/Busqueda";
 import Acciones from "@/app/formapago/components/Acciones";
+import ModalVistaPreviaFormaPago from "./modalVistaPreviaFormaPago";
 import { useForm } from "react-hook-form";
 import {
   getFormasPago,
@@ -18,6 +19,8 @@ import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/formapago/formapago";
 import { eventNames } from "process";
 import { NEXT_CACHE_REVALIDATE_TAG_TOKEN_HEADER } from "next/dist/lib/constants";
+import { ReportePDF } from "../utils/ReportesPDF";
+
 function FormaPago() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -31,6 +34,8 @@ function FormaPago() {
   const [currentID, setCurrentId] = useState("");
   const [filtro, setFiltro] = useState("");
   const [TB_Busqueda, setTB_Busqueda] = useState("");
+  const [pdfPreview, setPdfPreview] = useState(false);
+  const [pdfData, setPdfData] = useState("");
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -179,6 +184,11 @@ function FormaPago() {
       ? document.getElementById("my_modal_3").showModal()
       : document.getElementById("my_modal_3").close();
   };
+  const showModalVista = (show) => {
+    show
+      ? document.getElementById("modalVFormaPago").showModal()
+      : document.getElementById("modalVFormaPago").close();
+  }
   const home = () => {
     router.push("/");
   };
@@ -217,6 +227,55 @@ function FormaPago() {
     };
     ImprimirExcel(configuracion);
   };
+  const handleVerClick = () => {
+    const configuracion = {
+      Encabezado: {
+        Nombre_Aplicacion: "Sistema de Control Escolar",
+        Nombre_Reporte: "Reporte Datos Productos",
+        Nombre_Usuario: `Usuario: ${session.user.name}`,
+      },
+    };
+    const Enca1 = (doc) => {
+      if (!doc.tiene_encabezado) {
+        doc.imprimeEncabezadoPrincipalV();
+        doc.nextRow(12);
+        doc.ImpPosX("Numero", 14, doc.tw_ren);
+        doc.ImpPosX("Descripcion", 28, doc.tw_ren);
+        doc.ImpPosX("Comision", 128, doc.tw_ren);
+        doc.ImpPosX("Aplicacion", 152, doc.tw_ren);
+        doc.ImpPosX("C. Banco", 182, doc.tw_ren);
+        doc.nextRow(4);
+        doc.printLineV();
+        doc.nextRow(4);
+        doc.tiene_encabezado = true;
+      } else {
+        doc.nextRow(6);
+        doc.tiene_encabezado = true;
+      }
+    };
+    const reporte = new ReportePDF(configuracion)
+    Enca1(reporte);
+    formaPagosFiltrados.forEach((producto) => {
+      reporte.ImpPosX(producto.id.toString(), 14, reporte.tw_ren);
+      reporte.ImpPosX(producto.descripcion.toString(), 28, reporte.tw_ren);
+      reporte.ImpPosX(producto.comision.toString(), 128, reporte.tw_ren);
+      reporte.ImpPosX(producto.aplicacion.toString(), 152, reporte.tw_ren);
+      reporte.ImpPosX(producto.cue_banco.toString(), 182, reporte.tw_ren);
+      Enca1(reporte);
+      if (reporte.tw_ren >= reporte.tw_endRen) {
+        reporte.pageBreak();
+        Enca1(reporte);
+      }
+    })
+    const pdfData = reporte.doc.output("datauristring")
+    setPdfData(pdfData)
+    setPdfPreview(true)
+    showModalVista(true)
+  }
+  const CerrarView = () => {
+    setPdfPreview(false);
+    setPdfData('');
+  };
   if (status === "loading") {
     return (
       <div className="container skeleton w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -233,6 +292,8 @@ function FormaPago() {
         setFormaPago={setFormaPago}
         formaPago={formaPago}
       />
+      <ModalVistaPreviaFormaPago pdfPreview={pdfPreview} pdfData={pdfData} PDF={ImprimePDF} Excel={ImprimirExcel}/>      
+
       <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
         <div className="flex justify-start p-3 ">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
@@ -247,6 +308,8 @@ function FormaPago() {
               home={home}
               PDF={ImprimePDF}
               Excel={ImprimeExcel}
+              Ver={handleVerClick}
+              CerrarView={CerrarView}
             ></Acciones>
           </div>
           <div className="col-span-7  ">

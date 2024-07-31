@@ -40,14 +40,14 @@ export const getAlumnosPorMes = async (token, horario, orden) => {
     const newPDF = new ReportePDF(configuracion);
     const { body } = configuracion;
     Enca1(newPDF);
-  
+    console.log(body);
     body.forEach((reporte) => {
       newPDF.ImpPosX(reporte.Num_Renglon.toString() !== "0" ? reporte.Num_Renglon.toString() : "", 14, newPDF.tw_ren);
       newPDF.ImpPosX(reporte.Numero_1.toString() !== "0" ? reporte.Numero_1.toString() : "", 28, newPDF.tw_ren);
       newPDF.ImpPosX(reporte.Nombre_1.toString() !== "0" ? reporte.Nombre_1.toString() : "", 42, newPDF.tw_ren);
       newPDF.ImpPosX(reporte.Año_Nac_1.toString().substring(0, 4) !== "0" ? reporte.Año_Nac_1.toString().substring(0, 4) : "", 92, newPDF.tw_ren);
       newPDF.ImpPosX(reporte.Mes_Nac_1.toString().substring(4, 2) !== "0" ? reporte.Mes_Nac_1.toString().substring(4, 2) : "", 122, newPDF.tw_ren);
-  
+
       Enca1(newPDF);
       if (newPDF.tw_ren >= newPDF.tw_endRen) {
         newPDF.pageBreak();

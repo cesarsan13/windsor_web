@@ -19,6 +19,8 @@ import { siguiente } from "@/app/utils/api/cajeros/cajeros";
 import { eventNames } from "process";
 import { NEXT_CACHE_REVALIDATE_TAG_TOKEN_HEADER } from "next/dist/lib/constants";
 import "jspdf-autotable";
+import ModalVistaPreviaCajeros from "./components/modalVistaPreviaCajeros";
+import { ReportePDF } from "../utils/ReportesPDF";
 
 function Cajeros() {
   const router = useRouter();
@@ -33,6 +35,8 @@ function Cajeros() {
   const [currentID, setCurrentId] = useState("");
   const [filtro, setFiltro] = useState("");
   const [TB_Busqueda, setTB_Busqueda] = useState("");
+  const [pdfPreview, setPdfPreview] = useState(false);
+  const [pdfData, setPdfData] = useState("");
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -51,7 +55,7 @@ function Cajeros() {
     };
     fetchData();
   }, [session, status, bajas]);
-  
+
   const {
     register,
     handleSubmit,
@@ -212,25 +216,75 @@ function Cajeros() {
     };
     Imprimir(configuracion);
   };
-  const ImprimeExcel = () =>{
-    const configuracion ={
-        Encabezado:{
-            Nombre_Aplicacion: "Sistema de Control Escolar",
+  const ImprimeExcel = () => {
+    const configuracion = {
+      Encabezado: {
+        Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte Datos Cajeros",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
-        },
-        body:cajerosFiltrados,
-        columns:[
-            {header:"Numero",dataKey:"numero"},
-            {header:"Nombre",dataKey:"nombre"},
-            {header:"Clave Cajero",dataKey:"clave_cajero"},
-            {header:"Telefono",dataKey:"telefono"},
-            {header:"Correo",dataKey:"mail"},
-        ],
-        nombre:"Cajeros"
+      },
+      body: cajerosFiltrados,
+      columns: [
+        { header: "Numero", dataKey: "numero" },
+        { header: "Nombre", dataKey: "nombre" },
+        { header: "Clave Cajero", dataKey: "clave_cajero" },
+        { header: "Telefono", dataKey: "telefono" },
+        { header: "Correo", dataKey: "mail" },
+      ],
+      nombre: "Cajeros"
     }
-    ImprimirExcel(configuracion)        
-}
+    ImprimirExcel(configuracion)
+  }
+  const handleVerClick = () => {
+    const configuracion = {
+      Encabezado: {
+        Nombre_Aplicacion: "Sistema de Control Escolar",
+        Nombre_Reporte: "Reporte Datos Cajero",
+        Nombre_Usuario: `Usuario: ${session.user.name}`,
+      },
+    };
+    const Enca1 = (doc) => {
+      if (!doc.tiene_encabezado) {
+        doc.imprimeEncabezadoPrincipalV();
+        doc.nextRow(12);
+        doc.ImpPosX("Numero", 14, doc.tw_ren);
+        doc.ImpPosX("Nombre", 28, doc.tw_ren);
+        doc.ImpPosX("Clave", 62, doc.tw_ren);
+        doc.ImpPosX("Telefono", 82, doc.tw_ren);
+        doc.ImpPosX("Correo", 112, doc.tw_ren);
+        doc.nextRow(4);
+        doc.printLineV();
+        doc.nextRow(4);
+        doc.tiene_encabezado = true;
+      } else {
+        doc.nextRow(6);
+        doc.tiene_encabezado = true;
+      }
+    };
+    const reporte = new ReportePDF(configuracion)
+    Enca1(reporte)
+    cajerosFiltrados.forEach((cajero)=>{
+      reporte.ImpPosX(cajero.numero.toString(), 14, reporte.tw_ren);
+      reporte.ImpPosX(cajero.nombre.toString(), 28, reporte.tw_ren);
+      reporte.ImpPosX(cajero.clave_cajero.toString(), 62, reporte.tw_ren);
+      reporte.ImpPosX(cajero.telefono.toString(), 82, reporte.tw_ren);
+      reporte.ImpPosX(cajero.mail.toString(), 112, reporte.tw_ren);
+      Enca1(reporte);
+      if (reporte.tw_ren >= reporte.tw_endRen) {
+        reporte.pageBreak();
+        Enca1(reporte);
+      }
+    })
+    const pdfData = reporte.doc.output("datauristring");
+    setPdfData(pdfData);
+    setPdfPreview(true);
+    showModalVista(true)
+  }
+  const showModalVista = (show) => {
+    show
+      ? document.getElementById("modalVPAlumno").showModal()
+      : document.getElementById("modalVPAlumno").close();
+  }
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -247,6 +301,7 @@ function Cajeros() {
         setCajero={setCajero}
         cajero={cajero}
       />
+      <ModalVistaPreviaCajeros pdfPreview={pdfPreview} pdfData={pdfData} PDF={ImprimePDF} Excel={ImprimeExcel}/>
       <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
@@ -255,7 +310,7 @@ function Cajeros() {
         </div>
         <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] ">
           <div className="col-span-1 flex flex-col ">
-            <Acciones Buscar={Buscar} Alta={Alta} home={home} imprimir={ImprimePDF} excel={ImprimeExcel}></Acciones>
+            <Acciones Buscar={Buscar} Alta={Alta} home={home} Ver={handleVerClick}></Acciones>
           </div>
           <div className="col-span-7  ">
             <div className="flex flex-col h-[calc(100%)]">
