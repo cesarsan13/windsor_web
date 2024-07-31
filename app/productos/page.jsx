@@ -6,6 +6,7 @@ import ModalProductos from "@/app/productos/components/modalProductos";
 import TablaProductos from "@/app/productos/components/tablaProductos";
 import Busqueda from "@/app/productos/components/Busqueda";
 import Acciones from "@/app/productos/components/Acciones";
+import ModalVistaPreviaProductos from "./components/modalVistaPreviaProductos";
 import { useForm } from "react-hook-form";
 import {
   getProductos,
@@ -272,6 +273,11 @@ function Productos() {
       ? document.getElementById("my_modal_3").showModal()
       : document.getElementById("my_modal_3").close();
   };
+  const showModalVista = (show) => {
+    show
+      ? document.getElementById("modalVProducto").showModal()
+      : document.getElementById("modalVProducto").close();
+  }
   const home = () => {
     router.push("/");
   };
@@ -334,6 +340,7 @@ function Productos() {
     const pdfData = reporte.doc.output("datauristring")
     setPdfData(pdfData)
     setPdfPreview(true)
+    showModalVista(true)
   }
   const CerrarView = () => {
     setPdfPreview(false);
@@ -356,6 +363,7 @@ function Productos() {
         producto={producto}
         formatNumber={formatNumber}
       />
+      <ModalVistaPreviaProductos pdfPreview={pdfPreview} pdfData={pdfData} PDF={imprimirPDF} Excel={ImprimirExcel}/>      
       <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
         <div className="flex justify-start p-3 ">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
@@ -385,7 +393,6 @@ function Productos() {
                 TB_Busqueda={TB_Busqueda}
                 setTB_Busqueda={setTB_Busqueda}
               />
-              {!pdfPreview && !pdfData && (
                 <TablaProductos
                   isLoading={isLoading}
                   productosFiltrados={productosFiltrados}
@@ -395,23 +402,6 @@ function Productos() {
                   setCurrentId={setCurrentId}
                   formatNumber={formatNumber}
                 />
-              )}
-
-              <div className='mt-4'>
-                {pdfPreview && pdfData && (
-                  <div className=''>
-                    <div className='pdf-preview'>
-                      <Worker
-                        workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
-                      >
-                        <div style={{ height: "500px" }}>
-                          <Viewer fileUrl={pdfData} />
-                        </div>
-                      </Worker>
-                    </div>
-                  </div>
-                )}
-              </div>
             </div>
           </div>
         </div>
