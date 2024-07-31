@@ -11,11 +11,12 @@ function ModalCajeroPago({
   showModal,
   setValidar,
   home,
+  cajero,
+  setCajero,
   // validar,
   // pago,
 }) {
   const [error, setError] = useState(null);
-  const [cajero, setCajero] = useState({});
   const columnasBuscaCat = ["numero", "nombre"];
   const nameInputs = ["numero", "nombre"];
   const {
@@ -74,7 +75,7 @@ function ModalCajeroPago({
         </button>
         <form onSubmit={onSubmitModal}>
           <h3 className="font-bold text-lg mb-5">Ingresa Clave del Cajero</h3>
-          <fieldset id="fs_formapago">
+          <fieldset id="fs_cajeropago">
             <div className="container flex flex-col space-y-5">
               <BuscarCat
                 table="cajeros"
@@ -109,7 +110,7 @@ function ModalCajeroPago({
             >
               <button
                 type="submit"
-                id="btn_guardar"
+                id="btn_validar"
                 className="btn  bg-blue-500 hover:bg-blue-700 text-white"
               >
                 <i className="fa-regular fa-floppy-disk mx-2"></i> Validar

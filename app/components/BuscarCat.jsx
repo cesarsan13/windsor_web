@@ -18,7 +18,8 @@ function BuscarCat({
   modalId,
   array,
   alignRight = false,
-  inputWidths = { first: "80px", second: "150px" }
+  id,
+  inputWidths = { first: "80px", second: "150px" },
 }) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -26,9 +27,10 @@ function BuscarCat({
   const { register, setValue, watch, reset } = useForm({
     defaultValues: {
       [nameInput[0]]: "",
-      [nameInput[1]]: ""
-    }
+      [nameInput[1]]: "",
+    },
   });
+  // console.log(array);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,17 +64,21 @@ function BuscarCat({
       setFilteredData(fetchedData);
 
       if (fetchedData.length > 0) {
-        const defaultItem = fetchedData.find(item => item[fieldsToShow[0]] === array);
+        // console.log(fetchedData);
+        const defaultItem = fetchedData.find(
+          (item) => item[fieldsToShow[0]] === array
+        ); // Aquí puedes elegir la lógica para establecer el default item
+        // console.log(defaultItem);
         if (defaultItem) {
           reset({
             [nameInput[0]]: defaultItem[fieldsToShow[0]] || "",
-            [nameInput[1]]: defaultItem[fieldsToShow[1]] || ""
+            [nameInput[1]]: defaultItem[fieldsToShow[1]] || "",
           });
         }
       }
     };
     fetchData();
-  }, [table, token, array]);
+  }, [table, token, id]);
 
   const inputValue = watch(nameInput[0]);
   const inputValueDesc = watch(nameInput[1]);
@@ -119,7 +125,9 @@ function BuscarCat({
         if (typeof valorCampo === "number") {
           return valorCampoStr.includes(inputValueStr);
         }
-        return valorCampoStr.toLowerCase().includes(inputValueStr.toLowerCase());
+        return valorCampoStr
+          .toLowerCase()
+          .includes(inputValueStr.toLowerCase());
       });
     });
 
@@ -145,7 +153,9 @@ function BuscarCat({
           type="text"
           {...register(nameInput[0])}
           onKeyDown={(evt) => handleKeyDown(evt)}
-          className={`grow dark:text-neutral-200 text-neutral-600 rounded-r-none ${alignRight ? "text-right" : ""}`}
+          className={`grow dark:text-neutral-200 text-neutral-600 rounded-r-none ${
+            alignRight ? "text-right" : ""
+          }`}
           style={{ width: inputWidths.first }}
         />
       </label>
