@@ -6,9 +6,9 @@ import ModalAlumnos from "@/app/alumnos/components/modalAlumnos";
 import TablaAlumnos from "@/app/alumnos/components/tablaAlumnos";
 import Busqueda from "@/app/alumnos/components/Busqueda";
 import Acciones from "@/app/alumnos/components/Acciones";
-import { Worker, Viewer } from "@react-pdf-viewer/core";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { useForm } from "react-hook-form";
+import ModalVistaPreviaAlumnos from "./components/modalVistaPreviaAlumnos";
 import {
   getAlumnos,
   guardarAlumnos,
@@ -70,6 +70,7 @@ function Alumnos() {
       setisLoading(true);
       const { token } = session.user;
       const data = await getAlumnos(token, bajas);
+      console.log(data[0].referencia)
       setAlumnos(data);
       setAlumnosFiltrados(data);
       if (filtro !== "" && TB_Busqueda !== "") {
@@ -580,6 +581,11 @@ function Alumnos() {
       ? document.getElementById("my_modal_3").showModal()
       : document.getElementById("my_modal_3").close();
   };
+  const showModalVista = (show) => {
+    show
+      ? document.getElementById("modalVPAlumno").showModal()
+      : document.getElementById("modalVPAlumno").close();
+  }
   const home = () => {
     router.push("/");
   };
@@ -627,7 +633,7 @@ function Alumnos() {
     setPdfData('');
   };
 
-  const handleVerClick = () => {
+  const handleVerClick = () => {    
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Lista de Alumnos por clase",
@@ -675,6 +681,7 @@ function Alumnos() {
     const pdfData = reporte.doc.output("datauristring");
     setPdfData(pdfData);
     setPdfPreview(true);
+    showModalVista(true)
   };
 
   if (status === "loading") {
@@ -703,6 +710,7 @@ function Alumnos() {
         setcond1={setcond1}
         setcond2={setcond2}
       />
+      <ModalVistaPreviaAlumnos pdfPreview={pdfPreview} pdfData={pdfData} PDF={imprimePDF} Excel={ImprimeExcel}/>      
       <div className="container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
@@ -723,21 +731,17 @@ function Alumnos() {
           </div>
           <div className="col-span-7">
             <div className="flex flex-col h-[calc(100%)]">
-              {!pdfPreview && !pdfData && (
-                <Busqueda
-                  setBajas={setBajas}
-                  setFiltro={setFiltro}
-                  limpiarBusqueda={limpiarBusqueda}
-                  Buscar={Buscar}
-                  handleBusquedaChange={handleBusquedaChange}
-                  TB_Busqueda={TB_Busqueda}
-                  setTB_Busqueda={setTB_Busqueda}
-                />
-              )}
-
-              {!pdfPreview && !pdfData && (
-                <div className="overflow-x-auto">
-                  <TablaAlumnos
+              <Busqueda
+                setBajas={setBajas}
+                setFiltro={setFiltro}
+                limpiarBusqueda={limpiarBusqueda}
+                Buscar={Buscar}
+                handleBusquedaChange={handleBusquedaChange}
+                TB_Busqueda={TB_Busqueda}
+                setTB_Busqueda={setTB_Busqueda}
+              />
+              <div className="overflow-x-auto">
+                <TablaAlumnos
                   session={session}
                   isLoading={isLoading}
                   alumnosFiltrados={alumnosFiltrados}
@@ -749,25 +753,8 @@ function Alumnos() {
                   setCapturedImage={setCapturedImage}
                   setcondicion={setcondicion}
                 />
-                </div>
-                
-              )}
-
-              <div className='mt-4'>
-                {pdfPreview && pdfData && (
-                  <div className=''>
-                    <div className='pdf-preview'>
-                      <Worker
-                        workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
-                      >
-                        <div style={{ height: "500px" }}>
-                          <Viewer fileUrl={pdfData} />
-                        </div>
-                      </Worker>
-                    </div>
-                  </div>
-                )}
               </div>
+
             </div>
           </div>
         </div>

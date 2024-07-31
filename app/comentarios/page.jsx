@@ -18,8 +18,8 @@ import { useSession } from "next-auth/react";
 import { siguiente } from "../utils/api/comentarios/comentarios";
 import "jspdf-autotable";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
+import ModalVistaPreviaComentarios from "./components/modalVistaPreviaComentarios";
 
 function Comentarios(){
   const router = useRouter();
@@ -151,8 +151,14 @@ function Comentarios(){
     const pdfData = reporte.doc.output("datauristring");
     setPdfData(pdfData);
     setPdfPreview(true);
-
+    showModalVista(true)
   };
+
+  const showModalVista = (show) => {
+    show
+      ? document.getElementById("modalVPComentario").showModal()
+      : document.getElementById("modalVPComentario").close();
+  }
 
   const CerrarView = () => {
     setPdfPreview(false);
@@ -299,6 +305,12 @@ function Comentarios(){
         setFormaComentarios={setFormaComentarios}
         formaComentarios={formaComentarios}
       />
+      <ModalVistaPreviaComentarios
+      pdfPreview={pdfPreview} 
+      pdfData={pdfData} 
+      PDF={ImprimePDF} 
+      Excel = {ImprimeExcel}/>
+
       <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
         <div className="flex justify-start p-3 ">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
@@ -318,7 +330,6 @@ function Comentarios(){
             ></Acciones>
           </div>
           <div className="col-span-7">
-          <div className="flex flex-col h-full space-y-4">
             <div className="flex flex-col h-[calc(100%)]">
               <Busqueda
                 setBajas={setBajas}
@@ -339,17 +350,7 @@ function Comentarios(){
               />
 
             </div>
-              {pdfPreview && pdfData && (
-                <div className="pdf-preview ">
-                    <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}>
-                        <div style={{ height: "220px", width: "100%"}}>
-                            <Viewer fileUrl={pdfData} />
-                        </div>
-                    </Worker>
-                </div>
-              )}
           </div>
-        </div>
       </div>
       </div>
     </>
