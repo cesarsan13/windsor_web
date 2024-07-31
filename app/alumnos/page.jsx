@@ -6,6 +6,8 @@ import ModalAlumnos from "@/app/alumnos/components/modalAlumnos";
 import TablaAlumnos from "@/app/alumnos/components/tablaAlumnos";
 import Busqueda from "@/app/alumnos/components/Busqueda";
 import Acciones from "@/app/alumnos/components/Acciones";
+import { Worker, Viewer } from "@react-pdf-viewer/core";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { useForm } from "react-hook-form";
 import {
   getAlumnos,
@@ -38,6 +40,9 @@ function Alumnos() {
   const [grado2, setGrado2] = useState({});
   const [cond1, setcond1] = useState({});
   const [cond2, setcond2] = useState({});
+  const [pdfPreview, setPdfPreview] = useState(false);
+  const [pdfData, setPdfData] = useState("");
+
 
   const Buscar = (() => {
     if (TB_Busqueda === "" || filtro === "") {
@@ -616,6 +621,61 @@ function Alumnos() {
     ImprimirExcel(configuracion);
   };
 
+  const CerrarView = () => {
+    setPdfPreview(false);
+    setPdfData('');
+};
+
+const handleVerClick = () => {
+  const configuracion = {
+    Encabezado: {
+      Nombre_Aplicacion: "Lista de Alumnos por clase",
+      Nombre_Reporte: "Reporte de Alumnos",
+      Nombre_Usuario: `Usuario: ${session.user.name}`,
+    },
+  };
+  const Enca1 = (doc) => {
+    if (!doc.tiene_encabezado) {
+      doc.imprimeEncabezadoPrincipalV();
+      doc.nextRow(12);
+      doc.ImpPosX("Numero", 10, doc.tw_ren);
+      doc.ImpPosX("Nombre", 25, doc.tw_ren);
+      doc.ImpPosX("Dirección", 90, doc.tw_ren);
+      doc.ImpPosX("Colonia", 120, doc.tw_ren);
+      doc.ImpPosX("Fecha Nac", 175, doc.tw_ren);
+      doc.ImpPosX("Fecha Alta", 200, doc.tw_ren);
+      doc.ImpPosX("Telefono", 230, doc.tw_ren);
+      doc.nextRow(4);
+      doc.printLineH();
+      doc.nextRow(4);
+      doc.tiene_encabezado = true;
+    } else {
+      doc.nextRow(6);
+      doc.tiene_encabezado = true;
+    }
+  };
+  
+  const reporte = new ReportePDF(configuracion, "Landscape");
+  Enca1(reporte);
+  alumnosFiltrados.forEach((alumno) => {
+    reporte.ImpPosX(alumno.id.toString(), 10, reporte.tw_ren);
+    reporte.ImpPosX(alumno.nombre.toString().substring(0,20), 25, reporte.tw_ren);
+    reporte.ImpPosX(alumno.direccion.toString().substring(0,12), 90, reporte.tw_ren);
+    reporte.ImpPosX(alumno.colonia.toString().substring(0,20), 120, reporte.tw_ren);
+    reporte.ImpPosX(alumno.fecha_nac.toString().substring(0,15), 175, reporte.tw_ren);
+    reporte.ImpPosX(alumno.fecha_inscripcion.toString(), 200, reporte.tw_ren);
+    reporte.ImpPosX(alumno.telefono_1.toString(), 230, reporte.tw_ren);
+    Enca1(reporte);
+    if (reporte.tw_ren >= reporte.tw_endRenH) {
+      reporte.pageBreakH();
+      Enca1(reporte);
+    }
+  });
+  const pdfData = reporte.doc.output("datauristring");
+  setPdfData(pdfData);
+  setPdfPreview(true);
+};
+
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -642,23 +702,25 @@ function Alumnos() {
         setcond1={setcond1}
         setcond2={setcond2}
       />
-      <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
-        <div className="flex justify-start p-3 ">
+      <div className="container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
+        <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Alumnos.
           </h1>
         </div>
-        <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] ">
-          <div className="col-span-1 flex flex-col ">
+        <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
+          <div className="col-span-1 flex flex-col">
             <Acciones
               Buscar={Buscar}
               Alta={Alta}
               home={home}
               PDF={imprimePDF}
               Excel={ImprimeExcel}
-            ></Acciones>
+              Ver={handleVerClick}
+              CerrarView={CerrarView}
+            />
           </div>
-          <div className="col-span-7  ">
+          <div className="col-span-7">
             <div className="flex flex-col h-[calc(100%)]">
               <Busqueda
                 setBajas={setBajas}
@@ -669,22 +731,40 @@ function Alumnos() {
                 TB_Busqueda={TB_Busqueda}
                 setTB_Busqueda={setTB_Busqueda}
               />
-              <TablaAlumnos
-                session={session}
-                isLoading={isLoading}
-                alumnosFiltrados={alumnosFiltrados}
-                showModal={showModal}
-                setAlumno={setAlumno}
-                setAccion={setAccion}
-                setCurrentId={setCurrentId}
-                formatNumber={formatNumber}
-                setCapturedImage={setCapturedImage}
-                setcondicion={setcondicion}
-              />
+              {!pdfPreview && !pdfData && (
+                <TablaAlumnos
+                  session={session}
+                  isLoading={isLoading}
+                  alumnosFiltrados={alumnosFiltrados}
+                  showModal={showModal}
+                  setAlumno={setAlumno}
+                  setAccion={setAccion}
+                  setCurrentId={setCurrentId}
+                  formatNumber={formatNumber}
+                  setCapturedImage={setCapturedImage}
+                  setcondicion={setcondicion}
+                />
+              )} 
+              
+              <div className='mt-4'>
+                {pdfPreview && pdfData && (
+                  <div className=''>
+                    <div className='pdf-preview'>
+                      <Worker
+                        workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
+                      >
+                        <div style={{ height: "500px" }}>
+                          <Viewer fileUrl={pdfData} />
+                        </div>
+                      </Worker>
+                    </div>
+                  </div>
+                )}
+            </div>
             </div>
           </div>
         </div>
-      </div>
+        </div>
     </>
   );
 }

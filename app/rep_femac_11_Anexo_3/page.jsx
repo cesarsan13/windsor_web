@@ -7,7 +7,7 @@ import { calculaDigitoBvba } from "../utils/globalfn";
 import { useForm } from "react-hook-form";
 import {
     getReporteCobranzaporAlumno,
-    Imprimir,
+    ImprimirPDF,
     ImprimirExcel,
 } from "@/app/utils/api/rep_femac_11_Anexo_3/rep_femac_11_Anexo_3";
 import { useState, useEffect } from "react";
@@ -39,11 +39,11 @@ function CobranzaPorAlumno(){
         }
         const fetchData = async () => {
           const { token } = session.user
-  
+        
           const data = await getReporteCobranzaporAlumno(token, fecha_ini, fecha_fin, alumno_ini.id, alumno_fin.id, cajero_ini.numero, cajero_fin.numero, tomaFechas);
           setFormaReporteCobranzaporAlumno(data);
           console.log("ver", FormaRepCobranzaporAlumno);
-          console.log("dtaos",  FormaRepCobranzaporAlumno.data);
+          console.log("dtaos",  FormaRepCobranzaporAlumno);
         }
         fetchData()
       }, [session, status, fecha_ini, fecha_fin, alumno_ini.id, alumno_fin.id, cajero_ini.numero, cajero_fin.numero, tomaFechas]);
@@ -61,7 +61,7 @@ function CobranzaPorAlumno(){
         const configuracion = {
             Encabezado: {
               Nombre_Aplicacion: "Sistema de Control Escolar",
-              Nombre_Reporte: "Relación de Recibos",
+              Nombre_Reporte: "Reporte Cobranza por Alumno(s)",
               Nombre_Usuario: `Usuario: ${session.user.name}`,
             },
             body: FormaRepCobranzaporAlumno,
@@ -87,14 +87,14 @@ function CobranzaPorAlumno(){
             }
 
             if(cajero_fin.numero === undefined)
-                {
-                    doc.ImpPosX(`Cajero seleccionado: ${cajero_ini.numero} `,15,doc.tw_ren),
-            doc.nextRow(10);
-                }
-                else{
-                    doc.ImpPosX(`Cajeros seleccionado de ${cajero_ini.numero} al ${cajero_fin.numero}`,15,doc.tw_ren),
-                    doc.nextRow(10);
-                }
+            {
+                doc.ImpPosX(`Cajero seleccionado: ${cajero_ini.numero} `,15,doc.tw_ren),
+                doc.nextRow(10);
+            }
+            else{
+                doc.ImpPosX(`Cajeros seleccionado de ${cajero_ini.numero} al ${cajero_fin.numero}`,15,doc.tw_ren),
+                doc.nextRow(10);
+            }
             
             doc.ImpPosX("No.",15,doc.tw_ren),
             doc.ImpPosX("Nombre",50,doc.tw_ren),
@@ -122,34 +122,36 @@ function CobranzaPorAlumno(){
         let total_general = 0;
 
         const Cambia_Alumno = (doc, total_importe) => {
-            doc.ImpPosX("TOTAL", 108, doc.tw_ren);
-            doc.ImpPosX(total_importe.toString(), 128, doc.tw_ren);
-            doc.nextRow(4);
+            doc.ImpPosX(`TOTAL: ${total_importe.toString()}` || '', 97, doc.tw_ren);
+            doc.nextRow(8);
         }
 
         Enca1(reporte);
+            body.forEach((reporte2) => {
+                let tipoPago2 = " ";
+                
+            if(reporte2.desc_Tipo_Pago_2 === null)
+            {
+                tipoPago2 = " ";
+            }
+            else{
+                tipoPago2 = reporte2.desc_Tipo_Pago_2;
+            }
 
-        Object.keys(body).forEach((reporte1) => {
-            console.log("dentro del foreach",reporte1);
-            const arregloA = body[reporte1];
-
-            arregloA.forEach((reporte2) => {
-
-            if(reporte2.id !== alumno_Ant && alumno_Ant !== ""){
+            if(reporte2.id_al !== alumno_Ant && alumno_Ant !== ""){
                 Cambia_Alumno(reporte, total_importe);
                 total_importe = 0;
             }
 
-            if(reporte2.id !== alumno_Ant){
-                reporte.ImpPosX(reporte2.id_al.toString() +"-"+ calculaDigitoBvba(reporte2.id_al.toString()),15, reporte.tw_ren);
-                reporte.ImpPosX(reporte2.toString().nom_al,50, reporte.tw_ren);
+            if(reporte2.id_al !== alumno_Ant){
+                reporte.ImpPosX(reporte2.id_al +"-"+ calculaDigitoBvba(reporte2.id_al.toString()),15, reporte.tw_ren);
+                reporte.ImpPosX(reporte2.nom_al.toString(),50, reporte.tw_ren);
                 Enca1(reporte);
                 if (reporte.tw_ren >= reporte.tw_endRen) {
                     reporte.pageBreak();
                     Enca1(reporte);
                 }
             }
-
             reporte.ImpPosX(reporte2.articulo.toString(),15, reporte.tw_ren);
             reporte.ImpPosX(reporte2.descripcion.toString(),30, reporte.tw_ren);
             reporte.ImpPosX(reporte2.numero_doc.toString(),70, reporte.tw_ren);
@@ -157,11 +159,10 @@ function CobranzaPorAlumno(){
             reporte.ImpPosX(reporte2.importe.toString(),110, reporte.tw_ren);
             reporte.ImpPosX(reporte2.recibo.toString(),130, reporte.tw_ren);
             reporte.ImpPosX(reporte2.desc_Tipo_Pago_1.toString(),143, reporte.tw_ren);
-            reporte.ImpPosX(reporte2.desc_Tipo_Pago_1.toString(),163, reporte.tw_ren);
+            reporte.ImpPosX(tipoPago2.toString(),163, reporte.tw_ren);
             reporte.ImpPosX(reporte2.nombre.toString(),183, reporte.tw_ren);
-            reporte.nextRow(5);
 
-          Enca1(reporte);
+            Enca1(reporte);
           if (reporte.tw_ren >= reporte.tw_endRen) {
             reporte.pageBreak();
             Enca1(reporte);
@@ -169,16 +170,14 @@ function CobranzaPorAlumno(){
             total_importe = total_importe + reporte2.importe;
             total_general = total_general + reporte2.importe;
             alumno_Ant = reporte2.id_al;
-
-        });
         });
         Cambia_Alumno(reporte, total_importe);
-        reporte.ImpPosX(`Total importe: ${total_general.toString()}` || '', 88, reporte.tw_ren);
+        
+        reporte.ImpPosX(`TOTAL IMPORTE: ${total_general.toString()}` || '', 80, reporte.tw_ren);
         const pdfData = reporte.doc.output("datauristring");
         setPdfData(pdfData);
         setPdfPreview(true);
     };
-
 
     const CerrarView = () => {
         setPdfPreview(false);
@@ -187,11 +186,67 @@ function CobranzaPorAlumno(){
     };
 
     const ImprimePDF = async () => {
-        console.log("a");
+        const configuracion = {
+            Encabezado: {
+              Nombre_Aplicacion: "Sistema de Control Escolar",
+              Nombre_Reporte: "Reporte Cobranza por Alumno(s)",
+              Nombre_Usuario: `Usuario: ${session.user.name}`,
+            },
+            body: FormaRepCobranzaporAlumno,
+        }
+        ImprimirPDF(configuracion, fecha_ini, fecha_fin, cajero_ini, cajero_fin, tomaFechas)
     };
 
     const ImprimeExcel = async () => {
-        console.log("a");       
+        let detallefecha = "";
+        let detallecajero = "";
+        if(tomaFechas === true)
+            {
+                if(fecha_fin == '')
+                {
+                    detallefecha = `Reporte de cobranza del ${fecha_ini}`;
+                }
+                else{
+                    detallefecha = `Reporte de cobranza del ${fecha_ini} al ${fecha_fin}`;
+                }
+            }
+
+            if(cajero_fin.numero === undefined)
+            {
+                detallecajero = `Cajero seleccionado: ${cajero_ini.numero}`;
+            }
+            else{
+                detallecajero = `Cajeros seleccionado de ${cajero_ini.numero} al ${cajero_fin.numero}`;
+            }
+
+        const configuracion = {
+            Encabezado: {
+                Nombre_Aplicacion: "Sistema de Control Escolar",
+                Nombre_Reporte: "Reporte de Cobranza por Alumno(s)",
+                Nombre_Usuario: `${session.user.name}`,
+                Clase: detallefecha,
+                Profesor: detallecajero,
+                FechaE: "",
+            },
+            body: FormaRepCobranzaporAlumno,
+            columns: [
+                { header: "No.", dataKey: "id_al" },
+                { header: "Nombre", dataKey: "nom_al" },
+            ],
+            columns2: [
+                { header: "Producto", dataKey: "articulo" },
+                { header: "Descripcion", dataKey: "descripcion" },
+                { header: "Documento", dataKey: "numero_doc" },
+                { header: "Fecha P", dataKey: "fecha" },
+                { header: "Importe", dataKey: "importe" },
+                { header: "Recibo", dataKey: "recibo" },
+                { header: "Pago 1", dataKey: "desc_Tipo_Pago_1" },
+                { header: "Pago 2", dataKey: "desc_Tipo_Pago_2" },
+                { header: "Cajero", dataKey: "nombre" },
+            ],
+            nombre: "Reporte de Cobranza por Alumno(s)"
+        }
+        ImprimirExcel(configuracion, fecha_ini, fecha_fin, cajero_ini, cajero_fin, tomaFechas)       
     };
 
 
@@ -264,7 +319,7 @@ function CobranzaPorAlumno(){
                             itemData={[]}
                             fieldsToShow={["id", "nombre_completo"]}
                             nameInput={["id", "nombre_completo"]}
-                            titulo={"Inicio: "}
+                            titulo={"Alumno Inicio: "}
                             setItem={setAlumnoIni}
                             token={session.user.token}
                             modalId="modal_alumnos1"
@@ -274,7 +329,7 @@ function CobranzaPorAlumno(){
                             itemData={[]}
                             fieldsToShow={["id", "nombre_completo"]}
                             nameInput={["id", "nombre_completo"]}
-                            titulo={"Fin: "}
+                            titulo={"Alumno Fin: "}
                             setItem={setAlumnoFin}
                             token={session.user.token}
                             modalId="modal_alumnos2"
@@ -286,7 +341,7 @@ function CobranzaPorAlumno(){
                             itemData={[]}
                             fieldsToShow={["numero", "nombre"]}
                             nameInput={["numero", "nombre"]}
-                            titulo={"Inicio: "}
+                            titulo={"Cajero Inicio: "}
                             setItem={setCajeroIni}
                             token={session.user.token}
                             modalId="modal_cajeros1"
@@ -296,7 +351,7 @@ function CobranzaPorAlumno(){
                             itemData={[]}
                             fieldsToShow={["numero", "nombre"]}
                             nameInput={["numero", "nombre"]}
-                            titulo={"Fin: "}
+                            titulo={"Cajero Fin: "}
                             setItem={setCajeroFin}
                             token={session.user.token}
                             modalId="modal_cajeros2"
