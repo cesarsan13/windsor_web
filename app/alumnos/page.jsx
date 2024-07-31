@@ -20,7 +20,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import * as XLSX from "xlsx";
+import * as XLSX from "xlsx"
 import '@react-pdf-viewer/core/lib/styles/index.css';
 function Alumnos() {
   const router = useRouter();
