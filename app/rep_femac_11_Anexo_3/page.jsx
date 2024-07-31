@@ -358,7 +358,7 @@ function CobranzaPorAlumno(){
                         />
                     </div>
                     {pdfPreview && pdfData && (
-                        <div className="pdf-preview ">
+                        <div className="pdf-preview">
                             <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}>
                                 <div style={{ height: "550px", width: "100%"}}>
                                     <Viewer fileUrl={pdfData} />
