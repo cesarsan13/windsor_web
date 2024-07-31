@@ -17,6 +17,8 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { getUltimoHorario } from "@/app/utils/api/horarios/horarios";
 import { getProductos } from "../utils/api/productos/productos";
+import ModalVistaPreviaHorarios from "./components/modalVistaPreviaHorarios";
+import { ReportePDF } from "../utils/ReportesPDF";
 
 function Horarios() {
   const router = useRouter();
@@ -32,6 +34,8 @@ function Horarios() {
   const [filtro, setFiltro] = useState("");
   const [dia, setDia] = useState("");
   const [TB_Busqueda, setTB_Busqueda] = useState("");  
+  const [pdfPreview, setPdfPreview] = useState(false);
+  const [pdfData, setPdfData] = useState("");
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -236,6 +240,62 @@ function Horarios() {
     };
     ImprimirExcel(configuracion);
   };
+  const handleVerClick = () =>{
+    const configuracion = {
+      Encabezado: {
+        Nombre_Aplicacion: "Sistema de Control Escolar",
+        Nombre_Reporte: "Reporte Datos Horario",
+        Nombre_Usuario: `Usuario: ${session.user.name}`,
+      },
+    };
+    const Enca1 = (doc) => {
+      if (!doc.tiene_encabezado) {
+        doc.imprimeEncabezadoPrincipalV();
+        doc.nextRow(12);
+        doc.ImpPosX("Numero", 14, doc.tw_ren);
+        doc.ImpPosX("Cancha", 28, doc.tw_ren);
+        doc.ImpPosX("Dia", 42, doc.tw_ren);
+        doc.ImpPosX("Horario", 82, doc.tw_ren);
+        doc.ImpPosX("Niños", 114, doc.tw_ren);
+        doc.ImpPosX("Sexo", 134, doc.tw_ren);
+        doc.ImpPosX("Edad Ini", 154, doc.tw_ren);
+        doc.ImpPosX("Edad Fin", 174, doc.tw_ren);
+        doc.nextRow(4);
+        doc.printLineV();
+        doc.nextRow(4);
+        doc.tiene_encabezado = true;
+      } else {
+        doc.nextRow(6);
+        doc.tiene_encabezado = true;
+      }
+    };    
+    const reporte = new ReportePDF(configuracion)
+    Enca1(reporte);
+    horariosFiltrados.forEach((horario)=>{
+      reporte.ImpPosX(horario.numero.toString(),14,reporte.tw_ren)
+      reporte.ImpPosX(horario.cancha.toString(),28,reporte.tw_ren)
+      reporte.ImpPosX(horario.dia.toString(),42,reporte.tw_ren)
+      reporte.ImpPosX(horario.horario.toString(),82,reporte.tw_ren)
+      reporte.ImpPosX(horario.max_niños.toString(),114,reporte.tw_ren)
+      reporte.ImpPosX(horario.sexo.toString(),134,reporte.tw_ren)
+      reporte.ImpPosX(horario.edad_ini.toString(),154,reporte.tw_ren)
+      reporte.ImpPosX(horario.edad_fin.toString(),174,reporte.tw_ren)
+      Enca1(reporte);
+      if (reporte.tw_ren >= reporte.tw_endRen) {
+        reporte.pageBreak();
+        Enca1(reporte);
+      }
+    })
+    const pdfData = reporte.doc.output("datauristring");
+    setPdfData(pdfData);
+    setPdfPreview(true);
+    showModalVista(true)
+  }
+  const showModalVista = (show) => {
+    show
+      ? document.getElementById("modalVPHorarios").showModal()
+      : document.getElementById("modalVPHorarios").close();
+  }
   return (
     <>
       <ModalHorario
@@ -249,6 +309,7 @@ function Horarios() {
         control={control}
         setDia={setDia}
       />
+      <ModalVistaPreviaHorarios pdfData={pdfData} pdfPreview={pdfPreview} PDF={ImprimePDF} Excel={ImprimeExcel} />
       <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
@@ -261,8 +322,7 @@ function Horarios() {
               Buscar={Buscar}
               Alta={Alta}
               home={home}
-              PDF={ImprimePDF}
-              Excel={ImprimeExcel}
+              Ver={handleVerClick}
             ></Acciones>
           </div>
           <div className="col-span-7">
