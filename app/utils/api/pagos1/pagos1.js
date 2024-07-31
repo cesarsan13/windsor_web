@@ -19,12 +19,91 @@ export const validarClaveCajero = async (token, data) => {
     return resJson;
 }
 
-export const buscarArticulo = async (token, numero  ) => {
+export const buscarArticulo = async (token, numero) => {
     let url = `${process.env.DOMAIN_API}api/pagos1/buscar-articulo`
     const res = await fetch(url, {
         method: "POST",
         body: JSON.stringify({
             articulo: numero,
+        }),
+        headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json"
+        }
+    })
+    const resJson = await res.json();
+    return resJson;
+}
+
+export const buscaDocumento = async (token, data) => {
+    let url = `${process.env.DOMAIN_API}api/pagos1/busca-documentos`
+    const res = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+            alumno: data.alumno,
+            productos: data.productos,
+            numero_doc: data.numero_doc,
+        }),
+        headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json"
+        }
+    })
+    const resJson = await res.json();
+    return resJson;
+}
+
+export const buscaPropietario = async (token, numero) => {
+    let url = `${process.env.DOMAIN_API}api/pagos1/busca-propietario`
+    const res = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+            numero: numero,
+        }),
+        headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json"
+        }
+    })
+    const resJson = await res.json();
+    return resJson.data;
+}
+
+export const guardarDetallePedido = async (token, data) => {
+    let url = `${process.env.DOMAIN_API}api/pagos1/guardar-detalle-pedido`
+    const res = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+            recibo: data.recibo,
+            alumno: data.alumno,
+            fecha: data.fecha,
+            articulo: data.articulo,
+            cantidad: data.cantidad,
+            precio_unitario: data.precio_unitario,
+            descuento: data.descuento,
+            iva: data.iva,
+            documento: data.documento,
+        }),
+        headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json"
+        }
+    })
+    const resJson = await res.json();
+    return resJson;
+}
+
+export const guardardocumento = async (token, data) => {
+    let url = `${process.env.DOMAIN_API}api/pagos1/guarda-documentos`
+    const res = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+            alumno: data.alumno,
+            producto: data.producto,
+            numero_doc: data.numero_doc,
+            fecha: data.fecha,
+            descuento: data.descuento,
+            importe: data.importe,
         }),
         headers: {
             Authorization: "Bearer " + token,

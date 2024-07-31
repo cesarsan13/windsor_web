@@ -14,6 +14,7 @@ function Inputs({
   maxLenght,
   isDisabled,
   setValue,
+  handleBlur,
   eventInput,
   valueInput,
   dataType,
@@ -80,6 +81,7 @@ function Inputs({
             type={type}
             className={`text-black dark:text-white ${className}`}
             disabled={isDisabled}
+            // onKeyDown={soloEnteros}
             onKeyDown={(evt) => eventInput(evt)}
             {...register(name, {
               ...(requerido && { required: message }),
@@ -96,6 +98,7 @@ function Inputs({
   } else if (tipoInput === 'disabledInput') {
     return (
       <input
+        {...(maxLenght !== 0 && { maxLength: maxLenght })}
         name={name}
         id={name}
         type={type}
@@ -157,7 +160,7 @@ function Inputs({
             {...(dataType === "float" && { onKeyDown: soloDecimales })}
             {...(dataType === "int" ||
               (dataType === "float" && {
-                onBlur: (event) => eventInput(event, dataType),
+                onBlur: (event) => handleBlur(event, dataType),
               }))}
             {...register(name, {
               ...(requerido && { required: message }),

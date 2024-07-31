@@ -21,6 +21,7 @@ import { useSession } from "next-auth/react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
+import '@react-pdf-viewer/core/lib/styles/index.css';
 function Alumnos() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -624,57 +625,57 @@ function Alumnos() {
   const CerrarView = () => {
     setPdfPreview(false);
     setPdfData('');
-};
+  };
 
-const handleVerClick = () => {
-  const configuracion = {
-    Encabezado: {
-      Nombre_Aplicacion: "Lista de Alumnos por clase",
-      Nombre_Reporte: "Reporte de Alumnos",
-      Nombre_Usuario: `Usuario: ${session.user.name}`,
-    },
-  };
-  const Enca1 = (doc) => {
-    if (!doc.tiene_encabezado) {
-      doc.imprimeEncabezadoPrincipalV();
-      doc.nextRow(12);
-      doc.ImpPosX("Numero", 10, doc.tw_ren);
-      doc.ImpPosX("Nombre", 25, doc.tw_ren);
-      doc.ImpPosX("Dirección", 90, doc.tw_ren);
-      doc.ImpPosX("Colonia", 120, doc.tw_ren);
-      doc.ImpPosX("Fecha Nac", 175, doc.tw_ren);
-      doc.ImpPosX("Fecha Alta", 200, doc.tw_ren);
-      doc.ImpPosX("Telefono", 230, doc.tw_ren);
-      doc.nextRow(4);
-      doc.printLineH();
-      doc.nextRow(4);
-      doc.tiene_encabezado = true;
-    } else {
-      doc.nextRow(6);
-      doc.tiene_encabezado = true;
-    }
-  };
-  
-  const reporte = new ReportePDF(configuracion, "Landscape");
-  Enca1(reporte);
-  alumnosFiltrados.forEach((alumno) => {
-    reporte.ImpPosX(alumno.id.toString(), 10, reporte.tw_ren);
-    reporte.ImpPosX(alumno.nombre.toString().substring(0,20), 25, reporte.tw_ren);
-    reporte.ImpPosX(alumno.direccion.toString().substring(0,12), 90, reporte.tw_ren);
-    reporte.ImpPosX(alumno.colonia.toString().substring(0,20), 120, reporte.tw_ren);
-    reporte.ImpPosX(alumno.fecha_nac.toString().substring(0,15), 175, reporte.tw_ren);
-    reporte.ImpPosX(alumno.fecha_inscripcion.toString(), 200, reporte.tw_ren);
-    reporte.ImpPosX(alumno.telefono_1.toString(), 230, reporte.tw_ren);
+  const handleVerClick = () => {
+    const configuracion = {
+      Encabezado: {
+        Nombre_Aplicacion: "Lista de Alumnos por clase",
+        Nombre_Reporte: "Reporte de Alumnos",
+        Nombre_Usuario: `Usuario: ${session.user.name}`,
+      },
+    };
+    const Enca1 = (doc) => {
+      if (!doc.tiene_encabezado) {
+        doc.imprimeEncabezadoPrincipalV();
+        doc.nextRow(12);
+        doc.ImpPosX("Numero", 10, doc.tw_ren);
+        doc.ImpPosX("Nombre", 25, doc.tw_ren);
+        doc.ImpPosX("Dirección", 90, doc.tw_ren);
+        doc.ImpPosX("Colonia", 120, doc.tw_ren);
+        doc.ImpPosX("Fecha Nac", 175, doc.tw_ren);
+        doc.ImpPosX("Fecha Alta", 200, doc.tw_ren);
+        doc.ImpPosX("Telefono", 230, doc.tw_ren);
+        doc.nextRow(4);
+        doc.printLineH();
+        doc.nextRow(4);
+        doc.tiene_encabezado = true;
+      } else {
+        doc.nextRow(6);
+        doc.tiene_encabezado = true;
+      }
+    };
+
+    const reporte = new ReportePDF(configuracion, "Landscape");
     Enca1(reporte);
-    if (reporte.tw_ren >= reporte.tw_endRenH) {
-      reporte.pageBreakH();
+    alumnosFiltrados.forEach((alumno) => {
+      reporte.ImpPosX(alumno.id.toString(), 10, reporte.tw_ren);
+      reporte.ImpPosX(alumno.nombre.toString().substring(0, 20), 25, reporte.tw_ren);
+      reporte.ImpPosX(alumno.direccion.toString().substring(0, 12), 90, reporte.tw_ren);
+      reporte.ImpPosX(alumno.colonia.toString().substring(0, 20), 120, reporte.tw_ren);
+      reporte.ImpPosX(alumno.fecha_nac.toString().substring(0, 15), 175, reporte.tw_ren);
+      reporte.ImpPosX(alumno.fecha_inscripcion.toString(), 200, reporte.tw_ren);
+      reporte.ImpPosX(alumno.telefono_1.toString(), 230, reporte.tw_ren);
       Enca1(reporte);
-    }
-  });
-  const pdfData = reporte.doc.output("datauristring");
-  setPdfData(pdfData);
-  setPdfPreview(true);
-};
+      if (reporte.tw_ren >= reporte.tw_endRenH) {
+        reporte.pageBreakH();
+        Enca1(reporte);
+      }
+    });
+    const pdfData = reporte.doc.output("datauristring");
+    setPdfData(pdfData);
+    setPdfPreview(true);
+  };
 
   if (status === "loading") {
     return (
@@ -722,17 +723,21 @@ const handleVerClick = () => {
           </div>
           <div className="col-span-7">
             <div className="flex flex-col h-[calc(100%)]">
-              <Busqueda
-                setBajas={setBajas}
-                setFiltro={setFiltro}
-                limpiarBusqueda={limpiarBusqueda}
-                Buscar={Buscar}
-                handleBusquedaChange={handleBusquedaChange}
-                TB_Busqueda={TB_Busqueda}
-                setTB_Busqueda={setTB_Busqueda}
-              />
               {!pdfPreview && !pdfData && (
-                <TablaAlumnos
+                <Busqueda
+                  setBajas={setBajas}
+                  setFiltro={setFiltro}
+                  limpiarBusqueda={limpiarBusqueda}
+                  Buscar={Buscar}
+                  handleBusquedaChange={handleBusquedaChange}
+                  TB_Busqueda={TB_Busqueda}
+                  setTB_Busqueda={setTB_Busqueda}
+                />
+              )}
+
+              {!pdfPreview && !pdfData && (
+                <div className="overflow-x-auto">
+                  <TablaAlumnos
                   session={session}
                   isLoading={isLoading}
                   alumnosFiltrados={alumnosFiltrados}
@@ -744,8 +749,10 @@ const handleVerClick = () => {
                   setCapturedImage={setCapturedImage}
                   setcondicion={setcondicion}
                 />
-              )} 
-              
+                </div>
+                
+              )}
+
               <div className='mt-4'>
                 {pdfPreview && pdfData && (
                   <div className=''>
@@ -760,11 +767,11 @@ const handleVerClick = () => {
                     </div>
                   </div>
                 )}
-            </div>
+              </div>
             </div>
           </div>
         </div>
-        </div>
+      </div>
     </>
   );
 }

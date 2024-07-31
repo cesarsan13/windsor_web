@@ -34,17 +34,24 @@ function Inputs({
             ...(requerido && { required: message }),
           })}
         >
-          {data && name === "font_nombre"
-            ? Object.entries(data).map(([key, value]) => (
-                <option key={key} value={value}>
-                  {value}
-                </option>
-              ))
-            : Object.entries(data).map(([key, value]) => (
-                <option key={key} value={key}>
-                  {value}
-                </option>
-              ))}
+          {data &&
+            (name === "font_nombre"
+              ? Object.entries(data).map(([key, value]) => (
+                  <option key={key} value={value}>
+                    {value}
+                  </option>
+                ))
+              : name === "idlabel"
+              ? data.map((object, index) => (
+                  <option key={index} value={object.numero_dato}>
+                    Texto {object.numero_dato}
+                  </option>
+                ))
+              : Object.entries(data).map(([key, value]) => (
+                  <option key={key} value={key}>
+                    {value}
+                  </option>
+                )))}
         </select>
       </label>
       {errors[name] && (

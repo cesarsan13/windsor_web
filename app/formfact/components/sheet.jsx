@@ -21,7 +21,6 @@ function Sheet({ labels, setLabels, selectedIndex, setSelectedIndex }) {
   const handleClick = (evt, index) => {
     evt.preventDefault();
     setSelectedIndex(index);
-    console.log(labels[selectedIndex]);
   };
   const handleDragStart = (event, index) => {
     event.dataTransfer.setData("index", index);
@@ -45,7 +44,7 @@ function Sheet({ labels, setLabels, selectedIndex, setSelectedIndex }) {
 
   return (
     <div
-      className="w-[calc(8.5in)] h-[calc(11in)] m-5  border-solid border bg-white  shadow-xl flex flex-col relative"
+      className="w-[calc(210mm)] h-[calc(297mm)] m-5  border-solid border bg-white  shadow-xl flex flex-col relative"
       onDoubleClick={(evt) => handleDoubleClick(evt)}
       onDragOver={(evt) => handleDragOver(evt)}
       onDrop={(evt) => handleDrop(evt)}
