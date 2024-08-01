@@ -2,9 +2,11 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import ModalCajeroPago from "@/app/pagos1/components/modalCajeroPago";
+import ModalDocTabla from "@/app/pagos1/components/modalDocTabla";
 import Acciones from "@/app/pagos1/components/Acciones";
 import { useForm } from "react-hook-form";
 import {
+    buscaDocumentosCobranza,
     buscaPropietario,
     guardarDocumento,
     buscaDocumento,
@@ -12,6 +14,7 @@ import {
     buscarArticulo,
 } from "@/app/utils/api/pagos1/pagos1";
 import { getFormasPago } from "@/app/utils/api/formapago/formapago";
+import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
 import { Elimina_Comas, formatNumber, pone_ceros } from "@/app/utils/globalfn";
 import Button from "@/app/components/button";
 import Tooltip from "@/app/components/tooltip";
@@ -22,8 +25,9 @@ import Inputs from "@/app/pagos1/components/Inputs";
 // import { Worker, Viewer } from "@react-pdf-viewer/core";
 import BuscarCat from "@/app/components/BuscarCat";
 import TablaPagos1 from "@/app/pagos1/components/tablaPagos1";
+import TablaDoc from "@/app/pagos1/components/tablaDoc";
 import ModalPagoImprime from "@/app/pagos1/components/modalPagosImprime";
-import { showSwal } from "@/app/utils/alerts";
+import { showSwal, showSwalAndWait } from "@/app/utils/alerts";
 import Swal from "sweetalert2";
 function Pagos_1() {
     const router = useRouter();
@@ -57,6 +61,8 @@ function Pagos_1() {
     const [dRecargo, setDrecargo] = useState('');
     const [selectedTable, setSelectedTable] = useState({});
     const [cargado, setCargado] = useState(false);
+    const [docFiltrados, setdDocFiltrados] = useState([]);
+    const [alumnos, setAlumnos] = useState([]);
     const {
         register,
         handleSubmit,
@@ -96,12 +102,20 @@ function Pagos_1() {
             const dd = String(today.getDate()).padStart(2, '0');
             const formattedToday = `${yyyy}-${mm}-${dd}`;
             document.getElementById('fecha').value = formattedToday;
-            if (cargado === false) { const data = await getFormasPago(session.user.token, false); setFormaPago(data); setCargado(true); }
-            // if (!validar) {
-            //     showModal(true);
-            // } else {
-            //     showModal(false);
-            // }
+            if (cargado === false) {
+                const [dataF, dataA] = await Promise.all([
+                    getFormasPago(session.user.token, false),
+                    getAlumnos(session.user.token, false)
+                ]);
+                setAlumnos(dataA);
+                setFormaPago(dataF);
+                setCargado(true);
+            }
+            if (!validar) {
+                showModal(true);
+            } else {
+                showModal(false);
+            }
             setisLoading(false);
         };
         fetchData();
@@ -132,12 +146,61 @@ function Pagos_1() {
             : document.getElementById("my_modal_4").close();
     };
 
+    const showModal3 = (show) => {
+        show
+            ? document.getElementById("my_modal_5").showModal()
+            : document.getElementById("my_modal_5").close();
+    };
+
     const home = () => {
         router.push("/");
     };
 
-    const Documento = () => {
+    const Documento = (event) => {
+        event.preventDefault();
+        handleSubmit(submitDocumento)();
     }
+
+    const submitDocumento = async (data) => {
+        const { token } = session.user;
+        let newData = {};
+        let alumnoInvalido = alumnos1.id;
+        if (!alumnoInvalido) { showSwal("Oppss!", "Alumno invalido", "error"); return; }
+        const dataR = await buscaDocumentosCobranza(token, alumnos1.id);
+        // console.log('dataR', dataR);
+        if (dataR.length > 0) {
+            setdDocFiltrados([]);
+            // console.log("paso");
+            for (const item of dataR) {
+                const importeConDescuento = item.importe - (item.importe * (item.descuento / 100));
+                const diferencia = parseFloat(importeConDescuento.toFixed(2));
+                if (parseFloat((diferencia - item.importe_pago).toFixed(2)) > 0) {
+                    newData = {
+                        numero: item.numero_doc,
+                        paquete: item.producto,
+                        fecha: item.fecha,
+                    };
+                    if (parseFloat(item.importe_pago.toFixed(2)) > 0) {
+                        const Tw_Trabajo = parseFloat(importeConDescuento.toFixed(2));
+                        const saldoF = parseFloat((Tw_Trabajo - item.importe_pago).toFixed(2));
+                        newData.saldo = formatNumber(saldoF);
+                        newData.descuento = "0.00";
+                    } else {
+                        const saldoF = parseFloat(item.importe.toFixed(2));
+                        newData.saldo = formatNumber(saldoF);
+                        const descF = parseFloat(item.descuento.toFixed(2));
+                        newData.descuento = formatNumber(descF);
+                    }
+                    // console.log('new Data', newData);
+                }
+            }
+            setdDocFiltrados((prevPagos) => [...prevPagos, newData]);
+            showModal3(true);
+        } else {
+            // console.log("no paso");
+            showSwal("Oppss!", "No hay documentos para cobro", "error");
+        }
+    };
 
     const Recargos = async () => {
         let recargo;
@@ -149,7 +212,6 @@ function Pagos_1() {
             BuscaArticulo(9999)
         ]);
         let desPr = ar9999.descripcion;
-        console.log(desPr);
         if (arFind) { recargo = formatNumber(arFind.pro_recargo); }
         else { recargo = formatNumber(0); }
         if (desPr) { setDrecargo(desPr); setMuestraRecargos(true); }
@@ -221,10 +283,8 @@ function Pagos_1() {
                     importe: A_Pagar || 0,
                 };
                 res = await buscaDocumento(token, newData);
-                console.log(res);
                 if (res.status) {
                     res2 = await guardarDocumento(token, newData);
-                    console.log(res2);
                 } else { showSwal("", "El documento a generar ya existe no se realiza el proceso", "info"); return; }
             } else { return; }
         });
@@ -272,43 +332,25 @@ function Pagos_1() {
         if (!fecha) {
             const today = new Date(); const yyyy = today.getFullYear(); const mm = String(today.getMonth() + 1).padStart(2, '0'); const dd = String(today.getDate()).padStart(2, '0'); fecha = `${dd}-${mm}-${yyyy}`;
         }
-        console.log('data imprime', data);
         let alumnoInvalido = alumnos1.id;
         if (!alumnoInvalido) { showSwal("Oppss!", "Alumno invalido", "error"); return; }
         if (h1Total <= 0) { showSwal("Oppss!", "El monto total debe ser mayor a 0", "error"); return; }
         let dataP = await buscaPropietario(session.user.token, 1);
         const formaPagoFind = formaPago.find(forma => forma.id === 1);
         const newData = {
-            pago: h1Total,
-            recibo: dataP.con_recibos,
-            forma_pago_id: formaPagoFind.id,
-            comentario_id: comentarios1.id,
-            comentario_desc: comentarios1.comentario_1,
-            comentarios: data.comentarios,
-            fecha: fecha,
-            total: h1Total,
-        }; console.log('dataaaaaaaaaa', newData); setformaPagoPage(newData); showModal2(true);
+            pago: h1Total || 0,
+            recibo: dataP.con_recibos || 0,
+            forma_pago_id: formaPagoFind.id || 0,
+            comentario_ad: data.comentarios || '',
+            fecha: fecha || '',
+        }; setformaPagoPage(newData); showModal2(true);
     };
 
     const BuscaArticulo = async (numero) => {
         let res;
         const { token } = session.user;
         res = await buscarArticulo(token, numero)
-        console.log(res);
         return res.data;
-    };
-
-    const handleBlur = (evt, datatype) => {
-        if (evt.target.value === "") return;
-        datatype === "int"
-            ? setPago((pago) => ({
-                ...pago,
-                [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-            }))
-            : setPago((pago) => ({
-                ...pago,
-                [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-            }));
     };
 
     const muestraTotal = (data) => {
@@ -317,6 +359,23 @@ function Pagos_1() {
         const formateado = formatNumber(nuevoTotal);
         setH1Total(formateado);
     };
+
+    const EliminarCampo = (data) => {
+        const index = pagos.findIndex((p) => p.numero === data.numero);
+        if (index !== -1) {
+            const pFiltrados = pagos.filter((p) => p.numero !== data.numero);
+            const fTotal = Elimina_Comas(h1Total);
+            const dTotal = Elimina_Comas(data.total);
+            let restaTotal = fTotal - dTotal;
+            if (!restaTotal) {
+                restaTotal = '0'
+            }
+            const total = formatNumber(restaTotal);
+            setH1Total(total);
+            setPagos(pFiltrados);
+            setPagosFiltrados(pFiltrados);
+        }
+    }
 
     const handleEnterKey = async (data) => {
         let productoInvalido = productos1.id;
@@ -353,27 +412,31 @@ function Pagos_1() {
         setPagosFiltrados((prevPagos) => [...prevPagos, nuevoPago]);
     };
 
-    const EliminarCampo = (data) => {
-        const index = pagos.findIndex((p) => p.numero === data.numero);
-        if (index !== -1) {
-            const pFiltrados = pagos.filter((p) => p.numero !== data.numero);
-            const fTotal = Elimina_Comas(h1Total);
-            const dTotal = Elimina_Comas(data.total);
-            let restaTotal = fTotal - dTotal;
-            if (!restaTotal) {
-                restaTotal = '0'
-            }
-            const total = formatNumber(restaTotal);
-            setH1Total(total);
-            setPagos(pFiltrados);
-            setPagosFiltrados(pFiltrados);
-        }
-    }
+    const handleBlur = (evt, datatype) => {
+        if (evt.target.value === "") return;
+        datatype === "int"
+            ? setPago((pago) => ({
+                ...pago,
+                [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+            }))
+            : setPago((pago) => ({
+                ...pago,
+                [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+            }));
+    };
 
     const handleKeyDown = (event) => {
-        if (event.key === 'Enter') {
+        const key = event.key;
+        if (key === 'Enter') {
             event.preventDefault();
             handleSubmit(handleEnterKey)();
+            return;
+        }
+        if (key === 'Backspace' || key === 'Tab' || key === 'ArrowLeft' || key === 'ArrowRight' || key === 'Delete' || key === 'Escape') {
+            return;
+        }
+        if (!/^\d$/.test(key)) {
+            event.preventDefault();
         }
     };
 
@@ -399,6 +462,17 @@ function Pagos_1() {
                 home={home}
                 formaPagoPage={formaPagoPage}
                 pagosFiltrados={pagosFiltrados}
+                alumnos1={alumnos1}
+                productos1={productos1}
+                comentarios1={comentarios1}
+                cajero={cajero}
+                alumnos={alumnos}
+            />
+            <ModalDocTabla
+                session={session}
+                showModal={showModal3}
+                docFiltrados={docFiltrados}
+                isLoading={isLoading}
             />
             <div className="container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
                 <div className="flex justify-start p-3">
@@ -499,6 +573,7 @@ function Pagos_1() {
                                     message={"numero requerido"}
                                     isDisabled={false}
                                     eventInput={handleKeyDown}
+                                    handleBlur={handleBlur}
                                     maxLength={8}
                                 />
                             </div>

@@ -4,12 +4,19 @@ import { useState, useEffect } from "react";
 import Inputs from "@/app/cajeros/components/Inputs";
 import BuscarCat from "@/app/components/BuscarCat";
 import { useForm } from "react-hook-form";
-
+import { showSwalAndWait } from "@/app/utils/alerts";
+import { guardarDetallePedido, guardaEcabYCobrD, Imprimir } from "@/app/utils/api/pagos1/pagos1"
+import { FaSpinner } from "react-icons/fa";
 function ModalPagoImprime({
     session,
     showModal,
     formaPagoPage,
-    pagosFiltrados
+    pagosFiltrados,
+    alumnos1,
+    productos1,
+    comentarios1,
+    cajero,
+    alumnos
 }) {
     const [error, setError] = useState(null);
     const columnasBuscaCat = ["id", "descripcion"];
@@ -17,6 +24,8 @@ function ModalPagoImprime({
     const [Handlepago, setPago] = useState([]);
     const [formpago, setFormPago] = useState({});
     const [formpago2, setFormPago2] = useState({});
+    const [cargado, setCargado] = useState(false);
+    const [isLoading, setisLoading] = useState(false);
 
     const {
         register,
@@ -35,7 +44,17 @@ function ModalPagoImprime({
     });
 
     useEffect(() => {
-        // if (showModal) {
+        const fetchData = async () => {
+            if (cargado === false) {
+                const { token } = session.user;
+
+            }
+        };
+        fetchData();
+    }, [session, reset]);
+
+
+    useEffect(() => {
         reset({
             pago: formaPagoPage.pago,
             pago_2: "0.00",
@@ -44,27 +63,127 @@ function ModalPagoImprime({
             num_copias: 1,
             recibo_imprimir: formaPagoPage.recibo,
         });
-        // document.getElementById("my_modal_4").showModal();
-        // } else {
-        //     document.getElementById("my_modal_4").close();
-        // }
     }, [showModal, reset]);
 
+    // const formaImprime = async (dataSub) => {
+    //     console.log(dataSub);
+    //     let data;
+    //     const { token } = session.user;
+    //     const fechaIniFormateada = fecha_ini ? fecha_ini.replace(/-/g, '/') : 0;
+    //     const fechaFinFormateada = fecha_fin ? fecha_fin.replace(/-/g, '/') : 0;
+    //     data = await getRelaciondeRecibos(token, tomaFechas, fechaIniFormateada, fechaFinFormateada, factura_ini, factura_fin, recibo_ini, recibo_fin, alumno_ini.id, alumno_fin.id);
+    //     console.log('data get report', data);
+    //     return data;
+    // };
+
     const onSubmitModal = handleSubmit(async (data) => {
-        console.log(data);
-        if (formaPagoPage.recibo <= 0) { showSwal("", "El recibo debe ser mayor a 0", "info"); return; }
-        let totalFormat = Elimina_Comas(formaPagoPage.total);
-        let imp_pago = Elimina_Comas(data.pago);
-        let imp_pago2 = Elimina_Comas(data.pago_2);
+        try {
+            const { token } = session.user;
+            let newData;
+            let res;
+            if (formaPagoPage.recibo <= 0) { showModal(false); await showSwalAndWait("", "El recibo debe ser mayor a 0", "info"); showModal(true); return; }
+            let totalFormat = Elimina_Comas(formaPagoPage.pago);
+            let imp_pago = Elimina_Comas(data.pago);
+            let imp_pago2 = Elimina_Comas(data.pago_2);
+            const totalPago = (imp_pago + imp_pago2);
 
-        const totalGeneralRounded = Math.round(totalFormat * 100) / 100;
-        const totalPago = Math.round((imp_pago + imp_pago2) * 100) / 100;
-        console.log(totalGeneralRounded, totalPago);
-        if (totalGeneralRounded !== totalPago) { showSwal("", "Diferencia entre el total recibido contra el pago", "info"); return; }
-        if (data.pago_2 > 0 && data.referencia_2 === "") { showSwal("", "Es necesario seleccionar segundo pago", "info"); return; }
+            if (totalFormat !== totalPago) { showModal(false); await showSwalAndWait("", "Diferencia entre el total recibido contra el pago", "info"); showModal(true); return; }
+            if (data.pago_2 > 0 && data.referencia_2 === "") { showModal(false); await showSwalAndWait("", "Es necesario seleccionar segundo pago", "info"); showModal(true); return; }
+            setisLoading(true);
+            for (const pago of pagosFiltrados) {
+                const pagoUnitF = Elimina_Comas(pago.precio_base)
+                newData = {
+                    recibo: data.recibo_imprimir || 0,
+                    alumno: pago.alumno || 0,
+                    fecha: formaPagoPage.fecha || '',
+                    articulo: pago.numero || 0,
+                    cantidad: pago.cantidad_producto || 0,
+                    precio_unitario: pagoUnitF || 0,
+                    descuento: pago.descuento || 0,
+                    documento: pago.documento || 0,
+                    total_general: totalFormat || 0,
+                };
+                // console.log(`primero`, newData);
+                res = await guardarDetallePedido(token, newData)
+            }
 
-
+            const postNewData = {
+                recibo: data.recibo_imprimir || 0,
+                alumno: alumnos1.id || 0,
+                fecha: formaPagoPage.fecha || '',
+                articulo: productos1.id || 0,
+                cajero: cajero.numero || 0,
+                total_neto: totalFormat || 0,
+                n_banco: formpago.id || 0,
+                imp_pago: imp_pago || 0,
+                referencia_1: data.referencia || '',
+                n_banco_2: formpago2.id || 0,
+                imp_pago_2: imp_pago2 || 0,
+                referencia_2: data.referencia_2 || '',
+                quien_paga: data.quien_paga || '',
+                comenta: comentarios1.id || '',
+                comentario_ad: formaPagoPage.comentario_ad || '',
+            }
+            res = await guardaEcabYCobrD(token, postNewData)
+            // if (res.status) {        
+            const pagoFiltrado = formaImprime(data);
+            const encaPago = formaEnca(data);
+            const configuracion = {
+                Encabezado: {
+                    Nombre_Aplicacion: "Sistema de Control Escolar",
+                    Nombre_Reporte: "Pagos",
+                    Nombre_Usuario: `Usuario: ${session.user.name}`,
+                },
+                body: pagoFiltrado,
+                encaBody: encaPago,
+                // encaBody: Old_Standard_TT,
+            };
+            Imprimir(configuracion);
+            setisLoading(false);
+            showModal(false);
+        } catch (e) {
+            setisLoading(false);
+        }
+        // } else { }
     });
+
+    const formaImprime = (dataSubmit) => {
+        console.log(dataSubmit);
+        console.log(pagosFiltrados);
+        console.log(formaPagoPage);
+        let body = [];
+        for (const item of pagosFiltrados) {
+            const formaPagoFind = alumnos.find(forma => forma.id === item.alumno);
+            const data = {
+                alumno_id: formaPagoFind.id || '',
+                alumno_nombre_completo: formaPagoFind.nombre_completo || '',
+                articulo_id: item.numero || '',
+                articulo_nombre: item.descripcion || '',
+                nom_doc: formaPagoFind.nom_pediatra || '',
+                cantidad: item.cantidad_producto || '',
+                precio: item.total || '',
+                importe: item.precio_base || '',
+            };
+            body.push(data);
+        }
+
+        console.log('data get report', body);
+        return body;
+    };
+
+    const formaEnca = (dataSubmit) => {
+        let data = {
+            fecha: formaPagoPage.fecha || '',
+            alumno_seleccionado: alumnos1.id || '',
+            numero_recibo: formaPagoPage.recibo || '',
+            forma_pago_descripcion: formpago.descripcion || '',
+            comentario: comentarios1.comentario_1 || '',
+            cajero_descripcion: cajero.nombre || '',
+            tota_general: formaPagoPage.pago || '',
+        }
+        console.log('data get report', data);
+        return data;
+    };
 
     const handleBlur = (evt, datatype) => {
         if (evt.target.value === "") return;
@@ -248,17 +367,24 @@ function ModalPagoImprime({
                             />
                         </div>
                     </fieldset>
-                    <div className=" modal-action">
+                    <div className="modal-action">
                         <div
-                            className={"tooltip tooltip-top my-5 hover:cursor-pointer"}
-                            data-tip="Guardar"
+                            className="tooltip tooltip-top my-5 hover:cursor-pointer"
+                            data-tip="Imprimir"
                         >
                             <button
                                 type="submit"
                                 id="btn_imprimir"
-                                className="btn  bg-blue-500 hover:bg-blue-700 text-white"
+                                className="btn bg-blue-500 hover:bg-blue-700 text-white relative"
+                                onClick={handleSubmit}
+                                disabled={isLoading}
                             >
-                                <i className="fas fa-file-pdf mx-2"></i> Imprimir
+                                {isLoading ? (
+                                    <FaSpinner className="animate-spin mx-2" />
+                                ) : (
+                                    <i className="fas fa-file-pdf mx-2"></i>
+                                )}
+                                {isLoading ? " Cargando..." : " Imprimir"}
                             </button>
                         </div>
                     </div>
