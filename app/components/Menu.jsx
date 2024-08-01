@@ -224,9 +224,14 @@ function Menu({ vertical }) {
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white"
+          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none "
         >
-          Archivos
+          <label className="swap">
+            {/* this hidden checkbox controls the state */}
+            <input type="checkbox" />
+            {/* volume on icon */}
+            Archivos
+          </label>
         </div>
         <ul
           tabIndex={0}
@@ -273,7 +278,7 @@ function Menu({ vertical }) {
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white"
+          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none"
         >
           Pagos
         </div>
@@ -292,7 +297,7 @@ function Menu({ vertical }) {
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white"
+          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none"
         >
           Procesos
         </div>
@@ -351,7 +356,7 @@ function Menu({ vertical }) {
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white"
+          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none"
         >
           Reportes
         </div>
@@ -405,7 +410,7 @@ function Menu({ vertical }) {
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white"
+          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none"
         >
           Seguridad
         </div>
@@ -434,7 +439,7 @@ function Menu({ vertical }) {
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white"
+          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none"
         >
           Propietario
         </div>
@@ -453,7 +458,7 @@ function Menu({ vertical }) {
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white"
+          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none"
         >
           Video Ayuda
         </div>
