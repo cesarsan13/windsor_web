@@ -10,6 +10,7 @@ import {
     ImprimirExcel,
     verImprimir,
 } from "@/app/utils/api/rep_femac_5/rep_femac_5";
+import ModalVistaPreviaRep5 from "./components/modalVistaPreviaRep5";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import BuscarCat from "@/app/components/BuscarCat";
@@ -111,19 +112,26 @@ function AltasBajasAlumnos() {
         const pdfData = await verImprimir(configuracion, selectedOptionAB);
         setPdfData(pdfData);
         setPdfPreview(true);
+        showModalVista(true);
     };
 
     const CerrarView = () => {
         setPdfPreview(false);
         setPdfData('');
     };
-
+    const showModalVista = (show) => {
+        show
+          ? document.getElementById("modalVRep5").showModal()
+          : document.getElementById("modalVRep5").close();
+      }
     if (status === "loading") {
         return (
             <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
         );
     }
     return (
+        <>
+              <ModalVistaPreviaRep5 pdfPreview={pdfPreview} pdfData={pdfData} PDF={ImprimePDF} Excel={ImprimeExcel}/>      
         <div className="container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
             <div className="flex justify-start p-3">
                 <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
@@ -230,25 +238,11 @@ function AltasBajasAlumnos() {
                                 setValue={setFecha_fin}
                             />
                         </div>
-
-                        <div className="col-span-7">
-                            <div className="flex flex-col h-[calc(95%)] w-full bg-white dark:bg-white">
-                                {pdfPreview && pdfData && (
-                                    <div className="pdf-preview flex overflow-auto border border-gray-300 rounded-lg shadow-lg">
-                                        <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}>
-                                            <div style={{ height: "500px", width: "100%" }}>
-                                                <Viewer fileUrl={pdfData} />
-                                            </div>
-                                        </Worker>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
         </div>
+                                    </>
     );
 
 

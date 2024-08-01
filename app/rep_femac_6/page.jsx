@@ -331,7 +331,7 @@ function Rep_Femac_6() {
                             <div className='flex flex-col md:flex-row'>
                                 <div className='w-11/12 md:w-4/12 lg:w-3/12'>
                                     <label className='input input-bordered input-md text-black dark:text-white flex items-center gap-3'>
-                                        Fecha Inicia
+                                        Fecha Inicial
                                         <input
                                             type="date"
                                             value={fechaIni}
