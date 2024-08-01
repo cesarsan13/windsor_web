@@ -13,9 +13,8 @@ import {
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import BuscarCat from "@/app/components/BuscarCat";
-import { showSwal } from "@/app/utils/alerts";
 import "jspdf-autotable";
-import { Worker, Viewer } from "@react-pdf-viewer/core";
+import ModalVistaPreviaRepFemac8Anexo1 from "./components/ModalVistaPreviaRepFemac8Anexo1";
 
 function AltasBajasAlumnos() {
     const router = useRouter();
@@ -29,35 +28,17 @@ function AltasBajasAlumnos() {
     let [alumno_ini, setAlumnoIni] = useState("");
     let [alumno_fin, setAlumnoFin] = useState("");
     let [alumnosFiltrados, setAlumnosFiltrados] = useState([]);
-    const nameInputs = ["id", "nombre_completo"];
-    const columnasBuscaCat = ["id", "nombre_completo"];
     const [tomaFechas, setTomaFechas] = useState(true);
     const [pdfPreview, setPdfPreview] = useState(false);
     const [pdfData, setPdfData] = useState("");
-    const {
-        formState: { errors },
-    } = useForm({});
-    const handleOptionChange = (event) => {
-        setSelectedOption(event.target.value);
-    };
-    const handleOptionChangeAB = (event) => {
-        setSelectedOptionAB(event.target.value);
-    };
+    const {formState: { errors },} = useForm({});
 
     const formaImprime = async () => {
         let data;
         const { token } = session.user;
         const fechaIniFormateada = fecha_ini ? fecha_ini.replace(/-/g, '/') : 0;
         const fechaFinFormateada = fecha_fin ? fecha_fin.replace(/-/g, '/') : 0;
-        // if (fechaIniFormateada) {
-        //     if (!fechaFinFormateada) {
-        //         fecha_fin = 0;
-        //     }
         data = await getRelaciondeRecibos(token, tomaFechas, fechaIniFormateada, fechaFinFormateada, factura_ini, factura_fin, recibo_ini, recibo_fin, alumno_ini.id, alumno_fin.id);
-        // } else {
-        //     showSwal("Oppss!", "Para imprimir, mínimo debe estar seleccionada una fecha de 'Inicio'", "error");
-        // }
-        console.log('data get report', data);
         return data;
     };
     const ImprimePDF = async () => {
@@ -112,12 +93,15 @@ function AltasBajasAlumnos() {
         const pdfData = await verImprimir(configuracion);
         setPdfData(pdfData);
         setPdfPreview(true);
+        showModalVista(true);
     };
 
-    const CerrarView = () => {
-        setPdfPreview(false);
-        setPdfData('');
-    };
+    const showModalVista = (show) => {
+        show
+          ? document.getElementById("modalVPRepFemac8Anexo1").showModal()
+          : document.getElementById("modalVPRepFemac8Anexo1").close();
+      }
+
 
     if (status === "loading") {
         return (
@@ -125,6 +109,13 @@ function AltasBajasAlumnos() {
         );
     }
     return (
+        <>
+        <ModalVistaPreviaRepFemac8Anexo1
+            pdfPreview={pdfPreview} 
+            pdfData={pdfData} 
+            PDF={ImprimePDF} 
+            Excel = {ImprimeExcel}
+        />
         <div className="container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
             <div className="flex justify-start p-3">
                 <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
@@ -134,11 +125,8 @@ function AltasBajasAlumnos() {
             <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
                 <div className="col-span-1 flex flex-col">
                     <Acciones
-                        ImprimePDF={ImprimePDF}
-                        ImprimeExcel={ImprimeExcel}
                         home={home}
                         Ver={handleVerClick}
-                        CerrarView={CerrarView}
                     />
                 </div>
                 <div className="col-span-7">
@@ -237,8 +225,8 @@ function AltasBajasAlumnos() {
                             <BuscarCat
                                 table="alumnos"
                                 itemData={[]}
-                                fieldsToShow={columnasBuscaCat}
-                                nameInput={nameInputs}
+                                fieldsToShow={["id", "nombre_completo"]}
+                                nameInput={["id", "nombre_completo"]}
                                 titulo={"Inicio: "}
                                 setItem={setAlumnoIni}
                                 token={session.user.token}
@@ -247,33 +235,19 @@ function AltasBajasAlumnos() {
                             <BuscarCat
                                 table="alumnos"
                                 itemData={[]}
-                                fieldsToShow={columnasBuscaCat}
-                                nameInput={nameInputs}
+                                fieldsToShow={["id", "nombre_completo"]}
+                                nameInput={["id", "nombre_completo"]}
                                 titulo={"Fin: "}
                                 setItem={setAlumnoFin}
                                 token={session.user.token}
                                 modalId="modal_alumnos2"
                             />
                         </div>
-
-                        <div className="col-span-7">
-                            <div className="flex flex-col h-[calc(95%)] w-full bg-white dark:bg-white">
-                                {pdfPreview && pdfData && (
-                                    <div className="pdf-preview flex overflow-auto border border-gray-300 rounded-lg shadow-lg">
-                                        <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}>
-                                            <div style={{ height: "500px", width: "100%" }}>
-                                                <Viewer fileUrl={pdfData} />
-                                            </div>
-                                        </Worker>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
         </div>
+        </>
     );
 
 
