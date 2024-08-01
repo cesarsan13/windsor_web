@@ -87,6 +87,8 @@ function ModalProductos({
                 message={"Descripción requerido"}
                 maxLenght={255}
                 isDisabled={isDisabled}
+                handleBlur={handleBlur}
+
               />
               <Inputs
                 dataType={"string"}
@@ -102,6 +104,8 @@ function ModalProductos({
                 message={"Referencia requerido"}
                 maxLenght={20}
                 isDisabled={isDisabled}
+                handleBlur={handleBlur}
+
               />
               <Inputs
                 dataType={"string"}
