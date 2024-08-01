@@ -6,7 +6,7 @@ import ModalFormaPago from "@/app/formapago/components/ModalFormaPago";
 import TablaFormaPago from "@/app/formapago/components/TablaFormaPago";
 import Busqueda from "@/app/formapago/components/Busqueda";
 import Acciones from "@/app/formapago/components/Acciones";
-import ModalVistaPreviaFormaPago from "./modalVistaPreviaFormaPago";
+import ModalVistaPreviaFormaPago from "@/app/formapago/components/modalVistaPreviaFormaPago";
 import { useForm } from "react-hook-form";
 import {
   getFormasPago,
