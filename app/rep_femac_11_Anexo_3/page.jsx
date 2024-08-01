@@ -187,10 +187,6 @@ function CobranzaPorAlumno(){
         : document.getElementById("modalVPRepFemac11Anexo3").close();
     }
 
-    const CerrarView = () => {
-        setPdfPreview(false);
-        setPdfData('');
-    };
 
     const ImprimePDF = async () => {
         const configuracion = {
