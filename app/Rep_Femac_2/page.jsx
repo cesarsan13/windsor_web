@@ -15,11 +15,12 @@ import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "jspdf-autotable";
 import BuscarCat from "../components/BuscarCat";
 import ModalVistaPreviaAlumnosPorClase from "./components/modalVistaPreviaRepFemac2";
+import { showSwal } from "@/app/utils/alerts";
 
 function AlumnosPorClase(){
   const router = useRouter();
   const {data: session, status} = useSession();
-  const [sOrdenar, ssetordenar] = useState('');
+  const [sOrdenar, ssetordenar] = useState('nombre');
   const [FormaRepDosSel, setFormaRepDosSel] =  useState([]);
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
@@ -89,11 +90,14 @@ function AlumnosPorClase(){
   }
 
   const handleCheckChange = (event) =>{
-    event.preventDefault;
     ssetordenar(event.target.value);
   }
 
   const handleVerClick = () => {
+    if (horario1.numero === undefined){
+      showSwal("Oppss!", "Para imprimir, mínimo debe estar seleccionada una fecha de 'Inicio'", "error");
+    } else {
+
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -152,6 +156,7 @@ function AlumnosPorClase(){
     setPdfData(pdfData);
     setPdfPreview(true);
     showModalVista(true);
+  }
   };
 
   const showModalVista = (show) => {
@@ -167,7 +172,6 @@ function AlumnosPorClase(){
   }
   return  (
     <>
-
       <ModalVistaPreviaAlumnosPorClase
       pdfPreview={pdfPreview} 
       pdfData={pdfData} 
@@ -216,11 +220,11 @@ function AlumnosPorClase(){
                     <span className="text-black dark:text-white">Ordenar por:</span>
                     <label className={` input-md text-black dark:text-white flex items-center gap-3`} onChange={(event) => handleCheckChange(event)} >
                         <span className="text-black dark:text-white">Nombre</span>
-                        <input type="radio" name="ordenar" value="nombre" className="radio checked:bg-blue-500" />
+                        <input type="radio" name="ordenar" value="nombre" onChange={handleCheckChange} checked={sOrdenar === "nombre"} className="radio checked:bg-blue-500" />
                     </label>
                     <label className={` input-md text-black dark:text-white flex items-center gap-3`} onChange={(event) => handleCheckChange(event)}>
                         <span className="text-black dark:text-white">Número</span>
-                        <input type="radio" name="ordenar" value="id" className="radio checked:bg-blue-500" />
+                        <input type="radio" name="ordenar" value="id" onChange={handleCheckChange} checked={sOrdenar === "id"} className="radio checked:bg-blue-500" />
                     </label>
                 </label>
               </div>
