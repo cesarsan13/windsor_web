@@ -9,7 +9,6 @@ import {
   ImprimirExcel
 } from "@/app/utils/api/rep_femac_3/rep_femac_3";
 import { useSession } from "next-auth/react";
-import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "jspdf-autotable";
@@ -35,7 +34,8 @@ function Rep_Femac_3() {
       setisLoading(true);
       const { token } = session.user
       setToken(token);
-      const data = await getAlumnosPorMes(token, horario, sOrdenar);
+      const data = await getAlumnosPorMes(token, horario, sOrdenar)
+      console.log(horario);
       setFormaRepDosSel(data.data);
       setisLoading(false);
     }
