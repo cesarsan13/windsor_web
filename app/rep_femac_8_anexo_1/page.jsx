@@ -49,14 +49,7 @@ function AltasBajasAlumnos() {
         const { token } = session.user;
         const fechaIniFormateada = fecha_ini ? fecha_ini.replace(/-/g, '/') : 0;
         const fechaFinFormateada = fecha_fin ? fecha_fin.replace(/-/g, '/') : 0;
-        // if (fechaIniFormateada) {
-        //     if (!fechaFinFormateada) {
-        //         fecha_fin = 0;
-        //     }
         data = await getRelaciondeRecibos(token, tomaFechas, fechaIniFormateada, fechaFinFormateada, factura_ini, factura_fin, recibo_ini, recibo_fin, alumno_ini.id, alumno_fin.id);
-        // } else {
-        //     showSwal("Oppss!", "Para imprimir, mínimo debe estar seleccionada una fecha de 'Inicio'", "error");
-        // }
         console.log('data get report', data);
         return data;
     };

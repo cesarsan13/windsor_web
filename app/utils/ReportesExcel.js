@@ -14,7 +14,7 @@ export class ReporteExcel {
     const date = new Date();
     const dateStr = formatDate(date);
     const timeStr = formatTime(date);
-
+    console.log(Encabezado)
     this.worksheetData.push(
       [Encabezado.Nombre_Aplicacion, "", "", "", `Fecha: ${dateStr}`],
       [Encabezado.Nombre_Reporte, "", "", "", `Hora: ${timeStr}`],
