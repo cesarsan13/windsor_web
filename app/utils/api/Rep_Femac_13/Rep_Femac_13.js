@@ -2,11 +2,11 @@ import { ReporteExcel } from "../../ReportesExcel";
 
 
 export const getRepASem = async (token, horario, orden) => {
-  const horarioFinal = horario === '' || horario === undefined ? '' : horario;
+  horario = (horario === undefined || Object.keys(horario).length === 0) ? '' : horario;
     const res = await fetch (`${process.env.DOMAIN_API}api/reportes/rep_femac_13`,{
       method: "post",
       body: JSON.stringify({
-        horario: horarioFinal,
+        horario: horario,
         orden: orden,
       }),
       headers: {

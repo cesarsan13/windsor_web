@@ -14,6 +14,7 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import BuscarCat from "../components/BuscarCat";
 import { formatDate } from '../utils/globalfn';
+import { showSwal } from "@/app/utils/alerts";
 
 function Rep_Femac_13() {
   const router = useRouter();
@@ -34,14 +35,13 @@ function Rep_Femac_13() {
       }
       const fetchData = async () => {
         const { token } = session.user
-
         const data = await getRepASem(token, horario, sOrdenar);
-        console.log("envia", horario, sOrdenar);
         setFormaRepASem(data.data);
  
       }
       fetchData()
     }, [session, status, horario, sOrdenar]);
+
 
     const handleCheckChange = (event) =>{
       ssetordenar(event.target.value);
@@ -52,6 +52,9 @@ function Rep_Femac_13() {
     };
 
   const handleClickVer = () => {
+    if (horario.numero === undefined){
+      showSwal("Oppss!", "Para imprimir, debes seleccionar el horario", "error");
+    } else {
 
     const configuracion = {
       Encabezado: {
@@ -107,6 +110,8 @@ function Rep_Femac_13() {
     setPdfData(pdfData);
     setPdfPreview(true);
     showModalVista(true);
+  }
+
   };
 
   const showModalVista = (show) => {
