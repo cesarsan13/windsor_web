@@ -32,6 +32,10 @@ function Inputs({
           {...(dataType === "int" && { onKeyDown: soloEnteros })}
           {...(dataType === "float" && { onKeyDown: soloDecimales })}
           {...register(name, {
+            maxLength: {
+              value: maxLenght,
+              message: `El campo ${name} no puede tener más de ${maxLenght} caracteres`,
+            },
             ...(requerido && { required: message }),
           })}
           {...(dataType === "int" ||

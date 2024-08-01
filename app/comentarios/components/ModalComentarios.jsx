@@ -3,7 +3,6 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Inputs from "@/app/comentarios/components/Inputs";
 
-
 function ModalComentarios({
   accion,
   onSubmit,
@@ -58,7 +57,9 @@ function ModalComentarios({
         </button>
         {/* if there is a button in form, it will close the modal */}
         <form onSubmit={onSubmit}>
-          <h3 className="font-bold text-lg mb-5  text-black dark:text-white">{titulo}</h3>
+          <h3 className="font-bold text-lg mb-5  text-black dark:text-white">
+            {titulo}
+          </h3>
           <fieldset id="fs_comentario">
             <div className="container flex flex-col space-y-5">
               <Inputs
@@ -86,9 +87,8 @@ function ModalComentarios({
                 errors={errors}
                 register={register}
                 message={"Comentario requerido"}
-                maxLength={50}
+                maxLenght={50}
                 isDisabled={isDisabled}
-
               />
 
               <Inputs
@@ -103,9 +103,8 @@ function ModalComentarios({
                 errors={errors}
                 register={register}
                 message={"Comentario requerido"}
-                maxLength={50}
+                maxLenght={50}
                 isDisabled={isDisabled}
-                
               />
 
               <Inputs
@@ -120,7 +119,7 @@ function ModalComentarios({
                 errors={errors}
                 register={register}
                 message={"Comentario requerido"}
-                maxLength={50}
+                maxLenght={50}
                 isDisabled={isDisabled}
               />
 
@@ -137,7 +136,6 @@ function ModalComentarios({
                 message={"General requerido"}
                 isDisabled={isDisabled}
               />
-
             </div>
           </fieldset>
           <div className=" modal-action">
