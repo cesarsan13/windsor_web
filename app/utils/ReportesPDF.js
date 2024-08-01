@@ -110,6 +110,41 @@ export class ReportePDF {
     }
   }
 
+  //impresion de pagos1
+
+  imprimeEncabezadoPrincipalP(body, fecha) {
+    const { Encabezado } = this.configuracion;
+    const ImagenL = "resources/Logo_Interaccion.png";
+    if (!this.tiene_encabezado) {
+      this.doc.addImage(ImagenL, "PNG", 10, 10, 26, 25);
+      this.setFontSize(14);
+      this.setTw_Ren(16);
+      this.ImpPosX(Encabezado.Nombre_Aplicacion, 35, this.tw_ren);
+      this.setFontSize(10);
+      this.nextRow(6);
+      this.ImpPosX(Encabezado.Nombre_Reporte, 35, this.tw_ren);
+      this.nextRow(6);
+      this.setFontSize(10);
+      this.ImpPosX(Encabezado.Nombre_Usuario, 35, this.tw_ren);
+      const date = new Date();
+      const dateStr = formatDate(date);
+      const timeStr = formatTime(date);
+      this.setTw_Ren(16);
+      this.ImpPosX(`Fecha: ${dateStr}`, 250, this.tw_ren);
+      this.nextRow(6);
+      this.ImpPosX(`Hora: ${timeStr}`, 250, this.tw_ren);
+      this.nextRow(6);
+      this.ImpPosX(`Hoja: ${this.getNumberPages()}`, 250, this.tw_ren);
+      this.nextRow(6);
+      this.ImpPosX(`Fecha Pago: ${fecha}`, 35, this.tw_ren);
+      this.ImpPosX(`Num Recibo: ${body.numero_recibo}`, 80, this.tw_ren);
+      this.ImpPosX(`Tipo Pago: ${body.forma_pago_descripcion}`, 120, this.tw_ren);
+      this.nextRow(6);
+      this.ImpPosX(`Comentario: ${body.comentario}`, 35, this.tw_ren);
+      this.ImpPosX(`Num. Alumno: ${body.alumno_seleccionado}`, 120, this.tw_ren);
+    }
+  }
+
   //Para la impresion Horizontal
   imprimeEncabezadoPrincipalH() {
     const { Encabezado } = this.configuracion;
