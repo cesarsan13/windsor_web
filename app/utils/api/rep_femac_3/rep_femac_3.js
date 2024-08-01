@@ -3,11 +3,11 @@ import { ReporteExcel } from "../../ReportesExcel";
 
 
 export const getAlumnosPorMes = async (token, horario, orden) => {
-  const horarioFinal1 = horario === "" || horario === undefined ? "" : horario;
+  horario = (horario === undefined || Object.keys(horario).length === 0) ? '' : horario;
   const res = await fetch (`${process.env.DOMAIN_API}api/reportes/rep_femac_3`,{
     method: "post",
     body: JSON.stringify({
-      horario: horarioFinal1,
+      horario: horario,
       orden: orden,
     }),
     headers: {
@@ -41,7 +41,6 @@ export const getAlumnosPorMes = async (token, horario, orden) => {
     const newPDF = new ReportePDF(configuracion);
     const { body } = configuracion;
     Enca1(newPDF);
-    console.log(body);
     body.forEach((reporte) => {
       newPDF.ImpPosX(reporte.Num_Renglon.toString() !== "0" ? reporte.Num_Renglon.toString() : "", 15, newPDF.tw_ren);
       newPDF.ImpPosX(reporte.Numero_1.toString() !== "0" ? reporte.Numero_1.toString() : "", 25, newPDF.tw_ren);

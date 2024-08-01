@@ -14,6 +14,7 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "jspdf-autotable";
 import BuscarCat from "../components/BuscarCat";
+import { showSwal } from "@/app/utils/alerts";
 
 function Rep_Femac_3() {
   const router = useRouter();
@@ -35,7 +36,6 @@ function Rep_Femac_3() {
       const { token } = session.user
       setToken(token);
       const data = await getAlumnosPorMes(token, horario, sOrdenar);
-      console.log("envia", horario, sOrdenar);
       setFormaRepDosSel(data.data);
       setisLoading(false);
     }
@@ -83,6 +83,11 @@ function Rep_Femac_3() {
   }
 
   const handleVerClick = () => {
+
+    if (horario.numero === undefined){
+      showSwal("Oppss!", "Para imprimir, debes seleccionar el horario", "error");
+    } else {
+
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Lista de Alumnos por clase mensual",
@@ -132,8 +137,8 @@ function Rep_Femac_3() {
     const pdfData = reporte.doc.output("datauristring");
     setPdfData(pdfData);
     setPdfPreview(true);
-
     showModalVista(true);
+  }
   };
 
   const showModalVista = (show) => {

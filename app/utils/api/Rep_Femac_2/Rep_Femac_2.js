@@ -3,6 +3,8 @@ import { ReportePDF } from "../../ReportesPDF";
 
 
 export const getRepDosSel = async (token, horario1, horario2, orden) => {
+  horario1 = (horario1 === undefined || Object.keys(horario1).length === 0) ? '' : horario1;
+  horario2 = (horario2 === undefined || Object.keys(horario2).length === 0) ? '' : horario2;
     const res = await fetch (`${process.env.DOMAIN_API}api/reportes/rep_femac_2`,{
       method: "post",
       body: JSON.stringify({
@@ -15,6 +17,7 @@ export const getRepDosSel = async (token, horario1, horario2, orden) => {
         "Content-Type": "application/json",
       },
     });
+    
     const resJson = await res.json();
     return resJson.data;
 }
@@ -50,7 +53,6 @@ export const getRepDosSel = async (token, horario1, horario2, orden) => {
         const orientacion = 'Landscape'  //Aqui se agrega la orientacion del documento PDF puede ser Landscape(Horizontal) o Portrait (Vertical)
         const newPDF = new ReportePDF(configuracion, orientacion);
         const { body } = configuracion;
-        console.log('body', body);
         Enca1(newPDF);
         body.forEach((horarios) => {
 
