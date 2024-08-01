@@ -3,10 +3,11 @@ import { ReporteExcel } from "../../ReportesExcel";
 
 
 export const getAlumnosPorMes = async (token, horario, orden) => {
+  const horarioFinal1 = horario === "" || horario === undefined ? "" : horario;
   const res = await fetch (`${process.env.DOMAIN_API}api/reportes/rep_femac_3`,{
     method: "post",
     body: JSON.stringify({
-      horario: horario,
+      horario: horarioFinal1,
       orden: orden,
     }),
     headers: {
@@ -22,11 +23,11 @@ export const getAlumnosPorMes = async (token, horario, orden) => {
     if (!doc.tiene_encabezado) {
       doc.imprimeEncabezadoPrincipalV();
       doc.nextRow(12);
-      doc.ImpPosX("No", 14, doc.tw_ren);
-      doc.ImpPosX("No.", 28, doc.tw_ren);
-      doc.ImpPosX("Nombre", 42, doc.tw_ren);
-      doc.ImpPosX("Año", 92, doc.tw_ren);
-      doc.ImpPosX("Mes", 122, doc.tw_ren);
+      doc.ImpPosX("No", 15, doc.tw_ren);
+      doc.ImpPosX("No.", 25, doc.tw_ren);
+      doc.ImpPosX("Nombre", 35, doc.tw_ren);
+      doc.ImpPosX("Año", 120, doc.tw_ren);
+      doc.ImpPosX("Mes", 130, doc.tw_ren);
       doc.nextRow(4);
       doc.printLineV();
       doc.nextRow(4);
@@ -40,14 +41,14 @@ export const getAlumnosPorMes = async (token, horario, orden) => {
     const newPDF = new ReportePDF(configuracion);
     const { body } = configuracion;
     Enca1(newPDF);
-  
+    console.log(body);
     body.forEach((reporte) => {
-      newPDF.ImpPosX(reporte.Num_Renglon.toString() !== "0" ? reporte.Num_Renglon.toString() : "", 14, newPDF.tw_ren);
-      newPDF.ImpPosX(reporte.Numero_1.toString() !== "0" ? reporte.Numero_1.toString() : "", 28, newPDF.tw_ren);
-      newPDF.ImpPosX(reporte.Nombre_1.toString() !== "0" ? reporte.Nombre_1.toString() : "", 42, newPDF.tw_ren);
-      newPDF.ImpPosX(reporte.Año_Nac_1.toString().substring(0, 4) !== "0" ? reporte.Año_Nac_1.toString().substring(0, 4) : "", 92, newPDF.tw_ren);
-      newPDF.ImpPosX(reporte.Mes_Nac_1.toString().substring(4, 2) !== "0" ? reporte.Mes_Nac_1.toString().substring(4, 2) : "", 122, newPDF.tw_ren);
-  
+      newPDF.ImpPosX(reporte.Num_Renglon.toString() !== "0" ? reporte.Num_Renglon.toString() : "", 15, newPDF.tw_ren);
+      newPDF.ImpPosX(reporte.Numero_1.toString() !== "0" ? reporte.Numero_1.toString() : "", 25, newPDF.tw_ren);
+      newPDF.ImpPosX(reporte.Nombre_1.toString() !== "0" ? reporte.Nombre_1.toString() : "", 35, newPDF.tw_ren);
+      newPDF.ImpPosX(reporte.Año_Nac_1.toString().substring(0, 4) !== "0" ? reporte.Año_Nac_1.toString().substring(0, 4) : "", 120, newPDF.tw_ren);
+      newPDF.ImpPosX(reporte.Mes_Nac_1.toString().substring(4, 2) !== "0" ? reporte.Mes_Nac_1.toString().substring(4, 2) : "", 130, newPDF.tw_ren);
+
       Enca1(newPDF);
       if (newPDF.tw_ren >= newPDF.tw_endRen) {
         newPDF.pageBreak();

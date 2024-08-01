@@ -12,10 +12,11 @@ function PropertyPage({
   setShowSheet,
   setSelectedIndex,
   session,
+  setTextoAnterior,
+  changeSelectedLabel,
 }) {
   const {
     register,
-    handleSubmit,
     reset,
     watch,
     formState: { errors },
@@ -25,10 +26,22 @@ function PropertyPage({
       numero_archivo: labels[selectedIndex].numero_archivo,
       font_nombre: labels[selectedIndex].font_nombre,
       font_tamaño: labels[selectedIndex].font_tamaño,
-      font_bold: labels[selectedIndex].font_bold,
-      font_italic: labels[selectedIndex].font_italic,
-      font_rallado: labels[selectedIndex].font_rallado,
-      font_subrallado: labels[selectedIndex].font_subrallado,
+      font_bold:
+        labels[selectedIndex].font_bold === "S"
+          ? labels[selectedIndex].font_bold
+          : "",
+      font_italic:
+        labels[selectedIndex].font_italic === "S"
+          ? labels[selectedIndex].font_italic
+          : "",
+      font_rallado:
+        labels[selectedIndex].font_rallado === "S"
+          ? labels[selectedIndex].font_rallado
+          : "",
+      font_subrallado:
+        labels[selectedIndex].font_subrallado === "S"
+          ? labels[selectedIndex].font_subrallado
+          : "",
       formato: labels[selectedIndex].formato,
       renglon_impresion: labels[selectedIndex].renglon_impresion,
       descripcion_campo: labels[selectedIndex].descripcion_campo,
@@ -41,16 +54,44 @@ function PropertyPage({
       numero_archivo: labels[selectedIndex].numero_archivo,
       font_nombre: labels[selectedIndex].font_nombre,
       font_tamaño: labels[selectedIndex].font_tamaño,
-      font_bold: labels[selectedIndex].font_bold,
-      font_italic: labels[selectedIndex].font_italic,
-      font_rallado: labels[selectedIndex].font_rallado,
-      font_subrallado: labels[selectedIndex].font_subrallado,
+      font_bold:
+        labels[selectedIndex].font_bold === "S"
+          ? labels[selectedIndex].font_bold
+          : "",
+      font_italic:
+        labels[selectedIndex].font_italic === "S"
+          ? labels[selectedIndex].font_italic
+          : "",
+      font_rallado:
+        labels[selectedIndex].font_rallado === "S"
+          ? labels[selectedIndex].font_rallado
+          : "",
+      font_subrallado:
+        labels[selectedIndex].font_subrallado === "S"
+          ? labels[selectedIndex].font_subrallado
+          : "",
       formato: labels[selectedIndex].formato,
       renglon_impresion: labels[selectedIndex].renglon_impresion,
       descripcion_campo: labels[selectedIndex].descripcion_campo,
       tipo_campo: labels[selectedIndex].tipo_campo,
     });
+    const selectLabels = document.getElementById("idlabel");
+    selectLabels.selectedIndex = selectedIndex;
+    setSelectedLabel(selectedIndex);
   }, [selectedIndex, labels, reset]);
+
+  const setSelectedLabel = (idx) => {
+    const idlabel = parseInt(idx) + 1;
+    const lbl = document.getElementById(`texto_${idlabel}`);
+    changeSelectedLabel(lbl.attributes["name"].value);
+    setTextoAnterior(lbl.attributes["name"].value);
+    lbl.classList.add(
+      "border-2",
+      "border-blue-500",
+      "border-dashed",
+      "rounded-lg"
+    );
+  };
   const getValueInput = async (evt) => {
     const { name, value } = evt.target;
     console.log("value input", name);
@@ -104,19 +145,37 @@ function PropertyPage({
         setLabels([]);
         showSwal(res.alert_title, res.message, res.alert_icon);
       }
-      console.log("resppuesa pa", res);
     } else {
       return;
     }
   };
+
+  const handleLabelChange = (evt) => {
+    const index = evt.target.selectedOptions[0].attributes["data-key"].value;
+    setSelectedIndex(index);
+  };
+
   return (
     <div className="flex flex-col card bg-white rounded-lg ">
-      <div className=" bg-slate-400 w-full p-2 rounded-lg rounde">
-        <h3 className="text-center font-bold">
-          Propiedades de Texto {labels[selectedIndex].numero_dato}
-        </h3>
+      <div className=" bg-slate-400 w-full p-2 rounded-lg rounde flex flex-row">
+        <h3 className="text-center font-bold ">Propiedades de </h3>
+        <Inputs
+          dataType={"string"}
+          name={"idlabel"}
+          tamañolabel={"w-full input-xs ml-1"}
+          className={"w-full text-left input-xs "}
+          Titulo={""}
+          type={"select"}
+          requerido={true}
+          errors={errors}
+          register={register}
+          message={""}
+          isDisabled={false}
+          data={labels}
+          handleChange={handleLabelChange}
+        />
       </div>
-      <div className="flex flex-col p-2">
+      <div className="flex flex-col p-1">
         <form action="">
           <div className="collapse collapse-arrow bg-base-200">
             <input type="radio" name="my-accordion-2" defaultChecked />
@@ -154,8 +213,6 @@ function PropertyPage({
               />
             </div>
           </div>
-
-          <div className="divider mt-0 mb-0"></div>
 
           <div className="divider mt-0 mb-0"></div>
           <div className="collapse collapse-arrow bg-base-200">
@@ -320,7 +377,7 @@ function PropertyPage({
           <div className="divider mt-0 mb-0"></div>
         </form>
       </div>
-      <div className="flex flex-row justify-between m-2">
+      <div className="flex flex-row justify-between m-1">
         <div
           className={`tooltip tooltip-top my-5  "hover:cursor-pointer"
               `}

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Acciones from "@/app/rep_femac_13/components/Acciones";
+import ModalVistaPreviaRepFemac13 from "./components/modalVistaPreviaRepFemac13";
 import { 
   getRepASem,
   ImprimirExcel,
@@ -25,7 +26,7 @@ function Rep_Femac_13() {
   const [FormaRepASem, setFormaRepASem] =  useState([]);
   const [Formahorario, setFormahorario] =  useState([]);
   const [horario, setHorario] = useState({});
-  const [sOrdenar, ssetordenar] = useState('');
+  const [sOrdenar, ssetordenar] = useState('nombre');
 
     useEffect(()=> {
       if(status === "loading" || !session) {
@@ -33,30 +34,22 @@ function Rep_Femac_13() {
       }
       const fetchData = async () => {
         const { token } = session.user
-        console.log(horario, sOrdenar);
 
         const data = await getRepASem(token, horario, sOrdenar);
+        console.log("envia", horario, sOrdenar);
         setFormaRepASem(data.data);
-        setFormahorario(data.horario[0].horario);
-        console.log("ver", Formahorario);
-        console.log("dtaos", FormaRepASem);
+ 
       }
       fetchData()
     }, [session, status, horario, sOrdenar]);
 
     const handleCheckChange = (event) =>{
-      event.preventDefault;
       ssetordenar(event.target.value);
     }
   
     const home = () => {
       router.push("/");
     };
-
-    const CerrarView = () => {
-      setPdfPreview(false);
-      setPdfData('');
-  };
 
   const handleClickVer = () => {
 
@@ -74,7 +67,7 @@ function Rep_Femac_13() {
       if (!doc.tiene_encabezado) {
         doc.imprimeEncabezadoPrincipalV();
         doc.nextRow(8);
-        doc.ImpPosX(`Clase: ${Formahorario}`,15,doc.tw_ren),
+        doc.ImpPosX(`Clase: ${horario.horario}`,15,doc.tw_ren),
         doc.nextRow(5);
         doc.ImpPosX("Profesor: _________________________________________",15,doc.tw_ren),
         doc.nextRow(5);
@@ -113,7 +106,14 @@ function Rep_Femac_13() {
     const pdfData = reporte.doc.output("datauristring");
     setPdfData(pdfData);
     setPdfPreview(true);
+    showModalVista(true);
   };
+
+  const showModalVista = (show) => {
+    show
+      ? document.getElementById("modalVPRepFemac13").showModal()
+      : document.getElementById("modalVPRepFemac13").close();
+  }
 
   const ImprimePDF = () => {
 
@@ -133,7 +133,7 @@ function Rep_Femac_13() {
       if (!doc.tiene_encabezado) {
         doc.imprimeEncabezadoPrincipalV();
         doc.nextRow(8);
-        doc.ImpPosX(`Clase: ${Formahorario}`,15,doc.tw_ren),
+        doc.ImpPosX(`Clase: ${horario.horario}`,15,doc.tw_ren),
         doc.nextRow(5);
         doc.ImpPosX("Profesor: _________________________________________",15,doc.tw_ren),
         doc.nextRow(5);
@@ -177,7 +177,7 @@ function Rep_Femac_13() {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Lista de Alumnos por clase semanal",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
-        Clase: `Clase: ${Formahorario}`,
+        Clase: `Clase: ${horario.horario}`,
         Profesor: "Profesor: ",
         FechaE: `Fecha: ${fecha}`,
       },
@@ -204,6 +204,12 @@ function Rep_Femac_13() {
 
   return (
     <>
+      <ModalVistaPreviaRepFemac13
+        pdfPreview={pdfPreview} 
+        pdfData={pdfData} 
+        PDF={ImprimePDF} 
+        Excel = {ImprimeExcel}
+      />
       <div className="container w-full max-w-screen-xl  bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin  text-black dark:text-white md:px-12">
@@ -214,10 +220,7 @@ function Rep_Femac_13() {
           <div className="col-span-1 flex flex-col">
             <Acciones 
             Ver={handleClickVer}
-            ImprimePDF={ImprimePDF}
-            ImprimeExcel={ImprimeExcel}
             home={home}
-            CerrarView={CerrarView}
             />
           </div>
           <div className="col-span-7">
@@ -245,28 +248,16 @@ function Rep_Femac_13() {
               <div className=" col-8">
                 <label className={` input-md text-black dark:text-white flex items-center gap-3`}>
                     <span className="text-black dark:text-white">Ordenar por:</span>
-                    <label className={` input-md text-black dark:text-white flex items-center gap-3`} onChange={(event) => handleCheckChange(event)} >
+                    <label className={` input-md text-black dark:text-white flex items-center gap-3`} >
                         <span className="text-black dark:text-white">Nombre</span>
-                        <input type="radio" name="ordenar" value="nombre" className="radio checked:bg-blue-500" />
+                        <input type="radio" name="ordenar" value="nombre" onChange={handleCheckChange} checked={sOrdenar === "nombre"} className="radio checked:bg-blue-500" />
                     </label>
-                    <label className={` input-md text-black dark:text-white flex items-center gap-3`} onChange={(event) => handleCheckChange(event)}>
+                    <label className={` input-md text-black dark:text-white flex items-center gap-3`} >
                         <span className="text-black dark:text-white">Número</span>
-                        <input type="radio" name="ordenar" value="id" className="radio checked:bg-blue-500" />
+                        <input type="radio" name="ordenar" value="id" onChange={handleCheckChange}  checked={sOrdenar === "id"} className="radio checked:bg-blue-500" />
                     </label>
                 </label>
               </div>
-            {pdfPreview && pdfData && (
-                <div className="pdf-preview">
-                  <Worker
-                    workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
-                  >
-                    <div style={{ height: "600px" }}>
-                      <Viewer fileUrl={pdfData}  />
-                    </div>
-                  </Worker>
-                </div> 
-            )}
-
             </div>
           </div>
         </div>

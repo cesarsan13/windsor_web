@@ -5,25 +5,20 @@ function Inputs({
   Titulo,
   name,
   type,
-  requerido,
-  dataType,
   className,
-  register,
-  message,
   errors,
+  dataType,
   tamañolabel,
   maxLenght,
   isDisabled,
-  handleBlur,
+  setValue,
 }) {
   return (
     <div className="flex flex-col">
       <label
-        className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
-      >
+        className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
         {Titulo}
         <input
-          // defaultValue={defaultValue}
           {...(maxLenght !== 0 && { maxLength: maxLenght })}
           name={name}
           id={name}
@@ -31,18 +26,12 @@ function Inputs({
           className={`text-black dark:text-white ${className}`}
           {...(dataType === "int" && { onKeyDown: soloEnteros })}
           {...(dataType === "float" && { onKeyDown: soloDecimales })}
-          {...register(name, {
-            maxLength: {
-              value: maxLenght,
-              message: `El campo ${name} no puede tener más de ${maxLenght} caracteres`,
-            },
-            ...(requerido && { required: message }),
-          })}
           {...(dataType === "int" ||
             (dataType === "float" && {
               onBlur: (event) => handleBlur(event, dataType),
             }))}
           disabled={isDisabled}
+          onChange={(event) => setValue(event.target.value)}
         />
       </label>
       {errors[name] && (

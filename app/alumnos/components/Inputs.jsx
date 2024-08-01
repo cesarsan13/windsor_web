@@ -17,6 +17,8 @@ function Inputs({
   handleBlur,
   arreglos,
 }) {
+  // console.log("name",name)
+  // console.log("maxLenght",maxLenght)
   if (type === 'select') {
     return (
       <div className="w-full md:w-1/2 px-0.5 py-2 mb-6 md:mb-0">
@@ -65,7 +67,11 @@ function Inputs({
             {...(dataType === "int" && { onKeyDown: soloEnteros })}
             {...(dataType === "float" && { onKeyDown: soloDecimales })}
             {...register(name, {
-              ...(requerido && { required: message }),
+              maxLength:{
+                value:maxLenght,
+                message:`El campo ${name} no puede tener más de ${maxLenght} caracteres`
+              },
+              ...(requerido && { required: message })
             })}
             {...(dataType === "int" ||
               (dataType === "float" && {

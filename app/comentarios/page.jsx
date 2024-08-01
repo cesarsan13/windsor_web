@@ -16,11 +16,10 @@ import {
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { siguiente } from "../utils/api/comentarios/comentarios";
-import { eventNames } from "process";
-import { NEXT_CACHE_REVALIDATE_TAG_TOKEN_HEADER } from "next/dist/lib/constants";
-import jsPDF from "jspdf";
 import "jspdf-autotable";
-import * as XLSX from "xlsx";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
+import "@react-pdf-viewer/core/lib/styles/index.css";
+import ModalVistaPreviaComentarios from "./components/modalVistaPreviaComentarios";
 
 function Comentarios(){
   const router = useRouter();
@@ -33,8 +32,10 @@ function Comentarios(){
   const [accion, setAccion] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState("");
-  const [filtro, setFiltro] = useState("");
+  const [filtro, setFiltro] = useState("id");
   const [TB_Busqueda, setTB_Busqueda] = useState("");
+  const [pdfPreview, setPdfPreview] = useState(false);
+  const [pdfData, setPdfData] = useState("");
 
 
   useEffect(() => {
@@ -99,6 +100,70 @@ function Comentarios(){
     evt.preventDefault;
     setTB_Busqueda("");
   };
+
+  const handleVerClick = () => {
+    const configuracion = {
+      Encabezado:{
+        Nombre_Aplicacion: "Sistema de Control Escolar",
+        Nombre_Reporte: "Reporte de Comentarios",
+        Nombre_Usuario: `Usuario: ${session.user.name}`,
+      },
+      body: formaComentariosFiltrados
+    };
+    
+    const orientacion = 'Landscape'
+    const reporte = new ReportePDF(configuracion, orientacion);
+    const { body } = configuracion;
+    const Enca1 = (doc) => {
+      if (!doc.tiene_encabezado) {
+        doc.imprimeEncabezadoPrincipalH();
+        doc.nextRow(12);
+        doc.ImpPosX("id", 15, doc.tw_ren);
+        doc.ImpPosX("Comentario 1", 30, doc.tw_ren);
+        doc.ImpPosX("Comentario 2", 110, doc.tw_ren);
+        doc.ImpPosX("Comentario 3", 190, doc.tw_ren);
+        doc.ImpPosX("Generales", 270, doc.tw_ren);
+  
+        doc.nextRow(4);
+        doc.printLineH();
+        doc.nextRow(4);
+        doc.tiene_encabezado = true;
+      } else {
+        doc.nextRow(6);
+        doc.tiene_encabezado = true;
+      }
+    };
+
+    Enca1(reporte);
+    body.forEach((comentarios) => {
+      reporte.ImpPosX(comentarios.id.toString(),15,reporte.tw_ren, 10)
+      reporte.ImpPosX(comentarios.comentario_1.toString(),30,reporte.tw_ren, 40)
+      reporte.ImpPosX(comentarios.comentario_2.toString(),110,reporte.tw_ren, 40)
+      reporte.ImpPosX(comentarios.comentario_3.toString(),190,reporte.tw_ren, 40)
+      reporte.ImpPosX(comentarios.generales.toString(),270,reporte.tw_ren, 5)
+      Enca1(reporte);
+      if (reporte.tw_ren >= reporte.tw_endRenH) {
+        reporte.pageBreakH();
+        Enca1(reporte);
+      }
+    });
+    
+    const pdfData = reporte.doc.output("datauristring");
+    setPdfData(pdfData);
+    setPdfPreview(true);
+    showModalVista(true)
+  };
+
+  const showModalVista = (show) => {
+    show
+      ? document.getElementById("modalVPComentario").showModal()
+      : document.getElementById("modalVPComentario").close();
+  }
+
+  const CerrarView = () => {
+    setPdfPreview(false);
+    setPdfData('');
+};
 
   const Alta = async (event) => {
     setCurrentId("");
@@ -240,6 +305,12 @@ function Comentarios(){
         setFormaComentarios={setFormaComentarios}
         formaComentarios={formaComentarios}
       />
+      <ModalVistaPreviaComentarios
+      pdfPreview={pdfPreview} 
+      pdfData={pdfData} 
+      PDF={ImprimePDF} 
+      Excel = {ImprimeExcel}/>
+
       <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
         <div className="flex justify-start p-3 ">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
@@ -248,9 +319,17 @@ function Comentarios(){
         </div>
         <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] ">
           <div className="col-span-1 flex flex-col ">
-            <Acciones Buscar={Buscar} Alta={Alta} ImprimePDF={ImprimePDF} ImprimeExcel={ImprimeExcel} home={home}></Acciones>
+            <Acciones 
+            Buscar={Buscar} 
+            Alta={Alta} 
+            ImprimePDF={ImprimePDF} 
+            ImprimeExcel={ImprimeExcel} 
+            home={home}
+            Ver={handleVerClick}
+            CerrarView={CerrarView}
+            ></Acciones>
           </div>
-          <div className="col-span-7  ">
+          <div className="col-span-7">
             <div className="flex flex-col h-[calc(100%)]">
               <Busqueda
                 setBajas={setBajas}
@@ -269,9 +348,10 @@ function Comentarios(){
                 setAccion={setAccion}
                 setCurrentId={setCurrentId}
               />
+
             </div>
           </div>
-        </div>
+      </div>
       </div>
     </>
   );
