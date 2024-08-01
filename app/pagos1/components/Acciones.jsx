@@ -23,4 +23,6 @@ function Acciones({ Documento, Recargos, Parciales, ImprimePDF, ImprimeExcel, ho
   );
 }
 
+
+
 export default Acciones;

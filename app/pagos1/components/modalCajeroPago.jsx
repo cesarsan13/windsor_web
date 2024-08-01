@@ -64,6 +64,8 @@ function ModalCajeroPago({
     }
   });
 
+
+
   return (
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box w-1/2 max-w-3xl">
