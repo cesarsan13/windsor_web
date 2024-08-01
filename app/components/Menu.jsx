@@ -68,11 +68,11 @@ function Menu({ vertical }) {
           </ul>
         </details>
       </li>
-      <li className="hidden">
+      <li >
         <details>
           <summary>Pagos</summary>
           <ul>
-            <li>{/* <Link href="/pagos1">Pagos</Link> */}</li>
+            <li><Link href="/pagos1">Pagos</Link></li>
           </ul>
         </details>
       </li>
@@ -247,11 +247,13 @@ function Menu({ vertical }) {
           </ul>
         </details>
       </li>
-      <li className="hidden">
+      <li>
         <details>
           <summary>Pagos</summary>
           <ul>
-            <li>{/* <Link href="/pagos1">Pagos</Link> */}</li>
+            <li>
+              <Link href="/pagos1">Pagos</Link>
+            </li>
           </ul>
         </details>
       </li>
