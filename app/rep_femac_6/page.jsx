@@ -9,6 +9,9 @@ import { Cobranza, Imprimir, ImprimirExcel } from '../utils/api/Rep_Femac_6/Rep_
 import { formatDate } from '../utils/globalfn';
 import { ReportePDF } from '../utils/ReportesPDF';
 import { Worker, Viewer } from "@react-pdf-viewer/core";
+import ModalVistaPreviaRep6 from './components/modalVistaPreviaRep6';
+import Swal from 'sweetalert2'; // Importa SweetAlert2
+
 
 function Rep_Femac_6() {
     const date = new Date();
@@ -92,10 +95,20 @@ function Rep_Femac_6() {
             ],
             nombre: "Reporte de Cobranza"
         }
-        ImprimirExcel(configuracion, cajero.numero);
+        console.log("hohoho", configuracion)
+       ImprimirExcel(configuracion, cajero.numero);
     }
     console.log(cajero)
     const handleVerClick = () => {
+        if (cajero.numero === 0 || cajero.numero === undefined) {
+            Swal.fire({
+                title: 'Opps',
+                text: 'Por favor selecciona un cajero antes de continuar.',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+            });
+            return;
+        }
         const configuracion = {
             Encabezado: {
                 Nombre_Aplicacion: "Nombre de la Aplicación",
@@ -287,13 +300,22 @@ function Rep_Femac_6() {
         const pdfData = reporte.doc.output("datauristring")
         setPdfData(pdfData)
         setPdfPreview(true)
+        showModalVista(true)
+
     }
+    const showModalVista = (show) => {
+        show
+          ? document.getElementById("modalVRep6").showModal()
+          : document.getElementById("modalVRep6").close();
+      }
     function roundNumber(value, decimals) {
         const factor = Math.pow(10, decimals);
         return Math.round(value * factor) / factor;
     }
     return (
         <>
+              <ModalVistaPreviaRep6 pdfPreview={pdfPreview} pdfData={pdfData} PDF={ImprimePDF} Excel={ImprimeExcel}/>      
+
             <div className='container w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 '>
                 <div className='flex justify-start p-3 '>
                     <h1 className='text-4xl font-xthin text-black dark:text-white md:px-12'>
