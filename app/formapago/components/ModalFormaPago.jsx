@@ -72,10 +72,10 @@ function ModalFormaPago({
                 requerido={true}
                 errors={errors}
                 register={register}
-                message={"idRequerido"}
+                message={"id Requerido"}
                 isDisabled={true}
-                //defaultValue={formaPago.id}
-              />
+                handleBlur={handleBlur}
+                />
               <Inputs
                 dataType={"string"}
                 name={"descripcion"}
@@ -90,7 +90,7 @@ function ModalFormaPago({
                 message={"descripcion requerid"}
                 maxLenght={50}
                 isDisabled={isDisabled}
-                //defaultValue={formaPago.descripcion}
+                handleBlur={handleBlur}
               />
 
               <Inputs
@@ -104,10 +104,9 @@ function ModalFormaPago({
                 errors={errors}
                 register={register}
                 message={"comision requerid"}
-                maxLenght={50}
+                maxLenght={5}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
-                //defaultValue={formaPago.comision}
               />
               <Inputs
                 dataType={"string"}
@@ -121,9 +120,9 @@ function ModalFormaPago({
                 errors={errors}
                 register={register}
                 message={"Aplicacion requerida"}
-                maxLenght={34}
+                maxLenght={30}
                 isDisabled={isDisabled}
-                //defaultValue={formaPago.aplicacion}
+                handleBlur={handleBlur}
               />
               <Inputs
                 dataType={"string"}
@@ -137,9 +136,9 @@ function ModalFormaPago({
                 errors={errors}
                 register={register}
                 message={"Cuenta Banco requerida"}
-                maxLenght={30}
+                maxLenght={34}
                 isDisabled={isDisabled}
-                //defaultValue={formaPago.cue_banco}
+                handleBlur={handleBlur}
               />
             </div>
           </fieldset>
