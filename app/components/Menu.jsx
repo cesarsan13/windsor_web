@@ -287,7 +287,7 @@ function Menu({ vertical }) {
           className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
         >
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>
+            <Link href="/pagos1" onClick={handleClick}>
               Pagos
             </Link>
           </li>
