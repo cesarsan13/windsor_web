@@ -88,7 +88,7 @@ function ModalFormaPago({
                 errors={errors}
                 register={register}
                 message={"descripcion requerid"}
-                maxLength={50}
+                maxLenght={50}
                 isDisabled={isDisabled}
                 //defaultValue={formaPago.descripcion}
               />
@@ -104,7 +104,7 @@ function ModalFormaPago({
                 errors={errors}
                 register={register}
                 message={"comision requerid"}
-                maxLength={50}
+                maxLenght={50}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
                 //defaultValue={formaPago.comision}
@@ -121,7 +121,7 @@ function ModalFormaPago({
                 errors={errors}
                 register={register}
                 message={"Aplicacion requerida"}
-                maxLength={34}
+                maxLenght={34}
                 isDisabled={isDisabled}
                 //defaultValue={formaPago.aplicacion}
               />
@@ -137,7 +137,7 @@ function ModalFormaPago({
                 errors={errors}
                 register={register}
                 message={"Cuenta Banco requerida"}
-                maxLength={30}
+                maxLenght={30}
                 isDisabled={isDisabled}
                 //defaultValue={formaPago.cue_banco}
               />
