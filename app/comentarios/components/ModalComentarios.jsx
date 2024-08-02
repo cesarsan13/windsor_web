@@ -136,7 +136,6 @@ function ModalComentarios({
                 message={"General requerido"}
                 isDisabled={isDisabled}
                 arreglos={[
-                  { id: "...", descripcion: "..." },
                   { id: "Si", descripcion: "Si" },
                   { id: "No", descripcion: "No" },
                 ]}

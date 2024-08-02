@@ -49,21 +49,21 @@ function ModalFormFact({
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box">
         <button
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+          className="btn btn-sm btn-circle btn-ghost  text-black dark:text-white absolute right-2 top-2"
           onClick={() => document.getElementById("my_modal_3").close()}
         >
           ✕
         </button>
         {/* if there is a button in form, it will close the modal */}
         <form onSubmit={onSubmit}>
-          <h3 className="font-bold text-lg mb-5">{titulo}</h3>
+          <h3 className="font-bold text-lg mb-5  text-black dark:text-white">{titulo}</h3>
           <fieldset id="fs_formapago">
             <div className="container flex flex-col space-y-5">
               <Inputs
                 dataType={"int"}
                 name={"numero"}
                 tamañolabel={"w-2/6"}
-                className={"w-3/6 text-right"}
+                className={"w-3/6 rounded block text-right"}
                 Titulo={"Numero: "}
                 type={"text"}
                 requerido={true}
@@ -77,7 +77,7 @@ function ModalFormFact({
                 dataType={"string"}
                 name={"nombre"}
                 tamañolabel={""}
-                className={"grow"}
+                className={"rounded block grow"}
                 Titulo={"Nombre: "}
                 type={"text"}
                 requerido={true}
@@ -92,8 +92,8 @@ function ModalFormFact({
               <Inputs
                 dataType={"float"}
                 name={"longitud"}
-                tamañolabel={""}
-                className={"grow"}
+                tamañolabel={"w-4/6"}
+                className={"rounded block grow"}
                 Titulo={"Longitud: "}
                 type={"text"}
                 requerido={true}
@@ -119,7 +119,7 @@ function ModalFormFact({
               <button
                 type="submit"
                 id="btn_guardar"
-                className="btn  bg-blue-500 hover:bg-blue-700 text-white"
+                className="bg-transparent over:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn"
               >
                 <i className="fa-regular fa-floppy-disk mx-2"></i> Guardar
               </button>

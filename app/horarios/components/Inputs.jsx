@@ -21,6 +21,7 @@ function Inputs({
   maxLenght,
   isDisabled,
   handleBlur,
+  arreglos,
 }) {
   if (type === 'multi-select') {    
     return (
@@ -53,21 +54,20 @@ function Inputs({
   } if (type === "select") {
     return (
       <div className='flex flex-col'>
-        <label htmlFor={name} className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
+        <label htmlFor={name} className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}>
           {Titulo}
           <select
           name={name}
-          className={`text-black dark:text-white ${className}`}
+          className={`text-black dark:text-white bg-transparent dark:${className}`}
           id={name}
           disabled={isDisabled}
           {...register(name, {
             ...(requerido && { required: message }),
           })}
         >
-          <option value="">--Seleccione una opcion--</option>
-          <option value="NIÑOS">Niños</option>
-          <option value="NIÑAS">Niñas</option>
-          <option value="MIXTO">Mixto</option>
+          {arreglos.map((arreglo) => (
+              <option className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]" key={arreglo.id} value={arreglo.id}>{arreglo.descripcion}</option>
+            ))}
         </select>
         </label>
         
@@ -80,7 +80,7 @@ function Inputs({
     return (
       <div className="flex flex-col">
         <label
-          className={`input input-bordered text-black dark:text-white input-md flex items-center gap-3 ${tamañolabel}`}
+          className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
         >
           {Titulo}
           <input
@@ -89,7 +89,7 @@ function Inputs({
             name={name}
             id={name}
             type={type}
-            className={`text-black dark:text-white ${className}`}
+            className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 ${className}`}
             {...(dataType === "int" && { onKeyDown: soloEnteros })}
             {...(dataType === "float" && { onKeyDown: soloDecimales })}
             {...register(name, {

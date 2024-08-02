@@ -29,7 +29,7 @@ function Inputs({
           name={name}
           id={name}
           type={type}
-          className={className}
+          className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 ${className}`}
           {...(dataType === "int" && { onKeyDown: soloEnteros })}
           {...(dataType === "float" && { onKeyDown: soloDecimales })}
           {...register(name, {
