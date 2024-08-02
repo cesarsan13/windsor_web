@@ -21,13 +21,13 @@ function TablaFormaPago({
     <div className="overflow-x-auto mt-3 h-[calc(75vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white m-2 w-full lg:w-3/4">
       {formaPagosFiltrados.length > 0 ? (
         <table className="table table-xs table-zebra w-full">
-          <thead className="sticky top-0 bg-white dark:bg-[#1d232a] ">
+          <thead className="sticky top-0 bg-white dark:bg-[#1d232a]">
             <tr>
-              <th>id</th>
-              <td>Descripcion</td>
-              <td>Comision</td>
-              <td>Aplicacion</td>
-              <td>Cuenta Banco</td>
+              <th className="w-[10%]">id</th>
+              <td className="w-[50%]">Descripcion</td>
+              <td className="w-[8%]">Comision</td>
+              <td className="w-[15%]">Aplicacion</td>
+              <td className="w-[20%]">Cuenta Banco</td>
               <th className="w-[calc(10%)]">Acciones</th>
             </tr>
           </thead>
@@ -67,16 +67,7 @@ function TablaFormaPago({
               </tr>
             ))}
           </tbody>
-          <tfoot>
-            <tr>
-              <th></th>
-              <td>Descripcion</td>
-              <td>Comision</td>
-              <td>Aplicacion</td>
-              <td>Cuenta Banco</td>
-              <th>Acciones</th>
-            </tr>
-          </tfoot>
+          <tfoot />
         </table>
       ) : (
         <NoData />

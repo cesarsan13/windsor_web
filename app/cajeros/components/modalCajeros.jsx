@@ -215,7 +215,7 @@ function ModalCajeros({
               <button
                 type="submit"
                 id="btn_guardar"
-                className="btn hover:bg-slate-200 dark:hover:bg-neutral-700"
+                className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn"
               >
                 <i className="fa-regular fa-floppy-disk mx-2"></i>
               </button>

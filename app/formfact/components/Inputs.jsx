@@ -88,7 +88,7 @@ function Inputs({
     </div>
   ) : (
     <div className="flex flex-col">
-      <label className={`input   flex items-center  ${tamañolabel}`}>
+      <label className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}>
         {Titulo}
         <input
           {...(step && { step: step })}
@@ -97,7 +97,7 @@ function Inputs({
           name={name}
           id={name}
           type={type}
-          className={className}
+          className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 ${className}`}
           {...(dataType === "int" && { onKeyDown: soloEnteros })}
           {...(dataType === "float" && { onKeyDown: soloDecimales })}
           {...register(name, {

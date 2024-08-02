@@ -239,7 +239,7 @@ function FormaPago() {
       if (!doc.tiene_encabezado) {
         doc.imprimeEncabezadoPrincipalV();
         doc.nextRow(12);
-        doc.ImpPosX("Numero", 14, doc.tw_ren);
+        doc.ImpPosX("No.", 14, doc.tw_ren);
         doc.ImpPosX("Descripcion", 28, doc.tw_ren);
         doc.ImpPosX("Comision", 128, doc.tw_ren);
         doc.ImpPosX("Aplicacion", 152, doc.tw_ren);

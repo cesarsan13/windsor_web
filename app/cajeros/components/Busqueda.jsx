@@ -33,9 +33,9 @@ function Busqueda({
         <option disabled defaultValue={""}>
           Filtros
         </option>
-        <option value={"numero"}>Numero</option>
         <option value={"nombre"}>Nombre</option>
-        <option value={"clave_cajero"}>Clave</option>
+        <option value={"telefono"}>Telefono</option>
+        <option value={"correo"}>Correo</option>
       </select>
       <div className="tooltip " data-tip="Limpiar">
         <button

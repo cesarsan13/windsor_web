@@ -3,8 +3,8 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalCajeros from "@/app/cajeros/components/modalCajeros";
-import TablaCajeros from "@/app/cajeros/components/tablaCajeros";
-import Busqueda from "@/app/cajeros/components/Busqueda";
+import TablaCajeros from "./components/tablaCajeros";
+import Busqueda from "./components/Busqueda";
 import Acciones from "@/app/cajeros/components/Acciones";
 import { useForm } from "react-hook-form";
 import {
@@ -247,11 +247,11 @@ function Cajeros() {
       if (!doc.tiene_encabezado) {
         doc.imprimeEncabezadoPrincipalV();
         doc.nextRow(12);
-        doc.ImpPosX("Numero", 14, doc.tw_ren);
+        doc.ImpPosX("No.", 14, doc.tw_ren);
         doc.ImpPosX("Nombre", 28, doc.tw_ren);
-        doc.ImpPosX("Clave", 62, doc.tw_ren);
-        doc.ImpPosX("Telefono", 82, doc.tw_ren);
-        doc.ImpPosX("Correo", 112, doc.tw_ren);
+        doc.ImpPosX("Clave", 97, doc.tw_ren);
+        doc.ImpPosX("Telefono", 112, doc.tw_ren);
+        doc.ImpPosX("Correo", 142, doc.tw_ren);
         doc.nextRow(4);
         doc.printLineV();
         doc.nextRow(4);
@@ -266,9 +266,9 @@ function Cajeros() {
     cajerosFiltrados.forEach((cajero)=>{
       reporte.ImpPosX(cajero.numero.toString(), 14, reporte.tw_ren);
       reporte.ImpPosX(cajero.nombre.toString(), 28, reporte.tw_ren);
-      reporte.ImpPosX(cajero.clave_cajero.toString(), 62, reporte.tw_ren);
-      reporte.ImpPosX(cajero.telefono.toString(), 82, reporte.tw_ren);
-      reporte.ImpPosX(cajero.mail.toString(), 112, reporte.tw_ren);
+      reporte.ImpPosX(cajero.clave_cajero.toString(), 97, reporte.tw_ren);
+      reporte.ImpPosX(cajero.telefono.toString(), 112, reporte.tw_ren);
+      reporte.ImpPosX(cajero.mail.toString(), 142, reporte.tw_ren);
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRen) {
         reporte.pageBreak();
@@ -305,7 +305,7 @@ function Cajeros() {
       <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
-            Cajeros.
+            Cajeros
           </h1>
         </div>
         <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] ">
