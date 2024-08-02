@@ -7,21 +7,6 @@ import { useEffect, useState } from "react";
 
 function NavBar() {
   const { data: session, status } = useSession();
-  // const [tema,setTema]=useState(() => {
-  //   if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-  //     return false;
-  //   }
-
-  //   return true;
-  // })
-  // console.log(tema)
-  // const [theme, setTheme] = useState(() => {
-  //   if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-  //     return "dark";
-  //   }
-
-  //   return "light";
-  // });
 
   const [tema, setTema] = useState(true); // Valor por defecto
   const [theme, setTheme] = useState("light"); // Valor por defecto
@@ -40,7 +25,6 @@ function NavBar() {
     setTheme(themeInicial);
   }, []);
 
-  console.log(tema, theme);
 
   useEffect(() => {
     if (theme === "dark") {
