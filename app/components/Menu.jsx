@@ -152,21 +152,23 @@ function Menu({ vertical }) {
               <Link href="/Rep_Femac_2">Lista de Alumnos por clase</Link>
             </li>
             <li>
-              <Link href="/rep_femac_3">
-                Lista de Alumnos por clase del mes
-              </Link>
+              <Link href="/rep_femac_3"> Lista de Alumnos por clase del mes </Link>
             </li>
             <li>
-              <Link href="/rep_femac_13">
-                Lista de alumnos por clase semanal
-              </Link>
+              <Link href="/rep_femac_13"> Lista de alumnos por clase semanal </Link>
             </li>
             <li>
               <Link href="/rep_femac_5">Altas y Bajas de Alumnos</Link>
             </li>
             <li>
+              <Link href="/rep_femac_7">Cartera</Link>
+            </li>
+            <li>
               <Link href="/rep_femac_8_anexo_1">Relacion de Recibos</Link>
             </li>
+            <li>
+            <Link href="/rep_femac_12_anexo_4"> Reporte Cobranza por Producto </Link>
+          </li>
           </ul>
         </details>
       </li>
@@ -395,6 +397,11 @@ function Menu({ vertical }) {
             </Link>
           </li>
           <li>
+            <Link href="/rep_femac_7" onClick={handleClick}>
+              Cartera
+            </Link>
+          </li>
+          <li>
             <Link href="/rep_femac_8_anexo_1" onClick={handleClick}>
               Relación de Recibos
             </Link>
@@ -402,6 +409,11 @@ function Menu({ vertical }) {
           <li>
             <Link href="/rep_femac_11_Anexo_3" onClick={handleClick}>
               Reporte Cobranza por Alumno
+            </Link>
+          </li>
+          <li>
+            <Link href="/rep_femac_12_anexo_4" onClick={handleClick}>
+              Reporte Cobranza por Producto
             </Link>
           </li>
         </ul>
