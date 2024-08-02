@@ -133,7 +133,7 @@ function ModalAlumnos({
                     dataType={"string"}
                     name={"a_paterno"}
                     tamañolabel={""}
-                    className={"rounded block grow"}
+                    className={"grow"}
                     Titulo={"Apellido paterno: "}
                     type={"text"}
                     requerido={true}
