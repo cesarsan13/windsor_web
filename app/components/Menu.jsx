@@ -167,6 +167,11 @@ function Menu({ vertical }) {
             <li>
               <Link href="/rep_femac_8_anexo_1">Relacion de Recibos</Link>
             </li>
+            <li>
+              <Link href="/rep_inscritos" onClick={handleClick}>
+                Reporte Inscripción
+              </Link>
+            </li>
           </ul>
         </details>
       </li>
@@ -402,6 +407,11 @@ function Menu({ vertical }) {
           <li>
             <Link href="/rep_femac_11_Anexo_3" onClick={handleClick}>
               Reporte Cobranza por Alumno
+            </Link>
+          </li>
+          <li>
+            <Link href="/rep_inscritos" onClick={handleClick}>
+              Reporte Inscripción
             </Link>
           </li>
         </ul>
