@@ -63,21 +63,21 @@ function TablaAlumnos({
                 <th className="w-[30%] sm:w-[10%]">
                   <div className="flex flex-row space-x-1 sm:space-x-3">
                     <div
-                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                       data-tip={`Ver ${item.id}`}
                       onClick={(evt) => tableAction(evt, item, `Ver`)}
                     >
                       <i className="fa-solid fa-eye"></i>
                     </div>
                     <div
-                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                       data-tip={`Editar ${item.id}`}
                       onClick={(evt) => tableAction(evt, item, `Editar`)}
                     >
                       <i className="fa-solid fa-file"></i>
                     </div>
                     <div
-                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                       data-tip={`Eliminar  ${item.id}`}
                       onClick={(evt) => tableAction(evt, item, "Eliminar")}
                     >
