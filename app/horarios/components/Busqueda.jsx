@@ -37,11 +37,11 @@ function Busqueda({
         <option value={"numero"}>Numero</option>
         <option value={"cancha"}>Cancha</option>
         <option value={"horario"}>Horario</option>
-        <option value={"max_niños"}>Max Niños</option>  
+        <option value={"max_niños"}>Max Niños</option>
       </select>
-      <div className="tooltip " data-tip="Limpiar">
+      <div className="tooltip" data-tip="Limpiar">
         <button
-          className="btn join-item  bg-blue-500 hover:bg-blue-700 text-white input-bordered"
+          className="btn btn-square join-item input input-sm  dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 border-none shadow-none "
           onClick={limpiarBusqueda}
         >
           <i className="fa-solid fa-broom"></i>

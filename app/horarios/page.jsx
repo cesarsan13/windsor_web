@@ -33,7 +33,7 @@ function Horarios() {
   const [currentID, setCurrentId] = useState("");
   const [filtro, setFiltro] = useState("");
   const [dia, setDia] = useState("");
-  const [TB_Busqueda, setTB_Busqueda] = useState("");  
+  const [TB_Busqueda, setTB_Busqueda] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
 
@@ -240,7 +240,7 @@ function Horarios() {
     };
     ImprimirExcel(configuracion);
   };
-  const handleVerClick = () =>{
+  const handleVerClick = () => {
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -268,18 +268,18 @@ function Horarios() {
         doc.nextRow(6);
         doc.tiene_encabezado = true;
       }
-    };    
+    };
     const reporte = new ReportePDF(configuracion)
     Enca1(reporte);
-    horariosFiltrados.forEach((horario)=>{
-      reporte.ImpPosX(horario.numero.toString(),14,reporte.tw_ren)
-      reporte.ImpPosX(horario.cancha.toString(),28,reporte.tw_ren)
-      reporte.ImpPosX(horario.dia.toString(),42,reporte.tw_ren)
-      reporte.ImpPosX(horario.horario.toString(),82,reporte.tw_ren)
-      reporte.ImpPosX(horario.max_niños.toString(),114,reporte.tw_ren)
-      reporte.ImpPosX(horario.sexo.toString(),134,reporte.tw_ren)
-      reporte.ImpPosX(horario.edad_ini.toString(),154,reporte.tw_ren)
-      reporte.ImpPosX(horario.edad_fin.toString(),174,reporte.tw_ren)
+    horariosFiltrados.forEach((horario) => {
+      reporte.ImpPosX(horario.numero.toString(), 14, reporte.tw_ren)
+      reporte.ImpPosX(horario.cancha.toString(), 28, reporte.tw_ren)
+      reporte.ImpPosX(horario.dia.toString(), 42, reporte.tw_ren)
+      reporte.ImpPosX(horario.horario.toString(), 82, reporte.tw_ren)
+      reporte.ImpPosX(horario.max_niños.toString(), 114, reporte.tw_ren)
+      reporte.ImpPosX(horario.sexo.toString(), 134, reporte.tw_ren)
+      reporte.ImpPosX(horario.edad_ini.toString(), 154, reporte.tw_ren)
+      reporte.ImpPosX(horario.edad_fin.toString(), 174, reporte.tw_ren)
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRen) {
         reporte.pageBreak();
@@ -335,7 +335,7 @@ function Horarios() {
                 handleBusquedaChange={handleBusquedaChange}
                 TB_Busqueda={TB_Busqueda}
                 setTB_Busqueda={setTB_Busqueda}
-              />            
+              />
               <TablaHorarios
                 isLoading={isLoading}
                 HorariosFiltrados={horariosFiltrados}
