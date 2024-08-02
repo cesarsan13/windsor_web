@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import NoData from "@/app/components/noData";
 
-function ModalBuscarCat({ data, fieldsToShow, setItem, modalId, titulo }) {
+function ModalBuscarCat({ data, fieldsToShow, setItem, modalId, titulo,tiutloInput }) {
   const [inputValues, setInputValues] = useState({}); // Estado para los valores de los inputs
   const [filteredData, setFilteredData] = useState(data); // Estado para los datos filtrados
 
@@ -30,6 +30,7 @@ function ModalBuscarCat({ data, fieldsToShow, setItem, modalId, titulo }) {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
+      e.preventDefault();
       handleSearch();
     }
   };
@@ -59,20 +60,20 @@ function ModalBuscarCat({ data, fieldsToShow, setItem, modalId, titulo }) {
         <div className='flex justify-start items-center'>
           {fieldsToShow.map((field, index) => (
             <label key={index} className={`input w-5/12 input-bordered ml-2 text-black dark:text-white input-md flex items-center gap-3`}>
-              {`${field}: `}
+              {`${tiutloInput[index] || fieldsToShow[index]}: `}
               <input
                 type="text"
                 value={inputValues[field] || ''}
                 onChange={(e) => handleInputChange(field, e.target.value)}
                 onKeyDown={handleKeyDown} // Añadir evento de tecla abajo
-                className='grow dark:text-neutral-200 text-neutral-600 rounded-r-none'
+                className='grow dark:text-neutral-200 border-b-2 border-slate-300 dark:border-slate-700 w-5/12 input-sm text-neutral-600 rounded-r-none'
               />
             </label>
           ))}
           <div className="tooltip" data-tip="Buscar">
             <button
             type='button'
-              className="bg-blue-500 ml-2 hover:bg-blue-700 text-white btn rounded-r-lg"
+              className="hover:bg-transparent border-none shadow-none bg-transparent text-black dark:text-white btn rounded-r-lg"
               onClick={handleSearch}
             >
               <i className="fa-solid fa-magnifying-glass"></i>
@@ -81,7 +82,7 @@ function ModalBuscarCat({ data, fieldsToShow, setItem, modalId, titulo }) {
         </div>
         <div className='text-black bg-white dark:bg-[#1d232a] dark:text-white mt-4 w-full'>
           {filteredData.length > 0 ? (
-            <table className='table table-md table-zebra table-pin-rows table-pin-cols max-h-[calc(50%)]'>
+            <table className='table table-xs table-zebra table-pin-rows table-pin-cols max-h-[calc(50%)]'>
               <thead className='relative z-[1] md:static'>
                 <tr>
                   <th></th>
@@ -96,11 +97,11 @@ function ModalBuscarCat({ data, fieldsToShow, setItem, modalId, titulo }) {
                     <th key={index}>
                       <div className='flex flex-row'>
                         <div
-                          className="kbd tooltip tooltip-right hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                          className="kbd tooltip tooltip-right hover:cursor-pointer hover:bg-transparent border-none shadow-none bg-transparent text-black dark:text-white"
                           data-tip={`Seleccionar ${item[fieldsToShow[0]]}`}
                           onClick={() => ModalAction(item)}
                         >
-                          <i class="fa-solid fa-check"></i>
+                          <i class="fa-solid fa-check-double"></i>
                         </div>
                       </div>
                     </th>

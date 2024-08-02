@@ -87,15 +87,7 @@ function TablaAlumnos({
                 </th>
               </tr>
             ))}
-          </tbody>
-          <tfoot>
-            <tr>
-              <th></th>
-              <td className="w-[40%]">Nombre</td>
-              <td className="hidden sm:table-cell">Grado</td>
-              <th className="w-[30%] sm:w-[10%]">Acciones</th>
-            </tr>
-          </tfoot>
+          </tbody>          
         </table>
       ) : (
         <NoData />
