@@ -30,43 +30,43 @@ function ModalFormaPago({
       accion === "Alta"
         ? `Nueva Forma de Pago: ${currentID}`
         : accion === "Editar"
-        ? `Editar Forma de Pago: ${currentID}`
-        : accion === "Eliminar"
-        ? `Eliminar Forma de Pago: ${currentID}`
-        : `Ver Forma de Pago: ${currentID}`
+          ? `Editar Forma de Pago: ${currentID}`
+          : accion === "Eliminar"
+            ? `Eliminar Forma de Pago: ${currentID}`
+            : `Ver Forma de Pago: ${currentID}`
     );
   }, [accion]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
       ? setFormaPago((formaPago) => ({
-          ...formaPago,
-          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-        }))
+        ...formaPago,
+        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+      }))
       : setFormaPago((formaPago) => ({
-          ...formaPago,
-          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-        }));
+        ...formaPago,
+        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+      }));
   };
   return (
     <dialog id="my_modal_3" className="modal">
-      <div className="modal-box">
+      <div className="modal-box w-full max-w-3xl h-full">
         <button
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black"
           onClick={() => document.getElementById("my_modal_3").close()}
         >
           ✕
         </button>
         {/* if there is a button in form, it will close the modal */}
         <form onSubmit={onSubmit}>
-          <h3 className="font-bold text-lg mb-5">{titulo}</h3>
+          <h3 className="font-bold text-lg mb-5  text-black dark:text-white">{titulo}</h3>
           <fieldset id="fs_formapago">
-            <div className="container flex flex-col space-y-5">
+            <div className="flex flex-wrap -mx-3 mb-6">
               <Inputs
                 dataType={"int"}
                 name={"id"}
-                tamañolabel={"w-2/6"}
-                className={"w-3/6 text-right"}
+                tamañolabel={""}
+                className={"rounded block grow text-right"}
                 Titulo={"Numero: "}
                 type={"text"}
                 requerido={true}
@@ -75,12 +75,12 @@ function ModalFormaPago({
                 message={"id Requerido"}
                 isDisabled={true}
                 handleBlur={handleBlur}
-                />
+              />
               <Inputs
                 dataType={"string"}
                 name={"descripcion"}
                 tamañolabel={""}
-                className={"grow"}
+                className={"rounded block grow"}
                 Titulo={"Descripcion: "}
                 type={"text"}
                 requerido={true}
@@ -96,8 +96,8 @@ function ModalFormaPago({
               <Inputs
                 dataType={"float"}
                 name={"comision"}
-                tamañolabel={"w-3/6"}
-                className={" w-2/6 grow text-right"}
+                tamañolabel={""}
+                className={"rounded block grow"}
                 Titulo={"Comision:"}
                 type={"text"}
                 requerido={true}
@@ -112,7 +112,7 @@ function ModalFormaPago({
                 dataType={"string"}
                 name={"aplicacion"}
                 tamañolabel={""}
-                className={"grow"}
+                className={"rounded block grow"}
                 Titulo={"Aplicacion:"}
                 type={"text"}
                 requerido={true}
@@ -128,7 +128,7 @@ function ModalFormaPago({
                 dataType={"string"}
                 name={"cue_banco"}
                 tamañolabel={""}
-                className={"grow"}
+                className={"rounded block grow"}
                 Titulo={"Cuenta Banco:"}
                 type={"text"}
                 requerido={true}
@@ -144,17 +144,16 @@ function ModalFormaPago({
           </fieldset>
           <div className=" modal-action">
             <div
-              className={`tooltip tooltip-top my-5 ${
-                accion === "Ver"
-                  ? "hover:cursor-not-allowed hidden"
-                  : "hover:cursor-pointer"
-              }`}
+              className={`tooltip tooltip-top my-5 ${accion === "Ver"
+                ? "hover:cursor-not-allowed hidden"
+                : "hover:cursor-pointer"
+                }`}
               data-tip="Guardar"
             >
               <button
                 type="submit"
                 id="btn_guardar"
-                className="btn  bg-blue-500 hover:bg-blue-700 text-white"
+                className="btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white"
               >
                 <i className="fa-regular fa-floppy-disk mx-2"></i> Guardar
               </button>
