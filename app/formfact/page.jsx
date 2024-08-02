@@ -270,6 +270,7 @@ function FormFact() {
                   formato={formato}
                   propertyData={propertyData}
                   setShowSheet={setShowSheet}
+                  currentID={currentID}
                 ></ConfigReporte>
               ) : (
                 <TablaFormFact

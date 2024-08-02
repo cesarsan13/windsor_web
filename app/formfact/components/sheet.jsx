@@ -9,18 +9,45 @@ function Sheet({
   setSelectedIndex,
   changeSelectedLabel,
   setTextoAnterior,
+  currentID,
 }) {
   const handleDoubleClick = (event) => {
     event.preventDefault();
     const rect = event.target.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
+
+    const maxNumeroDato = Math.max(...labels.map((lbl) => lbl.numero_dato)) + 1;
     setLabels([
       ...labels,
       {
         columna_impresion: x,
         renglon_impresion: y,
         descripcion_campo: "Texto",
+
+        cuenta: 0,
+        font_bold: "N",
+        font_italic: "N",
+        font_nombre: "Arial",
+        font_rallado: "N",
+        font_subrallado: "N",
+        font_tamaño: 9,
+        forma_columna: 9030,
+        forma_columna_dos: 0,
+        forma_renglon: 3120,
+        forma_renglon_dos: 0,
+        formato: 2,
+        funcion: 0,
+        importe_transaccion: 0,
+        longitud: 10,
+        naturaleza: 0,
+        nombre_campo: "",
+        numero_archivo: 12,
+        numero_dato: maxNumeroDato,
+        numero_forma: currentID,
+        tiempo_operacion: 0,
+        tipo_campo: 2,
+        visible: "S",
       },
     ]);
   };
@@ -59,6 +86,7 @@ function Sheet({
     });
     setLabels(resultado);
     setSelectedIndex(index);
+    console.log(labels[selectedIndex]);
   };
 
   return (
