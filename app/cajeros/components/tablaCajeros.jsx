@@ -46,21 +46,21 @@ function TablaCajeros({
                   <th>
                     <div className="flex flex-row space-x-1">
                       <div
-                        className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                        className="kbd tooltip tooltip-left hover:bg-slate-200 dark:hover:bg-neutral-700"
                         data-tip={`Ver ${item.numero}`}
                         onClick={(evt) => tableAction(evt, item, `Ver`)}
                       >
                         <i className="fa-solid fa-eye"></i>
                       </div>
                       <div
-                        className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                        className="kbd tooltip tooltip-left hover:bg-slate-200 dark:hover:bg-neutral-700"
                         data-tip={`Editar ${item.numero}`}
                         onClick={(evt) => tableAction(evt, item, `Editar`)}
                       >
                         <i className="fa-solid fa-file"></i>
                       </div>
                       <div
-                        className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                        className="kbd tooltip tooltip-left hover:bg-slate-200 dark:hover:bg-neutral-700"
                         data-tip={`Eliminar ${item.numero}`}
                         onClick={(evt) => tableAction(evt, item, "Eliminar")}
                       >
@@ -71,15 +71,7 @@ function TablaCajeros({
                 </tr>
               ))}
             </tbody>
-            <tfoot>
-              <tr>
-                <th></th>
-                <td>Nombre</td>
-                <td>Telefono</td>
-                <td>Correo</td>
-                <th>Acciones</th>
-              </tr>
-            </tfoot>
+
           </table>
         ) : (
           <NoData />
