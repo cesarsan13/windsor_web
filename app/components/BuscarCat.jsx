@@ -144,37 +144,38 @@ function BuscarCat({
   };
 
   return (
-    <div className="flex justify-start items-center gap-2">
-      <label className="input input-bordered text-black dark:text-white input-md flex items-center gap-3">
-        {titulo}
+    <div className="flex justify-start items-center join gap-2">
+      <div className="join">
+        <label className="input input-bordered join-item text-black dark:text-white input-md flex items-center gap-3">
+          {titulo}
+          <input
+            id={nameInput[0]}
+            name={nameInput[0]}
+            type="text"
+            {...register(nameInput[0])}
+            onKeyDown={(evt) => handleKeyDown(evt)}
+            className={`grow dark:text-neutral-200 join-item text-neutral-600 rounded-r-none ${alignRight ? "text-right" : ""
+              }`}
+            style={{ width: inputWidths.first }}
+          />
+        </label>
+        <button
+          type="button"
+          className="bg-transparent join-item hover:bg-transparent border-none shadow-none dark:text-white text-white btn rounded-r-lg"
+          onClick={Buscar}
+        >
+          <i className="fa-solid fa-magnifying-glass"></i>
+        </button>
         <input
-          id={nameInput[0]}
-          name={nameInput[0]}
+          id={nameInput[1]}
+          name={nameInput[1]}
           type="text"
-          {...register(nameInput[0])}
-          onKeyDown={(evt) => handleKeyDown(evt)}
-          className={`grow dark:text-neutral-200 text-neutral-600 rounded-r-none ${
-            alignRight ? "text-right" : ""
-          }`}
-          style={{ width: inputWidths.first }}
+          readOnly={true}
+          {...register(nameInput[1])}
+          className="input input-bordered join-item rounded-r-full bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md"
+          style={{ width: inputWidths.second }}
         />
-      </label>
-      <button
-        type="button"
-        className="bg-blue-500 hover:bg-blue-700 text-white btn rounded-r-lg"
-        onClick={Buscar}
-      >
-        <i className="fa-solid fa-magnifying-glass"></i>
-      </button>
-      <input
-        id={nameInput[1]}
-        name={nameInput[1]}
-        type="text"
-        readOnly={true}
-        {...register(nameInput[1])}
-        className="input input-bordered bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md"
-        style={{ width: inputWidths.second }}
-      />
+      </div>
       <ModalBuscarCat
         data={data}
         titulo={table}

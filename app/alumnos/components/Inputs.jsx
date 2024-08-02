@@ -27,14 +27,14 @@ function Inputs({
           <select
             name={name}
             id={name}
-            className={`text-black dark:text-white ${className}`}
+            className={`text-black dark:text-white bg-transparent dark: ${className}`}
             {...register(name, {
               ...(requerido && { required: message }),
             })}
             disabled={isDisabled}
           >
             {arreglos.map((arreglo) => (
-              <option key={arreglo.id} value={arreglo.id}>{arreglo.descripcion}</option>
+              <option className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]" key={arreglo.id} value={arreglo.id}>{arreglo.descripcion}</option>
             ))}
             {/* <option value={"Activo"}>Activo</option>
             <option value={"Enfermo"}>Enfermo</option>
@@ -63,7 +63,7 @@ function Inputs({
             name={name}
             id={name}
             type={type}
-            className={`text-black dark:text-white ${className}`}
+            className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 ${className}`}
             {...(dataType === "int" && { onKeyDown: soloEnteros })}
             {...(dataType === "float" && { onKeyDown: soloDecimales })}
             {...register(name, {
