@@ -24,11 +24,11 @@ function TablaComentarios({
           <thead className="sticky top-0 bg-white dark:bg-[#1d232a] ">
             <tr>
               <th></th>
-              <td className="w-[40%]">Comentario 1</td>
-              <td className="w-[40%]">Comentario 2</td>
-              <td className="w-[40%]">Comentario 3</td>
-              <td className="w-[30%] sm:w-[10%]">Generales</td>
-              <th className="w-[calc(10%)]">Acciones</th>
+              <td className="w-[30%]">Comentario 1</td>
+              <td className="w-[30%]">Comentario 2</td>
+              <td className="w-[30%]">Comentario 3</td>
+              <td className="w-[10%]">Generales</td>
+              <th className="w-[30%] sm:w-[10%]">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -64,20 +64,10 @@ function TablaComentarios({
                     </div>
                   </div>
                 </th>
-
               </tr>
             ))}
           </tbody>
-          {/* <tfoot>
-            <tr>
-              <th></th>
-              <td>Comentario 1</td>
-              <td>Comentario 2</td>
-              <td>Comentario 3</td>
-              <td>Generales</td>
-              <th>Acciones</th>
-            </tr>
-          </tfoot> */}
+          <tfoot />
         </table>
       ) : (
         <NoData />
