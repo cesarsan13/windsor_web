@@ -22,14 +22,14 @@ function Inputs({
   isDisabled,
   handleBlur,
 }) {
-  if (type === 'multi-select') {    
+  if (type === 'multi-select') {
     return (
-      <div className='flex flex-col'>
-        <label htmlFor={name} className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
+      <div className="w-full md:w-1/2 px-0.5 py-2 mb-6 md:mb-0">
+        <label className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}>
           {Titulo}
           <Controller
             name={name}
-            control={control}                
+            control={control}
             render={({ field }) => (
               <Select
                 {...field}
@@ -39,7 +39,7 @@ function Inputs({
                 className={`text-black ${className}`}
                 classNamePrefix='select'
                 value={value}
-                onChange={onChange}                              
+                onChange={onChange}
               />
             )}
           />
@@ -52,35 +52,35 @@ function Inputs({
     )
   } if (type === "select") {
     return (
-      <div className='flex flex-col'>
-        <label htmlFor={name} className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
+      <div className="w-full md:w-1/2 px-0.5 py-2 mb-6 md:mb-0">
+        <label className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}>
           {Titulo}
           <select
-          name={name}
-          className={`text-black dark:text-white ${className}`}
-          id={name}
-          disabled={isDisabled}
-          {...register(name, {
-            ...(requerido && { required: message }),
-          })}
-        >
-          <option value="">--Seleccione una opcion--</option>
-          <option value="NIÑOS">Niños</option>
-          <option value="NIÑAS">Niñas</option>
-          <option value="MIXTO">Mixto</option>
-        </select>
+            name={name}
+            className={`text-black dark:text-white bg-transparent dark: ${className}`}
+            id={name}
+            disabled={isDisabled}
+            {...register(name, {
+              ...(requerido && { required: message }),
+            })}
+          >
+            <option value="" className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]">--Seleccione una opcion--</option>
+            <option value="NIÑOS" className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]">Niños</option>
+            <option value="NIÑAS" className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]">Niñas</option>
+            <option value="MIXTO" className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]">Mixto</option>
+          </select>
         </label>
-        
+
         {errors[name] && requerido && (
           <span className="text-red-500 text-sm">{errors[name].message}</span>
         )}
       </div>
     )
-  } if (type === 'text') {    
+  } if (type === 'text') {
     return (
-      <div className="flex flex-col">
+      <div className="w-full md:w-1/2 px-0.5 py-2 mb-6 md:mb-0">
         <label
-          className={`input input-bordered text-black dark:text-white input-md flex items-center gap-3 ${tamañolabel}`}
+          className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
         >
           {Titulo}
           <input
@@ -89,7 +89,7 @@ function Inputs({
             name={name}
             id={name}
             type={type}
-            className={`text-black dark:text-white ${className}`}
+            className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 ${className}`}
             {...(dataType === "int" && { onKeyDown: soloEnteros })}
             {...(dataType === "float" && { onKeyDown: soloDecimales })}
             {...register(name, {
