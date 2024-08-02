@@ -18,9 +18,6 @@ import { showSwal } from "@/app/utils/alerts";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import * as XLSX from "xlsx";
-import { Worker, Viewer } from "@react-pdf-viewer/core";
-// import { calculaDigitoBvba } from "@/app/utils/globalfn";
 
 function AltasBajasAlumnos() {
     const router = useRouter();
@@ -57,6 +54,7 @@ function AltasBajasAlumnos() {
             data = await getReportAltaBajaAlumno(token, selectedOptionAB, selectedOption, fechaIniFormateada, fechaFinFormateada);
         } else {
             showSwal("Oppss!", "Para imprimir, mínimo debe estar seleccionada una fecha de 'Inicio'", "error");
+            return
         }
         console.log('data get report', data);
         return data;
@@ -99,6 +97,12 @@ function AltasBajasAlumnos() {
     };
 
     const handleVerClick = async () => {
+        
+    if (fecha_ini === "" || fecha_fin === "") {
+        showSwal("Oppss!", "Para imprimir, debes seleccionar un rango de fechas", "error");
+        return
+    } 
+
         console.log(session);
         const alumnosFiltrados = await formaImprime();
         const configuracion = {
@@ -150,70 +154,6 @@ function AltasBajasAlumnos() {
                 </div>
                 <div className="col-span-7">
                     <div className="flex flex-col h-full space-y-4">
-                        <div className="flex items-center space-x-4">
-                            <div className="w-full max-w-sm p-4 border dark:border-gray-300 border-black rounded-lg">
-                                <h2 className="text-lg font-bold mb-4 dark:text-white text-black">Ordenado por...</h2>
-                                <div className="flex flex-col space-y-2">
-                                    <label className="flex items-center space-x-2 dark:text-white text-black">
-                                        <input
-                                            type="radio"
-                                            name="options"
-                                            value="Nombre"
-                                            checked={selectedOption === 'Nombre'}
-                                            onChange={handleOptionChange}
-                                            className="form-radio"
-                                        />
-                                        <span>Nombre</span>
-                                    </label>
-                                    <label className="flex items-center space-x-2 dark:text-white text-black">
-                                        <input
-                                            type="radio"
-                                            name="options"
-                                            value="Numero"
-                                            checked={selectedOption === 'Numero'}
-                                            onChange={handleOptionChange}
-                                            className="form-radio"
-                                        />
-                                        <span>Número</span>
-                                    </label>
-                                    <label className="flex items-center space-x-2 dark:text-white text-black">
-                                        <input
-                                            type="radio"
-                                            name="options"
-                                            value="Fecha_nac"
-                                            checked={selectedOption === 'Fecha_nac'}
-                                            onChange={handleOptionChange}
-                                            className="form-radio"
-                                        />
-                                        <span>Fecha nacimiento</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <label className="flex items-center space-x-2 dark:text-white text-black">
-                                <input
-                                    type="radio"
-                                    name="optionsAB"
-                                    value="Alta"
-                                    checked={selectedOptionAB === 'Alta'}
-                                    onChange={handleOptionChangeAB}
-                                    className="form-radio"
-                                />
-                                <span>Altas</span>
-                            </label>
-                            <label className="flex items-center space-x-2 dark:text-white text-black">
-                                <input
-                                    type="radio"
-                                    name="optionsAB"
-                                    value="Bajas"
-                                    checked={selectedOptionAB === 'Bajas'}
-                                    onChange={handleOptionChangeAB}
-                                    className="form-radio"
-                                />
-                                <span>Bajas</span>
-                            </label>
-                        </div>
-
-
                         <div className="flex space-x-4">
                             <Inputs
                                 name={"fecha_ini"}
@@ -238,6 +178,36 @@ function AltasBajasAlumnos() {
                                 setValue={setFecha_fin}
                             />
                         </div>
+                        <div className=" col-7">
+                <label className={` input-md text-black dark:text-white flex items-center gap-3`}>
+                    <label className={` input-md text-black dark:text-white flex items-center gap-3`}>
+                        <span className="text-black dark:text-white">Altas</span>
+                        <input type="radio" name="ordenar" value="nombre" onChange={handleOptionChangeAB} checked={selectedOptionAB === "Alta"} className="radio checked:bg-blue-500" />
+                    </label>
+                    <label className={` input-md text-black dark:text-white flex items-center gap-3`}>
+                        <span className="text-black dark:text-white">Bajas</span>
+                        <input type="radio" name="ordenar" value="id" onChange={handleOptionChangeAB} checked={selectedOptionAB === "Bajas"} className="radio checked:bg-blue-500" />
+                    </label>
+                </label>
+              </div>
+                        <div className=" col-8">
+                <label className={` input-md text-black dark:text-white flex items-center gap-3`}>
+                    <span className="text-black dark:text-white">Ordenar por:</span>
+                    <label className={` input-md text-black dark:text-white flex items-center gap-3`}>
+                        <span className="text-black dark:text-white">Nombre</span>
+                        <input type="radio" name="ordenar" value="nombre" onChange={handleOptionChange} checked={selectedOption === "nombre"} className="radio checked:bg-blue-500" />
+                    </label>
+                    <label className={` input-md text-black dark:text-white flex items-center gap-3`}>
+                        <span className="text-black dark:text-white">Número</span>
+                        <input type="radio" name="ordenar" value="id" onChange={handleOptionChange} checked={selectedOption === "id"} className="radio checked:bg-blue-500" />
+                    </label>
+                    <label className={` input-md text-black dark:text-white flex items-center gap-3`}>
+                        <span className="text-black dark:text-white">Fecha Nacimiento</span>
+                        <input type="radio" name="ordenar" value="id" onChange={handleOptionChange} checked={selectedOption === "Fecha_nac"} className="radio checked:bg-blue-500" />
+                    </label>
+                </label>
+
+              </div>
                     </div>
                 </div>
             </div>
