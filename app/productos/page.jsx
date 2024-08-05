@@ -22,7 +22,7 @@ import "jspdf-autotable";
 import * as XLSX from "xlsx";
 import { ReportePDF } from "../utils/ReportesPDF";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
-import '@react-pdf-viewer/core/lib/styles/index.css';
+import "@react-pdf-viewer/core/lib/styles/index.css";
 function Productos() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -277,7 +277,7 @@ function Productos() {
     show
       ? document.getElementById("modalVProducto").showModal()
       : document.getElementById("modalVProducto").close();
-  }
+  };
   const home = () => {
     router.push("/");
   };
@@ -295,20 +295,20 @@ function Productos() {
     };
     const Enca1 = (doc) => {
       if (!doc.tiene_encabezado) {
-        doc.imprimeEncabezadoPrincipalV();
+        doc.imprimeEncabezadoPrincipalH();
         doc.nextRow(12);
-        doc.ImpPosX("Numero", 14, doc.tw_ren);
+        doc.ImpPosX("No.", 14, doc.tw_ren);
         doc.ImpPosX("Descripcion", 28, doc.tw_ren);
-        doc.ImpPosX("costo", 58, doc.tw_ren);
-        doc.ImpPosX("Frecuencia", 72, doc.tw_ren);
-        doc.ImpPosX("Recargo", 102, doc.tw_ren);
-        doc.ImpPosX("Aplicacion", 117, doc.tw_ren);
-        doc.ImpPosX("IVA", 139, doc.tw_ren);
-        doc.ImpPosX("Condicion", 149, doc.tw_ren);
-        doc.ImpPosX("Cambio \nPrecio", 169, doc.tw_ren);
-        doc.ImpPosX("Referencia", 184, doc.tw_ren);
+        doc.ImpPosX("Costo", 80, doc.tw_ren);
+        doc.ImpPosX("Frecuencia", 100, doc.tw_ren);
+        doc.ImpPosX("Recargo", 130, doc.tw_ren);
+        doc.ImpPosX("Aplicacion", 150, doc.tw_ren);
+        doc.ImpPosX("IVA", 175, doc.tw_ren);
+        doc.ImpPosX("Condicion", 190, doc.tw_ren);
+        doc.ImpPosX("Cambio Precio", 215, doc.tw_ren);
+        doc.ImpPosX("Referencia", 250, doc.tw_ren);
         doc.nextRow(4);
-        doc.printLineV();
+        doc.printLineH();
         doc.nextRow(4);
         doc.tiene_encabezado = true;
       } else {
@@ -316,35 +316,34 @@ function Productos() {
         doc.tiene_encabezado = true;
       }
     };
-    const reporte = new ReportePDF(configuracion)
+    const reporte = new ReportePDF(configuracion, "Landscape");
     Enca1(reporte);
     productosFiltrados.forEach((producto) => {
       reporte.ImpPosX(producto.id.toString(), 14, reporte.tw_ren);
       reporte.ImpPosX(producto.descripcion.toString(), 28, reporte.tw_ren);
-      reporte.ImpPosX(producto.costo.toString(), 58, reporte.tw_ren);
-      reporte.ImpPosX(producto.frecuencia.toString(), 72, reporte.tw_ren);
-      reporte.ImpPosX(producto.pro_recargo.toString(), 102, reporte.tw_ren);
-      reporte.ImpPosX(producto.aplicacion.toString(), 117, reporte.tw_ren);
-      reporte.ImpPosX(producto.iva.toString(), 139, reporte.tw_ren);
-      reporte.ImpPosX(producto.cond_1.toString(), 149, reporte.tw_ren);
+      reporte.ImpPosX(producto.costo.toString(), 80, reporte.tw_ren);
+      reporte.ImpPosX(producto.frecuencia.toString(), 100, reporte.tw_ren);
+      reporte.ImpPosX(producto.pro_recargo.toString(), 130, reporte.tw_ren);
+      reporte.ImpPosX(producto.aplicacion.toString(), 150, reporte.tw_ren);
+      reporte.ImpPosX(producto.iva.toString(), 175, reporte.tw_ren);
+      reporte.ImpPosX(producto.cond_1.toString(), 190, reporte.tw_ren);
       const cam_precio = producto.cam_precio ? "Si" : "No";
-      reporte.ImpPosX(cam_precio.toString(), 169, reporte.tw_ren);
-      console.log(cam_precio);
-      reporte.ImpPosX(producto.ref.toString(), 184, reporte.tw_ren);
+      reporte.ImpPosX(cam_precio.toString(), 215, reporte.tw_ren);
+      reporte.ImpPosX(producto.ref.toString(), 250, reporte.tw_ren);
       Enca1(reporte);
-      if (reporte.tw_ren >= reporte.tw_endRen) {
-        reporte.pageBreak();
+      if (reporte.tw_ren >= reporte.tw_endRenH) {
+        reporte.pageBreakH();
         Enca1(reporte);
       }
-    })
-    const pdfData = reporte.doc.output("datauristring")
-    setPdfData(pdfData)
-    setPdfPreview(true)
-    showModalVista(true)
-  }
+    });
+    const pdfData = reporte.doc.output("datauristring");
+    setPdfData(pdfData);
+    setPdfPreview(true);
+    showModalVista(true);
+  };
   const CerrarView = () => {
     setPdfPreview(false);
-    setPdfData('');
+    setPdfData("");
   };
   if (status === "loading") {
     return (
@@ -363,7 +362,12 @@ function Productos() {
         producto={producto}
         formatNumber={formatNumber}
       />
-      <ModalVistaPreviaProductos pdfPreview={pdfPreview} pdfData={pdfData} PDF={imprimirPDF} Excel={ImprimirExcel}/>      
+      <ModalVistaPreviaProductos
+        pdfPreview={pdfPreview}
+        pdfData={pdfData}
+        PDF={imprimirPDF}
+        Excel={ImprimirExcel}
+      />
       <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
         <div className="flex justify-start p-3 ">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
@@ -393,15 +397,15 @@ function Productos() {
                 TB_Busqueda={TB_Busqueda}
                 setTB_Busqueda={setTB_Busqueda}
               />
-                <TablaProductos
-                  isLoading={isLoading}
-                  productosFiltrados={productosFiltrados}
-                  showModal={showModal}
-                  setProducto={setProducto}
-                  setAccion={setAccion}
-                  setCurrentId={setCurrentId}
-                  formatNumber={formatNumber}
-                />
+              <TablaProductos
+                isLoading={isLoading}
+                productosFiltrados={productosFiltrados}
+                showModal={showModal}
+                setProducto={setProducto}
+                setAccion={setAccion}
+                setCurrentId={setCurrentId}
+                formatNumber={formatNumber}
+              />
             </div>
           </div>
         </div>

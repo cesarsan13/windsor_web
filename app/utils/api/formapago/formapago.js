@@ -62,7 +62,7 @@ const Enca1 = (doc) => {
   if (!doc.tiene_encabezado) {
     doc.imprimeEncabezadoPrincipalV();
     doc.nextRow(12);
-    doc.ImpPosX("Numero", 14, doc.tw_ren);
+    doc.ImpPosX("No.", 14, doc.tw_ren);
     doc.ImpPosX("Descripcion", 28, doc.tw_ren);
     doc.ImpPosX("Comision", 132, doc.tw_ren);
     doc.ImpPosX("Aplicacion", 152, doc.tw_ren);
@@ -80,16 +80,6 @@ export const Imprimir = (configuracion) => {
   const orientacion = "Portrait";
   const newPDF = new ReportePDF(configuracion, orientacion);
   const { body } = configuracion;
-  // newPDF.setFontSize(12);
-  // newPDF.ImpPosX("-", 0, 0, 10);
-  // newPDF.ImpPosX("-", 1, 1, 10);
-  // newPDF.ImpPosX("-", 1, 2, 10);
-  // newPDF.ImpPosX("-", 1, 3, 10);
-  // newPDF.ImpPosX("-", 1, 4, 10);
-  // newPDF.ImpPosX("-", 1, 5, 10);
-  // newPDF.ImpPosX("-", 1, 6, 10);
-  // newPDF.guardaReporte("PruebaEncabezado");
-  // return;
   Enca1(newPDF);
   body.forEach((cajero) => {
     newPDF.ImpPosX(cajero.id.toString(), 14, newPDF.tw_ren, 10);

@@ -12,7 +12,6 @@ export const Documentos = async (token, fecha, grupo) => {
     }
   );
   const resJson = await res.json();
-  console.log(resJson);
   return resJson.data;
 };
 const Enca1 = (doc) => {
@@ -98,7 +97,6 @@ export const Imprimir = async (
   const documentos = data.documentos;
   const indeces = data.indeces;
   const alumnos = data.alumnos;
-  console.log(data);
 
   documentos.forEach((doc, index) => {
     grupo_act = doc.grupo;
@@ -324,6 +322,5 @@ export const grupo_cobranza = async (token) => {
     },
   });
   const resJson = await res.json();
-  console.log(resJson);
   return resJson.data;
 };

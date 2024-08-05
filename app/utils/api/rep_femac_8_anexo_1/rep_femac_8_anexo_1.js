@@ -26,76 +26,18 @@ export const getRelaciondeRecibos = async (token, tomaFecha, fecha_ini, fecha_fi
     return resJson.data;
 }
 
-const Enca2 = (doc) => {
+const Enca1 = (doc) => {
     if (!doc.tiene_encabezado) {
         doc.imprimeEncabezadoPrincipalV();
         doc.nextRow(12);
-        doc.ImpPosX("Recibo", 5, doc.tw_ren);
-        doc.ImpPosX("Factura", 20, doc.tw_ren);
-        doc.ImpPosX("Fecha P", 35, doc.tw_ren);
-        doc.ImpPosX("No.", 55, doc.tw_ren);
-        doc.ImpPosX("Nombre Alumno", 65, doc.tw_ren);
-        doc.ImpPosX("Total Rec.", 180, doc.tw_ren);
-        doc.nextRow(4);
-        doc.printLineF();
-        doc.nextRow(4);
-        doc.tiene_encabezado = true;
-    } else {
-        doc.nextRow(6);
-        doc.tiene_encabezado = true;
-    }
-};
-
-export const verImprimir = async (configuracion, impr) => {
-    const newPDF = new ReportePDF(configuracion);
-    const { body } = configuracion;
-    Enca2(newPDF);
-    let total = 0;
-    body.forEach((rec) => {
-        const recibo = (rec.recibo || '').toString();
-        const factura = (rec.numero_factura || '').toString();
-        const fecha = (rec.fecha || '').toString();
-        const idAl = (rec.alumno || '').toString();
-        const nombre = `${rec.nombre_alumno || ''}`;
-        let importe_total = parseFloat(rec.importe_total) || 0;
-        if (importe_total !== 0) {
-            total += importe_total;
-        }
-        newPDF.ImpPosX(recibo, 6, newPDF.tw_ren);
-        newPDF.ImpPosX(factura, 20, newPDF.tw_ren);
-        newPDF.ImpPosX(fecha, 35, newPDF.tw_ren);
-        newPDF.ImpPosX(idAl, 55, newPDF.tw_ren);
-        newPDF.ImpPosX(nombre, 65, newPDF.tw_ren);
-        if (importe_total === 0) {
-            newPDF.ImpPosX(`CANCELADO`, 180, newPDF.tw_ren);
-        } else {
-            newPDF.ImpPosX(importe_total.toFixed(2), 180, newPDF.tw_ren);
-        }
-        Enca2(newPDF);
-        if (newPDF.tw_ren >= newPDF.tw_endRen) {
-            newPDF.pageBreak();
-            Enca2(newPDF);
-        }
-    });
-
-    newPDF.ImpPosX(`Total: ${total.toFixed(2)}` || '', 170, newPDF.tw_ren);
-    const pdfData = newPDF.doc.output("datauristring");
-    return pdfData;
-};
-
-
-const Enca1 = (doc) => {
-    if (!doc.tiene_encabezado) {
-        doc.imprimeEncabezadoPrincipalH();
-        doc.nextRow(12);
         doc.ImpPosX("Recibo", 15, doc.tw_ren);
-        doc.ImpPosX("Factura", 35, doc.tw_ren);
-        doc.ImpPosX("Fecha P", 55, doc.tw_ren);
-        doc.ImpPosX("No.", 85, doc.tw_ren);
-        doc.ImpPosX("Nombre Alumno", 100, doc.tw_ren);
-        doc.ImpPosX("Total Rec.", 250, doc.tw_ren);
+        doc.ImpPosX("Factura", 30, doc.tw_ren);
+        doc.ImpPosX("Fecha P", 45, doc.tw_ren);
+        doc.ImpPosX("No.", 65, doc.tw_ren);
+        doc.ImpPosX("Nombre Alumno", 75, doc.tw_ren);
+        doc.ImpPosX("Total Rec.", 170, doc.tw_ren);
         doc.nextRow(4);
-        doc.printLineH();
+        doc.printLineV();
         doc.nextRow(4);
         doc.tiene_encabezado = true;
     } else {
@@ -104,9 +46,8 @@ const Enca1 = (doc) => {
     }
 };
 
-export const Imprimir = (configuracion, impr) => {
-    const orientacion = 'Landscape'
-    const newPDF = new ReportePDF(configuracion, orientacion);
+export const verImprimir = async (configuracion) => {
+    const newPDF = new ReportePDF(configuracion, "Portrait");
     const { body } = configuracion;
     Enca1(newPDF);
     let total = 0;
@@ -120,15 +61,15 @@ export const Imprimir = (configuracion, impr) => {
         if (importe_total !== 0) {
             total += importe_total;
         }
-        newPDF.ImpPosX(recibo, 17, newPDF.tw_ren);
-        newPDF.ImpPosX(factura, 35, newPDF.tw_ren);
-        newPDF.ImpPosX(fecha, 55, newPDF.tw_ren);
-        newPDF.ImpPosX(idAl, 85, newPDF.tw_ren);
-        newPDF.ImpPosX(nombre, 100, newPDF.tw_ren);
+        newPDF.ImpPosX(recibo, 15, newPDF.tw_ren);
+        newPDF.ImpPosX(factura, 30, newPDF.tw_ren);
+        newPDF.ImpPosX(fecha, 45, newPDF.tw_ren);
+        newPDF.ImpPosX(idAl, 65, newPDF.tw_ren);
+        newPDF.ImpPosX(nombre, 75, newPDF.tw_ren);
         if (importe_total === 0) {
-            newPDF.ImpPosX(`CANCELADO`, 250, newPDF.tw_ren);
+            newPDF.ImpPosX(`CANCELADO`, 170, newPDF.tw_ren);
         } else {
-            newPDF.ImpPosX(importe_total.toFixed(2), 250, newPDF.tw_ren);
+            newPDF.ImpPosX(importe_total.toFixed(2), 170, newPDF.tw_ren);
         }
         Enca1(newPDF);
         if (newPDF.tw_ren >= newPDF.tw_endRen) {
@@ -136,10 +77,46 @@ export const Imprimir = (configuracion, impr) => {
             Enca1(newPDF);
         }
     });
-    newPDF.ImpPosX(`Total: ${total.toFixed(2)}` || '', 240, newPDF.tw_ren);
-    newPDF.guardaReporte("rep_relacion_recibos");
+
+    newPDF.ImpPosX(`Total: ${total.toFixed(2)}` || '', 160, newPDF.tw_ren);
+    const pdfData = newPDF.doc.output("datauristring");
+    return pdfData;
 };
 
+export const Imprimir = (configuracion) => {
+    const newPDF = new ReportePDF(configuracion, "Portrait");
+    const { body } = configuracion;
+    Enca1(newPDF);
+    let total = 0;
+    body.forEach((rec) => {
+        const recibo = (rec.recibo || '').toString();
+        const factura = (rec.numero_factura || '').toString();
+        const fecha = (rec.fecha || '').toString();
+        const idAl = (rec.alumno || '').toString();
+        const nombre = `${rec.nombre_alumno || ''}`;
+        let importe_total = parseFloat(rec.importe_total) || 0;
+        if (importe_total !== 0) {
+            total += importe_total;
+        }
+        newPDF.ImpPosX(recibo, 15, newPDF.tw_ren);
+        newPDF.ImpPosX(factura, 30, newPDF.tw_ren);
+        newPDF.ImpPosX(fecha, 45, newPDF.tw_ren);
+        newPDF.ImpPosX(idAl, 65, newPDF.tw_ren);
+        newPDF.ImpPosX(nombre, 75, newPDF.tw_ren);
+        if (importe_total === 0) {
+            newPDF.ImpPosX(`CANCELADO`, 170, newPDF.tw_ren);
+        } else {
+            newPDF.ImpPosX(importe_total.toFixed(2), 170, newPDF.tw_ren);
+        }
+        Enca1(newPDF);
+        if (newPDF.tw_ren >= newPDF.tw_endRen) {
+            newPDF.pageBreak();
+            Enca1(newPDF);
+        }
+    });
+    newPDF.ImpPosX(`Total: ${total.toFixed(2)}` || '', 160, newPDF.tw_ren);
+    newPDF.guardaReporte("rep_relacion_recibos");
+};
 
 export const ImprimirExcel = (configuracion) => {
     const newExcel = new ReporteExcel(configuracion);

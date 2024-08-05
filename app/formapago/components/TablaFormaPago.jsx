@@ -18,16 +18,16 @@ function TablaFormaPago({
   };
 
   return !isLoading ? (
-    <div className="overflow-x-auto mt-3  h-6/8  text-black bg-white dark:bg-[#1d232a] dark:text-white m-2 w-full  lg:w-5/8 ">
+    <div className="overflow-x-auto mt-3 h-[calc(75vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white m-2 w-full lg:w-3/4">
       {formaPagosFiltrados.length > 0 ? (
-        <table className="table table-xs table-zebra table-pin-rows table-pin-cols max-h-[calc(50%)]">
-          <thead className=" relative z-[1] md:static">
+        <table className="table table-xs table-zebra w-full">
+          <thead className="sticky top-0 bg-white dark:bg-[#1d232a]">
             <tr>
-              <th>id</th>
-              <td>Descripcion</td>
-              <td>Comision</td>
-              <td>Aplicacion</td>
-              <td>Cuenta Banco</td>
+              <th className="w-[10%]">id</th>
+              <td className="w-[50%]">Descripcion</td>
+              <td className="w-[8%]">Comision</td>
+              <td className="w-[15%]">Aplicacion</td>
+              <td className="w-[20%]">Cuenta Banco</td>
               <th className="w-[calc(10%)]">Acciones</th>
             </tr>
           </thead>
@@ -39,24 +39,24 @@ function TablaFormaPago({
                 <td className={`text-right w-11`}>{item.comision}</td>
                 <td>{item.aplicacion}</td>
                 <td>{item.cue_banco}</td>
-                <th>
-                  <div className="flex flex-row space-x-3">
+                <th className="w-[30%] sm:w-[10%]">
+                  <div className="flex flex-row space-x-1 sm:space-x-3">
                     <div
-                      className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                       data-tip={`Ver ${item.id}`}
                       onClick={(evt) => tableAction(evt, item, `Ver`)}
                     >
                       <i className="fa-solid fa-eye"></i>
                     </div>
                     <div
-                      className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                       data-tip={`Editar ${item.id}`}
                       onClick={(evt) => tableAction(evt, item, `Editar`)}
                     >
                       <i className="fa-solid fa-file"></i>
                     </div>
                     <div
-                      className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                       data-tip={`Eliminar  ${item.id}`}
                       onClick={(evt) => tableAction(evt, item, "Eliminar")}
                     >
@@ -67,16 +67,7 @@ function TablaFormaPago({
               </tr>
             ))}
           </tbody>
-          <tfoot>
-            <tr>
-              <th></th>
-              <td>Descripcion</td>
-              <td>Comision</td>
-              <td>Aplicacion</td>
-              <td>Cuenta Banco</td>
-              <th>Acciones</th>
-            </tr>
-          </tfoot>
+          <tfoot />
         </table>
       ) : (
         <NoData />
