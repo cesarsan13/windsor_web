@@ -18,7 +18,6 @@ export const getDetallePedido = async (
     }
   );
   const resJson = await res.json();
-  console.log(resJson);
   return resJson.data;
 };
 
@@ -33,12 +32,10 @@ export const getTrabRepCob = async (token, orden) => {
     }
   );
   const resJson = await res.json();
-  console.log(resJson);
   return resJson.data;
 };
 
 export const insertTrabRepCobr = async (token, data) => {
-  console.log(data);
   const res = await fetch(
     `${process.env.DOMAIN_API}api/cobranzaProducto/insert`,
     {
@@ -76,7 +73,6 @@ export const ImprimirPDF = async (
   articulo = articulo === undefined ? "" : articulo;
   artFin = artFin === undefined ? "" : artFin;
   const data = await getDetallePedido(token, fecha1, fecha2, articulo, artFin);
-  console.log(data);
   let alu_Ant;
   let alumno;
   for (const dato of data) {
@@ -99,7 +95,6 @@ export const ImprimirPDF = async (
     alu_Ant = dato.alumno;
   }
   const dataTrabRepCobr = await getTrabRepCob(token, orden);
-  console.log("data trabrepcobr: ", dataTrabRepCobr);
   let Art_Ant = "";
   let tot_art = 0;
   let total_general = 0;
@@ -117,7 +112,13 @@ export const ImprimirPDF = async (
         Enca1(newPDF);
       }
     }
-    newPDF.ImpPosX(trabRep.alumno.toString() +"-"+ calculaDigitoBvba(trabRep.alumno.toString()), 14, newPDF.tw_ren);
+    newPDF.ImpPosX(
+      trabRep.alumno.toString() +
+        "-" +
+        calculaDigitoBvba(trabRep.alumno.toString()),
+      14,
+      newPDF.tw_ren
+    );
     newPDF.ImpPosX(trabRep.nombre.toString(), 28, newPDF.tw_ren);
     newPDF.ImpPosX(trabRep.importe.toString(), 128, newPDF.tw_ren);
     newPDF.ImpPosX(trabRep.fecha.toString(), 158, newPDF.tw_ren);
@@ -196,7 +197,6 @@ export const ImprimirExcel = async (
     alu_Ant = dato.alumno;
   }
   const dataTrabRepCobr = await getTrabRepCob(token, orden);
-  console.log("data trabrepcobr: ", dataTrabRepCobr);
   let Art_Ant = "";
   let tot_art = 0;
   let total_general = 0;
@@ -204,7 +204,7 @@ export const ImprimirExcel = async (
   const { columns2 } = configuracion;
   const { nombre } = configuracion;
   newExcel.setColumnas(columns);
-  newExcel.setColumnas(columns2);  
+  newExcel.setColumnas(columns2);
   let data1 = [];
 
   dataTrabRepCobr.forEach((trabRep) => {
@@ -212,7 +212,6 @@ export const ImprimirExcel = async (
       Cambia_Articulo_Excel(tot_art, data1);
       // newExcel.addData(data1);
       // data1.pop()
-      console.log(data1);
       tot_art = 0;
     }
     if (trabRep.articulo !== Art_Ant) {
@@ -226,7 +225,8 @@ export const ImprimirExcel = async (
       // data1.pop()
     }
     data1.push({
-      alumno: trabRep.alumno+"-"+ calculaDigitoBvba(trabRep.alumno.toString()),
+      alumno:
+        trabRep.alumno + "-" + calculaDigitoBvba(trabRep.alumno.toString()),
       nombre: trabRep.nombre,
       importe: trabRep.importe,
       fecha: trabRep.fecha,
@@ -244,7 +244,6 @@ export const ImprimirExcel = async (
     importe: total_general,
     fecha: "",
   });
-  console.log(data1)
   // newExcel.addData(data1);
   newExcel.addData(data1);
   newExcel.guardaReporte(nombre);

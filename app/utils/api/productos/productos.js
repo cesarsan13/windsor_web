@@ -48,7 +48,6 @@ export const filtroProductos = async (token, tipo, valor) => {
 };
 
 export const guardarProductos = async (token, data, accion) => {
-  console.log("data desde modal si no", data);
   let url = "";
   let met = "";
   if (accion === "Alta") {
@@ -129,7 +128,6 @@ export const Imprimir = (configuracion) => {
     newPDF.ImpPosX(producto.cond_1.toString(), 190, newPDF.tw_ren);
     const cam_precio = producto.cam_precio ? "Si" : "No";
     newPDF.ImpPosX(cam_precio.toString(), 215, newPDF.tw_ren);
-    console.log(cam_precio);
     newPDF.ImpPosX(producto.ref.toString(), 250, newPDF.tw_ren);
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRenH) {
@@ -138,7 +136,6 @@ export const Imprimir = (configuracion) => {
     }
   });
   newPDF.guardaReporte("Productos");
-  // console.log("cambios")
 };
 
 export const ImprimirExcel = (configuracion) => {

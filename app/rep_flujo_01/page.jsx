@@ -31,7 +31,6 @@ function Rep_Flujo_01() {
       const { token } = session.user;
       const data = await DocumentosCobranza(token, fecha_ini, fecha_fin);
       setDataDocumentoCobranza(data);
-      console.log(dataDocumentoCobranza);
     };
     fetchData();
   }, [session, status, fecha_ini, fecha_fin]);
@@ -44,11 +43,9 @@ function Rep_Flujo_01() {
   const handleCheckChange = (event) => {
     setSelectedOption(event.target.value);
   };
-  console.log(selectedOption);
   const home = () => {
     router.push("/");
   };
-  console.log(fecha_ini, fecha_fin);
   const handleVerClick = () => {
     const configuracion = {
       Encabezado: {
@@ -83,9 +80,6 @@ function Rep_Flujo_01() {
     Tw_Per[1] = fecha_ini.slice(0, 7);
     Tw_Per[12] = fecha_fin.slice(0, 7);
     documentosCobranza.forEach((docuemnto) => {});
-    console.log("tw_col", Tw_Col);
-    console.log("tw_tGe", Tw_TGe);
-    console.log("tw_per", Tw_Per);
     showModalVista(true);
   };
   const showModalVista = (show) => {

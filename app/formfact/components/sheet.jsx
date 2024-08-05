@@ -86,7 +86,6 @@ function Sheet({
     });
     setLabels(resultado);
     setSelectedIndex(index);
-    console.log(labels[selectedIndex]);
   };
 
   return (

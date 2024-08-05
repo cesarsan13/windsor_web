@@ -45,7 +45,6 @@ function FormaPago() {
       setisLoading(true);
       const { token } = session.user;
       const data = await getFormasPago(token, bajas);
-      console.log(data);
       setFormasPago(data);
       setFormaPagosFiltrados(data);
       if (filtro !== "" && TB_Busqueda !== "") {
@@ -81,7 +80,6 @@ function FormaPago() {
   }, [formaPago, reset]);
   const Buscar = () => {
     // alert(filtro);
-    console.log(TB_Busqueda, filtro);
     if (TB_Busqueda === "" || filtro === "") {
       setFormaPagosFiltrados(formasPago);
       return;
@@ -188,14 +186,13 @@ function FormaPago() {
     show
       ? document.getElementById("modalVFormaPago").showModal()
       : document.getElementById("modalVFormaPago").close();
-  }
+  };
   const home = () => {
     router.push("/");
   };
   const handleBusquedaChange = (event) => {
     event.preventDefault;
     setTB_Busqueda(event.target.value);
-    console.log(event.target.value);
   };
   const ImprimePDF = () => {
     const configuracion = {
@@ -253,7 +250,7 @@ function FormaPago() {
         doc.tiene_encabezado = true;
       }
     };
-    const reporte = new ReportePDF(configuracion)
+    const reporte = new ReportePDF(configuracion);
     Enca1(reporte);
     formaPagosFiltrados.forEach((producto) => {
       reporte.ImpPosX(producto.id.toString(), 14, reporte.tw_ren);
@@ -266,15 +263,15 @@ function FormaPago() {
         reporte.pageBreak();
         Enca1(reporte);
       }
-    })
-    const pdfData = reporte.doc.output("datauristring")
-    setPdfData(pdfData)
-    setPdfPreview(true)
-    showModalVista(true)
-  }
+    });
+    const pdfData = reporte.doc.output("datauristring");
+    setPdfData(pdfData);
+    setPdfPreview(true);
+    showModalVista(true);
+  };
   const CerrarView = () => {
     setPdfPreview(false);
-    setPdfData('');
+    setPdfData("");
   };
   if (status === "loading") {
     return (
@@ -292,7 +289,12 @@ function FormaPago() {
         setFormaPago={setFormaPago}
         formaPago={formaPago}
       />
-      <ModalVistaPreviaFormaPago pdfPreview={pdfPreview} pdfData={pdfData} PDF={ImprimePDF} Excel={ImprimirExcel}/>      
+      <ModalVistaPreviaFormaPago
+        pdfPreview={pdfPreview}
+        pdfData={pdfData}
+        PDF={ImprimePDF}
+        Excel={ImprimirExcel}
+      />
 
       <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
         <div className="flex justify-start p-3 ">

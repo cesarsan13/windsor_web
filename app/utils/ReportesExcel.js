@@ -14,13 +14,13 @@ export class ReporteExcel {
     const date = new Date();
     const dateStr = formatDate(date);
     const timeStr = formatTime(date);
-    console.log(Encabezado)
+    Encabezado;
     this.worksheetData.push(
       [Encabezado.Nombre_Aplicacion, "", "", "", `Fecha: ${dateStr}`],
       [Encabezado.Nombre_Reporte, "", "", "", `Hora: ${timeStr}`],
       [`Usuario: ${Encabezado.Nombre_Usuario}`, "", "", "", "Hoja: 1"],
-      [Encabezado.Clase,"", Encabezado. Profesor, "", Encabezado.FechaE],
-      [ ]
+      [Encabezado.Clase, "", Encabezado.Profesor, "", Encabezado.FechaE],
+      []
     );
   }
   addRow(rowData) {
@@ -38,7 +38,7 @@ export class ReporteExcel {
     data.forEach((row) => {
       let rowData = this.columnas.map((col) => {
         if (col.dataKey === this.conditionColumn && this.condition) {
-          return this.condition(row[col.dataKey]) ? 'Si' : 'No';
+          return this.condition(row[col.dataKey]) ? "Si" : "No";
         }
         return row[col.dataKey] || "";
       });
@@ -47,19 +47,22 @@ export class ReporteExcel {
   }
   calculaAnchos() {
     const maxColumnWidths = [];
-    this.worksheetData.forEach(row => {
+    this.worksheetData.forEach((row) => {
       row.forEach((cell, index) => {
         const cellLength = cell ? cell.toString().length : 0;
-        maxColumnWidths[index] = Math.max(maxColumnWidths[index] || 0, cellLength);
+        maxColumnWidths[index] = Math.max(
+          maxColumnWidths[index] || 0,
+          cellLength
+        );
       });
     });
-    return maxColumnWidths.map(width => ({ wch: width }));
+    return maxColumnWidths.map((width) => ({ wch: width }));
   }
   guardaReporte(Nombre) {
     const worksheet = XLSX.utils.aoa_to_sheet(this.worksheetData);
     const workbook = XLSX.utils.book_new();
-    
-    worksheet['!cols'] = this.calculaAnchos();
+
+    worksheet["!cols"] = this.calculaAnchos();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Reporte");
     XLSX.writeFile(workbook, `${Nombre}.xlsx`);
   }

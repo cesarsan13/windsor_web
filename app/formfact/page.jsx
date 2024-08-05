@@ -103,7 +103,6 @@ function FormFact() {
   }, [formFact, reset]);
   const Buscar = () => {
     // alert(filtro);
-    console.log(TB_Busqueda, filtro);
     if (TB_Busqueda === "" || filtro === "") {
       setFormFactsFiltrados(formFacts);
       return;
@@ -164,7 +163,6 @@ function FormFact() {
       // showModal(true);
     }
     res = await guardaFormFact(session.user.token, data, accion);
-    // console.log(res.status + " " + res);
     if (res.status) {
       if (accion === "Alta") {
         const nuevaFormFact = { currentID, ...data };
