@@ -6,7 +6,7 @@ import BuscarCat from '../components/BuscarCat';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Acciones from './components/Acciones';
-import { getDetallePedido, getTrabRepCob, ImprimirExcel, ImprimirPDF, insertTrabRepCobr } from '../utils/api/rep_femac_12_anexo/rep_femac_12_anexo';
+import { getDetallePedido, getTrabRepCob, ImprimirExcel, ImprimirPDF, insertTrabRepCobr } from '../utils/api/rep_femac_12_anexo_4/rep_femac_12_anexo';
 import { ReportePDF } from '../utils/ReportesPDF';
 import { Viewer, Worker } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
@@ -176,7 +176,7 @@ function RepFemac12Anexo() {
             <div className='container w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3'>
                 <div className='flex justify-start p-3'>
                     <h1 className='text-4xl font-xthin text-black dark:text-white md:px-12'>
-                        Reporte de Cobranza Productos
+                        Reporte de Cobranza por Productos
                     </h1>
                 </div>
                 <div className='container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]'>
