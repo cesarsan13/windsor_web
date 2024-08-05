@@ -1,6 +1,5 @@
-import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
-import React from "react";
-
+import React from 'react'
+import { useEffect } from 'react';
 function Inputs({
   Titulo,
   name,
@@ -12,6 +11,7 @@ function Inputs({
   maxLenght,
   isDisabled,
   setValue,
+  value
 }) {
   return (
     <div className="flex flex-col">
@@ -31,6 +31,7 @@ function Inputs({
               onBlur: (event) => handleBlur(event, dataType),
             }))}
           disabled={isDisabled}
+          value={value}
           onChange={(event) => setValue(event.target.value)}
         />
       </label>
@@ -40,7 +41,7 @@ function Inputs({
         </span>
       )}
     </div>
-  );
+  )
 }
 
-export default Inputs;
+export default Inputs
