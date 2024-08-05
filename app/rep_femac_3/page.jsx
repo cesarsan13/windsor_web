@@ -178,7 +178,7 @@ function Rep_Femac_3() {
                   modalId={"modal_horarios"}
                 />
               }
-              <div className='flex space-x-4'>
+              <div className='flex space-x-4 mt-4'>
                 <div className="flex flex-col md:flex-row md:space-x-4 md:space-y-0 space-y-2">
                   <span className="text-black dark:text-white">Ordenar por:</span>
                   <label className="flex items-center space-x-2 dark:text-white text-black">
