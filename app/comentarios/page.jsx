@@ -1,5 +1,5 @@
-"use client"
-import React from "react"
+"use client";
+import React from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalComentarios from "./components/ModalComentarios";
@@ -7,11 +7,11 @@ import TablaComentarios from "./components/TablaComentarios";
 import Busqueda from "./components/Busqueda";
 import Acciones from "./components/Acciones";
 import { useForm } from "react-hook-form";
-import { 
-  getComentarios, 
+import {
+  getComentarios,
   guardaComentarios,
   ImprimirPDF,
-  ImprimirExcel
+  ImprimirExcel,
 } from "../utils/api/comentarios/comentarios";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -21,12 +21,14 @@ import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import ModalVistaPreviaComentarios from "./components/modalVistaPreviaComentarios";
 
-function Comentarios(){
+function Comentarios() {
   const router = useRouter();
-  const {data: session, status} = useSession();
-  const [ formasComentarios, setFormasComentarios] = useState([]);
-  const [ formaComentarios, setFormaComentarios ] = useState({});
-  const [ formaComentariosFiltrados, setFormaComentariosFiltrados] = useState([]);
+  const { data: session, status } = useSession();
+  const [formasComentarios, setFormasComentarios] = useState([]);
+  const [formaComentarios, setFormaComentarios] = useState({});
+  const [formaComentariosFiltrados, setFormaComentariosFiltrados] = useState(
+    []
+  );
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
@@ -36,7 +38,6 @@ function Comentarios(){
   const [TB_Busqueda, setTB_Busqueda] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
-
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -103,15 +104,15 @@ function Comentarios(){
 
   const handleVerClick = () => {
     const configuracion = {
-      Encabezado:{
+      Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte de Comentarios",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
-      body: formaComentariosFiltrados
+      body: formaComentariosFiltrados,
     };
-    
-    const orientacion = 'Landscape'
+
+    const orientacion = "Landscape";
     const reporte = new ReportePDF(configuracion, orientacion);
     const { body } = configuracion;
     const Enca1 = (doc) => {
@@ -123,7 +124,7 @@ function Comentarios(){
         doc.ImpPosX("Comentario 2", 110, doc.tw_ren);
         doc.ImpPosX("Comentario 3", 190, doc.tw_ren);
         doc.ImpPosX("Generales", 270, doc.tw_ren);
-  
+
         doc.nextRow(4);
         doc.printLineH();
         doc.nextRow(4);
@@ -136,34 +137,49 @@ function Comentarios(){
 
     Enca1(reporte);
     body.forEach((comentarios) => {
-      reporte.ImpPosX(comentarios.id.toString(),15,reporte.tw_ren, 10)
-      reporte.ImpPosX(comentarios.comentario_1.toString(),30,reporte.tw_ren, 40)
-      reporte.ImpPosX(comentarios.comentario_2.toString(),110,reporte.tw_ren, 40)
-      reporte.ImpPosX(comentarios.comentario_3.toString(),190,reporte.tw_ren, 40)
-      reporte.ImpPosX(comentarios.generales.toString(),270,reporte.tw_ren, 5)
+      reporte.ImpPosX(comentarios.id.toString(), 15, reporte.tw_ren, 10);
+      reporte.ImpPosX(
+        comentarios.comentario_1.toString(),
+        30,
+        reporte.tw_ren,
+        40
+      );
+      reporte.ImpPosX(
+        comentarios.comentario_2.toString(),
+        110,
+        reporte.tw_ren,
+        40
+      );
+      reporte.ImpPosX(
+        comentarios.comentario_3.toString(),
+        190,
+        reporte.tw_ren,
+        40
+      );
+      reporte.ImpPosX(comentarios.generales.toString(), 270, reporte.tw_ren, 5);
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRenH) {
         reporte.pageBreakH();
         Enca1(reporte);
       }
     });
-    
+
     const pdfData = reporte.doc.output("datauristring");
     setPdfData(pdfData);
     setPdfPreview(true);
-    showModalVista(true)
+    showModalVista(true);
   };
 
   const showModalVista = (show) => {
     show
       ? document.getElementById("modalVPComentario").showModal()
       : document.getElementById("modalVPComentario").close();
-  }
+  };
 
   const CerrarView = () => {
     setPdfPreview(false);
-    setPdfData('');
-};
+    setPdfData("");
+  };
 
   const Alta = async (event) => {
     setCurrentId("");
@@ -188,37 +204,37 @@ function Comentarios(){
 
   const ImprimePDF = () => {
     const configuracion = {
-      Encabezado:{
+      Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte de Comentarios",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
-      body: formaComentariosFiltrados
-    }
-    ImprimirPDF(configuracion)
-  }
+      body: formaComentariosFiltrados,
+    };
+    ImprimirPDF(configuracion);
+  };
 
   const ImprimeExcel = () => {
     const configuracion = {
-      Encabezado:{
+      Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte de Comentarios",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
-      
-      body: formaComentariosFiltrados,
-      columns:[
-      { header: "Id", dataKey: "id" },
-      { header: "Comentario 1", dataKey: "comentario_1" },
-      { header: "Comentario 2", dataKey: "comentario_2" },
-      { header: "Comentario 3", dataKey: "comentario_3" },
-      { header: "Generales", dataKey: "generales" },
-    ],
 
-    nombre: "Comentarios"
-  }
-  ImprimirExcel(configuracion)
-}
+      body: formaComentariosFiltrados,
+      columns: [
+        { header: "Id", dataKey: "id" },
+        { header: "Comentario 1", dataKey: "comentario_1" },
+        { header: "Comentario 2", dataKey: "comentario_2" },
+        { header: "Comentario 3", dataKey: "comentario_3" },
+        { header: "Generales", dataKey: "generales" },
+      ],
+
+      nombre: "Comentarios",
+    };
+    ImprimirExcel(configuracion);
+  };
 
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
@@ -245,19 +261,26 @@ function Comentarios(){
         const nuevaFormaComentarios = { currentID, ...data };
         setFormasComentarios([...formasComentarios, nuevaFormaComentarios]);
         if (!bajas) {
-          setFormaComentariosFiltrados([...formaComentariosFiltrados, nuevaFormaComentarios]);
+          setFormaComentariosFiltrados([
+            ...formaComentariosFiltrados,
+            nuevaFormaComentarios,
+          ]);
         }
       }
       if (accion === "Eliminar" || accion === "Editar") {
         const index = formasComentarios.findIndex((fp) => fp.id === data.id);
         if (index !== -1) {
           if (accion === "Eliminar") {
-            const fpFiltrados = formasComentarios.filter((fp) => fp.id !== data.id);
+            const fpFiltrados = formasComentarios.filter(
+              (fp) => fp.id !== data.id
+            );
             setFormasComentarios(fpFiltrados);
             setFormaComentariosFiltrados(fpFiltrados);
           } else {
             if (bajas) {
-              const fpFiltrados = formasComentarios.filter((fp) => fp.id !== data.id);
+              const fpFiltrados = formasComentarios.filter(
+                (fp) => fp.id !== data.id
+              );
               setFormasComentarios(fpFiltrados);
               setFormaComentariosFiltrados(fpFiltrados);
             } else {
@@ -286,7 +309,6 @@ function Comentarios(){
   const handleBusquedaChange = (event) => {
     event.preventDefault;
     setTB_Busqueda(event.target.value);
-    console.log(event.target.value);
   };
 
   if (status === "loading") {
@@ -306,27 +328,28 @@ function Comentarios(){
         formaComentarios={formaComentarios}
       />
       <ModalVistaPreviaComentarios
-      pdfPreview={pdfPreview} 
-      pdfData={pdfData} 
-      PDF={ImprimePDF} 
-      Excel = {ImprimeExcel}/>
+        pdfPreview={pdfPreview}
+        pdfData={pdfData}
+        PDF={ImprimePDF}
+        Excel={ImprimeExcel}
+      />
 
       <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
         <div className="flex justify-start p-3 ">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
-           Comentarios.
+            Comentarios.
           </h1>
         </div>
         <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] ">
           <div className="col-span-1 flex flex-col ">
-            <Acciones 
-            Buscar={Buscar} 
-            Alta={Alta} 
-            ImprimePDF={ImprimePDF} 
-            ImprimeExcel={ImprimeExcel} 
-            home={home}
-            Ver={handleVerClick}
-            CerrarView={CerrarView}
+            <Acciones
+              Buscar={Buscar}
+              Alta={Alta}
+              ImprimePDF={ImprimePDF}
+              ImprimeExcel={ImprimeExcel}
+              home={home}
+              Ver={handleVerClick}
+              CerrarView={CerrarView}
             ></Acciones>
           </div>
           <div className="col-span-7">
@@ -348,14 +371,12 @@ function Comentarios(){
                 setAccion={setAccion}
                 setCurrentId={setCurrentId}
               />
-
             </div>
           </div>
-      </div>
+        </div>
       </div>
     </>
   );
-
 }
 
 export default Comentarios;

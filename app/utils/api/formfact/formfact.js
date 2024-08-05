@@ -228,7 +228,6 @@ export const updateFormat = async (token, data) => {
   let url_api = "";
   url_api = `${process.env.DOMAIN_API}api/facturasformato/update`;
   data.baja = "";
-  console.log("estamos en update forma");
   try {
     const res = await fetch(`${url_api}`, {
       method: "post",
@@ -240,7 +239,5 @@ export const updateFormat = async (token, data) => {
     });
     const resJson = await res.json();
     return resJson;
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };

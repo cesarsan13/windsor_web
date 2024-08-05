@@ -48,9 +48,9 @@ function ModalComentarios({
   };
   return (
     <dialog id="my_modal_3" className="modal">
-      <div className="modal-box">
+      <div className="modal-box w-full max-w-3xl h-full">
         <button
-          className="btn btn-sm btn-circle btn-ghost  text-black dark:text-white absolute right-2 top-2"
+          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black"
           onClick={() => document.getElementById("my_modal_3").close()}
         >
           ✕
@@ -61,12 +61,12 @@ function ModalComentarios({
             {titulo}
           </h3>
           <fieldset id="fs_comentario">
-            <div className="container flex flex-col space-y-5">
+            <div className="flex flex-wrap -mx-3 mb-6">
               <Inputs
                 dataType={"int"}
                 name={"id"}
                 tamañolabel={"w-2/6"}
-                className={"w-3/6 text-right"}
+                className={"rounded block grow text-right"}
                 Titulo={"Numero: "}
                 type={"text"}
                 requerido={true}
@@ -79,7 +79,7 @@ function ModalComentarios({
                 dataType={"string"}
                 name={"comentario_1"}
                 tamañolabel={""}
-                className={"grow"}
+                className={"rounded block grow"}
                 Titulo={"Comentario 1: "}
                 type={"text"}
                 requerido={true}
@@ -95,7 +95,7 @@ function ModalComentarios({
                 dataType={"string"}
                 name={"comentario_2"}
                 tamañolabel={""}
-                className={"grow"}
+                className={"rounded block grow"}
                 Titulo={"Comentario 2: "}
                 type={"text"}
                 requerido={true}
@@ -111,7 +111,7 @@ function ModalComentarios({
                 dataType={"string"}
                 name={"comentario_3"}
                 tamañolabel={""}
-                className={"grow"}
+                className={"rounded block grow"}
                 Titulo={"Comentario 3: "}
                 type={"text"}
                 requerido={true}
@@ -126,7 +126,7 @@ function ModalComentarios({
               <Inputs
                 name={"generales"}
                 tamañolabel={"w-3/6"}
-                className={" w-1/6 grow text-right"}
+                className={"fyo8m-select p-1.5 grow bg-[#ffffff] "}
                 Titulo={"Generales:"}
                 type={"select"}
                 requerido={true}
@@ -135,6 +135,10 @@ function ModalComentarios({
                 register={register}
                 message={"General requerido"}
                 isDisabled={isDisabled}
+                arreglos={[
+                  { id: "Si", descripcion: "Si" },
+                  { id: "No", descripcion: "No" },
+                ]}
               />
             </div>
           </fieldset>
@@ -150,7 +154,7 @@ function ModalComentarios({
               <button
                 type="submit"
                 id="btn_guardar"
-                className="btn  bg-blue-500 hover:bg-blue-700 text-white"
+                className="bg-transparent over:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn"
               >
                 <i className="fa-regular fa-floppy-disk mx-2"></i> Guardar
               </button>

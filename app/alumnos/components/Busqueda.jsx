@@ -48,7 +48,7 @@ function Busqueda({
       </select>
       <div className="tooltip" data-tip="Limpiar">
         <button
-          className="btn join-item bg-blue-500 hover:bg-blue-700 text-white input-bordered"
+          className="btn btn-square join-item input input-sm  dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 border-none shadow-none "
           onClick={limpiarBusqueda}
         >
           <i className="fa-solid fa-broom"></i>
@@ -63,7 +63,9 @@ function Busqueda({
             onClick={(evt) => setBajas(evt.target.checked)}
           />
           <span className="fa-solid fa-trash block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
-          <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">Bajas</span>
+          <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
+            Bajas
+          </span>
         </label>
       </div>
       {/* <div className="lg:flex hidden justify-end w-full">
