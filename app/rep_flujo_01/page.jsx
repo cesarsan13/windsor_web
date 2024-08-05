@@ -271,7 +271,7 @@ function page() {
           </div>
           <div className='col-span-7'>
             <div className='flex flex-col h-full space-y-4'>
-              <div className='flex space-x-4'>
+              <div className='flex flex-col md:flex-row lg:space-x-4'>
                 <Inputs
                   name={"fecha_ini"}
                   tamañolabel={""}
