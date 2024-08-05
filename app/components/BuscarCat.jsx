@@ -170,7 +170,7 @@ function BuscarCat({
         <i className="fa-solid fa-magnifying-glass"></i>
       </button>
     </div>
-    <div className="w-full md:w-auto mt-2 md:mt-0">
+    <div className="w-full md:w-auto mt-2 md:mt-0 pb-3">
       <input
         id={nameInput[1]}
         name={nameInput[1]}
