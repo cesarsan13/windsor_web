@@ -43,7 +43,7 @@ function Busqueda({
       <div className="tooltip" data-tip="Limpiar">
         <button
           className="btn btn-square join-item input input-sm  dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 border-none shadow-none "
-          onClick={limpiarBusqueda}
+          onClick={(evt) => limpiarBusqueda(evt)}
         >
           <i className="fa-solid fa-broom"></i>
         </button>

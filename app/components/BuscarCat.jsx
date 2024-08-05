@@ -23,6 +23,7 @@ function BuscarCat({
 }) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [tiutloInput, setTiutloInput] = useState([]);
 
   const { register, setValue, watch, reset } = useForm({
     defaultValues: {
@@ -30,7 +31,6 @@ function BuscarCat({
       [nameInput[1]]: "",
     },
   });
-  // console.log(array);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,22 +38,28 @@ function BuscarCat({
       switch (table) {
         case "alumnos":
           fetchedData = await getAlumnos(token, false);
+          setTiutloInput(["Id", "Nombre"]);
           break;
         case "productos":
           fetchedData = await getProductos(token, "");
+          setTiutloInput(["Id", "Descripción"]);
           break;
         case "horarios":
           fetchedData = await getHorarios(token, "");
+          setTiutloInput(["Número", "Horarios"]);
           break;
         case "cajeros":
           fetchedData = await getCajeros(token, "");
+          setTiutloInput(["Número", "Nombre"]);
           break;
         case "comentarios":
           fetchedData = await getComentarios(token, "");
+          setTiutloInput(["Id", "Comentario"]);
           break;
         case "formfact":
         case "formaPago":
           fetchedData = await getFormasPago(token, false);
+          setTiutloInput(["Id", "Descripcion"]);
           break;
         case "proveedores":
         default:
@@ -64,11 +70,9 @@ function BuscarCat({
       setFilteredData(fetchedData);
 
       if (fetchedData.length > 0) {
-        // console.log(fetchedData);
         const defaultItem = fetchedData.find(
           (item) => item[fieldsToShow[0]] === array
         ); // Aquí puedes elegir la lógica para establecer el default item
-        // console.log(defaultItem);
         if (defaultItem) {
           reset({
             [nameInput[0]]: defaultItem[fieldsToShow[0]] || "",
@@ -144,7 +148,7 @@ function BuscarCat({
   };
 
   return (
-    <div className="flex justify-start items-center join gap-2">
+    <div className="flex justify-start items-center gap-2">
       <div className="join">
         <label className="input input-bordered join-item text-black dark:text-white input-md flex items-center gap-3">
           {titulo}
@@ -154,14 +158,15 @@ function BuscarCat({
             type="text"
             {...register(nameInput[0])}
             onKeyDown={(evt) => handleKeyDown(evt)}
-            className={`grow dark:text-neutral-200 join-item text-neutral-600 rounded-r-none ${alignRight ? "text-right" : ""
-              }`}
+            className={`grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${
+              alignRight ? "text-right" : ""
+            }`}
             style={{ width: inputWidths.first }}
           />
         </label>
         <button
           type="button"
-          className="bg-transparent join-item hover:bg-transparent border-none shadow-none dark:text-white text-white btn rounded-r-lg"
+          className="bg-transparent join-item hover:bg-transparent border-none shadow-none dark:text-white text-black btn rounded-r-lg"
           onClick={Buscar}
         >
           <i className="fa-solid fa-magnifying-glass"></i>
@@ -172,7 +177,7 @@ function BuscarCat({
           type="text"
           readOnly={true}
           {...register(nameInput[1])}
-          className="input input-bordered join-item rounded-r-full bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md"
+          className="input input-bordered join-item rounded-r-md bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md"
           style={{ width: inputWidths.second }}
         />
       </div>
@@ -182,6 +187,7 @@ function BuscarCat({
         fieldsToShow={fieldsToShow}
         setItem={handleSetItem}
         modalId={modalId}
+        tiutloInput={tiutloInput}
       />
     </div>
   );

@@ -127,7 +127,7 @@ export const ImprimirExcel = (configuracion, cajero) => {
     });
     newExcel.setColumnas(columns2);
     newExcel.addData(tipo_pago);
-  }else{
+  } else {
     let tipo_pago = [];
     tipo_pago.push({
       tipo_pago: "",
@@ -184,7 +184,7 @@ export const ImprimirExcel = (configuracion, cajero) => {
     });
     newExcel.setColumnas(columns3);
     newExcel.addData(cajeros);
-  }else{
+  } else {
     let cajeros = [];
     cajeros.push({
       cajero: "",
@@ -201,7 +201,7 @@ export const ImprimirExcel = (configuracion, cajero) => {
       descripcion: "",
       importe: 0.0,
     });
-    
+
     newExcel.setColumnas(columns3);
     newExcel.addData(cajeros);
   }
@@ -216,8 +216,7 @@ export const Imprimir = (configuracion, cajero) => {
   const Tw_Pago = Array.from({ length: 100 }, () => Array(2).fill(0));
   //producto
   if (cajero === 0 || cajero === undefined) {
-    if(body.producto.length>0){
-      console.log("estoy dentro");
+    if (body.producto.length > 0) {
       newPDF.ImpPosX("Producto", 14, newPDF.tw_ren);
       newPDF.ImpPosX("Descripcion", 34, newPDF.tw_ren);
       newPDF.ImpPosX("Importe", 154, newPDF.tw_ren);
@@ -244,15 +243,10 @@ export const Imprimir = (configuracion, cajero) => {
             producto.precio_unitario * (producto.descuento / 100),
           2
         );
-        console.log("importe", importe_cobro);
         importe_cobro = importe_cobro * producto.cantidad;
         tot_ant = tot_ant + importe_cobro;
-        console.log("total", tot_ant);
-        console.log("total productos", total_productos);
         atr_ant = producto.articulo;
         atr_des_ant = producto.descripcion;
-        console.log("articulo anterio", atr_ant);
-        console.log("articulo anterio desc", atr_des_ant);
       });
       total_productos = total_productos + tot_ant;
       newPDF.ImpPosX(atr_ant.toString(), 14, newPDF.tw_ren);
@@ -262,7 +256,7 @@ export const Imprimir = (configuracion, cajero) => {
       newPDF.ImpPosX("Total Productos", 34, newPDF.tw_ren);
       newPDF.ImpPosX(total_productos.toString(), 154, newPDF.tw_ren);
       newPDF.nextRow(15);
-    }else{
+    } else {
       newPDF.ImpPosX("Producto", 14, newPDF.tw_ren);
       newPDF.ImpPosX("Descripcion", 34, newPDF.tw_ren);
       newPDF.ImpPosX("Importe", 154, newPDF.tw_ren);
@@ -298,8 +292,6 @@ export const Imprimir = (configuracion, cajero) => {
           Tw_Pago[Tw_count][2] = tipoPago.descripcion1;
           break;
         }
-        console.log("tipo_pago_1", Tw_Pago[Tw_count][0]);
-        console.log("importe_pago_1", Tw_Pago[Tw_count][1]);
       }
       for (let Tw_count = 0; Tw_count < 20; Tw_count++) {
         if (tipoPago.tipo_pago_2 === 0) break;
@@ -314,8 +306,6 @@ export const Imprimir = (configuracion, cajero) => {
           Tw_Pago[Tw_count][2] = tipoPago.descripcion2;
           break;
         }
-        console.log("tipo_pago_2", Tw_Pago[Tw_count][0]);
-        console.log("importe_pago_2", Tw_Pago[Tw_count][1]);
       }
     });
     let total_tipo_pago = 0;
@@ -335,7 +325,7 @@ export const Imprimir = (configuracion, cajero) => {
     newPDF.ImpPosX("Total Tipo Pago", 34, newPDF.tw_ren);
     newPDF.ImpPosX(total_tipo_pago.toString(), 154, newPDF.tw_ren);
     newPDF.nextRow(15);
-  } else{
+  } else {
     newPDF.ImpPosX("Tipo Pago", 14, newPDF.tw_ren);
     newPDF.ImpPosX("Descripcion", 34, newPDF.tw_ren);
     newPDF.ImpPosX("Importe", 154, newPDF.tw_ren);
@@ -377,7 +367,7 @@ export const Imprimir = (configuracion, cajero) => {
     newPDF.nextRow(5);
     newPDF.ImpPosX("Total Cajeros", 34, newPDF.tw_ren);
     newPDF.ImpPosX(total_cajero.toString(), 154, newPDF.tw_ren);
-  }else{
+  } else {
     newPDF.ImpPosX("Cajero", 14, newPDF.tw_ren);
     newPDF.ImpPosX("Descripcion", 34, newPDF.tw_ren);
     newPDF.ImpPosX("Importe", 154, newPDF.tw_ren);
@@ -407,7 +397,6 @@ const Enca1 = (doc) => {
 
 export const Cobranza = async (token, fecha_inicia, fecha_final, cajero) => {
   const valorFinal = cajero === 0 || cajero === undefined ? 0 : cajero;
-  console.log(valorFinal);
   const res = await fetch(
     `${process.env.DOMAIN_API}api/cobranza/` +
       fecha_inicia +
@@ -422,6 +411,5 @@ export const Cobranza = async (token, fecha_inicia, fecha_final, cajero) => {
     }
   );
   const resJson = await res.json();
-  console.log(resJson);
   return resJson.data;
 };

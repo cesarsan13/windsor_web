@@ -97,7 +97,7 @@ function ModalAlumnos({
             {titulo}
           </h3>
           <fieldset id="fs_alumnos">
-            <div role="tablist" class="tabs tabs-lifted">
+            <div role="tablist" class="tabs tabs-lifted ">
               <input
                 type="radio"
                 name="my_tabs"
@@ -109,7 +109,7 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box ${
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
                   activeTab === 1 ? "tab-active " : ""
                 }`}
               >
@@ -133,7 +133,7 @@ function ModalAlumnos({
                     dataType={"string"}
                     name={"a_paterno"}
                     tamañolabel={""}
-                    className={"rounded block grow"}
+                    className={"grow"}
                     Titulo={"Apellido paterno: "}
                     type={"text"}
                     requerido={true}
@@ -379,14 +379,14 @@ function ModalAlumnos({
                 type="radio"
                 name="my_tabs"
                 role="tab"
-                className="tab"
+                className="tab max-md:!row-start-1 max-md:!col-start-2"
                 aria-label="Generales"
                 checked={activeTab === 2}
                 onChange={() => handleTabs(2)}
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box ${
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
                   activeTab === 2 ? "tab-active " : ""
                 }`}
               >
@@ -495,14 +495,14 @@ function ModalAlumnos({
                 type="radio"
                 name="my_tabs"
                 role="tab"
-                className="tab"
+                className="tab max-md:!row-start-1 max-md:!col-start-3"
                 aria-label="Foto"
                 checked={activeTab === 3}
                 onChange={() => handleTabs(3)}
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box ${
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
                   activeTab === 3 ? "tab-active " : ""
                 }`}
               >
@@ -523,7 +523,7 @@ function ModalAlumnos({
                     <button
                       type="button"
                       onClick={toggleCamera}
-                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded"
+                      className="btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white font-bold px-4 rounded"
                     >
                       {isCameraOn ? "Apagar cámara" : "Encender cámara"}
                     </button>
@@ -531,7 +531,7 @@ function ModalAlumnos({
                       type="button"
                       onClick={capture}
                       disabled={!isCameraOn}
-                      className="ml-4 bg-green-500 hover:bg-green-700 text-white font-bold px-4 rounded"
+                      className="ml-4 btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white font-bold px-4 rounded"
                     >
                       Capturar Foto
                     </button>
@@ -557,14 +557,14 @@ function ModalAlumnos({
                 type="radio"
                 name="my_tabs"
                 role="tab"
-                className="tab"
+                className="tab max-md:!row-start-1 max-md:!col-start-4"
                 aria-label="Grado"
                 checked={activeTab === 4}
                 onChange={() => handleTabs(4)}
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box ${
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
                   activeTab === 4 ? "tab-active " : ""
                 }`}
               >
@@ -600,14 +600,14 @@ function ModalAlumnos({
                 type="radio"
                 name="my_tabs"
                 role="tab"
-                className="tab"
+                className="tab max-md:!row-start-2 max-md:!col-start-1"
                 aria-label="Pago"
                 checked={activeTab === 5}
                 onChange={() => handleTabs(5)}
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box ${
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
                   activeTab === 5 ? "tab-active " : ""
                 }`}
               >
@@ -713,14 +713,14 @@ function ModalAlumnos({
                 type="radio"
                 name="my_tabs"
                 role="tab"
-                className="tab"
+                className="tab max-md:!row-start-2 max-md:!col-start-2"
                 aria-label="Medicos"
                 checked={activeTab === 6}
                 onChange={() => handleTabs(6)}
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box ${
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
                   activeTab === 6 ? "tab-active " : ""
                 }`}
               >
@@ -892,14 +892,14 @@ function ModalAlumnos({
                 type="radio"
                 name="my_tabs"
                 role="tab"
-                className="tab"
+                className="tab max-md:!row-start-2 max-md:!col-start-3"
                 aria-label="Facturas"
                 checked={activeTab === 7}
                 onChange={() => handleTabs(7)}
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box ${
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
                   activeTab === 7 ? "tab-active " : ""
                 }`}
               >
@@ -1023,14 +1023,14 @@ function ModalAlumnos({
                 type="radio"
                 name="my_tabs"
                 role="tab"
-                className="tab"
+                className="tab max-md:!row-start-2 max-md:!col-start-4"
                 aria-label="Familiares"
                 checked={activeTab === 8}
                 onChange={() => handleTabs(8)}
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box ${
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
                   activeTab === 8 ? "tab-active " : ""
                 }`}
               >
@@ -1243,7 +1243,7 @@ function ModalAlumnos({
               <button
                 type="submit"
                 id="btn_guardar"
-                className="btn bg-blue-500 hover:bg-blue-700 text-white"
+                className="btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white"
               >
                 <i className="fa-regular fa-floppy-disk mx-2"></i> Guardar
               </button>

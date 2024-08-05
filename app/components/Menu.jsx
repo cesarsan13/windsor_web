@@ -153,19 +153,30 @@ function Menu({ vertical }) {
             </li>
             <li>
               <Link href="/rep_femac_3">
-                Lista de Alumnos por clase del mes
+                {" "}
+                Lista de Alumnos por clase del mes{" "}
               </Link>
             </li>
             <li>
               <Link href="/rep_femac_13">
-                Lista de alumnos por clase semanal
+                {" "}
+                Lista de alumnos por clase semanal{" "}
               </Link>
             </li>
             <li>
               <Link href="/rep_femac_5">Altas y Bajas de Alumnos</Link>
             </li>
             <li>
+              <Link href="/rep_femac_7">Cartera</Link>
+            </li>
+            <li>
               <Link href="/rep_femac_8_anexo_1">Relacion de Recibos</Link>
+            </li>
+            <li>
+              <Link href="/rep_femac_12_anexo_4">
+                {" "}
+                Reporte Cobranza por Producto{" "}
+              </Link>
             </li>
             <li>
               <Link href="/rep_inscritos" onClick={handleClick}>
@@ -400,6 +411,11 @@ function Menu({ vertical }) {
             </Link>
           </li>
           <li>
+            <Link href="/rep_femac_7" onClick={handleClick}>
+              Cartera
+            </Link>
+          </li>
+          <li>
             <Link href="/rep_femac_8_anexo_1" onClick={handleClick}>
               Relación de Recibos
             </Link>
@@ -412,6 +428,11 @@ function Menu({ vertical }) {
           <li>
             <Link href="/rep_inscritos" onClick={handleClick}>
               Reporte Inscripción
+            </Link>
+          </li>
+          <li>
+            <Link href="/rep_femac_12_anexo_4" onClick={handleClick}>
+              Reporte Cobranza por Producto
             </Link>
           </li>
         </ul>

@@ -3,15 +3,15 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalCajeros from "@/app/cajeros/components/modalCajeros";
-import TablaCajeros from "@/app/cajeros/components/tablaCajeros";
-import Busqueda from "@/app/cajeros/components/Busqueda";
+import TablaCajeros from "./components/tablaCajeros";
+import Busqueda from "./components/Busqueda";
 import Acciones from "@/app/cajeros/components/Acciones";
 import { useForm } from "react-hook-form";
 import {
   getCajeros,
   guardaCajero,
   Imprimir,
-  ImprimirExcel
+  ImprimirExcel,
 } from "@/app/utils/api/cajeros/cajeros";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -25,8 +25,8 @@ import { ReportePDF } from "../utils/ReportesPDF";
 function Cajeros() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [cajeros, setCajeros] = useState([]);  //formasPago
-  const [cajero, setCajero] = useState({});    //formaPago
+  const [cajeros, setCajeros] = useState([]); //formasPago
+  const [cajero, setCajero] = useState({}); //formaPago
   const [cajerosFiltrados, setCajerosFiltrados] = useState([]);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
@@ -89,7 +89,6 @@ function Cajeros() {
   }, [cajero, reset]);
   const Buscar = () => {
     // alert(filtro);
-    console.log(TB_Busqueda, filtro);
     if (TB_Busqueda === "" || filtro === "") {
       setCajerosFiltrados(cajeros);
       return;
@@ -158,7 +157,6 @@ function Cajeros() {
       // showModal(true);
     }
     res = await guardaCajero(session.user.token, data, accion);
-    // console.log(res.status + " " + res);
     if (res.status) {
       if (accion === "Alta") {
         const nuevaCajero = { currentID, ...data };
@@ -176,7 +174,9 @@ function Cajeros() {
             setCajerosFiltrados(cFiltrados);
           } else {
             if (bajas) {
-              const cFiltrados = cajeros.filter((c) => c.numero !== data.numero);
+              const cFiltrados = cajeros.filter(
+                (c) => c.numero !== data.numero
+              );
               setCajeros(cFiltrados);
               setCajerosFiltrados(cFiltrados);
             } else {
@@ -231,10 +231,10 @@ function Cajeros() {
         { header: "Telefono", dataKey: "telefono" },
         { header: "Correo", dataKey: "mail" },
       ],
-      nombre: "Cajeros"
-    }
-    ImprimirExcel(configuracion)
-  }
+      nombre: "Cajeros",
+    };
+    ImprimirExcel(configuracion);
+  };
   const handleVerClick = () => {
     const configuracion = {
       Encabezado: {
@@ -247,11 +247,11 @@ function Cajeros() {
       if (!doc.tiene_encabezado) {
         doc.imprimeEncabezadoPrincipalV();
         doc.nextRow(12);
-        doc.ImpPosX("Numero", 14, doc.tw_ren);
+        doc.ImpPosX("No.", 14, doc.tw_ren);
         doc.ImpPosX("Nombre", 28, doc.tw_ren);
-        doc.ImpPosX("Clave", 62, doc.tw_ren);
-        doc.ImpPosX("Telefono", 82, doc.tw_ren);
-        doc.ImpPosX("Correo", 112, doc.tw_ren);
+        doc.ImpPosX("Clave", 97, doc.tw_ren);
+        doc.ImpPosX("Telefono", 112, doc.tw_ren);
+        doc.ImpPosX("Correo", 142, doc.tw_ren);
         doc.nextRow(4);
         doc.printLineV();
         doc.nextRow(4);
@@ -261,30 +261,30 @@ function Cajeros() {
         doc.tiene_encabezado = true;
       }
     };
-    const reporte = new ReportePDF(configuracion)
-    Enca1(reporte)
-    cajerosFiltrados.forEach((cajero)=>{
+    const reporte = new ReportePDF(configuracion);
+    Enca1(reporte);
+    cajerosFiltrados.forEach((cajero) => {
       reporte.ImpPosX(cajero.numero.toString(), 14, reporte.tw_ren);
       reporte.ImpPosX(cajero.nombre.toString(), 28, reporte.tw_ren);
-      reporte.ImpPosX(cajero.clave_cajero.toString(), 62, reporte.tw_ren);
-      reporte.ImpPosX(cajero.telefono.toString(), 82, reporte.tw_ren);
-      reporte.ImpPosX(cajero.mail.toString(), 112, reporte.tw_ren);
+      reporte.ImpPosX(cajero.clave_cajero.toString(), 97, reporte.tw_ren);
+      reporte.ImpPosX(cajero.telefono.toString(), 112, reporte.tw_ren);
+      reporte.ImpPosX(cajero.mail.toString(), 142, reporte.tw_ren);
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRen) {
         reporte.pageBreak();
         Enca1(reporte);
       }
-    })
+    });
     const pdfData = reporte.doc.output("datauristring");
     setPdfData(pdfData);
     setPdfPreview(true);
-    showModalVista(true)
-  }
+    showModalVista(true);
+  };
   const showModalVista = (show) => {
     show
       ? document.getElementById("modalVPAlumno").showModal()
       : document.getElementById("modalVPAlumno").close();
-  }
+  };
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -301,16 +301,26 @@ function Cajeros() {
         setCajero={setCajero}
         cajero={cajero}
       />
-      <ModalVistaPreviaCajeros pdfPreview={pdfPreview} pdfData={pdfData} PDF={ImprimePDF} Excel={ImprimeExcel}/>
+      <ModalVistaPreviaCajeros
+        pdfPreview={pdfPreview}
+        pdfData={pdfData}
+        PDF={ImprimePDF}
+        Excel={ImprimeExcel}
+      />
       <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
-            Cajeros.
+            Cajeros
           </h1>
         </div>
         <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] ">
           <div className="col-span-1 flex flex-col ">
-            <Acciones Buscar={Buscar} Alta={Alta} home={home} Ver={handleVerClick}></Acciones>
+            <Acciones
+              Buscar={Buscar}
+              Alta={Alta}
+              home={home}
+              Ver={handleVerClick}
+            ></Acciones>
           </div>
           <div className="col-span-7  ">
             <div className="flex flex-col h-[calc(100%)]">

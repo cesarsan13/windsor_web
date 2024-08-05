@@ -39,7 +39,7 @@ function Busqueda({
       </select>
       <div className="tooltip " data-tip="Limpiar">
         <button
-          className="btn join-item  bg-blue-500 hover:bg-blue-700 text-white input-bordered"
+          className="btn btn-square join-item input input-sm  dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 border-none shadow-none "
           onClick={limpiarBusqueda}
         >
           <i className="fa-solid fa-broom"></i>
@@ -66,7 +66,7 @@ function Busqueda({
             <input
               type="radio"
               name="r_tipo"
-              className="radio checked:bg-blue-500"
+              className="radio checked:bg-neutral-600"
               value={"Facturas"}
               onChange={(evt) => setFormato(evt.target.value)}
               defaultChecked
@@ -79,7 +79,7 @@ function Busqueda({
             <input
               type="radio"
               name="r_tipo"
-              className="radio checked:bg-blue-500"
+              className="radio checked:bg-neutral-600"
               onChange={(evt) => setFormato(evt.target.value)}
               value={"Recibo"}
             />
@@ -92,7 +92,7 @@ function Busqueda({
               type="radio"
               name="r_tipo"
               value={"Credencial"}
-              className="radio checked:bg-blue-500"
+              className="radio checked:bg-neutral-600"
               onChange={(evt) => setFormato(evt.target.value)}
             />
           </label>

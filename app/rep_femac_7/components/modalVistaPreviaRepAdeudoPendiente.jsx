@@ -1,23 +1,29 @@
+"use client";
+
+import Button from "@/app/components/button";
 import Tooltip from "@/app/components/tooltip";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import React, { useEffect, useState } from "react";
-import "@react-pdf-viewer/core/lib/styles/index.css";
 
-function ModalVistaPreviaHorarios({ pdfPreview, pdfData, PDF, Excel }) {
+function ModalVistaPreviaReporteAdeudoPendientes({ pdfPreview, pdfData, PDF, Excel }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
+    // Determinar si el modal debe abrirse
     const isEmptyDataPDF =
       Object.keys(pdfData || {}).length === 0 &&
       (pdfData || {}).constructor === Object;
     setIsModalOpen(pdfPreview && !isEmptyDataPDF);
   }, [pdfPreview, pdfData]);
+
+  // if (!isModalOpen) return; // No renderizar nada si el modal no debe abrirse
+
   return (
-    <dialog id="modalVPHorarios" className="modal">
+    <dialog id="modalVPRepAdeudosPendientes" className="modal">
       <div className="modal-box w-full max-w-4xl h-full">
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black"
-          onClick={() => document.getElementById("modalVPHorarios").close()}
+          onClick={() => document.getElementById("modalVPRepAdeudosPendientes").close()}
         >
           ✕
         </button>
@@ -60,4 +66,4 @@ function ModalVistaPreviaHorarios({ pdfPreview, pdfData, PDF, Excel }) {
   );
 }
 
-export default ModalVistaPreviaHorarios;
+export default ModalVistaPreviaReporteAdeudoPendientes;

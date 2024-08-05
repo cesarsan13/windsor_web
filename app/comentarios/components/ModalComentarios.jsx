@@ -28,23 +28,23 @@ function ModalComentarios({
       accion === "Alta"
         ? `Nuevos Comentarios: ${currentID}`
         : accion === "Editar"
-          ? `Editar Comentarios: ${currentID}`
-          : accion === "Eliminar"
-            ? `Eliminar Comentarios: ${currentID}`
-            : `Ver Comentarios: ${currentID}`
+        ? `Editar Comentarios: ${currentID}`
+        : accion === "Eliminar"
+        ? `Eliminar Comentarios: ${currentID}`
+        : `Ver Comentarios: ${currentID}`
     );
   }, [accion]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
       ? setFormaComentarios((comentarios) => ({
-        ...comentarios,
-        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-      }))
+          ...comentarios,
+          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+        }))
       : setFormaComentarios((comentarios) => ({
-        ...comentarios,
-        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-      }));
+          ...comentarios,
+          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+        }));
   };
   return (
     <dialog id="my_modal_3" className="modal">
@@ -135,21 +135,26 @@ function ModalComentarios({
                 register={register}
                 message={"General requerido"}
                 isDisabled={isDisabled}
+                arreglos={[
+                  { id: "Si", descripcion: "Si" },
+                  { id: "No", descripcion: "No" },
+                ]}
               />
             </div>
           </fieldset>
           <div className=" modal-action">
             <div
-              className={`tooltip tooltip-top my-5 ${accion === "Ver"
-                ? "hover:cursor-not-allowed hidden"
-                : "hover:cursor-pointer"
-                }`}
+              className={`tooltip tooltip-top my-5 ${
+                accion === "Ver"
+                  ? "hover:cursor-not-allowed hidden"
+                  : "hover:cursor-pointer"
+              }`}
               data-tip="Guardar"
             >
               <button
                 type="submit"
                 id="btn_guardar"
-                className="btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white"
+                className="bg-transparent over:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn"
               >
                 <i className="fa-regular fa-floppy-disk mx-2"></i> Guardar
               </button>

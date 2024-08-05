@@ -30,23 +30,23 @@ function ModalHorario({
       accion === "Alta"
         ? `Nueva Forma de Pago: ${currentID}`
         : accion === "Editar"
-          ? `Editar Forma de Pago: ${currentID}`
-          : accion === "Eliminar"
-            ? `Eliminar Forma de Pago: ${currentID}`
-            : `Ver Forma de Pago: ${currentID}`
+        ? `Editar Forma de Pago: ${currentID}`
+        : accion === "Eliminar"
+        ? `Eliminar Forma de Pago: ${currentID}`
+        : `Ver Forma de Pago: ${currentID}`
     );
   }, [accion]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
       ? setHorarios((horarios) => ({
-        ...horarios,
-        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-      }))
+          ...horarios,
+          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+        }))
       : setHorarios((horarios) => ({
-        ...horarios,
-        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-      }));
+          ...horarios,
+          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+        }));
   };
   const options = [
     { value: "LU", label: "Lunes" },
@@ -176,6 +176,11 @@ function ModalHorario({
                 requerido={true}
                 type={"select"}
                 isDisabled={isDisabled}
+                arreglos={[
+                  { id: "NIÑOS", descripcion: "Niños" },
+                  { id: "NIÑAS", descripcion: "Niñas" },
+                  { id: "MIXTO", descripcion: "Mixto" },
+                ]}
               />
               <Inputs
                 dataType={"int"}
@@ -211,16 +216,17 @@ function ModalHorario({
           </fieldset>
           <div className=" modal-action">
             <div
-              className={`tooltip tooltip-top my-5 ${accion === "Ver"
-                ? "hover:cursor-not-allowed hidden"
-                : "hover:cursor-pointer"
-                }`}
+              className={`tooltip tooltip-top my-5 ${
+                accion === "Ver"
+                  ? "hover:cursor-not-allowed hidden"
+                  : "hover:cursor-pointer"
+              }`}
               data-tip="Guardar"
             >
               <button
                 type="submit"
                 id="btn_guardar"
-                className="btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white"
+                className="bg-transparent over:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn"
               >
                 <i className="fa-regular fa-floppy-disk mx-2"></i> Guardar
               </button>

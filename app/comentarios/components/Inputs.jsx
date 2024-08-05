@@ -1,7 +1,6 @@
 import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
 import React from "react";
 
-
 function Inputs({
   Titulo,
   name,
@@ -16,12 +15,14 @@ function Inputs({
   maxLenght,
   isDisabled,
   handleBlur,
+  arreglos,
 }) {
-
-  if (type === 'select') {
+  if (type === "select") {
     return (
-      <div className="w-full md:w-1/2 px-0.5 py-2 mb-6 md:mb-0">
-        <label className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}>
+      <div className="flex flex-col">
+        <label
+          className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
+        >
           {Titulo}
           <select
             name={name}
@@ -29,10 +30,18 @@ function Inputs({
             className={`text-black dark:text-white bg-transparent dark: ${className}`}
             {...register(name, {
               ...(requerido && { required: message }),
-            })}>
-            <option value="" className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]">&nbsp;&nbsp; ... &nbsp;&nbsp;</option>
-            <option value="S" className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]">Si</option>
-            <option value="N" className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]">No</option>
+            })}
+            disabled={isDisabled}
+          >
+            {arreglos.map((arreglo) => (
+              <option
+                className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]"
+                key={arreglo.id}
+                value={arreglo.id}
+              >
+                {arreglo.descripcion}
+              </option>
+            ))}
           </select>
         </label>
         {errors[name] && (
@@ -41,11 +50,11 @@ function Inputs({
           </span>
         )}
       </div>
-    )
-
-  } if (type === 'text') {
+    );
+  }
+  if (type === "text") {
     return (
-      <div className="w-full md:w-1/2 px-0.5 py-2 mb-6 md:mb-0">
+      <div className="flex flex-col">
         <label
           className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
         >
@@ -55,15 +64,11 @@ function Inputs({
             name={name}
             id={name}
             type={type}
-            className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 ${className}`}
+            className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700  ${className}`}
             {...(dataType === "int" && { onKeyDown: soloEnteros })}
             {...(dataType === "float" && { onKeyDown: soloDecimales })}
             {...register(name, {
-              maxLength: {
-                value: maxLenght,
-                message: `El campo ${name} no puede tener más de ${maxLenght} caracteres`
-              },
-              ...(requerido && { required: message })
+              ...(requerido && { required: message }),
             })}
             {...(dataType === "int" ||
               (dataType === "float" && {

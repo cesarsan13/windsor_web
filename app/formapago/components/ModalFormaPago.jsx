@@ -30,23 +30,23 @@ function ModalFormaPago({
       accion === "Alta"
         ? `Nueva Forma de Pago: ${currentID}`
         : accion === "Editar"
-          ? `Editar Forma de Pago: ${currentID}`
-          : accion === "Eliminar"
-            ? `Eliminar Forma de Pago: ${currentID}`
-            : `Ver Forma de Pago: ${currentID}`
+        ? `Editar Forma de Pago: ${currentID}`
+        : accion === "Eliminar"
+        ? `Eliminar Forma de Pago: ${currentID}`
+        : `Ver Forma de Pago: ${currentID}`
     );
   }, [accion]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
       ? setFormaPago((formaPago) => ({
-        ...formaPago,
-        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-      }))
+          ...formaPago,
+          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+        }))
       : setFormaPago((formaPago) => ({
-        ...formaPago,
-        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-      }));
+          ...formaPago,
+          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+        }));
   };
   return (
     <dialog id="my_modal_3" className="modal">
@@ -59,7 +59,9 @@ function ModalFormaPago({
         </button>
         {/* if there is a button in form, it will close the modal */}
         <form onSubmit={onSubmit}>
-          <h3 className="font-bold text-lg mb-5  text-black dark:text-white">{titulo}</h3>
+          <h3 className="font-bold text-lg mb-5  text-black dark:text-white">
+            {titulo}
+          </h3>
           <fieldset id="fs_formapago">
             <div className="flex flex-wrap -mx-3 mb-6">
               <Inputs
@@ -144,16 +146,17 @@ function ModalFormaPago({
           </fieldset>
           <div className=" modal-action">
             <div
-              className={`tooltip tooltip-top my-5 ${accion === "Ver"
-                ? "hover:cursor-not-allowed hidden"
-                : "hover:cursor-pointer"
-                }`}
+              className={`tooltip tooltip-top my-5 ${
+                accion === "Ver"
+                  ? "hover:cursor-not-allowed hidden"
+                  : "hover:cursor-pointer"
+              }`}
               data-tip="Guardar"
             >
               <button
                 type="submit"
                 id="btn_guardar"
-                className="btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white"
+                className="bg-transparent over:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn"
               >
                 <i className="fa-regular fa-floppy-disk mx-2"></i> Guardar
               </button>

@@ -1,9 +1,10 @@
 import React from 'react'
 import Tooltip from "@/app/components/tooltip";
 import Button from "@/app/components/button";
-function Acciones({ home, Ver }) {
+
+function Acciones({home,Ver}) {
     return (
-        <div className='join join-vertical '>
+        <div className="join join-vertical ">
             <Tooltip Titulo={"Vista Previa"} posicion={"tooltip-top"}>
                 <Button icono={"fas fa-eye"} onClick={Ver}></Button>
             </Tooltip>

@@ -56,7 +56,7 @@ function TablaAlumnos({
                 >
                   {item.id}
                 </th>
-                <td className="w-[40%]">{`${item.nombre} ${item.a_paterno} ${item.a_materno}`}</td>
+                <td className="w-[40%]">{`${item.a_nombre} ${item.a_paterno} ${item.a_materno}`}</td>
                 <td className="hidden sm:table-cell">
                   {item.horario_1_nombre}
                 </td>
@@ -88,14 +88,6 @@ function TablaAlumnos({
               </tr>
             ))}
           </tbody>
-          <tfoot>
-            <tr>
-              <th></th>
-              <td className="w-[40%]">Nombre</td>
-              <td className="hidden sm:table-cell">Grado</td>
-              <th className="w-[30%] sm:w-[10%]">Acciones</th>
-            </tr>
-          </tfoot>
         </table>
       ) : (
         <NoData />
