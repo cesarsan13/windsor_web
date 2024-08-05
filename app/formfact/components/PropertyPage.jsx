@@ -18,6 +18,7 @@ function PropertyPage({
   const {
     register,
     reset,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
