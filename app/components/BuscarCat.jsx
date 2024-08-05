@@ -148,49 +148,50 @@ function BuscarCat({
   };
 
   return (
-    <div className="flex justify-start items-center gap-2">
-      <div className="join">
-        <label className="input input-bordered join-item text-black dark:text-white input-md flex items-center gap-3">
-          {titulo}
-          <input
-            id={nameInput[0]}
-            name={nameInput[0]}
-            type="text"
-            {...register(nameInput[0])}
-            onKeyDown={(evt) => handleKeyDown(evt)}
-            className={`grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${
-              alignRight ? "text-right" : ""
-            }`}
-            style={{ width: inputWidths.first }}
-          />
-        </label>
-        <button
-          type="button"
-          className="bg-transparent join-item hover:bg-transparent border-none shadow-none dark:text-white text-black btn rounded-r-lg"
-          onClick={Buscar}
-        >
-          <i className="fa-solid fa-magnifying-glass"></i>
-        </button>
+  <div className="flex flex-col md:flex-row justify-start gap-2">
+    <div className="flex gap-2">
+      <label className="input input-bordered join-item text-black dark:text-white input-md flex items-center gap-3 ">
+        {titulo}
         <input
-          id={nameInput[1]}
-          name={nameInput[1]}
+          id={nameInput[0]}
+          name={nameInput[0]}
           type="text"
-          readOnly={true}
-          {...register(nameInput[1])}
-          className="input input-bordered join-item rounded-r-md bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md"
-          style={{ width: inputWidths.second }}
+          {...register(nameInput[0])}
+          onKeyDown={(evt) => handleKeyDown(evt)}
+          className={`grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${alignRight ? "text-right" : ""}`}
+          style={{ width: inputWidths.first }}
         />
-      </div>
-      <ModalBuscarCat
-        data={data}
-        titulo={table}
-        fieldsToShow={fieldsToShow}
-        setItem={handleSetItem}
-        modalId={modalId}
-        tiutloInput={tiutloInput}
+      </label>
+      <button
+        type="button"
+        className="bg-transparent join-item hover:bg-transparent border-none shadow-none dark:text-white text-black btn rounded-r-lg"
+        onClick={Buscar}
+      >
+        <i className="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </div>
+    <div className="w-full md:w-auto mt-2 md:mt-0">
+      <input
+        id={nameInput[1]}
+        name={nameInput[1]}
+        type="text"
+        readOnly={true}
+        {...register(nameInput[1])}
+        className="input input-bordered join-item rounded-r-md bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md"
+        style={{ width: inputWidths.second }}
       />
     </div>
-  );
+    <ModalBuscarCat
+      data={data}
+      titulo={table}
+      fieldsToShow={fieldsToShow}
+      setItem={handleSetItem}
+      modalId={modalId}
+      tiutloInput={tiutloInput}
+    />
+  </div>
+);
+
 }
 
 export default BuscarCat;
