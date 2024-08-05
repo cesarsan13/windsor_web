@@ -160,7 +160,6 @@ function FormFact() {
         showModal(true);
         return;
       }
-      // showModal(true);
     }
     res = await guardaFormFact(session.user.token, data, accion);
     if (res.status) {
