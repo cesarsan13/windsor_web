@@ -151,9 +151,9 @@ function BuscarCat({
   };
 
   return (
-    <div className="flex justify-start items-center gap-2">
-      <div className="join">
-        <label className="input input-bordered join-item text-black dark:text-white input-md flex items-center gap-3">
+    <div className="flex flex-col md:flex-row justify-start gap-2">
+      <div className="flex gap-2">
+        <label className="input input-bordered join-item text-black dark:text-white input-md flex items-center gap-3 ">
           {titulo}
           <input
             id={nameInput[0]}
@@ -161,8 +161,7 @@ function BuscarCat({
             type="text"
             {...register(nameInput[0])}
             onKeyDown={(evt) => handleKeyDown(evt)}
-            className={`grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${alignRight ? "text-right" : ""
-              }`}
+            className={`grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${alignRight ? "text-right" : ""}`}
             style={{ width: inputWidths.first }}
           />
         </label>
@@ -173,6 +172,8 @@ function BuscarCat({
         >
           <i className="fa-solid fa-magnifying-glass"></i>
         </button>
+      </div>
+      <div className="w-full md:w-auto mt-2 md:mt-0">
         <input
           id={nameInput[1]}
           name={nameInput[1]}
