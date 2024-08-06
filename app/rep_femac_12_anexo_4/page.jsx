@@ -255,6 +255,10 @@ function RepFemac12Anexo() {
                     token={session.user.token}
                     modalId={"modal_producto1"}
                   />
+                </div>
+              </div>
+              <div className="flex flex-col gap-4 md:flex-row">
+                <div className="w-6/12">
                   <BuscarCat
                     table={"productos"}
                     nameInput={["producto2", "producto_desc2"]}
@@ -265,9 +269,13 @@ function RepFemac12Anexo() {
                     modalId={"modal_producto2"}
                   />
                 </div>
-                <div className="col-8 flex flex-col">
-                <label className="text-black dark:text-white flex flex-col gap-3 md:flex-row">
-                    <span className="text-black dark:text-white">Ordenar por:</span>
+                <div className="">
+                  <label
+                    className={` input-md text-black dark:text-white flex items-center gap-3`}
+                  >
+                    <span className="text-black dark:text-white">
+                      Ordenar por:
+                    </span>
                     <label
                       className={` input-md text-black dark:text-white flex items-center gap-3`}
                       onChange={(event) => handleCheckChange(event)}
