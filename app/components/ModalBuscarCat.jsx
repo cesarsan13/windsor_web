@@ -82,36 +82,37 @@ function ModalBuscarCat({ data, fieldsToShow, setItem, modalId, titulo,tiutloInp
         </div>
         <div className='text-black bg-white dark:bg-[#1d232a] dark:text-white mt-4 w-full'>
           {filteredData.length > 0 ? (
-            <table className='table table-xs table-zebra table-pin-rows table-pin-cols max-h-[calc(50%)]'>
-              <thead className='relative z-[1] md:static'>
-                <tr>
-                  <th></th>
-                  {fieldsToShow.map((field, index) => (
-                    <th key={index}>{field}</th>
+            <table className='table table-xs table-zebra max-h-[calc(50%)]'>
+            <thead className=''>
+              <tr>
+                <th></th>
+                {fieldsToShow.map((field, index) => (
+                  <th key={index}>{field}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {filteredData.map((item, index) => (
+                <tr key={index}>
+                  <th key={index}>
+                    <div className='flex flex-row'>
+                      <div
+                        className="kbd tooltip tooltip-right hover:cursor-pointer hover:bg-transparent border-none shadow-none bg-transparent text-black dark:text-white"
+                        data-tip={`Seleccionar ${item[fieldsToShow[0]]}`}
+                        onClick={() => ModalAction(item)}
+                      >
+                        <i className="fa-solid fa-check-double"></i>
+                      </div>
+                    </div>
+                  </th>
+                  {fieldsToShow.map((field, subIndex) => (
+                    <td className='p-2' key={subIndex}>{item[field]}</td>
                   ))}
                 </tr>
-              </thead>
-              <tbody>
-                {filteredData.map((item, index) => (
-                  <tr key={index}>
-                    <th key={index}>
-                      <div className='flex flex-row'>
-                        <div
-                          className="kbd tooltip tooltip-right hover:cursor-pointer hover:bg-transparent border-none shadow-none bg-transparent text-black dark:text-white"
-                          data-tip={`Seleccionar ${item[fieldsToShow[0]]}`}
-                          onClick={() => ModalAction(item)}
-                        >
-                          <i class="fa-solid fa-check-double"></i>
-                        </div>
-                      </div>
-                    </th>
-                    {fieldsToShow.map((field, subIndex) => (
-                      <td className='p-2' key={subIndex}>{item[field]}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+              ))}
+            </tbody>
+          </table>
+          
           ) : (
             <NoData />
           )}
