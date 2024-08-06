@@ -209,40 +209,34 @@ function Rep_Femac_3() {
                   modalId={"modal_horarios"}
                 />
               )}
-              <div className=" col-8">
-                <label
-                  className={` input-md text-black dark:text-white flex items-center gap-3`}
-                >
+              <div className="flex space-x-4">
+                <div className="flex flex-col md:flex-row md:space-x-4 md:space-y-0 space-y-2">
                   <span className="text-black dark:text-white">
                     Ordenar por:
                   </span>
-                  <label
-                    className={` input-md text-black dark:text-white flex items-center gap-3`}
-                  >
-                    <span className="text-black dark:text-white">Nombre</span>
+                  <label className="flex items-center space-x-2 dark:text-white text-black">
                     <input
                       type="radio"
-                      name="ordenar"
+                      name="options"
                       value="nombre"
-                      onChange={handleCheckChange}
                       checked={sOrdenar === "nombre"}
-                      className="radio checked:bg-blue-500"
+                      onChange={handleCheckChange}
+                      className="form-radio"
                     />
+                    <span>Nombre</span>
                   </label>
-                  <label
-                    className={` input-md text-black dark:text-white flex items-center gap-3`}
-                  >
-                    <span className="text-black dark:text-white">Número</span>
+                  <label className="flex items-center space-x-2 dark:text-white text-black">
                     <input
                       type="radio"
-                      name="ordenar"
+                      name="options"
                       value="id"
-                      onChange={handleCheckChange}
                       checked={sOrdenar === "id"}
-                      className="radio checked:bg-blue-500"
+                      onChange={handleCheckChange}
+                      className="form-radio"
                     />
+                    <span>Numero</span>
                   </label>
-                </label>
+                </div>
               </div>
             </div>
           </div>

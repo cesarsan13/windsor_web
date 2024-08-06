@@ -42,6 +42,7 @@ function AlumnosPorClase() {
     }
     const fetchData = async () => {
       const { token } = session.user;
+      console.log(alumno1V, alumno2V);
       const data = await getreportAlumn(
         token,
         bajas,
@@ -50,6 +51,7 @@ function AlumnosPorClase() {
         alumno2V
       );
       setAlumnosFiltrados(data);
+      console.log(alumnosFiltrados);
     };
     fetchData();
   }, [session, status, bajas, selectedOption, alumno1V, alumno2V]);
@@ -199,76 +201,76 @@ function AlumnosPorClase() {
           </div>
           <div className="col-span-7">
             <div className="flex flex-col h-full space-y-4">
-              <div className="flex space-x-4">
-                <BuscarCat
-                  table="alumnos"
-                  fieldsToShow={["id", "nombre_completo"]}
-                  nameInput={["id", "nombre_completo"]}
-                  titulo={"Inicio: "}
-                  setItem={setAlumnos1}
-                  token={session.user.token}
-                  modalId="modal_alumnos1"
-                />
-                <BuscarCat
-                  table="alumnos"
-                  fieldsToShow={["id", "nombre_completo"]}
-                  nameInput={["id", "nombre_completo"]}
-                  titulo={"Fin: "}
-                  setItem={setAlumnos2}
-                  token={session.user.token}
-                  modalId="modal_alumnos2"
-                />
-              </div>
-              <div className=" col-10">
-                <label
-                  className={` input-lg text-black dark:text-white flex items-center gap-3`}
-                >
-                  <span className="text-black dark:text-white">
-                    Ordenar por:
-                  </span>
-                  <label
-                    className={` input-md text-black dark:text-white flex items-center gap-3`}
-                  >
-                    <span className="text-black dark:text-white">Nombre</span>
-                    <input
-                      type="radio"
-                      name="ordenar"
-                      value="nombre"
-                      onChange={handleCheckChange}
-                      checked={selectedOption === "nombre"}
-                      className="radio checked:bg-blue-500"
-                    />
-                  </label>
-                  <label
-                    className={` input-md text-black dark:text-white flex items-center gap-3`}
-                  >
-                    <span className="text-black dark:text-white">Número</span>
-                    <input
-                      type="radio"
-                      name="ordenar"
-                      value="id"
-                      onChange={handleCheckChange}
-                      checked={selectedOption === "id"}
-                      className="radio checked:bg-blue-500"
-                    />
-                  </label>
-                  <div className="tooltip" data-tip="Ver Bajas">
-                    <label
-                      htmlFor="ch_bajas"
-                      className="label cursor-pointer flex items-center space-x-2"
-                    >
+              <div className="flex items-center space-x-4">
+                <div className="w-full max-w-sm p-4 border dark:border-gray-300 border-black rounded-lg">
+                  <h2 className="text-lg font-bold mb-4 dark:text-white text-black">
+                    Ordenado por...
+                  </h2>
+                  <div className="flex flex-col space-y-2">
+                    <label className="flex items-center space-x-2 dark:text-white text-black">
                       <input
-                        id="ch_bajas"
-                        type="checkbox"
-                        className="checkbox checkbox-md"
-                        onClick={(evt) => setBajas(evt.target.checked)}
+                        type="radio"
+                        name="options"
+                        value="nombre"
+                        checked={selectedOption === "nombre"}
+                        onChange={handleCheckChange}
+                        className="form-radio"
                       />
-                      <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
-                        Incluir bajas
-                      </span>
+                      <span>Nombre</span>
+                    </label>
+                    <label className="flex items-center space-x-2 dark:text-white text-black">
+                      <input
+                        type="radio"
+                        name="options"
+                        value="id"
+                        checked={selectedOption === "id"}
+                        onChange={handleCheckChange}
+                        className="form-radio"
+                      />
+                      <span>Número</span>
                     </label>
                   </div>
-                </label>
+                </div>
+
+                <div className="tooltip" data-tip="Ver Bajas">
+                  <label
+                    htmlFor="ch_bajas"
+                    className="label cursor-pointer flex items-center space-x-2"
+                  >
+                    <input
+                      id="ch_bajas"
+                      type="checkbox"
+                      className="checkbox checkbox-md"
+                      onClick={(evt) => setBajas(evt.target.checked)}
+                    />
+                    <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
+                      Incluir bajas
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="flex space-x-4">
+                <div className="flex flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0">
+                  <BuscarCat
+                    table="alumnos"
+                    fieldsToShow={["id", "nombre_completo"]}
+                    nameInput={["id", "nombre_completo"]}
+                    titulo={"Inicio: "}
+                    setItem={setAlumnos1}
+                    token={session.user.token}
+                    modalId="modal_alumnos1"
+                  />
+                  <BuscarCat
+                    table="alumnos"
+                    fieldsToShow={["id", "nombre_completo"]}
+                    nameInput={["id", "nombre_completo"]}
+                    titulo={"Fin: "}
+                    setItem={setAlumnos2}
+                    token={session.user.token}
+                    modalId="modal_alumnos2"
+                  />
+                </div>
               </div>
             </div>
           </div>
