@@ -258,8 +258,8 @@ function RelaciondeFacturas(){
             <Acciones home={home} Ver={handleVerClick} />
           </div>
           <div className="col-span-7">
-            <div className="flex flex-col h-full space-y-4">
-              <div className="flex space-x-4">
+            <div className="flex flex-col h-[calc(100%)]">
+              <div className="flex flex-col gap-4 md:flex-row">
                 <Inputs
                   name={"fecha_cobro_ini"}
                   tamañolabel={""}
@@ -282,44 +282,46 @@ function RelaciondeFacturas(){
                   isDisabled={false}
                   setValue={setFecha_cobro_fin}
                 />
-                <div className="tooltip pt-1" data-tip="Tomar Fechas">
-                  <label
-                    htmlFor="ch_tomaFechas"
-                    className="label cursor-pointer flex items-center space-x-2">
-                    <input
-                      id="ch_tomaFechas"
-                      type="checkbox"
-                      className="checkbox checkbox-md"
-                      defaultChecked={true}
-                      onClick={(evt) => setTomaFechas(evt.target.checked)}
-                    />
-                    <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
-                      Toma Fechas
-                    </span>
-                  </label>
-                </div>
-                <div className="tooltip pt-1" data-tip="Tomar Facturas Canceladas">
-                  <label
-                    htmlFor="ch_tomaCanceladas"
-                    className="label cursor-pointer flex items-center space-x-2">
-                    <input
-                      id="ch_tomaCanceladas"
-                      type="checkbox"
-                      className="checkbox checkbox-md"
-                      defaultChecked={false}
-                      onClick={(evt) => setTomaCanceladas(evt.target.checked)}
-                    />
-                    <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
-                      Toma Facturas Canceladas
-                    </span>
-                  </label>
+                <div className="flex flex-col gap-4 md:flex-row h-[calc(80%)]">
+                  <div className="tooltip pt-1" data-tip="Tomar Fechas">
+                    <label
+                      htmlFor="ch_tomaFechas"
+                      className="label cursor-pointer flex items-center space-x-2">
+                      <input
+                        id="ch_tomaFechas"
+                        type="checkbox"
+                        className="checkbox checkbox-md"
+                        defaultChecked={true}
+                        onClick={(evt) => setTomaFechas(evt.target.checked)}
+                      />
+                      <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
+                        Toma Fechas
+                      </span>
+                    </label>
+                  </div>
+                  <div className="tooltip pt-1" data-tip="Tomar Facturas Canceladas">
+                    <label
+                      htmlFor="ch_tomaCanceladas"
+                      className="label cursor-pointer flex items-center space-x-2">
+                      <input
+                        id="ch_tomaCanceladas"
+                        type="checkbox"
+                        className="checkbox checkbox-md"
+                        defaultChecked={false}
+                        onClick={(evt) => setTomaCanceladas(evt.target.checked)}
+                      />
+                      <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
+                        Toma Facturas Canceladas
+                      </span>
+                    </label>
+                  </div>
                 </div>
               </div>
-              <div className="flex space-x-4">
+              <div className="flex flex-col gap-4 md:flex-row sm:flex-row pt-1">
                 <Inputs
                   name={"factura_ini"}
                   tamañolabel={""}
-                  className={"rounded block grow"}
+                  className={"rounded grow "}
                   Titulo={"Facturas: "}
                   type={"text"}
                   errors={errors}
@@ -331,7 +333,7 @@ function RelaciondeFacturas(){
                 <Inputs
                   name={"factura_fin"}
                   tamañolabel={""}
-                  className={"rounded block grow"}
+                  className={"rounded grow "}
                   Titulo={""}
                   type={"text"}
                   errors={errors}
