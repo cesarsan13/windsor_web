@@ -33,14 +33,14 @@ function TablaComentarios({
           </thead>
           <tbody>
             {formaComentariosFiltrados.map((item) => (
-              <tr key = {item.id} class="hover: cursor-pointer">
-                  <th className={"text-right"}>{item.id}</th>
-                  <td> {item.comentario_1 } </td>
-                  <td> {item.comentario_2 } </td>
-                  <td> {item.comentario_3 } </td>
-                  <td> {item.generales} </td>
-                  <th>
-                  <div className="flex flex-row space-x-3">
+              <tr key={item.id} class="hover: cursor-pointer">
+                <th className={"text-right"}>{item.id}</th>
+                <td> {item.comentario_1} </td>
+                <td> {item.comentario_2} </td>
+                <td> {item.comentario_3} </td>
+                <td> {item.generales} </td>
+                <th className="w-[30%] sm:w-[10%]">
+                  <div className="flex flex-row space-x-1 sm:space-x-3">
                     <div
                       className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                       data-tip={`Ver ${item.id}`}
@@ -63,12 +63,11 @@ function TablaComentarios({
                       <i className="fa-solid fa-trash"></i>
                     </div>
                   </div>
-                </th>  
-
+                </th>
               </tr>
             ))}
           </tbody>
-          <tfoot/>
+          <tfoot />
         </table>
       ) : (
         <NoData />

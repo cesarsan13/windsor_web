@@ -63,7 +63,9 @@ function Busqueda({
             onClick={(evt) => setBajas(evt.target.checked)}
           />
           <span className="fa-solid fa-trash block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
-          <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">Bajas</span>
+          <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
+            Bajas
+          </span>
         </label>
       </div>
       {/* <div className="lg:flex hidden justify-end w-full">

@@ -88,7 +88,6 @@ function TablaAlumnos({
               </tr>
             ))}
           </tbody>
-          <tfoot/>
         </table>
       ) : (
         <NoData />

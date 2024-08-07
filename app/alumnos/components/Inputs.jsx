@@ -17,12 +17,12 @@ function Inputs({
   handleBlur,
   arreglos,
 }) {
-  // console.log("name",name)
-  // console.log("maxLenght",maxLenght)
-  if (type === 'select') {
+  if (type === "select") {
     return (
       <div className="w-full md:w-1/2 px-0.5 py-2 mb-6 md:mb-0">
-        <label className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}>
+        <label
+          className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
+        >
           {Titulo}
           <select
             name={name}
@@ -34,7 +34,13 @@ function Inputs({
             disabled={isDisabled}
           >
             {arreglos.map((arreglo) => (
-              <option className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]" key={arreglo.id} value={arreglo.id}>{arreglo.descripcion}</option>
+              <option
+                className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]"
+                key={arreglo.id}
+                value={arreglo.id}
+              >
+                {arreglo.descripcion}
+              </option>
             ))}
             {/* <option value={"Activo"}>Activo</option>
             <option value={"Enfermo"}>Enfermo</option>
@@ -50,7 +56,6 @@ function Inputs({
         )}
       </div>
     );
-
   } else {
     return (
       <div className="w-full md:w-1/2 px-0.5 py-2 mb-6 md:mb-0">
@@ -67,11 +72,11 @@ function Inputs({
             {...(dataType === "int" && { onKeyDown: soloEnteros })}
             {...(dataType === "float" && { onKeyDown: soloDecimales })}
             {...register(name, {
-              maxLength:{
-                value:maxLenght,
-                message:`El campo ${name} no puede tener más de ${maxLenght} caracteres`
+              maxLength: {
+                value: maxLenght,
+                message: `El campo ${name} no puede tener más de ${maxLenght} caracteres`,
               },
-              ...(requerido && { required: message })
+              ...(requerido && { required: message }),
             })}
             {...(dataType === "int" ||
               (dataType === "float" && {

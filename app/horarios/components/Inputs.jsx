@@ -1,7 +1,7 @@
 import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
-import React from 'react'
-import Select from 'react-select'
-import { Controller } from 'react-hook-form'
+import React from "react";
+import Select from "react-select";
+import { Controller } from "react-hook-form";
 
 function Inputs({
   Titulo,
@@ -23,14 +23,16 @@ function Inputs({
   handleBlur,
   arreglos,
 }) {
-  if (type === 'multi-select') {    
+  if (type === "multi-select") {
     return (
-      <div className='flex flex-col'>
-        <label htmlFor={name} className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
+      <div className="w-full md:w-1/2 px-0.5 py-2 mb-6 md:mb-0">
+        <label
+          className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
+        >
           {Titulo}
           <Controller
             name={name}
-            control={control}                
+            control={control}
             render={({ field }) => (
               <Select
                 {...field}
@@ -38,9 +40,9 @@ function Inputs({
                 isDisabled={isDisabled}
                 options={options}
                 className={`text-black ${className}`}
-                classNamePrefix='select'
+                classNamePrefix="select"
                 value={value}
-                onChange={onChange}                              
+                onChange={onChange}
               />
             )}
           />
@@ -50,35 +52,46 @@ function Inputs({
           <span className="text-red-500 text-sm">{errors[name].message}</span>
         )}
       </div>
-    )
-  } if (type === "select") {
+    );
+  }
+  if (type === "select") {
     return (
-      <div className='flex flex-col'>
-        <label htmlFor={name} className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}>
+      <div className="flex flex-col">
+        <label
+          htmlFor={name}
+          className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
+        >
           {Titulo}
           <select
-          name={name}
-          className={`text-black dark:text-white bg-transparent dark:${className}`}
-          id={name}
-          disabled={isDisabled}
-          {...register(name, {
-            ...(requerido && { required: message }),
-          })}
-        >
-          {arreglos.map((arreglo) => (
-              <option className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]" key={arreglo.id} value={arreglo.id}>{arreglo.descripcion}</option>
+            name={name}
+            className={`text-black dark:text-white bg-transparent dark:${className}`}
+            id={name}
+            disabled={isDisabled}
+            {...register(name, {
+              ...(requerido && { required: message }),
+            })}
+          >
+            {arreglos.map((arreglo) => (
+              <option
+                className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]"
+                key={arreglo.id}
+                value={arreglo.id}
+              >
+                {arreglo.descripcion}
+              </option>
             ))}
-        </select>
+          </select>
         </label>
-        
+
         {errors[name] && requerido && (
           <span className="text-red-500 text-sm">{errors[name].message}</span>
         )}
       </div>
-    )
-  } if (type === 'text') {    
+    );
+  }
+  if (type === "text") {
     return (
-      <div className="flex flex-col">
+      <div className="w-full md:w-1/2 px-0.5 py-2 mb-6 md:mb-0">
         <label
           className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
         >
@@ -112,4 +125,4 @@ function Inputs({
   }
 }
 
-export default Inputs
+export default Inputs;

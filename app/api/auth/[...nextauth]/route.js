@@ -15,7 +15,6 @@ export const authOptions = {
 
       async authorize(credentials, request) {
         const { csrfToken, ...data } = credentials;
-        console.log("llego a la autorizacion");
         const res = await fetch(`${process.env.DOMAIN_API}api/login`, {
           method: "POST",
           body: JSON.stringify(data),

@@ -20,7 +20,7 @@ function TablaCajeros({
 
   return !isLoading ? (
     <>
-        <div className='overflow-x-auto mt-3 h-[calc(75vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white m-2 w-full lg:w-3/4'>
+      <div className="overflow-x-auto mt-3 h-[calc(75vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white m-2 w-full lg:w-3/4">
         {cajerosFiltrados.length > 0 ? (
           <table className="table table-xs table-zebra w-full">
             <thead className="sticky top-0 bg-white dark:bg-[#1d232a] ">
@@ -35,12 +35,8 @@ function TablaCajeros({
             <tbody>
               {cajerosFiltrados.map((item) => (
                 <tr key={item.numero} className="hover:cursor-pointer">
-                  <th className="text-left">
-                    {item.numero}
-                  </th>
-                  <td className="text-left w-50">
-                    {item.nombre}
-                  </td>
+                  <th className="text-left">{item.numero}</th>
+                  <td className="text-left w-50">{item.nombre}</td>
                   <td>{item.telefono}</td>
                   <td>{item.mail}</td>
                   <th>
@@ -71,7 +67,7 @@ function TablaCajeros({
                 </tr>
               ))}
             </tbody>
-            <tfoot/>
+            <tfoot />
           </table>
         ) : (
           <NoData />

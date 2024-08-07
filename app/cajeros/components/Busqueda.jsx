@@ -20,7 +20,7 @@ function Busqueda({
     <div className="join w-full max-w-3/4 flex justify-start items-center h-1/8 p-1">
       <input
         id="TB_Busqueda"
-        className="input input-bordered input-md join-item w-full max-w-lg dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 "
+        className="input input-bordered input-md join-item w-full max-w-lg dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600"
         placeholder="Buscar..."
         onChange={(event) => handleBusquedaChange(event)}
         onKeyDown={(evt) => handleKeyDown(evt)}

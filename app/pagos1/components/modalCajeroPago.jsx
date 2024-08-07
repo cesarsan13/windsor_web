@@ -45,12 +45,10 @@ function ModalCajeroPago({
     if (Object.keys(cajero).length > 0) {
       res = await validarClaveCajero(token, data);
       if (res.status) {
-        console.log('true');
         showModal(false);
         await showSwalAndWait(res.alert_title, res.alert_text, res.alert_icon);
         setValidar(true);
       } else {
-        console.log('false');
         showModal(false);
         await showSwalAndWait(res.alert_title, res.alert_text, res.alert_icon);
         showModal(true);
@@ -58,13 +56,15 @@ function ModalCajeroPago({
       }
     } else {
       showModal(false);
-      await showSwalAndWait("Oppss!", "Para validar la clave, debe estar seleccionado un cajero", "error");
+      await showSwalAndWait(
+        "Oppss!",
+        "Para validar la clave, debe estar seleccionado un cajero",
+        "error"
+      );
       showModal(true);
       setValidar(false);
     }
   });
-
-
 
   return (
     <dialog id="my_modal_3" className="modal">

@@ -18,6 +18,7 @@ function PropertyPage({
   const {
     register,
     reset,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -93,7 +94,6 @@ function PropertyPage({
   };
   const getValueInput = async (evt) => {
     const { name, value } = evt.target;
-    console.log("value input", name);
     if (
       name === "columna_impresion" ||
       name === "renglon_impresion" ||

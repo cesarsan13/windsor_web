@@ -96,7 +96,7 @@ function Rep_Femac_6() {
             nombre: "Reporte de Cobranza"
         }
         console.log("hohoho", configuracion)
-       ImprimirExcel(configuracion, cajero.numero);
+        ImprimirExcel(configuracion, cajero.numero);
     }
     console.log(cajero)
     const handleVerClick = () => {
@@ -305,30 +305,30 @@ function Rep_Femac_6() {
     }
     const showModalVista = (show) => {
         show
-          ? document.getElementById("modalVRep6").showModal()
-          : document.getElementById("modalVRep6").close();
-      }
+            ? document.getElementById("modalVRep6").showModal()
+            : document.getElementById("modalVRep6").close();
+    }
     function roundNumber(value, decimals) {
         const factor = Math.pow(10, decimals);
         return Math.round(value * factor) / factor;
     }
     return (
         <>
-              <ModalVistaPreviaRep6 pdfPreview={pdfPreview} pdfData={pdfData} PDF={ImprimePDF} Excel={ImprimeExcel}/>      
+            <ModalVistaPreviaRep6 pdfPreview={pdfPreview} pdfData={pdfData} PDF={ImprimePDF} Excel={ImprimeExcel} />
 
-            <div className='container w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 '>
-                <div className='flex justify-start p-3 '>
+            <div className='container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3'>
+                <div className='flex justify-start p-3'>
                     <h1 className='text-4xl font-xthin text-black dark:text-white md:px-12'>
                         Reporte Resumen de Cobranza
                     </h1>
                 </div>
-                <div className='container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] '>
-                    <div className='col-span-1 flex flex-col '>
-                        <Acciones home={home} ImprimePDF={ImprimePDF} Ver={handleVerClick} ImprimeExcel={ImprimeExcel} CerrarView={CerrarView}/>
+                <div className='container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]'>
+                    <div className='col-span-1 flex flex-col'>
+                        <Acciones home={home} ImprimePDF={ImprimePDF} Ver={handleVerClick} ImprimeExcel={ImprimeExcel} CerrarView={CerrarView} />
                     </div>
                     <div className='col-span-7'>
                         <div className='flex flex-col h-[calc(100%)]'>
-                            <div className='flex flex-col md:flex-row'>
+                            <div className='flex flex-col md:flex-row gap-4'>
                                 <div className='w-11/12 md:w-4/12 lg:w-3/12'>
                                     <label className='input input-bordered input-md text-black dark:text-white flex items-center gap-3'>
                                         Fecha Inicial
@@ -336,56 +336,40 @@ function Rep_Femac_6() {
                                             type="date"
                                             value={fechaIni}
                                             onChange={(e) => setFechaIni(e.target.value)}
-                                            className='text-black dark:text-white'
+                                            className='rounded block grow text-black dark:text-white'
                                         />
                                     </label>
                                 </div>
                                 <div className='w-11/12 md:w-4/12 lg:w-3/12'>
-                                    <label className='input input-bordered input-md text-black dark:text-white flex items-center gap-3'>
+                                    <label className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3`}>
                                         Fecha Final
                                         <input
                                             type="date"
                                             value={fechaFin}
                                             onChange={(e) => setFechaFin(e.target.value)}
-                                            className='text-black dark:text-white'
+                                            className='rounded block grow text-black dark:text-white'
                                         />
                                     </label>
                                 </div>
-                                <div className='md:w-6/12 lg:w-3/12'>
-                                    <BuscarCat
-                                        table={"cajeros"}
-                                        titulo={"Cajeros: "}
-                                        token={session.user.token}
-                                        fieldsToShow={["numero", "nombre"]}
-                                        nameInput={["numero", "nombre"]}
-                                        setItem={setCajero}
-                                        modalId={"modal_Cajeros"}
-                                    />
-                                </div>
                             </div>
-                            <div className=' overflow-scroll mt-4'>
-                                {pdfPreview && pdfData && (
-                                    <div className=''>
-                                        <div className='pdf-preview'>
-                                            <Worker
-                                                workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
-                                            >
-                                                <div style={{ height: "600px" }}>
-                                                    <Viewer fileUrl={pdfData} />
-                                                </div>
-                                            </Worker>
-                                        </div>
-                                    </div>
-                                )}
+                            <div className='mt-4'>
+                                <BuscarCat
+                                    table={"cajeros"}
+                                    titulo={"Cajeros: "}
+                                    token={session.user.token}
+                                    fieldsToShow={["numero", "nombre"]}
+                                    nameInput={["numero", "nombre"]}
+                                    setItem={setCajero}
+                                    modalId={"modal_Cajeros"}
+                                />
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </>
-    )
+    );
+
 }
 
 export default Rep_Femac_6

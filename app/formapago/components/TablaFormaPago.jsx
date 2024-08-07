@@ -39,8 +39,8 @@ function TablaFormaPago({
                 <td className={`text-right w-11`}>{item.comision}</td>
                 <td>{item.aplicacion}</td>
                 <td>{item.cue_banco}</td>
-                <th>
-                  <div className="flex flex-row space-x-3">
+                <th className="w-[30%] sm:w-[10%]">
+                  <div className="flex flex-row space-x-1 sm:space-x-3">
                     <div
                       className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                       data-tip={`Ver ${item.id}`}
@@ -67,7 +67,7 @@ function TablaFormaPago({
               </tr>
             ))}
           </tbody>
-          <tfoot/>
+          <tfoot />
         </table>
       ) : (
         <NoData />
