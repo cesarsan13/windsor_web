@@ -169,8 +169,9 @@ function AltasBajasAlumnos() {
             />
           </div>
           <div className="col-span-7">
-            <div className="flex flex-col h-full space-y-4">
-              <div className="flex space-x-4">
+          <div className='flex flex-col h-[calc(100%)]'>
+          <div className='flex flex-col md:flex-row gap-4'>
+          <div className='w-11/12 md:w-4/12 lg:w-3/12'>
                 <Inputs
                   name={"fecha_ini"}
                   tamañolabel={""}
@@ -182,6 +183,8 @@ function AltasBajasAlumnos() {
                   isDisabled={false}
                   setValue={setFecha_ini}
                 />
+                </div>
+                <div className='w-11/12 md:w-4/12 lg:w-3/12'>
                 <Inputs
                   name={"fecha_fin"}
                   tamañolabel={""}
@@ -193,6 +196,7 @@ function AltasBajasAlumnos() {
                   isDisabled={false}
                   setValue={setFecha_fin}
                 />
+                </div>
               </div>
               <div className=" col-7">
                 <label
@@ -226,17 +230,11 @@ function AltasBajasAlumnos() {
                   </label>
                 </label>
               </div>
-              <div className=" col-8">
-                <label
-                  className={` input-md text-black dark:text-white flex items-center gap-3`}
-                >
-                  <span className="text-black dark:text-white">
-                    Ordenar por:
-                  </span>
-                  <label
-                    className={` input-md text-black dark:text-white flex items-center gap-3`}
-                  >
-                    <span className="text-black dark:text-white">Nombre</span>
+              <div className=" col-8 flex flex-col">
+              <label className="text-black dark:text-white flex flex-col gap-3 md:flex-row">
+              <span className="text-black dark:text-white">Ordenar por:</span>
+              <label className="flex items-center gap-3">
+              <span className="text-black dark:text-white">Nombre</span>
                     <input
                       type="radio"
                       name="ordenar"
@@ -246,9 +244,7 @@ function AltasBajasAlumnos() {
                       className="radio checked:bg-blue-500"
                     />
                   </label>
-                  <label
-                    className={` input-md text-black dark:text-white flex items-center gap-3`}
-                  >
+                  <label className="flex items-center gap-3">
                     <span className="text-black dark:text-white">Número</span>
                     <input
                       type="radio"
@@ -259,9 +255,7 @@ function AltasBajasAlumnos() {
                       className="radio checked:bg-blue-500"
                     />
                   </label>
-                  <label
-                    className={` input-md text-black dark:text-white flex items-center gap-3`}
-                  >
+                  <label className="flex items-center gap-3">
                     <span className="text-black dark:text-white">
                       Fecha Nacimiento
                     </span>

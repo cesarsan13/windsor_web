@@ -245,7 +245,7 @@ function RepFemac12Anexo() {
                   </label>
                 </div>
 
-                <div className="w-6/12">
+                <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
                   <BuscarCat
                     table={"productos"}
                     nameInput={["producto1", "producto_desc1"]}
