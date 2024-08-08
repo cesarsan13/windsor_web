@@ -50,7 +50,7 @@ function ModalFormaPago({
   };
   return (
     <dialog id="my_modal_3" className="modal">
-      <div className="modal-box w-full max-w-3xl h-full">
+      <div className="modal-box">
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black"
           onClick={() => document.getElementById("my_modal_3").close()}
@@ -63,12 +63,12 @@ function ModalFormaPago({
             {titulo}
           </h3>
           <fieldset id="fs_formapago">
-            <div className="flex flex-wrap -mx-3 mb-6">
+            <div className="container flex flex-col space-y-5">
               <Inputs
                 dataType={"int"}
                 name={"id"}
                 tamañolabel={""}
-                className={"rounded block grow text-right"}
+                className={"w-3/6 text-right"}
                 Titulo={"Numero: "}
                 type={"text"}
                 requerido={true}
@@ -81,8 +81,8 @@ function ModalFormaPago({
               <Inputs
                 dataType={"string"}
                 name={"descripcion"}
-                tamañolabel={""}
-                className={"rounded block grow"}
+                tamañolabel={"w-72"}
+                className={"w-3/6"}
                 Titulo={"Descripcion: "}
                 type={"text"}
                 requerido={true}
@@ -99,7 +99,7 @@ function ModalFormaPago({
                 dataType={"float"}
                 name={"comision"}
                 tamañolabel={""}
-                className={"rounded block grow"}
+                className={"w-3/6"}
                 Titulo={"Comision:"}
                 type={"text"}
                 requerido={true}
@@ -114,7 +114,7 @@ function ModalFormaPago({
                 dataType={"string"}
                 name={"aplicacion"}
                 tamañolabel={""}
-                className={"rounded block grow"}
+                className={"w-3/6"}
                 Titulo={"Aplicacion:"}
                 type={"text"}
                 requerido={true}
@@ -129,8 +129,8 @@ function ModalFormaPago({
               <Inputs
                 dataType={"string"}
                 name={"cue_banco"}
-                tamañolabel={""}
-                className={"rounded block grow"}
+                tamañolabel={"w-72"}
+                className={"w-3/6 "}
                 Titulo={"Cuenta Banco:"}
                 type={"text"}
                 requerido={true}
