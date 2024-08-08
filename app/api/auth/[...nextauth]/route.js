@@ -58,6 +58,17 @@ export const authOptions = {
     signOut: "/",
   },
   secret: process.env.NEXTAUTH_SECRET,
+  cookies: {
+    sessionToken: {
+      name: "next-auth.session-token-escolar",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/windsor",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
+  },
 };
 const handler = NextAuth(authOptions);
 
