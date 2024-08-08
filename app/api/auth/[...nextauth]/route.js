@@ -24,21 +24,7 @@ export const authOptions = {
         const { status } = resjson;
         if (!status) throw new Error("Credenciales Incorrectas");
 
-        // resjson.data.user_data =
-        //   resjson.data.rol_id === "2"
-        //     ? resjson.data.paciente
-        //     : resjson.data.rol_id === "3"
-        //     ? resjson.data.medico
-        //     : [];
         resjson.data.token = resjson.token;
-
-        // const accesos_rol = await getAccesosRol(
-        //   resjson.token,
-        //   resjson.data.rol_id
-        // );
-        // if (accesos_rol.status) {
-        //   resjson.data.permisos = accesos_rol.data;
-        // }
 
         return resjson.data;
       },
@@ -65,7 +51,6 @@ export const authOptions = {
         httpOnly: true,
         sameSite: "lax",
         path: "/windsor",
-        secure: process.env.NODE_ENV === "production",
       },
     },
     csrfToken: {
@@ -74,7 +59,6 @@ export const authOptions = {
         httpOnly: true,
         sameSite: "lax",
         path: "/windsor",
-        secure: process.env.NODE_ENV === "production",
       },
     },
     callbackUrl: {
@@ -83,7 +67,6 @@ export const authOptions = {
         httpOnly: true,
         sameSite: "lax",
         path: "/windsor",
-        secure: process.env.NODE_ENV === "production",
       },
     },
   },
