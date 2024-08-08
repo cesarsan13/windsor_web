@@ -197,83 +197,76 @@ function AlumnosPorClase() {
         </div>
         <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
           <div className="col-span-1 flex flex-col">
-            <Acciones home={home} Ver={handleVerClick} />
+            <Acciones 
+            home={home} 
+            Ver={handleVerClick} />
           </div>
           <div className="col-span-7">
             <div className="flex flex-col h-full space-y-4">
-              <div className="flex items-center space-x-4">
-                <div className="w-full max-w-sm p-4 border dark:border-gray-300 border-black rounded-lg">
-                  <h2 className="text-lg font-bold mb-4 dark:text-white text-black">
-                    Ordenado por...
-                  </h2>
-                  <div className="flex flex-col space-y-2">
-                    <label className="flex items-center space-x-2 dark:text-white text-black">
+              
+              <BuscarCat
+                table="alumnos"
+                fieldsToShow={["id", "nombre_completo"]}
+                nameInput={["id", "nombre_completo"]}
+                titulo={"Inicio: "}
+                setItem={setAlumnos1}
+                token={session.user.token}
+                modalId="modal_alumnos1"
+              />
+              <BuscarCat
+                table="alumnos"
+                fieldsToShow={["id", "nombre_completo"]}
+                nameInput={["id", "nombre_completo"]}
+                titulo={"Fin:"}
+                setItem={setAlumnos2}
+                token={session.user.token}
+                modalId="modal_alumnos2"
+              />
+              <div className="col-8 flex flex-col">
+                <div className="flex space-x-4">
+                  <label className="text-black dark:text-white flex flex-col md:flex-row space-x-4">
+                    <span className="text-black dark:text-white flex items-center gap-3">Ordenar por:</span>
+                    <label className="flex items-center gap-3">
+                      <span className="text-black dark:text-white">Nombre</span>
                       <input
                         type="radio"
-                        name="options"
+                        name="ordenar"
                         value="nombre"
-                        checked={selectedOption === "nombre"}
                         onChange={handleCheckChange}
-                        className="form-radio"
+                        checked={selectedOption === "nombre"}
+                        className="radio checked:bg-blue-500"
                       />
-                      <span>Nombre</span>
                     </label>
-                    <label className="flex items-center space-x-2 dark:text-white text-black">
+                    <label className="flex items-center gap-3">
+                      <span className="text-black dark:text-white">Número</span>
                       <input
                         type="radio"
-                        name="options"
+                        name="ordenar"
                         value="id"
-                        checked={selectedOption === "id"}
                         onChange={handleCheckChange}
-                        className="form-radio"
+                        checked={selectedOption === "id"}
+                        className="radio checked:bg-blue-500"
                       />
-                      <span>Número</span>
+                    </label>
+                  </label>
+                  <div className="tooltip" data-tip="Ver Bajas">
+                    <label
+                      htmlFor="ch_bajas"
+                      className="label cursor-pointer flex items-center space-x-2">
+                      <input
+                        id="ch_bajas"
+                        type="checkbox"
+                        className="checkbox checkbox-md"
+                        onClick={(evt) => setBajas(evt.target.checked)}/>
+                      <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
+                        Incluir bajas
+                      </span>
                     </label>
                   </div>
                 </div>
-
-                <div className="tooltip" data-tip="Ver Bajas">
-                  <label
-                    htmlFor="ch_bajas"
-                    className="label cursor-pointer flex items-center space-x-2"
-                  >
-                    <input
-                      id="ch_bajas"
-                      type="checkbox"
-                      className="checkbox checkbox-md"
-                      onClick={(evt) => setBajas(evt.target.checked)}
-                    />
-                    <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
-                      Incluir bajas
-                    </span>
-                  </label>
-                </div>
-              </div>
-
-              <div className="flex space-x-4">
-                <div className="flex flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0">
-                  <BuscarCat
-                    table="alumnos"
-                    fieldsToShow={["id", "nombre_completo"]}
-                    nameInput={["id", "nombre_completo"]}
-                    titulo={"Inicio: "}
-                    setItem={setAlumnos1}
-                    token={session.user.token}
-                    modalId="modal_alumnos1"
-                  />
-                  <BuscarCat
-                    table="alumnos"
-                    fieldsToShow={["id", "nombre_completo"]}
-                    nameInput={["id", "nombre_completo"]}
-                    titulo={"Fin: "}
-                    setItem={setAlumnos2}
-                    token={session.user.token}
-                    modalId="modal_alumnos2"
-                  />
-                </div>
               </div>
             </div>
-          </div>
+          </div>  
         </div>
       </div>
     </>
