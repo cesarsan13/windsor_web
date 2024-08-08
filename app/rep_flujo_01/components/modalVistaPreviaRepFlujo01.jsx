@@ -3,7 +3,7 @@ import { Viewer, Worker, SpecialZoomLevel } from "@react-pdf-viewer/core";
 import React, { useEffect, useState } from "react";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 
-function modalVistaPreviaRepFlujo01({ pdfPreview, pdfData, PDF, Excel }) {
+function ModalVistaPreviaRepFlujo01({ pdfPreview, pdfData, PDF, Excel }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   useEffect(() => {
     const isEmptyDataPDF =
