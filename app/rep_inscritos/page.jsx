@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import Acciones from "@/app/rep_femac_8_anexo_1/components/Acciones";
-import Inputs from "@/app/rep_femac_8_anexo_1/components/Inputs";
+import Acciones from "@/app/rep_inscritos/components/Acciones";
+import Inputs from "@/app/rep_inscritos/components/Inputs";
 import { useForm } from "react-hook-form";
 import {
     getConsultasInscripcion,
@@ -10,6 +10,7 @@ import {
     ImprimirExcel,
     verImprimir,
 } from "@/app/utils/api/rep_inscritos/rep_inscritos";
+import { formatDate } from "@/app/utils/globalfn";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { showSwal } from "@/app/utils/alerts";
@@ -20,80 +21,81 @@ import ModalVistaPreviaRepInsc from "@/app/rep_inscritos/components/ModalVistaPr
 function AltasBajasAlumnos() {
     const router = useRouter();
     const { data: session, status } = useSession();
-    let [fecha_ini, setFecha_ini] = useState("");
-    let [fecha_fin, setFecha_fin] = useState("");
+    const date = new Date();
+    const dateStr = formatDate(date);
+    let [fecha_ini, setFecha_ini] = useState(dateStr.replace(/\//g, '-'));
+    let [fecha_fin, setFecha_fin] = useState(dateStr.replace(/\//g, '-'));
     let [alumnosFiltrados, setAlumnosFiltrados] = useState([]);
     const [pdfPreview, setPdfPreview] = useState(false);
     const [pdfData, setPdfData] = useState("");
+    const [isLoading, setisLoading] = useState(false);
     const {
         formState: { errors },
     } = useForm({});
 
-    const formaImprime = async () => {
-        let res;
-        let si_inscrito = false;
-        let si_suma = false;
-        let alumnos = 0;
-        let det_inscripcion = 0;
-        let total_inscripcion = 0;
-        let fecha_inscripcion = "";
-        let fecha_inscrip = "";
-        let horario_1 = 0;
+    // const formaImprime = async () => {
+    //     let res;
+    //     let si_inscrito = false;
+    //     let si_suma = false;
+    //     let alumnos = 0;
+    //     let det_inscripcion = 0;
+    //     let total_inscripcion = 0;
+    //     let fecha_inscripcion = "";
+    //     let fecha_inscrip = "";
+    //     let horario_1 = 0;
+    //     const { token } = session.user;
+    //     const fechaIni = fecha_ini ? fecha_ini.replace(/-/g, "/") : 0;
+    //     const fechaFin = fecha_fin ? fecha_fin.replace(/-/g, "/") : 0;
+
+    //     // res = await getConsultasInscripcion(token);
+    //     // if (res.status) {
+    //     let dataAlumnos = res.data_alumnos;
+    //     let dataDetalles = res.data_detalle;
+    //     let dataProductos = res.data_productos;
+    //     let dataHorarios = res.data_horarios;
+
+    //     for (const item of dataAlumnos) {
+    //         const detalleEncontrado = dataDetalles.find(detalle =>
+    //             detalle.alumno === item.id &&
+    //             detalle.fecha >= fechaIni &&
+    //             detalle.fecha <= fechaFin
+    //         );
+    //         if (detalleEncontrado) {
+    //             for (const producto of dataProductos) {
+    //                 const productoEncontrado = dataProductos.find(producto =>
+    //                     producto.ref === 'INS' &&
+    //                     producto.id === producto.articulo
+    //                 );
+    //                 if (productoEncontrado) {
+    //                     si_inscrito = true;
+    //                     si_suma = true;
+    //                     det_inscripcion += producto.precio_unitario * producto.cantidad;
+    //                     total_inscripcion += producto.precio_unitario * producto.cantidad;
+    //                 }; fecha_inscripcion = producto.fecha;
+    //             }
+    //             if (si_suma) {
+    //                 const horarioEncontrado = dataHorarios.fin(
+    //                     horario => horario.numero === item.horario_1
+    //                 );
+    //                 if (horarioEncontrado) {
+    //                     //imprime algo imp_pos 70, AllTrim(RsHorario!Horario), 3
+    //                 }
+    //                 //imprime otro algo  imp_pos 90, Fecha_Inscripcion, 4
+    //                 //imprime otro algo  imp_pos_Izq 120, Formato_Imprime(Det_Inscripcion, 2), 5
+    //                 alumnos += 1;
+    //             }
+    //             det_inscripcion = 0;
+    //         }
+    //     }
+    //     // } else { showSwal(res.alert_title, res.alert_text, res.alert_icon); }
+
+    //     // return data;
+    // };
+
+    const handleVerClick = async () => {
+        setisLoading(true);
         const { token } = session.user;
-        const data = [];
-        const fechaIni = fecha_ini ? fecha_ini.replace(/-/g, "/") : 0;
-        const fechaFin = fecha_fin ? fecha_fin.replace(/-/g, "/") : 0;
-
-        res = await getConsultasInscripcion(token);
-        // if (res.status) {
-        let dataAlumnos = res.data_alumnos;
-        let dataDetalles = res.data_detalle;
-        let dataProductos = res.data_productos;
-        let dataHorarios = res.data_horarios;
-
-        for (const item of dataAlumnos) {
-            const detalleEncontrado = dataDetalles.find(detalle =>
-                detalle.alumno === item.id &&
-                detalle.fecha >= fechaIni &&
-                detalle.fecha <= fechaFin
-            );
-            if (detalleEncontrado) {
-                for (const pedido of dataPedidos) {
-                    const productoEncontrado = dataProductos.find(producto =>
-                        producto.ref === 'INS' &&
-                        producto.id === pedido.articulo
-                    );
-                    if (productoEncontrado) {
-                        si_inscrito = true;
-                        si_suma = true;
-                        det_inscripcion += pedido.precio_unitario * pedido.cantidad;
-                        total_inscripcion += pedido.precio_unitario * pedido.cantidad;
-                    }; fecha_inscripcion = pedido.fecha;
-                }
-                if (si_suma) {
-                    const horarioEncontrado = dataHorarios.fin(
-                        horario => horario.numero === item.horario_1
-                    );
-                    if (horarioEncontrado) {
-                        //imprime algo imp_pos 70, AllTrim(RsHorario!Horario), 3
-                    }
-                    //imprime otro algo  imp_pos 90, Fecha_Inscripcion, 4
-                    //imprime otro algo  imp_pos_Izq 120, Formato_Imprime(Det_Inscripcion, 2), 5
-                    alumnos += 1;
-                }
-                det_inscripcion = 0;
-            }
-        }
-        // } else { showSwal(res.alert_title, res.alert_text, res.alert_icon); }
-
-        // return data;
-    };
-    const ImprimePDF = async () => {
-        res = await getConsultasInscripcion(token);
-        // let dataAlumnos = res.data_alumnos;
-        // let dataDetalles = res.data_detalle;
-        // let dataProductos = res.data_productos;
-        // let dataHorarios = res.data_horarios;
+        const res = await getConsultasInscripcion(token);
         const configuracion = {
             Encabezado: {
                 Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -104,50 +106,64 @@ function AltasBajasAlumnos() {
             bodyDetalles: res.data_detalle,
             bodyProductos: res.data_productos,
             bodyHorarios: res.data_horarios,
+            fecha_ini: fecha_ini,
+            fecha_fin: fecha_fin,
         };
-        Imprimir(configuracion);
+        const pdfData = await verImprimir(configuracion);
+        setPdfData(pdfData);
+        setPdfPreview(true);
+        setisLoading(false);
+        showModalVista(true);
     };
 
-    const ImprimeExcel = async () => {
-        alumnosFiltrados = await formaImprime();
+    const ImprimePDF = async () => {
+        const { token } = session.user;
+        const res = await getConsultasInscripcion(token);
         const configuracion = {
             Encabezado: {
                 Nombre_Aplicacion: "Sistema de Control Escolar",
                 Nombre_Reporte: "Reporte Relación de Recibos",
                 Nombre_Usuario: `Usuario: ${session.user.name}`,
             },
-            body: alumnosFiltrados,
+            bodyAlumnos: res.data_alumnos,
+            bodyDetalles: res.data_detalle,
+            bodyProductos: res.data_productos,
+            bodyHorarios: res.data_horarios,
+            fecha_ini: fecha_ini,
+            fecha_fin: fecha_fin,
+        };
+        Imprimir(configuracion);
+    };
+
+    const ImprimeExcel = async () => {
+        const { token } = session.user;
+        const res = await getConsultasInscripcion(token);
+        const configuracion = {
+            Encabezado: {
+                Nombre_Aplicacion: "Sistema de Control Escolar",
+                Nombre_Reporte: "Reporte Relación de Recibos",
+                Nombre_Usuario: `Usuario: ${session.user.name}`,
+            },
+            bodyAlumnos: res.data_alumnos,
+            bodyDetalles: res.data_detalle,
+            bodyProductos: res.data_productos,
+            bodyHorarios: res.data_horarios,
+            fecha_ini: fecha_ini,
+            fecha_fin: fecha_fin,
             columns: [
-                { header: "Recibo", dataKey: "recibo" },
-                { header: "Factura", dataKey: "factura" },
-                { header: "Fecha P", dataKey: "fecha" },
-                { header: "No.", dataKey: "alumno" },
-                { header: "Nombre Alumno", dataKey: "nombre_alumno" },
-                { header: "Total Rec.", dataKey: "importe_total" },
+                { header: "No.", dataKey: "id" },
+                { header: "Nombre", dataKey: "nombre" },
+                { header: "Grado", dataKey: "horario" },
+                { header: "Fecha", dataKey: "fecha_inscripcion" },
+                { header: "Importe", dataKey: "det_inscripcion" },
             ],
-            nombre: "Reporte Relación Recibos",
+            nombre: "Reporte Alumnos Inscritos",
         };
         ImprimirExcel(configuracion);
     };
 
     const home = () => {
         router.push("/");
-    };
-
-    const handleVerClick = async () => {
-        alumnosFiltrados = await formaImprime();
-        // const configuracion = {
-        //     Encabezado: {
-        //         Nombre_Aplicacion: "Sistema de Control Escolar",
-        //         Nombre_Reporte: "Reporte Relación de Recibos",
-        //         Nombre_Usuario: `Usuario: ${session.user.name}`,
-        //     },
-        //     body: alumnosFiltrados,
-        // };
-        // const pdfData = await verImprimir(configuracion);
-        // setPdfData(pdfData);
-        // setPdfPreview(true);
-        // showModalVista(true);
     };
 
     const showModalVista = (show) => {
@@ -177,11 +193,14 @@ function AltasBajasAlumnos() {
                 </div>
                 <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
                     <div className="col-span-1 flex flex-col">
-                        <Acciones home={home} Ver={handleVerClick} />
+                        <Acciones
+                            home={home}
+                            Ver={handleVerClick}
+                            isLoading={isLoading} />
                     </div>
                     <div className="col-span-7">
                         <div className="flex flex-col h-full space-y-4">
-                            <div className="flex space-x-4">
+                            <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
                                 <Inputs
                                     name={"fecha_ini"}
                                     tamañolabel={""}
@@ -189,9 +208,10 @@ function AltasBajasAlumnos() {
                                     Titulo={"Fecha Inicial: "}
                                     type={"date"}
                                     errors={errors}
-                                    maxLength={15}
+                                    maxLength={11}
                                     isDisabled={false}
                                     setValue={setFecha_ini}
+                                    value={fecha_ini}
                                 />
                                 <Inputs
                                     name={"fecha_fin"}
@@ -200,33 +220,12 @@ function AltasBajasAlumnos() {
                                     Titulo={"Fecha Final: "}
                                     type={"date"}
                                     errors={errors}
-                                    maxLength={15}
+                                    maxLength={11}
                                     isDisabled={false}
                                     setValue={setFecha_fin}
+                                    value={fecha_fin}
                                 />
                             </div>
-                            {/* <div className="flex space-x-4">
-                                <BuscarCat
-                                    table="alumnos"
-                                    itemData={[]}
-                                    fieldsToShow={["id", "nombre_completo"]}
-                                    nameInput={["id", "nombre_completo"]}
-                                    titulo={"Inicio: "}
-                                    setItem={setAlumnoIni}
-                                    token={session.user.token}
-                                    modalId="modal_alumnos1"
-                                />
-                                <BuscarCat
-                                    table="alumnos"
-                                    itemData={[]}
-                                    fieldsToShow={["id", "nombre_completo"]}
-                                    nameInput={["id", "nombre_completo"]}
-                                    titulo={"Fin: "}
-                                    setItem={setAlumnoFin}
-                                    token={session.user.token}
-                                    modalId="modal_alumnos2"
-                                />
-                            </div> */}
                         </div>
                     </div>
                 </div>

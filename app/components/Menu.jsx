@@ -40,13 +40,11 @@ function Menu({ vertical }) {
     <ul
       ref={menuRef}
       tabIndex={0}
-      className="menu menu-md dropdown-content bg-base-100 rounded-box text-black dark:text-white mt-3 w-52 p-2 shadow z-50"
-    >
+      className="menu menu-md dropdown-content bg-base-100 rounded-box text-black dark:text-white mt-3 w-52 p-2 shadow z-50">
       <li>
         <details
           open={isOpen.archivos}
-          onClick={() => handleToggle("archivos")}
-        >
+          onClick={() => handleToggle("archivos")}>
           <summary>Archivos</summary>
           <ul>
             <li>
@@ -88,49 +86,31 @@ function Menu({ vertical }) {
           <summary>Proceso</summary>
           <ul>
             <li className="hidden">
-              <Link href="" style={{ color: "red" }}>
-                Adición de Productos a Cartera
-              </Link>
+              <Link href="" style={{ color: "red" }}>Adición de Productos a Cartera</Link>
             </li>
             <li className="hidden">
-              <Link href="" style={{ color: "red" }}>
-                Emisión de Factura
-              </Link>
+              <Link href="" style={{ color: "red" }}>Emisión de Factura</Link>
             </li>
             <li className="hidden">
-              <Link href="" style={{ color: "red" }}>
-                Factura Global
-              </Link>
+              <Link href="" style={{ color: "red" }}>Factura Global</Link>
             </li>
             <li className="hidden">
-              <Link href="" style={{ color: "red" }}>
-                Cancelación de Recibo
-              </Link>
+              <Link href="" style={{ color: "red" }}>Cancelación de Recibo</Link>
             </li>
             <li className="hidden">
-              <Link href="" style={{ color: "red" }}>
-                Cancelación de Factura
-              </Link>
+              <Link href="" style={{ color: "red" }}>Cancelación de Factura</Link>
             </li>
             <li className="hidden">
-              <Link href="" style={{ color: "red" }}>
-                Actualiza Cobranza
-              </Link>
+              <Link href="" style={{ color: "red" }}>Actualiza Cobranza</Link>
             </li>
             <li className="hidden">
-              <Link href="" style={{ color: "red" }}>
-                Cambio de Ciclo Escolar
-              </Link>
+              <Link href="" style={{ color: "red" }}>Cambio de Ciclo Escolar</Link>
             </li>
             <li className="hidden">
-              <Link href="" style={{ color: "red" }}>
-                Cobranza Diaria
-              </Link>
+              <Link href="" style={{ color: "red" }}>Cobranza Diaria</Link>
             </li>
             <li className="hidden">
-              <Link href="" style={{ color: "red" }}>
-                Cambio Numero de Alumno
-              </Link>
+              <Link href="" style={{ color: "red" }}>Cambio Numero de Alumno</Link>
             </li>
           </ul>
         </details>
@@ -173,6 +153,12 @@ function Menu({ vertical }) {
               <Link href="/rep_femac_8_anexo_1">Relacion de Recibos</Link>
             </li>
             <li>
+            <Link href="/Rep_Femac_9_Anexo_4" >Relación de Facturas</Link>
+            </li>
+            <li>
+            <Link href="/rep_femac_12_anexo_4"> Reporte Cobranza por Producto </Link>
+          </li>
+          <li>
               <Link href="/rep_femac_12_anexo_4">
                 {" "}
                 Reporte Cobranza por Producto{" "}
@@ -192,19 +178,13 @@ function Menu({ vertical }) {
           <summary>Seguridad</summary>
           <ul>
             <li className="hidden">
-              <Link href="" style={{ color: "red" }}>
-                Usuarios
-              </Link>
+              <Link href="" style={{ color: "red" }}>Usuarios</Link>
             </li>
             <li className="hidden">
-              <Link href="" style={{ color: "red" }}>
-                Acceso a Usuarios
-              </Link>
+              <Link href="" style={{ color: "red" }}>Acceso a Usuarios</Link>
             </li>
             <li className="hidden">
-              <Link href="" style={{ color: "red" }}>
-                Utilerias
-              </Link>
+              <Link href="" style={{ color: "red" }}>Utilerias</Link>
             </li>
           </ul>
         </details>
@@ -214,9 +194,7 @@ function Menu({ vertical }) {
           <summary>Propietario</summary>
           <ul>
             <li className="hidden">
-              <Link href="" style={{ color: "red" }}>
-                Propietario
-              </Link>
+              <Link href="" style={{ color: "red" }}>Propietario</Link>
             </li>
           </ul>
         </details>
@@ -226,9 +204,7 @@ function Menu({ vertical }) {
           <summary>Video Ayuda</summary>
           <ul>
             <li className="hidden">
-              <Link href="" style={{ color: "red" }}>
-                Carga de Cartera
-              </Link>
+              <Link href="" style={{ color: "red" }}>Carga de Cartera</Link>
             </li>
           </ul>
         </details>
@@ -251,42 +227,27 @@ function Menu({ vertical }) {
         </div>
         <ul
           tabIndex={0}
-          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
-        >
+          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow">
           <li>
-            <Link href="/alumnos" onClick={handleClick}>
-              Alumnos
-            </Link>
+            <Link href="/alumnos" onClick={handleClick}>Alumnos</Link>
           </li>
           <li>
-            <Link href="/productos" onClick={handleClick}>
-              Productos
-            </Link>
+            <Link href="/productos" onClick={handleClick}>Productos</Link>
           </li>
           <li>
-            <Link href="/comentarios" onClick={handleClick}>
-              Comentarios
-            </Link>
+            <Link href="/comentarios" onClick={handleClick}>Comentarios</Link>
           </li>
           <li>
-            <Link href="/cajeros" onClick={handleClick}>
-              Cajeros
-            </Link>
+            <Link href="/cajeros" onClick={handleClick}>Cajeros</Link>
           </li>
           <li>
-            <Link href="/horarios" onClick={handleClick}>
-              Horarios
-            </Link>
+            <Link href="/horarios" onClick={handleClick}>Horarios</Link>
           </li>
           <li>
-            <Link href="/formapago" onClick={handleClick}>
-              Forma de Pago
-            </Link>
+            <Link href="/formapago" onClick={handleClick}>Forma de Pago</Link>
           </li>
           <li>
-            <Link href="/formfact" onClick={handleClick}>
-              Formato Variable
-            </Link>
+            <Link href="/formfact" onClick={handleClick}>Formato Variable</Link>
           </li>
         </ul>
       </div>
@@ -294,18 +255,14 @@ function Menu({ vertical }) {
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none"
-        >
+          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none">
           Pagos
         </div>
         <ul
           tabIndex={0}
-          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
-        >
+          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow">
           <li>
-            <Link href="/pagos1" onClick={handleClick}>
-              Pagos
-            </Link>
+            <Link href="/pagos1" onClick={handleClick}>Pagos</Link>
           </li>
         </ul>
       </div>
@@ -313,8 +270,7 @@ function Menu({ vertical }) {
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none"
-        >
+          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none">
           Procesos
         </div>
         <ul
@@ -322,49 +278,31 @@ function Menu({ vertical }) {
           className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
         >
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>
-              Adición de Productos a Cartera
-            </Link>
+            <Link href="" style={{ color: "red" }} onClick={handleClick}>Adición de Productos a Cartera</Link>
           </li>
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>
-              Emisión de Facturas
-            </Link>
+            <Link href="" style={{ color: "red" }} onClick={handleClick}>Emisión de Facturas</Link>
           </li>
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>
-              Factura Global
-            </Link>
+            <Link href="" style={{ color: "red" }} onClick={handleClick}>Factura Global</Link>
           </li>
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>
-              Cancelación de Recibo
-            </Link>
+            <Link href="" style={{ color: "red" }} onClick={handleClick}>Cancelación de Recibo</Link>
           </li>
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>
-              Cancelación de Factura
-            </Link>
+            <Link href="" style={{ color: "red" }} onClick={handleClick}>Cancelación de Factura</Link>
           </li>
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>
-              Actualiza Cobranza
-            </Link>
+            <Link href="" style={{ color: "red" }} onClick={handleClick}>Actualiza Cobranza</Link>
           </li>
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>
-              Cambio de Ciclo Escolar
-            </Link>
+            <Link href="" style={{ color: "red" }} onClick={handleClick}>Cambio de Ciclo Escolar</Link>
           </li>
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>
-              Cobranza Diaria
-            </Link>
+            <Link href="" style={{ color: "red" }} onClick={handleClick}>Cobranza Diaria</Link>
           </li>
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>
-              Cambio Numero de Alumno
-            </Link>
+            <Link href="" style={{ color: "red" }} onClick={handleClick}>Cambio Numero de Alumno</Link>
           </li>
         </ul>
       </div>
@@ -372,60 +310,44 @@ function Menu({ vertical }) {
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none"
-        >
+          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none">
           Reportes
         </div>
         <ul
           tabIndex={0}
-          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
-        >
+          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow">
           <li>
-            <Link href="/rep_femac_6" onClick={handleClick}>
-              Cobranza
-            </Link>
+            <Link href="/rep_femac_6" onClick={handleClick}>Cobranza</Link>
           </li>
           <li>
-            <Link href="/rep_femac_1" onClick={handleClick}>
-              Relación General de Alumnos
-            </Link>
+            <Link href="/rep_femac_1" onClick={handleClick}>Relación General de Alumnos</Link>
           </li>
           <li>
-            <Link href="/Rep_Femac_2" onClick={handleClick}>
-              Lista de Alumnos por Clase
-            </Link>
+            <Link href="/Rep_Femac_2" onClick={handleClick}>Lista de Alumnos por Clase</Link>
           </li>
           <li>
-            <Link href="/rep_femac_3" onClick={handleClick}>
-              Lista de Alumnos por Clase de Mes
-            </Link>
+            <Link href="/rep_femac_3" onClick={handleClick}>Lista de Alumnos por Clase de Mes</Link>
           </li>
           <li>
-            <Link href="/rep_femac_13" onClick={handleClick}>
-              Lista de Alumnos por Clase Semanal
-            </Link>
+            <Link href="/rep_femac_13" onClick={handleClick}>Lista de Alumnos por Clase Semanal</Link>
           </li>
           <li>
-            <Link href="/rep_femac_5" onClick={handleClick}>
-              Altas Y Bajas de Alumnos
-            </Link>
+            <Link href="/rep_femac_5" onClick={handleClick}>Altas Y Bajas de Alumnos</Link>
           </li>
           <li>
-            <Link href="/rep_femac_7" onClick={handleClick}>
-              Cartera
-            </Link>
+            <Link href="/rep_femac_7" onClick={handleClick}>Cartera</Link>
           </li>
           <li>
-            <Link href="/rep_femac_8_anexo_1" onClick={handleClick}>
-              Relación de Recibos
-            </Link>
+            <Link href="/rep_femac_8_anexo_1" onClick={handleClick}>Relación de Recibos</Link>
           </li>
           <li>
-            <Link href="/rep_femac_11_Anexo_3" onClick={handleClick}>
-              Reporte Cobranza por Alumno
-            </Link>
+            <Link href="/Rep_Femac_9_Anexo_4" onClick={handleClick}>Relación de Facturas</Link>
           </li>
           <li>
+            <Link href="/rep_femac_11_Anexo_3" onClick={handleClick}>Reporte Cobranza por Alumno</Link>
+          </li>
+          <li>
+            <Link href="/rep_femac_12_anexo_4" onClick={handleClick}>Reporte Cobranza por Producto</Link>
             <Link href="/rep_inscritos" onClick={handleClick}>
               Reporte Inscripción
             </Link>
@@ -441,28 +363,20 @@ function Menu({ vertical }) {
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none"
-        >
+          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none">
           Seguridad
         </div>
         <ul
           tabIndex={0}
-          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
-        >
+          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow">
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>
-              Usuarios
-            </Link>
+            <Link href="" style={{ color: "red" }} onClick={handleClick}>Usuarios</Link>
           </li>
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>
-              Acceso a Usuarios
-            </Link>
+            <Link href="" style={{ color: "red" }} onClick={handleClick}>Acceso a Usuarios</Link>
           </li>
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>
-              Utilerias
-            </Link>
+            <Link href="" style={{ color: "red" }} onClick={handleClick}>Utilerias</Link>
           </li>
         </ul>
       </div>
@@ -470,18 +384,14 @@ function Menu({ vertical }) {
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none"
-        >
+          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none">
           Propietario
         </div>
         <ul
           tabIndex={0}
-          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
-        >
+          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow">
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>
-              Propietario
-            </Link>
+            <Link href="" style={{ color: "red" }} onClick={handleClick}>Propietario</Link>
           </li>
         </ul>
       </div>
@@ -489,18 +399,14 @@ function Menu({ vertical }) {
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none"
-        >
+          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none">
           Video Ayuda
         </div>
         <ul
           tabIndex={0}
-          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
-        >
+          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow">
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>
-              Carga de Cartera
-            </Link>
+            <Link href="" style={{ color: "red" }} onClick={handleClick}>Carga de Cartera</Link>
           </li>
         </ul>
       </div>

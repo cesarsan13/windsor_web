@@ -1,19 +1,22 @@
-import React from 'react'
-import { useEffect } from 'react';
+import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
+import React from "react";
+
 function Inputs({
   Titulo,
   name,
   type,
-  className,
-  errors,
+  requerido,
   dataType,
+  className,
+  message,
+  errors,
   tamañolabel,
   maxLenght,
   isDisabled,
-  setValue,
-  value
+  handleBlur,
 }) {
-  return (
+  if (type === 'text'){
+  return ( 
     <div className="flex flex-col">
       <label
         className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
@@ -26,13 +29,14 @@ function Inputs({
           className={`text-black dark:text-white ${className}`}
           {...(dataType === "int" && { onKeyDown: soloEnteros })}
           {...(dataType === "float" && { onKeyDown: soloDecimales })}
+          {...register(name, {
+            ...(requerido && { required: message }),
+          })}
           {...(dataType === "int" ||
             (dataType === "float" && {
               onBlur: (event) => handleBlur(event, dataType),
             }))}
           disabled={isDisabled}
-          value={value}
-          onChange={(event) => setValue(event.target.value)}
         />
       </label>
       {errors[name] && (
@@ -41,7 +45,8 @@ function Inputs({
         </span>
       )}
     </div>
-  )
+    );
+  }
 }
 
-export default Inputs
+export default Inputs;
