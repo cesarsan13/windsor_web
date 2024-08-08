@@ -19,7 +19,7 @@ function BuscarCat({
   array,
   alignRight = false,
   id,
-  inputWidths = { first: "80px", second: "150px" },
+  inputWidths = { contdef:"200px", first: "80px", second: "150px" },
 }) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -150,7 +150,7 @@ function BuscarCat({
   return (
     <div className="flex flex-col md:flex-row justify-start gap-2">
       <div className="flex gap-2">
-        <label className="input input-bordered join-item text-black dark:text-white input-md flex items-center gap-3 ">
+        <label className="input input-bordered join-item text-black dark:text-white input-md flex items-center gap-3 " style={{width: inputWidths.contdef}}>
           {titulo}
           <input
             id={nameInput[0]}
