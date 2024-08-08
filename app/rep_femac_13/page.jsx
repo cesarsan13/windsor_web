@@ -229,7 +229,7 @@ function Rep_Femac_13() {
             />
           </div>
           <div className="col-span-7">
-            <div className="flex flex-col h-[calc(100%)]">
+            <div className="flex flex-col h-[calc(100%)] space-y-4">
               <div className='flex flex-col md:flex-row gap-3'>
                 <label className='input input-bordered input-md text-black dark:text-white flex items-center gap-3 w-auto'>
                   Fecha emisión

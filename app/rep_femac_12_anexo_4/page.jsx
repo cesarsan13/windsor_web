@@ -220,7 +220,7 @@ function RepFemac12Anexo() {
             />
           </div>
           <div className="col-span-7">
-            <div className="flex flex-col h-[calc(100%)]">
+            <div className="flex flex-col h-[calc(100%)] space-y-4">
               <div className="flex flex-col gap-4 md:flex-row">
                 <div className="w-full sm:w-full md:w-4/12 lg:w-3/12">
                   <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3">
