@@ -54,7 +54,7 @@ export const authOptions = {
       },
     },
     csrfToken: {
-      name: "next-auth.csrf-token",
+      name: "next-auth.csrf-tokenw",
       options: {
         httpOnly: true,
         sameSite: "lax",
@@ -62,7 +62,7 @@ export const authOptions = {
       },
     },
     callbackUrl: {
-      name: "next-auth.callback-url",
+      name: "next-auth.callback-urlw",
       options: {
         httpOnly: true,
         sameSite: "lax",
