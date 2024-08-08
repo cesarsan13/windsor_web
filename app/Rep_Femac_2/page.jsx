@@ -196,7 +196,7 @@ function AlumnosPorClase() {
           </div>
 
           <div className="col-span-7">
-            <div className="flex flex-col h-[calc(100%)]">
+            <div className="flex flex-col h-full space-y-4">
               <BuscarCat
                 table="horarios"
                 titulo={"horario 1: "}
