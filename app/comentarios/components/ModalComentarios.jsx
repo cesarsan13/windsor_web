@@ -48,7 +48,7 @@ function ModalComentarios({
   };
   return (
     <dialog id="my_modal_3" className="modal">
-      <div className="modal-box w-full max-w-3xl h-full">
+      <div className="modal-box">
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black"
           onClick={() => document.getElementById("my_modal_3").close()}
@@ -61,12 +61,12 @@ function ModalComentarios({
             {titulo}
           </h3>
           <fieldset id="fs_comentario">
-            <div className="flex flex-wrap -mx-3 mb-6">
-              <Inputs
+          <div className="container flex flex-col space-y-5">
+          <Inputs
                 dataType={"int"}
                 name={"id"}
                 tamañolabel={"w-2/6"}
-                className={"rounded block grow text-right"}
+                className={"w-3/6 text-right"}
                 Titulo={"Numero: "}
                 type={"text"}
                 requerido={true}
