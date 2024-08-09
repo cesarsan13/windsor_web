@@ -40,8 +40,8 @@ export const authOptions = {
     },
   },
   pages: {
-    signIn: "/windsor/auth/login",
-    signOut: "/windsor",
+    signIn: "/control_escolar/auth/login",
+    signOut: "/control_escolar",
   },
   secret: process.env.NEXTAUTH_SECRET,
   cookies: {
@@ -50,7 +50,7 @@ export const authOptions = {
       options: {
         httpOnly: true,
         sameSite: "lax",
-        path: "/windsor",
+        path: "/control_escolar",
       },
     },
     csrfToken: {
@@ -58,7 +58,7 @@ export const authOptions = {
       options: {
         httpOnly: true,
         sameSite: "lax",
-        path: "/windsor",
+        path: "/control_escolar",
       },
     },
     callbackUrl: {
@@ -66,7 +66,7 @@ export const authOptions = {
       options: {
         httpOnly: true,
         sameSite: "lax",
-        path: "/windsor",
+        path: "/control_escolar",
       },
     },
   },
