@@ -41,7 +41,7 @@ export const authOptions = {
   },
   pages: {
     signIn: "/windsor/auth/login",
-    signOut: "/",
+    signOut: "/windsor",
   },
   secret: process.env.NEXTAUTH_SECRET,
   cookies: {
