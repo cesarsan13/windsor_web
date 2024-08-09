@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: "/windsor",
+  basePath: "/control_escolar",
   env: {
     DOMAIN_API: process.env.DOMAIN_API,
 
