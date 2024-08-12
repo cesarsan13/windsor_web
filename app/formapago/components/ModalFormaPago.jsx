@@ -68,7 +68,7 @@ function ModalFormaPago({
                 dataType={"int"}
                 name={"id"}
                 tamañolabel={""}
-                className={"w-3/6 text-right"}
+                className={"w-4/6 text-right"}
                 Titulo={"Numero: "}
                 type={"text"}
                 requerido={true}
@@ -82,7 +82,7 @@ function ModalFormaPago({
                 dataType={"string"}
                 name={"descripcion"}
                 tamañolabel={"w-72"}
-                className={"w-3/6"}
+                className={"w-4/6"}
                 Titulo={"Descripcion: "}
                 type={"text"}
                 requerido={true}
@@ -99,7 +99,7 @@ function ModalFormaPago({
                 dataType={"float"}
                 name={"comision"}
                 tamañolabel={""}
-                className={"w-3/6"}
+                className={"w-4/6"}
                 Titulo={"Comision:"}
                 type={"text"}
                 requerido={true}
@@ -114,7 +114,7 @@ function ModalFormaPago({
                 dataType={"string"}
                 name={"aplicacion"}
                 tamañolabel={""}
-                className={"w-3/6"}
+                className={"w-4/6"}
                 Titulo={"Aplicacion:"}
                 type={"text"}
                 requerido={true}

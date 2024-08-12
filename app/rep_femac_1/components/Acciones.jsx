@@ -3,7 +3,7 @@ import Tooltip from "@/app/components/tooltip";
 import Button from "@/app/components/button";
 function Acciones({ ImprimePDF, ImprimeExcel, home, Ver, CerrarView }) {
   return (
-    <div className="join join-vertical ">
+    <div className="join join-horizontal justify-around md:join-vertical">
       <Tooltip Titulo={"Vista Previa"} posicion={"tooltip-top"}>
         <Button icono={"fas fa-eye"} onClick={Ver}></Button>
       </Tooltip>

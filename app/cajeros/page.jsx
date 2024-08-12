@@ -313,8 +313,8 @@ function Cajeros() {
             Cajeros
           </h1>
         </div>
-        <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] ">
-          <div className="col-span-1 flex flex-col ">
+        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
+        <div className="md:col-span-1 flex flex-col">
             <Acciones
               Buscar={Buscar}
               Alta={Alta}
@@ -322,8 +322,8 @@ function Cajeros() {
               Ver={handleVerClick}
             ></Acciones>
           </div>
-          <div className="col-span-7  ">
-            <div className="flex flex-col h-[calc(100%)]">
+          <div className="md:col-span-7">
+          <div className="flex flex-col h-full">
               <Busqueda
                 setBajas={setBajas}
                 setFiltro={setFiltro}
