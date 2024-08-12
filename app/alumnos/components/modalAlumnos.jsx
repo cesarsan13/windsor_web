@@ -97,7 +97,7 @@ function ModalAlumnos({
             {titulo}
           </h3>
           <fieldset id="fs_alumnos">
-            <div role="tablist" class="tabs tabs-lifted ">
+            <div role="tablist" className="tabs tabs-lifted ">
               <input
                 type="radio"
                 name="my_tabs"

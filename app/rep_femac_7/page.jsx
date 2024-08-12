@@ -223,8 +223,8 @@ function Repo_Femac_7() {
                         Reporte Adeudos Pendientes
                     </h1>
                 </div>
-                <div className='container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]'>
-                    <div className='col-span-1 flex flex-col'>
+                <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
+                <div className="md:col-span-1 flex flex-col">
                         <Acciones home={home} Ver={handleVerClick} />
                     </div>
                     <div className='col-span-7'>
@@ -259,7 +259,7 @@ function Repo_Femac_7() {
                                             checked={sinDeudores}
                                             onClick={(evt) => setSinDeudores(evt.target.checked)}
                                         />
-                                        <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">Sin Deudores</span>
+                                        <span className="label-text font-bold  sm:block text-neutral-600 dark:text-neutral-200">Sin Deudores</span>
                                     </label>
                                     <label htmlFor="ch_grupoAlumno" className="label cursor-pointer flex items-center space-x-2">
                                         <input
@@ -268,7 +268,7 @@ function Repo_Femac_7() {
                                             className="checkbox mx-2 checkbox-md"
                                             onClick={(evt) => setGrupoAlumno(evt.target.checked)}
                                         />
-                                        <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">Imprimir Grupo, Alumno</span>
+                                        <span className="label-text font-bold  sm:block text-neutral-600 dark:text-neutral-200">Imprimir Grupo, Alumno</span>
                                     </label>
                                 </div>
                             </div>

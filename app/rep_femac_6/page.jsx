@@ -322,8 +322,8 @@ function Rep_Femac_6() {
                         Reporte Resumen de Cobranza
                     </h1>
                 </div>
-                <div className='container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]'>
-                    <div className='col-span-1 flex flex-col'>
+                <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
+                <div className="md:col-span-1 flex flex-col">
                         <Acciones home={home} ImprimePDF={ImprimePDF} Ver={handleVerClick} ImprimeExcel={ImprimeExcel} CerrarView={CerrarView} />
                     </div>
                     <div className='col-span-7'>
@@ -361,7 +361,7 @@ function Rep_Femac_6() {
                                     nameInput={["numero", "nombre"]}
                                     setItem={setCajero}
                                     modalId={"modal_Cajeros"}
-                                />
+                                    />
                             </div>
                         </div>
                     </div>

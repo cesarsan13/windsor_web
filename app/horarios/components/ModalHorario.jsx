@@ -28,12 +28,12 @@ function ModalHorario({
     }
     setTitulo(
       accion === "Alta"
-        ? `Nueva Forma de Pago: ${currentID}`
+        ? `Nuevo Horario: ${currentID}`
         : accion === "Editar"
-        ? `Editar Forma de Pago: ${currentID}`
+        ? `Editar Horario: ${currentID}`
         : accion === "Eliminar"
-        ? `Eliminar Forma de Pago: ${currentID}`
-        : `Ver Forma de Pago: ${currentID}`
+        ? `Eliminar Horario: ${currentID}`
+        : `Ver Horario: ${currentID}`
     );
   }, [accion]);
   const handleBlur = (evt, datatype) => {
@@ -76,7 +76,7 @@ function ModalHorario({
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box">
         <button
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black"
+          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
           onClick={() => document.getElementById("my_modal_3").close()}
         >
           ✕
@@ -90,8 +90,8 @@ function ModalHorario({
               <Inputs
                 dataType={"int"}
                 name={"numero"}
-                tamañolabel={""}
-                className={"w-3/6 text-right"}
+                tamañolabel={"3/6"}
+                className={"w-4/6 text-right"}
                 Titulo={"Numero: "}
                 type={"text"}
                 requerido={true}
@@ -104,7 +104,7 @@ function ModalHorario({
                 dataType={"int"}
                 name={"cancha"}
                 tamañolabel={""}
-                className={"w-3/6 text-right"}
+                className={"w-4/6 text-right"}
                 Titulo={"Cancha: "}
                 type={"text"}
                 requerido={true}
@@ -119,10 +119,10 @@ function ModalHorario({
                 titulo={"Dias de la semana"}
                 name={"dia"}
                 Titulo={"Dias de la semana"}
-                tamañolabel={"w-96"}
+                tamañolabel={"w-full sm:w-96"}
                 message={"dia requerido"}
                 register={register}
-                className={"p-1.5 grow"}
+                className={"p-1.5 grow  sm:w-auto"}
                 errors={errors}
                 requerido={true}
                 dataType={"multi-select"}
@@ -139,7 +139,7 @@ function ModalHorario({
                 dataType={"string"}
                 name={"horario"}
                 tamañolabel={""}
-                className={"w-3/6"}
+                className={"w-4/6"}
                 Titulo={"Horario: "}
                 type={"text"}
                 requerido={true}
@@ -153,8 +153,8 @@ function ModalHorario({
               <Inputs
                 dataType={"int"}
                 name={"max_niños"}
-                tamañolabel={"w-52"}
-                className={"w-3/6 text-right"}
+                tamañolabel={""}
+                className={"w-4/6 text-right"}
                 Titulo={"Max Niños: "}
                 type={"text"}
                 requerido={true}
@@ -169,8 +169,8 @@ function ModalHorario({
                 Titulo={"Sexo"}
                 name={"sexo"}
                 message={"sexo requerido"}
-                className={"fyo8m-select w-3/6 bg-[#ffffff] "}
-                tamañolabel={"w-3/6"}
+                className={"fyo8m-select w-4/6 bg-[#ffffff] "}
+                tamañolabel={"w-4/6"}
                 register={register}
                 errors={errors}
                 requerido={true}
@@ -186,7 +186,7 @@ function ModalHorario({
                 dataType={"int"}
                 name={"edad_ini"}
                 tamañolabel={""}
-                className={"w-3/6 text-right"}
+                className={"w-4/6 text-right"}
                 Titulo={"Edad Ini: "}
                 type={"text"}
                 requerido={true}
