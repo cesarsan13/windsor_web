@@ -33,7 +33,7 @@ function TablaComentarios({
           </thead>
           <tbody>
             {formaComentariosFiltrados.map((item) => (
-              <tr key={item.id} class="hover: cursor-pointer">
+              <tr key={item.id} className="hover: cursor-pointer">
                 <th className={"text-right"}>{item.id}</th>
                 <td> {item.comentario_1} </td>
                 <td> {item.comentario_2} </td>

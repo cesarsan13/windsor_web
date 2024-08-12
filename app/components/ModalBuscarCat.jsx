@@ -101,7 +101,7 @@ function ModalBuscarCat({ data, fieldsToShow, setItem, modalId, titulo,tiutloInp
                           data-tip={`Seleccionar ${item[fieldsToShow[0]]}`}
                           onClick={() => ModalAction(item)}
                         >
-                          <i class="fa-solid fa-check-double"></i>
+                          <i className="fa-solid fa-check-double"></i>
                         </div>
                       </div>
                     </th>
