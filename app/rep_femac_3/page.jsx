@@ -192,8 +192,8 @@ function Rep_Femac_3() {
             Reporte de Alumnos por clase mensual.
           </h1>
         </div>
-        <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
-          <div className="col-span-1 flex flex-col">
+        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
+        <div className="md:col-span-1 flex flex-col">
             <Acciones Ver={handleVerClick} home={home}></Acciones>
           </div>
           <div className="col-span-7">
