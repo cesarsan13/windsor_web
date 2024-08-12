@@ -28,12 +28,12 @@ function ModalHorario({
     }
     setTitulo(
       accion === "Alta"
-        ? `Nueva Forma de Pago: ${currentID}`
+        ? `Nuevo Horario: ${currentID}`
         : accion === "Editar"
-        ? `Editar Forma de Pago: ${currentID}`
+        ? `Editar Horario: ${currentID}`
         : accion === "Eliminar"
-        ? `Eliminar Forma de Pago: ${currentID}`
-        : `Ver Forma de Pago: ${currentID}`
+        ? `Eliminar Horario: ${currentID}`
+        : `Ver Horario: ${currentID}`
     );
   }, [accion]);
   const handleBlur = (evt, datatype) => {
@@ -90,8 +90,8 @@ function ModalHorario({
               <Inputs
                 dataType={"int"}
                 name={"numero"}
-                tamañolabel={""}
-                className={"w-3/6 text-right"}
+                tamañolabel={"3/6"}
+                className={"w-4/6 text-right"}
                 Titulo={"Numero: "}
                 type={"text"}
                 requerido={true}
@@ -104,7 +104,7 @@ function ModalHorario({
                 dataType={"int"}
                 name={"cancha"}
                 tamañolabel={""}
-                className={"w-3/6 text-right"}
+                className={"w-4/6 text-right"}
                 Titulo={"Cancha: "}
                 type={"text"}
                 requerido={true}
@@ -139,7 +139,7 @@ function ModalHorario({
                 dataType={"string"}
                 name={"horario"}
                 tamañolabel={""}
-                className={"w-3/6"}
+                className={"w-4/6"}
                 Titulo={"Horario: "}
                 type={"text"}
                 requerido={true}
@@ -154,7 +154,7 @@ function ModalHorario({
                 dataType={"int"}
                 name={"max_niños"}
                 tamañolabel={""}
-                className={"w-3/6 text-right"}
+                className={"w-4/6 text-right"}
                 Titulo={"Max Niños: "}
                 type={"text"}
                 requerido={true}
@@ -170,7 +170,7 @@ function ModalHorario({
                 name={"sexo"}
                 message={"sexo requerido"}
                 className={"fyo8m-select w-4/6 bg-[#ffffff] "}
-                tamañolabel={"w-3/6"}
+                tamañolabel={"w-4/6"}
                 register={register}
                 errors={errors}
                 requerido={true}
@@ -186,7 +186,7 @@ function ModalHorario({
                 dataType={"int"}
                 name={"edad_ini"}
                 tamañolabel={""}
-                className={"w-3/6 text-right"}
+                className={"w-4/6 text-right"}
                 Titulo={"Edad Ini: "}
                 type={"text"}
                 requerido={true}
