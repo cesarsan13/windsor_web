@@ -76,7 +76,7 @@ function ModalHorario({
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box">
         <button
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black"
+          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
           onClick={() => document.getElementById("my_modal_3").close()}
         >
           ✕
@@ -119,10 +119,10 @@ function ModalHorario({
                 titulo={"Dias de la semana"}
                 name={"dia"}
                 Titulo={"Dias de la semana"}
-                tamañolabel={"w-96"}
+                tamañolabel={"w-full sm:w-96"}
                 message={"dia requerido"}
                 register={register}
-                className={"p-1.5 grow"}
+                className={"p-1.5 grow  sm:w-auto"}
                 errors={errors}
                 requerido={true}
                 dataType={"multi-select"}
@@ -153,7 +153,7 @@ function ModalHorario({
               <Inputs
                 dataType={"int"}
                 name={"max_niños"}
-                tamañolabel={"w-52"}
+                tamañolabel={""}
                 className={"w-3/6 text-right"}
                 Titulo={"Max Niños: "}
                 type={"text"}
@@ -169,7 +169,7 @@ function ModalHorario({
                 Titulo={"Sexo"}
                 name={"sexo"}
                 message={"sexo requerido"}
-                className={"fyo8m-select w-3/6 bg-[#ffffff] "}
+                className={"fyo8m-select w-4/6 bg-[#ffffff] "}
                 tamañolabel={"w-3/6"}
                 register={register}
                 errors={errors}

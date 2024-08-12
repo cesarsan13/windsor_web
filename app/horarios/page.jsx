@@ -297,58 +297,59 @@ function Horarios() {
       : document.getElementById("modalVPHorarios").close();
   }
   return (
-    <>
-      <ModalHorario
-        accion={accion}
-        onSubmit={onSubmitModal}
-        currentID={currentID}
-        errors={errors}
-        register={register}
-        setHorarios={setHorario}
-        horarios={horario}
-        control={control}
-        setDia={setDia}
-      />
-      <ModalVistaPreviaHorarios pdfData={pdfData} pdfPreview={pdfPreview} PDF={ImprimePDF} Excel={ImprimeExcel} />
-      <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
-        <div className="flex justify-start p-3">
-          <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
-            Horarios
-          </h1>
-        </div>
-        <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] ">
-          <div className="col-span-1 flex flex-col">
-            <Acciones
-              Buscar={Buscar}
-              Alta={Alta}
-              home={home}
-              Ver={handleVerClick}
-            ></Acciones>
-          </div>
-          <div className="col-span-7">
-            <div className="flex flex-col h-[calc(100%)]">
-              <Busqueda
-                setBajas={setBajas}
-                setFiltro={setFiltro}
-                limpiarBusqueda={limpiarBusqueda}
-                Buscar={Buscar}
-                handleBusquedaChange={handleBusquedaChange}
-                TB_Busqueda={TB_Busqueda}
-                setTB_Busqueda={setTB_Busqueda}
-              />
-              <TablaHorarios
-                isLoading={isLoading}
-                HorariosFiltrados={horariosFiltrados}
-                showModal={showModal}
-                setHorario={setHorario}
-                setAccion={setAccion}
-                setCurrentId={setCurrentId}
-              />
-            </div>
-          </div>
+   <>
+  <ModalHorario
+    accion={accion}
+    onSubmit={onSubmitModal}
+    currentID={currentID}
+    errors={errors}
+    register={register}
+    setHorarios={setHorario}
+    horarios={horario}
+    control={control}
+    setDia={setDia}
+  />
+  <ModalVistaPreviaHorarios pdfData={pdfData} pdfPreview={pdfPreview} PDF={ImprimePDF} Excel={ImprimeExcel} />
+  <div className="container mx-auto w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
+    <div className="flex justify-start p-3">
+      <h1 className="text-4xl font-thin text-black dark:text-white md:px-12">
+        Horarios
+      </h1>
+    </div>
+    <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
+      <div className="md:col-span-1 flex flex-col">
+        <Acciones
+          Buscar={Buscar}
+          Alta={Alta}
+          home={home}
+          Ver={handleVerClick}
+        />
+      </div>
+      <div className="md:col-span-7">
+        <div className="flex flex-col h-full">
+          <Busqueda
+            setBajas={setBajas}
+            setFiltro={setFiltro}
+            limpiarBusqueda={limpiarBusqueda}
+            Buscar={Buscar}
+            handleBusquedaChange={handleBusquedaChange}
+            TB_Busqueda={TB_Busqueda}
+            setTB_Busqueda={setTB_Busqueda}
+          />
+          <TablaHorarios
+            isLoading={isLoading}
+            HorariosFiltrados={horariosFiltrados}
+            showModal={showModal}
+            setHorario={setHorario}
+            setAccion={setAccion}
+            setCurrentId={setCurrentId}
+          />
         </div>
       </div>
-    </>
+    </div>
+  </div>
+</>
+
   );
 }
 
