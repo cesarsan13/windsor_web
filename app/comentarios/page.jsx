@@ -38,25 +38,25 @@ function Comentarios() {
   const [TB_Busqueda, setTB_Busqueda] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+useEffect(() => {
+  if (status === "loading" || !session) {
+    return;
+  }
+  const fetchData = async () => {
+    setisLoading(true);
+    const { token } = session.user;
+    const data = await getComentarios(token, bajas);
+    setFormasComentarios(data);
+    setFormaComentariosFiltrados(data);
+    setFiltro("id")
+    setisLoading(false);
+  };
+  fetchData();
+}, [session, status, bajas]);
 
-  useEffect(() => {
-    if (status === "loading" || !session) {
-      return;
-    }
-    const fetchData = async () => {
-      setisLoading(true);
-      const { token } = session.user;
-      const data = await getComentarios(token, bajas);
-      setFormasComentarios(data);
-      setFormaComentariosFiltrados(data);
-      if (filtro !== "" && TB_Busqueda !== "") {
-        Buscar();
-      }
-      setisLoading(false);
-    };
-    fetchData();
-  }, [session, status, bajas]);
-
+useEffect(() => {
+  Buscar();
+}, [TB_Busqueda]);
   const {
     register,
     handleSubmit,
