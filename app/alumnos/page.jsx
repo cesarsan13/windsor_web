@@ -72,15 +72,16 @@ function Alumnos() {
       const data = await getAlumnos(token, bajas);
       setAlumnos(data);
       setAlumnosFiltrados(data);
-      setFiltro("id")
       setisLoading(false);
     };
     fetchData();
   }, [session, status, bajas]);
   
   useEffect(() => {
-    Buscar();
-  }, [TB_Busqueda]);
+    if (TB_Busqueda !== "" && filtro !== "") {
+      Buscar();
+    }
+  }, [TB_Busqueda, filtro]);
 
 
   const {

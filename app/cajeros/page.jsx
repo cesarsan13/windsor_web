@@ -37,6 +37,8 @@ function Cajeros() {
   const [TB_Busqueda, setTB_Busqueda] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const [TB_Busqueda_Nombre, setTB_Busqueda_Nombre] = useState("")
+  const [TB_Busqueda_Numero, setTB_Busqueda_Numero] = useState("")
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -56,7 +58,7 @@ function Cajeros() {
   
   useEffect(() => {
     Buscar();
-  }, [TB_Busqueda]);
+  }, [TB_Busqueda_Nombre, TB_Busqueda_Numero]);
 
   const {
     register,
@@ -89,28 +91,29 @@ function Cajeros() {
       clave_cajero: cajero.clave_cajero,
     });
   }, [cajero, reset]);
-  const Buscar = () => {
-    // alert(filtro);
-    if (TB_Busqueda === "" || filtro === "") {
+  const Buscar = (busquedaNumero, busquedaNombre) => {
+    if (busquedaNumero === "" && busquedaNombre === "") {
       setCajerosFiltrados(cajeros);
       return;
     }
+
     const infoFiltrada = cajeros.filter((cajero) => {
-      const valorCampo = cajero[filtro];
-      if (typeof valorCampo === "number") {
-        return valorCampo.toString().includes(TB_Busqueda);
-      }
-      return valorCampo
-        ?.toString()
+      const numeroMatch = cajero.numero
+        .toString()
+        .includes(busquedaNumero);
+      const nombreMatch = cajero.nombre
         .toLowerCase()
-        .includes(TB_Busqueda.toLowerCase());
+        .includes(busquedaNombre.toLowerCase());
+
+      return numeroMatch && nombreMatch;
     });
+
     setCajerosFiltrados(infoFiltrada);
   };
 
-  const limpiarBusqueda = (evt) => {
-    evt.preventDefault;
-    setTB_Busqueda("");
+  const limpiarBusqueda = () => {
+    setTB_Busqueda_Nombre("");
+    setTB_Busqueda_Numero("");
   };
 
   const Alta = async (event) => {
@@ -332,7 +335,8 @@ function Cajeros() {
                 limpiarBusqueda={limpiarBusqueda}
                 Buscar={Buscar}
                 handleBusquedaChange={handleBusquedaChange}
-                TB_Busqueda={TB_Busqueda}
+                TB_Busqueda_Numero={TB_Busqueda_Numero}
+                TB_Busqueda_Nombre={TB_Busqueda_Nombre}
               />
               <TablaCajeros
                 isLoading={isLoading}
