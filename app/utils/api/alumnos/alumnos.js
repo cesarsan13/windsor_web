@@ -4,11 +4,10 @@ export const getAlumnos = async (token, baja) => {
   let url = "";
   baja
     ? (url = `${process.env.DOMAIN_API}api/students/bajas`)
-    : (url = `${process.env.DOMAIN_API}api/students`);
+    : (url = `${process.env.DOMAIN_API}api/students/`);
   const res = await fetch(url, {
     headers: {
-      Authorization: "Bearer " + token,
-      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
   });
   const resJson = await res.json();

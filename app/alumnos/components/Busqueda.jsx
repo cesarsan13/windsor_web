@@ -9,16 +9,11 @@ function Busqueda({
   TB_Busqueda,
   setTB_Busqueda,
 }) {
-  useEffect(() => {
-    setFiltro("id");
-    Buscar();
-  }, [setFiltro, Buscar]);
 
   const handleFiltroChange = (event) => {
     const selectedValue = event.target.value;
     setFiltro(selectedValue);
   };
-
   const handleKeyDown = (evt) => {
     if (evt.key !== "Enter") return;
     Buscar();
@@ -39,7 +34,7 @@ function Busqueda({
         onChange={(event) => handleFiltroChange(event)}
         defaultValue="id"
       >
-        <option disabled value="">
+        <option disabled defaultValue={""}>
           Filtros
         </option>
         <option value="id">Número</option>
@@ -49,7 +44,7 @@ function Busqueda({
       <div className="tooltip" data-tip="Limpiar">
         <button
           className="btn btn-square join-item input input-sm  dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 border-none shadow-none "
-          onClick={limpiarBusqueda}
+          onClick={(evt) => limpiarBusqueda(evt)}
         >
           <i className="fa-solid fa-broom"></i>
         </button>
@@ -68,6 +63,7 @@ function Busqueda({
           </span>
         </label>
       </div>
+      
       {/* <div className="lg:flex hidden justify-end w-full">
         <div className="stats stats-vertical lg:stats-horizontal shadow  ">
           <div className="stat">

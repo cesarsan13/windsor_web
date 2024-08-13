@@ -61,6 +61,7 @@ function Alumnos() {
     });
     setAlumnosFiltrados(infoFiltrada);
   };
+  
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
@@ -71,13 +72,16 @@ function Alumnos() {
       const data = await getAlumnos(token, bajas);
       setAlumnos(data);
       setAlumnosFiltrados(data);
-      if (filtro !== "" && TB_Busqueda !== "") {
-        Buscar();
-      }
+      setFiltro("id")
       setisLoading(false);
     };
     fetchData();
-  }, [session, status, bajas, filtro, TB_Busqueda]);
+  }, [session, status, bajas]);
+  
+  useEffect(() => {
+    Buscar();
+  }, [TB_Busqueda]);
+
 
   const {
     register,

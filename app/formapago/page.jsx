@@ -79,7 +79,6 @@ function FormaPago() {
     });
   }, [formaPago, reset]);
   const Buscar = () => {
-    // alert(filtro);
     if (TB_Busqueda === "" || filtro === "") {
       setFormaPagosFiltrados(formasPago);
       return;
