@@ -229,23 +229,23 @@ function FormFact() {
   }
   return (
     <>
-      <ModalFormFact
-        accion={accion}
-        onSubmit={onSubmitModal}
-        currentID={currentID}
-        errors={errors}
-        register={register}
-        setFormFact={setFormFact}
-        formFact={formFact}
-      />
-      <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
+      <div className="h-[83vh] max-h-[83vh] container w-full bg-slate-100 rounded-3xl shadow-xl px-3 dark:bg-slate-700 overflow-y-auto">
+        <ModalFormFact
+          accion={accion}
+          onSubmit={onSubmitModal}
+          currentID={currentID}
+          errors={errors}
+          register={register}
+          setFormFact={setFormFact}
+          formFact={formFact}
+        />
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Formas Facturas.
           </h1>
         </div>
         <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-        <div className="md:col-span-1 flex flex-col">
+          <div className="md:col-span-1 flex flex-col">
             <Acciones
               Buscar={Buscar}
               Alta={Alta}
@@ -253,7 +253,7 @@ function FormFact() {
             ></Acciones>
           </div>
           <div className="md:col-span-7">
-          <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full">
               <Busqueda
                 setBajas={setBajas}
                 setFiltro={setFiltro}

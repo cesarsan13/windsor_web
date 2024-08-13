@@ -69,7 +69,7 @@ function TablaFormFact({
                         <i className="fa-solid fa-trash"></i>
                       </div>
                       <div
-                        className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
+                        className="hidden sm:hidden md:block lg:block kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                         data-tip={`Actualizar Formato`}
                         name="btn_actualiza_formato"
                         onClick={(evt) =>
@@ -81,12 +81,13 @@ function TablaFormFact({
                           name="btn_actualiza_formato"
                         ></i>
                       </div>
+
                     </div>
                   </th>
                 </tr>
               ))}
             </tbody>
-            <tfoot/>
+            <tfoot />
           </table>
         ) : (
           <NoData />
