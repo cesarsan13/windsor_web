@@ -71,8 +71,10 @@ function FormFact() {
     setFormato("Facturas");
   }, [session, status, bajas]);
   useEffect(() => {
-    Buscar();
-  }, [TB_Busqueda]);
+    if (TB_Busqueda !== "" && filtro !== "") {
+      Buscar();
+    }
+  }, [TB_Busqueda, filtro]);
 
   useEffect(() => {
     const reporte = new ReportePDF(configuracion, "portrait");

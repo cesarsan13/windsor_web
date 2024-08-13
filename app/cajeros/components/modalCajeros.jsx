@@ -62,7 +62,7 @@ function ModalCajeros({
               <Inputs
                 dataType={"int"}
                 name={"numero"}
-                tamañolabel={"w-2/6"}
+                tamañolabel={"w-3/6"}
                 className={"w-3/6 text-right"}
                 Titulo={"Numero: "}
                 type={"text"}
