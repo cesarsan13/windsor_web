@@ -37,8 +37,6 @@ function Cajeros() {
   const [TB_Busqueda, setTB_Busqueda] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
-  const [TB_Busqueda_Nombre, setTB_Busqueda_Nombre] = useState("")
-  const [TB_Busqueda_Numero, setTB_Busqueda_Numero] = useState("")
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -49,17 +47,18 @@ function Cajeros() {
       const { token } = session.user;
       const data = await getCajeros(token, bajas);
       setCajeros(data);
-      setCajerosFiltrados(data);
-      setFiltro("numero")
+      setCajero(data);
+      setFiltro("id")
       setisLoading(false);
     };
     fetchData();
   }, [session, status, bajas]);
   
   useEffect(() => {
-    Buscar();
-  }, [TB_Busqueda_Nombre, TB_Busqueda_Numero]);
-
+    if (TB_Busqueda !== "" && filtro !== "") {
+      Buscar();
+    }
+  }, [TB_Busqueda, filtro]);
   const {
     register,
     handleSubmit,
@@ -91,29 +90,28 @@ function Cajeros() {
       clave_cajero: cajero.clave_cajero,
     });
   }, [cajero, reset]);
-  const Buscar = (busquedaNumero, busquedaNombre) => {
-    if (busquedaNumero === "" && busquedaNombre === "") {
+  const Buscar = () => {
+    // alert(filtro);
+    if (TB_Busqueda === "" || filtro === "") {
       setCajerosFiltrados(cajeros);
       return;
     }
-
     const infoFiltrada = cajeros.filter((cajero) => {
-      const numeroMatch = cajero.numero
-        .toString()
-        .includes(busquedaNumero);
-      const nombreMatch = cajero.nombre
+      const valorCampo = cajero[filtro];
+      if (typeof valorCampo === "number") {
+        return valorCampo.toString().includes(TB_Busqueda);
+      }
+      return valorCampo
+        ?.toString()
         .toLowerCase()
-        .includes(busquedaNombre.toLowerCase());
-
-      return numeroMatch && nombreMatch;
+        .includes(TB_Busqueda.toLowerCase());
     });
-
     setCajerosFiltrados(infoFiltrada);
   };
 
-  const limpiarBusqueda = () => {
-    setTB_Busqueda_Nombre("");
-    setTB_Busqueda_Numero("");
+  const limpiarBusqueda = (evt) => {
+    evt.preventDefault;
+    setTB_Busqueda("");
   };
 
   const Alta = async (event) => {
@@ -335,8 +333,7 @@ function Cajeros() {
                 limpiarBusqueda={limpiarBusqueda}
                 Buscar={Buscar}
                 handleBusquedaChange={handleBusquedaChange}
-                TB_Busqueda_Numero={TB_Busqueda_Numero}
-                TB_Busqueda_Nombre={TB_Busqueda_Nombre}
+                TB_Busqueda={TB_Busqueda}
               />
               <TablaCajeros
                 isLoading={isLoading}
