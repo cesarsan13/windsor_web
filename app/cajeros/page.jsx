@@ -48,13 +48,15 @@ function Cajeros() {
       const data = await getCajeros(token, bajas);
       setCajeros(data);
       setCajerosFiltrados(data);
-      if (filtro !== "" && TB_Busqueda !== "") {
-        Buscar();
-      }
+      setFiltro("numero")
       setisLoading(false);
     };
     fetchData();
   }, [session, status, bajas]);
+  
+  useEffect(() => {
+    Buscar();
+  }, [TB_Busqueda]);
 
   const {
     register,
