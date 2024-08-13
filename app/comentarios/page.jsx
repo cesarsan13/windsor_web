@@ -48,15 +48,17 @@ useEffect(() => {
     const data = await getComentarios(token, bajas);
     setFormasComentarios(data);
     setFormaComentariosFiltrados(data);
-    setFiltro("id")
     setisLoading(false);
   };
   fetchData();
 }, [session, status, bajas]);
 
 useEffect(() => {
-  Buscar();
-}, [TB_Busqueda]);
+  if (TB_Busqueda !== "" && filtro !== "") {
+    Buscar();
+  }
+}, [TB_Busqueda, filtro]);
+
   const {
     register,
     handleSubmit,

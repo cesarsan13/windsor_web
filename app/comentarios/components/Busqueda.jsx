@@ -30,16 +30,12 @@ function Busqueda({
       <select
         className="select select-bordered join-item dark:bg-[#191e24] dark:text-neutral-200 w-20 md:w-32 text-neutral-600 "
         onChange={(event) => handleFiltroChange(event)}
-        defaultValue="id"
       >
-        <option disabled defaultValue={""}>
+        <option  defaultValue={""}>
           Filtros
         </option>
         <option value={"id"}>Id</option>
         <option value={"comentario_1"}>Comentario 1</option>
-        <option value={"comentario_2"}>Comentario 2</option>
-        <option value={"comentario_3"}>Comentario 3</option>
-        <option value={"generales"}>Generales</option>
       </select>
       <div className="tooltip" data-tip="Limpiar">
         <button
