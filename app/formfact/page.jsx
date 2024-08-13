@@ -64,14 +64,15 @@ function FormFact() {
       const data = await getFormFact(token, bajas);
       setFormFacts(data);
       setFormFactsFiltrados(data);
-      if (filtro !== "" && TB_Busqueda !== "") {
-        Buscar();
-      }
+      setFiltro("numero")
       setisLoading(false);
     };
     fetchData();
     setFormato("Facturas");
   }, [session, status, bajas]);
+  useEffect(() => {
+    Buscar();
+  }, [TB_Busqueda]);
 
   useEffect(() => {
     const reporte = new ReportePDF(configuracion, "portrait");
