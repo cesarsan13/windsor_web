@@ -128,7 +128,7 @@ function AltasBajasAlumnos() {
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
       />
-      <div className="container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
+      <div className="container overflow-x-auto w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Relación de Recibos
@@ -140,11 +140,11 @@ function AltasBajasAlumnos() {
           </div>
           <div className="col-span-7">
             <div className="flex flex-col h-full space-y-4">
-              <div className="flex space-x-4">
+              <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
                 <Inputs
                   name={"fecha_ini"}
-                  tamañolabel={""}
-                  className={"rounded block grow"}
+                  tamañolabel={"w-64"}
+                  className={"rounded  block grow"}
                   Titulo={"Fecha Inicial: "}
                   type={"date"}
                   errors={errors}
@@ -152,39 +152,41 @@ function AltasBajasAlumnos() {
                   isDisabled={false}
                   setValue={setFecha_ini}
                 />
-                <Inputs
-                  name={"fecha_fin"}
-                  tamañolabel={""}
-                  className={"rounded block grow"}
-                  Titulo={"Fecha Final: "}
-                  type={"date"}
-                  errors={errors}
-                  maxLength={15}
-                  isDisabled={false}
-                  setValue={setFecha_fin}
-                />
-                <div className="tooltip pt-1" data-tip="Tomar Fechas">
-                  <label
-                    htmlFor="ch_tomaFechas"
-                    className="label cursor-pointer flex items-center space-x-2"
-                  >
-                    <input
-                      id="ch_tomaFechas"
-                      type="checkbox"
-                      className="checkbox checkbox-md"
-                      defaultChecked={true}
-                      onClick={(evt) => setTomaFechas(evt.target.checked)}
-                    />
-                    <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
-                      Toma Fechas
-                    </span>
-                  </label>
+                <div className="flex flex-row items-center space-x-4 w-full md:w-auto">
+                  <Inputs
+                    name={"fecha_fin"}
+                    tamañolabel={"w-64"}
+                    className={"rounded block grow"}
+                    Titulo={"Fecha Final: "}
+                    type={"date"}
+                    errors={errors}
+                    maxLength={15}
+                    isDisabled={false}
+                    setValue={setFecha_fin}
+                  />
+                  <div className="tooltip pt-1" data-tip="Tomar Fechas">
+                    <label
+                      htmlFor="ch_tomaFechas"
+                      className="label cursor-pointer flex items-center space-x-2"
+                    >
+                      <input
+                        id="ch_tomaFechas"
+                        type="checkbox"
+                        className="checkbox checkbox-md"
+                        defaultChecked={true}
+                        onClick={(evt) => setTomaFechas(evt.target.checked)}
+                      />
+                      <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
+                        Toma Fechas
+                      </span>
+                    </label>
+                  </div>
                 </div>
               </div>
-              <div className="flex space-x-4">
+              <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
                 <Inputs
                   name={"recibo_ini"}
-                  tamañolabel={""}
+                  tamañolabel={"w-64"}
                   className={"rounded block grow"}
                   Titulo={"Recibos: "}
                   type={"text"}
@@ -196,7 +198,7 @@ function AltasBajasAlumnos() {
                 />
                 <Inputs
                   name={"recibo_fin"}
-                  tamañolabel={""}
+                  tamañolabel={"w-64"}
                   className={"rounded block grow"}
                   Titulo={""}
                   type={"text"}
@@ -208,10 +210,10 @@ function AltasBajasAlumnos() {
                 />
               </div>
 
-              <div className="flex space-x-4">
+              <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
                 <Inputs
                   name={"factura_ini"}
-                  tamañolabel={""}
+                  tamañolabel={"w-64"}
                   className={"rounded block grow"}
                   Titulo={"Facturas: "}
                   type={"text"}
@@ -223,7 +225,7 @@ function AltasBajasAlumnos() {
                 />
                 <Inputs
                   name={"factura_fin"}
-                  tamañolabel={""}
+                  tamañolabel={"w-64"}
                   className={"rounded block grow"}
                   Titulo={""}
                   type={"text"}
@@ -235,7 +237,7 @@ function AltasBajasAlumnos() {
                 />
               </div>
 
-              <div className="flex space-x-4">
+              <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
                 <BuscarCat
                   table="alumnos"
                   itemData={[]}
@@ -263,6 +265,9 @@ function AltasBajasAlumnos() {
       </div>
     </>
   );
+
+
+
 }
 
 export default AltasBajasAlumnos;
