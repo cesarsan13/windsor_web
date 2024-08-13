@@ -25,9 +25,9 @@ function Inputs({
 }) {
   if (type === "multi-select") {
     return (
-      <div className="w-full md:w-1/2 px-0.5 py-2 mb-6 md:mb-0">
+      <div className="flex flex-col">
         <label
-          className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
+        className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel}  text-black dark:text-white`}
         >
           {Titulo}
           <Controller
@@ -91,7 +91,7 @@ function Inputs({
   }
   if (type === "text") {
     return (
-      <div className="w-full md:w-1/2 px-0.5 py-2 mb-6 md:mb-0">
+      <div className="flex flex-col">
         <label
           className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
         >
