@@ -49,13 +49,15 @@ function Productos() {
       const data = await getProductos(token, bajas);
       setProductos(data);
       setProductosFiltrados(data);
-      if (filtro !== "" && TB_Busqueda !== "") {
-        Buscar();
-      }
+      setFiltro("id")
       setisLoading(false);
     };
     fetchData();
   }, [session, status, bajas]);
+  
+  useEffect(() => {
+    Buscar();
+  }, [TB_Busqueda]);
 
   const {
     register,
