@@ -47,13 +47,15 @@ function Horarios() {
       const data = await getHorarios(token, bajas);
       setHorarios(data);
       setHorariosFiltrados(data);
-      if (filtro !== "" && TB_Busqueda !== "") {
-        Buscar();
-      }
+      setFiltro("numero")
       setisLoading(false);
     };
     fetchData();
   }, [session, status, bajas]);
+  
+  useEffect(() => {
+    Buscar();
+  }, [TB_Busqueda]);
   const {
     register,
     handleSubmit,

@@ -30,6 +30,7 @@ function Busqueda({
       <select
         className="select select-bordered join-item dark:bg-[#191e24] dark:text-neutral-200 w-20 md:w-32 text-neutral-600"
         onChange={(event) => handleFiltroChange(event)}
+        defaultValue="numero"
       >
         <option disabled>
           Filtros
