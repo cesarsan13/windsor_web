@@ -47,13 +47,15 @@ function FormaPago() {
       const data = await getFormasPago(token, bajas);
       setFormasPago(data);
       setFormaPagosFiltrados(data);
-      if (filtro !== "" && TB_Busqueda !== "") {
-        Buscar();
-      }
+      setFiltro("id")
       setisLoading(false);
     };
     fetchData();
   }, [session, status, bajas]);
+  
+  useEffect(() => {
+    Buscar();
+  }, [TB_Busqueda]);
 
   const {
     register,
