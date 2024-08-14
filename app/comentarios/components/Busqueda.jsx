@@ -17,7 +17,7 @@ function Busqueda({
       <div className="col-span-1 md:col-span-2">
         <input
           id="tb_id"
-          className="input input-bordered input-md join-item w-full max-w-lg dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600"
+          className="input input-bordered text-right input-md join-item w-full max-w-lg dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600"
           placeholder="Id..."
           onChange={(event) => handleBusquedaChange(event)}
           onKeyDown={(evt) => {
