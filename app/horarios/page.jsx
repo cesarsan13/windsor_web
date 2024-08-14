@@ -303,6 +303,11 @@ function Horarios() {
       ? document.getElementById("modalVPHorarios").showModal()
       : document.getElementById("modalVPHorarios").close();
   }
+  if (status === "loading") {
+    return (
+      <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
+    );
+  }
   return (
     <>
       <ModalHorario
@@ -317,7 +322,7 @@ function Horarios() {
         setDia={setDia}
       />
       <ModalVistaPreviaHorarios pdfData={pdfData} pdfPreview={pdfPreview} PDF={ImprimePDF} Excel={ImprimeExcel} />
-      <div className="container mx-auto w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
+      <div className="h-[83vh] max-h-[83vh] container w-full bg-slate-100 rounded-3xl shadow-xl px-3 dark:bg-slate-700 overflow-y-auto">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Horarios.
