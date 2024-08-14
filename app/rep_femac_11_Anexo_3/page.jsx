@@ -31,8 +31,7 @@ function CobranzaPorAlumno() {
   const [tomaFechas, setTomaFechas] = useState(true);
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
-  const [FormaRepCobranzaporAlumno, setFormaReporteCobranzaporAlumno] =
-    useState([]);
+  const [FormaRepCobranzaporAlumno, setFormaReporteCobranzaporAlumno] = useState([]);
 
   useEffect(() => {
     if (status === "loading" || !session) {
