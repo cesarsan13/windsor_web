@@ -67,8 +67,8 @@ function ModalFormaPago({
               <Inputs
                 dataType={"int"}
                 name={"id"}
-                tamañolabel={""}
-                className={"w-4/6 text-right"}
+                tamañolabel={"w-3/6"}
+                className={"w-3/6 text-right"}
                 Titulo={"Numero: "}
                 type={"text"}
                 requerido={true}
@@ -98,7 +98,7 @@ function ModalFormaPago({
               <Inputs
                 dataType={"float"}
                 name={"comision"}
-                tamañolabel={""}
+                tamañolabel={"w-72"}
                 className={"w-4/6"}
                 Titulo={"Comision:"}
                 type={"text"}
@@ -113,7 +113,7 @@ function ModalFormaPago({
               <Inputs
                 dataType={"string"}
                 name={"aplicacion"}
-                tamañolabel={""}
+                tamañolabel={"w-72"}
                 className={"w-4/6"}
                 Titulo={"Aplicacion:"}
                 type={"text"}
@@ -129,8 +129,8 @@ function ModalFormaPago({
               <Inputs
                 dataType={"string"}
                 name={"cue_banco"}
-                tamañolabel={"w-72"}
-                className={"w-3/6 "}
+                tamañolabel={"w-6/6"}
+                className={"w-4/6"}
                 Titulo={"Cuenta Banco:"}
                 type={"text"}
                 requerido={true}
