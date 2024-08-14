@@ -4,18 +4,14 @@ export const soloEnteros = (event) => {
   if (isControlKey(key)) {
     return;
   }
-  // Permitir teclas de retroceso (Backspace) y Enter (Enter)
-  if (keyCode === 8) {
-    // Backspace
-    return;
-  } else if (keyCode === 13) {
-    // Enter
+  if (key === 'Enter') { return; }
+  if (keyCode === 8) { return; }
+  else if (keyCode === 13) {
     event.preventDefault();
     const form = event.target.form;
     const index = Array.prototype.indexOf.call(form, event.target);
     form.elements[index + 1].focus();
   } else if (key < "0" || key > "9") {
-    // No es un número
     event.preventDefault();
   }
 };
@@ -111,12 +107,12 @@ export function formatDate(date) {
   return `${year}/${month}/${day}`;
 }
 
-export function Fecha_de_Ctod(date, diasmas) {  
+export function Fecha_de_Ctod(date, diasmas) {
   if (!(date instanceof Date)) {
     date = new Date(date);
-  }  
+  }
   diasmas = Number(diasmas);
-  date.setDate(date.getDate() + diasmas);  
+  date.setDate(date.getDate() + diasmas);
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
