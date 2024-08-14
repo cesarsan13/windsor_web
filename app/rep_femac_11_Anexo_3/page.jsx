@@ -3,7 +3,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import Acciones from "./components/Acciones";
 import Inputs from "./components/Inputs";
-import { calculaDigitoBvba } from "../utils/globalfn";
+import { calculaDigitoBvba, formatDate } from "../utils/globalfn";
 import { useForm } from "react-hook-form";
 import {
   getReporteCobranzaporAlumno,
