@@ -19,7 +19,7 @@ function BuscarCat({
   array,
   alignRight = false,
   id,
-  inputWidths = { contdef: "180px", first: "80px", second: "150px" },
+  inputWidths = { first: "80px", second: "150px" },
 
 }) {
   const [data, setData] = useState([]);

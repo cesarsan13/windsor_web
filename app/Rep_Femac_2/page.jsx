@@ -207,7 +207,7 @@ function AlumnosPorClase() {
                 modalId="modal_horarios"
                 alignRight={true}
                 inputWidths={{
-                  first: "50px", second: "180px"
+                  first: "50px", second: "210px"
                 }}
               />
               <BuscarCat
@@ -220,7 +220,7 @@ function AlumnosPorClase() {
                 modalId="modal_horarios2"
                 alignRight={true}
                 inputWidths={{
-                  first: "50px", second: "180px"
+                  first: "50px", second: "210px"
                 }}
               />
               <div className="col-8 flex flex-col">
