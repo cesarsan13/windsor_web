@@ -19,7 +19,7 @@ function BuscarCat({
   array,
   alignRight = false,
   id,
-  /*inputWidths= { contdef:"180px", first: "80px", second: "150px" },*/
+  inputWidths= { contdef:"180px", first: "100px", second: "150px" },
 
 }) {
   const [data, setData] = useState([]);
@@ -28,7 +28,7 @@ function BuscarCat({
 
   const { register, setValue, watch, reset } = useForm({
     defaultValues: {
-      [nameInput[0]]: "",
+      [nameInput[0]]: "", 
       [nameInput[1]]: "",
     },
   });
@@ -151,19 +151,25 @@ function BuscarCat({
   return (
     <div className="flex flex-col md:flex-row justify-start gap-2 sm:flex-row">
       <div className="flex gap-2 ">
-        <label className={`input input-bordered join-item text-black dark:text-white input-md flex items-center gap-3 lg:w-60 md:w-64 sm:w-80`} /*style={{ width: inputWidths.contdef }} */>
-          {titulo}
-          <input
-            id={nameInput[0]}
-            name={nameInput[0]}
-            type="text"
-            {...register(nameInput[0])}
-            onKeyDown={(evt) => handleKeyDown(evt)}
-            className={`grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${
-              alignRight ? "text-right" : ""} lg:w-24 ` }
-            /*style={{ width: inputWidths.first }}*/
-          />
-        </label>
+      <label className={`input input-bordered join-item text-black dark:text-white input-md flex items-center gap-3 lg:w-44 md:w-80 sm:w-80`}>
+    {titulo}
+    <input
+      id={nameInput[0]}
+      name={nameInput[0]}
+      type="text"
+      {...register(nameInput[0])}
+      onKeyDown={(evt) => handleKeyDown(evt)}
+      onKeyPress={(e) => {
+        if (!/[0-9]/.test(e.key)) {
+          e.preventDefault();
+        }
+      }}
+      className={`grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${
+        alignRight ? "text-right" : ""} lg:w-24 md:w-24 sm:w-16` }
+      style={{ width: inputWidths.first }}
+    />
+  </label>
+
         <button
           type="button"
           className="bg-transparent join-item hover:bg-transparent border-none shadow-none dark:text-white text-black btn rounded-r-lg"
@@ -180,7 +186,7 @@ function BuscarCat({
           readOnly={true}
           {...register(nameInput[1])}
           className={`input input-bordered join-item rounded-r-md bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md w-full`}
-          /*style={{ width: inputWidths.second }}*/
+          style={{ width: inputWidths.second }}
         />
       </div>
       <ModalBuscarCat
