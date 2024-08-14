@@ -17,8 +17,6 @@ import {
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/formapago/formapago";
-import { eventNames } from "process";
-import { NEXT_CACHE_REVALIDATE_TAG_TOKEN_HEADER } from "next/dist/lib/constants";
 import { ReportePDF } from "../utils/ReportesPDF";
 
 function FormaPago() {
@@ -32,10 +30,9 @@ function FormaPago() {
   const [accion, setAccion] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState("");
-  const [filtro, setFiltro] = useState("");
-  const [TB_Busqueda, setTB_Busqueda] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -47,16 +44,16 @@ function FormaPago() {
       const data = await getFormasPago(token, bajas);
       setFormasPago(data);
       setFormaPagosFiltrados(data);
+      Buscar();
       setisLoading(false);
     };
     fetchData();
   }, [session, status, bajas]);
-  
+
   useEffect(() => {
-    if (TB_Busqueda !== "" && filtro !== "") {
-      Buscar();
-    }
-  }, [TB_Busqueda, filtro]);
+    // const { tb_id, tb_desc } = busqueda;
+    Buscar();
+  }, [busqueda]);
 
   const {
     register,
@@ -82,26 +79,26 @@ function FormaPago() {
     });
   }, [formaPago, reset]);
   const Buscar = () => {
-    if (TB_Busqueda === "" || filtro === "") {
+    const { tb_id, tb_desc } = busqueda;
+    if (tb_id === "" && tb_desc === "") {
       setFormaPagosFiltrados(formasPago);
       return;
     }
     const infoFiltrada = formasPago.filter((formapago) => {
-      const valorCampo = formapago[filtro];
-      if (typeof valorCampo === "number") {
-        return valorCampo.toString().includes(TB_Busqueda);
-      }
-      return valorCampo
-        ?.toString()
-        .toLowerCase()
-        .includes(TB_Busqueda.toLowerCase());
+      const coincideId = tb_id
+        ? formapago["id"].toString().includes(tb_id)
+        : true;
+      const coincideDescripcion = tb_desc
+        ? formapago.descripcion.toLowerCase().includes(tb_desc.toLowerCase())
+        : true;
+      return coincideId && coincideDescripcion;
     });
     setFormaPagosFiltrados(infoFiltrada);
   };
 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
-    setTB_Busqueda("");
+    setBusqueda({ tb_id: "", tb_desc: "" });
   };
 
   const Alta = async (event) => {
@@ -194,7 +191,10 @@ function FormaPago() {
   };
   const handleBusquedaChange = (event) => {
     event.preventDefault;
-    setTB_Busqueda(event.target.value);
+    setBusqueda((estadoPrevio) => ({
+      ...estadoPrevio,
+      [event.target.id]: event.target.value,
+    }));
   };
   const ImprimePDF = () => {
     const configuracion = {
@@ -305,7 +305,7 @@ function FormaPago() {
           </h1>
         </div>
         <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-        <div className="md:col-span-1 flex flex-col">
+          <div className="md:col-span-1 flex flex-col">
             <Acciones
               Buscar={Buscar}
               Alta={Alta}
@@ -317,15 +317,13 @@ function FormaPago() {
             ></Acciones>
           </div>
           <div className="md:col-span-7">
-          <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full">
               <Busqueda
                 setBajas={setBajas}
-                setFiltro={setFiltro}
                 limpiarBusqueda={limpiarBusqueda}
                 Buscar={Buscar}
                 handleBusquedaChange={handleBusquedaChange}
-                TB_Busqueda={TB_Busqueda}
-                setTB_Busqueda={setTB_Busqueda}
+                busqueda={busqueda}
               />
               <TablaFormaPago
                 isLoading={isLoading}
