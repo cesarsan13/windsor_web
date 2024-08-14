@@ -19,7 +19,8 @@ function BuscarCat({
   array,
   alignRight = false,
   id,
-  inputWidths = { contdef:"200px", first: "80px", second: "150px" },
+  /*inputWidths= { contdef:"180px", first: "80px", second: "150px" },*/
+
 }) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -148,9 +149,9 @@ function BuscarCat({
   };
 
   return (
-    <div className="flex flex-col md:flex-row justify-start gap-2">
-      <div className="flex gap-2">
-        <label className="input input-bordered join-item text-black dark:text-white input-md flex items-center gap-3 " style={{width: inputWidths.contdef}}>
+    <div className="flex flex-col md:flex-row justify-start gap-2 sm:flex-row">
+      <div className="flex gap-2 ">
+        <label className={`input input-bordered join-item text-black dark:text-white input-md flex items-center gap-3 lg:w-60 md:w-64 sm:w-80`} /*style={{ width: inputWidths.contdef }} */>
           {titulo}
           <input
             id={nameInput[0]}
@@ -159,9 +160,8 @@ function BuscarCat({
             {...register(nameInput[0])}
             onKeyDown={(evt) => handleKeyDown(evt)}
             className={`grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${
-              alignRight ? "text-right" : ""
-            }`}
-            style={{ width: inputWidths.first }}
+              alignRight ? "text-right" : ""} lg:w-24 ` }
+            /*style={{ width: inputWidths.first }}*/
           />
         </label>
         <button
@@ -172,15 +172,15 @@ function BuscarCat({
           <i className="fa-solid fa-magnifying-glass"></i>
         </button>
       </div>
-      <div className="w-full md:w-auto mt-2 md:mt-0">
+      <div className=" mt-2 md:mt-0 lg:w-52 md:w-56 sm:w-60">
         <input
           id={nameInput[1]}
           name={nameInput[1]}
           type="text"
           readOnly={true}
           {...register(nameInput[1])}
-          className="input input-bordered join-item rounded-r-md bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md"
-          style={{ width: inputWidths.second }}
+          className={`input input-bordered join-item rounded-r-md bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md w-full`}
+          /*style={{ width: inputWidths.second }}*/
         />
       </div>
       <ModalBuscarCat
