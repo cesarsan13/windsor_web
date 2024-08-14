@@ -178,14 +178,14 @@ function AlumnosPorClase() {
         PDF={ImprimePDF}
         Excel={ImprimeExcel} />
 
-      <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
+      <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 overflow-y-auto">
         <div className="flex justify-start p-3 ">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Lista de Alumnos por clase.
           </h1>
         </div>
         <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-        <div className="md:col-span-1 flex flex-col">
+          <div className="md:col-span-1 flex flex-col">
             <Acciones
               Ver={handleVerClick}
               ImprimePDF={ImprimePDF}
@@ -205,6 +205,10 @@ function AlumnosPorClase() {
                 fieldsToShow={["numero", "horario"]}
                 setItem={setHorario1}
                 modalId="modal_horarios"
+                alignRight={true}
+                inputWidths={{
+                  first: "50px", second: "180px"
+                }}
               />
               <BuscarCat
                 table="horarios"
@@ -214,6 +218,10 @@ function AlumnosPorClase() {
                 fieldsToShow={["numero", "horario"]}
                 setItem={setHorario2}
                 modalId="modal_horarios2"
+                alignRight={true}
+                inputWidths={{
+                  first: "50px", second: "180px"
+                }}
               />
               <div className="col-8 flex flex-col">
                 <label className="text-black dark:text-white flex flex-col gap-3 md:flex-row">
