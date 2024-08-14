@@ -55,9 +55,9 @@ function Alumnos() {
       const coincideId = tb_id ? alumno["id"].toString().includes(tb_id) : true;
       const coincideDescripcion = tb_desc
         ? alumno["nombre"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_desc.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
         : true;
       return coincideId && coincideDescripcion;
     });
@@ -74,7 +74,6 @@ function Alumnos() {
       const data = await getAlumnos(token, bajas);
       setAlumnos(data);
       setAlumnosFiltrados(data);
-      Buscar();
       setisLoading(false);
     };
     fetchData();

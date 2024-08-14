@@ -44,14 +44,14 @@ function Cajeros() {
       const { token } = session.user;
       const data = await getCajeros(token, bajas);
       setCajeros(data);
-      setCajero(data);
+      setCajerosFiltrados(data);
       setisLoading(false);
     };
     fetchData();
   }, [session, status, bajas]);
-  
+
   useEffect(() => {
-      Buscar();
+    Buscar();
   }, [busqueda]);
   const {
     register,
@@ -85,24 +85,29 @@ function Cajeros() {
     });
   }, [cajero, reset]);
   const Buscar = () => {
-    const { tb_id, tb_desc} = busqueda;
+    const { tb_id, tb_desc } = busqueda;
     if (tb_id === "" && tb_desc === "") {
       setCajerosFiltrados(cajeros);
       return;
     }
     const infoFiltrada = cajeros.filter((cajero) => {
-      const coincideNumero = tb_id ? cajero["numero"].toString().includes(tb_id) : true;
+      const coincideNumero = tb_id
+        ? cajero["numero"].toString().includes(tb_id)
+        : true;
       const coincideNombre = tb_desc
-      ? cajero["nombre"].toString().toLowerCase().includes(tb_desc.toLowerCase())
-      : true;
-      return coincideNumero && coincideNombre
+        ? cajero["nombre"]
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
+        : true;
+      return coincideNumero && coincideNombre;
     });
     setCajerosFiltrados(infoFiltrada);
   };
 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
-    setBusqueda({tb_id: "", tb_desc: ""});
+    setBusqueda({ tb_id: "", tb_desc: "" });
   };
 
   const Alta = async (event) => {
@@ -311,7 +316,7 @@ function Cajeros() {
           </h1>
         </div>
         <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-        <div className="md:col-span-1 flex flex-col">
+          <div className="md:col-span-1 flex flex-col">
             <Acciones
               Buscar={Buscar}
               Alta={Alta}
@@ -320,7 +325,7 @@ function Cajeros() {
             ></Acciones>
           </div>
           <div className="md:col-span-7">
-          <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full">
               <Busqueda
                 setBajas={setBajas}
                 limpiarBusqueda={limpiarBusqueda}
