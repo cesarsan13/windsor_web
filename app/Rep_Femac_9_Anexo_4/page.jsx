@@ -259,7 +259,6 @@ function RelaciondeFacturas(){
           </div>
           <div className="lg:col-span-7 md:col-span-7 sm:col-span-full space-y-3">
             <div className="flex flex-col lg:flex-row md:flex-row sm:col-span-1 lg:col-span-10 md:space-x-1">
-            {/*<div className="flex md:flex-row sm:flex-col  lg:flex-row sm:col-span-1 md:space-x-1">*/}
                 <Inputs
                   name={"fecha_cobro_ini"}
                   tamañolabel={""}
