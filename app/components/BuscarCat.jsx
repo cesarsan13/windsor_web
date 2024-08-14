@@ -112,6 +112,10 @@ function BuscarCat({
     BuscarInfo();
   };
 
+  const onBlur = () =>{
+    BuscarInfo();
+  }
+
   const BuscarInfo = () => {
     const inputValueStr = String(inputValue);
 
@@ -159,6 +163,7 @@ function BuscarCat({
             type="text"
             {...register(nameInput[0])}
             onKeyDown={(evt) => handleKeyDown(evt)}
+            onBlur={onBlur}
             className={`grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${
               alignRight ? "text-right" : ""} lg:w-24 ` }
             /*style={{ width: inputWidths.first }}*/

@@ -26,7 +26,7 @@ function ModalVistaPreviaRep6({ pdfPreview, pdfData, PDF, Excel }) {
         const isEmptyDataPDF = Object.keys(pdfData || {}).length === 0 && (pdfData || {}).constructor === Object;
         setIsModalOpen(pdfPreview && !isEmptyDataPDF);
     }, [pdfPreview, pdfData]);
-    const [scale, setScale] = useState(1);
+    // const [scale, setScale] = useState(1);
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 768) {
