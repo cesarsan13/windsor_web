@@ -17,7 +17,6 @@ function TablaFormFact({
     setFormFact(formFact);
     setAccion(accion);
     setCurrentId(formFact.numero);
-
     if (evt.target.attributes.name.value !== "btn_actualiza_formato") {
       showModal(true);
     } else {
@@ -28,14 +27,14 @@ function TablaFormFact({
 
   return !isLoading ? (
     <>
-      <div className="overflow-x-auto mt-3  h-6/8 text-black bg-white dark:bg-[#1d232a] dark:text-white m-2 w-full  lg:w-5/8 ">
+      <div className="overflow-x-auto mt-3 h-[calc(55vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-3/4">
         {formFactsFiltrados.length > 0 ? (
-          <table className="table table-xs table-zebra table-compact w-full">
-            <thead className="relative z-[1] md:static">
+          <table className="table table-xs table-zebra w-full">
+            <thead className="sticky top-0 bg-white dark:bg-[#1d232a]">
               <tr>
                 <th></th>
-                <td>Nombre</td>
-                <td>Longitud</td>
+                <td className="w-[60%]">Nombre</td>
+                <td className="w-[40%]">Longitud</td>
                 <th className="w-[calc(20%)]">Acciones</th>
               </tr>
             </thead>
@@ -48,28 +47,40 @@ function TablaFormFact({
                   <th>
                     <div className="flex flex-row space-x-1">
                       <div
-                        className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                        className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                         data-tip={`Ver ${item.numero}`}
+                        name="btn_ver"
                         onClick={(evt) => tableAction(evt, item, `Ver`)}
                       >
-                        <i className="fa-solid fa-eye"></i>
+                        <i
+                          className="fa-solid fa-eye"
+                          name="btn_ver"
+                        ></i>
                       </div>
                       <div
-                        className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                        className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                         data-tip={`Editar ${item.numero}`}
+                        name="btn_editar"
                         onClick={(evt) => tableAction(evt, item, `Editar`)}
                       >
-                        <i className="fa-solid fa-file"></i>
+                        <i
+                          className="fa-solid fa-file"
+                          name="btn_editar"
+                        ></i>
                       </div>
                       <div
-                        className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                        className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                         data-tip={`Eliminar ${item.numero}`}
+                        name="btn_elimina"
                         onClick={(evt) => tableAction(evt, item, "Eliminar")}
                       >
-                        <i className="fa-solid fa-trash"></i>
+                        <i
+                          className="fa-solid fa-trash"
+                          name="btn_elimina"
+                        ></i>
                       </div>
                       <div
-                        className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                        className="hidden sm:hidden md:block lg:block kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                         data-tip={`Actualizar Formato`}
                         name="btn_actualiza_formato"
                         onClick={(evt) =>
@@ -81,19 +92,13 @@ function TablaFormFact({
                           name="btn_actualiza_formato"
                         ></i>
                       </div>
+
                     </div>
                   </th>
                 </tr>
               ))}
             </tbody>
-            <tfoot>
-              <tr>
-                <th></th>
-                <td>Nombre</td>
-                <td>Longitud</td>
-                <th>Acciones</th>
-              </tr>
-            </tfoot>
+            <tfoot />
           </table>
         ) : (
           <NoData />

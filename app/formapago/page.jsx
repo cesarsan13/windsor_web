@@ -17,8 +17,6 @@ import {
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/formapago/formapago";
-import { eventNames } from "process";
-import { NEXT_CACHE_REVALIDATE_TAG_TOKEN_HEADER } from "next/dist/lib/constants";
 import { ReportePDF } from "../utils/ReportesPDF";
 
 function FormaPago() {
@@ -32,10 +30,9 @@ function FormaPago() {
   const [accion, setAccion] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState("");
-  const [filtro, setFiltro] = useState("");
-  const [TB_Busqueda, setTB_Busqueda] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -45,16 +42,17 @@ function FormaPago() {
       setisLoading(true);
       const { token } = session.user;
       const data = await getFormasPago(token, bajas);
-      console.log(data);
       setFormasPago(data);
       setFormaPagosFiltrados(data);
-      if (filtro !== "" && TB_Busqueda !== "") {
-        Buscar();
-      }
       setisLoading(false);
     };
     fetchData();
   }, [session, status, bajas]);
+
+  useEffect(() => {
+    // const { tb_id, tb_desc } = busqueda;
+    Buscar();
+  }, [busqueda]);
 
   const {
     register,
@@ -80,28 +78,26 @@ function FormaPago() {
     });
   }, [formaPago, reset]);
   const Buscar = () => {
-    // alert(filtro);
-    console.log(TB_Busqueda, filtro);
-    if (TB_Busqueda === "" || filtro === "") {
+    const { tb_id, tb_desc } = busqueda;
+    if (tb_id === "" && tb_desc === "") {
       setFormaPagosFiltrados(formasPago);
       return;
     }
     const infoFiltrada = formasPago.filter((formapago) => {
-      const valorCampo = formapago[filtro];
-      if (typeof valorCampo === "number") {
-        return valorCampo.toString().includes(TB_Busqueda);
-      }
-      return valorCampo
-        ?.toString()
-        .toLowerCase()
-        .includes(TB_Busqueda.toLowerCase());
+      const coincideId = tb_id
+        ? formapago["id"].toString().includes(tb_id)
+        : true;
+      const coincideDescripcion = tb_desc
+        ? formapago.descripcion.toLowerCase().includes(tb_desc.toLowerCase())
+        : true;
+      return coincideId && coincideDescripcion;
     });
     setFormaPagosFiltrados(infoFiltrada);
   };
 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
-    setTB_Busqueda("");
+    setBusqueda({ tb_id: "", tb_desc: "" });
   };
 
   const Alta = async (event) => {
@@ -188,14 +184,16 @@ function FormaPago() {
     show
       ? document.getElementById("modalVFormaPago").showModal()
       : document.getElementById("modalVFormaPago").close();
-  }
+  };
   const home = () => {
     router.push("/");
   };
   const handleBusquedaChange = (event) => {
     event.preventDefault;
-    setTB_Busqueda(event.target.value);
-    console.log(event.target.value);
+    setBusqueda((estadoPrevio) => ({
+      ...estadoPrevio,
+      [event.target.id]: event.target.value,
+    }));
   };
   const ImprimePDF = () => {
     const configuracion = {
@@ -239,7 +237,7 @@ function FormaPago() {
       if (!doc.tiene_encabezado) {
         doc.imprimeEncabezadoPrincipalV();
         doc.nextRow(12);
-        doc.ImpPosX("Numero", 14, doc.tw_ren);
+        doc.ImpPosX("No.", 14, doc.tw_ren);
         doc.ImpPosX("Descripcion", 28, doc.tw_ren);
         doc.ImpPosX("Comision", 128, doc.tw_ren);
         doc.ImpPosX("Aplicacion", 152, doc.tw_ren);
@@ -253,7 +251,7 @@ function FormaPago() {
         doc.tiene_encabezado = true;
       }
     };
-    const reporte = new ReportePDF(configuracion)
+    const reporte = new ReportePDF(configuracion);
     Enca1(reporte);
     formaPagosFiltrados.forEach((producto) => {
       reporte.ImpPosX(producto.id.toString(), 14, reporte.tw_ren);
@@ -266,15 +264,15 @@ function FormaPago() {
         reporte.pageBreak();
         Enca1(reporte);
       }
-    })
-    const pdfData = reporte.doc.output("datauristring")
-    setPdfData(pdfData)
-    setPdfPreview(true)
-    showModalVista(true)
-  }
+    });
+    const pdfData = reporte.doc.output("datauristring");
+    setPdfData(pdfData);
+    setPdfPreview(true);
+    showModalVista(true);
+  };
   const CerrarView = () => {
     setPdfPreview(false);
-    setPdfData('');
+    setPdfData("");
   };
   if (status === "loading") {
     return (
@@ -292,16 +290,21 @@ function FormaPago() {
         setFormaPago={setFormaPago}
         formaPago={formaPago}
       />
-      <ModalVistaPreviaFormaPago pdfPreview={pdfPreview} pdfData={pdfData} PDF={ImprimePDF} Excel={ImprimirExcel}/>      
+      <ModalVistaPreviaFormaPago
+        pdfPreview={pdfPreview}
+        pdfData={pdfData}
+        PDF={ImprimePDF}
+        Excel={ImprimirExcel}
+      />
 
-      <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
-        <div className="flex justify-start p-3 ">
+<div className="h-[83vh] max-h-[83vh] container w-full bg-slate-100 rounded-3xl shadow-xl px-3 dark:bg-slate-700 overflow-y-auto">
+<div className="flex justify-start p-3 ">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Formas de Pagos.
           </h1>
         </div>
-        <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] ">
-          <div className="col-span-1 flex flex-col ">
+        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
+          <div className="md:col-span-1 flex flex-col">
             <Acciones
               Buscar={Buscar}
               Alta={Alta}
@@ -312,16 +315,14 @@ function FormaPago() {
               CerrarView={CerrarView}
             ></Acciones>
           </div>
-          <div className="col-span-7  ">
-            <div className="flex flex-col h-[calc(100%)]">
+          <div className="md:col-span-7">
+            <div className="flex flex-col h-full">
               <Busqueda
                 setBajas={setBajas}
-                setFiltro={setFiltro}
                 limpiarBusqueda={limpiarBusqueda}
                 Buscar={Buscar}
                 handleBusquedaChange={handleBusquedaChange}
-                TB_Busqueda={TB_Busqueda}
-                setTB_Busqueda={setTB_Busqueda}
+                busqueda={busqueda}
               />
               <TablaFormaPago
                 isLoading={isLoading}

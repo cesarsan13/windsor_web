@@ -6,7 +6,7 @@ import ModalVistaPreviaRepFemac3 from "./components/modalVistaPreviaRepFemac3";
 import {
   getAlumnosPorMes,
   Imprimir,
-  ImprimirExcel
+  ImprimirExcel,
 } from "@/app/utils/api/rep_femac_3/rep_femac_3";
 import { useSession } from "next-auth/react";
 import "@react-pdf-viewer/core/lib/styles/index.css";
@@ -18,7 +18,7 @@ import { showSwal } from "@/app/utils/alerts";
 function Rep_Femac_3() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [sOrdenar, ssetordenar] = useState('nombre');
+  const [sOrdenar, ssetordenar] = useState("nombre");
   const [FormaRepDosSel, setFormaRepDosSel] = useState([]);
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
@@ -32,14 +32,13 @@ function Rep_Femac_3() {
     }
     const fetchData = async () => {
       setisLoading(true);
-      const { token } = session.user
+      const { token } = session.user;
       setToken(token);
-      const data = await getAlumnosPorMes(token, horario, sOrdenar)
-      console.log(horario);
+      const data = await getAlumnosPorMes(token, horario, sOrdenar);
       setFormaRepDosSel(data.data);
       setisLoading(false);
-    }
-    fetchData()
+    };
+    fetchData();
   }, [session, status, horario, sOrdenar]);
 
   const home = () => {
@@ -54,9 +53,9 @@ function Rep_Femac_3() {
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
       body: FormaRepDosSel,
-    }
-    Imprimir(configuracion)
-  }
+    };
+    Imprimir(configuracion);
+  };
 
   const ImprimeExcel = () => {
     const configuracion = {
@@ -73,21 +72,23 @@ function Rep_Femac_3() {
         { header: "Año", dataKey: "Año_Nac_1" },
         { header: "Mes", dataKey: "Mes_Nac_1" },
       ],
-      nombre: "ReportePorMes"
-    }
-    ImprimirExcel(configuracion)
-  }
+      nombre: "ReportePorMes",
+    };
+    ImprimirExcel(configuracion);
+  };
 
   const handleCheckChange = (event) => {
     ssetordenar(event.target.value);
-  }
+  };
 
   const handleVerClick = () => {
-
     if (horario.numero === undefined) {
-      showSwal("Oppss!", "Para imprimir, debes seleccionar el horario", "error");
+      showSwal(
+        "Oppss!",
+        "Para imprimir, debes seleccionar el horario",
+        "error"
+      );
     } else {
-
       const configuracion = {
         Encabezado: {
           Nombre_Aplicacion: "Lista de Alumnos por clase mensual",
@@ -121,11 +122,41 @@ function Rep_Femac_3() {
       Enca1(reporte);
 
       body.forEach((reporte1) => {
-        reporte.ImpPosX(reporte1.Num_Renglon.toString() !== "0" ? reporte1.Num_Renglon.toString() : "", 15, reporte.tw_ren);
-        reporte.ImpPosX(reporte1.Numero_1.toString() !== "0" ? reporte1.Numero_1.toString() : "", 25, reporte.tw_ren);
-        reporte.ImpPosX(reporte1.Nombre_1.toString() !== "0" ? reporte1.Nombre_1.toString() : "", 35, reporte.tw_ren);
-        reporte.ImpPosX(reporte1.Año_Nac_1.toString().substring(0, 4) !== "0" ? reporte1.Año_Nac_1.toString().substring(0, 4) : "", 120, reporte.tw_ren);
-        reporte.ImpPosX(reporte1.Mes_Nac_1.toString().substring(4, 2) !== "0" ? reporte1.Mes_Nac_1.toString().substring(4, 2) : "", 130, reporte.tw_ren);
+        reporte.ImpPosX(
+          reporte1.Num_Renglon.toString() !== "0"
+            ? reporte1.Num_Renglon.toString()
+            : "",
+          15,
+          reporte.tw_ren
+        );
+        reporte.ImpPosX(
+          reporte1.Numero_1.toString() !== "0"
+            ? reporte1.Numero_1.toString()
+            : "",
+          25,
+          reporte.tw_ren
+        );
+        reporte.ImpPosX(
+          reporte1.Nombre_1.toString() !== "0"
+            ? reporte1.Nombre_1.toString()
+            : "",
+          35,
+          reporte.tw_ren
+        );
+        reporte.ImpPosX(
+          reporte1.Año_Nac_1.toString().substring(0, 4) !== "0"
+            ? reporte1.Año_Nac_1.toString().substring(0, 4)
+            : "",
+          120,
+          reporte.tw_ren
+        );
+        reporte.ImpPosX(
+          reporte1.Mes_Nac_1.toString().substring(4, 2) !== "0"
+            ? reporte1.Mes_Nac_1.toString().substring(4, 2)
+            : "",
+          130,
+          reporte.tw_ren
+        );
 
         Enca1(reporte);
         if (reporte.tw_ren >= reporte.tw_endRen) {
@@ -145,7 +176,7 @@ function Rep_Femac_3() {
     show
       ? document.getElementById("modalVPRepFemac3").showModal()
       : document.getElementById("modalVPRepFemac3").close();
-  }
+  };
 
   return (
     <>
@@ -161,13 +192,13 @@ function Rep_Femac_3() {
             Reporte de Alumnos por clase mensual.
           </h1>
         </div>
-        <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
-          <div className="col-span-1 flex flex-col">
+        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
+        <div className="md:col-span-1 flex flex-col">
             <Acciones Ver={handleVerClick} home={home}></Acciones>
           </div>
           <div className="col-span-7">
-            <div className="flex flex-col h-[calc(100%)]">
-              {token &&
+            <div className="flex flex-col h-[calc(100%)] space-y-4">
+              {token && (
                 <BuscarCat
                   table={"horarios"}
                   titulo={"Horario: "}
@@ -177,32 +208,36 @@ function Rep_Femac_3() {
                   setItem={setHorario}
                   modalId={"modal_horarios"}
                 />
-              }
-              <div className='flex space-x-4 mt-4'>
-                <div className="flex flex-col md:flex-row md:space-x-4 md:space-y-0 space-y-2">
-                  <span className="text-black dark:text-white">Ordenar por:</span>
-                  <label className="flex items-center space-x-2 dark:text-white text-black">
+              )}
+
+              <div className="col-8 flex flex-col">
+                <div className="flex space-x-4">
+                <label className="text-black dark:text-white flex flex-col md:flex-row space-x-4">
+                  <span className="text-black dark:text-white  flex items-center gap-3">Ordenar por:</span>
+                  <label className="flex items-center gap-3">
+                  <span className="text-black dark:text-white">Nombre</span>
                     <input
                       type="radio"
                       name="options"
                       value="nombre"
                       checked={sOrdenar === "nombre"}
                       onChange={handleCheckChange}
-                      className="form-radio"
+                      className="radio checked:bg-blue-500"
                     />
-                    <span>Nombre</span>
-                  </label>
-                  <label className="flex items-center space-x-2 dark:text-white text-black">
+                    </label>
+                    
+                  <label className="flex items-center gap-3">
+                  <span className="text-black dark:text-white">Número</span>
                     <input
                       type="radio"
                       name="options"
                       value="id"
                       checked={sOrdenar === "id"}
                       onChange={handleCheckChange}
-                      className="form-radio"
+                      className="radio checked:bg-blue-500"
                     />
-                    <span>Numero</span>
                   </label>
+                </label>
                 </div>
               </div>
             </div>

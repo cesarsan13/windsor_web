@@ -6,8 +6,9 @@ import { formatDate } from '../utils/globalfn';
 import { Documentos, grupo_cobranza, Imprimir, ImprimirExcel } from '../utils/api/Rep_Femac_7/Rep_Femac_7';
 import { useSession } from 'next-auth/react';
 import { ReportePDF } from '../utils/ReportesPDF';
-import { Viewer, Worker } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
+import ModalVistaPreviaReporteAdeudoPendientes from './components/modalVistaPreviaRepAdeudoPendiente';
+
 
 function Repo_Femac_7() {
     const date = new Date();
@@ -198,25 +199,37 @@ function Repo_Femac_7() {
         reporte.ImpPosX("Total General", 208, reporte.tw_ren);
         reporte.ImpPosX(total_General.toFixed(2).toString(), 248, reporte.tw_ren);
         const pdfData = reporte.doc.output("datauristring")
-        setPdfData(pdfData)
-        setPdfPreview(true)
+        setPdfData(pdfData);
+        setPdfPreview(true);
+        showModalVista(true);
     }
+
+    const showModalVista = (show) => {
+        show
+          ? document.getElementById("modalVPRepAdeudosPendientes").showModal()
+          : document.getElementById("modalVPRepAdeudosPendientes").close();
+      }
     return (
         <>
+        <ModalVistaPreviaReporteAdeudoPendientes
+           pdfPreview={pdfPreview} 
+           pdfData={pdfData} 
+           PDF={ImprimePDF} 
+           Excel = {ImprimeExcel} 
+        />
             <div className='container w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3'>
                 <div className='flex justify-start p-3 '>
                     <h1 className='text-4xl font-xthin text-black dark:text-white md:px-12'>
                         Reporte Adeudos Pendientes
                     </h1>
                 </div>
-                <div className='container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]'>
-                    <div className='col-span-1 flex flex-col'>
-                        <Acciones home={home} ImprimePDF={ImprimePDF} ImprimeExcel={ImprimeExcel} Ver={handleVerClick} />
+                <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
+                <div className="md:col-span-1 flex flex-col">
+                        <Acciones home={home} Ver={handleVerClick} />
                     </div>
                     <div className='col-span-7'>
                         <div className='flex flex-col h-[calc(100%)]'>
                             <div className='flex flex-col gap-4 md:flex-row'>
-                                <div className='w-full sm:w-full md:w-4/12 lg:w-3/12'>
                                     <label className='input input-bordered input-md text-black dark:text-white flex items-center gap-3'>
                                         Fecha
                                         <input
@@ -226,8 +239,7 @@ function Repo_Femac_7() {
                                             className='text-black dark:text-white'
                                         />
                                     </label>
-                                </div>
-                                <div className='w-full sm:w-full md:w-4/12 lg:w-3/12'>
+
                                     <label className='input input-bordered input-md text-black dark:text-white flex items-center gap-3'>
                                         Documento
                                         <input
@@ -237,9 +249,9 @@ function Repo_Femac_7() {
                                             className='text-black dark:text-white'
                                         />
                                     </label>
-                                </div>
-                                <div className='w-full sm:w-full md:w-4/12 lg:w-6/12 flex flex-col sm:flex-col md:flex-row lg:flex-row items-start gap-2'>
-                                    <label htmlFor="ch_sinDeudores" className="flex items-center cursor-pointer w-full">
+
+                                <div className='w-full sm:w-full m:w-full lg:w-7/12 flex flex-col sm:flex-col md:flex-row lg:flex-row items-start gap-2'>
+                                    <label htmlFor="ch_sinDeudores" className="label cursor-pointer flex items-center space-x-2">
                                         <input
                                             type="checkbox"
                                             id="ch_sinDeudores"
@@ -247,35 +259,18 @@ function Repo_Femac_7() {
                                             checked={sinDeudores}
                                             onClick={(evt) => setSinDeudores(evt.target.checked)}
                                         />
-                                        <span className="label-text font-bold text-neutral-600 dark:text-neutral-200">Sin Deudores</span>
+                                        <span className="label-text font-bold  sm:block text-neutral-600 dark:text-neutral-200">Sin Deudores</span>
                                     </label>
-                                    <label htmlFor="ch_grupoAlumno" className="flex items-center cursor-pointer w-full">
+                                    <label htmlFor="ch_grupoAlumno" className="label cursor-pointer flex items-center space-x-2">
                                         <input
                                             type="checkbox"
                                             id="ch_grupoAlumno"
                                             className="checkbox mx-2 checkbox-md"
                                             onClick={(evt) => setGrupoAlumno(evt.target.checked)}
                                         />
-                                        <span className="label-text font-bold text-neutral-600 dark:text-neutral-200">Imprimir Grupo, Alumno</span>
+                                        <span className="label-text font-bold  sm:block text-neutral-600 dark:text-neutral-200">Imprimir Grupo, Alumno</span>
                                     </label>
                                 </div>
-                            </div>
-
-
-                            <div className='  mt-4'>
-                                {pdfPreview && pdfData && (
-                                    <div className=''>
-                                        <div className='pdf-preview'>
-                                            <Worker
-                                                workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
-                                            >
-                                                <div style={{ height: "400px" }}>
-                                                    <Viewer fileUrl={pdfData} />
-                                                </div>
-                                            </Worker>
-                                        </div>
-                                    </div>
-                                )}
                             </div>
                         </div>
                     </div>

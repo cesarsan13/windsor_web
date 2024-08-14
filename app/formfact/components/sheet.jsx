@@ -9,18 +9,45 @@ function Sheet({
   setSelectedIndex,
   changeSelectedLabel,
   setTextoAnterior,
+  currentID,
 }) {
   const handleDoubleClick = (event) => {
     event.preventDefault();
     const rect = event.target.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
+
+    const maxNumeroDato = Math.max(...labels.map((lbl) => lbl.numero_dato)) + 1;
     setLabels([
       ...labels,
       {
         columna_impresion: x,
         renglon_impresion: y,
         descripcion_campo: "Texto",
+
+        cuenta: 0,
+        font_bold: "N",
+        font_italic: "N",
+        font_nombre: "Arial",
+        font_rallado: "N",
+        font_subrallado: "N",
+        font_tamaño: 9,
+        forma_columna: 9030,
+        forma_columna_dos: 0,
+        forma_renglon: 3120,
+        forma_renglon_dos: 0,
+        formato: 2,
+        funcion: 0,
+        importe_transaccion: 0,
+        longitud: 10,
+        naturaleza: 0,
+        nombre_campo: "",
+        numero_archivo: 12,
+        numero_dato: maxNumeroDato,
+        numero_forma: currentID,
+        tiempo_operacion: 0,
+        tipo_campo: 2,
+        visible: "S",
       },
     ]);
   };
@@ -44,22 +71,33 @@ function Sheet({
   const handleDragStart = (event, index) => {
     event.dataTransfer.setData("index", index);
   };
-
+  const roundToNearest = (value, threshold) => {
+    const roundedValue = Math.round(value / threshold) * threshold;
+    return roundedValue;
+  };
   const handleDragOver = (evt) => {
     evt.preventDefault();
   };
   const handleDrop = (evt) => {
     const index = evt.dataTransfer.getData("index");
-    const x = evt.clientX - evt.currentTarget.offsetLeft - 15;
-    const y = evt.clientY - evt.currentTarget.offsetTop - 15;
+    const rect = evt.currentTarget.getBoundingClientRect();
+    let x = evt.clientX - rect.left - 15;
+    let y = evt.clientY - rect.top - 15;
+    const redondea = 10;
+    x = roundToNearest(x, redondea);
+    y = roundToNearest(y, redondea);
+    x = Math.max(x, 0);
+    y = Math.max(y, 0);
     const resultado = labels.map((lbl, idx) => {
       return idx === parseInt(index)
         ? { ...lbl, columna_impresion: x, renglon_impresion: y }
         : lbl;
     });
+
     setLabels(resultado);
     setSelectedIndex(index);
   };
+
 
   return (
     <div
@@ -76,7 +114,7 @@ function Sheet({
           data-key={index}
           name={`texto_${label.numero_dato}`}
           id={`texto_${label.numero_dato}`}
-          className="hover:cursor-move  "
+          className="hover:cursor-move  text-black dark:text-black"
           onClick={(evt) => handleClick(evt, index)}
           style={{
             position: "absolute",
@@ -89,9 +127,8 @@ function Sheet({
             fontWeight: label.font_bold === "S" ? `bold` : `normal`,
             fontSize: `${label.font_tamaño * 1.3333}px`,
             fontStyle: label.font_italic === "S" ? "italic" : "normal",
-            textDecoration: `${
-              label.font_subrallado === "S" ? "underline" : ""
-            } ${label.font_rallado === "S" ? "line-through" : ""}`,
+            textDecoration: `${label.font_subrallado === "S" ? "underline" : ""
+              } ${label.font_rallado === "S" ? "line-through" : ""}`,
           }}
         >
           {label.descripcion_campo}

@@ -33,9 +33,10 @@ function Horarios() {
   const [currentID, setCurrentId] = useState("");
   const [filtro, setFiltro] = useState("");
   const [dia, setDia] = useState("");
-  const [TB_Busqueda, setTB_Busqueda] = useState("");  
+  // const [TB_Busqueda, setTB_Busqueda] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -47,13 +48,15 @@ function Horarios() {
       const data = await getHorarios(token, bajas);
       setHorarios(data);
       setHorariosFiltrados(data);
-      if (filtro !== "" && TB_Busqueda !== "") {
-        Buscar();
-      }
       setisLoading(false);
     };
     fetchData();
   }, [session, status, bajas]);
+
+  useEffect(() => {
+    Buscar();
+  }, [busqueda]);
+
   const {
     register,
     handleSubmit,
@@ -85,25 +88,26 @@ function Horarios() {
     });
   }, [horario, reset]);
   const Buscar = () => {
-    if (TB_Busqueda === "" || filtro === "") {
+    const { tb_id, tb_desc } = busqueda;
+    if (tb_id === "" && tb_desc === "") {
       setHorariosFiltrados(horarios);
       return;
     }
-    const infoFiltrada = horarios.filter((formapago) => {
-      const valorCampo = formapago[filtro];
-      if (typeof valorCampo === "number") {
-        return valorCampo.toString().includes(TB_Busqueda);
-      }
-      return valorCampo
-        ?.toString()
-        .toLowerCase()
-        .includes(TB_Busqueda.toLowerCase());
+    const infoFiltrada = horarios.filter((horario) => {
+      const coincideId = tb_id ? horario["numero"].toString().includes(tb_id) : true;
+      const coincideDescripcion = tb_desc
+        ? horario["horario"]
+          .toString()
+          .toLowerCase()
+          .includes(tb_desc.toLowerCase())
+        : true;
+      return coincideId && coincideDescripcion;
     });
     setHorariosFiltrados(infoFiltrada);
   };
-  const limpiarBusqueda = () => {
-    setFiltro("");
-    setTB_Busqueda("");
+  const limpiarBusqueda = (evt) => {
+    evt.preventDefault;
+    setBusqueda({ tb_id: "", tb_desc: "" });
   };
   const Alta = async (event) => {
     setCurrentId("");
@@ -200,7 +204,10 @@ function Horarios() {
   };
   const handleBusquedaChange = (event) => {
     event.preventDefault;
-    setTB_Busqueda(event.target.value);
+    setBusqueda((estadoPrevio) => ({
+      ...estadoPrevio,
+      [event.target.id]: event.target.value,
+    }));
   };
   if (status === "loading") {
     return (
@@ -240,7 +247,7 @@ function Horarios() {
     };
     ImprimirExcel(configuracion);
   };
-  const handleVerClick = () =>{
+  const handleVerClick = () => {
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -268,18 +275,18 @@ function Horarios() {
         doc.nextRow(6);
         doc.tiene_encabezado = true;
       }
-    };    
+    };
     const reporte = new ReportePDF(configuracion)
     Enca1(reporte);
-    horariosFiltrados.forEach((horario)=>{
-      reporte.ImpPosX(horario.numero.toString(),14,reporte.tw_ren)
-      reporte.ImpPosX(horario.cancha.toString(),28,reporte.tw_ren)
-      reporte.ImpPosX(horario.dia.toString(),42,reporte.tw_ren)
-      reporte.ImpPosX(horario.horario.toString(),82,reporte.tw_ren)
-      reporte.ImpPosX(horario.max_niños.toString(),114,reporte.tw_ren)
-      reporte.ImpPosX(horario.sexo.toString(),134,reporte.tw_ren)
-      reporte.ImpPosX(horario.edad_ini.toString(),154,reporte.tw_ren)
-      reporte.ImpPosX(horario.edad_fin.toString(),174,reporte.tw_ren)
+    horariosFiltrados.forEach((horario) => {
+      reporte.ImpPosX(horario.numero.toString(), 14, reporte.tw_ren)
+      reporte.ImpPosX(horario.cancha.toString(), 28, reporte.tw_ren)
+      reporte.ImpPosX(horario.dia.toString(), 42, reporte.tw_ren)
+      reporte.ImpPosX(horario.horario.toString(), 82, reporte.tw_ren)
+      reporte.ImpPosX(horario.max_niños.toString(), 114, reporte.tw_ren)
+      reporte.ImpPosX(horario.sexo.toString(), 134, reporte.tw_ren)
+      reporte.ImpPosX(horario.edad_ini.toString(), 154, reporte.tw_ren)
+      reporte.ImpPosX(horario.edad_fin.toString(), 174, reporte.tw_ren)
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRen) {
         reporte.pageBreak();
@@ -296,6 +303,11 @@ function Horarios() {
       ? document.getElementById("modalVPHorarios").showModal()
       : document.getElementById("modalVPHorarios").close();
   }
+  if (status === "loading") {
+    return (
+      <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
+    );
+  }
   return (
     <>
       <ModalHorario
@@ -310,32 +322,30 @@ function Horarios() {
         setDia={setDia}
       />
       <ModalVistaPreviaHorarios pdfData={pdfData} pdfPreview={pdfPreview} PDF={ImprimePDF} Excel={ImprimeExcel} />
-      <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
+      <div className="h-[83vh] max-h-[83vh] container w-full bg-slate-100 rounded-3xl shadow-xl px-3 dark:bg-slate-700 overflow-y-auto">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
-            Horarios
+            Horarios.
           </h1>
         </div>
-        <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] ">
-          <div className="col-span-1 flex flex-col">
+        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
+          <div className="md:col-span-1 flex flex-col">
             <Acciones
               Buscar={Buscar}
               Alta={Alta}
               home={home}
               Ver={handleVerClick}
-            ></Acciones>
+            />
           </div>
-          <div className="col-span-7">
-            <div className="flex flex-col h-[calc(100%)]">
+          <div className="md:col-span-7">
+            <div className="flex flex-col h-full">
               <Busqueda
                 setBajas={setBajas}
-                setFiltro={setFiltro}
                 limpiarBusqueda={limpiarBusqueda}
                 Buscar={Buscar}
                 handleBusquedaChange={handleBusquedaChange}
-                TB_Busqueda={TB_Busqueda}
-                setTB_Busqueda={setTB_Busqueda}
-              />            
+                busqueda={busqueda}
+              />
               <TablaHorarios
                 isLoading={isLoading}
                 HorariosFiltrados={horariosFiltrados}
@@ -349,6 +359,7 @@ function Horarios() {
         </div>
       </div>
     </>
+
   );
 }
 

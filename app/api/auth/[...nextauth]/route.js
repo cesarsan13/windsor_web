@@ -15,7 +15,6 @@ export const authOptions = {
 
       async authorize(credentials, request) {
         const { csrfToken, ...data } = credentials;
-        console.log("llego a la autorizacion");
         const res = await fetch(`${process.env.DOMAIN_API}api/login`, {
           method: "POST",
           body: JSON.stringify(data),
@@ -25,21 +24,7 @@ export const authOptions = {
         const { status } = resjson;
         if (!status) throw new Error("Credenciales Incorrectas");
 
-        // resjson.data.user_data =
-        //   resjson.data.rol_id === "2"
-        //     ? resjson.data.paciente
-        //     : resjson.data.rol_id === "3"
-        //     ? resjson.data.medico
-        //     : [];
         resjson.data.token = resjson.token;
-
-        // const accesos_rol = await getAccesosRol(
-        //   resjson.token,
-        //   resjson.data.rol_id
-        // );
-        // if (accesos_rol.status) {
-        //   resjson.data.permisos = accesos_rol.data;
-        // }
 
         return resjson.data;
       },
@@ -55,10 +40,36 @@ export const authOptions = {
     },
   },
   pages: {
-    signIn: "/windsor/auth/login",
-    signOut: "/",
+    signIn: "/control_escolar/auth/login",
+    signOut: "/control_escolar",
   },
   secret: process.env.NEXTAUTH_SECRET,
+  cookies: {
+    sessionToken: {
+      name: "next-auth.session-tokenw",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/control_escolar",
+      },
+    },
+    csrfToken: {
+      name: "next-auth.csrf-tokenw",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/control_escolar",
+      },
+    },
+    callbackUrl: {
+      name: "next-auth.callback-urlw",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/control_escolar",
+      },
+    },
+  },
 };
 const handler = NextAuth(authOptions);
 

@@ -3,21 +3,19 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalCajeros from "@/app/cajeros/components/modalCajeros";
-import TablaCajeros from "@/app/cajeros/components/tablaCajeros";
-import Busqueda from "@/app/cajeros/components/Busqueda";
+import TablaCajeros from "./components/tablaCajeros";
+import Busqueda from "./components/Busqueda";
 import Acciones from "@/app/cajeros/components/Acciones";
 import { useForm } from "react-hook-form";
 import {
   getCajeros,
   guardaCajero,
   Imprimir,
-  ImprimirExcel
+  ImprimirExcel,
 } from "@/app/utils/api/cajeros/cajeros";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/cajeros/cajeros";
-import { eventNames } from "process";
-import { NEXT_CACHE_REVALIDATE_TAG_TOKEN_HEADER } from "next/dist/lib/constants";
 import "jspdf-autotable";
 import ModalVistaPreviaCajeros from "./components/modalVistaPreviaCajeros";
 import { ReportePDF } from "../utils/ReportesPDF";
@@ -25,18 +23,17 @@ import { ReportePDF } from "../utils/ReportesPDF";
 function Cajeros() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [cajeros, setCajeros] = useState([]);  //formasPago
-  const [cajero, setCajero] = useState({});    //formaPago
+  const [cajeros, setCajeros] = useState([]); //formasPago
+  const [cajero, setCajero] = useState({}); //formaPago
   const [cajerosFiltrados, setCajerosFiltrados] = useState([]);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState("");
-  const [filtro, setFiltro] = useState("");
-  const [TB_Busqueda, setTB_Busqueda] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -48,14 +45,14 @@ function Cajeros() {
       const data = await getCajeros(token, bajas);
       setCajeros(data);
       setCajerosFiltrados(data);
-      if (filtro !== "" && TB_Busqueda !== "") {
-        Buscar();
-      }
       setisLoading(false);
     };
     fetchData();
   }, [session, status, bajas]);
 
+  useEffect(() => {
+    Buscar();
+  }, [busqueda]);
   const {
     register,
     handleSubmit,
@@ -88,28 +85,29 @@ function Cajeros() {
     });
   }, [cajero, reset]);
   const Buscar = () => {
-    // alert(filtro);
-    console.log(TB_Busqueda, filtro);
-    if (TB_Busqueda === "" || filtro === "") {
+    const { tb_id, tb_desc } = busqueda;
+    if (tb_id === "" && tb_desc === "") {
       setCajerosFiltrados(cajeros);
       return;
     }
     const infoFiltrada = cajeros.filter((cajero) => {
-      const valorCampo = cajero[filtro];
-      if (typeof valorCampo === "number") {
-        return valorCampo.toString().includes(TB_Busqueda);
-      }
-      return valorCampo
-        ?.toString()
-        .toLowerCase()
-        .includes(TB_Busqueda.toLowerCase());
+      const coincideNumero = tb_id
+        ? cajero["numero"].toString().includes(tb_id)
+        : true;
+      const coincideNombre = tb_desc
+        ? cajero["nombre"]
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
+        : true;
+      return coincideNumero && coincideNombre;
     });
     setCajerosFiltrados(infoFiltrada);
   };
 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
-    setTB_Busqueda("");
+    setBusqueda({ tb_id: "", tb_desc: "" });
   };
 
   const Alta = async (event) => {
@@ -158,7 +156,6 @@ function Cajeros() {
       // showModal(true);
     }
     res = await guardaCajero(session.user.token, data, accion);
-    // console.log(res.status + " " + res);
     if (res.status) {
       if (accion === "Alta") {
         const nuevaCajero = { currentID, ...data };
@@ -176,7 +173,9 @@ function Cajeros() {
             setCajerosFiltrados(cFiltrados);
           } else {
             if (bajas) {
-              const cFiltrados = cajeros.filter((c) => c.numero !== data.numero);
+              const cFiltrados = cajeros.filter(
+                (c) => c.numero !== data.numero
+              );
               setCajeros(cFiltrados);
               setCajerosFiltrados(cFiltrados);
             } else {
@@ -203,7 +202,10 @@ function Cajeros() {
   };
   const handleBusquedaChange = (event) => {
     event.preventDefault;
-    setTB_Busqueda(event.target.value);
+    setBusqueda((estadoPrevio) => ({
+      ...estadoPrevio,
+      [event.target.id]: event.target.value,
+    }));
   };
   const ImprimePDF = () => {
     const configuracion = {
@@ -231,10 +233,10 @@ function Cajeros() {
         { header: "Telefono", dataKey: "telefono" },
         { header: "Correo", dataKey: "mail" },
       ],
-      nombre: "Cajeros"
-    }
-    ImprimirExcel(configuracion)
-  }
+      nombre: "Cajeros",
+    };
+    ImprimirExcel(configuracion);
+  };
   const handleVerClick = () => {
     const configuracion = {
       Encabezado: {
@@ -247,11 +249,11 @@ function Cajeros() {
       if (!doc.tiene_encabezado) {
         doc.imprimeEncabezadoPrincipalV();
         doc.nextRow(12);
-        doc.ImpPosX("Numero", 14, doc.tw_ren);
+        doc.ImpPosX("No.", 14, doc.tw_ren);
         doc.ImpPosX("Nombre", 28, doc.tw_ren);
-        doc.ImpPosX("Clave", 62, doc.tw_ren);
-        doc.ImpPosX("Telefono", 82, doc.tw_ren);
-        doc.ImpPosX("Correo", 112, doc.tw_ren);
+        doc.ImpPosX("Clave", 97, doc.tw_ren);
+        doc.ImpPosX("Telefono", 112, doc.tw_ren);
+        doc.ImpPosX("Correo", 142, doc.tw_ren);
         doc.nextRow(4);
         doc.printLineV();
         doc.nextRow(4);
@@ -261,30 +263,30 @@ function Cajeros() {
         doc.tiene_encabezado = true;
       }
     };
-    const reporte = new ReportePDF(configuracion)
-    Enca1(reporte)
-    cajerosFiltrados.forEach((cajero)=>{
+    const reporte = new ReportePDF(configuracion);
+    Enca1(reporte);
+    cajerosFiltrados.forEach((cajero) => {
       reporte.ImpPosX(cajero.numero.toString(), 14, reporte.tw_ren);
       reporte.ImpPosX(cajero.nombre.toString(), 28, reporte.tw_ren);
-      reporte.ImpPosX(cajero.clave_cajero.toString(), 62, reporte.tw_ren);
-      reporte.ImpPosX(cajero.telefono.toString(), 82, reporte.tw_ren);
-      reporte.ImpPosX(cajero.mail.toString(), 112, reporte.tw_ren);
+      reporte.ImpPosX(cajero.clave_cajero.toString(), 97, reporte.tw_ren);
+      reporte.ImpPosX(cajero.telefono.toString(), 112, reporte.tw_ren);
+      reporte.ImpPosX(cajero.mail.toString(), 142, reporte.tw_ren);
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRen) {
         reporte.pageBreak();
         Enca1(reporte);
       }
-    })
+    });
     const pdfData = reporte.doc.output("datauristring");
     setPdfData(pdfData);
     setPdfPreview(true);
-    showModalVista(true)
-  }
+    showModalVista(true);
+  };
   const showModalVista = (show) => {
     show
       ? document.getElementById("modalVPAlumno").showModal()
       : document.getElementById("modalVPAlumno").close();
-  }
+  };
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -301,26 +303,35 @@ function Cajeros() {
         setCajero={setCajero}
         cajero={cajero}
       />
-      <ModalVistaPreviaCajeros pdfPreview={pdfPreview} pdfData={pdfData} PDF={ImprimePDF} Excel={ImprimeExcel}/>
+      <ModalVistaPreviaCajeros
+        pdfPreview={pdfPreview}
+        pdfData={pdfData}
+        PDF={ImprimePDF}
+        Excel={ImprimeExcel}
+      />
       <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
-            Cajeros.
+            Cajeros
           </h1>
         </div>
-        <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)] ">
-          <div className="col-span-1 flex flex-col ">
-            <Acciones Buscar={Buscar} Alta={Alta} home={home} Ver={handleVerClick}></Acciones>
+        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
+          <div className="md:col-span-1 flex flex-col">
+            <Acciones
+              Buscar={Buscar}
+              Alta={Alta}
+              home={home}
+              Ver={handleVerClick}
+            ></Acciones>
           </div>
-          <div className="col-span-7  ">
-            <div className="flex flex-col h-[calc(100%)]">
+          <div className="md:col-span-7">
+            <div className="flex flex-col h-full">
               <Busqueda
                 setBajas={setBajas}
-                setFiltro={setFiltro}
                 limpiarBusqueda={limpiarBusqueda}
                 Buscar={Buscar}
                 handleBusquedaChange={handleBusquedaChange}
-                TB_Busqueda={TB_Busqueda}
+                busqueda={busqueda}
               />
               <TablaCajeros
                 isLoading={isLoading}

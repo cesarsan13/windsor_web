@@ -16,6 +16,7 @@ function Inputs({
   isDisabled,
   handleBlur,
   handleChange,
+  handleKeyDown,
   data,
   step,
 }) {
@@ -37,12 +38,12 @@ function Inputs({
           {data &&
             (name === "font_nombre"
               ? Object.entries(data).map(([key, value]) => (
-                  <option key={key} value={value}>
-                    {value}
-                  </option>
-                ))
+                <option key={key} value={value}>
+                  {value}
+                </option>
+              ))
               : name === "idlabel"
-              ? data.map((object, index) => (
+                ? data.map((object, index) => (
                   <option
                     key={index}
                     value={object.numero_dato}
@@ -51,7 +52,7 @@ function Inputs({
                     Texto {object.numero_dato}
                   </option>
                 ))
-              : Object.entries(data).map(([key, value]) => (
+                : Object.entries(data).map(([key, value]) => (
                   <option key={key} value={key}>
                     {value}
                   </option>
@@ -86,9 +87,35 @@ function Inputs({
         </span>
       )}
     </div>
+  ) : type === 'number_enter' ? (
+    <div className="flex flex-col">
+      <label className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}>
+        {Titulo}
+        <input
+          {...(step && { step: step })}
+          {...(maxLenght !== 0 && { maxLength: maxLenght })}
+          name={name}
+          id={name}
+          type={"number"}
+          className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 ${className}`}
+          // {...(dataType === "int" && { onKeyDown: soloEnteros })}
+          // {...(dataType === "float" && { onKeyDown: soloDecimales })}
+          {...register(name, {
+            ...(requerido && { required: message }),
+          })}
+          disabled={isDisabled}
+          onKeyDown={(evt) => handleKeyDown(evt)}
+        />
+      </label>
+      {errors[name] && (
+        <span className="text-red-500 text-sm mt-2">
+          {errors[name].message}
+        </span>
+      )}
+    </div>
   ) : (
     <div className="flex flex-col">
-      <label className={`input   flex items-center  ${tamañolabel}`}>
+      <label className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}>
         {Titulo}
         <input
           {...(step && { step: step })}
@@ -97,7 +124,7 @@ function Inputs({
           name={name}
           id={name}
           type={type}
-          className={className}
+          className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 ${className}`}
           {...(dataType === "int" && { onKeyDown: soloEnteros })}
           {...(dataType === "float" && { onKeyDown: soloDecimales })}
           {...register(name, {
@@ -106,8 +133,8 @@ function Inputs({
           {...(dataType === "int" ||
             (dataType === "float" &&
               handleBlur && {
-                onBlur: (event) => handleBlur(event, dataType),
-              }))}
+              onBlur: (event) => handleBlur(event, dataType),
+            }))}
           disabled={isDisabled}
         />
       </label>

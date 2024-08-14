@@ -20,47 +20,43 @@ function TablaCajeros({
 
   return !isLoading ? (
     <>
-        <div className='overflow-x-auto mt-3  h-6/8 text-black bg-white dark:bg-[#1d232a] dark:text-white m-2 w-full  lg:w-5/8 '>
+      <div className="overflow-x-auto mt-3 h-[calc(40vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-3/4">
         {cajerosFiltrados.length > 0 ? (
-          <table className="table table-xs table-zebra table-compact w-full">
-            <thead className="relative z-[1] md:static">
+          <table className="table table-xs table-zebra w-full">
+            <thead className="sticky top-0 bg-white dark:bg-[#1d232a] ">
               <tr>
                 <th></th>
-                <td>Nombre</td>
-                <td>Telefono</td>
-                <td>Correo</td>
+                <td className="w-[50%]">Nombre</td>
+                <td className="w-[20%]">Telefono</td>
+                <td className="w-[40%]">Correo</td>
                 <th className="w-[calc(20%)]">Acciones</th>
               </tr>
             </thead>
             <tbody>
               {cajerosFiltrados.map((item) => (
                 <tr key={item.numero} className="hover:cursor-pointer">
-                  <th className="text-left">
-                    {item.numero}
-                  </th>
-                  <td className="text-left w-50">
-                    {item.nombre}
-                  </td>
+                  <th className="text-left">{item.numero}</th>
+                  <td className="text-left w-50">{item.nombre}</td>
                   <td>{item.telefono}</td>
                   <td>{item.mail}</td>
                   <th>
                     <div className="flex flex-row space-x-1">
                       <div
-                        className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                        className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                         data-tip={`Ver ${item.numero}`}
                         onClick={(evt) => tableAction(evt, item, `Ver`)}
                       >
                         <i className="fa-solid fa-eye"></i>
                       </div>
                       <div
-                        className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                        className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                         data-tip={`Editar ${item.numero}`}
                         onClick={(evt) => tableAction(evt, item, `Editar`)}
                       >
                         <i className="fa-solid fa-file"></i>
                       </div>
                       <div
-                        className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
+                        className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                         data-tip={`Eliminar ${item.numero}`}
                         onClick={(evt) => tableAction(evt, item, "Eliminar")}
                       >
@@ -71,15 +67,7 @@ function TablaCajeros({
                 </tr>
               ))}
             </tbody>
-            <tfoot>
-              <tr>
-                <th></th>
-                <td>Nombre</td>
-                <td>Telefono</td>
-                <td>Correo</td>
-                <th>Acciones</th>
-              </tr>
-            </tfoot>
+            <tfoot />
           </table>
         ) : (
           <NoData />

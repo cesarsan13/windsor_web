@@ -4,11 +4,10 @@ export const getAlumnos = async (token, baja) => {
   let url = "";
   baja
     ? (url = `${process.env.DOMAIN_API}api/students/bajas`)
-    : (url = `${process.env.DOMAIN_API}api/students`);
+    : (url = `${process.env.DOMAIN_API}api/students/`);
   const res = await fetch(url, {
     headers: {
-      Authorization: "Bearer " + token,
-      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
   });
   const resJson = await res.json();
@@ -85,9 +84,8 @@ const Enca1 = (doc) => {
 };
 
 export const Imprimir = (configuracion) => {
-  const newPDF = new ReportePDF(configuracion,"landscape");
+  const newPDF = new ReportePDF(configuracion, "landscape");
   const { body } = configuracion;
-  console.log("body", body);
   Enca1(newPDF);
   body.forEach((alumnos) => {
     const id = alumnos.id.toString().substring(0, 25);
@@ -102,10 +100,26 @@ export const Imprimir = (configuracion) => {
       .substring(0, 15);
     const telefono = alumnos.telefono_1.toString().substring(0, 15);
     newPDF.ImpPosX(alumnos.id.toString(), 10, newPDF.tw_ren);
-    newPDF.ImpPosX(alumnos.nombre.toString().substring(0,20), 25, newPDF.tw_ren);
-    newPDF.ImpPosX(alumnos.direccion.toString().substring(0,12), 90, newPDF.tw_ren);
-    newPDF.ImpPosX(alumnos.colonia.toString().substring(0,20), 120, newPDF.tw_ren);
-    newPDF.ImpPosX(alumnos.fecha_nac.toString().substring(0,15), 175, newPDF.tw_ren);
+    newPDF.ImpPosX(
+      alumnos.nombre.toString().substring(0, 20),
+      25,
+      newPDF.tw_ren
+    );
+    newPDF.ImpPosX(
+      alumnos.direccion.toString().substring(0, 12),
+      90,
+      newPDF.tw_ren
+    );
+    newPDF.ImpPosX(
+      alumnos.colonia.toString().substring(0, 20),
+      120,
+      newPDF.tw_ren
+    );
+    newPDF.ImpPosX(
+      alumnos.fecha_nac.toString().substring(0, 15),
+      175,
+      newPDF.tw_ren
+    );
     newPDF.ImpPosX(alumnos.fecha_inscripcion.toString(), 200, newPDF.tw_ren);
     newPDF.ImpPosX(alumnos.telefono_1.toString(), 230, newPDF.tw_ren);
     Enca1(newPDF);

@@ -45,12 +45,10 @@ function ModalCajeroPago({
     if (Object.keys(cajero).length > 0) {
       res = await validarClaveCajero(token, data);
       if (res.status) {
-        console.log('true');
         showModal(false);
         await showSwalAndWait(res.alert_title, res.alert_text, res.alert_icon);
         setValidar(true);
       } else {
-        console.log('false');
         showModal(false);
         await showSwalAndWait(res.alert_title, res.alert_text, res.alert_icon);
         showModal(true);
@@ -58,17 +56,19 @@ function ModalCajeroPago({
       }
     } else {
       showModal(false);
-      await showSwalAndWait("Oppss!", "Para validar la clave, debe estar seleccionado un cajero", "error");
+      await showSwalAndWait(
+        "Oppss!",
+        "Para validar la clave, debe estar seleccionado un cajero",
+        "error"
+      );
       showModal(true);
       setValidar(false);
     }
   });
 
-
-
   return (
     <dialog id="my_modal_3" className="modal">
-      <div className="modal-box w-1/2 max-w-3xl">
+      <div className="modal-box w-full max-w-md sm:max-w-lg p-6">
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
           onClick={() => home()}
@@ -78,7 +78,7 @@ function ModalCajeroPago({
         <form onSubmit={onSubmitModal}>
           <h3 className="font-bold text-lg mb-5">Ingresa Clave del Cajero</h3>
           <fieldset id="fs_cajeropago">
-            <div className="container flex flex-col space-y-5">
+            <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row lg:flex-row">
               <BuscarCat
                 table="cajeros"
                 fieldsToShow={columnasBuscaCat}
@@ -88,6 +88,8 @@ function ModalCajeroPago({
                 token={session.user.token}
                 modalId="modal_cajeros"
               />
+            </div>
+            <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row lg:flex-row mt-4">
               <Inputs
                 dataType={"string"}
                 name={"clave_cajero"}
@@ -105,15 +107,15 @@ function ModalCajeroPago({
               />
             </div>
           </fieldset>
-          <div className=" modal-action">
+          <div className="modal-action flex justify-end mt-5">
             <div
-              className={`tooltip tooltip-top my-5 hover:cursor-pointer`}
+              className="tooltip tooltip-top hover:cursor-pointer"
               data-tip="Guardar"
             >
               <button
                 type="submit"
                 id="btn_validar"
-                className="btn  bg-blue-500 hover:bg-blue-700 text-white"
+                className="btn bg-blue-500 hover:bg-blue-700 text-white"
               >
                 <i className="fa-regular fa-floppy-disk mx-2"></i> Validar
               </button>
@@ -123,5 +125,6 @@ function ModalCajeroPago({
       </div>
     </dialog>
   );
+
 }
 export default ModalCajeroPago;

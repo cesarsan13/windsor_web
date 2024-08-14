@@ -62,7 +62,7 @@ function ModalCajeros({
               <Inputs
                 dataType={"int"}
                 name={"numero"}
-                tamañolabel={"w-2/6"}
+                tamañolabel={"w-3/6"}
                 className={"w-3/6 text-right"}
                 Titulo={"Numero: "}
                 type={"text"}
@@ -215,7 +215,7 @@ function ModalCajeros({
               <button
                 type="submit"
                 id="btn_guardar"
-                className="btn  bg-blue-500 hover:bg-blue-700 text-white"
+                className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn"
               >
                 <i className="fa-regular fa-floppy-disk mx-2"></i> Guardar
               </button>
