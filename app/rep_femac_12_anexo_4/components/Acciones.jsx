@@ -4,7 +4,7 @@ import Button from "@/app/components/button";
 
 function Acciones({ ImprimePDF, ImprimeExcel, home, Ver }) {
     return (
-        <div className='join join-vertical '>
+        <div className='join join-horizontal justify-around md:join-vertical'>
             <Tooltip Titulo={"Imprimir"} posicion={"tooltip-top"}>
                 <Button icono={"fas fa-file-pdf"} onClick={ImprimePDF}></Button>
             </Tooltip>

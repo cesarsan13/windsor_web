@@ -117,7 +117,7 @@ function AltasBajasAlumnos() {
 
   if (status === "loading") {
     return (
-      <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
+      <div className="container skeleton w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
     );
   }
   return (
@@ -128,135 +128,135 @@ function AltasBajasAlumnos() {
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
       />
-      <div className="container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
+      <div className="container overflow-x-auto w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Relación de Recibos
           </h1>
         </div>
-        <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
-          <div className="col-span-1 flex flex-col">
+        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
+          <div className="md:col-span-1 flex flex-col">
             <Acciones home={home} Ver={handleVerClick} />
           </div>
-          <div className="col-span-7">
-            <div className="flex flex-col h-full space-y-4">
-              <div className="flex space-x-4">
-                <Inputs
-                  name={"fecha_ini"}
-                  tamañolabel={""}
-                  className={"rounded block grow"}
-                  Titulo={"Fecha Inicial: "}
-                  type={"date"}
-                  errors={errors}
-                  maxLength={15}
-                  isDisabled={false}
-                  setValue={setFecha_ini}
-                />
-                <Inputs
-                  name={"fecha_fin"}
-                  tamañolabel={""}
-                  className={"rounded block grow"}
-                  Titulo={"Fecha Final: "}
-                  type={"date"}
-                  errors={errors}
-                  maxLength={15}
-                  isDisabled={false}
-                  setValue={setFecha_fin}
-                />
-                <div className="tooltip pt-1" data-tip="Tomar Fechas">
-                  <label
-                    htmlFor="ch_tomaFechas"
-                    className="label cursor-pointer flex items-center space-x-2"
-                  >
-                    <input
-                      id="ch_tomaFechas"
-                      type="checkbox"
-                      className="checkbox checkbox-md"
-                      defaultChecked={true}
-                      onClick={(evt) => setTomaFechas(evt.target.checked)}
-                    />
-                    <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
-                      Toma Fechas
-                    </span>
-                  </label>
-                </div>
-              </div>
-              <div className="flex space-x-4">
-                <Inputs
-                  name={"recibo_ini"}
-                  tamañolabel={""}
-                  className={"rounded block grow"}
-                  Titulo={"Recibos: "}
-                  type={"text"}
-                  errors={errors}
-                  maxLength={15}
-                  dataType={"int"}
-                  isDisabled={false}
-                  setValue={setRecibeIni}
-                />
-                <Inputs
-                  name={"recibo_fin"}
-                  tamañolabel={""}
-                  className={"rounded block grow"}
-                  Titulo={""}
-                  type={"text"}
-                  errors={errors}
-                  maxLength={15}
-                  dataType={"int"}
-                  isDisabled={false}
-                  setValue={setRecibeFin}
-                />
-              </div>
+          <div className="lg:col-span-7 md:col-span-7 sm:col-span-full space-y-3">
+            <div className="flex flex-col lg:flex-row md:flex-row sm:col-span-1 lg:col-span-10 md:space-x-1">
+              <Inputs
+                name={"fecha_ini"}
+                tamañolabel={"w-64"}
+                className={"rounded  block grow"}
+                Titulo={"Fecha Inicial: "}
+                type={"date"}
+                errors={errors}
+                maxLength={15}
+                isDisabled={false}
+                setValue={setFecha_ini}
+              />
+              <Inputs
+                name={"fecha_fin"}
+                tamañolabel={""}
+                className={"rounded block grow"}
+                Titulo={"Fecha Final: "}
+                type={"date"}
+                errors={errors}
+                maxLength={15}
+                isDisabled={false}
+                setValue={setFecha_fin}
+              />
 
-              <div className="flex space-x-4">
-                <Inputs
-                  name={"factura_ini"}
-                  tamañolabel={""}
-                  className={"rounded block grow"}
-                  Titulo={"Facturas: "}
-                  type={"text"}
-                  errors={errors}
-                  maxLength={15}
-                  dataType={"int"}
-                  isDisabled={false}
-                  setValue={setFacturaIni}
-                />
-                <Inputs
-                  name={"factura_fin"}
-                  tamañolabel={""}
-                  className={"rounded block grow"}
-                  Titulo={""}
-                  type={"text"}
-                  errors={errors}
-                  maxLength={15}
-                  dataType={"int"}
-                  isDisabled={false}
-                  setValue={setFacturaFin}
-                />
+              <div className="tooltip pt-1 lg:w-40" data-tip="Tomar Fechas">
+                <label
+                  htmlFor="ch_tomaFechas"
+                  className="label cursor-pointer flex justify-start space-x-2 "
+                >
+                  <input
+                    id="ch_tomaFechas"
+                    type="checkbox"
+                    className="checkbox checkbox-md"
+                    defaultChecked={true}
+                    onClick={(evt) => setTomaFechas(evt.target.checked)}
+                  />
+                  <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
+                  <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
+                    Toma Fechas
+                  </span>
+                </label>
               </div>
+            </div>
+            <div className="flex md:flex-row lg:flex-row  md:space-x-1">
+              <Inputs
+                name={"recibo_ini"}
+                tamañolabel={""}
+                className={"rounded block grow w-full md:w-1/2"}
+                Titulo={"Recibos: "}
+                type={"text"}
+                errors={errors}
+                maxLength={15}
+                dataType={"int"}
+                isDisabled={false}
+                setValue={setRecibeIni}
+              />
+              <Inputs
+                name={"recibo_fin"}
+                tamañolabel={""}
+                className={"rounded block grow w-full md:w-1/2"}
+                Titulo={""}
+                type={"text"}
+                errors={errors}
+                maxLength={15}
+                dataType={"int"}
+                isDisabled={false}
+                setValue={setRecibeFin}
+              />
+            </div>
 
-              <div className="flex space-x-4">
-                <BuscarCat
-                  table="alumnos"
-                  itemData={[]}
-                  fieldsToShow={["id", "nombre_completo"]}
-                  nameInput={["id", "nombre_completo"]}
-                  titulo={"Inicio: "}
-                  setItem={setAlumnoIni}
-                  token={session.user.token}
-                  modalId="modal_alumnos1"
-                />
-                <BuscarCat
-                  table="alumnos"
-                  itemData={[]}
-                  fieldsToShow={["id", "nombre_completo"]}
-                  nameInput={["id", "nombre_completo"]}
-                  titulo={"Fin: "}
-                  setItem={setAlumnoFin}
-                  token={session.user.token}
-                  modalId="modal_alumnos2"
-                />
-              </div>
+            <div className="flex md:flex-row lg:flex-row md:space-x-1">
+              <Inputs
+                name={"factura_ini"}
+                tamañolabel={""}
+                className={"rounded block grow w-full md:w-1/2"}
+                Titulo={"Facturas: "}
+                type={"text"}
+                errors={errors}
+                maxLength={15}
+                dataType={"int"}
+                isDisabled={false}
+                setValue={setFacturaIni}
+              />
+              <Inputs
+                name={"factura_fin"}
+                tamañolabel={""}
+                className={"rounded block grow w-full md:w-1/2"}
+                Titulo={""}
+                type={"text"}
+                errors={errors}
+                maxLength={15}
+                dataType={"int"}
+                isDisabled={false}
+                setValue={setFacturaFin}
+              />
+            </div>
+
+            <div className="flex lg:flex-row flex-col lg:space-x-2 lg:space-y-0 sm:space-y-1">
+              <BuscarCat
+                table="alumnos"
+                itemData={[]}
+                fieldsToShow={["id", "nombre_completo"]}
+                nameInput={["id", "nombre_completo"]}
+                titulo={"Inicio: "}
+                setItem={setAlumnoIni}
+                token={session.user.token}
+                modalId="modal_alumnos1"
+              />
+              <BuscarCat
+                table="alumnos"
+                itemData={[]}
+                fieldsToShow={["id", "nombre_completo"]}
+                nameInput={["id", "nombre_completo"]}
+                titulo={"Fin: "}
+                setItem={setAlumnoFin}
+                token={session.user.token}
+                modalId="modal_alumnos2"
+              />
             </div>
           </div>
         </div>

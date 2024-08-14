@@ -43,24 +43,27 @@ function Alumnos() {
   const [cond2, setcond2] = useState({});
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
 
   const Buscar = () => {
-    if (TB_Busqueda === "" || filtro === "") {
+    const { tb_id, tb_desc } = busqueda;
+    if (tb_id === "" && tb_desc === "") {
       setAlumnosFiltrados(alumnos);
       return;
     }
     const infoFiltrada = alumnos.filter((alumno) => {
-      const valorCampo = alumno[filtro];
-      if (typeof valorCampo === "number") {
-        return valorCampo.toString().includes(TB_Busqueda);
-      }
-      return valorCampo
-        ?.toString()
-        .toLowerCase()
-        .includes(TB_Busqueda.toLowerCase());
+      const coincideId = tb_id ? alumno["id"].toString().includes(tb_id) : true;
+      const coincideDescripcion = tb_desc
+        ? alumno["nombre"]
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
+        : true;
+      return coincideId && coincideDescripcion;
     });
     setAlumnosFiltrados(infoFiltrada);
   };
+
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
@@ -71,13 +74,14 @@ function Alumnos() {
       const data = await getAlumnos(token, bajas);
       setAlumnos(data);
       setAlumnosFiltrados(data);
-      if (filtro !== "" && TB_Busqueda !== "") {
-        Buscar();
-      }
       setisLoading(false);
     };
     fetchData();
-  }, [session, status, bajas, filtro, TB_Busqueda]);
+  }, [session, status, bajas]);
+
+  useEffect(() => {
+    Buscar();
+  }, [busqueda]);
 
   const {
     register,
@@ -581,7 +585,7 @@ function Alumnos() {
   };
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
-    setTB_Busqueda("");
+    setBusqueda({ tb_id: "", tb_desc: "" });
   };
   const showModal = (show) => {
     show
@@ -598,7 +602,10 @@ function Alumnos() {
   };
   const handleBusquedaChange = (event) => {
     event.preventDefault;
-    setTB_Busqueda(event.target.value);
+    setBusqueda((estadoPrevio) => ({
+      ...estadoPrevio,
+      [event.target.id]: event.target.value,
+    }));
   };
 
   const imprimePDF = () => {
@@ -746,7 +753,7 @@ function Alumnos() {
           </h1>
         </div>
         <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-        <div className="md:col-span-1 flex flex-col">
+          <div className="md:col-span-1 flex flex-col">
             <Acciones
               Buscar={Buscar}
               Alta={Alta}
@@ -758,15 +765,13 @@ function Alumnos() {
             />
           </div>
           <div className="md:col-span-7">
-          <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full">
               <Busqueda
                 setBajas={setBajas}
-                setFiltro={setFiltro}
                 limpiarBusqueda={limpiarBusqueda}
                 Buscar={Buscar}
                 handleBusquedaChange={handleBusquedaChange}
-                TB_Busqueda={TB_Busqueda}
-                setTB_Busqueda={setTB_Busqueda}
+                busqueda={busqueda}
               />
               <div className="overflow-x-auto">
                 <TablaAlumnos

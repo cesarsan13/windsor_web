@@ -111,6 +111,10 @@ function PropertyPage({
       return String(value);
     }
   };
+  const roundToNearest = (value, threshold) => {
+    const roundedValue = Math.round(value / threshold) * threshold;
+    return roundedValue;
+  };
   const handleChange = async (evt) => {
     const { name } = evt.target;
     const resultado = [...labels];
@@ -120,6 +124,22 @@ function PropertyPage({
       [name]: value,
     };
     setLabels(resultado);
+  };
+  const handleKeyDown = async (evt) => {
+    if (evt.key === 'Enter') {
+      console.log("entra");
+      const { name } = evt.target;
+      const resultado = [...labels];
+      let value = await getValueInput(evt);
+      console.log(value);
+      const redondea = 10;
+      value = roundToNearest(value, redondea);
+      resultado[selectedIndex] = {
+        ...resultado[selectedIndex],
+        [name]: value,
+      };
+      setLabels(resultado);
+    } else { console.log("no entra"); }
   };
   const handleCancelarClick = (evt) => {
     evt.preventDefault();
@@ -155,7 +175,7 @@ function PropertyPage({
   };
 
   return (
-    <div className="flex flex-col card bg-white rounded-lg ">
+    <div className="flex flex-col card bg-slate-100 dark:bg-slate-800 rounded-lg ">
       <div className=" bg-slate-400 w-full p-2 rounded-lg rounde flex flex-row">
         <h3 className="text-center font-bold ">Propiedades de </h3>
         <Inputs
@@ -186,13 +206,13 @@ function PropertyPage({
                 tamañolabel={"w-full input-xs"}
                 className={"w-full text-right input-xs"}
                 Titulo={"Columna: "}
-                type={"number"}
+                type={"number_enter"}
                 requerido={true}
                 errors={errors}
                 register={register}
                 message={"columna requerido"}
                 isDisabled={false}
-                handleChange={handleChange}
+                handleKeyDown={handleKeyDown}
                 step="10"
               />
               <Inputs
@@ -201,13 +221,13 @@ function PropertyPage({
                 tamañolabel={"w-full input-xs"}
                 className={"w-full text-right input-xs"}
                 Titulo={"Renglon: "}
-                type={"number"}
+                type={"number_enter"}
                 requerido={true}
                 errors={errors}
                 register={register}
                 message={"Renglon requerido"}
                 isDisabled={false}
-                handleChange={handleChange}
+                handleKeyDown={handleKeyDown}
                 step="15"
               />
             </div>
@@ -232,7 +252,7 @@ function PropertyPage({
                 isDisabled={false}
                 data={propertyData.fuente}
                 handleChange={handleChange}
-                //defaultValue={formaPago.id}
+              //defaultValue={formaPago.id}
               />
               <Inputs
                 dataType={"int"}
@@ -338,7 +358,7 @@ function PropertyPage({
                 message={"Campo requerido"}
                 isDisabled={false}
                 data={propertyData.campo}
-                //defaultValue={formaPago.id}
+              //defaultValue={formaPago.id}
               />
               <Inputs
                 dataType={"string"}
@@ -353,7 +373,7 @@ function PropertyPage({
                 message={"Formato requerido"}
                 isDisabled={false}
                 data={propertyData.formato}
-                //defaultValue={formaPago.id}
+              //defaultValue={formaPago.id}
               />
               <Inputs
                 dataType={"string"}
@@ -368,7 +388,7 @@ function PropertyPage({
                 message={"Area requerida"}
                 isDisabled={false}
                 data={propertyData.area}
-                //defaultValue={formaPago.id}
+              //defaultValue={formaPago.id}
               />
             </div>
           </div>
