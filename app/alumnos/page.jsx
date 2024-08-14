@@ -55,9 +55,9 @@ function Alumnos() {
       const coincideId = tb_id ? alumno["id"].toString().includes(tb_id) : true;
       const coincideDescripcion = tb_desc
         ? alumno["nombre"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_desc.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_desc.toLowerCase())
         : true;
       return coincideId && coincideDescripcion;
     });
@@ -94,6 +94,7 @@ function Alumnos() {
       nombre: alumno.nombre,
       a_paterno: alumno.a_paterno,
       a_materno: alumno.a_materno,
+      a_nombre: alumno.a_nombre,
       fecha_nac: alumno.fecha_nac,
       fecha_inscripcion: alumno.fecha_inscripcion,
       fecha_baja: alumno.fecha_baja,
@@ -186,6 +187,7 @@ function Alumnos() {
       nombre: alumno.nombre,
       a_paterno: alumno.a_paterno,
       a_materno: alumno.a_materno,
+      a_nombre: alumno.a_nombre,
       fecha_nac: alumno.fecha_nac,
       fecha_inscripcion: alumno.fecha_inscripcion,
       fecha_baja: alumno.fecha_baja,
@@ -391,7 +393,7 @@ function Alumnos() {
     setAccion("Alta");
     showModal(true);
 
-    document.getElementById("nombre").focus();
+    document.getElementById("a_nombre").focus();
   };
   const Elimina_Comas = (data) => {
     const convertir = (alumno) => {
@@ -434,12 +436,13 @@ function Alumnos() {
         return;
       }
     }
-
+    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${data.a_nombre || ""}`.trim();
     const formData = new FormData();
     formData.append("id", data.id || "");
-    formData.append("nombre", data.nombre || "");
+    formData.append("nombre", nombreCompleto || "");
     formData.append("a_paterno", data.a_paterno || "");
     formData.append("a_materno", data.a_materno || "");
+    formData.append("a_nombre", data.a_nombre || "");
     formData.append("fecha_nac", data.fecha_nac || "");
     formData.append("fecha_inscripcion", data.fecha_inscripcion || "");
     formData.append("fecha_baja", data.fecha_baja || "");
@@ -530,6 +533,7 @@ function Alumnos() {
         `${data.nombre}_${data.a_paterno}_${data.a_materno}.jpg`
       );
     }
+    data.horario_1_nombre = grado.horario;
     res = await guardarAlumnos(session.user.token, formData, accion, data.id);
     if (res.status) {
       if (accion === "Alta") {
@@ -746,7 +750,7 @@ function Alumnos() {
         PDF={imprimePDF}
         Excel={ImprimeExcel}
       />
-      <div className="container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 overflow-y-auto">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Alumnos.
