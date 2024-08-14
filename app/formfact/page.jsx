@@ -30,14 +30,13 @@ function FormFact() {
   const [accion, setAccion] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState("");
-  const [filtro, setFiltro] = useState("");
   const [formato, setFormato] = useState("");
-  const [TB_Busqueda, setTB_Busqueda] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [showSheet, setShowSheet] = useState(false);
   const [labels, setLabels] = useState([]);
   const [propertyData, setPropertyData] = useState({});
+  const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
 
   const [configuracion, setConfiguracion] = useState({
     Encabezado: {
@@ -54,6 +53,7 @@ function FormFact() {
     const data = getPropertyData(formato);
     setPropertyData(data);
   }, [formato]);
+
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
@@ -64,17 +64,14 @@ function FormFact() {
       const data = await getFormFact(token, bajas);
       setFormFacts(data);
       setFormFactsFiltrados(data);
-      setFiltro("numero")
       setisLoading(false);
     };
     fetchData();
     setFormato("Facturas");
   }, [session, status, bajas]);
   useEffect(() => {
-    if (TB_Busqueda !== "" && filtro !== "") {
-      Buscar();
-    }
-  }, [TB_Busqueda, filtro]);
+    Buscar();
+  }, [busqueda]);
 
   useEffect(() => {
     const reporte = new ReportePDF(configuracion, "portrait");
@@ -106,26 +103,35 @@ function FormFact() {
   }, [formFact, reset]);
   const Buscar = () => {
     // alert(filtro);
-    if (TB_Busqueda === "" || filtro === "") {
+    const { tb_id, tb_desc } = busqueda;
+    if (tb_id === "" && tb_desc === "") {
       setFormFactsFiltrados(formFacts);
       return;
     }
     const infoFiltrada = formFacts.filter((formFact) => {
-      const valorCampo = formFact[filtro];
-      if (typeof valorCampo === "number") {
-        return valorCampo.toString().includes(TB_Busqueda);
-      }
-      return valorCampo
-        ?.toString()
-        .toLowerCase()
-        .includes(TB_Busqueda.toLowerCase());
+      const coincideId = tb_id
+        ? formFact["numero"].toString().includes(tb_id)
+        : true;
+      const coincideDescripcion = tb_desc
+        ? formFact.nombre.toLowerCase().includes(tb_desc.toLowerCase())
+        : true;
+      return coincideId && coincideDescripcion;
     });
+    // const valorCampo = formFact[filtro];
+    // if (typeof valorCampo === "number") {
+    //   return valorCampo.toString().includes(TB_Busqueda);
+    // }
+    // return valorCampo
+    //   ?.toString()
+    //   .toLowerCase()
+    //   .includes(TB_Busqueda.toLowerCase());
+    // });
     setFormFactsFiltrados(infoFiltrada);
   };
 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
-    setTB_Busqueda("");
+    setBusqueda({ tb_id: "", tb_desc: "" });
   };
   const Alta = async (event) => {
     setCurrentId("");
@@ -213,7 +219,10 @@ function FormFact() {
   };
   const handleBusquedaChange = (event) => {
     event.preventDefault;
-    setTB_Busqueda(event.target.value);
+    setBusqueda((estadoPrevio) => ({
+      ...estadoPrevio,
+      [event.target.id]: event.target.value,
+    }));
   };
 
   const fetchFacturasFormato = async (id) => {
@@ -256,12 +265,11 @@ function FormFact() {
             <div className="flex flex-col h-full">
               <Busqueda
                 setBajas={setBajas}
-                setFiltro={setFiltro}
                 limpiarBusqueda={limpiarBusqueda}
                 Buscar={Buscar}
                 handleBusquedaChange={handleBusquedaChange}
-                TB_Busqueda={TB_Busqueda}
                 setFormato={setFormato}
+                busqueda={busqueda}
               />
               {showSheet ? (
                 <ConfigReporte

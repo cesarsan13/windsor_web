@@ -44,7 +44,6 @@ function FormaPago() {
       const data = await getFormasPago(token, bajas);
       setFormasPago(data);
       setFormaPagosFiltrados(data);
-      Buscar();
       setisLoading(false);
     };
     fetchData();
