@@ -204,14 +204,14 @@ function RepFemac12Anexo() {
   };
   return (
     <>
-      <div className="container w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
+      <div className="container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Reporte de Cobranza por Productos
           </h1>
         </div>
-        <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
-          <div className="col-span-1 flex flex-col">
+        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
+          <div className="md:col-span-1 flex flex-col">
             <Acciones
               ImprimePDF={ImprimePDF}
               ImprimeExcel={ImprimeExcel}
@@ -219,33 +219,32 @@ function RepFemac12Anexo() {
               home={home}
             />
           </div>
-          <div className="col-span-7">
-            <div className="flex flex-col h-[calc(100%)] space-y-4">
-              <div className="flex flex-col gap-4 md:flex-row">
-                <div className="w-full sm:w-full md:w-4/12 lg:w-3/12">
+          <div className="lg:col-span-7 md:col-span-7 sm:col-span-full space-y-3">
+            <div className="flex flex-col lg:flex-row md:flex-row sm:col-span-1 lg:col-span-10 md:space-x-1">
+                <div className="w-full sm:w-full md:w-60 lg:w-60">
                   <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3">
                     Fecha Inicia
                     <input
                       type="date"
                       value={fecha1}
                       onChange={(e) => setFecha1(e.target.value)}
-                      className="text-black dark:text-white"
+                      className= "grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none"
                     />
                   </label>
                 </div>
-                <div className="w-full sm:w-full md:w-4/12 lg:w-3/12">
+                <div className="w-full sm:w-full sm: md:w-60 lg:w-60">
                   <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3">
-                    Fecha Inicia
+                    Fecha Fin
                     <input
                       type="date"
                       value={fecha2}
                       onChange={(e) => setFecha2(e.target.value)}
-                      className="text-black dark:text-white"
+                      className=" grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none"
                     />
                   </label>
                 </div>
-
-                <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+              </div>
+              <div className="flex lg:flex-row flex-col lg:space-x-2 lg:space-y-0 sm:space-y-1">
                   <BuscarCat
                     table={"productos"}
                     nameInput={["producto1", "producto_desc1"]}
@@ -255,10 +254,9 @@ function RepFemac12Anexo() {
                     token={session.user.token}
                     modalId={"modal_producto1"}
                   />
-                </div>
-              </div>
-              <div className="flex flex-col gap-4 md:flex-row">
-                <div className="w-6/12">
+             {/*} </div>
+              
+              <div className="flex flex-col gap-4 md:flex-row">*/}
                   <BuscarCat
                     table={"productos"}
                     nameInput={["producto2", "producto_desc2"]}
@@ -268,7 +266,7 @@ function RepFemac12Anexo() {
                     token={session.user.token}
                     modalId={"modal_producto2"}
                   />
-                </div>
+              </div>
                 <div className="">
                   <label
                     className={` input-md text-black dark:text-white flex items-center gap-3`}
@@ -302,7 +300,7 @@ function RepFemac12Anexo() {
                     </label>
                   </label>
                 </div>
-              </div>
+              
               <div className="  mt-4">
                 {pdfPreview && pdfData && (
                   <div className="">
@@ -321,7 +319,7 @@ function RepFemac12Anexo() {
             </div>
           </div>
         </div>
-      </div>
+
     </>
   );
 }

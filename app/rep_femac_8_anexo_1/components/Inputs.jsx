@@ -23,7 +23,7 @@ function Inputs({
           name={name}
           id={name}
           type={type}
-          className={`text-black dark:text-white ${className}`}
+          className={`text-black dark:text-white ${className} grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none  `}
           {...(dataType === "int" && { onKeyDown: soloEnteros })}
           {...(dataType === "float" && { onKeyDown: soloDecimales })}
           {...(dataType === "int" ||
@@ -32,6 +32,7 @@ function Inputs({
             }))}
           disabled={isDisabled}
           onChange={(event) => setValue(event.target.value)}
+          
         />
       </label>
       {errors[name] && (
