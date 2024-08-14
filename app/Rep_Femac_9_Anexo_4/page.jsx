@@ -253,7 +253,7 @@ function RelaciondeFacturas(){
             Relación de Facturas
             </h1>
         </div>
-            <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
+            <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1">
           <div className="md:col-span-1 flex flex-col">
             <Acciones home={home} Ver={handleVerClick} />
           </div>

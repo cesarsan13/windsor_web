@@ -191,14 +191,14 @@ function AltasBajasAlumnos() {
                         Relación de Alumnos Inscritos
                     </h1>
                 </div>
-                <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
+                <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1">
                     <div className="md:col-span-1 flex flex-col">
                         <Acciones
                             home={home}
                             Ver={handleVerClick}
                             isLoading={isLoading} />
                     </div>
-                    <div className="lg:col-span-7 md:col-span-7 sm:col-span-full space-y-3">
+                    <div className="overflow-y-auto lg:col-span-7 md:col-span-7 sm:col-span-full h-[calc(45vh)] space-y-3">
                         <div className="flex flex-col lg:flex-row md:flex-row sm:col-span-1 lg:col-span-10 md:space-x-1">
                                 <Inputs
                                     name={"fecha_ini"}
