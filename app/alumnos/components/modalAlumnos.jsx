@@ -163,7 +163,7 @@ function ModalAlumnos({
                   />
                   <Inputs
                     dataType={"string"}
-                    name={"nombre"}
+                    name={"a_nombre"}
                     tamañolabel={""}
                     className={"rounded block grow"}
                     Titulo={"Nombre: "}
