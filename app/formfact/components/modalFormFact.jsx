@@ -27,23 +27,23 @@ function ModalFormFact({
       accion === "Alta"
         ? `Nuevo Factura: ${currentID}`
         : accion === "Editar"
-        ? `Editar Factura: ${currentID}`
-        : accion === "Eliminar"
-        ? `Eliminar Factura: ${currentID}`
-        : `Ver Factura: ${currentID}`
+          ? `Editar Factura: ${currentID}`
+          : accion === "Eliminar"
+            ? `Eliminar Factura: ${currentID}`
+            : `Ver Factura: ${currentID}`
     );
   }, [accion]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
       ? setFormFact((formFact) => ({
-          ...formFact,
-          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-        }))
+        ...formFact,
+        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+      }))
       : setFormFact((formFact) => ({
-          ...formFact,
-          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-        }));
+        ...formFact,
+        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+      }));
   };
   return (
     <dialog id="my_modal_3" className="modal">
@@ -62,8 +62,8 @@ function ModalFormFact({
               <Inputs
                 dataType={"int"}
                 name={"numero"}
-                tamañolabel={"w-2/6"}
-                className={"w-3/6 rounded block text-right"}
+                tamañolabel={"w-6/12"}
+                className={"w-5/12 rounded block text-right"}
                 Titulo={"Numero: "}
                 type={"text"}
                 requerido={true}
@@ -71,7 +71,7 @@ function ModalFormFact({
                 register={register}
                 message={"numero requerido"}
                 isDisabled={true}
-                //defaultValue={formaPago.id}
+              //defaultValue={formaPago.id}
               />
               <Inputs
                 dataType={"string"}
@@ -87,13 +87,13 @@ function ModalFormFact({
                 message={"nombre requerido"}
                 maxLength={50}
                 isDisabled={isDisabled}
-                //defaultValue={formaPago.descripcion}
+              //defaultValue={formaPago.descripcion}
               />
               <Inputs
                 dataType={"float"}
                 name={"longitud"}
                 tamañolabel={"w-4/6"}
-                className={"rounded block grow"}
+                className={"rounded block w-4/6 text-right"}
                 Titulo={"Longitud: "}
                 type={"text"}
                 requerido={true}
@@ -103,17 +103,16 @@ function ModalFormFact({
                 message={"longitud requerido"}
                 maxLength={50}
                 isDisabled={isDisabled}
-                //defaultValue={formaPago.descripcion}
+              //defaultValue={formaPago.descripcion}
               />
             </div>
           </fieldset>
           <div className=" modal-action">
             <div
-              className={`tooltip tooltip-top my-5 ${
-                accion === "Ver"
-                  ? "hover:cursor-not-allowed hidden"
-                  : "hover:cursor-pointer"
-              }`}
+              className={`tooltip tooltip-top my-5 ${accion === "Ver"
+                ? "hover:cursor-not-allowed hidden"
+                : "hover:cursor-pointer"
+                }`}
               data-tip="Guardar"
             >
               <button
