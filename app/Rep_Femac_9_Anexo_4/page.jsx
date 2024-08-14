@@ -253,17 +253,17 @@ function RelaciondeFacturas(){
             Relación de Facturas
             </h1>
         </div>
-            <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
-          <div className="col-span-1 flex flex-col">
+            <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
+          <div className="md:col-span-1 flex flex-col">
             <Acciones home={home} Ver={handleVerClick} />
           </div>
-          <div className="col-span-7">
-            <div className="flex flex-col h-[calc(100%)]">
-              <div className="flex flex-col gap-4 md:flex-row">
+          <div className="lg:col-span-7 md:col-span-7 sm:col-span-full space-y-3">
+            <div className="flex flex-col lg:flex-row md:flex-row sm:col-span-1 lg:col-span-10 md:space-x-1">
+            {/*<div className="flex md:flex-row sm:flex-col  lg:flex-row sm:col-span-1 md:space-x-1">*/}
                 <Inputs
                   name={"fecha_cobro_ini"}
                   tamañolabel={""}
-                  className={"rounded block grow "}
+                  className={"rounded block grow"}
                   Titulo={"Fecha Inicial: "}
                   type={"date"}
                   errors={errors}
@@ -282,11 +282,12 @@ function RelaciondeFacturas(){
                   isDisabled={false}
                   setValue={setFecha_cobro_fin}
                 />
-                <div className="flex flex-col gap-4 md:flex-row h-[calc(80%)]">
-                  <div className="tooltip pt-1" data-tip="Tomar Fechas">
+
+                <div className="flex md:flex-row lg:flex-row  md:space-x-1">
+                  <div className="tooltip pt-1 lg:w-40" data-tip="Tomar Fechas">
                     <label
                       htmlFor="ch_tomaFechas"
-                      className="label cursor-pointer flex items-center space-x-2">
+                      className="label cursor-pointer flex justify-start space-x-2">
                       <input
                         id="ch_tomaFechas"
                         type="checkbox"
@@ -294,15 +295,16 @@ function RelaciondeFacturas(){
                         defaultChecked={true}
                         onClick={(evt) => setTomaFechas(evt.target.checked)}
                       />
+                      <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span> 
                       <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
                         Toma Fechas
                       </span>
                     </label>
                   </div>
-                  <div className="tooltip pt-1" data-tip="Tomar Facturas Canceladas">
+                  <div className="tooltip pt-1 lg:w-42" data-tip="Tomar Facturas Canceladas">
                     <label
                       htmlFor="ch_tomaCanceladas"
-                      className="label cursor-pointer flex items-center space-x-2">
+                      className="label cursor-pointer flex justify-start space-x-2">
                       <input
                         id="ch_tomaCanceladas"
                         type="checkbox"
@@ -310,18 +312,19 @@ function RelaciondeFacturas(){
                         defaultChecked={false}
                         onClick={(evt) => setTomaCanceladas(evt.target.checked)}
                       />
+                      <span className="fa-regular fa-file-lines block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
                       <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
                         Toma Facturas Canceladas
                       </span>
                     </label>
                   </div>
-                </div>
+                  </div>
               </div>
-              <div className="flex flex-col gap-4 md:flex-row sm:flex-row pt-1">
+              <div className="flex md:flex-row lg:flex-row  md:space-x-1">
                 <Inputs
                   name={"factura_ini"}
                   tamañolabel={""}
-                  className={"rounded grow "}
+                  className={"rounded grow w-full md:w-1/2"}
                   Titulo={"Facturas: "}
                   type={"text"}
                   errors={errors}
@@ -333,7 +336,7 @@ function RelaciondeFacturas(){
                 <Inputs
                   name={"factura_fin"}
                   tamañolabel={""}
-                  className={"rounded grow "}
+                  className={"rounded grow w-full md:w-1/2"}
                   Titulo={""}
                   type={"text"}
                   errors={errors}
@@ -343,7 +346,7 @@ function RelaciondeFacturas(){
                   setValue={setFacturaFin}
                 />
               </div>
-            </div>
+            
           </div>
         </div>
     </div> 

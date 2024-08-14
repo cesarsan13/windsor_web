@@ -111,11 +111,11 @@ function Pagos_1() {
         setFormaPago(dataF);
         setCargado(true);
       }
-      if (!validar) {
-        showModal(true);
-      } else {
-        showModal(false);
-      }
+      // if (!validar) {
+      //   showModal(true);
+      // } else {
+      //   showModal(false);
+      // }
       setisLoading(false);
     };
     fetchData();
@@ -482,13 +482,13 @@ function Pagos_1() {
     if (evt.target.value === "") return;
     datatype === "int"
       ? setPago((pago) => ({
-          ...pago,
-          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-        }))
+        ...pago,
+        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+      }))
       : setPago((pago) => ({
-          ...pago,
-          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-        }));
+        ...pago,
+        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+      }));
   };
 
   const handleKeyDown = (event) => {
@@ -520,34 +520,35 @@ function Pagos_1() {
   }
   return (
     <>
-      <ModalCajeroPago
-        session={session}
-        validarClaveCajero={validarClaveCajero}
-        showModal={showModal}
-        setValidar={setValidar}
-        home={home}
-        setCajero={setCajero}
-        cajero={cajero}
-      />
-      <ModalPagoImprime
-        session={session}
-        showModal={showModal2}
-        home={home}
-        formaPagoPage={formaPagoPage}
-        pagosFiltrados={pagosFiltrados}
-        alumnos1={alumnos1}
-        productos1={productos1}
-        comentarios1={comentarios1}
-        cajero={cajero}
-        alumnos={alumnos}
-      />
-      <ModalDocTabla
-        session={session}
-        showModal={showModal3}
-        docFiltrados={docFiltrados}
-        isLoading={isLoading}
-      />
-      <div className="container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
+      <div className="h-[83vh] max-h-[83vh] container w-full bg-slate-100 rounded-3xl shadow-xl px-3 dark:bg-slate-700 overflow-y-auto">
+
+        <ModalCajeroPago
+          session={session}
+          validarClaveCajero={validarClaveCajero}
+          showModal={showModal}
+          setValidar={setValidar}
+          home={home}
+          setCajero={setCajero}
+          cajero={cajero}
+        />
+        <ModalPagoImprime
+          session={session}
+          showModal={showModal2}
+          home={home}
+          formaPagoPage={formaPagoPage}
+          pagosFiltrados={pagosFiltrados}
+          alumnos1={alumnos1}
+          productos1={productos1}
+          comentarios1={comentarios1}
+          cajero={cajero}
+          alumnos={alumnos}
+        />
+        <ModalDocTabla
+          session={session}
+          showModal={showModal3}
+          docFiltrados={docFiltrados}
+          isLoading={isLoading}
+        />
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Pagos.
@@ -557,7 +558,7 @@ function Pagos_1() {
           </h1>
         </div>
 
-        <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
+        <div className="grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
           <div className="col-span-1 flex flex-col">
             <Acciones
               ImprimePDF={btnPDF}
@@ -569,25 +570,25 @@ function Pagos_1() {
           </div>
 
           <div className="col-span-7">
-            <div className="flex flex-col h-full space-y-4">
-              <div className="flex items-center space-x-4">
-                <Inputs
-                  tipoInput={""}
-                  name={"fecha"}
-                  tamañolabel={""}
-                  className={"rounded block grow"}
-                  Titulo={"Fecha: "}
-                  type={"date"}
-                  requerido={false}
-                  register={register}
-                  errors={errors}
-                  maxLength={15}
-                  isDisabled={false}
-                  // setValue={setFecha}
-                />
-              </div>
+            <div className="flex flex-col md:flex-row lg:flex-row pb-4">
+              <Inputs
+                tipoInput={""}
+                name={"fecha"}
+                tamañolabel={""}
+                className={"rounded block grow"}
+                Titulo={"Fecha: "}
+                type={"date"}
+                requerido={false}
+                register={register}
+                errors={errors}
+                maxLength={15}
+                isDisabled={false}
+              // setValue={setFecha}
+              />
+            </div>
 
-              <div className="flex">
+            <div className="flex flex-col md:flex-row lg:flex-row ">
+              <div className="w-full">
                 <BuscarCat
                   table="alumnos"
                   itemData={[]}
@@ -598,6 +599,8 @@ function Pagos_1() {
                   token={session.user.token}
                   modalId="modal_alumnos1"
                 />
+              </div>
+              <div className="w-full">
                 <BuscarCat
                   table="comentarios"
                   itemData={[]}
@@ -609,6 +612,8 @@ function Pagos_1() {
                   modalId="modal_comentarios1"
                 />
               </div>
+            </div>
+            <div className="pb-4">
               <Inputs
                 name={"comentarios"}
                 tamañolabel={""}
@@ -621,157 +626,159 @@ function Pagos_1() {
                 maxLength={15}
                 isDisabled={false}
               />
-              <div className="flex">
-                <BuscarCat
-                  table="productos"
-                  itemData={[]}
-                  fieldsToShow={columnasBuscaCat3}
-                  nameInput={nameInputs3}
-                  titulo={"Articulos: "}
-                  setItem={setProductos1}
-                  token={session.user.token}
-                  modalId="modal_articulos1"
-                />
-                <Inputs
-                  tipoInput={"enterEvent"}
-                  dataType={"int"}
-                  name={"cantidad_producto"}
-                  tamañolabel={""}
-                  className={`${colorInput}`}
-                  Titulo={"Cantidad: "}
-                  type={"text"}
-                  requerido={false}
-                  errors={errors}
-                  register={register}
-                  message={"numero requerido"}
-                  isDisabled={false}
-                  eventInput={handleKeyDown}
-                  handleBlur={handleBlur}
-                  maxLength={8}
-                />
-              </div>
-              <div className="flex">
-                <Inputs
-                  tipoInput={"numberDouble"}
-                  dataType={"double"}
-                  name={"precio_base"}
-                  tamañolabel={"w-1/2"}
-                  className={`w-1/2 text-right ${colorInput}`}
-                  Titulo={"Precio Base: "}
-                  type={"text"}
-                  requerido={false}
-                  errors={errors}
-                  register={register}
-                  message={"numero requerido"}
-                  isDisabled={false}
-                  valueInput={precio_base}
-                  eventInput={handleBlur}
-                  maxLength={8}
-                />
-              </div>
+            </div>
+            <div className="flex flex-col md:flex-row lg:flex-row ">
+              <BuscarCat
+                table="productos"
+                itemData={[]}
+                fieldsToShow={columnasBuscaCat3}
+                nameInput={nameInputs3}
+                titulo={"Articulos: "}
+                setItem={setProductos1}
+                token={session.user.token}
+                modalId="modal_articulos1"
+              />
+              <Inputs
+                tipoInput={"enterEvent"}
+                dataType={"int"}
+                name={"cantidad_producto"}
+                tamañolabel={""}
+                className={`${colorInput}`}
+                Titulo={"Cantidad: "}
+                type={"text"}
+                requerido={false}
+                errors={errors}
+                register={register}
+                message={"numero requerido"}
+                isDisabled={false}
+                eventInput={handleKeyDown}
+                handleBlur={handleBlur}
+                maxLength={8}
+              />
+            </div>
+            <div className="pb-3">
+              <Inputs
+                tipoInput={"numberDouble"}
+                dataType={"double"}
+                name={"precio_base"}
+                tamañolabel={"w-1/2"}
+                className={`w-1/2 text-right ${colorInput}`}
+                Titulo={"Precio Base: "}
+                type={"text"}
+                requerido={false}
+                errors={errors}
+                register={register}
+                message={"numero requerido"}
+                isDisabled={false}
+                valueInput={precio_base}
+                eventInput={handleBlur}
+                maxLength={8}
+              />
+            </div>
 
-              {muestraRecargos && (
-                <>
-                  <div className="flex">
-                    <Inputs
-                      tipoInput={"disabledInput"}
-                      name={"R_Articulo"}
-                      tamañolabel={""}
-                      className={""}
-                      Titulo={"Articulo: "}
-                      type={"text"}
-                      requerido={false}
-                      register={register}
-                      errors={errors}
-                      maxLength={10}
-                      isDisabled={true}
-                      valueInput={"9999"}
-                    />
-                    <Inputs
-                      tipoInput={"disabledInput"}
-                      name={"D_Recargo"}
-                      tamañolabel={""}
-                      className={""}
-                      Titulo={"Articulo: "}
-                      type={"text"}
-                      requerido={false}
-                      register={register}
-                      errors={errors}
-                      maxLength={10}
-                      isDisabled={true}
-                      valueInput={dRecargo}
-                    />
-                    <Inputs
-                      tipoInput={""}
-                      dataType={"double"}
-                      name={"recargo"}
-                      tamañolabel={""}
-                      className={"rounded block grow text-right"}
-                      Titulo={" "}
-                      type={"text"}
-                      requerido={false}
-                      register={register}
-                      errors={errors}
-                      maxLength={8}
-                      isDisabled={false}
-                    />
-                    <Tooltip Titulo={"Adiciona"} posicion={"tooltip-top"}>
-                      <Button
-                        icono={"fa-solid fa-circle-plus"}
-                        onClick={btnRecargo}
-                      ></Button>
-                    </Tooltip>
-                  </div>
-                </>
-              )}
+            {muestraRecargos && (
+              <div className="flex flex-col md:flex-row lg:flex-row lg:space-x-2 ">
+                <div className="w-full lg:w-auto pb-2 lg:pb-0 mt-0 mb-0">
+                  <Inputs
+                    tipoInput={"disabledInput"}
+                    name={"R_Articulo"}
+                    tamañolabel={""}
+                    className={""}
+                    Titulo={"Articulo: "}
+                    type={"text"}
+                    requerido={false}
+                    register={register}
+                    errors={errors}
+                    maxLength={10}
+                    isDisabled={true}
+                    valueInput={"9999"}
+                  />
+                </div>
+                <div className="w-full lg:w-auto pb-2 lg:pb-0 mt-0 mb-0">
+                  <Inputs
+                    tipoInput={"disabledInput"}
+                    name={"D_Recargo"}
+                    tamañolabel={""}
+                    className={""}
+                    Titulo={"Articulo: "}
+                    type={"text"}
+                    requerido={false}
+                    register={register}
+                    errors={errors}
+                    maxLength={10}
+                    isDisabled={true}
+                    valueInput={dRecargo}
+                  />
+                </div>
+                <div className="w-full lg:w-auto pb-2 lg:pb-0 mt-0 mb-0 flex">
+                  <Inputs
+                    tipoInput={""}
+                    dataType={"double"}
+                    name={"recargo"}
+                    tamañolabel={""}
+                    className={"rounded-l block grow text-right"}
+                    Titulo={" "}
+                    type={"text"}
+                    requerido={false}
+                    register={register}
+                    errors={errors}
+                    maxLength={8}
+                    isDisabled={false}
+                  />
+                  <Tooltip Titulo={"Adiciona"} posicion={"tooltip-top"}>
+                    <Button
+                      icono={"fa-solid fa-circle-plus"}
+                      onClick={btnRecargo}
+                      className="rounded-r"
+                    ></Button>
+                  </Tooltip>
+                </div>
+              </div>
+            )}
 
-              {muestraParciales && (
-                <>
-                  <div className="sm:w-[calc(80%)] md:w-[calc(70%)] lg:w-[calc(70%)] p-4 border dark:border-gray-300 border-black rounded-lg">
-                    <h2 className="text-lg font-bold mb-4 dark:text-white text-black">
-                      Pago Parcial
-                    </h2>
-                    <div className="flex flex-col space-y-2">
-                      <label className="flex items-center space-x-2 dark:text-white text-black">
-                        <Inputs
-                          tipoInput={""}
-                          dataType={"double"}
-                          name={"monto_parcial"}
-                          tamañolabel={"w-80"}
-                          className={"rounded block grow text-right"}
-                          Titulo={"Monto Parcial: "}
-                          type={"text"}
-                          requerido={false}
-                          register={register}
-                          errors={errors}
-                          maxLength={8}
-                          isDisabled={false}
-                        />
-                        <Inputs
-                          tipoInput={""}
-                          dataType={"string"}
-                          name={"clave_acceso"}
-                          tamañolabel={"w-80"}
-                          className={"rounded block grow text-right"}
-                          Titulo={"Acceso: "}
-                          type={"password"}
-                          requerido={false}
-                          register={register}
-                          errors={errors}
-                          maxLength={15}
-                          isDisabled={false}
-                        />
-                        <Tooltip Titulo={"Actualiza"} posicion={"tooltip-top"}>
-                          <Button
-                            icono={"fa-solid fa-circle-plus"}
-                            onClick={btnParciales}
-                          ></Button>
-                        </Tooltip>
-                      </label>
-                    </div>
-                  </div>
-                </>
-              )}
+            {muestraParciales && (
+              <div className="flex flex-col md:flex-row lg:flex-row lg:space-x-2">
+                <div className="w-full lg:w-auto pb-2 lg:pb-0 mt-0 mb-0">
+                  <Inputs
+                    tipoInput={""}
+                    dataType={"double"}
+                    name={"monto_parcial"}
+                    tamañolabel={""}
+                    className={"rounded block grow text-right"}
+                    Titulo={"Monto Parcial: "}
+                    type={"text"}
+                    requerido={false}
+                    register={register}
+                    errors={errors}
+                    maxLength={8}
+                    isDisabled={false}
+                  />
+                </div>
+                <div className="w-full lg:w-auto pb-2 lg:pb-0 mt-0 mb-0 flex">
+                  <Inputs
+                    tipoInput={""}
+                    dataType={"string"}
+                    name={"clave_acceso"}
+                    tamañolabel={""}
+                    className={"rounded block grow text-right"}
+                    Titulo={"Acceso: "}
+                    type={"password"}
+                    requerido={false}
+                    register={register}
+                    errors={errors}
+                    maxLength={15}
+                    isDisabled={false}
+                  />
+                  <Tooltip Titulo={"Actualiza"} posicion={"tooltip-top"}>
+                    <Button
+                      icono={"fa-solid fa-circle-plus"}
+                      onClick={btnParciales}
+                    ></Button>
+                  </Tooltip>
+                </div>
+              </div>
+            )}
+            <div className="pb-5">
               <TablaPagos1
                 isLoading={isLoading}
                 pagosFiltrados={pagosFiltrados}
@@ -779,28 +786,14 @@ function Pagos_1() {
                 setAccion={setAccion}
                 setSelectedTable={setSelectedTable}
                 deleteRow={EliminarCampo}
-                // tableHeight={tableHeight}
-                // setTableHeight={setTableHeight}
               />
-              {/* <div className="col-span-7">
-                                <div className="flex flex-col h-[calc(95%)] w-full bg-white dark:bg-white">
-                                    {pdfPreview && pdfData && (
-                                        <div className="pdf-preview flex overflow-auto border border-gray-300 rounded-lg shadow-lg">
-                                            <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}>
-                                                <div style={{ height: "500px", width: "100%" }}>
-                                                    <Viewer fileUrl={pdfData} />
-                                                </div>
-                                            </Worker>
-                                        </div>
-                                    )}
-                                </div>
-                            </div> */}
             </div>
           </div>
         </div>
       </div>
     </>
   );
+
 }
 
 export default Pagos_1;

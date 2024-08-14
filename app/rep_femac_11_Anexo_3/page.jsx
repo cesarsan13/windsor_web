@@ -311,19 +311,18 @@ function CobranzaPorAlumno() {
         Excel={ImprimeExcel}
       />
 
-      <div className="container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
+      <div className="container w-full lg:h-full md:h-fit max-w-screen-xl  bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Reporte Cobranza por Alumno
           </h1>
         </div>
-        <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
-          <div className="col-span-1 flex flex-col">
+        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
+          <div className="md:col-span-1 flex flex-col">
             <Acciones home={home} Ver={handleVerClick}></Acciones>
           </div>
-          <div className="col-span-7">
-            <div className="flex flex-col h-full space-y-4">
-              <div className="flex space-x-4">
+          <div className="lg:col-span-7 md:col-span-7 sm:col-span-full space-y-3">
+            <div className="flex flex-col lg:flex-row md:flex-row sm:col-span-1 lg:col-span-10 md:space-x-1 ">
                 <Inputs
                   name={"fecha_ini"}
                   tamañolabel={""}
@@ -347,10 +346,10 @@ function CobranzaPorAlumno() {
                   setValue={setFecha_fin}
                 />
 
-                <div className="tooltip pt-1" data-tip="Tomar Fechas">
+                <div className="tooltip pt-1 lg:w-40" data-tip="Tomar Fechas">
                   <label
                     htmlFor="ch_tomaFechas"
-                    className="label cursor-pointer flex items-center space-x-2"
+                    className="label cursor-pointer flex justify-start space-x-2"
                   >
                     <input
                       id="ch_tomaFechas"
@@ -359,6 +358,7 @@ function CobranzaPorAlumno() {
                       defaultChecked={true}
                       onClick={(evt) => setTomaFechas(evt.target.checked)}
                     />
+                    <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
                     <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
                       Toma Fechas
                     </span>
@@ -366,7 +366,7 @@ function CobranzaPorAlumno() {
                 </div>
               </div>
 
-              <div className="flex space-x-4">
+              <div className="flex lg:flex-row flex-col lg:space-x-2 lg:space-y-0 sm:space-y-1">
                 <BuscarCat
                   table="alumnos"
                   itemData={[]}
@@ -388,7 +388,7 @@ function CobranzaPorAlumno() {
                   modalId="modal_alumnos2"
                 />
               </div>
-              <div className="flex space-x-4">
+              <div className="flex lg:flex-row flex-col lg:space-x-2 lg:space-y-0 sm:space-y-1">
                 <BuscarCat
                   table="cajeros"
                   itemData={[]}
@@ -410,10 +410,10 @@ function CobranzaPorAlumno() {
                   modalId="modal_cajeros2"
                 />
               </div>
+              <div></div>
             </div>
           </div>
         </div>
-      </div>
     </>
   );
 }

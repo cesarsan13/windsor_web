@@ -35,9 +35,10 @@ function Productos() {
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState("");
   const [filtro, setFiltro] = useState("id");
-  const [TB_Busqueda, setTB_Busqueda] = useState("");
+  // const [TB_Busqueda, setTB_Busqueda] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -49,14 +50,15 @@ function Productos() {
       const data = await getProductos(token, bajas);
       setProductos(data);
       setProductosFiltrados(data);
-      if (filtro !== "" && TB_Busqueda !== "") {
-        Buscar();
-      }
       setisLoading(false);
     };
     fetchData();
   }, [session, status, bajas]);
 
+  useEffect(() => {
+    Buscar();
+  }, [busqueda]);
+  
   const {
     register,
     handleSubmit,
@@ -92,19 +94,20 @@ function Productos() {
   }, [producto, reset]);
 
   const Buscar = () => {
-    if (TB_Busqueda === "" || filtro === "") {
+    const { tb_id, tb_desc } = busqueda;
+    if (tb_id === "" && tb_desc === "") {
       setProductosFiltrados(productos);
       return;
     }
     const infoFiltrada = productos.filter((producto) => {
-      const valorCampo = producto[filtro];
-      if (typeof valorCampo === "number") {
-        return valorCampo.toString().includes(TB_Busqueda);
-      }
-      return valorCampo
-        ?.toString()
-        .toLowerCase()
-        .includes(TB_Busqueda.toLowerCase());
+      const coincideId = tb_id ? producto["id"].toString().includes(tb_id) : true;
+      const coincideDescripcion = tb_desc
+        ? producto["descripcion"]
+          .toString()
+          .toLowerCase()
+          .includes(tb_desc.toLowerCase())
+        : true;
+      return coincideId && coincideDescripcion;
     });
     setProductosFiltrados(infoFiltrada);
   };
@@ -229,7 +232,7 @@ function Productos() {
   });
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
-    setTB_Busqueda("");
+    setBusqueda({ tb_id: "", tb_desc: "" });
   };
 
   const imprimirPDF = () => {
@@ -283,7 +286,10 @@ function Productos() {
   };
   const handleBusquedaChange = (event) => {
     event.preventDefault;
-    setTB_Busqueda(event.target.value);
+    setBusqueda((estadoPrevio) => ({
+      ...estadoPrevio,
+      [event.target.id]: event.target.value,
+    }));
   };
   const handleVerClick = () => {
     const configuracion = {
@@ -369,13 +375,13 @@ function Productos() {
         Excel={ImprimirExcel}
       />
       <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
-        <div className="flex justify-start p-3 ">
+        <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Productos.
           </h1>
         </div>
         <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-        <div className="md:col-span-1 flex flex-col">
+          <div className="md:col-span-1 flex flex-col">
             <Acciones
               Buscar={Buscar}
               Alta={Alta}
@@ -387,15 +393,13 @@ function Productos() {
             ></Acciones>
           </div>
           <div className="md:col-span-7">
-          <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full">
               <Busqueda
                 setBajas={setBajas}
-                setFiltro={setFiltro}
                 limpiarBusqueda={limpiarBusqueda}
                 Buscar={Buscar}
                 handleBusquedaChange={handleBusquedaChange}
-                TB_Busqueda={TB_Busqueda}
-                setTB_Busqueda={setTB_Busqueda}
+                busqueda={busqueda}
               />
               <TablaProductos
                 isLoading={isLoading}

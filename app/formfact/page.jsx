@@ -30,14 +30,13 @@ function FormFact() {
   const [accion, setAccion] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState("");
-  const [filtro, setFiltro] = useState("");
   const [formato, setFormato] = useState("");
-  const [TB_Busqueda, setTB_Busqueda] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [showSheet, setShowSheet] = useState(false);
   const [labels, setLabels] = useState([]);
   const [propertyData, setPropertyData] = useState({});
+  const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
 
   const [configuracion, setConfiguracion] = useState({
     Encabezado: {
@@ -54,6 +53,7 @@ function FormFact() {
     const data = getPropertyData(formato);
     setPropertyData(data);
   }, [formato]);
+
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
@@ -64,14 +64,14 @@ function FormFact() {
       const data = await getFormFact(token, bajas);
       setFormFacts(data);
       setFormFactsFiltrados(data);
-      if (filtro !== "" && TB_Busqueda !== "") {
-        Buscar();
-      }
       setisLoading(false);
     };
     fetchData();
     setFormato("Facturas");
   }, [session, status, bajas]);
+  useEffect(() => {
+    Buscar();
+  }, [busqueda]);
 
   useEffect(() => {
     const reporte = new ReportePDF(configuracion, "portrait");
@@ -103,26 +103,35 @@ function FormFact() {
   }, [formFact, reset]);
   const Buscar = () => {
     // alert(filtro);
-    if (TB_Busqueda === "" || filtro === "") {
+    const { tb_id, tb_desc } = busqueda;
+    if (tb_id === "" && tb_desc === "") {
       setFormFactsFiltrados(formFacts);
       return;
     }
     const infoFiltrada = formFacts.filter((formFact) => {
-      const valorCampo = formFact[filtro];
-      if (typeof valorCampo === "number") {
-        return valorCampo.toString().includes(TB_Busqueda);
-      }
-      return valorCampo
-        ?.toString()
-        .toLowerCase()
-        .includes(TB_Busqueda.toLowerCase());
+      const coincideId = tb_id
+        ? formFact["numero"].toString().includes(tb_id)
+        : true;
+      const coincideDescripcion = tb_desc
+        ? formFact.nombre.toLowerCase().includes(tb_desc.toLowerCase())
+        : true;
+      return coincideId && coincideDescripcion;
     });
+    // const valorCampo = formFact[filtro];
+    // if (typeof valorCampo === "number") {
+    //   return valorCampo.toString().includes(TB_Busqueda);
+    // }
+    // return valorCampo
+    //   ?.toString()
+    //   .toLowerCase()
+    //   .includes(TB_Busqueda.toLowerCase());
+    // });
     setFormFactsFiltrados(infoFiltrada);
   };
 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
-    setTB_Busqueda("");
+    setBusqueda({ tb_id: "", tb_desc: "" });
   };
   const Alta = async (event) => {
     setCurrentId("");
@@ -210,7 +219,10 @@ function FormFact() {
   };
   const handleBusquedaChange = (event) => {
     event.preventDefault;
-    setTB_Busqueda(event.target.value);
+    setBusqueda((estadoPrevio) => ({
+      ...estadoPrevio,
+      [event.target.id]: event.target.value,
+    }));
   };
 
   const fetchFacturasFormato = async (id) => {
@@ -226,23 +238,23 @@ function FormFact() {
   }
   return (
     <>
-      <ModalFormFact
-        accion={accion}
-        onSubmit={onSubmitModal}
-        currentID={currentID}
-        errors={errors}
-        register={register}
-        setFormFact={setFormFact}
-        formFact={formFact}
-      />
-      <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
+      <div className="h-[83vh] max-h-[83vh] container w-full bg-slate-100 rounded-3xl shadow-xl px-3 dark:bg-slate-700 overflow-y-auto">
+        <ModalFormFact
+          accion={accion}
+          onSubmit={onSubmitModal}
+          currentID={currentID}
+          errors={errors}
+          register={register}
+          setFormFact={setFormFact}
+          formFact={formFact}
+        />
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Formas Facturas.
           </h1>
         </div>
         <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-        <div className="md:col-span-1 flex flex-col">
+          <div className="md:col-span-1 flex flex-col">
             <Acciones
               Buscar={Buscar}
               Alta={Alta}
@@ -250,15 +262,14 @@ function FormFact() {
             ></Acciones>
           </div>
           <div className="md:col-span-7">
-          <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full">
               <Busqueda
                 setBajas={setBajas}
-                setFiltro={setFiltro}
                 limpiarBusqueda={limpiarBusqueda}
                 Buscar={Buscar}
                 handleBusquedaChange={handleBusquedaChange}
-                TB_Busqueda={TB_Busqueda}
                 setFormato={setFormato}
+                busqueda={busqueda}
               />
               {showSheet ? (
                 <ConfigReporte

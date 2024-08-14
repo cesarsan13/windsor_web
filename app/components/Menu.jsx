@@ -157,17 +157,9 @@ function Menu({ vertical }) {
             </li>
             <li>
             <Link href="/rep_femac_12_anexo_4"> Reporte Cobranza por Producto </Link>
-          </li>
-          <li>
-              <Link href="/rep_femac_12_anexo_4">
-                {" "}
-                Reporte Cobranza por Producto{" "}
-              </Link>
             </li>
             <li>
-              <Link href="/rep_inscritos" onClick={handleClick}>
-                Reporte Inscripción
-              </Link>
+            <Link href="/rep_inscritos" onClick={handleClick}>Reporte Inscripción</Link>
             </li>
           </ul>
         </details>
@@ -348,14 +340,9 @@ function Menu({ vertical }) {
           </li>
           <li>
             <Link href="/rep_femac_12_anexo_4" onClick={handleClick}>Reporte Cobranza por Producto</Link>
-            <Link href="/rep_inscritos" onClick={handleClick}>
-              Reporte Inscripción
-            </Link>
           </li>
           <li>
-            <Link href="/rep_femac_12_anexo_4" onClick={handleClick}>
-              Reporte Cobranza por Producto
-            </Link>
+            <Link href="/rep_inscritos" onClick={handleClick}>Reporte Inscripción</Link>
           </li>
         </ul>
       </div>

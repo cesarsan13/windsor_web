@@ -16,8 +16,6 @@ import {
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/cajeros/cajeros";
-import { eventNames } from "process";
-import { NEXT_CACHE_REVALIDATE_TAG_TOKEN_HEADER } from "next/dist/lib/constants";
 import "jspdf-autotable";
 import ModalVistaPreviaCajeros from "./components/modalVistaPreviaCajeros";
 import { ReportePDF } from "../utils/ReportesPDF";
@@ -33,10 +31,9 @@ function Cajeros() {
   const [accion, setAccion] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState("");
-  const [filtro, setFiltro] = useState("");
-  const [TB_Busqueda, setTB_Busqueda] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -48,14 +45,14 @@ function Cajeros() {
       const data = await getCajeros(token, bajas);
       setCajeros(data);
       setCajerosFiltrados(data);
-      if (filtro !== "" && TB_Busqueda !== "") {
-        Buscar();
-      }
       setisLoading(false);
     };
     fetchData();
   }, [session, status, bajas]);
 
+  useEffect(() => {
+    Buscar();
+  }, [busqueda]);
   const {
     register,
     handleSubmit,
@@ -88,27 +85,29 @@ function Cajeros() {
     });
   }, [cajero, reset]);
   const Buscar = () => {
-    // alert(filtro);
-    if (TB_Busqueda === "" || filtro === "") {
+    const { tb_id, tb_desc } = busqueda;
+    if (tb_id === "" && tb_desc === "") {
       setCajerosFiltrados(cajeros);
       return;
     }
     const infoFiltrada = cajeros.filter((cajero) => {
-      const valorCampo = cajero[filtro];
-      if (typeof valorCampo === "number") {
-        return valorCampo.toString().includes(TB_Busqueda);
-      }
-      return valorCampo
-        ?.toString()
-        .toLowerCase()
-        .includes(TB_Busqueda.toLowerCase());
+      const coincideNumero = tb_id
+        ? cajero["numero"].toString().includes(tb_id)
+        : true;
+      const coincideNombre = tb_desc
+        ? cajero["nombre"]
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
+        : true;
+      return coincideNumero && coincideNombre;
     });
     setCajerosFiltrados(infoFiltrada);
   };
 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
-    setTB_Busqueda("");
+    setBusqueda({ tb_id: "", tb_desc: "" });
   };
 
   const Alta = async (event) => {
@@ -203,7 +202,10 @@ function Cajeros() {
   };
   const handleBusquedaChange = (event) => {
     event.preventDefault;
-    setTB_Busqueda(event.target.value);
+    setBusqueda((estadoPrevio) => ({
+      ...estadoPrevio,
+      [event.target.id]: event.target.value,
+    }));
   };
   const ImprimePDF = () => {
     const configuracion = {
@@ -314,7 +316,7 @@ function Cajeros() {
           </h1>
         </div>
         <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-        <div className="md:col-span-1 flex flex-col">
+          <div className="md:col-span-1 flex flex-col">
             <Acciones
               Buscar={Buscar}
               Alta={Alta}
@@ -323,14 +325,13 @@ function Cajeros() {
             ></Acciones>
           </div>
           <div className="md:col-span-7">
-          <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full">
               <Busqueda
                 setBajas={setBajas}
-                setFiltro={setFiltro}
                 limpiarBusqueda={limpiarBusqueda}
                 Buscar={Buscar}
                 handleBusquedaChange={handleBusquedaChange}
-                TB_Busqueda={TB_Busqueda}
+                busqueda={busqueda}
               />
               <TablaCajeros
                 isLoading={isLoading}

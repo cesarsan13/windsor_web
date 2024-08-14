@@ -1,45 +1,43 @@
 import React from "react";
+import { soloEnteros } from "@/app/utils/globalfn";
 
 function Busqueda({
   setBajas,
-  setFiltro,
   limpiarBusqueda,
   Buscar,
   handleBusquedaChange,
-  TB_Busqueda,
-  setTB_Busqueda,
+  busqueda,
 }) {
-  const handleFiltroChange = (event) => {
-    const selectedValue = event.target.value;
-    setFiltro(selectedValue);
-  };
   const handleKeyDown = (evt) => {
     if (evt.key !== "Enter") return;
     Buscar();
   };
   return (
-    <div className="join w-full max-w-3/4 flex justify-start items-center h-1/8 p-1">
-      <input
-        id="TB_Busqueda"
-        className="input input-bordered input-md join-item w-full max-w-lg dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600"
-        placeholder="Buscar..."
-        onChange={(event) => handleBusquedaChange(event)}
-        onKeyDown={(evt) => handleKeyDown(evt)}
-        value={TB_Busqueda}
-      />
-      <select
-        className="select select-bordered join-item dark:bg-[#191e24] dark:text-neutral-200 w-20 md:w-32 text-neutral-600 "
-        onChange={(event) => handleFiltroChange(event)}
-      >
-        <option disabled defaultValue={""}>
-          Filtros
-        </option>
-        <option value={"id"}>Id</option>
-        <option value={"comentario_1"}>Comentario 1</option>
-        <option value={"comentario_2"}>Comentario 2</option>
-        <option value={"comentario_3"}>Comentario 3</option>
-        <option value={"generales"}>Generales</option>
-      </select>
+    <div className="grid grid-cols-3 md:grid-cols-12 gap-2">
+      <div className="col-span-1 md:col-span-2">
+        <input
+          id="tb_id"
+          className="input input-bordered text-right input-md join-item w-full max-w-lg dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600"
+          placeholder="Id..."
+          onChange={(event) => handleBusquedaChange(event)}
+          onKeyDown={(evt) => {
+            soloEnteros(evt);
+            handleKeyDown(evt);
+          }}
+          value={busqueda.tb_id}
+        />
+      </div>
+      <div className="col-span-2 md:col-span-4">
+        <input
+          id="tb_comentario1"
+          className="input input-bordered input-md join-item w-full max-w-lg dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600"
+          placeholder="Comentario 1..."
+          onChange={(event) => handleBusquedaChange(event)}
+          onKeyDown={(evt) => handleKeyDown(evt)}
+          value={busqueda.tb_comentario1}
+        />
+      </div>
+      <div className="md:col-span-1">
       <div className="tooltip" data-tip="Limpiar">
         <button
           className="btn btn-square join-item input input-sm  dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 border-none shadow-none "
@@ -48,6 +46,8 @@ function Busqueda({
           <i className="fa-solid fa-broom"></i>
         </button>
       </div>
+      </div>
+      <div className="md:col-span-1">
       <div className="form-control tooltip" data-tip="Ver Bajas">
         <label htmlFor="ch_bajas" className="label cursor-pointer">
           <input
@@ -61,6 +61,7 @@ function Busqueda({
             Bajas
           </span>
         </label>
+      </div>
       </div>
     </div>
   );

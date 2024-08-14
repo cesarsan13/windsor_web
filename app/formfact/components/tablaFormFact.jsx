@@ -17,7 +17,6 @@ function TablaFormFact({
     setFormFact(formFact);
     setAccion(accion);
     setCurrentId(formFact.numero);
-
     if (evt.target.attributes.name.value !== "btn_actualiza_formato") {
       showModal(true);
     } else {
@@ -50,26 +49,38 @@ function TablaFormFact({
                       <div
                         className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                         data-tip={`Ver ${item.numero}`}
+                        name="btn_ver"
                         onClick={(evt) => tableAction(evt, item, `Ver`)}
                       >
-                        <i className="fa-solid fa-eye"></i>
+                        <i
+                          className="fa-solid fa-eye"
+                          name="btn_ver"
+                        ></i>
                       </div>
                       <div
                         className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                         data-tip={`Editar ${item.numero}`}
+                        name="btn_editar"
                         onClick={(evt) => tableAction(evt, item, `Editar`)}
                       >
-                        <i className="fa-solid fa-file"></i>
+                        <i
+                          className="fa-solid fa-file"
+                          name="btn_editar"
+                        ></i>
                       </div>
                       <div
                         className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                         data-tip={`Eliminar ${item.numero}`}
+                        name="btn_elimina"
                         onClick={(evt) => tableAction(evt, item, "Eliminar")}
                       >
-                        <i className="fa-solid fa-trash"></i>
+                        <i
+                          className="fa-solid fa-trash"
+                          name="btn_elimina"
+                        ></i>
                       </div>
                       <div
-                        className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
+                        className="hidden sm:hidden md:block lg:block kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                         data-tip={`Actualizar Formato`}
                         name="btn_actualiza_formato"
                         onClick={(evt) =>
@@ -81,12 +92,13 @@ function TablaFormFact({
                           name="btn_actualiza_formato"
                         ></i>
                       </div>
+
                     </div>
                   </th>
                 </tr>
               ))}
             </tbody>
-            <tfoot/>
+            <tfoot />
           </table>
         ) : (
           <NoData />
