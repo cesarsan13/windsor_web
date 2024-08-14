@@ -26,18 +26,15 @@ function Comentarios() {
   const { data: session, status } = useSession();
   const [formasComentarios, setFormasComentarios] = useState([]);
   const [formaComentarios, setFormaComentarios] = useState({});
-  const [formaComentariosFiltrados, setFormaComentariosFiltrados] = useState(
-    []
-  );
+  const [formaComentariosFiltrados, setFormaComentariosFiltrados] = useState([]);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState("");
-  const [filtro, setFiltro] = useState("id");
-  const [TB_Busqueda, setTB_Busqueda] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const [busqueda, setBusqueda] = useState({ tb_id: "", tb_comentario1: "" });
 useEffect(() => {
   if (status === "loading" || !session) {
     return;
@@ -54,10 +51,8 @@ useEffect(() => {
 }, [session, status, bajas]);
 
 useEffect(() => {
-  if (TB_Busqueda !== "" && filtro !== "") {
     Buscar();
-  }
-}, [TB_Busqueda, filtro]);
+}, [busqueda]);
 
   const {
     register,
@@ -83,25 +78,27 @@ useEffect(() => {
     });
   }, [formaComentarios, reset]);
   const Buscar = () => {
-    if (TB_Busqueda === "" || filtro === "") {
+    const {tb_id, tb_comentario1} = busqueda;
+
+    if (tb_id === "" && tb_comentario1 === ""){
       setFormaComentariosFiltrados(formasComentarios);
       return;
     }
-    const infoFiltrada = formasComentarios.filter((formacomentarios) => {
-      const valorCampo = formacomentarios[filtro];
-      if (typeof valorCampo === "number") {
-        return valorCampo.toString().includes(TB_Busqueda);
-      }
-      return valorCampo
-        ?.toString()
+    const infoFiltrada = formasComentarios.filter((formaComentarios) => {
+      const coincideID = tb_id ? formaComentarios["id"].toString().includes(tb_id) : true;
+      const coincideComentario1 = tb_comentario1 ?
+        formaComentarios["comentario_1"]
+        .toString()
         .toLowerCase()
-        .includes(TB_Busqueda.toLowerCase());
+        .includes(tb_comentario1.toLowerCase())
+        : true;
+      return coincideID && coincideComentario1;
     });
     setFormaComentariosFiltrados(infoFiltrada);
   };
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
-    setTB_Busqueda("");
+    setBusqueda({ tb_id: "", tb_comentario1: "" });
   };
 
   const handleVerClick = () => {
@@ -310,7 +307,10 @@ useEffect(() => {
   };
   const handleBusquedaChange = (event) => {
     event.preventDefault;
-    setTB_Busqueda(event.target.value);
+    setBusqueda((estadoPrevio) => ({
+      ...estadoPrevio,
+      [event.target.id]: event.target.value,
+    }));
   };
 
   if (status === "loading") {
@@ -358,12 +358,10 @@ useEffect(() => {
           <div className="flex flex-col h-full">
               <Busqueda
                 setBajas={setBajas}
-                setFiltro={setFiltro}
                 limpiarBusqueda={limpiarBusqueda}
                 Buscar={Buscar}
                 handleBusquedaChange={handleBusquedaChange}
-                TB_Busqueda={TB_Busqueda}
-                setTB_Busqueda={setTB_Busqueda}
+                busqueda={busqueda}
               />
               <TablaComentarios
                 isLoading={isLoading}
