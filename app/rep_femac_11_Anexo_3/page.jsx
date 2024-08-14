@@ -311,17 +311,17 @@ function CobranzaPorAlumno() {
         Excel={ImprimeExcel}
       />
 
-      <div className="container w-full lg:h-full md:h-fit max-w-screen-xl  bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
+      <div className="container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Reporte Cobranza por Alumno
           </h1>
         </div>
-        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
+        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1">
           <div className="md:col-span-1 flex flex-col">
             <Acciones home={home} Ver={handleVerClick}></Acciones>
           </div>
-          <div className="lg:col-span-7 md:col-span-7 sm:col-span-full space-y-3">
+          <div className="overflow-y-auto lg:col-span-7 md:col-span-7 sm:col-span-full h-[calc(45vh)] space-y-3">
             <div className="flex flex-col lg:flex-row md:flex-row sm:col-span-1 lg:col-span-10 md:space-x-1 ">
                 <Inputs
                   name={"fecha_ini"}
