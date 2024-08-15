@@ -16,6 +16,7 @@ import {
 import { ReportePDF } from "../utils/ReportesPDF";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
+import ModalVistaPreviaRepFemac12Anexo4 from "./components/ModalVistaPreviaRepFemac12Anexo4";
 
 function RepFemac12Anexo() {
   const date = new Date();
@@ -201,9 +202,25 @@ function RepFemac12Anexo() {
     const pdfData = reporte.doc.output("datauristring");
     setPdfData(pdfData);
     setPdfPreview(true);
+    showModalVista(true);
   };
+
+  const showModalVista = (show) => {
+    show
+      ? document.getElementById("modalVPRepFemac12Anexo4").showModal()
+      : document.getElementById("modalVPRepFemac12Anexo4").close();
+  };
+
+
   return (
     <>
+    <ModalVistaPreviaRepFemac12Anexo4
+      pdfPreview={pdfPreview}
+      pdfData={pdfData}
+      PDF={ImprimePDF}
+      Excel={ImprimeExcel}
+    />
+     
       <div className="container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
@@ -213,8 +230,6 @@ function RepFemac12Anexo() {
         <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1">
           <div className="md:col-span-1 flex flex-col">
             <Acciones
-              ImprimePDF={ImprimePDF}
-              ImprimeExcel={ImprimeExcel}
               Ver={handleVerClick}
               home={home}
             />
@@ -297,26 +312,9 @@ function RepFemac12Anexo() {
                     </label>
                   </label>
                 </div>
-              
-              <div className="  mt-4">
-                {pdfPreview && pdfData && (
-                  <div className="">
-                    <div className="pdf-preview">
-                      <Worker
-                        workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
-                      >
-                        <div style={{ height: "400px" }}>
-                          <Viewer fileUrl={pdfData} />
-                        </div>
-                      </Worker>
-                    </div>
-                  </div>
-                )}
-              </div>
             </div>
           </div>
         </div>
-
     </>
   );
 }

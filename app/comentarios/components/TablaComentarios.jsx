@@ -18,28 +18,30 @@ function TablaComentarios({
   };
 
   return !isLoading ? (
-    <div className="overflow-x-auto mt-3 h-[calc(40vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-3/4">
+    <div className="overflow-x-auto mt-3 h-[calc(55vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-3/4">
       {formaComentariosFiltrados.length > 0 ? (
         <table className="table table-xs table-zebra w-full">
           <thead className="sticky top-0 bg-white dark:bg-[#1d232a] ">
             <tr>
-              <th></th>
-              <td className="w-[30%]">Comentario 1</td>
-              <td className="w-[30%]">Comentario 2</td>
-              <td className="w-[30%]">Comentario 3</td>
-              <td className="w-[10%]">Generales</td>
+              <th className="sm:w-[10%]"></th>
+              <td className="w-[45%]">Comentario 1</td>
+              <td className="w-[25%] hidden sm:table-cell">Comentario 2</td>
+              <td className="w-[25%] hidden sm:table-cell">Comentario 3</td>
               <th className="w-[30%] sm:w-[10%]">Acciones</th>
             </tr>
           </thead>
           <tbody>
             {formaComentariosFiltrados.map((item) => (
-              <tr key={item.id} className="hover: cursor-pointer">
-                <th className={"text-right"}>{item.id}</th>
-                <td> {item.comentario_1} </td>
-                <td> {item.comentario_2} </td>
-                <td> {item.comentario_3} </td>
-                <td> {item.generales} </td>
-                <th className="w-[30%] sm:w-[10%]">
+              <tr key={item.id} className="hover:cursor-pointer">
+                <th className={
+                  typeof item.comision === "number"
+                  ? "text-right"
+                  : "text-left"
+                }>{item.id}</th>
+                <td className="w-[45%]"> {item.comentario_1} </td>
+                <td className="w-[25%] hidden sm:table-cell"> {item.comentario_2} </td>
+                <td className="w-[25%] hidden sm:table-cell"> {item.comentario_3} </td>
+              <th className="w-[30%] sm:w-[10%]">
                   <div className="flex flex-row space-x-1 sm:space-x-3">
                     <div
                       className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"

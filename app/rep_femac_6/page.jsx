@@ -336,7 +336,7 @@ function Rep_Femac_6() {
                                             type="date"
                                             value={fechaIni}
                                             onChange={(e) => setFechaIni(e.target.value)}
-                                            className='rounded block grow text-black dark:text-white'
+                                            className='rounded block grow text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700'
                                         />
                                     </label>
                                 </div>
@@ -347,7 +347,7 @@ function Rep_Femac_6() {
                                             type="date"
                                             value={fechaFin}
                                             onChange={(e) => setFechaFin(e.target.value)}
-                                            className='rounded block grow text-black dark:text-white'
+                                            className='rounded block grow text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700'
                                         />
                                     </label>
                                 </div>
@@ -361,6 +361,7 @@ function Rep_Femac_6() {
                                     nameInput={["numero", "nombre"]}
                                     setItem={setCajero}
                                     modalId={"modal_Cajeros"}
+                                    alignRight={true}
                                     />
                             </div>
                         </div>

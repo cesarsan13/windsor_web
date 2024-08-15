@@ -19,8 +19,7 @@ function BuscarCat({
   array,
   alignRight = false,
   id,
-  /*inputWidths= { contdef:"180px", first: "80px", second: "150px" },*/
-
+  inputWidths = { first: "80px", second: "150px" },
 }) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -112,6 +111,10 @@ function BuscarCat({
     BuscarInfo();
   };
 
+  const onBlur = () => {
+    BuscarInfo();
+  };
+
   const BuscarInfo = () => {
     const inputValueStr = String(inputValue);
 
@@ -151,7 +154,9 @@ function BuscarCat({
   return (
     <div className="flex flex-col md:flex-row justify-start gap-2 sm:flex-row">
       <div className="flex gap-2 ">
-        <label className={`input input-bordered join-item text-black dark:text-white input-md flex items-center gap-3 lg:w-60 md:w-64 sm:w-80`} /*style={{ width: inputWidths.contdef }} */>
+        <label
+          className={`input input-bordered join-item text-black dark:text-white input-md flex items-center gap-3`}
+        >
           {titulo}
           <input
             id={nameInput[0]}
@@ -159,9 +164,11 @@ function BuscarCat({
             type="text"
             {...register(nameInput[0])}
             onKeyDown={(evt) => handleKeyDown(evt)}
+            onBlur={onBlur}
             className={`grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${
-              alignRight ? "text-right" : ""} lg:w-24 ` }
-            /*style={{ width: inputWidths.first }}*/
+              alignRight ? "text-right" : ""
+            } lg:w-24 `}
+            style={{ width: inputWidths.first }}
           />
         </label>
         <button
@@ -180,7 +187,7 @@ function BuscarCat({
           readOnly={true}
           {...register(nameInput[1])}
           className={`input input-bordered join-item rounded-r-md bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md w-full`}
-          /*style={{ width: inputWidths.second }}*/
+          style={{ width: inputWidths.second }}
         />
       </div>
       <ModalBuscarCat
