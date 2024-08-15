@@ -138,31 +138,35 @@ function AltasBajasAlumnos() {
           <div className="md:col-span-1 flex flex-col">
             <Acciones home={home} Ver={handleVerClick} />
           </div>
-          <div className="overflow-y-auto lg:col-span-7 md:col-span-7 sm:col-span-full h-[calc(50vh)] space-y-3">
-            <div className="flex flex-col lg:flex-row md:flex-row sm:col-span-1 lg:col-span-10 md:space-x-1">
-              <Inputs
-                name={"fecha_ini"}
-                tamañolabel={""}
-                className={"rounded  block grow"}
-                Titulo={"Fecha Inicial: "}
-                type={"date"}
-                errors={errors}
-                maxLength={15}
-                isDisabled={false}
-                setValue={setFecha_ini}
-              />
-              <Inputs
-                name={"fecha_fin"}
-                tamañolabel={""}
-                className={"rounded block grow"}
-                Titulo={"Fecha Final: "}
-                type={"date"}
-                errors={errors}
-                maxLength={15}
-                isDisabled={false}
-                setValue={setFecha_fin}
-              />
-
+          <div className=" lg:col-span-7 md:col-span-7 sm:col-span-full space-y-3">
+            <div className="flex lg:flex-row md:flex-row sm:flex-row xs:flex-col md:space-x-1">
+              <div className="lg:w-[calc(30vh)] md:w-[calc(30vh)] sm:w-[calc(30vh)] xs:w-[calc(10vh)]">
+                <Inputs
+                  name={"fecha_ini"}
+                  tamañolabel={""}
+                  className={"rounded  block grow"}
+                  Titulo={"Fecha Inicial: "}
+                  type={"date"}
+                  errors={errors}
+                  maxLength={15}
+                  isDisabled={false}
+                  setValue={setFecha_ini}
+                />
+              </div>
+              <div className="lg:w-[calc(30vh)] md:w-[calc(30vh)] sm:w-[calc(30vh)] xs:w-[calc(10vh)]">
+                <Inputs
+                  name={"fecha_fin"}
+                  tamañolabel={""}
+                  className={"rounded block grow"}
+                  Titulo={"Fecha Final: "}
+                  type={"date"}
+                  errors={errors}
+                  maxLength={15}
+                  isDisabled={false}
+                  setValue={setFecha_fin}
+                />
+              </div>
+             <div className="lg:w-[calc(30vh)] md:w-[calc(30vh)] sm:w-[calc(30vh)] xs:w-[calc(10vh)]"></div>
               <div className="tooltip pt-1 lg:w-40" data-tip="Tomar Fechas">
                 <label
                   htmlFor="ch_tomaFechas"
