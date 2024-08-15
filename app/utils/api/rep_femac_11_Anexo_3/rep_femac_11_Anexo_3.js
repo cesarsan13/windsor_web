@@ -125,10 +125,10 @@ export const ImprimirPDF = (configuracion, fecha_ini, fecha_fin, cajero_ini, caj
       newPDF.ImpPosX(tipoPago2.toString(),163, newPDF.tw_ren);
       newPDF.ImpPosX(reporte2.nombre.toString(),183, newPDF.tw_ren);
 
-      Enca1(newPDF);
+      Enca1(newPDF,fecha_ini, fecha_fin, cajero_ini, cajero_fin, tomaFechas);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
       newPDF.pageBreak();
-      Enca1(newPDF);
+      Enca1(newPDF,fecha_ini, fecha_fin, cajero_ini, cajero_fin, tomaFechas);
     }
       total_importe = total_importe + reporte2.importe;
       total_general = total_general + reporte2.importe;

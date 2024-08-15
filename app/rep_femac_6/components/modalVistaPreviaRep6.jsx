@@ -26,7 +26,22 @@ function ModalVistaPreviaRep6({ pdfPreview, pdfData, PDF, Excel }) {
         const isEmptyDataPDF = Object.keys(pdfData || {}).length === 0 && (pdfData || {}).constructor === Object;
         setIsModalOpen(pdfPreview && !isEmptyDataPDF);
     }, [pdfPreview, pdfData]);
+    // const [scale, setScale] = useState(1);
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth >= 768) {
+                setScale(SpecialZoomLevel.PageWidth);
+            } else {
+                setScale(1);
+            }
+        };
 
+        window.addEventListener('resize', handleResize);
+        handleResize();
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
     return (
         <dialog id='modalVRep6' className='modal'>
             <div className='modal-box w-full max-w-4xl h-full'>
