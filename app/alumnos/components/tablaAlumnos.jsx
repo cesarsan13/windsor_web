@@ -47,8 +47,7 @@ function TablaAlumnos({
           <tbody>
             {alumnosFiltrados.map((item) => (
               <tr key={item.id} className="hover:cursor-pointer">
-                <th
-                  className={
+                <th className={
                     typeof item.comision === "number"
                       ? "text-right"
                       : "text-left"
