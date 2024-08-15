@@ -309,7 +309,7 @@ function Cajeros() {
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
       />
-      <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
+      <div className="container h-[80vh] w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 overflow-x-auto">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Cajeros
@@ -333,6 +333,7 @@ function Cajeros() {
                 handleBusquedaChange={handleBusquedaChange}
                 busqueda={busqueda}
               />
+              <div className="overflow-x-auto">
               <TablaCajeros
                 isLoading={isLoading}
                 cajerosFiltrados={cajerosFiltrados}
@@ -341,6 +342,7 @@ function Cajeros() {
                 setAccion={setAccion}
                 setCurrentId={setCurrentId}
               />
+              </div>
             </div>
           </div>
         </div>
