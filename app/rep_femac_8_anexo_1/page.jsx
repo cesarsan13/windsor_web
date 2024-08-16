@@ -134,13 +134,14 @@ function AltasBajasAlumnos() {
             Relación de Recibos
           </h1>
         </div>
-        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1">
+        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
           <div className="md:col-span-1 flex flex-col">
             <Acciones home={home} Ver={handleVerClick} />
           </div>
-          <div className=" lg:col-span-7 md:col-span-7 sm:col-span-full space-y-3">
-            <div className="flex lg:flex-row md:flex-row sm:flex-row xs:flex-col md:space-x-1">
-              <div className="lg:w-[calc(30vh)] md:w-[calc(30vh)] sm:w-[calc(30vh)] xs:w-[calc(10vh)]">
+          <div className="col-span-7">
+            <div className="flex flex-col h-[calc(80%)] overflow-y-auto">
+            <div className='flex flex-col md:flex-row gap-4 '>
+              <div className='w-11/12 md:w-4/12 lg:w-3/12'>
                 <Inputs
                   name={"fecha_ini"}
                   tamañolabel={""}
@@ -152,12 +153,13 @@ function AltasBajasAlumnos() {
                   isDisabled={false}
                   setValue={setFecha_ini}
                 />
-              </div>
-              <div className="lg:w-[calc(30vh)] md:w-[calc(30vh)] sm:w-[calc(30vh)] xs:w-[calc(10vh)]">
+                </div>
+                <div className='w-11/12 md:w-4/12 lg:w-3/12'>
+             
                 <Inputs
                   name={"fecha_fin"}
                   tamañolabel={""}
-                  className={"rounded block grow"}
+                  className={"rounded block grow "}
                   Titulo={"Fecha Final: "}
                   type={"date"}
                   errors={errors}
@@ -165,12 +167,12 @@ function AltasBajasAlumnos() {
                   isDisabled={false}
                   setValue={setFecha_fin}
                 />
+                </div>
               </div>
-             <div className="lg:w-[calc(30vh)] md:w-[calc(30vh)] sm:w-[calc(30vh)] xs:w-[calc(10vh)]"></div>
-              <div className="tooltip pt-1 lg:w-40" data-tip="Tomar Fechas">
+              <div className="tooltip" data-tip="Tomar Fechas">
                 <label
                   htmlFor="ch_tomaFechas"
-                  className="label cursor-pointer flex justify-start space-x-2 "
+                  className="label cursor-pointer flex justify-start space-x-2"
                 >
                   <input
                     id="ch_tomaFechas"
@@ -179,18 +181,18 @@ function AltasBajasAlumnos() {
                     defaultChecked={true}
                     onClick={(evt) => setTomaFechas(evt.target.checked)}
                   />
-                  <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
+                  <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden  text-neutral-600 dark:text-neutral-200"></span>
                   <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
                     Toma Fechas
                   </span>
                 </label>
               </div>
-            </div>
-            <div className="flex md:flex-row lg:flex-row  md:space-x-1">
+            
+            <div className="flex md:flex-row lg:flex-row md:space-x-1p-1">
               <Inputs
                 name={"recibo_ini"}
                 tamañolabel={""}
-                className={"rounded block grow w-full md:w-1/2"}
+                className={"rounded block grow w-full md:w-1/2 "}
                 Titulo={"Recibos: "}
                 type={"text"}
                 errors={errors}
@@ -213,7 +215,7 @@ function AltasBajasAlumnos() {
               />
             </div>
 
-            <div className="flex md:flex-row lg:flex-row md:space-x-1">
+            <div className="flex md:flex-row lg:flex-row md:space-x-1 gap-3 p-1">
               <Inputs
                 name={"factura_ini"}
                 tamañolabel={""}
@@ -239,8 +241,7 @@ function AltasBajasAlumnos() {
                 setValue={setFacturaFin}
               />
             </div>
-
-            <div className="flex lg:flex-row flex-col lg:space-x-2 lg:space-y-0 sm:space-y-1">
+            <div className="p-1">
               <BuscarCat
                 table="alumnos"
                 itemData={[]}
@@ -250,7 +251,10 @@ function AltasBajasAlumnos() {
                 setItem={setAlumnoIni}
                 token={session.user.token}
                 modalId="modal_alumnos1"
+                inputWidths={{ first: "100px", second: "300px" }}
               />
+              </div>
+              <div className="p-1">
               <BuscarCat
                 table="alumnos"
                 itemData={[]}
@@ -260,8 +264,10 @@ function AltasBajasAlumnos() {
                 setItem={setAlumnoFin}
                 token={session.user.token}
                 modalId="modal_alumnos2"
+                inputWidths={{ first: "115px", second: "300px" }}
               />
-            </div>
+              </div>
+          </div>
           </div>
         </div>
       </div>
