@@ -51,7 +51,7 @@ function LoginPage() {
           Correo Electronico
         </label>
         <input
-          type="text"
+          type="email"
           name="username"
           className="p-3 rounded block  text-slate-400 w-full"
           {...register("username", { required: "Usuario requerido" })}
