@@ -99,7 +99,7 @@ function ModalFormaPago({
                 dataType={"float"}
                 name={"comision"}
                 tamañolabel={"w-72"}
-                className={"w-4/6"}
+                className={"w-4/6 text-right"}
                 Titulo={"Comision:"}
                 type={"text"}
                 requerido={true}
