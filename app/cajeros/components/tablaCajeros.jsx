@@ -37,8 +37,8 @@ function TablaCajeros({
                 <tr key={item.numero} className="hover:cursor-pointer">
                   <th className={
                     typeof item.comision === "number"
-                    ? "text-right"
-                    : "text-left"
+                    ? "text-left"
+                    : "text-right"
                   }>{item.numero}</th>
                   <td className="w-[45%]">{item.nombre}</td>
                   <td className="w-[20%] hidden sm:table-cell">{item.telefono}</td>
