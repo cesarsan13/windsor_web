@@ -18,7 +18,7 @@ function LoginPage() {
   const onSubmit = handleSubmit(async (data) => {
     event.preventDefault();
     const res = await signIn("credentials", {
-      name: data.username,
+      email: data.username,
       password: data.password,
       redirect: false,
     });
@@ -48,7 +48,7 @@ function LoginPage() {
           Iniciar Sesion
         </h1>
         <label className="text-slate-500 mb-2 block" htmlFor="username">
-          Usuario
+          Correo Electronico
         </label>
         <input
           type="text"
