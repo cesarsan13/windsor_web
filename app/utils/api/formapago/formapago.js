@@ -45,7 +45,7 @@ export const guardaFormaPAgo = async (token, data, accion) => {
     body: JSON.stringify({
       id: data.id,
       descripcion: data.descripcion,
-      comision: data.comision,
+      comision: data.comision.replace(/,/g, ''),
       aplicacion: data.aplicacion,
       cue_banco: data.cue_banco,
       baja: data.baja,

@@ -40,18 +40,18 @@ function TablaProductos({
                                 <th
                                     className={
                                         typeof item.comision === "number"
-                                            ? "text-right"
-                                            : "text-left"
+                                            ? "text-left"
+                                            : "text-right"
                                     }
                                 >
                                     {item.id}
                                 </th>
                                 <td>{item.descripcion}</td>
                                 <td>{item.aplicacion}</td>
-                                <td>{formatNumber(item.costo)}</td>
-                                <td>{formatNumber(item.pro_recargo)}</td>
-                                <td>{item.cond_1}</td>
-                                <td>{formatNumber(item.iva)}</td>
+                                <td className="text-right">{formatNumber(item.costo)}</td>
+                                <td className="text-right">{formatNumber(item.pro_recargo)}</td>
+                                <td className="text-right">{item.cond_1}</td>
+                                <td className="text-right">{formatNumber(item.iva)}</td>
                                 <th>
                                     <div className="flex flex-row space-x-3">
                                         <div

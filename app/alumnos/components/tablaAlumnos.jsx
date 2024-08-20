@@ -49,8 +49,8 @@ function TablaAlumnos({
               <tr key={item.id} className="hover:cursor-pointer">
                 <th className={
                     typeof item.comision === "number"
-                      ? "text-right"
-                      : "text-left"
+                      ? "text-left"
+                      : "text-right"
                   }
                 >
                   {item.id}

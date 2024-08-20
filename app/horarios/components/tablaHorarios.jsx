@@ -25,7 +25,7 @@ function TablaHorarios({
             <tr>
               <th></th>
               <th className="w-[5%]">Cancha</th>
-              <th className="w-[45%]">Dia</th>
+              <th className="w-[40%]">Dia</th>
               <th className="w-[15%]">Horario</th>
               <th className="w-[10%]">Max Niños</th>
               <th className="w-[5%]">Sexo</th>
@@ -39,24 +39,24 @@ function TablaHorarios({
               <tr key={item.numero}>
                 <th
                   className={
-                    typeof item.numero === "number" ? "text-right" : "text-left"
+                    typeof item.numero === "number" ? "text-left" : "text-right"
                   }
                 >
                   {item.numero}
                 </th>
                 <td
                   className={
-                    typeof item.numero === "number" ? "text-right" : "text-left"
+                    typeof item.numero === "number" ? "text-left" : "text-right"
                   }
                 >
                   {item.cancha}
                 </td>
                 <td>{item.dia}</td>
                 <td>{item.horario}</td>
-                <td>{item.max_niños}</td>
+                <td className="text-right">{item.max_niños}</td>
                 <td>{item.sexo}</td>
-                <td>{item.edad_ini}</td>
-                <td>{item.edad_fin}</td>
+                <td className="text-right">{item.edad_ini}</td>
+                <td className="text-right">{item.edad_fin}</td>
                 <th className="w-[30%] sm:w-[10%]">
                   <div className="flex flex-row space-x-1 sm:space-x-3">
                     <div
