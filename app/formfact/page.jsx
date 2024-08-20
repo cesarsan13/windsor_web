@@ -238,7 +238,7 @@ function FormFact() {
   }
   return (
     <>
-      <div className="h-[83vh] max-h-[83vh] container w-full bg-slate-100 rounded-3xl shadow-xl px-3 dark:bg-slate-700 overflow-y-auto">
+      <div className="h-[83vh] max-h-[83vh] container w-full bg-slate-100 rounded-3xl shadow-xl px-3 dark:bg-slate-700 overflow-y-auto md:overflow-y-hidden">
         <ModalFormFact
           accion={accion}
           onSubmit={onSubmitModal}

@@ -55,9 +55,9 @@ function Alumnos() {
       const coincideId = tb_id ? alumno["id"].toString().includes(tb_id) : true;
       const coincideDescripcion = tb_desc
         ? alumno["nombre"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_desc.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
         : true;
       return coincideId && coincideDescripcion;
     });
@@ -436,7 +436,9 @@ function Alumnos() {
         return;
       }
     }
-    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${data.a_nombre || ""}`.trim();
+    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${
+      data.a_nombre || ""
+    }`.trim();
     const formData = new FormData();
     formData.append("id", data.id || "");
     formData.append("nombre", nombreCompleto || "");
@@ -750,7 +752,7 @@ function Alumnos() {
         PDF={imprimePDF}
         Excel={ImprimeExcel}
       />
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 overflow-y-auto">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 overflow-y-auto md:overflow-y-hidden">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Alumnos.

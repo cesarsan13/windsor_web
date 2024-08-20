@@ -26,7 +26,9 @@ function Comentarios() {
   const { data: session, status } = useSession();
   const [formasComentarios, setFormasComentarios] = useState([]);
   const [formaComentarios, setFormaComentarios] = useState({});
-  const [formaComentariosFiltrados, setFormaComentariosFiltrados] = useState([]);
+  const [formaComentariosFiltrados, setFormaComentariosFiltrados] = useState(
+    []
+  );
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
@@ -35,24 +37,24 @@ function Comentarios() {
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_comentario1: "" });
-useEffect(() => {
-  if (status === "loading" || !session) {
-    return;
-  }
-  const fetchData = async () => {
-    setisLoading(true);
-    const { token } = session.user;
-    const data = await getComentarios(token, bajas);
-    setFormasComentarios(data);
-    setFormaComentariosFiltrados(data);
-    setisLoading(false);
-  };
-  fetchData();
-}, [session, status, bajas]);
+  useEffect(() => {
+    if (status === "loading" || !session) {
+      return;
+    }
+    const fetchData = async () => {
+      setisLoading(true);
+      const { token } = session.user;
+      const data = await getComentarios(token, bajas);
+      setFormasComentarios(data);
+      setFormaComentariosFiltrados(data);
+      setisLoading(false);
+    };
+    fetchData();
+  }, [session, status, bajas]);
 
-useEffect(() => {
+  useEffect(() => {
     Buscar();
-}, [busqueda]);
+  }, [busqueda]);
 
   const {
     register,
@@ -78,19 +80,21 @@ useEffect(() => {
     });
   }, [formaComentarios, reset]);
   const Buscar = () => {
-    const {tb_id, tb_comentario1} = busqueda;
+    const { tb_id, tb_comentario1 } = busqueda;
 
-    if (tb_id === "" && tb_comentario1 === ""){
+    if (tb_id === "" && tb_comentario1 === "") {
       setFormaComentariosFiltrados(formasComentarios);
       return;
     }
     const infoFiltrada = formasComentarios.filter((formaComentarios) => {
-      const coincideID = tb_id ? formaComentarios["id"].toString().includes(tb_id) : true;
-      const coincideComentario1 = tb_comentario1 ?
-        formaComentarios["comentario_1"]
-        .toString()
-        .toLowerCase()
-        .includes(tb_comentario1.toLowerCase())
+      const coincideID = tb_id
+        ? formaComentarios["id"].toString().includes(tb_id)
+        : true;
+      const coincideComentario1 = tb_comentario1
+        ? formaComentarios["comentario_1"]
+            .toString()
+            .toLowerCase()
+            .includes(tb_comentario1.toLowerCase())
         : true;
       return coincideID && coincideComentario1;
     });
@@ -336,14 +340,14 @@ useEffect(() => {
         Excel={ImprimeExcel}
       />
 
-      <div className="container h-[80vh] w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 overflow-y-auto">
+      <div className="container h-[80vh] w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 overflow-y-auto md:overflow-y-hidden">
         <div className="flex justify-start p-3 ">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Comentarios.
           </h1>
         </div>
         <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-        <div className="md:col-span-1 flex flex-col">
+          <div className="md:col-span-1 flex flex-col">
             <Acciones
               Buscar={Buscar}
               Alta={Alta}
@@ -355,7 +359,7 @@ useEffect(() => {
             ></Acciones>
           </div>
           <div className="md:col-span-7">
-          <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full">
               <Busqueda
                 setBajas={setBajas}
                 limpiarBusqueda={limpiarBusqueda}
@@ -364,14 +368,14 @@ useEffect(() => {
                 busqueda={busqueda}
               />
               <div className="overflow-x-auto">
-              <TablaComentarios
-                isLoading={isLoading}
-                formaComentariosFiltrados={formaComentariosFiltrados}
-                showModal={showModal}
-                setFormaComentarios={setFormaComentarios}
-                setAccion={setAccion}
-                setCurrentId={setCurrentId}
-              />
+                <TablaComentarios
+                  isLoading={isLoading}
+                  formaComentariosFiltrados={formaComentariosFiltrados}
+                  showModal={showModal}
+                  setFormaComentarios={setFormaComentarios}
+                  setAccion={setAccion}
+                  setCurrentId={setCurrentId}
+                />
               </div>
             </div>
           </div>

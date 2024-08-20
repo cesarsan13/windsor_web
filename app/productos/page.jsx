@@ -100,12 +100,14 @@ function Productos() {
       return;
     }
     const infoFiltrada = productos.filter((producto) => {
-      const coincideId = tb_id ? producto["id"].toString().includes(tb_id) : true;
+      const coincideId = tb_id
+        ? producto["id"].toString().includes(tb_id)
+        : true;
       const coincideDescripcion = tb_desc
         ? producto["descripcion"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_desc.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
         : true;
       return coincideId && coincideDescripcion;
     });
@@ -374,7 +376,7 @@ function Productos() {
         PDF={imprimirPDF}
         Excel={ImprimirExcel}
       />
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 overflow-y-auto">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 overflow-y-auto md:overflow-y-hidden">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Productos.

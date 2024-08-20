@@ -94,12 +94,14 @@ function Horarios() {
       return;
     }
     const infoFiltrada = horarios.filter((horario) => {
-      const coincideId = tb_id ? horario["numero"].toString().includes(tb_id) : true;
+      const coincideId = tb_id
+        ? horario["numero"].toString().includes(tb_id)
+        : true;
       const coincideDescripcion = tb_desc
         ? horario["horario"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_desc.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
         : true;
       return coincideId && coincideDescripcion;
     });
@@ -276,33 +278,33 @@ function Horarios() {
         doc.tiene_encabezado = true;
       }
     };
-    const reporte = new ReportePDF(configuracion)
+    const reporte = new ReportePDF(configuracion);
     Enca1(reporte);
     horariosFiltrados.forEach((horario) => {
-      reporte.ImpPosX(horario.numero.toString(), 14, reporte.tw_ren)
-      reporte.ImpPosX(horario.cancha.toString(), 28, reporte.tw_ren)
-      reporte.ImpPosX(horario.dia.toString(), 42, reporte.tw_ren)
-      reporte.ImpPosX(horario.horario.toString(), 82, reporte.tw_ren)
-      reporte.ImpPosX(horario.max_niños.toString(), 114, reporte.tw_ren)
-      reporte.ImpPosX(horario.sexo.toString(), 134, reporte.tw_ren)
-      reporte.ImpPosX(horario.edad_ini.toString(), 154, reporte.tw_ren)
-      reporte.ImpPosX(horario.edad_fin.toString(), 174, reporte.tw_ren)
+      reporte.ImpPosX(horario.numero.toString(), 14, reporte.tw_ren);
+      reporte.ImpPosX(horario.cancha.toString(), 28, reporte.tw_ren);
+      reporte.ImpPosX(horario.dia.toString(), 42, reporte.tw_ren);
+      reporte.ImpPosX(horario.horario.toString(), 82, reporte.tw_ren);
+      reporte.ImpPosX(horario.max_niños.toString(), 114, reporte.tw_ren);
+      reporte.ImpPosX(horario.sexo.toString(), 134, reporte.tw_ren);
+      reporte.ImpPosX(horario.edad_ini.toString(), 154, reporte.tw_ren);
+      reporte.ImpPosX(horario.edad_fin.toString(), 174, reporte.tw_ren);
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRen) {
         reporte.pageBreak();
         Enca1(reporte);
       }
-    })
+    });
     const pdfData = reporte.doc.output("datauristring");
     setPdfData(pdfData);
     setPdfPreview(true);
-    showModalVista(true)
-  }
+    showModalVista(true);
+  };
   const showModalVista = (show) => {
     show
       ? document.getElementById("modalVPHorarios").showModal()
       : document.getElementById("modalVPHorarios").close();
-  }
+  };
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -321,8 +323,13 @@ function Horarios() {
         control={control}
         setDia={setDia}
       />
-      <ModalVistaPreviaHorarios pdfData={pdfData} pdfPreview={pdfPreview} PDF={ImprimePDF} Excel={ImprimeExcel} />
-      <div className="h-[83vh] max-h-[83vh] container w-full bg-slate-100 rounded-3xl shadow-xl px-3 dark:bg-slate-700 overflow-y-auto">
+      <ModalVistaPreviaHorarios
+        pdfData={pdfData}
+        pdfPreview={pdfPreview}
+        PDF={ImprimePDF}
+        Excel={ImprimeExcel}
+      />
+      <div className="h-[83vh] max-h-[83vh] container w-full bg-slate-100 rounded-3xl shadow-xl px-3 dark:bg-slate-700 overflow-y-auto md:overflow-y-hidden">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Horarios.
@@ -359,7 +366,6 @@ function Horarios() {
         </div>
       </div>
     </>
-
   );
 }
 
