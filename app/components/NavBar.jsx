@@ -45,7 +45,7 @@ function NavBar() {
     return <></>;
   }
   const handleSingOut = async () => {
-    await signOut({ redirect: true, callbackUrl: "/" });
+    await signOut({ redirect: true, callbackUrl: "/control_escolar" });
   };
   return (
     <div className="navbar sticky top-0 h-full max-h-7 bg-slate-100 dark:bg-slate-700 z-[2]">
