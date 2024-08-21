@@ -248,42 +248,47 @@ function RelaciondeFacturas(){
         Excel = {ImprimeExcel}/>
 
         <div className="container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
-        <div className="flex justify-start p-3">
+          <div className="flex justify-start p-3">
             <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
-            Relación de Facturas
+              Relación de Facturas
             </h1>
-        </div>
-            <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1">
-          <div className="md:col-span-1 flex flex-col">
-            <Acciones home={home} Ver={handleVerClick} />
           </div>
-          <div className="lg:col-span-7 md:col-span-7 sm:col-span-full space-y-3">
-            <div className="flex flex-col lg:flex-row md:flex-row sm:col-span-1 lg:col-span-10 md:space-x-1">
-                <Inputs
-                  name={"fecha_cobro_ini"}
-                  tamañolabel={""}
-                  className={"rounded block grow"}
-                  Titulo={"Fecha Inicial: "}
-                  type={"date"}
-                  errors={errors}
-                  maxLength={15}
-                  isDisabled={false}
-                  setValue={setFecha_cobro_ini}
-                />
-                <Inputs
-                  name={"fecha_cobro_fin"}
-                  tamañolabel={""}
-                  className={"rounded block grow"}
-                  Titulo={"Fecha Final: "}
-                  type={"date"}
-                  errors={errors}
-                  maxLength={15}
-                  isDisabled={false}
-                  setValue={setFecha_cobro_fin}
-                />
-
-                <div className="flex md:flex-row lg:flex-row  md:space-x-1">
-                  <div className="tooltip pt-1 lg:w-40" data-tip="Tomar Fechas">
+          <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
+            <div className="md:col-span-1 flex flex-col">
+              <Acciones home={home} Ver={handleVerClick} />
+            </div>
+            <div className="col-span-7">
+              <div className="flex flex-col h-[calc(80%)] overflow-y-auto">
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className='w-11/12 md:w-4/12 lg:w-3/12'>
+                    <Inputs
+                      name={"fecha_cobro_ini"}
+                      tamañolabel={""}
+                      className={"rounded block grow"}
+                      Titulo={"Fecha Inicial: "}
+                      type={"date"}
+                      errors={errors}
+                      maxLength={15}
+                      isDisabled={false}
+                      setValue={setFecha_cobro_ini}
+                    />
+                  </div>
+                  <div className='w-11/12 md:w-4/12 lg:w-3/12'>
+                    <Inputs
+                      name={"fecha_cobro_fin"}
+                      tamañolabel={""}
+                      className={"rounded block grow"}
+                      Titulo={"Fecha Final: "}
+                      type={"date"}
+                      errors={errors}
+                      maxLength={15}
+                      isDisabled={false}
+                      setValue={setFecha_cobro_fin}
+                    />
+                  </div>
+                </div>
+                <div >
+                  <div className="tooltip" data-tip="Tomar Fechas">
                     <label
                       htmlFor="ch_tomaFechas"
                       className="label cursor-pointer flex justify-start space-x-2">
@@ -294,13 +299,13 @@ function RelaciondeFacturas(){
                         defaultChecked={true}
                         onClick={(evt) => setTomaFechas(evt.target.checked)}
                       />
-                      <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span> 
+                      <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
                       <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
                         Toma Fechas
                       </span>
                     </label>
                   </div>
-                  <div className="tooltip pt-1 lg:w-42" data-tip="Tomar Facturas Canceladas">
+                  <div className="tooltip" data-tip="Tomar Facturas Canceladas">
                     <label
                       htmlFor="ch_tomaCanceladas"
                       className="label cursor-pointer flex justify-start space-x-2">
@@ -317,9 +322,9 @@ function RelaciondeFacturas(){
                       </span>
                     </label>
                   </div>
-                  </div>
-              </div>
-              <div className="flex md:flex-row lg:flex-row  md:space-x-1">
+                </div>
+              
+              <div className="flex md:flex-row lg:flex-row md:space-x-1 gap-3">
                 <Inputs
                   name={"factura_ini"}
                   tamañolabel={""}
@@ -345,10 +350,10 @@ function RelaciondeFacturas(){
                   setValue={setFacturaFin}
                 />
               </div>
-            
+              </div>
+            </div>
           </div>
-        </div>
-    </div> 
+        </div> 
 
     </>
     );

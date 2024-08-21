@@ -35,8 +35,8 @@ function TablaComentarios({
               <tr key={item.id} className="hover:cursor-pointer">
                 <th className={
                   typeof item.comision === "number"
-                  ? "text-right"
-                  : "text-left"
+                  ? "text-left"
+                  : "text-right"
                 }>{item.id}</th>
                 <td className="w-[45%]"> {item.comentario_1} </td>
                 <td className="w-[25%] hidden sm:table-cell"> {item.comentario_2} </td>

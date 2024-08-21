@@ -212,6 +212,8 @@ function AlumnosPorClase() {
                 setItem={setAlumnos1}
                 token={session.user.token}
                 modalId="modal_alumnos1"
+                alignRight={true}
+                inputWidths={{ first: "100px", second: "300px" }}
               />
               <BuscarCat
                 table="alumnos"
@@ -221,6 +223,9 @@ function AlumnosPorClase() {
                 setItem={setAlumnos2}
                 token={session.user.token}
                 modalId="modal_alumnos2"
+                alignRight={true}
+                inputWidths={{ first: "100px", second: "300px" }}
+
               />
               <div className="col-8 flex flex-col">
                 <div className="flex space-x-4">
