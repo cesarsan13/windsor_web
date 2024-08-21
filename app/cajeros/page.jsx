@@ -33,7 +33,7 @@ function Cajeros() {
   const [currentID, setCurrentId] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
-  const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
+  const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "", tb_correo: "", tb_tel:"" });
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -85,8 +85,8 @@ function Cajeros() {
     });
   }, [cajero, reset]);
   const Buscar = () => {
-    const { tb_id, tb_desc } = busqueda;
-    if (tb_id === "" && tb_desc === "") {
+    const { tb_id, tb_desc, tb_correo, tb_tel } = busqueda;
+    if (tb_id === "" && tb_desc === "" && tb_correo === "" && tb_tel === "") {
       setCajerosFiltrados(cajeros);
       return;
     }
@@ -100,14 +100,23 @@ function Cajeros() {
             .toLowerCase()
             .includes(tb_desc.toLowerCase())
         : true;
-      return coincideNumero && coincideNombre;
+      const coincideCorreo = tb_correo
+      ? cajero["mail"]
+      .toString()
+      .toLowerCase()
+      .includes(tb_correo.toLowerCase())
+      :true;
+      const coincideTelefono = tb_tel
+      ?cajero["telefono"].toString().includes(tb_tel)
+      : true;
+      return coincideNumero && coincideNombre && coincideCorreo && coincideTelefono;
     });
     setCajerosFiltrados(infoFiltrada);
   };
 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
-    setBusqueda({ tb_id: "", tb_desc: "" });
+    setBusqueda({ tb_id: "", tb_desc: "", tb_correo:"", tb_tel:"" });
   };
 
   const Alta = async (event) => {

@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
+import iconos from "@/app/utils/iconos";
+import Image from "next/image";
 
 function Busqueda({
   setBajas,
@@ -28,7 +30,7 @@ function Busqueda({
           value={busqueda.tb_id}
         />
       </div>
-      <div className="col-span-2 md:col-span-4">
+      <div className="col-span-2 md:col-span-3">
         <input
           id="tb_desc"
           className="input input-bordered input-md join-item w-full max-w-lg dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600"
@@ -38,14 +40,35 @@ function Busqueda({
           value={busqueda.tb_desc}
         />
       </div>
+      {/*  */}
+      <div className="col-span-2 md:col-span-2">
+        <input
+          id="tb_tel"
+          className="input input-bordered input-md join-item w-full max-w-lg dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600"
+          placeholder="Telefono..."
+          onChange={(event) => handleBusquedaChange(event)}
+          onKeyDown={(evt) => handleKeyDown(evt)}
+          value={busqueda.tb_tel}
+        />
+      </div>
+      <div className="col-span-2 md:col-span-3">
+        <input
+          id="tb_correo"
+          className="input input-bordered input-md join-item w-full max-w-lg dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600"
+          placeholder="Correo..."
+          onChange={(event) => handleBusquedaChange(event)}
+          onKeyDown={(evt) => handleKeyDown(evt)}
+          value={busqueda.tb_correo}
+        />
+      </div>
       <div className="md:col-span-1">
         <div className=" tooltip" data-tip="Limpiar">
           <button
             className="btn btn-square join-item input input-sm  dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 border-none shadow-none "
             onClick={(evt) => limpiarBusqueda(evt)}
           >
-            <i className="fa-solid fa-broom"></i>
-          </button>
+                <Image src={iconos.limpiar} alt="Limpiar" />
+                </button>
         </div>
       </div>
       <div className="md:col-span-1">
