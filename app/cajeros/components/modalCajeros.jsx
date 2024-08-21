@@ -3,6 +3,8 @@ import React from "react";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import { useState, useEffect } from "react";
 import Inputs from "@/app/cajeros/components/Inputs";
+import Image from "next/image";
+import iconos from "@/app/utils/iconos";
 
 function ModalCajeros({
   accion,
@@ -217,7 +219,7 @@ function ModalCajeros({
                 id="btn_guardar"
                 className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn"
               >
-                <i className="fa-regular fa-floppy-disk mx-2"></i> Guardar
+                <Image src={iconos.guardar} alt="Guardar" /> Guardar
               </button>
             </div>
           </div>
