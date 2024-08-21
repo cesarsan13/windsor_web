@@ -9,6 +9,7 @@ const iconos = {
     excel: require('@/public/Iconos/Btn_Negro_Excel_32.png'),
     imprimir: require('@/public/Iconos/Btn_Imprime_32x32.png'),
     guardar: require('@/public/Iconos/Btn_Guardar_Negro.png'),
+    limpiar: require('@/public/Iconos/Btn_Limpia_Negro.png'),
   };
   
   export default iconos;
