@@ -1,22 +1,31 @@
 import React from "react";
 import Tooltip from "@/app/components/tooltip";
 import Button from "@/app/components/button";
+import Image from "next/image";
+import iconos from "@/app/utils/iconos";
+
 
 function Acciones({ Buscar, Alta, home, Ver }) {
+  const images = [
+    { src: iconos.buscar, alt: 'Buscar', tooltipTitle: 'Buscar', onClick: Buscar },
+    { src: iconos.alta, alt: 'Alta', tooltipTitle: 'Alta', onClick: Alta},
+    { src: iconos.vistaPrevia, alt: 'Vista previa', tooltipTitle: 'Vista previa', onClick: Ver },
+    { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home },
+  ];
+
+  const ImageTooltip = ({ src, tooltipTitle, onClick }) => {
+    return (
+      <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
+        <Image src={src} alt={tooltipTitle} onClick={onClick} />
+      </Tooltip>
+    );
+  };
+
   return (
-    <div className="flex justify-between w-full">
-      <Tooltip Titulo={"Buscar"} posicion={"tooltip-bottom"}>
-        <Button icono={"fa-solid fa-magnifying-glass"} onClick={Buscar} className="w-full mx-1" />
-      </Tooltip>
-      <Tooltip Titulo={"Alta"} posicion={"tooltip-bottom"}>
-        <Button icono={"fa-regular fa-square-plus"} onClick={Alta} className="w-full mx-1" />
-      </Tooltip>
-      <Tooltip Titulo={"Vista Previa"} posicion={"tooltip-bottom"}>
-        <Button icono={"fas fa-eye"} onClick={Ver} className="w-full mx-1" />
-      </Tooltip>
-      <Tooltip Titulo={"Inicio"} posicion={"tooltip-bottom"}>
-        <Button icono={"fas fa-home"} onClick={home} className="w-full mx-1" />
-      </Tooltip>
+    <div className="grid grid-flow-col gap-5 justify-around w-full">
+      {images.map((image) => (
+        <ImageTooltip key={image.src} {...image} />
+      ))}
     </div>
   );
 }

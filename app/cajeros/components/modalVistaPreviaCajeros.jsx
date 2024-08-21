@@ -2,6 +2,8 @@ import Tooltip from "@/app/components/tooltip";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import React, { useEffect, useState } from "react";
 import "@react-pdf-viewer/core/lib/styles/index.css";
+import Image from "next/image";
+import iconos from "@/app/utils/iconos";
 
 function ModalVistaPreviaCajeros({ pdfPreview, pdfData, PDF, Excel }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,7 +32,7 @@ function ModalVistaPreviaCajeros({ pdfPreview, pdfData, PDF, Excel }) {
               className="bg-transparent over:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn"
               onClick={PDF}
             >
-              Imprimir PDF<i className="fa-solid fa-file-pdf"></i>
+              Imprimir PDF<Image src={iconos.imprimir} alt="Imprimir" />
             </button>
           </Tooltip>
           <Tooltip Titulo={"Imprimir Excel"} posicion={"tooltip-top"}>
@@ -38,7 +40,7 @@ function ModalVistaPreviaCajeros({ pdfPreview, pdfData, PDF, Excel }) {
               className="bg-transparent over:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn"
               onClick={Excel}
             >
-              Imprimir Excel<i className="fa-solid fa-file-excel"></i>
+              Imprimir ExcelPDF<Image src={iconos.excel} alt="Excel" />
             </button>
           </Tooltip>
         </div>
