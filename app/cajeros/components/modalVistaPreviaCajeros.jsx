@@ -32,7 +32,8 @@ function ModalVistaPreviaCajeros({ pdfPreview, pdfData, PDF, Excel }) {
               className="bg-transparent over:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn"
               onClick={PDF}
             >
-              Imprimir PDF<Image src={iconos.imprimir} alt="Imprimir" />
+              <span className="hidden sm:inline">Generar PDF</span>
+              <Image src={iconos.imprimir} alt="Imprimir" />
             </button>
           </Tooltip>
           <Tooltip Titulo={"Imprimir Excel"} posicion={"tooltip-top"}>
@@ -40,7 +41,8 @@ function ModalVistaPreviaCajeros({ pdfPreview, pdfData, PDF, Excel }) {
               className="bg-transparent over:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn"
               onClick={Excel}
             >
-              Imprimir ExcelPDF<Image src={iconos.excel} alt="Excel" />
+              <span className="hidden sm:inline">Generar Excel</span>
+              <Image src={iconos.excel} alt="Excel" />
             </button>
           </Tooltip>
         </div>

@@ -48,7 +48,7 @@ function NavBar() {
     await signOut({ redirect: true, callbackUrl: "/control_escolar" });
   };
   return (
-    <div className="navbar sticky top-0 h-full max-h-7 bg-slate-100 dark:bg-slate-700 z-50">
+    <div className="navbar sticky top-0 h-full max-h-7 bg-slate-100 dark:bg-slate-700  lg:z-50 sm:z-[2]">
       <div className="navbar-start">
         <div className="dropdown">
           <div className="flex-none lg:hidden">

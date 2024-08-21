@@ -40,7 +40,7 @@ function Menu({ vertical }) {
     <ul
       ref={menuRef}
       tabIndex={0}
-      className="menu menu-md dropdown-content bg-base-100 rounded-box text-black dark:text-white mt-3 w-52 p-2 shadow z-50">
+      className="menu menu-md dropdown-content bg-base-100 rounded-box text-black dark:text-white mt-3 w-52 p-2 shadow z-auto">
       <li>
         <details
           open={isOpen.archivos}
