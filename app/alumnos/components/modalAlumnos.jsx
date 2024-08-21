@@ -361,7 +361,7 @@ function ModalAlumnos({
                     dataType={"int"}
                     name={"referencia"}
                     tamañolabel={""}
-                    className={"rounded block grow"}
+                    className={"rounded block grow text-right"}
                     Titulo={"Referencia: "}
                     type={"text"}
                     requerido={false}

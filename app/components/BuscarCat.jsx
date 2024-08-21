@@ -19,7 +19,7 @@ function BuscarCat({
   array,
   alignRight = false,
   id,
-  inputWidths = { first: "80px", second: "150px" },
+  inputWidths = { contdef: "180px", first: "100px", second: "150px" },
 }) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -165,6 +165,11 @@ function BuscarCat({
             {...register(nameInput[0])}
             onKeyDown={(evt) => handleKeyDown(evt)}
             onBlur={onBlur}
+            onKeyPress={(e) => {
+              if (!/[0-9]/.test(e.key)) {
+                e.preventDefault();
+              }
+            }}
             className={`grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${
               alignRight ? "text-right" : ""
             } lg:w-24 `}

@@ -214,40 +214,41 @@ function RepFemac12Anexo() {
 
   return (
     <>
-    <ModalVistaPreviaRepFemac12Anexo4
-      pdfPreview={pdfPreview}
-      pdfData={pdfData}
-      PDF={ImprimePDF}
-      Excel={ImprimeExcel}
-    />
-     
+      <ModalVistaPreviaRepFemac12Anexo4
+        pdfPreview={pdfPreview}
+        pdfData={pdfData}
+        PDF={ImprimePDF}
+        Excel={ImprimeExcel}
+      />
+
       <div className="container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Reporte de Cobranza por Productos
           </h1>
         </div>
-        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1">
+        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
           <div className="md:col-span-1 flex flex-col">
             <Acciones
               Ver={handleVerClick}
               home={home}
             />
           </div>
-          <div className="overflow-y-auto lg:col-span-7 md:col-span-7 sm:col-span-full h-[calc(45vh)] space-y-3">
-            <div className="flex flex-col lg:flex-row md:flex-row sm:col-span-1 lg:col-span-10 md:space-x-1">
-                <div className="w-full sm:w-full md:w-60 lg:w-60">
+          <div className="col-span-7">
+            <div className="flex flex-col h-[calc(100%)] overflow-y-auto">
+              <div className="flex flex-col md:flex-row gap-4 p-1">
+                <div className='w-11/12 md:w-4/12 lg:w-3/12'>
                   <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3">
                     Fecha Inicia
                     <input
                       type="date"
                       value={fecha1}
                       onChange={(e) => setFecha1(e.target.value)}
-                      className= "grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none"
+                      className="grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none"
                     />
                   </label>
                 </div>
-                <div className="w-full sm:w-full sm: md:w-60 lg:w-60">
+                <div className='w-11/12 md:w-4/12 lg:w-3/12'>
                   <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3">
                     Fecha Fin
                     <input
@@ -259,62 +260,67 @@ function RepFemac12Anexo() {
                   </label>
                 </div>
               </div>
-              <div className="flex lg:flex-row flex-col lg:space-x-2 lg:space-y-0 sm:space-y-1">
-                  <BuscarCat
-                    table={"productos"}
-                    nameInput={["producto1", "producto_desc1"]}
-                    fieldsToShow={["id", "descripcion"]}
-                    titulo={"Producto: "}
-                    setItem={setProducto1}
-                    token={session.user.token}
-                    modalId={"modal_producto1"}
-                  />
-                  <BuscarCat
-                    table={"productos"}
-                    nameInput={["producto2", "producto_desc2"]}
-                    fieldsToShow={["id", "descripcion"]}
-                    titulo={"Producto: "}
-                    setItem={setProducto2}
-                    token={session.user.token}
-                    modalId={"modal_producto2"}
-                  />
+              <div className="p-2">
+              <BuscarCat
+                table={"productos"}
+                nameInput={["producto1", "producto_desc1"]}
+                fieldsToShow={["id", "descripcion"]}
+                titulo={"Producto: "}
+                setItem={setProducto1}
+                token={session.user.token}
+                modalId={"modal_producto1"}
+                inputWidths={{ first: "100px", second: "300px" }}
+              />
               </div>
-                <div className="">
+              <div className="p-2">
+              <BuscarCat
+                table={"productos"}
+                nameInput={["producto2", "producto_desc2"]}
+                fieldsToShow={["id", "descripcion"]}
+                titulo={"Producto: "}
+                setItem={setProducto2}
+                token={session.user.token}
+                modalId={"modal_producto2"}
+                inputWidths={{ first: "100px", second: "300px" }}
+              />
+              </div>
+              <div className=" col-8 flex flex-col">
+                <label
+                  className={` input-md text-black dark:text-white flex items-center gap-3`}
+                >
+                  <span className="text-black dark:text-white">
+                    Ordenar por:
+                  </span>
                   <label
                     className={` input-md text-black dark:text-white flex items-center gap-3`}
+                    onChange={(event) => handleCheckChange(event)}
                   >
-                    <span className="text-black dark:text-white">
-                      Ordenar por:
-                    </span>
-                    <label
-                      className={` input-md text-black dark:text-white flex items-center gap-3`}
-                      onChange={(event) => handleCheckChange(event)}
-                    >
-                      <span className="text-black dark:text-white">Nombre</span>
-                      <input
-                        type="radio"
-                        name="ordenar"
-                        value="nombre"
-                        className="radio"
-                      />
-                    </label>
-                    <label
-                      className={` input-md text-black dark:text-white flex items-center gap-3`}
-                      onChange={(event) => handleCheckChange(event)}
-                    >
-                      <span className="text-black dark:text-white">Número</span>
-                      <input
-                        type="radio"
-                        name="ordenar"
-                        value="id"
-                        className="radio"
-                      />
-                    </label>
+                    <span className="text-black dark:text-white">Nombre</span>
+                    <input
+                      type="radio"
+                      name="ordenar"
+                      value="nombre"
+                      className="radio"
+                    />
                   </label>
-                </div>
+                  <label
+                    className={` input-md text-black dark:text-white flex items-center gap-3`}
+                    onChange={(event) => handleCheckChange(event)}
+                  >
+                    <span className="text-black dark:text-white">Número</span>
+                    <input
+                      type="radio"
+                      name="ordenar"
+                      value="id"
+                      className="radio"
+                    />
+                  </label>
+                </label>
+              </div>
             </div>
           </div>
         </div>
+      </div>
     </>
   );
 }

@@ -316,12 +316,14 @@ function CobranzaPorAlumno() {
             Reporte Cobranza por Alumno
           </h1>
         </div>
-        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1">
+        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
           <div className="md:col-span-1 flex flex-col">
             <Acciones home={home} Ver={handleVerClick}></Acciones>
           </div>
-          <div className="overflow-y-auto lg:col-span-7 md:col-span-7 sm:col-span-full h-[calc(45vh)] space-y-3">
-            <div className="flex flex-col lg:flex-row md:flex-row sm:col-span-1 lg:col-span-10 md:space-x-1 ">
+          <div className="col-span-7">
+          <div className='flex flex-col h-[calc(85%)] overflow-y-auto'>
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className='w-11/12 md:w-4/12 lg:w-3/12'>
                 <Inputs
                   name={"fecha_ini"}
                   tamañolabel={""}
@@ -333,6 +335,8 @@ function CobranzaPorAlumno() {
                   isDisabled={false}
                   setValue={setFecha_ini}
                 />
+              </div>
+              <div className='w-11/12 md:w-4/12 lg:w-3/12'>
                 <Inputs
                   name={"fecha_fin"}
                   tamañolabel={""}
@@ -344,8 +348,9 @@ function CobranzaPorAlumno() {
                   isDisabled={false}
                   setValue={setFecha_fin}
                 />
-
-                <div className="tooltip pt-1 lg:w-40" data-tip="Tomar Fechas">
+              </div>
+              </div>
+                <div className="tooltip " data-tip="Tomar Fechas">
                   <label
                     htmlFor="ch_tomaFechas"
                     className="label cursor-pointer flex justify-start space-x-2"
@@ -363,9 +368,8 @@ function CobranzaPorAlumno() {
                     </span>
                   </label>
                 </div>
-              </div>
-
-              <div className="flex lg:flex-row flex-col lg:space-x-2 lg:space-y-0 sm:space-y-1">
+              
+                <div className="p-2">
                 <BuscarCat
                   table="alumnos"
                   itemData={[]}
@@ -375,7 +379,10 @@ function CobranzaPorAlumno() {
                   setItem={setAlumnoIni}
                   token={session.user.token}
                   modalId="modal_alumnos1"
+                  inputWidths={{ first: "100px", second: "300px" }}
                 />
+                </div>
+                <div className="p-2">
                 <BuscarCat
                   table="alumnos"
                   itemData={[]}
@@ -385,9 +392,10 @@ function CobranzaPorAlumno() {
                   setItem={setAlumnoFin}
                   token={session.user.token}
                   modalId="modal_alumnos2"
+                  inputWidths={{ first: "115px", second: "300px" }}
                 />
-              </div>
-              <div className="flex lg:flex-row flex-col lg:space-x-2 lg:space-y-0 sm:space-y-1">
+                </div>
+                <div className="p-2">
                 <BuscarCat
                   table="cajeros"
                   itemData={[]}
@@ -397,7 +405,10 @@ function CobranzaPorAlumno() {
                   setItem={setCajeroIni}
                   token={session.user.token}
                   modalId="modal_cajeros1"
+                  inputWidths={{ first: "109px", second: "300px" }}
                 />
+                </div>
+                <div className="p-2">
                 <BuscarCat
                   table="cajeros"
                   itemData={[]}
@@ -407,11 +418,12 @@ function CobranzaPorAlumno() {
                   setItem={setCajeroFin}
                   token={session.user.token}
                   modalId="modal_cajeros2"
+                  inputWidths={{ first: "124px", second: "300px" }}
                 />
               </div>
-              <div></div>
             </div>
           </div>
+        </div>
         </div>
     </>
   );

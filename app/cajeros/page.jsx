@@ -293,61 +293,63 @@ function Cajeros() {
     );
   }
   return (
-    <>
-      <ModalCajeros
-        accion={accion}
-        onSubmit={onSubmitModal}
-        currentID={currentID}
-        errors={errors}
-        register={register}
-        setCajero={setCajero}
-        cajero={cajero}
-      />
-      <ModalVistaPreviaCajeros
-        pdfPreview={pdfPreview}
-        pdfData={pdfData}
-        PDF={ImprimePDF}
-        Excel={ImprimeExcel}
-      />
-      <div className="container h-[80vh] w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 overflow-x-auto">
-        <div className="flex justify-start p-3">
-          <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
-            Cajeros
-          </h1>
-        </div>
-        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-          <div className="md:col-span-1 flex flex-col">
+<>
+  <ModalCajeros
+    accion={accion}
+    onSubmit={onSubmitModal}
+    currentID={currentID}
+    errors={errors}
+    register={register}
+    setCajero={setCajero}
+    cajero={cajero}
+  />
+  <ModalVistaPreviaCajeros
+    pdfPreview={pdfPreview}
+    pdfData={pdfData}
+    PDF={ImprimePDF}
+    Excel={ImprimeExcel}
+  />
+  <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 overflow-x-auto">
+  <div className="flex flex-col justify-start p-3">
+    <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
+        <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
             <Acciones
-              Buscar={Buscar}
-              Alta={Alta}
-              home={home}
-              Ver={handleVerClick}
-            ></Acciones>
-          </div>
-          <div className="md:col-span-7">
-            <div className="flex flex-col h-full">
-              <Busqueda
-                setBajas={setBajas}
-                limpiarBusqueda={limpiarBusqueda}
                 Buscar={Buscar}
-                handleBusquedaChange={handleBusquedaChange}
-                busqueda={busqueda}
-              />
-              <div className="overflow-x-auto">
-              <TablaCajeros
-                isLoading={isLoading}
-                cajerosFiltrados={cajerosFiltrados}
-                showModal={showModal}
-                setCajero={setCajero}
-                setAccion={setAccion}
-                setCurrentId={setCurrentId}
-              />
-              </div>
-            </div>
-          </div>
+                Alta={Alta}
+                home={home}
+                Ver={handleVerClick}
+            />
+        </div>
+
+        <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-2 md:mb-0 grid grid-flow-col gap-1 justify-around w-2/12">
+            Cajeros
+        </h1>
+    </div>
+</div>
+
+    <div className="flex flex-col items-center h-full">
+    <div className="w-full max-w-4xl">
+      <Busqueda
+        setBajas={setBajas}
+        limpiarBusqueda={limpiarBusqueda}
+        Buscar={Buscar}
+        handleBusquedaChange={handleBusquedaChange}
+        busqueda={busqueda}
+      />
+      <TablaCajeros
+        isLoading={isLoading}
+        cajerosFiltrados={cajerosFiltrados}
+        showModal={showModal}
+        setCajero={setCajero}
+        setAccion={setAccion}
+        setCurrentId={setCurrentId}
+      />
         </div>
       </div>
-    </>
+    </div>
+</>
+
+
   );
 }
 
