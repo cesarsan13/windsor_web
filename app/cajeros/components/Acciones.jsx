@@ -23,8 +23,8 @@ function Acciones({ Buscar, Alta, home, Ver }) {
 
   return (
     <div className="grid grid-flow-col gap-5 justify-around w-full">
-      {images.map((image) => (
-        <ImageTooltip key={image.src} {...image} />
+      {images.map((image,idx) => (
+        <ImageTooltip key={idx} src={image.src} {...image} />
       ))}
     </div>
   );
