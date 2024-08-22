@@ -27,7 +27,7 @@ function TablaCajeros({
             <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-10">
               <tr>
                 <th className="sm:w-[10%]"></th>
-                <td className="sm:w-[45%]">Nombre</td>
+                <td className="sm:w-[35%]">Nombre</td>
                 <td className="w-[20%] hidden sm:table-cell">Telefono</td>
                 <td className="w-[30%] hidden sm:table-cell">Correo</td>
                 <th className="w-[25%] sm:w-[10%]">Acciones</th>
@@ -41,7 +41,7 @@ function TablaCajeros({
                     ? "text-left"
                     : "text-right"
                   }>{item.numero}</th>
-                  <td className="w-[45%]">{item.nombre}</td>
+                  <td className="sm:w-[35%]">{item.nombre}</td>
                   <td className="w-[20%] hidden sm:table-cell">{item.telefono}</td>
                   <td className="w-[30%] hidden sm:table-cell">{item.mail}</td>
                   <th className="w-[25%] sm:w-[10%]">

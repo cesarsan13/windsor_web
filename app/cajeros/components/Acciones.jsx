@@ -16,7 +16,7 @@ function Acciones({ Buscar, Alta, home, Ver }) {
   const ImageTooltip = ({ src, tooltipTitle, onClick }) => {
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
-        <Image src={src} alt={tooltipTitle} onClick={onClick} />
+        <Image src={src} alt={tooltipTitle} onClick={onClick} className="w-6 h-6 md:w-8 md:h-8"/>
       </Tooltip>
     );
   };
