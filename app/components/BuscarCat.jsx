@@ -152,16 +152,17 @@ function BuscarCat({
   };
 
   return (
-    <div className="flex flex-col md:flex-row justify-start gap-2 sm:flex-row">
+    <div className="flex flex-row md:flex-row justify-start gap-2 sm:flex-row">
       <div className="flex gap-2 ">
         <label
           className={`input input-bordered join-item text-black dark:text-white input-md flex items-center gap-3`}
         >
-          {titulo}
+          {/* {titulo} */}
           <input
             id={nameInput[0]}
             name={nameInput[0]}
             type="text"
+            placeholder={titulo}
             {...register(nameInput[0])}
             onKeyDown={(evt) => handleKeyDown(evt)}
             onBlur={onBlur}
@@ -172,7 +173,7 @@ function BuscarCat({
             }}
             className={`grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${
               alignRight ? "text-right" : ""
-            } lg:w-24 `}
+            } `}
             style={{ width: inputWidths.first }}
           />
         </label>
@@ -184,17 +185,18 @@ function BuscarCat({
           <i className="fa-solid fa-magnifying-glass"></i>
         </button>
       </div>
-      <div className=" mt-2 md:mt-0 lg:w-52 md:w-56 sm:w-60">
-        <input
-          id={nameInput[1]}
-          name={nameInput[1]}
-          type="text"
-          readOnly={true}
-          {...register(nameInput[1])}
-          className={`input input-bordered join-item rounded-r-md bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md w-full`}
-          style={{ width: inputWidths.second }}
-        />
-      </div>
+      <div className="md:mt-0 lg:w-52 md:w-56 sm:w-60 w-full">
+  <input
+    id={nameInput[1]}
+    name={nameInput[1]}
+    type="text"
+    readOnly={true}
+    {...register(nameInput[1])}
+    className="input input-bordered join-item rounded-r-md bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md w-full"
+    style={{ maxWidth: '380px' }}
+  />
+</div>
+
       <ModalBuscarCat
         data={data}
         titulo={table}
