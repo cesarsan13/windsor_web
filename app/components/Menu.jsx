@@ -9,6 +9,22 @@ function Menu({ vertical }) {
     pagos: false,
   });
   const menuRef = useRef(null);
+  
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768); 
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const handleClickOutside = (event) => {
     if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -30,6 +46,17 @@ function Menu({ vertical }) {
       return newState;
     });
   };
+
+
+
+  const handleClickLink = () => {
+    if (isMobile) {
+      setTimeout(() => {
+        setIsOpen({ archivos: false, reportes: false, pagos: false });
+
+      }, 100);
+    }
+  };
   const handleClick = () => {
     const elem = document.activeElement;
     if (elem) {
@@ -40,77 +67,46 @@ function Menu({ vertical }) {
     <ul
       ref={menuRef}
       tabIndex={0}
-      className="menu menu-md dropdown-content bg-base-100 rounded-box text-black dark:text-white mt-3 w-52 p-2 shadow z-auto">
+      className="menu menu-md dropdown-content bg-base-100 rounded-box text-black dark:text-white mt-3 w-52 p-2 shadow z-auto"
+
+    >
       <li>
-        <details
+      <details
           open={isOpen.archivos}
-          onClick={() => handleToggle("archivos")}>
+          onClick={() => handleToggle("archivos")}
+        >
           <summary>Archivos</summary>
           <ul>
             <li>
-              <Link href="/alumnos">Alumnos</Link>
+              <Link href="/alumnos" onClick={handleClickLink}>Alumnos</Link>
             </li>
             <li>
-              <Link href="/productos">Productos</Link>
+              <Link href="/productos" onClick={handleClickLink}>Productos</Link>
             </li>
             <li>
-              <Link href="/comentarios">Comentarios</Link>
+              <Link href="/comentarios" onClick={handleClickLink}>Comentarios</Link>
             </li>
             <li>
-              <Link href="/cajeros">Cajeros</Link>
+              <Link href="/cajeros" onClick={handleClickLink}>Cajeros</Link>
             </li>
             <li>
-              <Link href="/horarios">Horarios</Link>
+              <Link href="/horarios" onClick={handleClickLink}>Horarios</Link>
             </li>
             <li>
-              <Link href="/formapago">Forma de Pago</Link>
+              <Link href="/formapago" onClick={handleClickLink}>Forma de Pago</Link>
             </li>
             <li>
-              <Link href="/formfact">Formato Variable</Link>
+              <Link href="/formfact" onClick={handleClickLink}>Formato Variable</Link>
             </li>
           </ul>
         </details>
       </li>
       <li>
-        <details>
+        <details open={isOpen.pagos} onClick={() => handleToggle("pagos")}>
           <summary>Pagos</summary>
           <ul>
             <li>
-              <Link href="/pagos1">Pagos</Link>
-            </li>
-          </ul>
-        </details>
-      </li>
-      <li className="hidden">
-        <details>
-          <summary>Proceso</summary>
-          <ul>
-            <li className="hidden">
-              <Link href="" style={{ color: "red" }}>Adición de Productos a Cartera</Link>
-            </li>
-            <li className="hidden">
-              <Link href="" style={{ color: "red" }}>Emisión de Factura</Link>
-            </li>
-            <li className="hidden">
-              <Link href="" style={{ color: "red" }}>Factura Global</Link>
-            </li>
-            <li className="hidden">
-              <Link href="" style={{ color: "red" }}>Cancelación de Recibo</Link>
-            </li>
-            <li className="hidden">
-              <Link href="" style={{ color: "red" }}>Cancelación de Factura</Link>
-            </li>
-            <li className="hidden">
-              <Link href="" style={{ color: "red" }}>Actualiza Cobranza</Link>
-            </li>
-            <li className="hidden">
-              <Link href="" style={{ color: "red" }}>Cambio de Ciclo Escolar</Link>
-            </li>
-            <li className="hidden">
-              <Link href="" style={{ color: "red" }}>Cobranza Diaria</Link>
-            </li>
-            <li className="hidden">
-              <Link href="" style={{ color: "red" }}>Cambio Numero de Alumno</Link>
+              <Link href="/pagos1" onClick={handleClickLink}>Pagos</Link>
             </li>
           </ul>
         </details>
@@ -123,43 +119,37 @@ function Menu({ vertical }) {
           <summary>Reportes</summary>
           <ul>
             <li>
-              <Link href="/rep_femac_6">Cobranza</Link>
+              <Link href="/rep_femac_6" onClick={handleClickLink}>Cobranza</Link>
             </li>
             <li>
-              <Link href="/rep_femac_1">Relación General de Alumnos</Link>
+              <Link href="/rep_femac_1" onClick={handleClickLink}>Relación General de Alumnos</Link>
             </li>
             <li>
-              <Link href="/Rep_Femac_2">Lista de Alumnos por clase</Link>
+              <Link href="/Rep_Femac_2" onClick={handleClickLink}>Lista de Alumnos por clase</Link>
             </li>
             <li>
-              <Link href="/rep_femac_3">
-                {" "}
-                Lista de Alumnos por clase del mes{" "}
-              </Link>
+              <Link href="/rep_femac_3" onClick={handleClickLink}>Lista de Alumnos por clase del mes</Link>
             </li>
             <li>
-              <Link href="/rep_femac_13">
-                {" "}
-                Lista de alumnos por clase semanal{" "}
-              </Link>
+              <Link href="/rep_femac_13" onClick={handleClickLink}>Lista de alumnos por clase semanal</Link>
             </li>
             <li>
-              <Link href="/rep_femac_5">Altas y Bajas de Alumnos</Link>
+              <Link href="/rep_femac_5" onClick={handleClickLink}>Altas y Bajas de Alumnos</Link>
             </li>
             <li>
-              <Link href="/rep_femac_7">Cartera</Link>
+              <Link href="/rep_femac_7" onClick={handleClickLink}>Cartera</Link>
             </li>
             <li>
-              <Link href="/rep_femac_8_anexo_1">Relacion de Recibos</Link>
+              <Link href="/rep_femac_8_anexo_1" onClick={handleClickLink}>Relación de Recibos</Link>
             </li>
             <li>
-            <Link href="/Rep_Femac_9_Anexo_4" >Relación de Facturas</Link>
+              <Link href="/Rep_Femac_9_Anexo_4" onClick={handleClickLink}>Relación de Facturas</Link>
             </li>
             <li>
-            <Link href="/rep_femac_12_anexo_4"> Reporte Cobranza por Producto </Link>
+              <Link href="/rep_femac_12_anexo_4" onClick={handleClickLink}>Reporte Cobranza por Producto</Link>
             </li>
             <li>
-            <Link href="/rep_inscritos" onClick={handleClick}>Reporte Inscripción</Link>
+              <Link href="/rep_inscritos" onClick={handleClickLink}>Reporte Inscripción</Link>
             </li>
           </ul>
         </details>
