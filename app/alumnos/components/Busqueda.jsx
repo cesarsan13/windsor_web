@@ -53,7 +53,7 @@ function Busqueda({
       <div className="col-span-1 md:col-span-1">
         <div className=" tooltip" data-tip="Limpiar">
           <button
-            className=" join-item   dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 border-none shadow-none w-6 h-6 md:w-8 md:h-8 mt-2 "
+            className=" join-item  dark:text-neutral-200 text-neutral-600 border-none shadow-none w-6 h-6 md:w-8 md:h-8 mt-2 "
             onClick={(evt) => limpiarBusqueda(evt)}
           >
                 <Image src={iconos.limpiar} alt="Limpiar" />
