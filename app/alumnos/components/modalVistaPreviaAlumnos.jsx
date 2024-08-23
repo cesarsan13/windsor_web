@@ -4,6 +4,8 @@ import Button from "@/app/components/button";
 import Tooltip from "@/app/components/tooltip";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import iconos from "@/app/utils/iconos";
 
 function ModalVistaPreviaAlumnos({ pdfPreview, pdfData, PDF, Excel }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,7 +38,8 @@ function ModalVistaPreviaAlumnos({ pdfPreview, pdfData, PDF, Excel }) {
               className="hover:bg-transparent border-none shadow-md hover:bg-slate-200 dark:hover:bg-neutral-700 bg-transparent text-black dark:text-white rounded-lg btn"
               onClick={PDF}
             >
-              Imprimir PDF<i className="fa-solid fa-file-pdf"></i>
+              <span className="hidden sm:inline">Generar PDF</span>
+              <Image src={iconos.imprimir} alt="Imprimir" />
             </button>
           </Tooltip>
           <Tooltip Titulo={"Imprimir Excel"} posicion={"tooltip-top"}>
@@ -44,7 +47,8 @@ function ModalVistaPreviaAlumnos({ pdfPreview, pdfData, PDF, Excel }) {
               className="hover:bg-transparent border-none shadow-md hover:bg-slate-200 dark:hover:bg-neutral-700 bg-transparent text-black dark:text-white rounded-lg btn"
               onClick={Excel}
             >
-              Imprimir Excel<i className="fa-solid fa-file-excel"></i>
+              <span className="hidden sm:inline">Generar Excel</span>
+              <Image src={iconos.excel} alt="Excel" />
             </button>
           </Tooltip>
         </div>

@@ -16,15 +16,15 @@ function Acciones({ Buscar, Alta, home, Ver }) {
   const ImageTooltip = ({ src, tooltipTitle, onClick }) => {
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
-        <Image src={src} alt={tooltipTitle} onClick={onClick} />
+        <Image src={src} alt={tooltipTitle} onClick={onClick} className="w-6 h-6 md:w-8 md:h-8"/>
       </Tooltip>
     );
   };
 
   return (
     <div className="grid grid-flow-col gap-5 justify-around w-full">
-      {images.map((image) => (
-        <ImageTooltip key={image.src} {...image} />
+      {images.map((image,idx) => (
+        <ImageTooltip key={idx} src={image.src} {...image} />
       ))}
     </div>
   );

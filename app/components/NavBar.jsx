@@ -94,7 +94,7 @@ function NavBar() {
           </button>
         </div>
         <label className="btn btn-circle swap swap-rotate ml-2">
-          <input type="checkbox" onClick={handleChangeTheme} checked={tema} />
+          <input type="checkbox" onClick={handleChangeTheme} defaultChecked={tema} />
           <svg
             className="swap-on h-10 w-10 fill-current"
             xmlns="http://www.w3.org/2000/svg"
