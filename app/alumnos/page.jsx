@@ -43,11 +43,11 @@ function Alumnos() {
   const [cond2, setcond2] = useState({});
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
-  const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
+  const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "", tb_grado:"" });
 
   const Buscar = () => {
-    const { tb_id, tb_desc } = busqueda;
-    if (tb_id === "" && tb_desc === "") {
+    const { tb_id, tb_desc, tb_grado } = busqueda;
+    if (tb_id === "" && tb_desc === "" && tb_grado === "") {
       setAlumnosFiltrados(alumnos);
       return;
     }
@@ -59,7 +59,13 @@ function Alumnos() {
           .toLowerCase()
           .includes(tb_desc.toLowerCase())
         : true;
-      return coincideId && coincideDescripcion;
+        const coincideGrado = tb_grado
+        ? (alumno["horario_1_nombre"] || "")
+        .toString()
+        .toLowerCase()
+        .includes(tb_grado.toLowerCase())
+        : true;
+      return coincideId && coincideDescripcion && coincideGrado;
     });
     setAlumnosFiltrados(infoFiltrada);
   };
@@ -589,7 +595,7 @@ function Alumnos() {
   };
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
-    setBusqueda({ tb_id: "", tb_desc: "" });
+    setBusqueda({ tb_id: "", tb_desc: "", tb_grado:"" });
   };
   const showModal = (show) => {
     show
@@ -750,14 +756,10 @@ function Alumnos() {
         PDF={imprimePDF}
         Excel={ImprimeExcel}
       />
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 overflow-y-auto">
-        <div className="flex justify-start p-3">
-          <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
-            Alumnos.
-          </h1>
-        </div>
-        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-          <div className="md:col-span-1 flex flex-col">
+<div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 overflow-x-auto">
+  <div className="flex flex-col justify-start p-3">
+    <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
+        <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
             <Acciones
               Buscar={Buscar}
               Alta={Alta}
@@ -768,16 +770,20 @@ function Alumnos() {
               CerrarView={CerrarView}
             />
           </div>
-          <div className="md:col-span-7">
-            <div className="flex flex-col h-full">
-              <Busqueda
+          <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-2/12">
+            Alumnos
+        </h1>
+    </div>
+</div>
+<div className="flex flex-col items-center h-full">
+    <div className="w-full max-w-4xl">
+      <Busqueda
                 setBajas={setBajas}
                 limpiarBusqueda={limpiarBusqueda}
                 Buscar={Buscar}
                 handleBusquedaChange={handleBusquedaChange}
                 busqueda={busqueda}
               />
-              <div className="overflow-x-auto">
                 <TablaAlumnos
                   session={session}
                   isLoading={isLoading}
@@ -793,8 +799,7 @@ function Alumnos() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
+
     </>
   );
 }
