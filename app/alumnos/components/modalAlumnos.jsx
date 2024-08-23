@@ -5,6 +5,7 @@ import Inputs from "@/app/alumnos/components/Inputs";
 import Webcam from "react-webcam";
 import Image from "next/image";
 import BuscarCat from "@/app/components/BuscarCat";
+import iconos from "@/app/utils/iconos";
 
 function ModalAlumnos({
   session,
@@ -580,19 +581,8 @@ function ModalAlumnos({
                     modalId="modal_horarios"
                     array={alumno.horario_1}
                     alignRight={true}
-                    inputWidths={{ first: "100px", second: "200px" }}
+                    inputWidths={{ first: "60px", second: "380px" }}
                   />
-                  {/* <BuscarCat
-                                        table="horarios"
-                                        itemData={alumno}
-                                        fieldsToShow={columnasBuscaCat}
-                                        nameInput={nameInputs2}
-                                        titulo={"Grado: "}
-                                        setItem={setGrado2}
-                                        token={session.user.token}
-                                        modalId="modal_horarios2"
-                                        array={alumno.horario_2}
-                                    /> */}
                 </div>
               </div>
 
@@ -654,7 +644,7 @@ function ModalAlumnos({
                     array={alumno.cond_1}
                     titulo="Forma pago: "
                     alignRight={true}
-                    inputWidths={{ first: "100px", second: "380px" }}
+                    inputWidths={{ first: "80px", second: "380px" }}
                   />
                   <BuscarCat
                     table={"formaPago"}
@@ -664,9 +654,9 @@ function ModalAlumnos({
                     token={session.user.token}
                     modalId="modal_formaPago2"
                     array={alumno.cond_2}
-                    titulo={"Forma pago: "}
+                    titulo={"Forma pago:"}
                     alignRight={true}
-                    inputWidths={{ first: "100px", second: "380px" }}
+                    inputWidths={{ first: "80px", second: "380px" }}
                   />
                   {/* <Inputs
                                         dataType={"string"}
@@ -1245,8 +1235,8 @@ function ModalAlumnos({
                 id="btn_guardar"
                 className="btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white"
               >
-                <i className="fa-regular fa-floppy-disk mx-2"></i> Guardar
-              </button>
+                <Image src={iconos.guardar} alt="Guardar" /> Guardar
+                </button>
             </div>
           </div>
         </form>
