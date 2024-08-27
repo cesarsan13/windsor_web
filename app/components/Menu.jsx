@@ -9,13 +9,11 @@ function Menu({ vertical }) {
     pagos: false,
   });
   const menuRef = useRef(null);
-  
-
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768); 
+      setIsMobile(window.innerWidth <= 768); // Detecta si es móvil.
     };
 
     handleResize();
@@ -39,6 +37,18 @@ function Menu({ vertical }) {
     };
   }, []);
 
+  const handleClick = () => {
+    // Cierra todo el menú en vista móvil.
+    if (isMobile) {
+      setIsOpen({ archivos: false, reportes: false, pagos: false });
+    }
+    // Remueve el foco activo.
+    const elem = document.activeElement;
+    if (elem) {
+      elem?.blur();
+    }
+  };
+
   const handleToggle = (menu) => {
     setIsOpen((prevState) => {
       const newState = { archivos: false, reportes: false, pagos: false };
@@ -47,22 +57,6 @@ function Menu({ vertical }) {
     });
   };
 
-
-
-  const handleClickLink = () => {
-    if (isMobile) {
-      setTimeout(() => {
-        setIsOpen({ archivos: false, reportes: false, pagos: false });
-
-      }, 100);
-    }
-  };
-  const handleClick = () => {
-    const elem = document.activeElement;
-    if (elem) {
-      elem?.blur();
-    }
-  };
   return vertical ? (
     <ul
       ref={menuRef}
@@ -78,25 +72,25 @@ function Menu({ vertical }) {
           <summary>Archivos</summary>
           <ul>
             <li>
-              <Link href="/alumnos" onClick={handleClickLink}>Alumnos</Link>
+              <Link href="/alumnos" onClick={handleClick}>Alumnos</Link>
             </li>
             <li>
-              <Link href="/productos" onClick={handleClickLink}>Productos</Link>
+              <Link href="/productos" onClick={handleClick}>Productos</Link>
             </li>
             <li>
-              <Link href="/comentarios" onClick={handleClickLink}>Comentarios</Link>
+              <Link href="/comentarios" onClick={handleClick}>Comentarios</Link>
             </li>
             <li>
-              <Link href="/cajeros" onClick={handleClickLink}>Cajeros</Link>
+              <Link href="/cajeros" onClick={handleClick}>Cajeros</Link>
             </li>
             <li>
-              <Link href="/horarios" onClick={handleClickLink}>Horarios</Link>
+              <Link href="/horarios" onClick={handleClick}>Horarios</Link>
             </li>
             <li>
-              <Link href="/formapago" onClick={handleClickLink}>Forma de Pago</Link>
+              <Link href="/formapago" onClick={handleClick}>Forma de Pago</Link>
             </li>
             <li>
-              <Link href="/formfact" onClick={handleClickLink}>Formato Variable</Link>
+              <Link href="/formfact" onClick={handleClick}>Formato Variable</Link>
             </li>
           </ul>
         </details>
@@ -106,7 +100,7 @@ function Menu({ vertical }) {
           <summary>Pagos</summary>
           <ul>
             <li>
-              <Link href="/pagos1" onClick={handleClickLink}>Pagos</Link>
+              <Link href="/pagos1" onClick={handleClick}>Pagos</Link>
             </li>
           </ul>
         </details>
@@ -119,37 +113,37 @@ function Menu({ vertical }) {
           <summary>Reportes</summary>
           <ul>
             <li>
-              <Link href="/rep_femac_6" onClick={handleClickLink}>Cobranza</Link>
+              <Link href="/rep_femac_6" onClick={handleClick}>Cobranza</Link>
             </li>
             <li>
-              <Link href="/rep_femac_1" onClick={handleClickLink}>Relación General de Alumnos</Link>
+              <Link href="/rep_femac_1" onClick={handleClick}>Relación General de Alumnos</Link>
             </li>
             <li>
-              <Link href="/Rep_Femac_2" onClick={handleClickLink}>Lista de Alumnos por clase</Link>
+              <Link href="/Rep_Femac_2" onClick={handleClick}>Lista de Alumnos por clase</Link>
             </li>
             <li>
-              <Link href="/rep_femac_3" onClick={handleClickLink}>Lista de Alumnos por clase del mes</Link>
+              <Link href="/rep_femac_3" onClick={handleClick}>Lista de Alumnos por clase del mes</Link>
             </li>
             <li>
-              <Link href="/rep_femac_13" onClick={handleClickLink}>Lista de alumnos por clase semanal</Link>
+              <Link href="/rep_femac_13" onClick={handleClick}>Lista de alumnos por clase semanal</Link>
             </li>
             <li>
-              <Link href="/rep_femac_5" onClick={handleClickLink}>Altas y Bajas de Alumnos</Link>
+              <Link href="/rep_femac_5" onClick={handleClick}>Altas y Bajas de Alumnos</Link>
             </li>
             <li>
-              <Link href="/rep_femac_7" onClick={handleClickLink}>Cartera</Link>
+              <Link href="/rep_femac_7" onClick={handleClick}>Cartera</Link>
             </li>
             <li>
-              <Link href="/rep_femac_8_anexo_1" onClick={handleClickLink}>Relación de Recibos</Link>
+              <Link href="/rep_femac_8_anexo_1" onClick={handleClick}>Relación de Recibos</Link>
             </li>
             <li>
-              <Link href="/Rep_Femac_9_Anexo_4" onClick={handleClickLink}>Relación de Facturas</Link>
+              <Link href="/Rep_Femac_9_Anexo_4" onClick={handleClick}>Relación de Facturas</Link>
             </li>
             <li>
-              <Link href="/rep_femac_12_anexo_4" onClick={handleClickLink}>Reporte Cobranza por Producto</Link>
+              <Link href="/rep_femac_12_anexo_4" onClick={handleClick}>Reporte Cobranza por Producto</Link>
             </li>
             <li>
-              <Link href="/rep_inscritos" onClick={handleClickLink}>Reporte Inscripción</Link>
+              <Link href="/rep_inscritos" onClick={handleClick}>Reporte Inscripción</Link>
             </li>
           </ul>
         </details>
