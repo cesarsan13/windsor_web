@@ -41,6 +41,10 @@ function Menu({ vertical }) {
     // Cierra todo el menú en vista móvil.
     if (isMobile) {
       setIsOpen({ archivos: false, reportes: false, pagos: false });
+      document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
     }
     // Remueve el foco activo.
     const elem = document.activeElement;
@@ -48,7 +52,6 @@ function Menu({ vertical }) {
       elem?.blur();
     }
   };
-
   const handleToggle = (menu) => {
     setIsOpen((prevState) => {
       const newState = { archivos: false, reportes: false, pagos: false };
@@ -56,6 +59,23 @@ function Menu({ vertical }) {
       return newState;
     });
   };
+  useEffect(() => {
+    const handleSubmenuClick = (event) => {
+      if (window.innerWidth <= 768) { // Vista móvil
+        const linkElement = event.target.closest('a');
+        if (linkElement) {
+          // Cierra el menú completo si se hizo clic en un enlace dentro del submenú
+          setIsOpen({ archivos: false, reportes: false, pagos: false });
+        }
+      }
+    };
+
+    document.addEventListener('click', handleSubmenuClick);
+
+    return () => {
+      document.removeEventListener('click', handleSubmenuClick);
+    };
+  }, []);
 
   return vertical ? (
     <ul
@@ -71,26 +91,26 @@ function Menu({ vertical }) {
         >
           <summary>Archivos</summary>
           <ul>
-            <li>
-              <Link href="/alumnos" onClick={handleClick}>Alumnos</Link>
+            <li className="">
+              <Link href="/alumnos">Alumnos</Link>
             </li>
             <li>
-              <Link href="/productos" onClick={handleClick}>Productos</Link>
+              <Link href="/productos">Productos</Link>
             </li>
             <li>
-              <Link href="/comentarios" onClick={handleClick}>Comentarios</Link>
+              <Link href="/comentarios">Comentarios</Link>
             </li>
             <li>
-              <Link href="/cajeros" onClick={handleClick}>Cajeros</Link>
+              <Link href="/cajeros">Cajeros</Link>
             </li>
             <li>
-              <Link href="/horarios" onClick={handleClick}>Horarios</Link>
+              <Link href="/horarios">Horarios</Link>
             </li>
             <li>
-              <Link href="/formapago" onClick={handleClick}>Forma de Pago</Link>
+              <Link href="/formapago">Forma de Pago</Link>
             </li>
             <li>
-              <Link href="/formfact" onClick={handleClick}>Formato Variable</Link>
+              <Link href="/formfact">Formato Variable</Link>
             </li>
           </ul>
         </details>
