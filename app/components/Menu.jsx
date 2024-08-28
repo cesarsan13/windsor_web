@@ -11,19 +11,6 @@ function Menu({ vertical }) {
   const menuRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768); // Detecta si es móvil.
-    };
-
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
   const handleClickOutside = (event) => {
     if (menuRef.current && !menuRef.current.contains(event.target)) {
       setIsOpen({ archivos: false, reportes: false, pagos: false });

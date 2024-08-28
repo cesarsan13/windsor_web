@@ -171,7 +171,7 @@ function BuscarCat({
                 e.preventDefault();
               }
             }}
-            className={`grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${
+            className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${
               alignRight ? "text-right" : ""
             } `}
             style={{ width: inputWidths.first }}
