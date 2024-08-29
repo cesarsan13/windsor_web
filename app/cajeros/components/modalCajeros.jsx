@@ -87,7 +87,7 @@ function ModalCajeros({
                 errors={errors}
                 register={register}
                 message={"nombre requerido"}
-                maxLenght={50}
+                maxLenght={45}
                 isDisabled={isDisabled}
                 //defaultValue={formaPago.descripcion}
               />
@@ -103,7 +103,7 @@ function ModalCajeros({
                 errors={errors}
                 register={register}
                 message={"direccion requerida"}
-                maxLenght={50}
+                maxLenght={35}
                 isDisabled={isDisabled}
                 //defaultValue={formaPago.descripcion}
               />
@@ -119,7 +119,7 @@ function ModalCajeros({
                 errors={errors}
                 register={register}
                 message={"colonia requerida"}
-                maxLenght={50}
+                maxLenght={30}
                 isDisabled={isDisabled}
                 //defaultValue={formaPago.descripcion}
               />
@@ -135,7 +135,7 @@ function ModalCajeros({
                 errors={errors}
                 register={register}
                 message={"estado requerido"}
-                maxLenght={50}
+                maxLenght={25}
                 isDisabled={isDisabled}
                 //defaultValue={formaPago.descripcion}
               />
@@ -151,7 +151,7 @@ function ModalCajeros({
                 errors={errors}
                 register={register}
                 message={"telefono requerido"}
-                maxLenght={50}
+                maxLenght={10}
                 isDisabled={isDisabled}
                 //defaultValue={formaPago.descripcion}
               />
@@ -167,7 +167,7 @@ function ModalCajeros({
                 errors={errors}
                 register={register}
                 message={"fax requerido"}
-                maxLenght={50}
+                maxLenght={12}
                 isDisabled={isDisabled}
                 //defaultValue={formaPago.descripcion}
               />
@@ -183,7 +183,7 @@ function ModalCajeros({
                 errors={errors}
                 register={register}
                 message={"correo requerido"}
-                maxLenght={50}
+                maxLenght={45}
                 isDisabled={isDisabled}
                 //defaultValue={formaPago.descripcion}
               />
@@ -199,7 +199,7 @@ function ModalCajeros({
                 errors={errors}
                 register={register}
                 message={"Clave requerida"}
-                maxLenght={50}
+                maxLenght={20}
                 isDisabled={isDisabled}
                 //defaultValue={formaPago.descripcion}
               />
