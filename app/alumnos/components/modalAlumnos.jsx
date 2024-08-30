@@ -135,7 +135,7 @@ function ModalAlumnos({
                     name={"a_paterno"}
                     tamañolabel={""}
                     className={"grow"}
-                    Titulo={"Apellido paterno: "}
+                    Titulo={"A. Paterno: "}
                     type={"text"}
                     requerido={true}
                     isNumero={false}
@@ -151,7 +151,7 @@ function ModalAlumnos({
                     name={"a_materno"}
                     tamañolabel={""}
                     className={"rounded block grow"}
-                    Titulo={"Apellido materno: "}
+                    Titulo={"A. Materno: "}
                     type={"text"}
                     requerido={true}
                     isNumero={false}
@@ -768,7 +768,7 @@ function ModalAlumnos({
                     name={"cel_p_1"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
-                    Titulo={"Celular del pediatra: "}
+                    Titulo={"Cel. Pediatra: "}
                     type={"text"}
                     requerido={false}
                     isNumero={true}
@@ -848,7 +848,7 @@ function ModalAlumnos({
                     name={"tel_ase_1"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
-                    Titulo={"Tels de la aseguradora: "}
+                    Titulo={"Tels. Aseguradora: "}
                     type={"text"}
                     requerido={false}
                     isNumero={true}
@@ -1030,7 +1030,7 @@ function ModalAlumnos({
                     name={"nom_padre"}
                     tamañolabel={""}
                     className={"rounded block grow"}
-                    Titulo={"Nombre del padre: "}
+                    Titulo={"Nombre Padre: "}
                     type={"text"}
                     requerido={false}
                     isNumero={false}
@@ -1094,7 +1094,7 @@ function ModalAlumnos({
                     name={"nom_madre"}
                     tamañolabel={""}
                     className={"rounded block grow"}
-                    Titulo={"Nombre de la madre: "}
+                    Titulo={"Nombre Madre: "}
                     type={"text"}
                     requerido={false}
                     isNumero={false}
@@ -1142,7 +1142,7 @@ function ModalAlumnos({
                     name={"cel_mad_1"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
-                    Titulo={"Celular de la madre: "}
+                    Titulo={"Celular Madre: "}
                     type={"text"}
                     requerido={false}
                     isNumero={true}
