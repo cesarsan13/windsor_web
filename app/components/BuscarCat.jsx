@@ -155,7 +155,7 @@ function BuscarCat({
     <div className="flex flex-row md:flex-row justify-start gap-2 sm:flex-row">
       <div className="flex gap-2 ">
         <label
-          className={`input input-bordered join-item text-black dark:text-white input-md flex items-center gap-3`}
+          className={`input input-bordered  input-sm md:input-md join-item text-black dark:text-white input-md flex items-center gap-3`}
         >
           {/* {titulo} */}
           <input
@@ -171,7 +171,7 @@ function BuscarCat({
                 e.preventDefault();
               }
             }}
-            className={`grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${
+            className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${
               alignRight ? "text-right" : ""
             } `}
             style={{ width: inputWidths.first }}
@@ -192,7 +192,7 @@ function BuscarCat({
     type="text"
     readOnly={true}
     {...register(nameInput[1])}
-    className="input input-bordered join-item rounded-r-md bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md w-full"
+    className="input input-bordered  input-sm md:input-md join-item rounded-r-md bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md w-full mb-4"
     style={{ maxWidth: '380px' }}
   />
 </div>
