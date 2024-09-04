@@ -25,15 +25,13 @@ function Menu({ vertical }) {
   }, []);
 
   const handleClick = () => {
-    // Cierra todo el menú en vista móvil.
     if (isMobile) {
       setIsOpen({ archivos: false, reportes: false, pagos: false });
-      document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+      document.addEventListener('click', handleSubmenuClick);
+      return () => {
+        document.removeEventListener('click', handleSubmenuClick);
+      };
     }
-    // Remueve el foco activo.
     const elem = document.activeElement;
     if (elem) {
       elem?.blur();
