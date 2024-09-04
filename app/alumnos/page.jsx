@@ -399,7 +399,7 @@ function Alumnos() {
     setAccion("Alta");
     showModal(true);
 
-    document.getElementById("a_nombre").focus();
+    document.getElementById("a_paterno").focus();
   };
   const Elimina_Comas = (data) => {
     const convertir = (alumno) => {
