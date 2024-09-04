@@ -49,23 +49,43 @@ function ModalCajeros({
   };
   return (
     <dialog id="my_modal_3" className="modal">
-      <div className="modal-box ">
-        <button
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-          onClick={() => document.getElementById("my_modal_3").close()}
-        >
-          ✕
-        </button>
-        {/* if there is a button in form, it will close the modal */}
+      <div className="modal-box">
         <form onSubmit={onSubmit}>
-          <h3 className="font-bold text-lg mb-5">{titulo}</h3>
+        <div className="flex justify-between items-center mb-5">
+          <h3 className="font-bold text-lg">{titulo}</h3>
+          <div className="flex items-center space-x-2">
+            <div
+              className={`tooltip tooltip-bottom ${
+                accion === "Ver"
+                  ? "hover:cursor-not-allowed hidden"
+                  : "hover:cursor-pointer"
+              }`}
+              data-tip="Guardar"
+            >
+              <button
+                type="submit"
+                id="btn_guardar"
+                className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn"
+              >
+                        <Image src={iconos.guardar} alt="Guardar" className="w-4 h-4 mr-1" />
+                <span className="hidden sm:inline">Guardar</span>
+              </button>
+            </div>
+            <button
+              className="btn btn-sm btn-circle btn-ghost"
+              onClick={() => document.getElementById("my_modal_3").close()}
+            >
+              ✕
+            </button>
+          </div>
+        </div>
           <fieldset id="fs_formapago">
             <div className="container flex flex-col space-y-5">
               <Inputs
                 dataType={"int"}
                 name={"numero"}
                 tamañolabel={"w-3/6"}
-                className={"w-3/6 text-right "}
+                className={"w-3/6 text-right"}
                 Titulo={"Numero: "}
                 type={"text"}
                 requerido={true}
@@ -73,7 +93,6 @@ function ModalCajeros({
                 register={register}
                 message={"numero requerido"}
                 isDisabled={true}
-                //defaultValue={formaPago.id}
               />
               <Inputs
                 dataType={"string"}
@@ -89,7 +108,6 @@ function ModalCajeros({
                 message={"nombre requerido"}
                 maxLenght={45}
                 isDisabled={isDisabled}
-                //defaultValue={formaPago.descripcion}
               />
               <Inputs
                 dataType={"string"}
@@ -105,7 +123,6 @@ function ModalCajeros({
                 message={"direccion requerida"}
                 maxLenght={35}
                 isDisabled={isDisabled}
-                //defaultValue={formaPago.descripcion}
               />
               <Inputs
                 dataType={"string"}
@@ -121,7 +138,6 @@ function ModalCajeros({
                 message={"colonia requerida"}
                 maxLenght={30}
                 isDisabled={isDisabled}
-                //defaultValue={formaPago.descripcion}
               />
               <Inputs
                 dataType={"string"}
@@ -137,7 +153,6 @@ function ModalCajeros({
                 message={"estado requerido"}
                 maxLenght={25}
                 isDisabled={isDisabled}
-                //defaultValue={formaPago.descripcion}
               />
               <Inputs
                 dataType={"string"}
@@ -153,7 +168,6 @@ function ModalCajeros({
                 message={"telefono requerido"}
                 maxLenght={10}
                 isDisabled={isDisabled}
-                //defaultValue={formaPago.descripcion}
               />
               <Inputs
                 dataType={"string"}
@@ -169,7 +183,6 @@ function ModalCajeros({
                 message={"fax requerido"}
                 maxLenght={12}
                 isDisabled={isDisabled}
-                //defaultValue={formaPago.descripcion}
               />
               <Inputs
                 dataType={"string"}
@@ -185,7 +198,6 @@ function ModalCajeros({
                 message={"correo requerido"}
                 maxLenght={45}
                 isDisabled={isDisabled}
-                //defaultValue={formaPago.descripcion}
               />
               <Inputs
                 dataType={"string"}
@@ -201,32 +213,14 @@ function ModalCajeros({
                 message={"Clave requerida"}
                 maxLenght={20}
                 isDisabled={isDisabled}
-                //defaultValue={formaPago.descripcion}
               />
             </div>
           </fieldset>
-          <div className=" modal-action">
-            <div
-              className={`tooltip tooltip-top my-5 ${
-                accion === "Ver"
-                  ? "hover:cursor-not-allowed hidden"
-                  : "hover:cursor-pointer"
-              }`}
-              data-tip="Guardar"
-            >
-              <button
-                type="submit"
-                id="btn_guardar"
-                className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn"
-              >
-                <Image src={iconos.guardar} alt="Guardar" /> Guardar
-              </button>
-            </div>
-          </div>
         </form>
       </div>
     </dialog>
   );
+  
 }
 
 export default ModalCajeros;
