@@ -88,10 +88,10 @@ function ModalAlumnos({
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box w-full max-w-3xl h-full">
             <form onSubmit={onSubmit} encType="multipart/form-data">
-      <div className="flex justify-between items-center mb-5">
+            <div className="sticky -top-3 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
           <h3 className="font-bold text-lg">{titulo}</h3>
-          <div className="flex items-center space-x-2">
-            <div
+          <div className="flex space-x-2 items-center">
+          <div
               className={`tooltip tooltip-bottom ${
                 accion === "Ver"
                   ? "hover:cursor-not-allowed hidden"
@@ -102,7 +102,7 @@ function ModalAlumnos({
               <button
                 type="submit"
                 id="btn_guardar"
-                className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn"
+                className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
               >
                         <Image src={iconos.guardar} alt="Guardar" className="w-4 h-4 mr-1" />
                 <span className="hidden sm:inline">Guardar</span>
@@ -114,7 +114,7 @@ function ModalAlumnos({
             >
               ✕
             </button>
-          </div>
+            </div>
         </div>
           <fieldset id="fs_alumnos">
             <div role="tablist" className="tabs tabs-lifted ">
