@@ -2,7 +2,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import Link from "next/link";
 
-function Menu({ vertical }) {
+function Menu({ vertical, toogle }) {
   const [isOpen, setIsOpen] = useState({
     archivos: false,
     reportes: false,
@@ -27,16 +27,14 @@ function Menu({ vertical }) {
   const handleClick = () => {
     if (isMobile) {
       setIsOpen({ archivos: false, reportes: false, pagos: false });
-      document.addEventListener('click', handleSubmenuClick);
-      return () => {
-        document.removeEventListener('click', handleSubmenuClick);
-      };
+      closeAllDetails();
     }
     const elem = document.activeElement;
     if (elem) {
       elem?.blur();
     }
   };
+
   const handleToggle = (menu) => {
     setIsOpen((prevState) => {
       const newState = { archivos: false, reportes: false, pagos: false };
@@ -44,13 +42,32 @@ function Menu({ vertical }) {
       return newState;
     });
   };
+
+  const closeAllDetails = () => {
+    const details = document.querySelectorAll("details");
+    details.forEach((detail) => {
+      detail.removeAttribute("open");
+    });
+  };
+
+  const handleResize = () => {
+    setIsMobile(window.innerWidth <= 768);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   useEffect(() => {
     const handleSubmenuClick = (event) => {
-      if (window.innerWidth <= 768) { // Vista móvil
-        const linkElement = event.target.closest('a');
-        if (linkElement) {
-          // Cierra el menú completo si se hizo clic en un enlace dentro del submenú
+      if (window.innerWidth <= 768) {
+        if (isMobile && event.target.closest("a")) {
           setIsOpen({ archivos: false, reportes: false, pagos: false });
+          closeAllDetails();
         }
       }
     };
@@ -60,42 +77,41 @@ function Menu({ vertical }) {
     return () => {
       document.removeEventListener('click', handleSubmenuClick);
     };
-  }, []);
+  }, [isMobile]);
 
   return vertical ? (
     <ul
       ref={menuRef}
       tabIndex={0}
       className="menu menu-md dropdown-content bg-base-100 rounded-box text-black dark:text-white mt-3 w-52 p-2 shadow z-auto"
-
     >
       <li>
-      <details
+        <details
           open={isOpen.archivos}
           onClick={() => handleToggle("archivos")}
         >
           <summary>Archivos</summary>
           <ul>
             <li className="">
-              <Link href="/alumnos">Alumnos</Link>
+              <Link href="/alumnos" onClick={toogle}>Alumnos</Link>
             </li>
             <li>
-              <Link href="/productos">Productos</Link>
+              <Link href="/productos" onClick={toogle}>Productos</Link>
             </li>
             <li>
-              <Link href="/comentarios">Comentarios</Link>
+              <Link href="/comentarios" onClick={toogle}>Comentarios</Link>
             </li>
             <li>
-              <Link href="/cajeros">Cajeros</Link>
+              <Link href="/cajeros" onClick={toogle}>Cajeros</Link>
             </li>
             <li>
-              <Link href="/horarios">Horarios</Link>
+              <Link href="/horarios" onClick={toogle}>Horarios</Link>
             </li>
             <li>
-              <Link href="/formapago">Forma de Pago</Link>
+              <Link href="/formapago" onClick={toogle}>Forma de Pago</Link>
             </li>
             <li>
-              <Link href="/formfact">Formato Variable</Link>
+              <Link href="/formfact" onClick={toogle}>Formato Variable</Link>
             </li>
           </ul>
         </details>
@@ -105,7 +121,7 @@ function Menu({ vertical }) {
           <summary>Pagos</summary>
           <ul>
             <li>
-              <Link href="/pagos1" onClick={handleClick}>Pagos</Link>
+              <Link href="/pagos1" onClick={toogle}>Pagos</Link>
             </li>
           </ul>
         </details>
@@ -118,37 +134,37 @@ function Menu({ vertical }) {
           <summary>Reportes</summary>
           <ul>
             <li>
-              <Link href="/rep_femac_6" onClick={handleClick}>Cobranza</Link>
+              <Link href="/rep_femac_6" onClick={toogle}>Cobranza</Link>
             </li>
             <li>
-              <Link href="/rep_femac_1" onClick={handleClick}>Relación General de Alumnos</Link>
+              <Link href="/rep_femac_1" onClick={toogle}>Relación General de Alumnos</Link>
             </li>
             <li>
-              <Link href="/Rep_Femac_2" onClick={handleClick}>Lista de Alumnos por clase</Link>
+              <Link href="/Rep_Femac_2" onClick={toogle}>Lista de Alumnos por clase</Link>
             </li>
             <li>
-              <Link href="/rep_femac_3" onClick={handleClick}>Lista de Alumnos por clase del mes</Link>
+              <Link href="/rep_femac_3" onClick={toogle}>Lista de Alumnos por clase del mes</Link>
             </li>
             <li>
-              <Link href="/rep_femac_13" onClick={handleClick}>Lista de alumnos por clase semanal</Link>
+              <Link href="/rep_femac_13" onClick={toogle}>Lista de alumnos por clase semanal</Link>
             </li>
             <li>
-              <Link href="/rep_femac_5" onClick={handleClick}>Altas y Bajas de Alumnos</Link>
+              <Link href="/rep_femac_5" onClick={toogle}>Altas y Bajas de Alumnos</Link>
             </li>
             <li>
-              <Link href="/rep_femac_7" onClick={handleClick}>Cartera</Link>
+              <Link href="/rep_femac_7" onClick={toogle}>Cartera</Link>
             </li>
             <li>
-              <Link href="/rep_femac_8_anexo_1" onClick={handleClick}>Relación de Recibos</Link>
+              <Link href="/rep_femac_8_anexo_1" onClick={toogle}>Relación de Recibos</Link>
             </li>
             <li>
-              <Link href="/Rep_Femac_9_Anexo_4" onClick={handleClick}>Relación de Facturas</Link>
+              <Link href="/Rep_Femac_9_Anexo_4" onClick={toogle}>Relación de Facturas</Link>
             </li>
             <li>
-              <Link href="/rep_femac_12_anexo_4" onClick={handleClick}>Reporte Cobranza por Producto</Link>
+              <Link href="/rep_femac_12_anexo_4" onClick={toogle}>Reporte Cobranza por Producto</Link>
             </li>
             <li>
-              <Link href="/rep_inscritos" onClick={handleClick}>Reporte Inscripción</Link>
+              <Link href="/rep_inscritos" onClick={toogle}>Reporte Inscripción</Link>
             </li>
           </ul>
         </details>
@@ -192,7 +208,7 @@ function Menu({ vertical }) {
       </li>
     </ul>
   ) : (
-    <div className="menu menu-horizontal px-1 z-[2] text-black dark:text-white">
+    <div className="menu menu-horizontal px-1 z-[2] text-black dark:text-white w-[500px]">
       <div className=" dropdown">
         <div
           tabIndex={0}
@@ -200,9 +216,7 @@ function Menu({ vertical }) {
           className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none "
         >
           <label className="swap">
-            {/* this hidden checkbox controls the state */}
             <input type="checkbox" />
-            {/* volume on icon */}
             Archivos
           </label>
         </div>
