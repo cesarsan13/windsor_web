@@ -38,7 +38,7 @@ function TablaAlumnos({
     <div className="overflow-x-auto mt-3 h-[calc(55vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white  w-full lg:w-full">
       {alumnosFiltrados.length > 0 ? (
         <table className="table table-sm table-zebra w-full">
-          <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-10">
+          <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
             <tr>
             <th className="sm:w-[10%]"></th>
               <td className="w-[40%]">Nombre</td>
