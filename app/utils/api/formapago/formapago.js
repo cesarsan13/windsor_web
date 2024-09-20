@@ -1,3 +1,4 @@
+import { Elimina_Comas } from "../../globalfn";
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
 export const getFormasPago = async (token, baja) => {
@@ -43,9 +44,9 @@ export const guardaFormaPAgo = async (token, data, accion) => {
   const res = await fetch(`${url_api}`, {
     method: "post",
     body: JSON.stringify({
-      id: data.id,
+      numero: data.numero,
       descripcion: data.descripcion,
-      comision: data.comision.replace(/,/g, ''),
+      comision: Number(Elimina_Comas(data.comision)),
       aplicacion: data.aplicacion,
       cue_banco: data.cue_banco,
       baja: data.baja,

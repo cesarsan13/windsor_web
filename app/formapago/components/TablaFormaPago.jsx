@@ -13,7 +13,7 @@ function TablaFormaPago({
   const tableAction = (evt, formaPago, accion) => {
     setFormaPago(formaPago);
     setAccion(accion);
-    setCurrentId(formaPago.id);
+    setCurrentId(formaPago.numero);
     showModal(true);
   };
 
@@ -33,8 +33,8 @@ function TablaFormaPago({
           </thead>
           <tbody>
             {formaPagosFiltrados.map((item) => (
-              <tr key={item.id} className="hover:cursor-pointer">
-                <th className={"text-right"}>{item.id}</th>
+              <tr key={item.numero} className="hover:cursor-pointer">
+                <th className={"text-right"}>{item.numero}</th>
                 <td>{item.descripcion}</td>
                 <td className={`text-right w-11`}>{item.comision}</td>
                 <td>{item.aplicacion}</td>
@@ -43,21 +43,21 @@ function TablaFormaPago({
                   <div className="flex flex-row space-x-1 sm:space-x-3">
                     <div
                       className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                      data-tip={`Ver ${item.id}`}
+                      data-tip={`Ver ${item.numero}`}
                       onClick={(evt) => tableAction(evt, item, `Ver`)}
                     >
                       <i className="fa-solid fa-eye"></i>
                     </div>
                     <div
                       className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                      data-tip={`Editar ${item.id}`}
+                      data-tip={`Editar ${item.numero}`}
                       onClick={(evt) => tableAction(evt, item, `Editar`)}
                     >
                       <i className="fa-solid fa-file"></i>
                     </div>
                     <div
                       className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                      data-tip={`Eliminar  ${item.id}`}
+                      data-tip={`Eliminar  ${item.numero}`}
                       onClick={(evt) => tableAction(evt, item, "Eliminar")}
                     >
                       <i className="fa-solid fa-trash"></i>

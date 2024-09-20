@@ -2,6 +2,7 @@
 import Tooltip from "@/app/components/tooltip";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import React, { useEffect, useState } from "react";
+import "@react-pdf-viewer/core/lib/styles/index.css";
 
 function ModalVistaPreviaFormaPago({ pdfPreview, pdfData, PDF, Excel }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
