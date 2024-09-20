@@ -143,7 +143,7 @@ function ModalAlumnos({
                 <div className="flex flex-wrap -mx-3 mb-6 px-3">
                   <Inputs
                     dataType={"int"}
-                    name={"id"}
+                    name={"numero"}
                     tamañolabel={""}
                     className={"rounded block grow text-right"}
                     Titulo={"Numero: "}

@@ -1,5 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { format_Fecha_String } from "../../globalfn";
 export const getAlumnos = async (token, baja) => {
   let url = "";
   baja
@@ -88,7 +89,7 @@ export const Imprimir = (configuracion) => {
   const { body } = configuracion;
   Enca1(newPDF);
   body.forEach((alumnos) => {
-    const id = alumnos.id.toString().substring(0, 25);
+    const id = alumnos.numero.toString().substring(0, 25);
     const nombre = `${alumnos.nombre.toString()} ${alumnos.a_paterno} ${
       alumnos.a_materno
     }`.substring(0, 20);
@@ -98,8 +99,8 @@ export const Imprimir = (configuracion) => {
     const fecha_inscripcion = alumnos.fecha_inscripcion
       .toString()
       .substring(0, 15);
-    const telefono = alumnos.telefono_1.toString().substring(0, 15);
-    newPDF.ImpPosX(alumnos.id.toString(), 10, newPDF.tw_ren);
+    const telefono = alumnos.telefono1.toString().substring(0, 15);
+    newPDF.ImpPosX(alumnos.numero.toString(), 10, newPDF.tw_ren);
     newPDF.ImpPosX(
       alumnos.nombre.toString().substring(0, 20),
       25,
@@ -116,11 +117,15 @@ export const Imprimir = (configuracion) => {
       newPDF.tw_ren
     );
     newPDF.ImpPosX(
-      alumnos.fecha_nac.toString().substring(0, 15),
+      format_Fecha_String(alumnos.fecha_nac.toString().substring(0, 15)),
       175,
       newPDF.tw_ren
     );
-    newPDF.ImpPosX(alumnos.fecha_inscripcion.toString(), 200, newPDF.tw_ren);
+    newPDF.ImpPosX(
+      format_Fecha_String(alumnos.fecha_inscripcion.toString()),
+      200,
+      newPDF.tw_ren
+    );
     newPDF.ImpPosX(alumnos.telefono_1.toString(), 230, newPDF.tw_ren);
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRenH) {

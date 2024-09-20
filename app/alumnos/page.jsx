@@ -22,7 +22,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import { formatFecha, formatDate } from "../utils/globalfn";
+import { formatFecha, format_Fecha_String } from "../utils/globalfn";
 function Alumnos() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -51,6 +51,7 @@ function Alumnos() {
   });
 
   const Buscar = () => {
+    // alert("Busca al guardar");
     const { tb_id, tb_desc, tb_grado } = busqueda;
     if (tb_id === "" && tb_desc === "" && tb_grado === "") {
       setAlumnosFiltrados(alumnos);
@@ -94,7 +95,7 @@ function Alumnos() {
 
   useEffect(() => {
     Buscar();
-  }, [busqueda]);
+  }, [busqueda, alumnos]);
 
   const {
     register,
@@ -103,7 +104,7 @@ function Alumnos() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      id: alumno.numero,
+      numero: alumno.numero,
       nombre: alumno.nombre,
       a_paterno: alumno.a_paterno,
       a_materno: alumno.a_materno,
@@ -196,7 +197,7 @@ function Alumnos() {
   });
   useEffect(() => {
     reset({
-      id: alumno.numero,
+      numero: alumno.numero,
       nombre: alumno.nombre,
       a_paterno: alumno.a_paterno,
       a_materno: alumno.a_materno,
@@ -307,7 +308,7 @@ function Alumnos() {
     const { token } = session.user;
 
     reset({
-      id: 0,
+      numero: 0,
       nombre: "",
       a_paterno: "",
       a_materno: "",
@@ -457,17 +458,17 @@ function Alumnos() {
     }`.trim();
     data.nombre = nombreCompleto;
     const formData = new FormData();
-    formData.append("numero", data.id || "");
+    formData.append("numero", data.numero || "");
     formData.append("nombre", data.nombre || "");
     formData.append("a_paterno", data.a_paterno || "");
     formData.append("a_materno", data.a_materno || "");
     formData.append("a_nombre", data.a_nombre || "");
-    formData.append("fecha_nac", formatDate(data.fecha_nac) || "");
+    formData.append("fecha_nac", format_Fecha_String(data.fecha_nac) || "");
     formData.append(
       "fecha_inscripcion",
-      formatDate(data.fecha_inscripcion) || ""
+      format_Fecha_String(data.fecha_inscripcion) || ""
     );
-    formData.append("fecha_baja", formatDate(data.fecha_baja) || "");
+    formData.append("fecha_baja", format_Fecha_String(data.fecha_baja) || "");
     formData.append("sexo", data.sexo || "");
     formData.append("telefono1", data.telefono_1 || "");
     formData.append("telefono2", data.telefono_2 || "");
@@ -556,27 +557,33 @@ function Alumnos() {
       );
     }
     data.horario_1_nombre = grado.horario;
-    res = await guardarAlumnos(session.user.token, formData, accion, data.id);
+    res = await guardarAlumnos(
+      session.user.token,
+      formData,
+      accion,
+      data.numero
+    );
     if (res.status) {
       if (accion === "Alta") {
         const nuevosAlumnos = { ...data };
-        console.log("nuevos alimnos ", nuevosAlumnos);
-        console.log("data ", data);
+
         setAlumnos([...alumnos, nuevosAlumnos]);
         if (!bajas) {
           setAlumnosFiltrados([...alumnosFiltrados, nuevosAlumnos]);
         }
       }
       if (accion === "Eliminar" || accion === "Editar") {
-        const index = alumnos.findIndex((p) => p.numero === data.id);
+        const index = alumnos.findIndex((p) => p.numero === data.numero);
         if (index !== -1) {
           if (accion === "Eliminar") {
-            const aFiltrados = alumnos.filter((p) => p.numero !== data.id);
+            const aFiltrados = alumnos.filter((p) => p.numero !== data.numero);
             setAlumnos(aFiltrados);
             setAlumnosFiltrados(aFiltrados);
           } else {
             if (bajas) {
-              const aFiltrados = alumnos.filter((p) => p.numero !== data.id);
+              const aFiltrados = alumnos.filter(
+                (p) => p.numero !== data.numero
+              );
               setAlumnos(aFiltrados);
               setAlumnosFiltrados(aFiltrados);
             } else {
@@ -590,7 +597,9 @@ function Alumnos() {
         }
       }
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
+
       showModal(false);
+      // Buscar();
     }
   });
   const dataURLtoBlob = (dataURL) => {
@@ -657,7 +666,7 @@ function Alumnos() {
       },
       body: alumnosFiltrados,
       columns: [
-        { header: "Número", dataKey: "id" },
+        { header: "Número", dataKey: "numero" },
         { header: "Nombre", dataKey: "nombre" },
         { header: "Dirección", dataKey: "direccion" },
         { header: "Colonia", dataKey: "colonia" },
@@ -707,7 +716,11 @@ function Alumnos() {
     const reporte = new ReportePDF(configuracion, "Landscape");
     Enca1(reporte);
     alumnosFiltrados.forEach((alumno) => {
-      reporte.ImpPosX(alumno.id.toString(), 10, reporte.tw_ren);
+      console.log(
+        "esta es la fehca de inscr",
+        alumno.fecha_inscripcion.toString()
+      );
+      reporte.ImpPosX(alumno.numero.toString(), 10, reporte.tw_ren);
       reporte.ImpPosX(
         alumno.nombre.toString().substring(0, 20),
         25,
@@ -724,12 +737,16 @@ function Alumnos() {
         reporte.tw_ren
       );
       reporte.ImpPosX(
-        alumno.fecha_nac.toString().substring(0, 15),
+        format_Fecha_String(alumno.fecha_nac.toString().substring(0, 15)),
         175,
         reporte.tw_ren
       );
-      reporte.ImpPosX(alumno.fecha_inscripcion.toString(), 200, reporte.tw_ren);
-      reporte.ImpPosX(alumno.telefono_1.toString(), 230, reporte.tw_ren);
+      reporte.ImpPosX(
+        format_Fecha_String(alumno.fecha_inscripcion.toString()),
+        200,
+        reporte.tw_ren
+      );
+      reporte.ImpPosX(alumno.telefono1.toString(), 230, reporte.tw_ren);
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRenH) {
         reporte.pageBreakH();

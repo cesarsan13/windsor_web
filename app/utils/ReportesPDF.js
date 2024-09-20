@@ -1,6 +1,6 @@
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { formatDate, formatTime } from "@/app/utils/globalfn";
+import { Fecha_AMD, formatDate, formatTime } from "@/app/utils/globalfn";
 
 export class ReportePDF {
   //constructor del nuevo reporte, acepta un JSON de configuracion
@@ -138,10 +138,18 @@ export class ReportePDF {
       this.nextRow(6);
       this.ImpPosX(`Fecha Pago: ${fecha}`, 35, this.tw_ren);
       this.ImpPosX(`Num Recibo: ${body.numero_recibo}`, 80, this.tw_ren);
-      this.ImpPosX(`Tipo Pago: ${body.forma_pago_descripcion}`, 120, this.tw_ren);
+      this.ImpPosX(
+        `Tipo Pago: ${body.forma_pago_descripcion}`,
+        120,
+        this.tw_ren
+      );
       this.nextRow(6);
       this.ImpPosX(`Comentario: ${body.comentario}`, 35, this.tw_ren);
-      this.ImpPosX(`Num. Alumno: ${body.alumno_seleccionado}`, 120, this.tw_ren);
+      this.ImpPosX(
+        `Num. Alumno: ${body.alumno_seleccionado}`,
+        120,
+        this.tw_ren
+      );
     }
   }
 
