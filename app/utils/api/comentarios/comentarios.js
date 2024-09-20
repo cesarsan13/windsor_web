@@ -13,7 +13,6 @@ export const getComentarios = async (token, baja) => {
     },
   });
   const resJson = await res.json();
-  console.log(resJson.data);
   return resJson.data;
 };
 export const siguiente = async (token) => {
@@ -26,8 +25,6 @@ export const siguiente = async (token) => {
   return resJson.data;
 };
 export const guardaComentarios = async (token, data, accion) => {
-
-  console.log("esto trae dataaa", data);
     let url_api = "";
     if (accion === "Alta") {
       url_api = `${process.env.DOMAIN_API}api/comentarios`;
