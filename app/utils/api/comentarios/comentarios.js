@@ -13,7 +13,6 @@ export const getComentarios = async (token, baja) => {
     },
   });
   const resJson = await res.json();
-  console.log("dt", resJson.data);
   return resJson.data;
 };
 export const siguiente = async (token) => {
