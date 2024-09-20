@@ -4,9 +4,12 @@ export const soloEnteros = (event) => {
   if (isControlKey(key)) {
     return;
   }
-  if (key === 'Enter') { return; }
-  if (keyCode === 8) { return; }
-  else if (keyCode === 13) {
+  if (key === "Enter") {
+    return;
+  }
+  if (keyCode === 8) {
+    return;
+  } else if (keyCode === 13) {
     event.preventDefault();
     const form = event.target.form;
     const index = Array.prototype.indexOf.call(form, event.target);
@@ -67,16 +70,16 @@ const isControlKey = (key) => {
   );
 };
 
-export const poneCeros = (importe, longitud) => {
+export const poneCeros = (importe = 0, longitud = 0) => {
   let twTrabajoString = importe.toString();
   twTrabajoString = twTrabajoString.trim();
   const twLen = twTrabajoString.length;
   if (twLen >= longitud) {
     return twTrabajoString;
   }
-  let poneCeros = '';
+  let poneCeros = "";
   for (let i = 0; i < longitud - twLen; i++) {
-    poneCeros += '0';
+    poneCeros += "0";
   }
   poneCeros += twTrabajoString;
   return poneCeros;
@@ -101,9 +104,10 @@ export const pone_ceros = (number, decimalPlaces = 2, useCommas = true) => {
 };
 
 export function formatDate(date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
+  let fechaObj = new Date(date.replace(/\//g, "-"));
+  const year = fechaObj.getFullYear();
+  const month = String(fechaObj.getMonth() + 1).padStart(2, "0");
+  const day = String(fechaObj.getDate()).padStart(2, "0");
   return `${year}/${month}/${day}`;
 }
 
@@ -119,7 +123,6 @@ export function Fecha_de_Ctod(date, diasmas) {
   return `${year}-${month}-${day}`;
 }
 
-
 export function formatTime(date) {
   const hours = String(date.getHours()).padStart(2, "0");
   const minutes = String(date.getMinutes()).padStart(2, "0");
@@ -130,7 +133,7 @@ export function formatTime(date) {
 export const calculaDigitoBvba = (twInfo) => {
   const allTrim = (str) => str.trim();
   const val = (str) => parseInt(str, 10);
-  let txwCar = '';
+  let txwCar = "";
   let camMul = 2;
   twInfo = allTrim(twInfo);
   let txwLen = twInfo.length;
@@ -164,10 +167,13 @@ export const calculaDigitoBvba = (twInfo) => {
 
 export const formatNumber = (num) => {
   if (!num) return "";
-  const numStr = typeof num === 'string' ? num : num.toString();
-  const floatNum = parseFloat(numStr.replace(/,/g, "").replace(/[^\d.-]/g, ''));
+  const numStr = typeof num === "string" ? num : num.toString();
+  const floatNum = parseFloat(numStr.replace(/,/g, "").replace(/[^\d.-]/g, ""));
   if (isNaN(floatNum)) return "";
-  return floatNum.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return floatNum.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 };
 
 export const Elimina_Comas = (data) => {
@@ -177,9 +183,7 @@ export const Elimina_Comas = (data) => {
       typeof valueConvertido === "string" &&
       valueConvertido.match(/^\d{1,3}(,\d{3})*(\.\d+)?$/)
     ) {
-      valueConvertido = parseFloat(
-        valueConvertido.replace(/,/g, "")
-      );
+      valueConvertido = parseFloat(valueConvertido.replace(/,/g, ""));
     }
 
     return valueConvertido;
@@ -190,4 +194,29 @@ export const Elimina_Comas = (data) => {
   } else {
     return convertir(data);
   }
+};
+
+export const formatFecha = (fecha) => {
+  if (!fecha) return ""; // Manejo en caso de que la fecha sea nula
+  const fechaFormateada = String(fecha).replace(/\//g, "-");
+
+  // Verifica si ya está en formato AAAA-MM-DD y no es otra estructura (ejemplo con "T" de ISO)
+  const esISO = /^\d{4}-\d{2}-\d{2}T/.test(fechaFormateada);
+
+  // Si tiene una "T", significa que es formato ISO y solo necesitas las primeras 10 posiciones.
+  if (esISO) {
+    return fechaFormateada.substring(0, 10); // Extrae solo AAAA-MM-DD
+  }
+
+  return fechaFormateada; // Retorna la fecha convertida
+};
+
+export const Fecha_AMD = (Tw_Fecha) => {
+  return (
+    Tw_Fecha.Year &
+    "/" &
+    Format(Tw_Fecha.Month, "0#") &
+    "/" &
+    Format(Tw_Fecha.Day, "0#")
+  );
 };

@@ -22,6 +22,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
 import "@react-pdf-viewer/core/lib/styles/index.css";
+import { formatFecha, formatDate } from "../utils/globalfn";
 function Alumnos() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -43,7 +44,11 @@ function Alumnos() {
   const [cond2, setcond2] = useState({});
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
-  const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "", tb_grado:"" });
+  const [busqueda, setBusqueda] = useState({
+    tb_id: "",
+    tb_desc: "",
+    tb_grado: "",
+  });
 
   const Buscar = () => {
     const { tb_id, tb_desc, tb_grado } = busqueda;
@@ -52,18 +57,20 @@ function Alumnos() {
       return;
     }
     const infoFiltrada = alumnos.filter((alumno) => {
-      const coincideId = tb_id ? alumno["id"].toString().includes(tb_id) : true;
+      const coincideId = tb_id
+        ? alumno["numero"].toString().includes(tb_id)
+        : true;
       const coincideDescripcion = tb_desc
         ? alumno["nombre"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_desc.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
         : true;
-        const coincideGrado = tb_grado
+      const coincideGrado = tb_grado
         ? (alumno["horario_1_nombre"] || "")
-        .toString()
-        .toLowerCase()
-        .includes(tb_grado.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_grado.toLowerCase())
         : true;
       return coincideId && coincideDescripcion && coincideGrado;
     });
@@ -96,17 +103,17 @@ function Alumnos() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      id: alumno.id,
+      id: alumno.numero,
       nombre: alumno.nombre,
       a_paterno: alumno.a_paterno,
       a_materno: alumno.a_materno,
       a_nombre: alumno.a_nombre,
-      fecha_nac: alumno.fecha_nac,
-      fecha_inscripcion: alumno.fecha_inscripcion,
-      fecha_baja: alumno.fecha_baja,
+      fecha_nac: formatFecha(alumno.fecha_nac),
+      fecha_inscripcion: formatFecha(alumno.fecha_inscripcion),
+      fecha_baja: formatFecha(alumno.fecha_baja),
       sexo: alumno.sexo,
-      telefono_1: alumno.telefono_1,
-      telefono_2: alumno.telefono_2,
+      telefono_1: alumno.telefono1,
+      telefono_2: alumno.telefono2,
       celular: alumno.celular,
       codigo_barras: alumno.codigo_barras,
       direccion: alumno.direccion,
@@ -115,7 +122,7 @@ function Alumnos() {
       estado: alumno.estado,
       cp: alumno.cp,
       email: alumno.email,
-      imagen: alumno.imagen,
+      imagen: alumno.ruta_foto,
       dia_1: alumno.dia_1,
       dia_2: alumno.dia_2,
       dia_3: alumno.dia_3,
@@ -170,15 +177,15 @@ function Alumnos() {
       nom_padre: alumno.nom_padre,
       tel_pad_1: alumno.tel_pad_1,
       tel_pad_2: alumno.tel_pad_2,
-      cel_pad_1: alumno.cel_pad_1,
+      cel_pad_1: alumno.cel_pad,
       nom_madre: alumno.nom_madre,
       tel_mad_1: alumno.tel_mad_1,
       tel_mad_2: alumno.tel_mad_2,
-      cel_mad_1: alumno.cel_mad_1,
+      cel_mad_1: alumno.cel_mad,
       nom_avi: alumno.nom_avi,
       tel_avi_1: alumno.tel_avi_1,
       tel_avi_2: alumno.tel_avi_2,
-      cel_avi_1: alumno.cel_avi_1,
+      cel_avi_1: alumno.cel_avi,
       ciclo_escolar: alumno.ciclo_escolar,
       descuento: alumno.descuento,
       rfc_factura: alumno.rfc_factura,
@@ -189,17 +196,17 @@ function Alumnos() {
   });
   useEffect(() => {
     reset({
-      id: alumno.id,
+      id: alumno.numero,
       nombre: alumno.nombre,
       a_paterno: alumno.a_paterno,
       a_materno: alumno.a_materno,
       a_nombre: alumno.a_nombre,
-      fecha_nac: alumno.fecha_nac,
-      fecha_inscripcion: alumno.fecha_inscripcion,
-      fecha_baja: alumno.fecha_baja,
+      fecha_nac: formatFecha(alumno.fecha_nac),
+      fecha_inscripcion: formatFecha(alumno.fecha_inscripcion),
+      fecha_baja: formatFecha(alumno.fecha_baja),
       sexo: alumno.sexo,
-      telefono_1: alumno.telefono_1,
-      telefono_2: alumno.telefono_2,
+      telefono_1: alumno.telefono1,
+      telefono_2: alumno.telefono2,
       celular: alumno.celular,
       codigo_barras: alumno.codigo_barras,
       direccion: alumno.direccion,
@@ -208,7 +215,7 @@ function Alumnos() {
       estado: alumno.estado,
       cp: alumno.cp,
       email: alumno.email,
-      imagen: alumno.imagen,
+      imagen: alumno.ruta_foto,
       dia_1: alumno.dia_1,
       dia_2: alumno.dia_2,
       dia_3: alumno.dia_3,
@@ -263,15 +270,15 @@ function Alumnos() {
       nom_padre: alumno.nom_padre,
       tel_pad_1: alumno.tel_pad_1,
       tel_pad_2: alumno.tel_pad_2,
-      cel_pad_1: alumno.cel_pad_1,
+      cel_pad_1: alumno.cel_pad,
       nom_madre: alumno.nom_madre,
       tel_mad_1: alumno.tel_mad_1,
       tel_mad_2: alumno.tel_mad_2,
-      cel_mad_1: alumno.cel_mad_1,
+      cel_mad_1: alumno.cel_mad,
       nom_avi: alumno.nom_avi,
       tel_avi_1: alumno.tel_avi_1,
       tel_avi_2: alumno.tel_avi_2,
-      cel_avi_1: alumno.cel_avi_1,
+      cel_avi_1: alumno.cel_avi,
       ciclo_escolar: alumno.ciclo_escolar,
       descuento: alumno.descuento,
       rfc_factura: alumno.rfc_factura,
@@ -426,6 +433,9 @@ function Alumnos() {
 
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
+    // const dataj = JSON.stringify(data);
+    // alert(dataj);
+    // return;
     data.id = currentID;
     let res = null;
     if (accion === "Eliminar") {
@@ -442,19 +452,24 @@ function Alumnos() {
         return;
       }
     }
-    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${data.a_nombre || ""}`.trim();
+    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${
+      data.a_nombre || ""
+    }`.trim();
     const formData = new FormData();
-    formData.append("id", data.id || "");
+    formData.append("numero", data.id || "");
     formData.append("nombre", nombreCompleto || "");
     formData.append("a_paterno", data.a_paterno || "");
     formData.append("a_materno", data.a_materno || "");
     formData.append("a_nombre", data.a_nombre || "");
-    formData.append("fecha_nac", data.fecha_nac || "");
-    formData.append("fecha_inscripcion", data.fecha_inscripcion || "");
-    formData.append("fecha_baja", data.fecha_baja || "");
+    formData.append("fecha_nac", formatDate(data.fecha_nac) || "");
+    formData.append(
+      "fecha_inscripcion",
+      formatDate(data.fecha_inscripcion) || ""
+    );
+    formData.append("fecha_baja", formatDate(data.fecha_baja) || "");
     formData.append("sexo", data.sexo || "");
-    formData.append("telefono_1", data.telefono_1 || "");
-    formData.append("telefono_2", data.telefono_2 || "");
+    formData.append("telefono1", data.telefono_1 || "");
+    formData.append("telefono2", data.telefono_2 || "");
     formData.append("celular", data.celular || "");
     formData.append("codigo_barras", data.codigo_barras || "");
     formData.append("direccion", data.direccion || "");
@@ -513,19 +528,19 @@ function Alumnos() {
     formData.append("raz_colonia", data.raz_colonia || "");
     formData.append("raz_ciudad", data.raz_ciudad || "");
     formData.append("raz_estado", data.raz_estado || "");
-    formData.append("raz_cp", data.raz_cp || "");
+    formData.append("raz_cp", data.raz_cp || 0);
     formData.append("nom_padre", data.nom_padre || "");
     formData.append("tel_pad_1", data.tel_pad_1 || "");
     formData.append("tel_pad_2", data.tel_pad_2 || "");
-    formData.append("cel_pad_1", data.cel_pad_1 || "");
+    formData.append("cel_pad", data.cel_pad_1 || "");
     formData.append("nom_madre", data.nom_madre || "");
     formData.append("tel_mad_1", data.tel_mad_1 || "");
     formData.append("tel_mad_2", data.tel_mad_2 || "");
-    formData.append("cel_mad_1", data.cel_mad_1 || "");
+    formData.append("cel_mad", data.cel_mad_1 || "");
     formData.append("nom_avi", data.nom_avi || "");
     formData.append("tel_avi_1", data.tel_avi_1 || "");
     formData.append("tel_avi_2", data.tel_avi_2 || "");
-    formData.append("cel_avi_1", data.cel_avi_1 || "");
+    formData.append("cel_avi", data.cel_avi_1 || "");
     formData.append("ciclo_escolar", data.ciclo_escolar || "");
     formData.append("descuento", data.descuento || "");
     formData.append("rfc_factura", data.rfc_factura || "");
@@ -534,7 +549,7 @@ function Alumnos() {
     if (condicion === true) {
       const blob = dataURLtoBlob(capturedImage);
       formData.append(
-        "imagen",
+        "ruta_foto",
         blob,
         `${data.nombre}_${data.a_paterno}_${data.a_materno}.jpg`
       );
@@ -550,20 +565,20 @@ function Alumnos() {
         }
       }
       if (accion === "Eliminar" || accion === "Editar") {
-        const index = alumnos.findIndex((p) => p.id === data.id);
+        const index = alumnos.findIndex((p) => p.numero === data.id);
         if (index !== -1) {
           if (accion === "Eliminar") {
-            const aFiltrados = alumnos.filter((p) => p.id !== data.id);
+            const aFiltrados = alumnos.filter((p) => p.numero !== data.id);
             setAlumnos(aFiltrados);
             setAlumnosFiltrados(aFiltrados);
           } else {
             if (bajas) {
-              const aFiltrados = alumnos.filter((p) => p.id !== data.id);
+              const aFiltrados = alumnos.filter((p) => p.numero !== data.id);
               setAlumnos(aFiltrados);
               setAlumnosFiltrados(aFiltrados);
             } else {
               const aLactualizadas = alumnos.map((p) =>
-                p.id === currentID ? { ...p, ...data } : p
+                p.numero === currentID ? { ...p, ...data } : p
               );
               setAlumnos(aLactualizadas);
               setAlumnosFiltrados(aLactualizadas);
@@ -595,7 +610,7 @@ function Alumnos() {
   };
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
-    setBusqueda({ tb_id: "", tb_desc: "", tb_grado:"" });
+    setBusqueda({ tb_id: "", tb_desc: "", tb_grado: "" });
   };
   const showModal = (show) => {
     show
@@ -756,50 +771,49 @@ function Alumnos() {
         PDF={imprimePDF}
         Excel={ImprimeExcel}
       />
-<div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 overflow-x-auto">
-  <div className="flex flex-col justify-start p-3">
-    <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
-        <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
-            <Acciones
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 overflow-x-auto">
+        <div className="flex flex-col justify-start p-3">
+          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
+            <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
+              <Acciones
+                Buscar={Buscar}
+                Alta={Alta}
+                home={home}
+                PDF={imprimePDF}
+                Excel={ImprimeExcel}
+                Ver={handleVerClick}
+                CerrarView={CerrarView}
+              />
+            </div>
+            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-2/12">
+              Alumnos
+            </h1>
+          </div>
+        </div>
+        <div className="flex flex-col items-center h-full">
+          <div className="w-full max-w-4xl">
+            <Busqueda
+              setBajas={setBajas}
+              limpiarBusqueda={limpiarBusqueda}
               Buscar={Buscar}
-              Alta={Alta}
-              home={home}
-              PDF={imprimePDF}
-              Excel={ImprimeExcel}
-              Ver={handleVerClick}
-              CerrarView={CerrarView}
+              handleBusquedaChange={handleBusquedaChange}
+              busqueda={busqueda}
+            />
+            <TablaAlumnos
+              session={session}
+              isLoading={isLoading}
+              alumnosFiltrados={alumnosFiltrados}
+              showModal={showModal}
+              setAlumno={setAlumno}
+              setAccion={setAccion}
+              setCurrentId={setCurrentId}
+              formatNumber={formatNumber}
+              setCapturedImage={setCapturedImage}
+              setcondicion={setcondicion}
             />
           </div>
-          <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-2/12">
-            Alumnos
-        </h1>
-    </div>
-</div>
-<div className="flex flex-col items-center h-full">
-    <div className="w-full max-w-4xl">
-      <Busqueda
-                setBajas={setBajas}
-                limpiarBusqueda={limpiarBusqueda}
-                Buscar={Buscar}
-                handleBusquedaChange={handleBusquedaChange}
-                busqueda={busqueda}
-              />
-                <TablaAlumnos
-                  session={session}
-                  isLoading={isLoading}
-                  alumnosFiltrados={alumnosFiltrados}
-                  showModal={showModal}
-                  setAlumno={setAlumno}
-                  setAccion={setAccion}
-                  setCurrentId={setCurrentId}
-                  formatNumber={formatNumber}
-                  setCapturedImage={setCapturedImage}
-                  setcondicion={setcondicion}
-                />
-              </div>
-            </div>
-          </div>
-
+        </div>
+      </div>
     </>
   );
 }

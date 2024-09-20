@@ -67,6 +67,8 @@ function ModalAlumnos({
         ? `Eliminar Alumno: ${currentID}`
         : `Ver Alumno: ${currentID}`
     );
+    // const alj = JSON.stringify(alumno);
+    // console.log(alumno);
   }, [accion, currentID]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
@@ -83,39 +85,44 @@ function ModalAlumnos({
   const handleTabs = (num) => {
     setActiveTab(num);
   };
+  console.log(JSON.stringify(alumno));
 
   return (
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box w-full max-w-3xl h-full">
-            <form onSubmit={onSubmit} encType="multipart/form-data">
-            <div className="sticky -top-3 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
-          <h3 className="font-bold text-lg">{titulo}</h3>
-          <div className="flex space-x-2 items-center">
-          <div
-              className={`tooltip tooltip-bottom ${
-                accion === "Ver"
-                  ? "hover:cursor-not-allowed hidden"
-                  : "hover:cursor-pointer"
-              }`}
-              data-tip="Guardar"
-            >
-              <button
-                type="submit"
-                id="btn_guardar"
-                className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
+        <form onSubmit={onSubmit} encType="multipart/form-data">
+          <div className="sticky -top-3 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
+            <h3 className="font-bold text-lg">{titulo}</h3>
+            <div className="flex space-x-2 items-center">
+              <div
+                className={`tooltip tooltip-bottom ${
+                  accion === "Ver"
+                    ? "hover:cursor-not-allowed hidden"
+                    : "hover:cursor-pointer"
+                }`}
+                data-tip="Guardar"
               >
-                        <Image src={iconos.guardar} alt="Guardar" className="w-4 h-4 mr-1" />
-                <span className="hidden sm:inline">Guardar</span>
+                <button
+                  type="submit"
+                  id="btn_guardar"
+                  className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
+                >
+                  <Image
+                    src={iconos.guardar}
+                    alt="Guardar"
+                    className="w-4 h-4 mr-1"
+                  />
+                  <span className="hidden sm:inline">Guardar</span>
+                </button>
+              </div>
+              <button
+                className="btn btn-sm btn-circle btn-ghost"
+                onClick={() => document.getElementById("my_modal_3").close()}
+              >
+                ✕
               </button>
             </div>
-            <button
-              className="btn btn-sm btn-circle btn-ghost"
-              onClick={() => document.getElementById("my_modal_3").close()}
-            >
-              ✕
-            </button>
-            </div>
-        </div>
+          </div>
           <fieldset id="fs_alumnos">
             <div role="tablist" className="tabs tabs-lifted ">
               <input
@@ -289,9 +296,9 @@ function ModalAlumnos({
                     isDisabled={isDisabled}
                     handleBlur={handleBlur}
                     arreglos={[
-                      { id: "Hombre", descripcion: "Hombre" },
-                      { id: "Femenino", descripcion: "Femenino" },
-                      { id: "Otro", descripcion: "Otro" },
+                      { id: "H", descripcion: "Hombre" },
+                      { id: "M", descripcion: "Mujer" },
+                      { id: "O", descripcion: "Otro" },
                     ]}
                   />
 
@@ -1010,7 +1017,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"raz_cp"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
