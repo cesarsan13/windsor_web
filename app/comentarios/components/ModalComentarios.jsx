@@ -46,6 +46,13 @@ function ModalComentarios({
           [evt.target.name]: pone_ceros(evt.target.value, 2, true),
         }));
   };
+
+
+  const generales = [
+    { id: 1, descripcion: "Si" },
+    { id: 0, descripcion: "No" }
+  ];
+
   return (
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box">
@@ -62,9 +69,9 @@ function ModalComentarios({
           </h3>
           <fieldset id="fs_comentario">
           <div className="container flex flex-col space-y-5">
-          <Inputs
+              <Inputs
                 dataType={"int"}
-                name={"id"}
+                name={"numero"}
                 tamañolabel={"w-2/6"}
                 className={"w-3/6 text-right"}
                 Titulo={"Numero: "}
@@ -74,7 +81,7 @@ function ModalComentarios({
                 register={register}
                 message={"id Requerido"}
                 isDisabled={!isDisabled}
-              />
+              /> 
               <Inputs
                 dataType={"string"}
                 name={"comentario_1"}
@@ -135,10 +142,7 @@ function ModalComentarios({
                 register={register}
                 message={"General requerido"}
                 isDisabled={isDisabled}
-                arreglos={[
-                  { id: "S", descripcion: "Si" },
-                  { id: "N", descripcion: "No" },
-                ]}
+                generales={generales}
               />
             </div>
           </fieldset>

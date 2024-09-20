@@ -42,7 +42,7 @@ export const guardaComentarios = async (token, data, accion) => {
     const res = await fetch(`${url_api}`, {
       method: "post",
       body: JSON.stringify({
-        id: data.id,
+        numero: data.numero,
         comentario_1: data.comentario_1,
         comentario_2: data.comentario_2,
         comentario_3: data.comentario_3,
@@ -85,11 +85,12 @@ export const guardaComentarios = async (token, data, accion) => {
     const { body } = configuracion;
     Enca1(newPDF);
     body.forEach((comentarios) => {
-      newPDF.ImpPosX(comentarios.id.toString(),15,newPDF.tw_ren, 10)
-      newPDF.ImpPosX(comentarios.comentario_1.toString(),30,newPDF.tw_ren, 40)
-      newPDF.ImpPosX(comentarios.comentario_2.toString(),110,newPDF.tw_ren, 40)
-      newPDF.ImpPosX(comentarios.comentario_3.toString(),190,newPDF.tw_ren, 40)
-      newPDF.ImpPosX(comentarios.generales.toString(),270,newPDF.tw_ren, 5)
+      newPDF.ImpPosX(comentarios.numero.toString(),15,newPDF.tw_ren, 10);
+      newPDF.ImpPosX(comentarios.comentario_1.toString(),30,newPDF.tw_ren, 40);
+      newPDF.ImpPosX(comentarios.comentario_2.toString(),110,newPDF.tw_ren, 40);
+      newPDF.ImpPosX(comentarios.comentario_3.toString(),190,newPDF.tw_ren, 40);
+      let resultado = (comentarios.generales == 1) ? "Si" : (comentarios.generales == 0) ? "No": "No valido";
+      newPDF.ImpPosX(resultado.toString(),270,newPDF.tw_ren, 5);
       Enca1(newPDF);
       if (newPDF.tw_ren >= newPDF.tw_endRenH) {
         newPDF.pageBreakH();

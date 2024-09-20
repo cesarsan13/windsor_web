@@ -13,7 +13,7 @@ function TablaComentarios({
   const tableAction = (evt, formaComentarios, accion) => {
     setFormaComentarios(formaComentarios);
     setAccion(accion);
-    setCurrentId(formaComentarios.id);
+    setCurrentId(formaComentarios.numero);
     showModal(true);
   };
 
@@ -32,12 +32,12 @@ function TablaComentarios({
           </thead>
           <tbody>
             {formaComentariosFiltrados.map((item) => (
-              <tr key={item.id} className="hover:cursor-pointer">
+              <tr key={item.numero} className="hover:cursor-pointer">
                 <th className={
                   typeof item.comision === "number"
                   ? "text-left"
                   : "text-right"
-                }>{item.id}</th>
+                }>{item.numero}</th>
                 <td className="w-[45%]"> {item.comentario_1} </td>
                 <td className="w-[25%] hidden sm:table-cell"> {item.comentario_2} </td>
                 <td className="w-[25%] hidden sm:table-cell"> {item.comentario_3} </td>
@@ -45,21 +45,21 @@ function TablaComentarios({
                   <div className="flex flex-row space-x-1 sm:space-x-3">
                     <div
                       className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                      data-tip={`Ver ${item.id}`}
+                      data-tip={`Ver ${item.numero}`}
                       onClick={(evt) => tableAction(evt, item, `Ver`)}
                     >
                       <i className="fa-solid fa-eye"></i>
                     </div>
                     <div
                       className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                      data-tip={`Editar ${item.id}`}
+                      data-tip={`Editar ${item.numero}`}
                       onClick={(evt) => tableAction(evt, item, `Editar`)}
                     >
                       <i className="fa-solid fa-file"></i>
                     </div>
                     <div
                       className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                      data-tip={`Eliminar  ${item.id}`}
+                      data-tip={`Eliminar  ${item.numero}`}
                       onClick={(evt) => tableAction(evt, item, "Eliminar")}
                     >
                       <i className="fa-solid fa-trash"></i>

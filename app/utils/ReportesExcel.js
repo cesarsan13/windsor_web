@@ -1,5 +1,5 @@
 import * as XLSX from "xlsx";
-import { formatDate, formatTime } from "./globalfn";
+import { formatDate, formatTime, formatFecha } from "./globalfn";
 
 export class ReporteExcel {
   constructor(configuracion) {
@@ -12,7 +12,7 @@ export class ReporteExcel {
   imprimeEncabezadoPrincipal() {
     const { Encabezado } = this.configuracion;
     const date = new Date();
-    const dateStr = formatDate(date);
+    const dateStr = formatFecha(date);
     const timeStr = formatTime(date);
     Encabezado;
     this.worksheetData.push(

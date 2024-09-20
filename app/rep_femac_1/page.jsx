@@ -33,8 +33,8 @@ function AlumnosPorClase() {
     setSelectedOption(event.target.value);
   };
 
-  const alumno1V = alumnos1 === undefined ? 0 : alumnos1.id;
-  const alumno2V = alumnos2 === undefined ? 0 : alumnos2.id;
+  const alumno1V = alumnos1 === undefined ? 0 : alumnos1.numero;
+  const alumno2V = alumnos2 === undefined ? 0 : alumnos2.numero;
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -42,7 +42,6 @@ function AlumnosPorClase() {
     }
     const fetchData = async () => {
       const { token } = session.user;
-      console.log(alumno1V, alumno2V);
       const data = await getreportAlumn(
         token,
         bajas,
@@ -51,7 +50,6 @@ function AlumnosPorClase() {
         alumno2V
       );
       setAlumnosFiltrados(data);
-      console.log(alumnosFiltrados);
     };
     fetchData();
   }, [session, status, bajas, selectedOption, alumno1V, alumno2V]);
@@ -77,12 +75,12 @@ function AlumnosPorClase() {
       },
       body: alumnosFiltrados,
       columns: [
-        { header: "No", dataKey: "id" },
+        { header: "No", dataKey: "numero" },
         { header: "Nombre", dataKey: "nombre_completo" },
         { header: "Estatus", dataKey: "estatus" },
         { header: "Fecha", dataKey: "fecha_nac" },
         { header: "Horario", dataKey: "horario_1_nombre" },
-        { header: "Telefono", dataKey: "telefono_1" },
+        { header: "Telefono", dataKey: "telefono1" },
       ],
       nombre: "Relación General de Alumnos",
     };
@@ -94,7 +92,7 @@ function AlumnosPorClase() {
   };
 
   const handleVerClick = async () => {
-    if (alumnos1.id === undefined) {
+    if (alumnos1.numero === undefined) {
       showSwal(
         "Oppss!",
         "Para imprimir, mínimo debe estar seleccionado un Alumno de 'Inicio'",
@@ -134,7 +132,7 @@ function AlumnosPorClase() {
 
       Enca1(newPDF);
       body.forEach((alumno) => {
-        const id = calculaDigitoBvba((alumno.id || "").toString() || "");
+        const numero = calculaDigitoBvba((alumno.numero || "").toString() || "");
         const nombre = `${alumno.a_nombre || ""} ${alumno.a_paterno || ""} ${
           alumno.a_materno || ""
         }`.substring(0, 50);
@@ -143,8 +141,8 @@ function AlumnosPorClase() {
         const horario_1_nombre = (alumno.horario_1_nombre || "")
           .toString()
           .substring(0, 15);
-        const telefono = (alumno.telefono_1 || "").toString().substring(0, 15);
-        newPDF.ImpPosX(`${alumno.id}-${id}`, 15, newPDF.tw_ren);
+        const telefono = (alumno.telefono1 || "").toString().substring(0, 15);
+        newPDF.ImpPosX(`${alumno.numero}-${numero}`, 15, newPDF.tw_ren);
         newPDF.ImpPosX(nombre, 25, newPDF.tw_ren);
         newPDF.ImpPosX(estatus, 105, newPDF.tw_ren);
         newPDF.ImpPosX(fecha_nac, 125, newPDF.tw_ren);
@@ -206,8 +204,8 @@ function AlumnosPorClase() {
               
               <BuscarCat
                 table="alumnos"
-                fieldsToShow={["id", "nombre_completo"]}
-                nameInput={["id", "nombre_completo"]}
+                fieldsToShow={["numero", "nombre_completo"]}
+                nameInput={["numero", "nombre_completo"]}
                 titulo={"Inicio: "}
                 setItem={setAlumnos1}
                 token={session.user.token}
@@ -217,8 +215,8 @@ function AlumnosPorClase() {
               />
               <BuscarCat
                 table="alumnos"
-                fieldsToShow={["id", "nombre_completo"]}
-                nameInput={["id", "nombre_completo"]}
+                fieldsToShow={["numero", "nombre_completo"]}
+                nameInput={["numero", "nombre_completo"]}
                 titulo={"Fin:"}
                 setItem={setAlumnos2}
                 token={session.user.token}

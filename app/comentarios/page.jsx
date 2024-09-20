@@ -34,7 +34,7 @@ function Comentarios() {
   const [currentID, setCurrentId] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
-  const [busqueda, setBusqueda] = useState({ tb_id: "", tb_comentario1: "" });
+  const [busqueda, setBusqueda] = useState({ tb_numero: "", tb_comentario1: "" });
 useEffect(() => {
   if (status === "loading" || !session) {
     return;
@@ -61,7 +61,7 @@ useEffect(() => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      id: formaComentarios.id,
+      numero: formaComentarios.numero,
       comentario_1: formaComentarios.comentario_1,
       comentario_2: formaComentarios.comentario_2,
       comentario_3: formaComentarios.comentario_3,
@@ -70,7 +70,7 @@ useEffect(() => {
   });
   useEffect(() => {
     reset({
-      id: formaComentarios.id,
+      numero: formaComentarios.numero,
       comentario_1: formaComentarios.comentario_1,
       comentario_2: formaComentarios.comentario_2,
       comentario_3: formaComentarios.comentario_3,
@@ -78,14 +78,14 @@ useEffect(() => {
     });
   }, [formaComentarios, reset]);
   const Buscar = () => {
-    const {tb_id, tb_comentario1} = busqueda;
+    const {tb_numero, tb_comentario1} = busqueda;
 
-    if (tb_id === "" && tb_comentario1 === ""){
+    if (tb_numero === "" && tb_comentario1 === ""){
       setFormaComentariosFiltrados(formasComentarios);
       return;
     }
     const infoFiltrada = formasComentarios.filter((formaComentarios) => {
-      const coincideID = tb_id ? formaComentarios["id"].toString().includes(tb_id) : true;
+      const coincideID = tb_numero ? formaComentarios["numero"].toString().includes(tb_numero) : true;
       const coincideComentario1 = tb_comentario1 ?
         formaComentarios["comentario_1"]
         .toString()
@@ -98,7 +98,7 @@ useEffect(() => {
   };
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
-    setBusqueda({ tb_id: "", tb_comentario1: "" });
+    setBusqueda({ tb_numero: "", tb_comentario1: "" });
   };
 
   const handleVerClick = () => {
@@ -118,7 +118,7 @@ useEffect(() => {
       if (!doc.tiene_encabezado) {
         doc.imprimeEncabezadoPrincipalH();
         doc.nextRow(12);
-        doc.ImpPosX("id", 15, doc.tw_ren);
+        doc.ImpPosX("Id", 15, doc.tw_ren);
         doc.ImpPosX("Comentario 1", 30, doc.tw_ren);
         doc.ImpPosX("Comentario 2", 110, doc.tw_ren);
         doc.ImpPosX("Comentario 3", 190, doc.tw_ren);
@@ -136,7 +136,7 @@ useEffect(() => {
 
     Enca1(reporte);
     body.forEach((comentarios) => {
-      reporte.ImpPosX(comentarios.id.toString(), 15, reporte.tw_ren, 10);
+      reporte.ImpPosX(comentarios.numero.toString(), 15, reporte.tw_ren, 10);
       reporte.ImpPosX(
         comentarios.comentario_1.toString(),
         30,
@@ -155,7 +155,8 @@ useEffect(() => {
         reporte.tw_ren,
         40
       );
-      reporte.ImpPosX(comentarios.generales.toString(), 270, reporte.tw_ren, 5);
+      let resultado = (comentarios.generales == 1) ? "Si" : (comentarios.generales == 0) ? "No": "No valido";
+      reporte.ImpPosX(resultado.toString(),270,reporte.tw_ren, 5);
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRenH) {
         reporte.pageBreakH();
@@ -184,7 +185,7 @@ useEffect(() => {
     setCurrentId("");
     const { token } = session.user;
     reset({
-      id: "",
+      numero: "",
       comentario_1: "",
       comentario_2: "",
       comentario_3: "",
@@ -193,7 +194,7 @@ useEffect(() => {
     let siguienteId = await siguiente(token);
     siguienteId = Number(siguienteId) + 1;
     setCurrentId(siguienteId);
-    setFormaComentarios({ id: siguienteId });
+    setFormaComentarios({ numero: siguienteId });
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);
@@ -223,7 +224,7 @@ useEffect(() => {
 
       body: formaComentariosFiltrados,
       columns: [
-        { header: "Id", dataKey: "id" },
+        { header: "Id", dataKey: "numero" },
         { header: "Comentario 1", dataKey: "comentario_1" },
         { header: "Comentario 2", dataKey: "comentario_2" },
         { header: "Comentario 3", dataKey: "comentario_3" },
@@ -238,7 +239,7 @@ useEffect(() => {
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
     const dataj = JSON.stringify(data);
-    data.id = currentID;
+    data.numero = currentID;
     let res = null;
     if (accion === "Eliminar") {
       showModal(false);
@@ -267,24 +268,24 @@ useEffect(() => {
         }
       }
       if (accion === "Eliminar" || accion === "Editar") {
-        const index = formasComentarios.findIndex((fp) => fp.id === data.id);
+        const index = formasComentarios.findIndex((fp) => fp.numero === data.numero);
         if (index !== -1) {
           if (accion === "Eliminar") {
             const fpFiltrados = formasComentarios.filter(
-              (fp) => fp.id !== data.id
+              (fp) => fp.numero !== data.numero
             );
             setFormasComentarios(fpFiltrados);
             setFormaComentariosFiltrados(fpFiltrados);
           } else {
             if (bajas) {
               const fpFiltrados = formasComentarios.filter(
-                (fp) => fp.id !== data.id
+                (fp) => fp.numero !== data.numero
               );
               setFormasComentarios(fpFiltrados);
               setFormaComentariosFiltrados(fpFiltrados);
             } else {
               const fpActualizadas = formasComentarios.map((fp) =>
-                fp.id === currentID ? { ...fp, ...data } : fp
+                fp.numero === currentID ? { ...fp, ...data } : fp
               );
               setFormasComentarios(fpActualizadas);
               setFormaComentariosFiltrados(fpActualizadas);
@@ -309,7 +310,7 @@ useEffect(() => {
     event.preventDefault;
     setBusqueda((estadoPrevio) => ({
       ...estadoPrevio,
-      [event.target.id]: event.target.value,
+      [event.target.numero]: event.target.value,
     }));
   };
 

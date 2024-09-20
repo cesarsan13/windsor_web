@@ -46,13 +46,13 @@ export const ImprimirPDF = (configuracion) => {
   const { body } = configuracion;
   Enca1(newPDF);
   body.forEach((alumnos) => {
-    const id = calculaDigitoBvba((alumnos.id || '').toString() || '');
+    const id = calculaDigitoBvba((alumnos.numero || '').toString() || '');
     const nombre = `${(alumnos.a_nombre || '')} ${(alumnos.a_paterno || '')} ${(alumnos.a_materno || '')}`.substring(0, 50);
     const estatus = ((alumnos.estatus || '')).toString().substring(0, 12);
     const fecha_nac = ((alumnos.fecha_nac || '')).toString().substring(0, 15);
     const horario_1_nombre = ((alumnos.horario_1_nombre || '')).toString().substring(0, 15);
-    const telefono = ((alumnos.telefono_1 || '')).toString().substring(0, 15);
-    newPDF.ImpPosX(`${alumnos.id}-${id}`, 15, newPDF.tw_ren);
+    const telefono = ((alumnos.telefono1 || '')).toString().substring(0, 15);
+    newPDF.ImpPosX(`${alumnos.numero}-${id}`, 15, newPDF.tw_ren);
     newPDF.ImpPosX(nombre, 25, newPDF.tw_ren);
     newPDF.ImpPosX(estatus, 105, newPDF.tw_ren);
     newPDF.ImpPosX(fecha_nac, 125, newPDF.tw_ren);
@@ -81,11 +81,11 @@ export const ImprimirExcel = (configuracion) => {
   body.forEach((alumno) => {
     newBody.push({
       ...alumno,
-      id: `${alumno.id}-${calculaDigitoBvba(alumno.id.toString())}`
+      id: `${alumno.numero}-${calculaDigitoBvba(alumno.numero.toString())}`
     });
     if (alumno.baja === '*') {
       newBody.push({
-        id: '',
+        numero: '',
         nombre: '',
         estatus: '',
         fecha_nac: ((`Fecha de Baja: ${alumno.fecha_baja}` || '')).toString(),
