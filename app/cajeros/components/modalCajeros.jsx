@@ -106,7 +106,7 @@ function ModalCajeros({
                 errors={errors}
                 register={register}
                 message={"nombre requerido"}
-                maxLenght={45}
+                maxLenght={35}
                 isDisabled={isDisabled}
               />
               <Inputs
@@ -121,7 +121,7 @@ function ModalCajeros({
                 errors={errors}
                 register={register}
                 message={"direccion requerida"}
-                maxLenght={35}
+                maxLenght={50}
                 isDisabled={isDisabled}
               />
               <Inputs
@@ -151,7 +151,7 @@ function ModalCajeros({
                 errors={errors}
                 register={register}
                 message={"estado requerido"}
-                maxLenght={25}
+                maxLenght={30}
                 isDisabled={isDisabled}
               />
               <Inputs
@@ -166,7 +166,7 @@ function ModalCajeros({
                 errors={errors}
                 register={register}
                 message={"telefono requerido"}
-                maxLenght={10}
+                maxLenght={20}
                 isDisabled={isDisabled}
               />
               <Inputs
@@ -176,12 +176,12 @@ function ModalCajeros({
                 className={"grow"}
                 Titulo={"Fax: "}
                 type={"text"}
-                requerido={false}
+                requerido={true}
                 isNumero={false}
                 errors={errors}
                 register={register}
                 message={"fax requerido"}
-                maxLenght={12}
+                maxLenght={20}
                 isDisabled={isDisabled}
               />
               <Inputs
@@ -196,7 +196,7 @@ function ModalCajeros({
                 errors={errors}
                 register={register}
                 message={"correo requerido"}
-                maxLenght={45}
+                maxLenght={40}
                 isDisabled={isDisabled}
               />
               <Inputs
@@ -206,12 +206,12 @@ function ModalCajeros({
                 className={"grow"}
                 Titulo={"Clave Cajero: "}
                 type={"password"}
-                requerido={false}
+                requerido={true}
                 isNumero={false}
                 errors={errors}
                 register={register}
                 message={"Clave requerida"}
-                maxLenght={20}
+                maxLenght={8}
                 isDisabled={isDisabled}
               />
             </div>
