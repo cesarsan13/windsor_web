@@ -47,6 +47,7 @@ function Productos() {
     const fetchData = async () => {
       setisLoading(true);
       const { token } = session.user;
+      console.log(token);
       const data = await getProductos(token, bajas);
       setProductos(data);
       setProductosFiltrados(data);
@@ -228,7 +229,25 @@ function Productos() {
       }
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
-    }
+    } else {
+      const alertText = res.alert_text.ref ? res.alert_text.ref.join(", ") : "Error desconocido";
+      showModal(false);
+      const confirmed = await confirmSwal(
+        res.alert_title,
+        alertText,
+        res.alert_icon,
+        "Aceptar",
+        "Cancelar"
+      );
+      if (!confirmed) {
+        showModal(true);
+        return;
+      } else {
+        showModal(true);
+        return;
+      }
+
+    };
   });
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
