@@ -15,7 +15,7 @@ function Inputs({
   maxLenght,
   isDisabled,
   handleBlur,
-  arreglos,
+  generales,
 }) {
   if (type === "select") {
     return (
@@ -33,7 +33,7 @@ function Inputs({
             })}
             disabled={isDisabled}
           >
-            {arreglos.map((arreglo) => (
+            {generales.map((arreglo) => (
               <option
                 className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]"
                 key={arreglo.id}

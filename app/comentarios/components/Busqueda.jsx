@@ -16,7 +16,7 @@ function Busqueda({
     <div className="grid grid-cols-3 md:grid-cols-12 gap-2">
       <div className="col-span-1 md:col-span-2">
         <input
-          id="tb_id"
+          id="tb_numero"
           className="input input-bordered text-right input-md join-item w-full max-w-lg dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600"
           placeholder="Id..."
           onChange={(event) => handleBusquedaChange(event)}
@@ -24,7 +24,7 @@ function Busqueda({
             soloEnteros(evt);
             handleKeyDown(evt);
           }}
-          value={busqueda.tb_id}
+          value={busqueda.tb_numero}
         />
       </div>
       <div className="col-span-2 md:col-span-4">
