@@ -19,17 +19,18 @@ function TablaAlumnos({
   setcondicion,
 }) {
   const tableAction = async (evt, alumno, accion) => {
-    const imagenUrl = await getFotoAlumno(session.user.token, alumno.imagen);
+    const imagenUrl = await getFotoAlumno(session.user.token, alumno.ruta_foto);
     if (imagenUrl) {
       setCapturedImage(imagenUrl);
     }
-    let ref = "100910" + poneCeros(alumno.id, 4);
+    let ref = "100910" + poneCeros(alumno.numero, 4);
     let digitoBvba = calculaDigitoBvba(ref);
     let resultado = `${ref}${digitoBvba}`;
     alumno.referencia = resultado;
+    console.log("holaaaaa", alumno.sexo);
     setAlumno(alumno);
     setAccion(accion);
-    setCurrentId(alumno.id);
+    setCurrentId(alumno.numero);
     showModal(true);
     setcondicion(false);
   };
@@ -40,7 +41,7 @@ function TablaAlumnos({
         <table className="table table-sm table-zebra w-full">
           <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
             <tr>
-            <th className="sm:w-[10%]"></th>
+              <th className="sm:w-[10%]"></th>
               <td className="w-[40%]">Nombre</td>
               <td className="sm:table-cell">Grado</td>
               <th className="w-[30%] sm:w-[10%]">Acciones</th>
@@ -48,42 +49,41 @@ function TablaAlumnos({
           </thead>
           <tbody>
             {alumnosFiltrados.map((item) => (
-              <tr key={item.id} className="hover:cursor-pointer">
-                <th className={
+              <tr key={item.numero} className="hover:cursor-pointer">
+                <th
+                  className={
                     typeof item.comision === "number"
                       ? "text-left"
                       : "text-right"
                   }
                 >
-                  {item.id}
+                  {item.numero}
                 </th>
                 <td className="w-[40%]">{`${item.a_nombre} ${item.a_paterno} ${item.a_materno}`}</td>
-                <td className=" sm:table-cell">
-                  {item.horario_1_nombre}
-                </td>
+                <td className=" sm:table-cell">{item.horario_1_nombre}</td>
                 <th className="w-[25%] sm:w-[10%]">
                   <div className="flex flex-row space-x-1 sm:space-x-3">
                     <div
                       className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                      data-tip={`Ver ${item.id}`}
+                      data-tip={`Ver ${item.numero}`}
                       onClick={(evt) => tableAction(evt, item, `Ver`)}
                     >
-                        <Image src={iconos.ver} alt="Editar" />
-                        </div>
+                      <Image src={iconos.ver} alt="Editar" />
+                    </div>
                     <div
                       className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                      data-tip={`Editar ${item.id}`}
+                      data-tip={`Editar ${item.numero}`}
                       onClick={(evt) => tableAction(evt, item, `Editar`)}
                     >
-                        <Image src={iconos.editar} alt="Editar" />
-                        </div>
+                      <Image src={iconos.editar} alt="Editar" />
+                    </div>
                     <div
                       className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                      data-tip={`Eliminar  ${item.id}`}
+                      data-tip={`Eliminar  ${item.numero}`}
                       onClick={(evt) => tableAction(evt, item, "Eliminar")}
                     >
-                        <Image src={iconos.eliminar} alt="Editar" />
-                        </div>
+                      <Image src={iconos.eliminar} alt="Editar" />
+                    </div>
                   </div>
                 </th>
               </tr>

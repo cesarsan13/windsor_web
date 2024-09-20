@@ -111,11 +111,11 @@ function Pagos_1() {
         setFormaPago(dataF);
         setCargado(true);
       }
-      // if (!validar) {
-      //   showModal(true);
-      // } else {
-      //   showModal(false);
-      // }
+      if (!validar) {
+        showModal(true);
+      } else {
+        showModal(false);
+      }
       setisLoading(false);
     };
     fetchData();
@@ -482,13 +482,13 @@ function Pagos_1() {
     if (evt.target.value === "") return;
     datatype === "int"
       ? setPago((pago) => ({
-        ...pago,
-        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-      }))
+          ...pago,
+          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+        }))
       : setPago((pago) => ({
-        ...pago,
-        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-      }));
+          ...pago,
+          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+        }));
   };
 
   const handleKeyDown = (event) => {
@@ -521,7 +521,6 @@ function Pagos_1() {
   return (
     <>
       <div className="h-[83vh] max-h-[83vh] container w-full bg-slate-100 rounded-3xl shadow-xl px-3 dark:bg-slate-700 overflow-y-auto">
-
         <ModalCajeroPago
           session={session}
           validarClaveCajero={validarClaveCajero}
@@ -583,7 +582,7 @@ function Pagos_1() {
                 errors={errors}
                 maxLength={15}
                 isDisabled={false}
-              // setValue={setFecha}
+                // setValue={setFecha}
               />
             </div>
 
@@ -793,7 +792,6 @@ function Pagos_1() {
       </div>
     </>
   );
-
 }
 
 export default Pagos_1;

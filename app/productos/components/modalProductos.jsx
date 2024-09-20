@@ -26,23 +26,23 @@ function ModalProductos({
       accion === "Alta"
         ? `Nuevo Producto: ${currentID}`
         : accion === "Editar"
-        ? `Editar Producto: ${currentID}`
-        : accion === "Eliminar"
-        ? `Eliminar Producto: ${currentID}`
-        : `Ver Producto: ${currentID}`
+          ? `Editar Producto: ${currentID}`
+          : accion === "Eliminar"
+            ? `Eliminar Producto: ${currentID}`
+            : `Ver Producto: ${currentID}`
     );
   }, [accion]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
       ? setProducto((producto) => ({
-          ...producto,
-          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-        }))
+        ...producto,
+        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+      }))
       : setProducto((producto) => ({
-          ...producto,
-          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-        }));
+        ...producto,
+        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+      }));
   };
   return (
     <dialog id="my_modal_3" className="modal">
@@ -85,7 +85,7 @@ function ModalProductos({
                 errors={errors}
                 register={register}
                 message={"Descripción requerido"}
-                maxLenght={255}
+                maxLenght={30}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
 
@@ -102,7 +102,7 @@ function ModalProductos({
                 errors={errors}
                 register={register}
                 message={"Referencia requerido"}
-                maxLenght={20}
+                maxLenght={3}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
 
@@ -118,7 +118,7 @@ function ModalProductos({
                 errors={errors}
                 register={register}
                 message={"Frecuencia requerido"}
-                maxLenght={20}
+                maxLenght={6}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
               />
@@ -133,7 +133,7 @@ function ModalProductos({
                 errors={errors}
                 register={register}
                 message={"Aplicación requerido"}
-                maxLenght={25}
+                maxLenght={34}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
               />
@@ -143,7 +143,7 @@ function ModalProductos({
                 tamañolabel={"w-3/6"}
                 className={" w-2/6 grow text-right"}
                 Titulo={"Costo:"}
-                type={"text"}
+                type={"float"}
                 requerido={true}
                 errors={errors}
                 register={register}
@@ -158,7 +158,7 @@ function ModalProductos({
                 tamañolabel={"w-3/6"}
                 className={" w-2/6 grow text-right"}
                 Titulo={"Recargos:"}
-                type={"text"}
+                type={"float"}
                 requerido={true}
                 errors={errors}
                 register={register}
@@ -173,7 +173,7 @@ function ModalProductos({
                 tamañolabel={"w-3/6"}
                 className={" w-2/6 grow text-right"}
                 Titulo={"IVA:"}
-                type={"text"}
+                type={"float"}
                 requerido={true}
                 errors={errors}
                 register={register}
@@ -188,7 +188,7 @@ function ModalProductos({
                 tamañolabel={"w-3/6"}
                 className={" w-2/6 grow text-right"}
                 Titulo={"Condición:"}
-                type={"text"}
+                type={"int"}
                 requerido={true}
                 errors={errors}
                 register={register}
@@ -208,7 +208,7 @@ function ModalProductos({
                 errors={errors}
                 register={register}
                 message={"Cambia precio requerido"}
-                maxLenght={10}
+                maxLenght={1}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
               />
@@ -216,11 +216,10 @@ function ModalProductos({
           </fieldset>
           <div className=" modal-action">
             <div
-              className={`tooltip tooltip-top my-5 ${
-                accion === "Ver"
-                  ? "hover:cursor-not-allowed hidden"
-                  : "hover:cursor-pointer"
-              }`}
+              className={`tooltip tooltip-top my-5 ${accion === "Ver"
+                ? "hover:cursor-not-allowed hidden"
+                : "hover:cursor-pointer"
+                }`}
               data-tip="Guardar"
             >
               <button
