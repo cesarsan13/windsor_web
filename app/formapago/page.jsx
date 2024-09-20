@@ -61,7 +61,7 @@ function FormaPago() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      id: formaPago.id,
+      numero: formaPago.numero,
       descripcion: formaPago.descripcion,
       comision: formaPago.comision,
       aplicacion: formaPago.aplicacion,
@@ -70,7 +70,7 @@ function FormaPago() {
   });
   useEffect(() => {
     reset({
-      id: formaPago.id,
+      numero: formaPago.numero,
       descripcion: formaPago.descripcion,
       comision: formaPago.comision,
       aplicacion: formaPago.aplicacion,
@@ -85,7 +85,7 @@ function FormaPago() {
     }
     const infoFiltrada = formasPago.filter((formapago) => {
       const coincideId = tb_id
-        ? formapago["id"].toString().includes(tb_id)
+        ? formapago["numero"].toString().includes(tb_id)
         : true;
       const coincideDescripcion = tb_desc
         ? formapago.descripcion.toLowerCase().includes(tb_desc.toLowerCase())
@@ -104,7 +104,7 @@ function FormaPago() {
     setCurrentId("");
     const { token } = session.user;
     reset({
-      id: "",
+      numero: "",
       descripcion: "",
       comision: "",
       aplicacion: "",
@@ -113,7 +113,7 @@ function FormaPago() {
     let siguienteId = await siguiente(token);
     siguienteId = Number(siguienteId) + 1;
     setCurrentId(siguienteId);
-    setFormaPago({ id: siguienteId });
+    setFormaPago({ numero: siguienteId });
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);
@@ -150,20 +150,20 @@ function FormaPago() {
         }
       }
       if (accion === "Eliminar" || accion === "Editar") {
-        const index = formasPago.findIndex((fp) => fp.id === data.id);
+        const index = formasPago.findIndex((fp) => fp.numero === data.numero);
         if (index !== -1) {
           if (accion === "Eliminar") {
-            const fpFiltrados = formasPago.filter((fp) => fp.id !== data.id);
+            const fpFiltrados = formasPago.filter((fp) => fp.numero !== data.numero);
             setFormasPago(fpFiltrados);
             setFormaPagosFiltrados(fpFiltrados);
           } else {
             if (bajas) {
-              const fpFiltrados = formasPago.filter((fp) => fp.id !== data.id);
+              const fpFiltrados = formasPago.filter((fp) => fp.numero !== data.numero);
               setFormasPago(fpFiltrados);
               setFormaPagosFiltrados(fpFiltrados);
             } else {
               const fpActualizadas = formasPago.map((fp) =>
-                fp.id === currentID ? { ...fp, ...data } : fp
+                fp.numero === currentID ? { ...fp, ...data } : fp
               );
               setFormasPago(fpActualizadas);
               setFormaPagosFiltrados(fpActualizadas);
@@ -215,7 +215,7 @@ function FormaPago() {
       },
       body: formaPagosFiltrados,
       columns: [
-        { header: "Numero", dataKey: "id" },
+        { header: "Numero", dataKey: "numero" },
         { header: "Descripcion", dataKey: "descripcion" },
         { header: "Comision", dataKey: "comision" },
         { header: "Aplicacion", dataKey: "aplicacion" },
@@ -254,7 +254,7 @@ function FormaPago() {
     const reporte = new ReportePDF(configuracion);
     Enca1(reporte);
     formaPagosFiltrados.forEach((producto) => {
-      reporte.ImpPosX(producto.id.toString(), 14, reporte.tw_ren);
+      reporte.ImpPosX(producto.numero.toString(), 14, reporte.tw_ren);
       reporte.ImpPosX(producto.descripcion.toString(), 28, reporte.tw_ren);
       reporte.ImpPosX(producto.comision.toString(), 128, reporte.tw_ren);
       reporte.ImpPosX(producto.aplicacion.toString(), 152, reporte.tw_ren);
