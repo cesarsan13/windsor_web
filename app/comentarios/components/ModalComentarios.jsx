@@ -49,8 +49,8 @@ function ModalComentarios({
 
 
   const generales = [
-    { id: "1", descripcion: "Si" },
-    { id: "0", descripcion: "No" }
+    { id: 1, descripcion: "Si" },
+    { id: 0, descripcion: "No" }
   ];
 
   return (
