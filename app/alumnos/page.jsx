@@ -305,6 +305,7 @@ function Alumnos() {
     setCurrentId("");
     setCapturedImage(null);
     const { token } = session.user;
+
     reset({
       id: 0,
       nombre: "",
@@ -397,11 +398,10 @@ function Alumnos() {
       referencia: 0,
       baja: "",
     });
-
     let siguienteId = await getLastAlumnos(token);
     siguienteId = Number(siguienteId + 1);
     setCurrentId(siguienteId);
-    setAlumno({ id: siguienteId });
+    setAlumno({ numero: siguienteId });
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);
@@ -455,9 +455,10 @@ function Alumnos() {
     const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${
       data.a_nombre || ""
     }`.trim();
+    data.nombre = nombreCompleto;
     const formData = new FormData();
     formData.append("numero", data.id || "");
-    formData.append("nombre", nombreCompleto || "");
+    formData.append("nombre", data.nombre || "");
     formData.append("a_paterno", data.a_paterno || "");
     formData.append("a_materno", data.a_materno || "");
     formData.append("a_nombre", data.a_nombre || "");
@@ -558,7 +559,9 @@ function Alumnos() {
     res = await guardarAlumnos(session.user.token, formData, accion, data.id);
     if (res.status) {
       if (accion === "Alta") {
-        const nuevosAlumnos = { currentID, ...data };
+        const nuevosAlumnos = { ...data };
+        console.log("nuevos alimnos ", nuevosAlumnos);
+        console.log("data ", data);
         setAlumnos([...alumnos, nuevosAlumnos]);
         if (!bajas) {
           setAlumnosFiltrados([...alumnosFiltrados, nuevosAlumnos]);
