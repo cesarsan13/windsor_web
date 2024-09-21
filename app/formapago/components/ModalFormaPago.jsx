@@ -36,7 +36,7 @@ function ModalFormaPago({
         ? `Eliminar Forma de Pago: ${currentID}`
         : `Ver Forma de Pago: ${currentID}`
     );
-  }, [accion]);
+  }, [accion,currentID]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"

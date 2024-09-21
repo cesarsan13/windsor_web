@@ -294,7 +294,7 @@ function FormaPago() {
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
-        Excel={ImprimirExcel}
+        Excel={ImprimeExcel}
       />
 
 <div className="h-[83vh] max-h-[83vh] container w-full bg-slate-100 rounded-3xl shadow-xl px-3 dark:bg-slate-700 overflow-y-auto">

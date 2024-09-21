@@ -83,7 +83,7 @@ export const Imprimir = (configuracion) => {
   const { body } = configuracion;
   Enca1(newPDF);
   body.forEach((cajero) => {
-    newPDF.ImpPosX(cajero.id.toString(), 14, newPDF.tw_ren, 10);
+    newPDF.ImpPosX(cajero.numero.toString(), 14, newPDF.tw_ren, 10);
     newPDF.ImpPosX(cajero.descripcion.toString(), 28, newPDF.tw_ren, 50);
     newPDF.ImpPosX(cajero.comision.toString(), 132, newPDF.tw_ren, 50);
     newPDF.ImpPosX(cajero.aplicacion.toString(), 152, newPDF.tw_ren, 50);
