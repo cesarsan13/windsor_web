@@ -245,9 +245,9 @@ function AlumnosPorClase() {
                       <input
                         type="radio"
                         name="ordenar"
-                        value="id"
+                        value="numero"
                         onChange={handleCheckChange}
-                        checked={selectedOption === "id"}
+                        checked={selectedOption === "numero"}
                         className="radio checked:bg-blue-500"
                       />
                     </label>

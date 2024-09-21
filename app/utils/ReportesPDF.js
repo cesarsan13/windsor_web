@@ -163,7 +163,7 @@ export class ReportePDF {
       this.setFontSize(10);
       this.ImpPosX(Encabezado.Nombre_Usuario, 35, this.tw_ren);
       const date = new Date();
-      const dateStr = formatDate(date);
+      const dateStr = formatFecha(date);
       const timeStr = formatTime(date);
       this.setTw_Ren(16);
       this.ImpPosX(`Fecha: ${dateStr}`, 250, this.tw_ren);
