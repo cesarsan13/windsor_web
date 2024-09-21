@@ -15,124 +15,30 @@ function Inputs({
   maxLenght,
   isDisabled,
   handleBlur,
-  handleChange,
-  handleKeyDown,
-  data,
-  step,
 }) {
-  return type === "select" ? (
+  return (
     <div className="flex flex-col">
       <label
-        className={`input  text-black dark:text-white flex items-center ${tamañolabel}`}
+        className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
       >
         {Titulo}
-        <select
-          {...(handleChange && { onChangeCapture: (evt) => handleChange(evt) })}
-          name={name}
-          id={name}
-          className={`text-black dark:text-white ${className}`}
-          {...register(name, {
-            ...(requerido && { required: message }),
-          })}
-        >
-          {data &&
-            (name === "font_nombre"
-              ? Object.entries(data).map(([key, value]) => (
-                <option key={key} value={value}>
-                  {value}
-                </option>
-              ))
-              : name === "idlabel"
-                ? data.map((object, index) => (
-                  <option
-                    key={index}
-                    value={object.numero_dato}
-                    data-key={index}
-                  >
-                    Texto {object.numero_dato}
-                  </option>
-                ))
-                : Object.entries(data).map(([key, value]) => (
-                  <option key={key} value={key}>
-                    {value}
-                  </option>
-                )))}
-        </select>
-      </label>
-      {errors[name] && (
-        <span className="text-red-500 text-sm mt-2">
-          {errors[name].message}
-        </span>
-      )}
-    </div>
-  ) : type === "checkbox" ? (
-    <div className="flex flex-col">
-      <label className={`flex items-center  ${tamañolabel}`}>
-        {Titulo}
         <input
-          {...(handleChange && { onChangeCapture: (evt) => handleChange(evt) })}
-          name={name}
-          id={name}
-          type={type}
-          className={className}
-          {...register(name, {
-            ...(requerido && { required: message }),
-          })}
-          disabled={isDisabled}
-        />
-      </label>
-      {errors[name] && (
-        <span className="text-red-500 text-sm mt-2">
-          {errors[name].message}
-        </span>
-      )}
-    </div>
-  ) : type === 'number_enter' ? (
-    <div className="flex flex-col">
-      <label className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}>
-        {Titulo}
-        <input
-          {...(step && { step: step })}
-          {...(maxLenght !== 0 && { maxLength: maxLenght })}
-          name={name}
-          id={name}
-          type={"number"}
-          className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 ${className}`}
-          // {...(dataType === "int" && { onKeyDown: soloEnteros })}
-          // {...(dataType === "float" && { onKeyDown: soloDecimales })}
-          {...register(name, {
-            ...(requerido && { required: message }),
-          })}
-          disabled={isDisabled}
-          onKeyDown={(evt) => handleKeyDown(evt)}
-        />
-      </label>
-      {errors[name] && (
-        <span className="text-red-500 text-sm mt-2">
-          {errors[name].message}
-        </span>
-      )}
-    </div>
-  ) : (
-    <div className="flex flex-col">
-      <label className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}>
-        {Titulo}
-        <input
-          {...(step && { step: step })}
-          {...(handleChange && { onChangeCapture: (evt) => handleChange(evt) })}
           {...(maxLenght !== 0 && { maxLength: maxLenght })}
           name={name}
           id={name}
           type={type}
-          className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 ${className}`}
+          className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700  ${className}`}
           {...(dataType === "int" && { onKeyDown: soloEnteros })}
           {...(dataType === "float" && { onKeyDown: soloDecimales })}
           {...register(name, {
+            maxLength: {
+              value: maxLenght,
+              message: `El campo ${name} no puede tener más de ${maxLenght} caracteres`,
+            },
             ...(requerido && { required: message }),
           })}
           {...(dataType === "int" ||
-            (dataType === "float" &&
-              handleBlur && {
+            (dataType === "float" && {
               onBlur: (event) => handleBlur(event, dataType),
             }))}
           disabled={isDisabled}

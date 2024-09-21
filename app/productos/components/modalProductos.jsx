@@ -31,7 +31,7 @@ function ModalProductos({
             ? `Eliminar Producto: ${currentID}`
             : `Ver Producto: ${currentID}`
     );
-  }, [accion]);
+  }, [accion, currentID]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
@@ -62,7 +62,7 @@ function ModalProductos({
             <div className="container flex flex-col space-y-5">
               <Inputs
                 dataType={"int"}
-                name={"id"}
+                name={"numero"}
                 tamañolabel={"w-2/6"}
                 className={"w-3/6 text-right"}
                 Titulo={"Numero: "}
@@ -154,7 +154,7 @@ function ModalProductos({
               />
               <Inputs
                 dataType={"float"}
-                name={"pro_recargo"}
+                name={"por_recargo"}
                 tamañolabel={"w-3/6"}
                 className={" w-2/6 grow text-right"}
                 Titulo={"Recargos:"}

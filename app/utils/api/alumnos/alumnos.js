@@ -126,7 +126,7 @@ export const Imprimir = (configuracion) => {
       200,
       newPDF.tw_ren
     );
-    newPDF.ImpPosX(alumnos.telefono_1.toString(), 230, newPDF.tw_ren);
+    newPDF.ImpPosX(alumnos.telefono1.toString(), 230, newPDF.tw_ren);
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRenH) {
       newPDF.pageBreakH();

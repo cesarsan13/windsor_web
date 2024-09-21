@@ -110,7 +110,7 @@ export function formatDate(date) {
   return `${year}/${month}/${day}`;
 }
 export function format_Fecha_String(date) {
-  if (date === "" || date === null || !date) return "";
+  if (date === "" || date === null || !date || date === " ") return "";
   let fechaObj = new Date(date.replace(/\//g, "-"));
   const year = fechaObj.getFullYear();
   const month = String(fechaObj.getMonth() + 1).padStart(2, "0");
