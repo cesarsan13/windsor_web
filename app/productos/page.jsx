@@ -67,11 +67,11 @@ function Productos() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      id: producto.id,
+      numero: producto.numero,
       descripcion: producto.descripcion,
       costo: producto.costo,
       frecuencia: producto.frecuencia,
-      pro_recargo: producto.pro_recargo,
+      por_recargo: producto.por_recargo,
       aplicacion: producto.aplicacion,
       iva: producto.iva,
       cond_1: producto.cond_1,
@@ -81,11 +81,11 @@ function Productos() {
   });
   useEffect(() => {
     reset({
-      id: producto.id,
+      numero: producto.numero,
       descripcion: producto.descripcion,
       costo: producto.costo,
       frecuencia: producto.frecuencia,
-      pro_recargo: producto.pro_recargo,
+      por_recargo: producto.por_recargo,
       aplicacion: producto.aplicacion,
       iva: producto.iva,
       cond_1: producto.cond_1,
@@ -101,7 +101,7 @@ function Productos() {
       return;
     }
     const infoFiltrada = productos.filter((producto) => {
-      const coincideId = tb_id ? producto["id"].toString().includes(tb_id) : true;
+      const coincideId = tb_id ? producto["numero"].toString().includes(tb_id) : true;
       const coincideDescripcion = tb_desc
         ? producto["descripcion"]
           .toString()
@@ -130,11 +130,11 @@ function Productos() {
     setCurrentId("");
     const { token } = session.user;
     reset({
-      id: "",
+      numero: "",
       descripcion: "",
       costo: 0,
       frecuencia: "",
-      pro_recargo: 0,
+      por_recargo: 0,
       aplicacion: "",
       iva: 0,
       cond_1: 0,
@@ -142,9 +142,9 @@ function Productos() {
       ref: "",
     });
     let siguienteId = await getLastProduct(token);
-    siguienteId = Number(siguienteId + 1);
+    siguienteId = parseInt(siguienteId, 10) + 1;
     setCurrentId(siguienteId);
-    setProducto({ id: siguienteId });
+    setProducto({ numero: siguienteId });
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);
@@ -179,7 +179,7 @@ function Productos() {
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
     const dataj = JSON.stringify(data);
-    data.id = currentID;
+    data.numero = currentID;
     let res = null;
     if (accion === "Eliminar") {
       showModal(false);
@@ -206,20 +206,20 @@ function Productos() {
         }
       }
       if (accion === "Eliminar" || accion === "Editar") {
-        const index = productos.findIndex((p) => p.id === data.id);
+        const index = productos.findIndex((p) => p.numero === data.numero);
         if (index !== -1) {
           if (accion === "Eliminar") {
-            const pFiltrados = productos.filter((p) => p.id !== data.id);
+            const pFiltrados = productos.filter((p) => p.numero !== data.numero);
             setProductos(pFiltrados);
             setProductosFiltrados(pFiltrados);
           } else {
             if (bajas) {
-              const pFiltrados = productos.filter((p) => p.id !== data.id);
+              const pFiltrados = productos.filter((p) => p.numero !== data.numero);
               setProductos(pFiltrados);
               setProductosFiltrados(pFiltrados);
             } else {
               const pActualizadas = productos.map((p) =>
-                p.id === currentID ? { ...p, ...data } : p
+                p.numero === currentID ? { ...p, ...data } : p
               );
               setProductos(pActualizadas);
               setProductosFiltrados(pActualizadas);
@@ -230,11 +230,12 @@ function Productos() {
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
     } else {
-      const alertText = res.alert_text.ref ? res.alert_text.ref.join(", ") : "Error desconocido";
+      // const alertText = res.alert_text ? formatValidationErrors(res.alert_text) : "Error desconocido";
+      // console.log(alertText);
       showModal(false);
       const confirmed = await confirmSwal(
         res.alert_title,
-        alertText,
+        res.alert_text,
         res.alert_icon,
         "Aceptar",
         "Cancelar"
@@ -249,6 +250,18 @@ function Productos() {
 
     };
   });
+  const formatValidationErrors = (errors) => {
+    let errorMessages = [];
+    for (const field in errors) {
+      if (errors.hasOwnProperty(field)) {
+        const fieldErrors = errors[field];
+        if (Array.isArray(fieldErrors)) {
+          errorMessages.push(`${field}: ${fieldErrors.join(", ")}`);
+        }
+      }
+    }
+    return errorMessages.join("\n");
+  };
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
     setBusqueda({ tb_id: "", tb_desc: "" });
@@ -275,11 +288,11 @@ function Productos() {
       },
       body: productosFiltrados,
       columns: [
-        { header: "Numero", dataKey: "id" },
+        { header: "Numero", dataKey: "numero" },
         { header: "Descripcion", dataKey: "descripcion" },
         { header: "Costo", dataKey: "costo" },
         { header: "Frecuencia", dataKey: "frecuencia" },
-        { header: "Recargo", dataKey: "pro_recargo" },
+        { header: "Recargo", dataKey: "por_recargo" },
         { header: "Aplicacion", dataKey: "aplicacion" },
         { header: "IVA", dataKey: "iva" },
         { header: "Condicion", dataKey: "cond_1" },
@@ -344,11 +357,11 @@ function Productos() {
     const reporte = new ReportePDF(configuracion, "Landscape");
     Enca1(reporte);
     productosFiltrados.forEach((producto) => {
-      reporte.ImpPosX(producto.id.toString(), 14, reporte.tw_ren);
+      reporte.ImpPosX(producto.numero.toString(), 14, reporte.tw_ren);
       reporte.ImpPosX(producto.descripcion.toString(), 28, reporte.tw_ren);
       reporte.ImpPosX(producto.costo.toString(), 80, reporte.tw_ren);
       reporte.ImpPosX(producto.frecuencia.toString(), 100, reporte.tw_ren);
-      reporte.ImpPosX(producto.pro_recargo.toString(), 130, reporte.tw_ren);
+      reporte.ImpPosX(producto.por_recargo.toString(), 130, reporte.tw_ren);
       reporte.ImpPosX(producto.aplicacion.toString(), 150, reporte.tw_ren);
       reporte.ImpPosX(producto.iva.toString(), 175, reporte.tw_ren);
       reporte.ImpPosX(producto.cond_1.toString(), 190, reporte.tw_ren);
@@ -369,6 +382,15 @@ function Productos() {
   const CerrarView = () => {
     setPdfPreview(false);
     setPdfData("");
+  };
+  const tableAction = (acc, id) => {
+    const producto = productos.find((producto) => producto.numero === id);
+    if (producto) {
+      setProducto(producto);
+      setAccion(acc);
+      setCurrentId(id);
+      showModal(true);
+    }
   };
   if (status === "loading") {
     return (
@@ -428,6 +450,7 @@ function Productos() {
                 setAccion={setAccion}
                 setCurrentId={setCurrentId}
                 formatNumber={formatNumber}
+                tableAction={tableAction}
               />
             </div>
           </div>

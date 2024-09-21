@@ -10,13 +10,9 @@ function TablaProductos({
     setAccion,
     setCurrentId,
     formatNumber,
+    tableAction,
 }) {
-    const tableAction = (evt, producto, accion) => {
-        setProducto(producto);
-        setAccion(accion);
-        setCurrentId(producto.id);
-        showModal(true);
-    };
+
 
     return !isLoading ? (
         <div className="overflow-x-auto mt-3 h-[calc(55vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-3/4">
@@ -36,7 +32,7 @@ function TablaProductos({
                     </thead>
                     <tbody>
                         {productosFiltrados.map((item) => (
-                            <tr key={item.id} className="hover:cursor-pointer">
+                            <tr key={item.numero} className="hover:cursor-pointer">
                                 <th
                                     className={
                                         typeof item.comision === "number"
@@ -44,34 +40,34 @@ function TablaProductos({
                                             : "text-right"
                                     }
                                 >
-                                    {item.id}
+                                    {item.numero}
                                 </th>
                                 <td>{item.descripcion}</td>
                                 <td>{item.aplicacion}</td>
                                 <td className="text-right">{formatNumber(item.costo)}</td>
-                                <td className="text-right">{formatNumber(item.pro_recargo)}</td>
+                                <td className="text-right">{formatNumber(item.por_recargo)}</td>
                                 <td className="text-right">{item.cond_1}</td>
                                 <td className="text-right">{formatNumber(item.iva)}</td>
                                 <th>
                                     <div className="flex flex-row space-x-3">
                                         <div
                                             className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                                            data-tip={`Ver ${item.id}`}
-                                            onClick={(evt) => tableAction(evt, item, `Ver`)}
+                                            data-tip={`Ver ${item.numero}`}
+                                            onClick={(evt) => tableAction(`Ver`, item.numero)}
                                         >
                                             <i className="fa-solid fa-eye"></i>
                                         </div>
                                         <div
                                             className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                                            data-tip={`Editar ${item.id}`}
-                                            onClick={(evt) => tableAction(evt, item, `Editar`)}
+                                            data-tip={`Editar ${item.numero}`}
+                                            onClick={(evt) => tableAction(`Editar`, item.numero)}
                                         >
                                             <i className="fa-solid fa-file"></i>
                                         </div>
                                         <div
                                             className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                                            data-tip={`Eliminar  ${item.id}`}
-                                            onClick={(evt) => tableAction(evt, item, "Eliminar")}
+                                            data-tip={`Eliminar  ${item.numero}`}
+                                            onClick={(evt) => tableAction("Eliminar", item.numero)}
                                         >
                                             <i className="fa-solid fa-trash"></i>
                                         </div>

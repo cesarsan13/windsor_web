@@ -71,6 +71,7 @@ function ModalFormFact({
                 register={register}
                 message={"numero requerido"}
                 isDisabled={true}
+                handleBlur={handleBlur}
               //defaultValue={formaPago.id}
               />
               <Inputs
@@ -84,9 +85,10 @@ function ModalFormFact({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"nombre requerido"}
-                maxLength={50}
+                message={"Nombre requerido"}
+                maxLenght={30}
                 isDisabled={isDisabled}
+                handleBlur={handleBlur}
               //defaultValue={formaPago.descripcion}
               />
               <Inputs
@@ -100,9 +102,10 @@ function ModalFormFact({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"longitud requerido"}
-                maxLength={50}
+                message={"Longitud requerido"}
+                maxLenght={7}
                 isDisabled={isDisabled}
+                handleBlur={handleBlur}
               //defaultValue={formaPago.descripcion}
               />
             </div>
