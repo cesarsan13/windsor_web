@@ -310,7 +310,7 @@ useEffect(() => {
     event.preventDefault;
     setBusqueda((estadoPrevio) => ({
       ...estadoPrevio,
-      [event.target.numero]: event.target.value,
+      [event.target.id]: event.target.value,
     }));
   };
 
