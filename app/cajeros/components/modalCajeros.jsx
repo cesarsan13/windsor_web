@@ -72,6 +72,7 @@ function ModalCajeros({
             </button>
           </div>
           <button
+            type="button"
             className="btn btn-sm btn-circle btn-ghost"
             onClick={() => document.getElementById("my_modal_3").close()}
           >
