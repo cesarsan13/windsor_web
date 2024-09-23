@@ -168,9 +168,7 @@ function Horarios() {
         const index = horarios.findIndex((fp) => fp.numero === data.numero);
         if (index !== -1) {
           if (accion === "Eliminar") {
-            const fpFiltrados = horarios.filter(
-              (fp) => fp.numero !== data.numero
-            );
+            const fpFiltrados = horarios.filter((fp) => fp.numero !== data.numero);
             setHorarios(fpFiltrados);
             setHorariosFiltrados(fpFiltrados);
           } else {
@@ -182,7 +180,7 @@ function Horarios() {
               setHorariosFiltrados(fpFiltrados);
             } else {
               const fpActualizadas = horarios.map((fp) =>
-                fp.nuemro === currentID ? { ...fp, ...data } : fp
+                fp.numero === currentID ? { ...fp, ...data } : fp
               );
               setHorarios(fpActualizadas);
               setHorariosFiltrados(fpActualizadas);
@@ -206,7 +204,7 @@ function Horarios() {
     event.preventDefault;
     setBusqueda((estadoPrevio) => ({
       ...estadoPrevio,
-      [event.target.id]: event.target.value,
+      [event.target.numero]: event.target.value,
     }));
   };
   if (status === "loading") {

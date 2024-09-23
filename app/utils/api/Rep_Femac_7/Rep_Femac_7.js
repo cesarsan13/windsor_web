@@ -112,7 +112,7 @@ export const Imprimir = async (
       si_Imp = incide && incide.Incide >= documento;
 
       if (sinDeudores === true) {
-        const estatus = alumnos.find((alu) => alu.id === alu_Act);
+        const estatus = alumnos.find((alu) => alu.numero === alu_Act);
         if (
           estatus.estatus.toUpperCase() === "DEUDOR" ||
           estatus.estatus.toUpperCase() === "CARTERA"
@@ -123,7 +123,7 @@ export const Imprimir = async (
     }
     if (si_Imp === true) {
       newPDF.ImpPosX(alu_Act.toString(), 14, newPDF.tw_ren);
-      const data = alumnos.find((alu) => alu.id === alu_Act);
+      const data = alumnos.find((alu) => alu.numero === alu_Act);
       nombre = data.nombre;
       newPDF.ImpPosX(nombre.toString(), 28, newPDF.tw_ren);
       newPDF.ImpPosX(doc.producto.toString(), 108, newPDF.tw_ren);
@@ -241,7 +241,7 @@ export const ImprimirExcel = async (
       si_Imp = incide && incide.Incide >= documento;
 
       if (sinDeudores === true) {
-        const estatus = alumnos.find((alu) => alu.id === alu_Act);
+        const estatus = alumnos.find((alu) => alu.numero === alu_Act);
         if (
           estatus.estatus.toUpperCase() === "DEUDOR" ||
           estatus.estatus.toUpperCase() === "CARTERA"
@@ -251,7 +251,7 @@ export const ImprimirExcel = async (
       }
     }
     if (si_Imp === true) {
-      const data = alumnos.find((alu) => alu.id === alu_Act);
+      const data = alumnos.find((alu) => alu.numero === alu_Act);
       Nombre = data.nombre;
       saldo = doc.importe - doc.importe * (doc.descuento / 100);
       saldoTotal += saldo;
