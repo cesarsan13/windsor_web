@@ -1,6 +1,6 @@
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import {format_Fecha_String, formatTime } from "@/app/utils/globalfn";
+import {format_Fecha_String, formatDate, formatFecha, formatTime } from "@/app/utils/globalfn";
 
 export class ReportePDF {
   //constructor del nuevo reporte, acepta un JSON de configuracion
@@ -99,8 +99,8 @@ export class ReportePDF {
       this.setFontSize(10);
       this.ImpPosX(Encabezado.Nombre_Usuario, 35, this.tw_ren);
       const date = new Date();
-      const dateStr = format_Fecha_String(date);
-      console.log("dia", date);
+      const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+      const dateStr = format_Fecha_String(todayDate);
       const timeStr = formatTime(date);
       this.setTw_Ren(16);
       this.ImpPosX(`Fecha: ${dateStr}`, 150, this.tw_ren);
@@ -128,7 +128,7 @@ export class ReportePDF {
       this.setFontSize(10);
       this.ImpPosX(Encabezado.Nombre_Usuario, 35, this.tw_ren);
       const date = new Date();
-      const dateStr = format_Fecha_String(date);
+      const dateStr = formatDate(date);
       const timeStr = formatTime(date);
       this.setTw_Ren(16);
       this.ImpPosX(`Fecha: ${dateStr}`, 250, this.tw_ren);
