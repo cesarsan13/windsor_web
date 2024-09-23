@@ -1,3 +1,4 @@
+import { format_Fecha_String } from "../../globalfn";
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
 
@@ -398,15 +399,17 @@ const Enca1 = (doc) => {
 export const Cobranza = async (token, fecha_inicia, fecha_final, cajero) => {
   const valorFinal = cajero === 0 || cajero === undefined ? 0 : cajero;
   const res = await fetch(
-    `${process.env.DOMAIN_API}api/cobranza/` +
-      fecha_inicia +
-      `/` +
-      fecha_final +
-      `/` +
-      valorFinal,
+    `${process.env.DOMAIN_API}api/cobranza/`,
     {
+      method:"post",
+      body:JSON.stringify({
+        Fecha_Inicial:format_Fecha_String(fecha_inicia),
+        Fecha_Final:format_Fecha_String(fecha_final),
+        cajero:valorFinal
+      }),
       headers: {
-        Authorization: `Bearer ${token}`,
+       Authorization: "Bearer " + token,
+            "Content-Type": "application/json"
       },
     }
   );
