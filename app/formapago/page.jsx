@@ -130,7 +130,7 @@ function FormaPago() {
       showModal(false);
       const confirmed = await confirmSwal(
         "¿Desea Continuar?",
-        "Se eliminara el proveedor seleccionado",
+        "Se eliminara la forma de pago seleccionada",
         "warning",
         "Aceptar",
         "Cancelar"
@@ -153,12 +153,16 @@ function FormaPago() {
         const index = formasPago.findIndex((fp) => fp.numero === data.numero);
         if (index !== -1) {
           if (accion === "Eliminar") {
-            const fpFiltrados = formasPago.filter((fp) => fp.numero !== data.numero);
+            const fpFiltrados = formasPago.filter(
+              (fp) => fp.numero !== data.numero
+            );
             setFormasPago(fpFiltrados);
             setFormaPagosFiltrados(fpFiltrados);
           } else {
             if (bajas) {
-              const fpFiltrados = formasPago.filter((fp) => fp.numero !== data.numero);
+              const fpFiltrados = formasPago.filter(
+                (fp) => fp.numero !== data.numero
+              );
               setFormasPago(fpFiltrados);
               setFormaPagosFiltrados(fpFiltrados);
             } else {
@@ -297,8 +301,8 @@ function FormaPago() {
         Excel={ImprimeExcel}
       />
 
-<div className="h-[83vh] max-h-[83vh] container w-full bg-slate-100 rounded-3xl shadow-xl px-3 dark:bg-slate-700 overflow-y-auto">
-<div className="flex justify-start p-3 ">
+      <div className="h-[83vh] max-h-[83vh] container w-full bg-slate-100 rounded-3xl shadow-xl px-3 dark:bg-slate-700 overflow-y-auto">
+        <div className="flex justify-start p-3 ">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Formas de Pagos.
           </h1>

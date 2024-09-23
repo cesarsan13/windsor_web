@@ -16,7 +16,6 @@ function ModalFormaPago({
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
-  console.log("numero",currentID)
   useEffect(() => {
     if (accion === "Eliminar" || accion === "Ver") {
       setIsDisabled(true);
