@@ -32,7 +32,7 @@ function ModalFormFact({
             ? `Eliminar Factura: ${currentID}`
             : `Ver Factura: ${currentID}`
     );
-  }, [accion]);
+  }, [accion,currentID]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
@@ -61,7 +61,7 @@ function ModalFormFact({
             <div className="container flex flex-col space-y-5">
               <Inputs
                 dataType={"int"}
-                name={"numero"}
+                name={"numero_forma"}
                 tamañolabel={"w-6/12"}
                 className={"w-5/12 rounded block text-right"}
                 Titulo={"Numero: "}
@@ -76,7 +76,7 @@ function ModalFormFact({
               />
               <Inputs
                 dataType={"string"}
-                name={"nombre"}
+                name={"nombre_forma"}
                 tamañolabel={""}
                 className={"rounded block grow"}
                 Titulo={"Nombre: "}

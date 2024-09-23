@@ -16,11 +16,11 @@ function TablaFormFact({
   const tableAction = (evt, formFact, accion) => {
     setFormFact(formFact);
     setAccion(accion);
-    setCurrentId(formFact.numero);
+    setCurrentId(formFact.numero_forma);
     if (evt.target.attributes.name.value !== "btn_actualiza_formato") {
       showModal(true);
     } else {
-      fetchFacturasFormato(formFact.numero);
+      fetchFacturasFormato(formFact.numero_forma);
       setShowSheet(true);
     }
   };
@@ -41,14 +41,14 @@ function TablaFormFact({
             <tbody>
               {formFactsFiltrados.map((item) => (
                 <tr key={item.numero} className="hover:cursor-pointer">
-                  <th className="text-left">{item.numero}</th>
-                  <td className="text-left w-50">{item.nombre}</td>
+                  <th className="text-left">{item.numero_forma}</th>
+                  <td className="text-left w-50">{item.nombre_forma}</td>
                   <td>{item.longitud}</td>
                   <th>
                     <div className="flex flex-row space-x-1">
                       <div
                         className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                        data-tip={`Ver ${item.numero}`}
+                        data-tip={`Ver ${item.numero_forma}`}
                         name="btn_ver"
                         onClick={(evt) => tableAction(evt, item, `Ver`)}
                       >
@@ -59,7 +59,7 @@ function TablaFormFact({
                       </div>
                       <div
                         className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                        data-tip={`Editar ${item.numero}`}
+                        data-tip={`Editar ${item.numero_forma}`}
                         name="btn_editar"
                         onClick={(evt) => tableAction(evt, item, `Editar`)}
                       >
@@ -70,7 +70,7 @@ function TablaFormFact({
                       </div>
                       <div
                         className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                        data-tip={`Eliminar ${item.numero}`}
+                        data-tip={`Eliminar ${item.numero_forma}`}
                         name="btn_elimina"
                         onClick={(evt) => tableAction(evt, item, "Eliminar")}
                       >

@@ -89,15 +89,15 @@ function FormFact() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      numero: formFact.numero,
-      nombre: formFact.nombre,
+      numero_forma: formFact.numero_forma,
+      nombre_forma: formFact.nombre_forma,
       longitud: formFact.longitud,
     },
   });
   useEffect(() => {
     reset({
-      numero: formFact.numero,
-      nombre: formFact.nombre,
+      numero_forma: formFact.numero_forma,
+      nombre_forma: formFact.nombre_forma,
       longitud: formFact.longitud,
     });
   }, [formFact, reset]);
@@ -110,10 +110,10 @@ function FormFact() {
     }
     const infoFiltrada = formFacts.filter((formFact) => {
       const coincideId = tb_id
-        ? formFact["numero"].toString().includes(tb_id)
+        ? formFact["numero_forma"].toString().includes(tb_id)
         : true;
       const coincideDescripcion = tb_desc
-        ? formFact.nombre.toLowerCase().includes(tb_desc.toLowerCase())
+        ? formFact.nombre_forma.toLowerCase().includes(tb_desc.toLowerCase())
         : true;
       return coincideId && coincideDescripcion;
     });
@@ -137,19 +137,19 @@ function FormFact() {
     setCurrentId("");
     const { token } = session.user;
     reset({
-      numero: "",
-      nombre: "",
+      numero_forma: "",
+      nombre_forma: "",
       longitud: "",
     });
     let siguienteId = await siguiente(token);
     siguienteId = Number(siguienteId) + 1;
     setCurrentId(siguienteId);
-    setFormFact({ numero: siguienteId });
+    setFormFact({ numero_forma: siguienteId });
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);
 
-    document.getElementById("nombre").focus();
+    document.getElementById("nombre_forma").focus();
   };
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
@@ -180,24 +180,24 @@ function FormFact() {
         }
       }
       if (accion === "Eliminar" || accion === "Editar") {
-        const index = formFacts.findIndex((c) => c.numero === data.numero);
+        const index = formFacts.findIndex((c) => c.numero_forma === data.numero_forma);
         if (index !== -1) {
           if (accion === "Eliminar") {
             const formFiltrados = formFacts.filter(
-              (c) => c.numero !== data.numero
+              (c) => c.numero_forma !== data.numero_forma
             );
             setFormFacts(formFiltrados);
             setFormFactsFiltrados(formFiltrados);
           } else {
             if (bajas) {
               const formFiltrados = formFacts.filter(
-                (c) => c.numero !== data.numero
+                (c) => c.numero_forma !== data.numero_forma
               );
               setFormFacts(formFiltrados);
               setFormFactsFiltrados(formFiltrados);
             } else {
               const formActualizadas = formFacts.map((c) =>
-                c.numero === currentID ? { ...c, ...data } : c
+                c.numero_forma === currentID ? { ...c, ...data } : c
               );
               setFormFacts(formActualizadas);
               setFormFactsFiltrados(formActualizadas);
