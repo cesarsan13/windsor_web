@@ -69,6 +69,7 @@ function ModalComentarios({
           </h3>
           <fieldset id="fs_comentario">
           <div className="container flex flex-col space-y-5">
+              <fieldset disabled={accion === "Alta" || accion === "Editar" || accion === "Eliminar" || accion=== "Ver" }>
               <Inputs
                 dataType={"int"}
                 name={"numero"}
@@ -80,8 +81,9 @@ function ModalComentarios({
                 errors={errors}
                 register={register}
                 message={"id Requerido"}
-                isDisabled={!isDisabled}
+                isDisabled={isDisabled}
               /> 
+              </fieldset>
               <Inputs
                 dataType={"string"}
                 name={"comentario_1"}
