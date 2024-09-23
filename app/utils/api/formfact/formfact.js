@@ -41,8 +41,8 @@ export const guardaFormFact = async (token, data, accion) => {
   const res = await fetch(`${url_api}`, {
     method: "post",
     body: JSON.stringify({
-      numero: data.numero,
-      nombre: data.nombre,
+      numero_forma: data.numero_forma,
+      nombre_forma: data.nombre_forma,
       longitud: data.longitud,
       baja: data.baja,
     }),
