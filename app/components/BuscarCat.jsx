@@ -38,7 +38,7 @@ function BuscarCat({
       switch (table) {
         case "alumnos":
           fetchedData = await getAlumnos(token, false);
-          setTiutloInput(["Id", "Nombre"]);
+          setTiutloInput(["numero", "Nombre"]);
           break;
         case "productos":
           fetchedData = await getProductos(token, "");

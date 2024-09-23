@@ -20,6 +20,7 @@ import ModalVistaPreviaRepFemac12Anexo4 from "./components/ModalVistaPreviaRepFe
 
 function RepFemac12Anexo() {
   const date = new Date();
+  console.log(date)
   const dateStr = formatDate(date);
   const router = useRouter();
   const { data: session, status } = useSession();
