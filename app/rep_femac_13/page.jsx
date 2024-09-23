@@ -272,9 +272,9 @@ function Rep_Femac_13() {
                     <input
                       type="radio"
                       name="ordenar"
-                      value="id"
+                      value="numero"
                       onChange={handleCheckChange}
-                      checked={sOrdenar === "id"}
+                      checked={sOrdenar === "numero"}
                       className="radio checked:bg-blue-500"
                     />
                   </label>
