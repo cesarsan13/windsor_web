@@ -1,6 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import { formatNumber } from "@/app/utils/globalfn";
+import { format_Fecha_String, formatNumber } from "@/app/utils/globalfn";
 
 export const getConsultasInscripcion = async (token) => {
     let url = `${process.env.DOMAIN_API}api/reportes/rep_inscritos`
@@ -42,15 +42,15 @@ export const verImprimir = async (configuracion) => {
     const { bodyDetalles } = configuracion;
     const { bodyProductos } = configuracion;
     const { bodyHorarios } = configuracion;
-    const { fecha_ini } = configuracion;
-    const { fecha_fin } = configuracion;
+    const fecha_ini = format_Fecha_String(configuracion.fecha_ini);
+    const fecha_fin = format_Fecha_String(configuracion.fecha_fin);
     Enca1(newPDF);
     bodyAlumnos.forEach((alumno) => {
         let det_inscripcion = 0;
         let si_suma = false;
         let fecha_inscripcion = "";
         const detalleEncontrado = bodyDetalles.filter(detalle =>
-            detalle.alumno === alumno.id &&
+            detalle.alumno === alumno.numero &&
             detalle.fecha >= fecha_ini &&
             detalle.fecha <= fecha_fin
         );
@@ -58,10 +58,10 @@ export const verImprimir = async (configuracion) => {
             detalleEncontrado.forEach((detalle) => {
                 const productoEncontrado = bodyProductos.filter(producto =>
                     producto.ref === 'INS' &&
-                    producto.id === detalle.articulo
+                    producto.numero === detalle.articulo
                 );
                 if (productoEncontrado) {
-                    console.log('no entro');
+                    console.log('entro');
                     si_inscrito = true;
                     si_suma = true;
                     det_inscripcion += detalle.precio_unitario * detalle.cantidad;
@@ -71,7 +71,7 @@ export const verImprimir = async (configuracion) => {
             });
             if (si_suma) {
                 const nombre = `${(alumno.a_nombre || '')} ${(alumno.a_paterno || '')} ${(alumno.a_materno || '')}`.substring(0, 50);
-                newPDF.ImpPosX(alumno.id.toString() || '', 15, newPDF.tw_ren);
+                newPDF.ImpPosX(alumno.numero.toString() || '', 15, newPDF.tw_ren);
                 newPDF.ImpPosX(nombre.toString(), 30, newPDF.tw_ren);
                 const horarioEncontrado = bodyHorarios.find(
                     horario => horario.numero === alumno.horario_1
@@ -116,7 +116,7 @@ export const Imprimir = (configuracion) => {
         let si_suma = false;
         let fecha_inscripcion = "";
         const detalleEncontrado = bodyDetalles.filter(detalle =>
-            detalle.alumno === alumno.id &&
+            detalle.alumno === alumno.numero &&
             detalle.fecha >= fecha_ini &&
             detalle.fecha <= fecha_fin
         );
@@ -124,7 +124,7 @@ export const Imprimir = (configuracion) => {
             detalleEncontrado.forEach((detalle) => {
                 const productoEncontrado = bodyProductos.filter(producto =>
                     producto.ref === 'INS' &&
-                    producto.id === detalle.articulo
+                    producto.numero === detalle.articulo
                 );
                 if (productoEncontrado) {
                     console.log('no entro');
@@ -137,7 +137,7 @@ export const Imprimir = (configuracion) => {
             });
             if (si_suma) {
                 const nombre = `${(alumno.a_nombre || '')} ${(alumno.a_paterno || '')} ${(alumno.a_materno || '')}`.substring(0, 50);
-                newPDF.ImpPosX(alumno.id.toString() || '', 15, newPDF.tw_ren);
+                newPDF.ImpPosX(alumno.numero.toString() || '', 15, newPDF.tw_ren);
                 newPDF.ImpPosX(nombre.toString(), 30, newPDF.tw_ren);
                 const horarioEncontrado = bodyHorarios.find(
                     horario => horario.numero === alumno.horario_1
@@ -175,7 +175,7 @@ export const ImprimirExcel = (configuracion) => {
         let si_suma = false;
         let fecha_inscripcion = "";
         const detalleEncontrado = bodyDetalles.filter(detalle =>
-            detalle.alumno === alumno.id &&
+            detalle.alumno === alumno.numero &&
             detalle.fecha >= fecha_ini &&
             detalle.fecha <= fecha_fin
         );
@@ -183,7 +183,7 @@ export const ImprimirExcel = (configuracion) => {
             detalleEncontrado.forEach((detalle) => {
                 const productoEncontrado = bodyProductos.filter(producto =>
                     producto.ref === 'INS' &&
-                    producto.id === detalle.articulo
+                    producto.numero === detalle.articulo
                 );
 
                 if (productoEncontrado) {
@@ -196,7 +196,7 @@ export const ImprimirExcel = (configuracion) => {
             if (si_suma) {
                 const nombreCompleto = `${(alumno.a_nombre || '')} ${(alumno.a_paterno || '')} ${(alumno.a_materno || '')}`.substring(0, 50);
                 newBody.push({
-                    id: alumno.id,
+                    numero: alumno.numero,
                     nombre: nombreCompleto,
                     horario: bodyHorarios.find(horario => horario.numero === alumno.horario_1)?.horario || '',
                     fecha_inscripcion: fecha_inscripcion,
@@ -207,7 +207,7 @@ export const ImprimirExcel = (configuracion) => {
         }
     });
     newBody.push({
-        id: '',
+        numero: '',
         nombre: '',
         horario: '',
         fecha_inscripcion: `Total: ${formatNumber(total_inscripcion) || '0.00'}`,

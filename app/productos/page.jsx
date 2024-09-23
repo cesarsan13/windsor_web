@@ -39,6 +39,8 @@ function Productos() {
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
+  const [disabledNum, setDisableNum] = useState(false);
+  const [num, setNum] = useState("");
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -64,6 +66,8 @@ function Productos() {
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -127,8 +131,8 @@ function Productos() {
   };
 
   const Alta = async (event) => {
-    setCurrentId("");
-    const { token } = session.user;
+    // setCurrentId("");
+    // const { token } = session.user;
     reset({
       numero: "",
       descripcion: "",
@@ -141,10 +145,12 @@ function Productos() {
       cam_precio: false,
       ref: "",
     });
-    let siguienteId = await getLastProduct(token);
-    siguienteId = parseInt(siguienteId, 10) + 1;
-    setCurrentId(siguienteId);
-    setProducto({ numero: siguienteId });
+    // let siguienteId = await getLastProduct(token);
+    // siguienteId = parseInt(siguienteId, 10) + 1;
+    setNum("");
+    setCurrentId("");
+    setDisableNum(false);
+    // setProducto({ numero: "" });
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);
@@ -179,7 +185,7 @@ function Productos() {
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
     const dataj = JSON.stringify(data);
-    data.numero = currentID;
+    // data.numero = currentID;
     let res = null;
     if (accion === "Eliminar") {
       showModal(false);
@@ -195,6 +201,7 @@ function Productos() {
         return;
       }
     }
+    data.numero = num || currentID;
     data = await Elimina_Comas(data);
     res = await guardarProductos(session.user.token, data, accion);
     if (res.status) {
@@ -388,6 +395,8 @@ function Productos() {
     if (producto) {
       setProducto(producto);
       setAccion(acc);
+      setDisableNum(true);
+      setNum(id);
       setCurrentId(id);
       showModal(true);
     }
@@ -408,6 +417,11 @@ function Productos() {
         setProducto={setProducto}
         producto={producto}
         formatNumber={formatNumber}
+        setValue={setValue}
+        watch={watch}
+        disabledNum={disabledNum}
+        num={num}
+        setNum={setNum}
       />
       <ModalVistaPreviaProductos
         pdfPreview={pdfPreview}
