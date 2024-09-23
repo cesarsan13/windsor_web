@@ -104,7 +104,6 @@ export class ReportePDF {
       this.ImpPosX(Encabezado.Nombre_Usuario, 35, this.tw_ren);
       const date = new Date();
       const dateStr = formatDate(date);
-      console.log("dia", date);
       const timeStr = formatTime(date);
       this.setTw_Ren(16);
       this.ImpPosX(`Fecha: ${dateStr}`, 150, this.tw_ren);
