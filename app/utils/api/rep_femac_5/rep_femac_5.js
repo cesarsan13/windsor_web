@@ -27,7 +27,6 @@ export const getReportAltaBajaAlumno = async (
   return resJson.data;
 };
 
-
 const Enca1 = (doc) => {
   if (!doc.tiene_encabezado) {
     doc.imprimeEncabezadoPrincipalV();
