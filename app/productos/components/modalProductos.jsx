@@ -11,10 +11,16 @@ function ModalProductos({
   register,
   errors,
   setProducto,
+  setValue,
+  watch,
+  disabledNum,
+  num,
+  setNum,
 }) {
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
+  const numeroProd = watch("numero");
   useEffect(() => {
     if (accion === "Eliminar" || accion === "Ver") {
       setIsDisabled(true);
@@ -32,6 +38,26 @@ function ModalProductos({
             : `Ver Producto: ${currentID}`
     );
   }, [accion, currentID]);
+
+  useEffect(() => {
+    setValue("numero", num);
+    setTitulo(
+      accion === "Alta"
+        ? `Nuevo Producto: ${num}`
+        : accion === "Editar"
+          ? `Editar Producto: ${num}`
+          : accion === "Eliminar"
+            ? `Eliminar Producto: ${num}`
+            : `Ver Producto: ${num}`
+    );
+  }, [num]);
+
+  const handleBlurOut = (evt, datatype) => {
+    if (evt.target.name === "numero") {
+      setNum(evt.target.value);
+    }
+  }
+
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
@@ -66,12 +92,14 @@ function ModalProductos({
                 tamañolabel={"w-2/6"}
                 className={"w-3/6 text-right"}
                 Titulo={"Numero: "}
-                type={"text"}
+                type={"inputNum"}
                 requerido={true}
                 errors={errors}
                 register={register}
-                message={"idRequerido"}
-                isDisabled={true}
+                maxLenght={6}
+                message={"Numero requerido"}
+                isDisabled={disabledNum}
+                handleBlur={handleBlurOut}
               />
               <Inputs
                 dataType={"string"}

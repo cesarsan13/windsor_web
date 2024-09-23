@@ -104,7 +104,14 @@ export const pone_ceros = (number, decimalPlaces = 2, useCommas = true) => {
 };
 
 export function formatDate(date) {
-  if (date === "") return "";
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}/${month}/${day}`;
+}
+
+export function format_Fecha_String(date) {
+  if (date === "" || date === null || !date || date === " ") return "";
   let fechaObj = new Date(date.replace(/\//g, "-"));
   const year = fechaObj.getFullYear();
   const month = String(fechaObj.getMonth() + 1).padStart(2, "0");

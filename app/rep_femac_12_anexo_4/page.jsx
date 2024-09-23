@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useState } from "react";
-import { calculaDigitoBvba, formatDate } from "../utils/globalfn";
+import { calculaDigitoBvba, formatDate, formatDate_NewDate, format_Fecha_String } from "../utils/globalfn";
 import BuscarCat from "../components/BuscarCat";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -30,6 +30,7 @@ function RepFemac12Anexo() {
   const [sOrdenar, ssetordenar] = useState("nombre");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const [isLoading, setisLoading] = useState(false);
 
   if (status === "loading") {
     return (
@@ -44,6 +45,7 @@ function RepFemac12Anexo() {
     router.push("/");
   };
   const ImprimePDF = () => {
+    setisLoading(true);
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -57,12 +59,14 @@ function RepFemac12Anexo() {
       token,
       fecha1,
       fecha2,
-      producto1.id,
-      producto2.id,
+      producto1.numero,
+      producto2.numero,
       sOrdenar
     );
+    setisLoading(false);
   };
   const ImprimeExcel = () => {
+    setisLoading(true);
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -87,13 +91,15 @@ function RepFemac12Anexo() {
       token,
       fecha1,
       fecha2,
-      producto1.id,
-      producto2.id,
+      producto1.numero,
+      producto2.numero,
       sOrdenar
     );
+    setisLoading(false);
   };
 
   const handleVerClick = async () => {
+    setisLoading(true);
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -129,8 +135,8 @@ function RepFemac12Anexo() {
       doc.nextRow(4);
     };
     Enca1(reporte);
-    let articulo = producto1.id === undefined ? "" : producto1.id;
-    let artFin = producto2.id === undefined ? "" : producto2.id;
+    let articulo = producto1.numero === undefined ? "" : producto1.numero;
+    let artFin = producto2.numero === undefined ? "" : producto2.numero;
     const data = await getDetallePedido(
       token,
       fecha1,
@@ -150,7 +156,7 @@ function RepFemac12Anexo() {
       const datos = {
         recibo: dato.recibo,
         fecha: dato.fecha,
-        articulo: dato.articulo,
+        articulo: parseInt(dato.articulo),
         documento: dato.documento,
         alumno: dato.alumno,
         nombre: alumno,
@@ -179,8 +185,8 @@ function RepFemac12Anexo() {
       }
       reporte.ImpPosX(
         trabRep.alumno.toString() +
-          "-" +
-          calculaDigitoBvba(trabRep.alumno.toString()),
+        "-" +
+        calculaDigitoBvba(trabRep.alumno.toString()),
         14,
         reporte.tw_ren
       );
@@ -201,6 +207,7 @@ function RepFemac12Anexo() {
     reporte.ImpPosX(total_general.toString(), 128, reporte.tw_ren);
     const pdfData = reporte.doc.output("datauristring");
     setPdfData(pdfData);
+    setisLoading(false);
     setPdfPreview(true);
     showModalVista(true);
   };
@@ -232,6 +239,7 @@ function RepFemac12Anexo() {
             <Acciones
               Ver={handleVerClick}
               home={home}
+              isLoading={isLoading}
             />
           </div>
           <div className="col-span-7">
@@ -261,28 +269,28 @@ function RepFemac12Anexo() {
                 </div>
               </div>
               <div className="p-2">
-              <BuscarCat
-                table={"productos"}
-                nameInput={["producto1", "producto_desc1"]}
-                fieldsToShow={["id", "descripcion"]}
-                titulo={"Producto: "}
-                setItem={setProducto1}
-                token={session.user.token}
-                modalId={"modal_producto1"}
-                inputWidths={{ first: "100px", second: "300px" }}
-              />
+                <BuscarCat
+                  table={"productos"}
+                  nameInput={["producto1", "producto_desc1"]}
+                  fieldsToShow={["numero", "descripcion"]}
+                  titulo={"Producto: "}
+                  setItem={setProducto1}
+                  token={session.user.token}
+                  modalId={"modal_producto1"}
+                  inputWidths={{ first: "100px", second: "300px" }}
+                />
               </div>
               <div className="p-2">
-              <BuscarCat
-                table={"productos"}
-                nameInput={["producto2", "producto_desc2"]}
-                fieldsToShow={["id", "descripcion"]}
-                titulo={"Producto: "}
-                setItem={setProducto2}
-                token={session.user.token}
-                modalId={"modal_producto2"}
-                inputWidths={{ first: "100px", second: "300px" }}
-              />
+                <BuscarCat
+                  table={"productos"}
+                  nameInput={["producto2", "producto_desc2"]}
+                  fieldsToShow={["numero", "descripcion"]}
+                  titulo={"Producto: "}
+                  setItem={setProducto2}
+                  token={session.user.token}
+                  modalId={"modal_producto2"}
+                  inputWidths={{ first: "100px", second: "300px" }}
+                />
               </div>
               <div className=" col-8 flex flex-col">
                 <label

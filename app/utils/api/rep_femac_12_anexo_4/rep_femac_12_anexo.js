@@ -114,8 +114,8 @@ export const ImprimirPDF = async (
     }
     newPDF.ImpPosX(
       trabRep.alumno.toString() +
-        "-" +
-        calculaDigitoBvba(trabRep.alumno.toString()),
+      "-" +
+      calculaDigitoBvba(trabRep.alumno.toString()),
       14,
       newPDF.tw_ren
     );
