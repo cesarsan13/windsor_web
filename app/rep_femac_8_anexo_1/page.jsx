@@ -49,8 +49,8 @@ function AltasBajasAlumnos() {
       factura_fin,
       recibo_ini,
       recibo_fin,
-      alumno_ini.id,
-      alumno_fin.id
+      alumno_ini.numero,
+      alumno_fin.numero
     );
     return data;
   };
@@ -245,8 +245,8 @@ function AltasBajasAlumnos() {
               <BuscarCat
                 table="alumnos"
                 itemData={[]}
-                fieldsToShow={["id", "nombre_completo"]}
-                nameInput={["id", "nombre_completo"]}
+                fieldsToShow={["numero", "nombre_completo"]}
+                nameInput={["numero", "nombre_completo"]}
                 titulo={"Inicio: "}
                 setItem={setAlumnoIni}
                 token={session.user.token}
@@ -258,8 +258,8 @@ function AltasBajasAlumnos() {
               <BuscarCat
                 table="alumnos"
                 itemData={[]}
-                fieldsToShow={["id", "nombre_completo"]}
-                nameInput={["id", "nombre_completo"]}
+                fieldsToShow={["numero", "nombre_completo"]}
+                nameInput={["numero", "nombre_completo"]}
                 titulo={"Fin: "}
                 setItem={setAlumnoFin}
                 token={session.user.token}

@@ -154,7 +154,7 @@ function Repo_Femac_7() {
                 si_Imp = incide && incide.Incide >= documento;
 
                 if (sinDeudores === true) {
-                    const estatus = alumnos.find((alu) => alu.id === alu_Act);
+                    const estatus = alumnos.find((alu) => alu.numero === alu_Act);
                     if (
                         estatus.estatus.toUpperCase() === "DEUDOR" ||
                         estatus.estatus.toUpperCase() === "CARTERA"
@@ -165,7 +165,7 @@ function Repo_Femac_7() {
             }
             if (si_Imp === true) {
                 reporte.ImpPosX(alu_Act.toString(), 14, reporte.tw_ren);
-                const data = alumnos.find((alu) => alu.id === alu_Act);
+                const data = alumnos.find((alu) => alu.numero === alu_Act);
                 nombre = data.nombre;
                 reporte.ImpPosX(nombre.toString(), 28, reporte.tw_ren);
                 reporte.ImpPosX(doc.producto.toString(), 108, reporte.tw_ren);
