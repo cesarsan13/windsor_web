@@ -1,6 +1,6 @@
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
-import { calculaDigitoBvba } from "../../globalfn";
+import { calculaDigitoBvba, format_Fecha_String } from "../../globalfn";
 
 export const getReporteCobranzaporAlumno = async (token, fecha_ini, fecha_fin, alumno_ini,
     alumno_fin, cajero_ini, cajero_fin, tomaFechas) => {
@@ -8,8 +8,8 @@ export const getReporteCobranzaporAlumno = async (token, fecha_ini, fecha_fin, a
             method: "post",
             body: JSON.stringify({
                 tomafecha: tomaFechas,
-                fecha_cobro_ini: fecha_ini,
-                fecha_cobro_fin: fecha_fin,
+                fecha_cobro_ini: format_Fecha_String(fecha_ini),
+                fecha_cobro_fin: format_Fecha_String(fecha_fin),
                 alumno_ini: alumno_ini,
                 alumno_fin: alumno_fin,
                 cajero_ini: cajero_ini,

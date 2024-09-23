@@ -1,5 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { format_Fecha_String } from "../../globalfn";
 
 export const getRelaciondeFacturas = async (token, tomaFecha, tomaCanceladas, fecha_cobro_ini, fecha_cobro_fin, factura_ini, factura_fin) => {
     factura_ini = (factura_ini === '' || factura_ini === undefined) ? 0 : factura_ini;
@@ -12,8 +13,8 @@ export const getRelaciondeFacturas = async (token, tomaFecha, tomaCanceladas, fe
         body: JSON.stringify({
             tomaFecha: tomaFecha,
             tomaCanceladas: tomaCanceladas,
-            fecha_cobro_ini: fecha_cobro_ini,
-            fecha_cobro_fin: fecha_cobro_fin,
+            fecha_cobro_ini: format_Fecha_String(fecha_cobro_ini),
+            fecha_cobro_fin: format_Fecha_String(fecha_cobro_fin),
             factura_ini: factura_ini,
             factura_fin: factura_fin,
         }),

@@ -44,8 +44,8 @@ function CobranzaPorAlumno() {
         token,
         fecha_ini,
         fecha_fin,
-        alumno_ini.id,
-        alumno_fin.id,
+        alumno_ini.numero,
+        alumno_fin.numero,
         cajero_ini.numero,
         cajero_fin.numero,
         tomaFechas
@@ -58,8 +58,8 @@ function CobranzaPorAlumno() {
     status,
     fecha_ini,
     fecha_fin,
-    alumno_ini.id,
-    alumno_fin.id,
+    alumno_ini.numero,
+    alumno_fin.numero,
     cajero_ini.numero,
     cajero_fin.numero,
     tomaFechas,
@@ -373,8 +373,8 @@ function CobranzaPorAlumno() {
                 <BuscarCat
                   table="alumnos"
                   itemData={[]}
-                  fieldsToShow={["id", "nombre_completo"]}
-                  nameInput={["id", "nombre_completo"]}
+                  fieldsToShow={["numero", "nombre_completo"]}
+                  nameInput={["numero", "nombre_completo"]}
                   titulo={"Alumno Inicio: "}
                   setItem={setAlumnoIni}
                   token={session.user.token}
@@ -386,8 +386,8 @@ function CobranzaPorAlumno() {
                 <BuscarCat
                   table="alumnos"
                   itemData={[]}
-                  fieldsToShow={["id", "nombre_completo"]}
-                  nameInput={["id", "nombre_completo"]}
+                  fieldsToShow={["numero", "nombre_completo"]}
+                  nameInput={["numero", "nombre_completo"]}
                   titulo={"Alumno Fin: "}
                   setItem={setAlumnoFin}
                   token={session.user.token}
