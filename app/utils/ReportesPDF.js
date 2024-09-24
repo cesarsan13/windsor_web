@@ -23,13 +23,31 @@ export class ReportePDF {
   }
 
   //Imprime un texto, recibe como parametro el texto, la cordenada x y la cordenada y
-  ImpPosX(texto, x, y, maxLength) {
+  ImpPosX(texto, x, y, maxLength = 0, aln = "L") {
+    console.log("esta es la alineacion", (aln = "L"));
     var textoC = texto.substring(0, maxLength);
-
-    if (texto.length >= maxLength) {
-      this.doc.text(textoC, x, y);
+    const alinear = "";
+    switch (aln) {
+      case "L":
+        alinear = "left";
+        break;
+      case "C":
+        alinear = "center";
+        break;
+      case "R":
+        alinear = "right";
+        break;
+      case "J":
+        alinear = "justify";
+        break;
+      default:
+        alinear = "L";
+        break;
+    }
+    if (texto.length >= maxLength && maxLength > 0) {
+      this.doc.text(textoC, x, y, { align: alinear });
     } else {
-      this.doc.text(texto, x, y);
+      this.doc.text(texto, x, y, { align: alinear });
     }
   }
 
