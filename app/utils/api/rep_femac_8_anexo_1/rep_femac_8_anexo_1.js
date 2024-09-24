@@ -41,12 +41,12 @@ const Enca1 = (doc) => {
   if (!doc.tiene_encabezado) {
     doc.imprimeEncabezadoPrincipalV();
     doc.nextRow(12);
-    doc.ImpPosX("Recibo", 15, doc.tw_ren);
-    doc.ImpPosX("Factura", 30, doc.tw_ren);
-    doc.ImpPosX("Fecha P", 45, doc.tw_ren);
-    doc.ImpPosX("No.", 65, doc.tw_ren);
-    doc.ImpPosX("Nombre Alumno", 75, doc.tw_ren);
-    doc.ImpPosX("Total Rec.", 170, doc.tw_ren);
+    doc.ImpPosX("Recibo", 15, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Factura", 30, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Fecha P", 45, doc.tw_ren, 0, "L");
+    doc.ImpPosX("No.", 65, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Nombre Alumno", 75, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Total Rec.", 170, doc.tw_ren, 0, "L");
     doc.nextRow(4);
     doc.printLineV();
     doc.nextRow(4);
@@ -72,15 +72,15 @@ export const verImprimir = async (configuracion) => {
     if (importe_total !== 0) {
       total += importe_total;
     }
-    newPDF.ImpPosX(recibo, 15, newPDF.tw_ren);
-    newPDF.ImpPosX(factura, 30, newPDF.tw_ren);
-    newPDF.ImpPosX(fecha, 45, newPDF.tw_ren);
-    newPDF.ImpPosX(idAl, 65, newPDF.tw_ren);
-    newPDF.ImpPosX(nombre, 75, newPDF.tw_ren);
+    newPDF.ImpPosX(recibo, 15, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(factura, 30, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(fecha, 45, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(idAl, 65, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(nombre, 75, newPDF.tw_ren, 0, "L");
     if (importe_total === 0) {
-      newPDF.ImpPosX(`CANCELADO`, 170, newPDF.tw_ren);
+      newPDF.ImpPosX(`CANCELADO`, 170, newPDF.tw_ren, 0, "L");
     } else {
-      newPDF.ImpPosX(formatNumber(importe_total), 170, newPDF.tw_ren, "R");
+      newPDF.ImpPosX(formatNumber(importe_total), 170, newPDF.tw_ren, 0, "R");
     }
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
@@ -89,7 +89,13 @@ export const verImprimir = async (configuracion) => {
     }
   });
 
-  newPDF.ImpPosX(`Total: ${total.toFixed(2)}` || "", 160, newPDF.tw_ren);
+  newPDF.ImpPosX(
+    `Total: ${total.toFixed(2)}` || "",
+    160,
+    newPDF.tw_ren,
+    0,
+    "L"
+  );
   const pdfData = newPDF.doc.output("datauristring");
   return pdfData;
 };
@@ -109,15 +115,15 @@ export const Imprimir = (configuracion) => {
     if (importe_total !== 0) {
       total += importe_total;
     }
-    newPDF.ImpPosX(recibo, 15, newPDF.tw_ren);
-    newPDF.ImpPosX(factura, 30, newPDF.tw_ren);
-    newPDF.ImpPosX(fecha, 45, newPDF.tw_ren);
-    newPDF.ImpPosX(idAl, 65, newPDF.tw_ren);
-    newPDF.ImpPosX(nombre, 75, newPDF.tw_ren);
+    newPDF.ImpPosX(recibo, 15, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(factura, 30, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(fecha, 45, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(idAl, 65, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(nombre, 75, newPDF.tw_ren, 0, "L");
     if (importe_total === 0) {
-      newPDF.ImpPosX(`CANCELADO`, 170, newPDF.tw_ren);
+      newPDF.ImpPosX(`CANCELADO`, 170, newPDF.tw_ren, 0, "L");
     } else {
-      newPDF.ImpPosX(formatNumber(importe_total), 170, newPDF.tw_ren, "R");
+      newPDF.ImpPosX(formatNumber(importe_total), 170, newPDF.tw_ren, 0, "R");
     }
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
@@ -125,7 +131,13 @@ export const Imprimir = (configuracion) => {
       Enca1(newPDF);
     }
   });
-  newPDF.ImpPosX(`Total: ${total.toFixed(2)}` || "", 160, newPDF.tw_ren);
+  newPDF.ImpPosX(
+    `Total: ${total.toFixed(2)}` || "",
+    160,
+    newPDF.tw_ren,
+    0,
+    "R"
+  );
   newPDF.guardaReporte("rep_relacion_recibos");
 };
 

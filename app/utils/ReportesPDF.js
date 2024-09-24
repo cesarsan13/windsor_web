@@ -24,9 +24,8 @@ export class ReportePDF {
 
   //Imprime un texto, recibe como parametro el texto, la cordenada x y la cordenada y
   ImpPosX(texto, x, y, maxLength = 0, aln = "L") {
-    console.log("esta es la alineacion", (aln = "L"));
     var textoC = texto.substring(0, maxLength);
-    const alinear = "";
+    let alinear = "";
     switch (aln) {
       case "L":
         alinear = "left";
