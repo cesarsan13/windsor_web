@@ -103,7 +103,7 @@ export const Imprimir = async (
     alu_Act = doc.alumno;
     if (grupoAlumno) {
       if (grupo_act !== grupo_ant) {
-        newPDF.ImpPosX("Grupo " + grupo_act, 14, newPDF.tw_ren);
+        newPDF.ImpPosX("Grupo " + grupo_act, 14, newPDF.tw_ren, 0, "R");
         newPDF.nextRow(4);
       }
     }
@@ -122,25 +122,25 @@ export const Imprimir = async (
       }
     }
     if (si_Imp === true) {
-      newPDF.ImpPosX(alu_Act.toString(), 14, newPDF.tw_ren);
+      newPDF.ImpPosX(alu_Act, 14, newPDF.tw_ren, 0, "L");
       const data = alumnos.find((alu) => alu.numero === alu_Act);
       nombre = data.nombre;
-      newPDF.ImpPosX(nombre.toString(), 28, newPDF.tw_ren);
-      newPDF.ImpPosX(doc.producto.toString(), 108, newPDF.tw_ren);
-      newPDF.ImpPosX(doc.descripcion.toString(), 128, newPDF.tw_ren);
-      newPDF.ImpPosX(doc.fecha.toString(), 208, newPDF.tw_ren);
+      newPDF.ImpPosX(nombre, 28, newPDF.tw_ren, 0, "R");
+      newPDF.ImpPosX(doc.producto, 108, newPDF.tw_ren, 0, "R");
+      newPDF.ImpPosX(doc.descripcion, 128, newPDF.tw_ren, 0, "R");
+      newPDF.ImpPosX(doc.fecha, 208, newPDF.tw_ren, 0, "R");
       saldo = doc.importe - doc.importe * (doc.descuento / 100);
       saldoTotal += saldo;
       total_General += saldo;
-      newPDF.ImpPosX(saldo.toFixed(2).toString(), 228, newPDF.tw_ren);
+      newPDF.ImpPosX(saldo.toFixed(2), 228, newPDF.tw_ren, 0, "L");
 
       const isLastRecordForAlumno =
         index === documentos.length - 1 ||
         documentos[index + 1].alumno !== alu_Act;
 
       if (isLastRecordForAlumno) {
-        newPDF.ImpPosX(saldoTotal.toFixed(2).toString(), 248, newPDF.tw_ren);
-        newPDF.ImpPosX(data.telefono_1.toString(), 268, newPDF.tw_ren);
+        newPDF.ImpPosX(saldoTotal.toFixed(2), 248, newPDF.tw_ren, 0, "L");
+        newPDF.ImpPosX(data.telefono_1, 268, newPDF.tw_ren, 0, "R");
         saldoTotal = 0;
         newPDF.nextRow(5);
       }
@@ -154,8 +154,8 @@ export const Imprimir = async (
     grupo_ant = grupo_act;
     alu_Ant = alu_Act;
   });
-  newPDF.ImpPosX("Total General", 208, newPDF.tw_ren);
-  newPDF.ImpPosX(total_General.toFixed(2).toString(), 248, newPDF.tw_ren);
+  newPDF.ImpPosX("Total General", 208, newPDF.tw_ren, 0, "R");
+  newPDF.ImpPosX(total_General.toFixed(2), 248, newPDF.tw_ren, 0, "L");
   newPDF.guardaReporte("Reporte de Adeudos Pendientes");
 };
 
