@@ -72,15 +72,15 @@ export const verImprimir = async (configuracion) => {
     if (importe_total !== 0) {
       total += importe_total;
     }
-    newPDF.ImpPosX(recibo, 15, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(recibo, 25, newPDF.tw_ren, 0, "R");
     newPDF.ImpPosX(factura, 30, newPDF.tw_ren, 0, "L");
     newPDF.ImpPosX(fecha, 45, newPDF.tw_ren, 0, "L");
-    newPDF.ImpPosX(idAl, 65, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(idAl, 70, newPDF.tw_ren, 0, "R");
     newPDF.ImpPosX(nombre, 75, newPDF.tw_ren, 0, "L");
     if (importe_total === 0) {
       newPDF.ImpPosX(`CANCELADO`, 170, newPDF.tw_ren, 0, "L");
     } else {
-      newPDF.ImpPosX(formatNumber(importe_total), 170, newPDF.tw_ren, 0, "R");
+      newPDF.ImpPosX(formatNumber(importe_total), 190, newPDF.tw_ren, 0, "R");
     }
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
@@ -115,15 +115,15 @@ export const Imprimir = (configuracion) => {
     if (importe_total !== 0) {
       total += importe_total;
     }
-    newPDF.ImpPosX(recibo, 15, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(recibo, 25, newPDF.tw_ren, 0, "R");
     newPDF.ImpPosX(factura, 30, newPDF.tw_ren, 0, "L");
     newPDF.ImpPosX(fecha, 45, newPDF.tw_ren, 0, "L");
-    newPDF.ImpPosX(idAl, 65, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(idAl, 70, newPDF.tw_ren, 0, "R");
     newPDF.ImpPosX(nombre, 75, newPDF.tw_ren, 0, "L");
     if (importe_total === 0) {
       newPDF.ImpPosX(`CANCELADO`, 170, newPDF.tw_ren, 0, "L");
     } else {
-      newPDF.ImpPosX(formatNumber(importe_total), 170, newPDF.tw_ren, 0, "R");
+      newPDF.ImpPosX(formatNumber(importe_total), 190, newPDF.tw_ren, 0, "R");
     }
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
