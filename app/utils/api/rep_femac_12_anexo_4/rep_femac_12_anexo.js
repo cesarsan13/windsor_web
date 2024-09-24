@@ -85,7 +85,7 @@ export const ImprimirPDF = async (
     const datos = {
       recibo: dato.recibo,
       fecha: dato.fecha,
-      articulo: dato.articulo,
+      articulo: Number(dato.articulo),
       documento: dato.documento,
       alumno: dato.alumno,
       nombre: alumno,
@@ -104,8 +104,8 @@ export const ImprimirPDF = async (
       tot_art = 0;
     }
     if (trabRep.articulo !== Art_Ant) {
-      newPDF.ImpPosX(trabRep.articulo.toString(), 14, newPDF.tw_ren);
-      newPDF.ImpPosX(trabRep.descripcion.toString(), 33, newPDF.tw_ren);
+      newPDF.ImpPosX(trabRep.articulo.toString(), 24, newPDF.tw_ren,0,"R");
+      newPDF.ImpPosX(trabRep.descripcion.toString(), 43, newPDF.tw_ren,0,"L");
       Enca1(newPDF);
       if (newPDF.tw_ren >= newPDF.tw_endRen) {
         newPDF.pageBreak();
@@ -116,12 +116,12 @@ export const ImprimirPDF = async (
       trabRep.alumno.toString() +
       "-" +
       calculaDigitoBvba(trabRep.alumno.toString()),
-      14,
-      newPDF.tw_ren
+      24,
+      newPDF.tw_ren,0,"R"
     );
-    newPDF.ImpPosX(trabRep.nombre.toString(), 28, newPDF.tw_ren);
-    newPDF.ImpPosX(trabRep.importe.toString(), 128, newPDF.tw_ren);
-    newPDF.ImpPosX(trabRep.fecha.toString(), 158, newPDF.tw_ren);
+    newPDF.ImpPosX(trabRep.nombre.toString(), 38, newPDF.tw_ren,0,"L");
+    newPDF.ImpPosX(trabRep.importe.toString(), 138, newPDF.tw_ren,0,"R");
+    newPDF.ImpPosX(trabRep.fecha.toString(), 168, newPDF.tw_ren,0,"L");
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
       newPDF.pageBreak();
@@ -132,26 +132,26 @@ export const ImprimirPDF = async (
     Art_Ant = trabRep.articulo;
   });
   Cambia_Articulo(newPDF, tot_art);
-  newPDF.ImpPosX("TOTAL General", 98, newPDF.tw_ren);
-  newPDF.ImpPosX(total_general.toString(), 128, newPDF.tw_ren);
+  newPDF.ImpPosX("TOTAL General", 98, newPDF.tw_ren,0,"L");
+  newPDF.ImpPosX(total_general.toString(), 138, newPDF.tw_ren,0,"R");
   newPDF.guardaReporte("Reporte Cobranza por Producto");
 };
 const Cambia_Articulo = (doc, Total_Art) => {
-  doc.ImpPosX("TOTAL", 108, doc.tw_ren);
-  doc.ImpPosX(Total_Art.toString(), 128, doc.tw_ren);
+  doc.ImpPosX("TOTAL", 108, doc.tw_ren,0,"L");
+  doc.ImpPosX(Total_Art.toString(), 138, doc.tw_ren,0,"R");
   doc.nextRow(4);
 };
 const Enca1 = (doc) => {
   if (!doc.tiene_encabezado) {
     doc.imprimeEncabezadoPrincipalV();
     doc.nextRow(12);
-    doc.ImpPosX("Producto", 14, doc.tw_ren);
-    doc.ImpPosX("Descripcion", 33, doc.tw_ren);
+    doc.ImpPosX("Producto", 24, doc.tw_ren,0,"R");
+    doc.ImpPosX("Descripcion", 43, doc.tw_ren,0,"L");
     doc.nextRow(4);
-    doc.ImpPosX("Alumno", 14, doc.tw_ren);
-    doc.ImpPosX("Nombre", 28, doc.tw_ren);
-    doc.ImpPosX("Importe", 128, doc.tw_ren);
-    doc.ImpPosX("Fecha Pago", 158, doc.tw_ren);
+    doc.ImpPosX("Alumno", 24, doc.tw_ren,0,"R");
+    doc.ImpPosX("Nombre", 38, doc.tw_ren,0,"L");
+    doc.ImpPosX("Importe", 138, doc.tw_ren,0,"R");
+    doc.ImpPosX("Fecha Pago", 168, doc.tw_ren,0,"L");
     doc.nextRow(4);
     doc.printLineV();
     doc.nextRow(4);

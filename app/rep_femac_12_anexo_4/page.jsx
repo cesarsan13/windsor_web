@@ -114,13 +114,13 @@ function RepFemac12Anexo() {
       if (!doc.tiene_encabezado) {
         doc.imprimeEncabezadoPrincipalV();
         doc.nextRow(12);
-        doc.ImpPosX("Producto", 14, doc.tw_ren);
-        doc.ImpPosX("Descripcion", 33, doc.tw_ren);
+        doc.ImpPosX("Producto", 24, doc.tw_ren,0,"R");
+        doc.ImpPosX("Descripcion", 43, doc.tw_ren,0,"L");
         doc.nextRow(4);
-        doc.ImpPosX("Alumno", 14, doc.tw_ren);
-        doc.ImpPosX("Nombre", 28, doc.tw_ren);
-        doc.ImpPosX("Importe", 128, doc.tw_ren);
-        doc.ImpPosX("Fecha Pago", 158, doc.tw_ren);
+        doc.ImpPosX("Alumno", 24, doc.tw_ren,0,"R");
+        doc.ImpPosX("Nombre", 38, doc.tw_ren,0,"L");
+        doc.ImpPosX("Importe", 138, doc.tw_ren,0,"R");
+        doc.ImpPosX("Fecha Pago", 168, doc.tw_ren,0,"L");
         doc.nextRow(4);
         doc.printLineV();
         doc.nextRow(4);
@@ -131,8 +131,8 @@ function RepFemac12Anexo() {
       }
     };
     const Cambia_Articulo = (doc, Total_Art) => {
-      doc.ImpPosX("TOTAL", 108, doc.tw_ren);
-      doc.ImpPosX(Total_Art.toString(), 128, doc.tw_ren);
+      doc.ImpPosX("TOTAL", 108, doc.tw_ren,0,"R");
+      doc.ImpPosX(Total_Art.toString(), 138, doc.tw_ren,0,"R");
       doc.nextRow(4);
     };
     Enca1(reporte);
@@ -176,8 +176,8 @@ function RepFemac12Anexo() {
         tot_art = 0;
       }
       if (trabRep.articulo !== Art_Ant) {
-        reporte.ImpPosX(trabRep.articulo.toString(), 14, reporte.tw_ren);
-        reporte.ImpPosX(trabRep.descripcion.toString(), 33, reporte.tw_ren);
+        reporte.ImpPosX(trabRep.articulo.toString(), 24, reporte.tw_ren,0,"R");
+        reporte.ImpPosX(trabRep.descripcion.toString(), 43, reporte.tw_ren,0,"L");
         Enca1(reporte);
         if (reporte.tw_ren >= reporte.tw_endRen) {
           reporte.pageBreak();
@@ -188,12 +188,12 @@ function RepFemac12Anexo() {
         trabRep.alumno.toString() +
         "-" +
         calculaDigitoBvba(trabRep.alumno.toString()),
-        14,
-        reporte.tw_ren
+        24,
+        reporte.tw_ren,0,"R"
       );
-      reporte.ImpPosX(trabRep.nombre.toString(), 28, reporte.tw_ren);
-      reporte.ImpPosX(trabRep.importe.toString(), 128, reporte.tw_ren);
-      reporte.ImpPosX(trabRep.fecha.toString(), 158, reporte.tw_ren);
+      reporte.ImpPosX(trabRep.nombre.toString(), 38, reporte.tw_ren,0,"L");
+      reporte.ImpPosX(trabRep.importe.toString(), 138, reporte.tw_ren,0,"R");
+      reporte.ImpPosX(trabRep.fecha.toString(), 168, reporte.tw_ren,0,"L");
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRen) {
         reporte.pageBreak();
@@ -204,8 +204,8 @@ function RepFemac12Anexo() {
       Art_Ant = trabRep.articulo;
     });
     Cambia_Articulo(reporte, tot_art);
-    reporte.ImpPosX("TOTAL General", 98, reporte.tw_ren);
-    reporte.ImpPosX(total_general.toString(), 128, reporte.tw_ren);
+    reporte.ImpPosX("TOTAL General", 98, reporte.tw_ren,0,"L");
+    reporte.ImpPosX(total_general.toString(), 138, reporte.tw_ren,0,"R");
     const pdfData = reporte.doc.output("datauristring");
     setPdfData(pdfData);
     setisLoading(false);
