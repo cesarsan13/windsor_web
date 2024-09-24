@@ -18,11 +18,11 @@ const Enca1 = (doc) => {
     if (!doc.tiene_encabezado) {
         doc.imprimeEncabezadoPrincipalV();
         doc.nextRow(12);
-        doc.ImpPosX("No.", 15, doc.tw_ren);
-        doc.ImpPosX("Nombre", 30, doc.tw_ren);
-        doc.ImpPosX("Grado", 125, doc.tw_ren);
-        doc.ImpPosX("Fecha", 160, doc.tw_ren);
-        doc.ImpPosX("Importe", 185, doc.tw_ren);
+        doc.ImpPosX("No.", 25, doc.tw_ren,0,"R");
+        doc.ImpPosX("Nombre", 30, doc.tw_ren,0,"L");
+        doc.ImpPosX("Grado", 125, doc.tw_ren,0,"L");
+        doc.ImpPosX("Fecha", 160, doc.tw_ren,0,"L");
+        doc.ImpPosX("Importe", 195, doc.tw_ren,0,"R");
         doc.nextRow(4);
         doc.printLineV();
         doc.nextRow(4);
@@ -71,16 +71,16 @@ export const verImprimir = async (configuracion) => {
             });
             if (si_suma) {
                 const nombre = `${(alumno.a_nombre || '')} ${(alumno.a_paterno || '')} ${(alumno.a_materno || '')}`.substring(0, 50);
-                newPDF.ImpPosX(alumno.numero.toString() || '', 15, newPDF.tw_ren);
-                newPDF.ImpPosX(nombre.toString(), 30, newPDF.tw_ren);
+                newPDF.ImpPosX(alumno.numero.toString() || '', 25, newPDF.tw_ren,0,"R");
+                newPDF.ImpPosX(nombre.toString(), 30, newPDF.tw_ren,0,"L");
                 const horarioEncontrado = bodyHorarios.find(
                     horario => horario.numero === alumno.horario_1
                 );
                 if (horarioEncontrado) {
-                    newPDF.ImpPosX(horarioEncontrado.horario.toString() || '', 125, newPDF.tw_ren);
+                    newPDF.ImpPosX(horarioEncontrado.horario.toString() || '', 125, newPDF.tw_ren,0,"L");
                 }
-                newPDF.ImpPosX(fecha_inscripcion.toString() || '', 160, newPDF.tw_ren);
-                newPDF.ImpPosX(formatNumber(det_inscripcion) || '0.00', 185, newPDF.tw_ren);
+                newPDF.ImpPosX(fecha_inscripcion.toString() || '', 160, newPDF.tw_ren,0,"L");
+                newPDF.ImpPosX(formatNumber(det_inscripcion) || '0.00', 195, newPDF.tw_ren,0,"R");
                 alumnos += 1;
                 Enca1(newPDF);
             }
@@ -92,9 +92,9 @@ export const verImprimir = async (configuracion) => {
         }
     });
     newPDF.nextRow(4);
-    newPDF.ImpPosX(`Total: ${formatNumber(total_inscripcion)}` || '0.00', 175, newPDF.tw_ren);
+    newPDF.ImpPosX(`Total: ${formatNumber(total_inscripcion)}` || '0.00', 195, newPDF.tw_ren,0,"R");
     newPDF.nextRow(4);
-    newPDF.ImpPosX(`Total Alumnos: ${alumnos.toString() || '0'}`, 175, newPDF.tw_ren);
+    newPDF.ImpPosX(`Total Alumnos: ${alumnos.toString() || '0'}`, 195, newPDF.tw_ren,0,"R");
     const pdfData = newPDF.doc.output("datauristring");
     return pdfData;
 };
@@ -108,8 +108,8 @@ export const Imprimir = (configuracion) => {
     const { bodyDetalles } = configuracion;
     const { bodyProductos } = configuracion;
     const { bodyHorarios } = configuracion;
-    const { fecha_ini } = configuracion;
-    const { fecha_fin } = configuracion;
+    const fecha_ini = format_Fecha_String(configuracion.fecha_ini)
+    const fecha_fin = format_Fecha_String(configuracion.fecha_fin)    
     Enca1(newPDF);
     bodyAlumnos.forEach((alumno) => {
         let det_inscripcion = 0;
@@ -137,16 +137,16 @@ export const Imprimir = (configuracion) => {
             });
             if (si_suma) {
                 const nombre = `${(alumno.a_nombre || '')} ${(alumno.a_paterno || '')} ${(alumno.a_materno || '')}`.substring(0, 50);
-                newPDF.ImpPosX(alumno.numero.toString() || '', 15, newPDF.tw_ren);
-                newPDF.ImpPosX(nombre.toString(), 30, newPDF.tw_ren);
+                newPDF.ImpPosX(alumno.numero.toString() || '', 25, newPDF.tw_ren,0,"R");
+                newPDF.ImpPosX(nombre.toString(), 30, newPDF.tw_ren,0,"L");
                 const horarioEncontrado = bodyHorarios.find(
                     horario => horario.numero === alumno.horario_1
                 );
                 if (horarioEncontrado) {
-                    newPDF.ImpPosX(horarioEncontrado.horario.toString() || '', 125, newPDF.tw_ren);
+                    newPDF.ImpPosX(horarioEncontrado.horario.toString() || '', 125, newPDF.tw_ren,0,"L");
                 }
-                newPDF.ImpPosX(fecha_inscripcion.toString() || '', 160, newPDF.tw_ren);
-                newPDF.ImpPosX(formatNumber(det_inscripcion) || '0.00', 185, newPDF.tw_ren);
+                newPDF.ImpPosX(fecha_inscripcion.toString() || '', 160, newPDF.tw_ren,0,"L");
+                newPDF.ImpPosX(formatNumber(det_inscripcion) || '0.00', 195, newPDF.tw_ren,0,"R");
                 alumnos += 1;
                 Enca1(newPDF);
             }
