@@ -23,11 +23,11 @@ export const getAlumnosPorMes = async (token, horario, orden) => {
     if (!doc.tiene_encabezado) {
       doc.imprimeEncabezadoPrincipalV();
       doc.nextRow(12);
-      doc.ImpPosX("No", 15, doc.tw_ren);
-      doc.ImpPosX("No.", 25, doc.tw_ren);
-      doc.ImpPosX("Nombre", 35, doc.tw_ren);
-      doc.ImpPosX("Año", 120, doc.tw_ren);
-      doc.ImpPosX("Mes", 130, doc.tw_ren);
+      doc.ImpPosX("No", 15, doc.tw_ren,0,"R");
+      doc.ImpPosX("No.", 25, doc.tw_ren,0,"R");
+      doc.ImpPosX("Nombre", 35, doc.tw_ren,0,"L");
+      doc.ImpPosX("Año", 130, doc.tw_ren,0,"R");
+      doc.ImpPosX("Mes", 140, doc.tw_ren,0,"R");
       doc.nextRow(4);
       doc.printLineV();
       doc.nextRow(4);
@@ -42,11 +42,11 @@ export const getAlumnosPorMes = async (token, horario, orden) => {
     const { body } = configuracion;
     Enca1(newPDF);
     body.forEach((reporte) => {
-      newPDF.ImpPosX(reporte.Num_Renglon.toString() !== "0" ? reporte.Num_Renglon.toString() : "", 15, newPDF.tw_ren);
-      newPDF.ImpPosX(reporte.Numero_1.toString() !== "0" ? reporte.Numero_1.toString() : "", 25, newPDF.tw_ren);
-      newPDF.ImpPosX(reporte.Nombre_1.toString() !== "0" ? reporte.Nombre_1.toString() : "", 35, newPDF.tw_ren);
-      newPDF.ImpPosX(reporte.Año_Nac_1.toString().substring(0, 4) !== "0" ? reporte.Año_Nac_1.toString().substring(0, 4) : "", 120, newPDF.tw_ren);
-      newPDF.ImpPosX(reporte.Mes_Nac_1.toString().substring(4, 2) !== "0" ? reporte.Mes_Nac_1.toString().substring(4, 2) : "", 130, newPDF.tw_ren);
+      newPDF.ImpPosX(reporte.Num_Renglon.toString() !== "0" ? reporte.Num_Renglon.toString() : "", 15, newPDF.tw_ren,0,"R");
+      newPDF.ImpPosX(reporte.Numero_1.toString() !== "0" ? reporte.Numero_1.toString() : "", 25, newPDF.tw_ren,0,"R");
+      newPDF.ImpPosX(reporte.Nombre_1.toString() !== "0" ? reporte.Nombre_1.toString() : "", 35, newPDF.tw_ren,0,"L");
+      newPDF.ImpPosX(reporte.Año_Nac_1.toString().substring(0, 4) !== "0" ? reporte.Año_Nac_1.toString().substring(0, 4) : "", 130, newPDF.tw_ren,0,"R");
+      newPDF.ImpPosX(reporte.Mes_Nac_1.toString().substring(4, 2) !== "0" ? reporte.Mes_Nac_1.toString().substring(4, 2) : "", 140, newPDF.tw_ren,0,"R");
 
       Enca1(newPDF);
       if (newPDF.tw_ren >= newPDF.tw_endRen) {

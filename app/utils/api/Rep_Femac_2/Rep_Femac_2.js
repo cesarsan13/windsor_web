@@ -56,17 +56,17 @@ export const getRepDosSel = async (token, horario1, horario2, orden) => {
         Enca1(newPDF);
         body.forEach((horarios) => {
 
-          newPDF.ImpPosX(horarios.Num_Renglon.toString(),15, newPDF.tw_ren);
-          newPDF.ImpPosX(horarios.Numero_1.toString(),25, newPDF.tw_ren);
-          newPDF.ImpPosX(horarios.Nombre_1.toString(),35, newPDF.tw_ren);
-          newPDF.ImpPosX(horarios.Año_Nac_1.toString().substring(0,4),120, newPDF.tw_ren);
-          newPDF.ImpPosX(horarios.Mes_Nac_1.toString().substring(4,2),130, newPDF.tw_ren);
-          newPDF.ImpPosX(horarios.Telefono_1.toString(),138, newPDF.tw_ren);
-          newPDF.ImpPosX(horarios.Numero_2.toString(),155, newPDF.tw_ren);
-          newPDF.ImpPosX(horarios.Nombre_2.toString(),165, newPDF.tw_ren);
-          newPDF.ImpPosX(horarios.Año_Nac_2.toString().substring(0,4),250, newPDF.tw_ren);
-          newPDF.ImpPosX(horarios.Mes_Nac_2.toString().substring(4,2),260, newPDF.tw_ren);
-          newPDF.ImpPosX(horarios.Telefono_2.toString(),268, newPDF.tw_ren);
+          newPDF.ImpPosX(horarios.Num_Renglon.toString(),15, newPDF.tw_ren,0,"R");
+          newPDF.ImpPosX(horarios.Numero_1.toString(),25, newPDF.tw_ren,0,"R");
+          newPDF.ImpPosX(horarios.Nombre_1.toString(),35, newPDF.tw_ren,0,"L");
+          newPDF.ImpPosX(horarios.Año_Nac_1.toString().substring(0,4),120, newPDF.tw_ren,0,"L");
+          newPDF.ImpPosX(horarios.Mes_Nac_1.toString().substring(4,2),130, newPDF.tw_ren,0,"L");
+          newPDF.ImpPosX(horarios.Telefono_1.toString(),138, newPDF.tw_ren,8,"L");
+          newPDF.ImpPosX(horarios.Numero_2.toString(),155, newPDF.tw_ren,0,"L");
+          newPDF.ImpPosX(horarios.Nombre_2.toString(),165, newPDF.tw_ren,0,"L");
+          newPDF.ImpPosX(horarios.Año_Nac_2.toString().substring(0,4),250, newPDF.tw_ren,0,"L");
+          newPDF.ImpPosX(horarios.Mes_Nac_2.toString().substring(4,2),260, newPDF.tw_ren,0,"L");
+          newPDF.ImpPosX(horarios.Telefono_2.toString(),268, newPDF.tw_ren,0,"L");
 
           Enca1(newPDF);
           if (newPDF.tw_ren >= newPDF.tw_endRenH) {

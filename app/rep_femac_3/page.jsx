@@ -104,11 +104,11 @@ function Rep_Femac_3() {
         if (!doc.tiene_encabezado) {
           doc.imprimeEncabezadoPrincipalV();
           doc.nextRow(12);
-          doc.ImpPosX("No.", 15, doc.tw_ren),
-            doc.ImpPosX("No. 1", 25, doc.tw_ren),
-            doc.ImpPosX("Nombre", 35, doc.tw_ren),
-            doc.ImpPosX("Año", 120, doc.tw_ren),
-            doc.ImpPosX("Mes", 130, doc.tw_ren),
+          doc.ImpPosX("No.", 15, doc.tw_ren,0,"R"),
+            doc.ImpPosX("No. 1", 25, doc.tw_ren,0,"R"),
+            doc.ImpPosX("Nombre", 35, doc.tw_ren,0,"L"),
+            doc.ImpPosX("Año", 130, doc.tw_ren,0,"R"),
+            doc.ImpPosX("Mes", 140, doc.tw_ren,0,"R"),
             doc.nextRow(4);
           doc.printLineV();
           doc.nextRow(4);
@@ -127,35 +127,35 @@ function Rep_Femac_3() {
             ? reporte1.Num_Renglon.toString()
             : "",
           15,
-          reporte.tw_ren
+          reporte.tw_ren,0,"R"
         );
         reporte.ImpPosX(
           reporte1.Numero_1.toString() !== "0"
             ? reporte1.Numero_1.toString()
             : "",
           25,
-          reporte.tw_ren
+          reporte.tw_ren,0,"R"
         );
         reporte.ImpPosX(
           reporte1.Nombre_1.toString() !== "0"
             ? reporte1.Nombre_1.toString()
             : "",
           35,
-          reporte.tw_ren
+          reporte.tw_ren,0,"L"
         );
         reporte.ImpPosX(
           reporte1.Año_Nac_1.toString().substring(0, 4) !== "0"
             ? reporte1.Año_Nac_1.toString().substring(0, 4)
             : "",
-          120,
-          reporte.tw_ren
+          130,
+          reporte.tw_ren,0,"R"
         );
         reporte.ImpPosX(
           reporte1.Mes_Nac_1.toString().substring(4, 2) !== "0"
             ? reporte1.Mes_Nac_1.toString().substring(4, 2)
             : "",
-          130,
-          reporte.tw_ren
+          140,
+          reporte.tw_ren,0,"R"
         );
 
         Enca1(reporte);
