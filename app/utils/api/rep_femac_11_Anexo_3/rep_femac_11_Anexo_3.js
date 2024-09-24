@@ -107,23 +107,23 @@ export const ImprimirPDF = (configuracion, fecha_ini, fecha_fin, cajero_ini, caj
       }
 
       if(reporte2.id_al !== alumno_Ant){
-        newPDF.ImpPosX(reporte2.id_al +"-"+ calculaDigitoBvba(reporte2.id_al.toString()),15, newPDF.tw_ren);
-          newPDF.ImpPosX(reporte2.nom_al.toString(),50, newPDF.tw_ren);
+        newPDF.ImpPosX(reporte2.id_al +"-"+ calculaDigitoBvba(reporte2.id_al),15, newPDF.tw_ren, 0, "R");
+          newPDF.ImpPosX(reporte2.nom_al,50, newPDF.tw_ren, 0 , "L");
           Enca1(newPDF);
           if (newPDF.tw_ren >= newPDF.tw_endRen) {
             newPDF.pageBreak();
               Enca1(newPDF);
           }
       }
-      newPDF.ImpPosX(reporte2.articulo.toString(),15, newPDF.tw_ren);
-      newPDF.ImpPosX(reporte2.descripcion.toString(),30, newPDF.tw_ren);
-      newPDF.ImpPosX(reporte2.numero_doc.toString(),70, newPDF.tw_ren);
-      newPDF.ImpPosX(reporte2.fecha.toString(),90, newPDF.tw_ren);
-      newPDF.ImpPosX(reporte2.importe.toString(),110, newPDF.tw_ren);
-      newPDF.ImpPosX(reporte2.recibo.toString(),130, newPDF.tw_ren);
-      newPDF.ImpPosX(reporte2.desc_Tipo_Pago_1.toString(),143, newPDF.tw_ren);
-      newPDF.ImpPosX(tipoPago2.toString(),163, newPDF.tw_ren);
-      newPDF.ImpPosX(reporte2.nombre.toString(),183, newPDF.tw_ren);
+      newPDF.ImpPosX(reporte2.articulo,15, newPDF.tw_ren, 0 , "L");
+      newPDF.ImpPosX(reporte2.descripcion,30, newPDF.tw_ren, 0 , "L");
+      newPDF.ImpPosX(reporte2.numero_doc,70, newPDF.tw_ren, 0 , "R");
+      newPDF.ImpPosX(reporte2.fecha,90, newPDF.tw_ren, 0 , "L");
+      newPDF.ImpPosX(reporte2.importe,110, newPDF.tw_ren, 0 , "R");
+      newPDF.ImpPosX(reporte2.recibo,130, newPDF.tw_ren, 0 , "R");
+      newPDF.ImpPosX(reporte2.desc_Tipo_Pago_1,143, newPDF.tw_ren, 0 , "R");
+      newPDF.ImpPosX(tipoPago2,163, newPDF.tw_ren, 0 , "R");
+      newPDF.ImpPosX(reporte2.nombre,183, newPDF.tw_ren, 0 , "L");
 
       Enca1(newPDF,fecha_ini, fecha_fin, cajero_ini, cajero_fin, tomaFechas);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
@@ -136,7 +136,7 @@ export const ImprimirPDF = (configuracion, fecha_ini, fecha_fin, cajero_ini, caj
   });
   Cambia_Alumno(newPDF, total_importe);
   
-  newPDF.ImpPosX(`TOTAL IMPORTE: ${total_general.toString()}` || '', 80, newPDF.tw_ren);
+  newPDF.ImpPosX(`TOTAL IMPORTE: ${total_general}` || '', 80, newPDF.tw_ren, 0 , "R");
   newPDF.guardaReporte("Reporte Cobranza por Alumno(s)")
 };
 

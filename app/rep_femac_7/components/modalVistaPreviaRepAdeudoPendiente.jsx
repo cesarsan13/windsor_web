@@ -28,7 +28,7 @@ function ModalVistaPreviaReporteAdeudoPendientes({ pdfPreview, pdfData, PDF, Exc
           ✕
         </button>
         <h3 className="font-bold text-lg mb-5 dark:text-white text-black">
-          Vista Previa Alumnos
+          Vista Previa Reporte Adeudos Pendientes
         </h3>
         <div className="flex flex-row space-x-4">
           <Tooltip Titulo={"Imprimir PDF"} posicion={"tooltip-top"}>
