@@ -5,6 +5,7 @@ import Inputs from "@/app/cajeros/components/Inputs";
 import BuscarCat from "@/app/components/BuscarCat";
 import { useForm } from "react-hook-form";
 import { showSwalAndWait } from "@/app/utils/alerts";
+import { format_Fecha_String } from "@/app/utils/globalfn";
 import {
   guardarDetallePedido,
   guardaEcabYCobrD,
@@ -23,8 +24,8 @@ function ModalPagoImprime({
   alumnos,
 }) {
   const [error, setError] = useState(null);
-  const columnasBuscaCat = ["id", "descripcion"];
-  const nameInputs = ["id", "descripcion"];
+  const columnasBuscaCat = ["numero", "descripcion"];
+  const nameInputs = ["numero", "descripcion"];
   const [Handlepago, setPago] = useState([]);
   const [formpago, setFormPago] = useState({});
   const [formpago2, setFormPago2] = useState({});
@@ -108,7 +109,7 @@ function ModalPagoImprime({
         newData = {
           recibo: data.recibo_imprimir || 0,
           alumno: pago.alumno || 0,
-          fecha: formaPagoPage.fecha || "",
+          fecha: format_Fecha_String(formaPagoPage.fecha) || "",
           articulo: pago.numero || 0,
           cantidad: pago.cantidad_producto || 0,
           precio_unitario: pagoUnitF || 0,
@@ -121,19 +122,19 @@ function ModalPagoImprime({
 
       const postNewData = {
         recibo: data.recibo_imprimir || 0,
-        alumno: alumnos1.id || 0,
-        fecha: formaPagoPage.fecha || "",
-        articulo: productos1.id || 0,
+        alumno: alumnos1.numero || 0,
+        fecha: format_Fecha_String(formaPagoPage.fecha) || "",
+        articulo: productos1.numero || 0,
         cajero: cajero.numero || 0,
         total_neto: totalFormat || 0,
-        n_banco: formpago.id || 0,
+        n_banco: formpago.numero || 0,
         imp_pago: imp_pago || 0,
         referencia_1: data.referencia || "",
-        n_banco_2: formpago2.id || 0,
+        n_banco_2: formpago2.numero || 0,
         imp_pago_2: imp_pago2 || 0,
         referencia_2: data.referencia_2 || "",
         quien_paga: data.quien_paga || "",
-        comenta: comentarios1.id || "",
+        comenta: comentarios1.numero || "",
         comentario_ad: formaPagoPage.comentario_ad || "",
       };
       res = await guardaEcabYCobrD(token, postNewData);
@@ -162,9 +163,9 @@ function ModalPagoImprime({
   const formaImprime = (dataSubmit) => {
     let body = [];
     for (const item of pagosFiltrados) {
-      const formaPagoFind = alumnos.find((forma) => forma.id === item.alumno);
+      const formaPagoFind = alumnos.find((forma) => forma.numero === item.alumno);
       const data = {
-        alumno_id: formaPagoFind.id || "",
+        alumno_id: formaPagoFind.numero || "",
         alumno_nombre_completo: formaPagoFind.nombre_completo || "",
         articulo_id: item.numero || "",
         articulo_nombre: item.descripcion || "",
@@ -182,7 +183,7 @@ function ModalPagoImprime({
   const formaEnca = (dataSubmit) => {
     let data = {
       fecha: formaPagoPage.fecha || "",
-      alumno_seleccionado: alumnos1.id || "",
+      alumno_seleccionado: alumnos1.numero || "",
       numero_recibo: formaPagoPage.recibo || "",
       forma_pago_descripcion: formpago.descripcion || "",
       comentario: comentarios1.comentario_1 || "",
@@ -196,13 +197,13 @@ function ModalPagoImprime({
     if (evt.target.value === "") return;
     datatype === "int"
       ? setPago((alumno) => ({
-          ...alumno,
-          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-        }))
+        ...alumno,
+        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+      }))
       : setPago((alumno) => ({
-          ...alumno,
-          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-        }));
+        ...alumno,
+        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+      }));
   };
 
   return (
