@@ -59,7 +59,7 @@ function AltasBajasAlumnos() {
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: "Reporte Relación de Recibos",
+        Nombre_Reporte: "Reporte Altas y Bajas Alumnos",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
       body: alumnosFiltrados,
@@ -72,7 +72,7 @@ function AltasBajasAlumnos() {
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: "Reporte Relación de Recibos",
+        Nombre_Reporte: "Reporte Altas y Bajas Alumnos",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
       body: alumnosFiltrados,
@@ -98,7 +98,7 @@ function AltasBajasAlumnos() {
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: "Reporte Relación de Recibos",
+        Nombre_Reporte: "Reporte Altas y Bajas Alumnos",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
       body: alumnosFiltrados,

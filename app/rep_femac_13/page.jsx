@@ -59,7 +59,7 @@ function Rep_Femac_13() {
       const configuracion = {
         Encabezado: {
           Nombre_Aplicacion: "Sistema de Control Escolar",
-          Nombre_Reporte: "Lista de Alumnos por clase semanal",
+          Nombre_Reporte: "Lista de Alumnos por Clase Semanal",
           Nombre_Usuario: `Usuario: ${session.user.name}`,
         },
         body: FormaRepASem,
@@ -94,11 +94,12 @@ function Rep_Femac_13() {
 
       Enca1(reporte);
       body.forEach((reporte1) => {
-        reporte.ImpPosX(reporte1.Num_Renglon.toString(), 15, reporte.tw_ren);
-        reporte.ImpPosX(reporte1.Numero_1.toString(), 25, reporte.tw_ren);
-        reporte.ImpPosX(reporte1.Nombre_1.toString(), 35, reporte.tw_ren);
-        reporte.ImpPosX(reporte1.Año_Nac_1.toString().substring(0, 4), 120, reporte.tw_ren);
-        reporte.ImpPosX(reporte1.Mes_Nac_1.toString().substring(4, 2), 130, reporte.tw_ren);
+        reporte.ImpPosX(reporte1.Num_Renglon?.toString() ?? "", 19, reporte.tw_ren, 0, "R");
+        reporte.ImpPosX(reporte1.Numero_1?.toString() ?? "", 29, reporte.tw_ren, 0, "R");
+        reporte.ImpPosX(reporte1.Nombre_1?.toString() ?? "", 35, reporte.tw_ren, 0, "L");
+        reporte.ImpPosX(reporte1.Año_Nac_1?.toString().substring(0, 4) ?? "", 129, reporte.tw_ren, 0, "R");
+        reporte.ImpPosX(reporte1.Mes_Nac_1?.toString().substring(4, 2) ?? "", 138, reporte.tw_ren, 0, "R");
+        reporte.ImpPosX(reporte1.Observaciones?.toString() ?? "", 145, reporte.tw_ren, 0, "L");
         Enca1(reporte);
         if (reporte.tw_ren >= reporte.tw_endRen) {
           reporte.pageBreak();
@@ -125,7 +126,7 @@ function Rep_Femac_13() {
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: "Lista de Alumnos por clase semanal",
+        Nombre_Reporte: "Lista de Alumnos por Clase Semanal",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
       body: FormaRepASem,
@@ -162,11 +163,12 @@ function Rep_Femac_13() {
 
     Enca1(reporte);
     body.forEach((reporte1) => {
-      reporte.ImpPosX(reporte1.Num_Renglon.toString(), 15, reporte.tw_ren);
-      reporte.ImpPosX(reporte1.Numero_1.toString(), 25, reporte.tw_ren);
-      reporte.ImpPosX(reporte1.Nombre_1.toString(), 35, reporte.tw_ren);
-      reporte.ImpPosX(reporte1.Año_Nac_1.toString().substring(0, 4), 120, reporte.tw_ren);
-      reporte.ImpPosX(reporte1.Mes_Nac_1.toString().substring(4, 2), 130, reporte.tw_ren);
+      reporte.ImpPosX(reporte1.Num_Renglon?.toString() ?? "", 19, reporte.tw_ren, 0, "R");
+      reporte.ImpPosX(reporte1.Numero_1?.toString() ?? "", 29, reporte.tw_ren, 0, "R");
+      reporte.ImpPosX(reporte1.Nombre_1?.toString() ?? "", 35, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(reporte1.Año_Nac_1?.toString().substring(0, 4) ?? "", 129, reporte.tw_ren, 0, "R");
+      reporte.ImpPosX(reporte1.Mes_Nac_1?.toString().substring(4, 2) ?? "", 138, reporte.tw_ren, 0, "R");
+      reporte.ImpPosX(reporte1.Observaciones?.toString() ?? "", 145, reporte.tw_ren, 0, "L");
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRen) {
         reporte.pageBreak();
@@ -180,7 +182,7 @@ function Rep_Femac_13() {
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: "Lista de Alumnos por clase semanal",
+        Nombre_Reporte: "Lista de Alumnos por Clase Semanal",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
         Clase: `Clase: ${horario.horario}`,
         Profesor: "Profesor: ",
@@ -218,11 +220,11 @@ function Rep_Femac_13() {
       <div className="container w-full max-w-screen-xl  bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
         <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin  text-black dark:text-white md:px-12">
-            Reporte de Alumnos por clase semanal.
+            Reporte de Alumnos por Clase Semanal.
           </h1>
         </div>
         <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-        <div className="md:col-span-1 flex flex-col">
+          <div className="md:col-span-1 flex flex-col">
             <Acciones
               Ver={handleClickVer}
               home={home}

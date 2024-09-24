@@ -40,7 +40,7 @@ function ModalVistaPreviaAlumnosPorClase({ pdfPreview, pdfData, PDF, Excel }) {
                 >
                     ✕
                 </button>
-                <h3 className='font-bold text-lg mb-5 dark:text-white text-black'>Vista Previa Comentarios</h3>
+                <h3 className='font-bold text-lg mb-5 dark:text-white text-black'>Vista Previa Lista de Alumnos por Clase.</h3>
                 <div className='flex flex-row space-x-4'>
                     <Tooltip Titulo={"Imprimir PDF"} posicion={"tooltip-top"}>
                         <button className='hover:bg-transparent border-none shadow-md hover:bg-slate-200 dark:hover:bg-neutral-700 bg-transparent text-black dark:text-white rounded-lg btn' onClick={PDF}>Imprimir PDF<i className='fa-solid fa-file-pdf'></i></button>

@@ -84,7 +84,7 @@ function AlumnosPorClase() {
         { header: "Mes", dataKey: "Mes_Nac_2" },
         { header: "Telefono", dataKey: "Telefono_2" },
       ],
-      nombre: "RepDosSec"
+      nombre: "Lista_Alumnos_Por_Clase"
     }
     ImprimirExcel(configuracion)
   }
@@ -97,7 +97,6 @@ function AlumnosPorClase() {
     if (horario1.numero === undefined) {
       showSwal("Oppss!", "Para imprimir, mínimo debe estar seleccionada una fecha de 'Inicio'", "error");
     } else {
-
       const configuracion = {
         Encabezado: {
           Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -112,17 +111,17 @@ function AlumnosPorClase() {
         if (!doc.tiene_encabezado) {
           doc.imprimeEncabezadoPrincipalH();
           doc.nextRow(12);
-          doc.ImpPosX("No.", 15, doc.tw_ren),
-            doc.ImpPosX("No. 1", 25, doc.tw_ren),
-            doc.ImpPosX("Nombre", 35, doc.tw_ren),
-            doc.ImpPosX("Año", 120, doc.tw_ren),
-            doc.ImpPosX("Mes", 130, doc.tw_ren),
-            doc.ImpPosX("Telefono", 138, doc.tw_ren),
-            doc.ImpPosX("No. 2", 155, doc.tw_ren),
-            doc.ImpPosX("Nombre", 165, doc.tw_ren),
-            doc.ImpPosX("Año", 250, doc.tw_ren),
-            doc.ImpPosX("Mes", 260, doc.tw_ren),
-            doc.ImpPosX("Telefono", 268, doc.tw_ren),
+          doc.ImpPosX("No.", 15, doc.tw_ren, 0, "L"),
+            doc.ImpPosX("No. 1", 25, doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Nombre", 45, doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Año", 120, doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Mes", 130, doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Telefono", 138, doc.tw_ren, 0, "L"),
+            doc.ImpPosX("No. 2", 163, doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Nombre", 176, doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Año", 250, doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Mes", 260, doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Telefono", 268, doc.tw_ren, 0, "L"),
             doc.nextRow(4);
           doc.printLineH();
           doc.nextRow(4);
@@ -132,20 +131,19 @@ function AlumnosPorClase() {
           doc.tiene_encabezado = true;
         }
       };
-
       Enca1(reporte);
       body.forEach((reporte1) => {
-        reporte.ImpPosX(reporte1.Num_Renglon.toString(), 15, reporte.tw_ren,0,"R");
-        reporte.ImpPosX(reporte1.Numero_1.toString(), 25, reporte.tw_ren,0,"R");
-        reporte.ImpPosX(reporte1.Nombre_1.toString(), 35, reporte.tw_ren,0,"L");
-        reporte.ImpPosX(reporte1.Año_Nac_1.toString().substring(0, 4), 118, reporte.tw_ren,0,"L");
-        reporte.ImpPosX(reporte1.Mes_Nac_1.toString().substring(4, 2), 130, reporte.tw_ren,0,"L");
-        reporte.ImpPosX(reporte1.Telefono_1.toString(), 138, reporte.tw_ren,8,"L");
-        reporte.ImpPosX(reporte1.Numero_2.toString(), 155, reporte.tw_ren,0,"L");
-        reporte.ImpPosX(reporte1.Nombre_2.toString(), 165, reporte.tw_ren,0,"L");
-        reporte.ImpPosX(reporte1.Año_Nac_2.toString().substring(0, 4), 250, reporte.tw_ren,0,"L");
-        reporte.ImpPosX(reporte1.Mes_Nac_2.toString().substring(4, 2), 260, reporte.tw_ren,0,"L");
-        reporte.ImpPosX(reporte1.Telefono_2.toString(), 268, reporte.tw_ren,0,"L");
+        reporte.ImpPosX(reporte1.Num_Renglon?.toString() ?? "", 20, reporte.tw_ren, 0, "R");
+        reporte.ImpPosX(reporte1.Numero_1?.toString() ?? "", 27, reporte.tw_ren, 0, "R");
+        reporte.ImpPosX(reporte1.Nombre_1?.toString() ?? "", 45, reporte.tw_ren, 35, "L");
+        reporte.ImpPosX(reporte1.Año_Nac_1?.toString().substring(0, 4) ?? "", 128, reporte.tw_ren, 0, "R");
+        reporte.ImpPosX(reporte1.Mes_Nac_1?.toString().substring(4, 2) ?? "", 137, reporte.tw_ren, 0, "R");
+        reporte.ImpPosX(reporte1.Telefono_1?.toString() ?? "", 158, reporte.tw_ren, 0, "R");
+        reporte.ImpPosX(reporte1.Numero_2?.toString() ?? "", 173, reporte.tw_ren, 0, "R");
+        reporte.ImpPosX(reporte1.Nombre_2?.toString() ?? "", 176, reporte.tw_ren, 35, "L");
+        reporte.ImpPosX(reporte1.Año_Nac_2?.toString().substring(0, 4) ?? "", 259, reporte.tw_ren, 0, "R");
+        reporte.ImpPosX(reporte1.Mes_Nac_2?.toString().substring(4, 2) ?? "", 266, reporte.tw_ren, 0, "R");
+        reporte.ImpPosX(reporte1.Telefono_2?.toString() ?? "", 289, reporte.tw_ren, 0, "R");
         Enca1(reporte);
         if (reporte.tw_ren >= reporte.tw_endRenH) {
           reporte.pageBreakH();
@@ -181,7 +179,7 @@ function AlumnosPorClase() {
       <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 overflow-y-auto">
         <div className="flex justify-start p-3 ">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
-            Lista de Alumnos por clase.
+            Lista de Alumnos por Clase.
           </h1>
         </div>
         <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
