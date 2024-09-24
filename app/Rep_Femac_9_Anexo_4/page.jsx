@@ -15,6 +15,7 @@ import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import ModalVistaPreviaRepFemac9Anexo4 from "./components/modalVistaPreviaRepFemac9Anexo4";
+import { formatNumber } from "../utils/globalfn";
 
 
 function RelaciondeFacturas(){
@@ -74,27 +75,27 @@ function RelaciondeFacturas(){
             {
                 if(fecha_cobro_fin == '')
                 {
-                    doc.ImpPosX(`Reporte de Factura del ${fecha_cobro_ini} `,15,doc.tw_ren),
+                    doc.ImpPosX(`Reporte de Factura del ${fecha_cobro_ini} `,15,doc.tw_ren, 0, "L"),
                     doc.nextRow(5);
                 }
                 else{
-                    doc.ImpPosX(`Reporte de Facturas del ${fecha_cobro_ini} al ${fecha_cobro_fin}`,15,doc.tw_ren),
+                    doc.ImpPosX(`Reporte de Facturas del ${fecha_cobro_ini} al ${fecha_cobro_fin}`,15,doc.tw_ren, 0, "L"),
                     doc.nextRow(5);
                 }
             }
             
             if(tomaCanceladas === true){
-              doc.ImpPosX("Facturas Canceladas", 15, doc.tw_ren),
+              doc.ImpPosX("Facturas Canceladas", 15, doc.tw_ren, 0, "L"),
               doc.nextRow(5);
             }
 
-            doc.ImpPosX("Factura",15,doc.tw_ren),
-            doc.ImpPosX("Recibo",30,doc.tw_ren),
-            doc.ImpPosX("Fecha P",45,doc.tw_ren),
-            doc.ImpPosX("Nombre",68,doc.tw_ren),
-            doc.ImpPosX("Subtotal",145,doc.tw_ren),
-            doc.ImpPosX("I.V.A",165,doc.tw_ren),
-            doc.ImpPosX("Total",180,doc.tw_ren),
+            doc.ImpPosX("Factura",15,doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Recibo",30,doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Fecha P",45,doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Nombre",68,doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Subtotal",145,doc.tw_ren, 0, "L"),
+            doc.ImpPosX("I.V.A",167,doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Total",180,doc.tw_ren, 0, "L"),
             doc.nextRow(4);
             doc.printLineV();
             doc.nextRow(4);
@@ -143,13 +144,13 @@ function RelaciondeFacturas(){
             razon_social_cambio = razon_social;
          
           }
-            reporte.ImpPosX(noFac.toString(), 15, reporte.tw_ren);
-            reporte.ImpPosX(recibo.toString(), 30, reporte.tw_ren);
-            reporte.ImpPosX(fecha, 45, reporte.tw_ren);
-            reporte.ImpPosX(razon_social_cambio, 68, reporte.tw_ren);
-            reporte.ImpPosX(total_importe.toFixed(2), 145, reporte.tw_ren);
-            reporte.ImpPosX(`${ivaimp} %`.toString(), 165, reporte.tw_ren);
-            reporte.ImpPosX(sub_total.toFixed(2), 180, reporte.tw_ren);
+            reporte.ImpPosX(noFac.toString(), 25, reporte.tw_ren, 0, "R");
+            reporte.ImpPosX(recibo.toString(), 40, reporte.tw_ren, 0, "R");
+            reporte.ImpPosX(fecha, 45, reporte.tw_ren, 0, "L");
+            reporte.ImpPosX(razon_social_cambio, 68, reporte.tw_ren, 0, "L");
+            reporte.ImpPosX(formatNumber(total_importe), 157, reporte.tw_ren, 0, "R");
+            reporte.ImpPosX(`${ivaimp} %`.toString(), 175, reporte.tw_ren, 0, "R");
+            reporte.ImpPosX(formatNumber(sub_total), 198, reporte.tw_ren, 0, "R");
          
           Enca1(reporte);
           if (reporte.tw_ren >= reporte.tw_endRen) {
@@ -160,7 +161,7 @@ function RelaciondeFacturas(){
 
         });
         reporte.nextRow(4);
-        reporte.ImpPosX(`TOTAL IMPORTE: ${total_general.toFixed(2)}`|| '', 149, reporte.tw_ren);
+        reporte.ImpPosX(`TOTAL IMPORTE: ${formatNumber(total_general)}`|| '', 150, reporte.tw_ren,0, "L");
 
         const pdfData = reporte.doc.output("datauristring");
         setPdfData(pdfData);
