@@ -135,17 +135,17 @@ function AlumnosPorClase() {
 
       Enca1(reporte);
       body.forEach((reporte1) => {
-        reporte.ImpPosX(reporte1.Num_Renglon.toString(), 15, reporte.tw_ren);
-        reporte.ImpPosX(reporte1.Numero_1.toString(), 25, reporte.tw_ren);
-        reporte.ImpPosX(reporte1.Nombre_1.toString(), 35, reporte.tw_ren);
-        reporte.ImpPosX(reporte1.Año_Nac_1.toString().substring(0, 4), 120, reporte.tw_ren);
-        reporte.ImpPosX(reporte1.Mes_Nac_1.toString().substring(4, 2), 130, reporte.tw_ren);
-        reporte.ImpPosX(reporte1.Telefono_1.toString(), 138, reporte.tw_ren);
-        reporte.ImpPosX(reporte1.Numero_2.toString(), 155, reporte.tw_ren);
-        reporte.ImpPosX(reporte1.Nombre_2.toString(), 165, reporte.tw_ren);
-        reporte.ImpPosX(reporte1.Año_Nac_2.toString().substring(0, 4), 250, reporte.tw_ren);
-        reporte.ImpPosX(reporte1.Mes_Nac_2.toString().substring(4, 2), 260, reporte.tw_ren);
-        reporte.ImpPosX(reporte1.Telefono_2.toString(), 268, reporte.tw_ren);
+        reporte.ImpPosX(reporte1.Num_Renglon.toString(), 15, reporte.tw_ren,0,"R");
+        reporte.ImpPosX(reporte1.Numero_1.toString(), 25, reporte.tw_ren,0,"R");
+        reporte.ImpPosX(reporte1.Nombre_1.toString(), 35, reporte.tw_ren,0,"L");
+        reporte.ImpPosX(reporte1.Año_Nac_1.toString().substring(0, 4), 118, reporte.tw_ren,0,"L");
+        reporte.ImpPosX(reporte1.Mes_Nac_1.toString().substring(4, 2), 130, reporte.tw_ren,0,"L");
+        reporte.ImpPosX(reporte1.Telefono_1.toString(), 138, reporte.tw_ren,8,"L");
+        reporte.ImpPosX(reporte1.Numero_2.toString(), 155, reporte.tw_ren,0,"L");
+        reporte.ImpPosX(reporte1.Nombre_2.toString(), 165, reporte.tw_ren,0,"L");
+        reporte.ImpPosX(reporte1.Año_Nac_2.toString().substring(0, 4), 250, reporte.tw_ren,0,"L");
+        reporte.ImpPosX(reporte1.Mes_Nac_2.toString().substring(4, 2), 260, reporte.tw_ren,0,"L");
+        reporte.ImpPosX(reporte1.Telefono_2.toString(), 268, reporte.tw_ren,0,"L");
         Enca1(reporte);
         if (reporte.tw_ren >= reporte.tw_endRenH) {
           reporte.pageBreakH();
