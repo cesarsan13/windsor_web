@@ -25,12 +25,12 @@ const Enca1 = (doc) => {
   if (!doc.tiene_encabezado) {
     doc.imprimeEncabezadoPrincipalV();
     doc.nextRow(12);
-    doc.ImpPosX("No", 15, doc.tw_ren);
-    doc.ImpPosX("Nombre", 25, doc.tw_ren);
-    doc.ImpPosX("Estatus", 105, doc.tw_ren);
-    doc.ImpPosX("Fecha", 125, doc.tw_ren);
-    doc.ImpPosX("Horario", 150, doc.tw_ren);
-    doc.ImpPosX("Teléfono", 175, doc.tw_ren);
+    doc.ImpPosX("No", 15, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Nombre", 25, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Estatus", 110, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Fecha", 125, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Horario", 147, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Teléfono", 178, doc.tw_ren, 0, "L");
     doc.nextRow(4);
     doc.printLineV();
     doc.nextRow(4);
@@ -52,16 +52,16 @@ export const ImprimirPDF = (configuracion) => {
     const fecha_nac = ((alumnos.fecha_nac || '')).toString().substring(0, 15);
     const horario_1_nombre = ((alumnos.horario_1_nombre || '')).toString().substring(0, 15);
     const telefono = ((alumnos.telefono1 || '')).toString().substring(0, 15);
-    newPDF.ImpPosX(`${alumnos.numero}-${id}`, 15, newPDF.tw_ren);
-    newPDF.ImpPosX(nombre, 25, newPDF.tw_ren);
-    newPDF.ImpPosX(estatus, 105, newPDF.tw_ren);
-    newPDF.ImpPosX(fecha_nac, 125, newPDF.tw_ren);
-    newPDF.ImpPosX(horario_1_nombre, 150, newPDF.tw_ren);
-    newPDF.ImpPosX(telefono, 175, newPDF.tw_ren);
+    newPDF.ImpPosX(`${alumnos.numero}-${id}`, 23, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(nombre, 25, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(estatus, 110, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(fecha_nac, 125, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(horario_1_nombre, 147, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(telefono, 200, newPDF.tw_ren, 0, "R");
     if (alumnos.baja === '*') {
       newPDF.tw_ren += 5;
       const fecha_baja = ((alumnos.fecha_baja || '')).toString().substring(0, 15);
-      newPDF.ImpPosX(`Fecha de Baja: ${fecha_baja}`, 15, newPDF.tw_ren);
+      newPDF.ImpPosX(`Fecha de Baja: ${fecha_baja}`, 25, newPDF.tw_ren);
     }
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {

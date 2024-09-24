@@ -6,7 +6,7 @@ import Acciones from './components/Acciones';
 import BuscarCat from '../components/BuscarCat';
 import { useRouter } from "next/navigation";
 import { Cobranza, Imprimir, ImprimirExcel } from '../utils/api/Rep_Femac_6/Rep_Femac_6';
-import { formatDate } from '../utils/globalfn';
+import { formatDate, formatNumber } from '../utils/globalfn';
 import { ReportePDF } from '../utils/ReportesPDF';
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import ModalVistaPreviaRep6 from './components/modalVistaPreviaRep6';
@@ -135,9 +135,9 @@ function Rep_Femac_6() {
         const Tw_Pago = Array.from({ length: 100 }, () => Array(2).fill(0));
         if (cajero.numero === 0 || cajero.numero === undefined) {
             if (configuracion.body.producto.length > 0) {
-                reporte.ImpPosX("Producto", 14, reporte.tw_ren);
-                reporte.ImpPosX("Descripcion", 34, reporte.tw_ren);
-                reporte.ImpPosX("Importe", 154, reporte.tw_ren);
+                reporte.ImpPosX("Producto", 14, reporte.tw_ren, 0,"L");
+                reporte.ImpPosX("Descripcion", 34, reporte.tw_ren, 0,"L");
+                reporte.ImpPosX("Importe", 154, reporte.tw_ren, 0,"L");
                 reporte.nextRow(4);
                 let atr_ant = 0;
                 let tot_ant = 0;
@@ -146,9 +146,9 @@ function Rep_Femac_6() {
                 let total_productos = 0;
                 configuracion.body.producto.forEach((producto) => {
                     if (atr_ant !== producto.articulo && atr_ant !== 0) {
-                        reporte.ImpPosX(atr_ant.toString(), 14, reporte.tw_ren);
-                        reporte.ImpPosX(atr_des_ant.toString(), 34, reporte.tw_ren);
-                        reporte.ImpPosX(tot_ant.toString(), 154, reporte.tw_ren);
+                        reporte.ImpPosX(atr_ant.toString(), 27, reporte.tw_ren, 0, "R");
+                        reporte.ImpPosX(atr_des_ant.toString(), 34, reporte.tw_ren, 0,"L");
+                        reporte.ImpPosX(formatNumber(tot_ant), 166, reporte.tw_ren, 0,"R");
                         total_productos = total_productos + tot_ant;
                         Enca1(reporte);
                         if (reporte.tw_ren >= reporte.tw_endRen) {
@@ -167,21 +167,21 @@ function Rep_Femac_6() {
                     atr_des_ant = producto.descripcion;
                 })
                 total_productos = total_productos + tot_ant;
-                reporte.ImpPosX(atr_ant.toString(), 14, reporte.tw_ren);
-                reporte.ImpPosX(atr_des_ant.toString(), 34, reporte.tw_ren);
-                reporte.ImpPosX(tot_ant.toString(), 154, reporte.tw_ren);
+                reporte.ImpPosX(atr_ant.toString(), 27, reporte.tw_ren, 0, "R");
+                reporte.ImpPosX(atr_des_ant.toString(), 34, reporte.tw_ren, 0,"L")
+                reporte.ImpPosX(formatNumber(tot_ant), 166, reporte.tw_ren, 0,"R");
                 reporte.nextRow(5);
-                reporte.ImpPosX("Total Productos", 34, reporte.tw_ren);
-                reporte.ImpPosX(total_productos.toString(), 154, reporte.tw_ren);
+                reporte.ImpPosX("Total Productos", 34, reporte.tw_ren, 0, "L");
+                reporte.ImpPosX(formatNumber(total_productos), 166, reporte.tw_ren, 0, "R");
                 reporte.nextRow(15);
             } else {
-                reporte.ImpPosX("Producto", 14, reporte.tw_ren);
-                reporte.ImpPosX("Descripcion", 34, reporte.tw_ren);
-                reporte.ImpPosX("Importe", 154, reporte.tw_ren);
+                reporte.ImpPosX("Producto", 14, reporte.tw_ren, 0,"L");
+                reporte.ImpPosX("Descripcion", 34, reporte.tw_ren, 0,"L");
+                reporte.ImpPosX("Importe", 154, reporte.tw_ren, 0,"L");
                 reporte.nextRow(5);
                 let total_productos = 0;
-                reporte.ImpPosX("Total Productos", 34, reporte.tw_ren);
-                reporte.ImpPosX(total_productos.toString(), 154, reporte.tw_ren);
+                reporte.ImpPosX("Total Productos", 34, reporte.tw_ren, 0, "L");
+                reporte.ImpPosX(formatNumber(total_productos), 166, reporte.tw_ren, 0, "R");
                 reporte.nextRow(15);
             }
         }
@@ -192,9 +192,9 @@ function Rep_Femac_6() {
             Tw_Pago[Tw_count][2] = "";
         }
         if (configuracion.body.tipo_pago.length > 0) {
-            reporte.ImpPosX("Tipo Pago", 14, reporte.tw_ren);
-            reporte.ImpPosX("Descripcion", 34, reporte.tw_ren);
-            reporte.ImpPosX("Importe", 154, reporte.tw_ren);
+            reporte.ImpPosX("Tipo Pago", 14, reporte.tw_ren, 0,"L");
+            reporte.ImpPosX("Descripcion", 34, reporte.tw_ren, 0,"L");
+            reporte.ImpPosX("Importe", 154, reporte.tw_ren, 0,"L");
             reporte.nextRow(4);
             configuracion.body.tipo_pago.forEach((tipoPago) => {
                 for (let Tw_count = 0; Tw_count < 20; Tw_count++) {
@@ -233,9 +233,9 @@ function Rep_Femac_6() {
             let total_tipo_pago = 0;
             for (let Tw_count = 0; Tw_count < 20; Tw_count++) {
                 if (Tw_Pago[Tw_count][0] === 0) break;
-                reporte.ImpPosX(Tw_Pago[Tw_count][0].toString(), 14, reporte.tw_ren);
-                reporte.ImpPosX(Tw_Pago[Tw_count][2].toString(), 34, reporte.tw_ren);
-                reporte.ImpPosX(Tw_Pago[Tw_count][1].toString(), 154, reporte.tw_ren);
+                reporte.ImpPosX(Tw_Pago[Tw_count][0].toString(), 30, reporte.tw_ren, 0, "R");
+                reporte.ImpPosX(Tw_Pago[Tw_count][2].toString(), 34, reporte.tw_ren, 0, "L");
+                reporte.ImpPosX(formatNumber(Tw_Pago[Tw_count][1]), 166, reporte.tw_ren, 0, "R");
                 total_tipo_pago = total_tipo_pago + Number(Tw_Pago[Tw_count][1]);
                 Enca1(reporte);
                 if (reporte.tw_ren >= reporte.tw_endRen) {
@@ -243,23 +243,23 @@ function Rep_Femac_6() {
                     Enca1(reporte);
                 }
             }
-            reporte.ImpPosX("Total Tipo Pago", 34, reporte.tw_ren);
-            reporte.ImpPosX(total_tipo_pago.toString(), 154, reporte.tw_ren);
+            reporte.ImpPosX("Total Tipo Pago", 34, reporte.tw_ren, 0, "L");
+            reporte.ImpPosX(formatNumber(total_tipo_pago), 166, reporte.tw_ren, 0, "R");
             reporte.nextRow(15);
         } else {
-            reporte.ImpPosX("Tipo Pago", 14, reporte.tw_ren);
-            reporte.ImpPosX("Descripcion", 34, reporte.tw_ren);
-            reporte.ImpPosX("Importe", 154, reporte.tw_ren);
+            reporte.ImpPosX("Tipo Pago", 14, reporte.tw_ren, 0, "L");
+            reporte.ImpPosX("Descripcion", 34, reporte.tw_ren, 0, "L");
+            reporte.ImpPosX("Importe", 154, reporte.tw_ren, 0, "L");
             reporte.nextRow(5);
             let total_tipo_pago = 0;
-            reporte.ImpPosX("Total Tipo Pago", 34, reporte.tw_ren);
-            reporte.ImpPosX(total_tipo_pago.toString(), 154, reporte.tw_ren);
+            reporte.ImpPosX("Total Tipo Pago", 34, reporte.tw_ren, 0, "L");
+            reporte.ImpPosX(formatNumber(total_tipo_pago), 166, reporte.tw_ren, 0, "R");
             reporte.nextRow(15);
         }
         if (configuracion.body.cajeros.length > 0) {
-            reporte.ImpPosX("Cajero", 14, reporte.tw_ren);
-            reporte.ImpPosX("Descripcion", 34, reporte.tw_ren);
-            reporte.ImpPosX("Importe", 154, reporte.tw_ren);
+            reporte.ImpPosX("Cajero", 14, reporte.tw_ren, 0, "L");
+            reporte.ImpPosX("Descripcion", 34, reporte.tw_ren, 0, "L");
+            reporte.ImpPosX("Importe", 154, reporte.tw_ren, 0, "L");
             reporte.nextRow(4);
             let cajero_ant = 0;
             let tot_cajero = 0;
@@ -267,9 +267,9 @@ function Rep_Femac_6() {
             let total_cajero = 0;
             configuracion.body.cajeros.forEach((cajero) => {
                 if (cajero_ant !== cajero.cajero && cajero_ant !== 0) {
-                    reporte.ImpPosX(cajero_ant.toString(), 14, reporte.tw_ren);
-                    reporte.ImpPosX(cajero_desc_ant.toString(), 34, reporte.tw_ren);
-                    reporte.ImpPosX(tot_cajero.toString(), 154, reporte.tw_ren);
+                    reporte.ImpPosX(cajero_ant.toString(), 24, reporte.tw_ren, 0, "R");
+                    reporte.ImpPosX(cajero_desc_ant.toString(), 34, reporte.tw_ren, 0, "L");
+                    reporte.ImpPosX(formatNumber(tot_cajero), 166, reporte.tw_ren, 0, "R");
                     total_cajero = total_cajero + tot_cajero;
                     Enca1(reporte);
                     if (reporte.tw_ren >= reporte.tw_endRen) {
@@ -282,20 +282,20 @@ function Rep_Femac_6() {
                 cajero_desc_ant = cajero.nombre;
             })
             total_cajero = total_cajero + tot_cajero;
-            reporte.ImpPosX(cajero_ant.toString(), 14, reporte.tw_ren);
-            reporte.ImpPosX(cajero_desc_ant.toString(), 34, reporte.tw_ren);
-            reporte.ImpPosX(tot_cajero.toString(), 154, reporte.tw_ren);
+            reporte.ImpPosX(cajero_ant.toString(), 24, reporte.tw_ren, 0, "R");
+            reporte.ImpPosX(cajero_desc_ant.toString(), 34, reporte.tw_ren, 0, "L");
+            reporte.ImpPosX(formatNumber(tot_cajero), 166, reporte.tw_ren, 0, "R");
             reporte.nextRow(5);
-            reporte.ImpPosX("Total Cajeros", 34, reporte.tw_ren);
-            reporte.ImpPosX(total_cajero.toString(), 154, reporte.tw_ren);
+            reporte.ImpPosX("Total Cajeros", 34, reporte.tw_ren, 0, "L");
+            reporte.ImpPosX(formatNumber(total_cajero), 166, reporte.tw_ren, 0, "R");
         } else {
-            reporte.ImpPosX("Cajero", 14, reporte.tw_ren);
-            reporte.ImpPosX("Descripcion", 34, reporte.tw_ren);
-            reporte.ImpPosX("Importe", 154, reporte.tw_ren);
+            reporte.ImpPosX("Cajero", 14, reporte.tw_ren, 0, "L");
+            reporte.ImpPosX("Descripcion", 34, reporte.tw_ren, 0, "L");
+            reporte.ImpPosX("Importe", 154, reporte.tw_ren, 0, "L");
             reporte.nextRow(4);
             let total_cajero = 0;
-            reporte.ImpPosX("Total Cajeros", 34, reporte.tw_ren);
-            reporte.ImpPosX(total_cajero.toString(), 154, reporte.tw_ren);
+            reporte.ImpPosX("Total Cajeros", 34, reporte.tw_ren, 0, "L");
+            reporte.ImpPosX(formatNumber(total_cajero), 166, reporte.tw_ren, 0, "R");
         }
         const pdfData = reporte.doc.output("datauristring")
         setPdfData(pdfData)
