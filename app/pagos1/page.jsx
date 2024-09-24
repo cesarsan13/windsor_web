@@ -15,7 +15,7 @@ import {
 } from "@/app/utils/api/pagos1/pagos1";
 import { getFormasPago } from "@/app/utils/api/formapago/formapago";
 import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
-import { Elimina_Comas, formatNumber, pone_ceros } from "@/app/utils/globalfn";
+import { Elimina_Comas, formatNumber, pone_ceros, format_Fecha_String } from "@/app/utils/globalfn";
 import Button from "@/app/components/button";
 import Tooltip from "@/app/components/tooltip";
 import { useState, useEffect } from "react";
@@ -38,12 +38,12 @@ function Pagos_1() {
   const [alumnos1, setAlumnos1] = useState({});
   const [comentarios1, setComentarios1] = useState({});
   const [productos1, setProductos1] = useState({});
-  const nameInputs = ["id", "nombre_completo"];
-  const columnasBuscaCat = ["id", "nombre_completo"];
-  const nameInputs2 = ["id", "comentario_1"];
-  const columnasBuscaCat2 = ["id", "comentario_1"];
-  const nameInputs3 = ["id", "descripcion"];
-  const columnasBuscaCat3 = ["id", "descripcion"];
+  const nameInputs = ["numero", "nombre_completo"];
+  const columnasBuscaCat = ["numero", "nombre_completo"];
+  const nameInputs2 = ["numero", "comentario_1"];
+  const columnasBuscaCat2 = ["numero", "comentario_1"];
+  const nameInputs3 = ["numero", "descripcion"];
+  const columnasBuscaCat3 = ["numero", "descripcion"];
   const [pagos, setPagos] = useState([]);
   const [pago, setPago] = useState({});
   let [pagosFiltrados, setPagosFiltrados] = useState([]);
@@ -164,12 +164,12 @@ function Pagos_1() {
   const submitDocumento = async (data) => {
     const { token } = session.user;
     let newData = {};
-    let alumnoInvalido = alumnos1.id;
+    let alumnoInvalido = alumnos1.numero;
     if (!alumnoInvalido) {
       showSwal("Oppss!", "Alumno invalido", "error");
       return;
     }
-    const dataR = await buscaDocumentosCobranza(token, alumnos1.id);
+    const dataR = await buscaDocumentosCobranza(token, alumnos1.numero);
     if (dataR.length > 0) {
       setdDocFiltrados([]);
       for (const item of dataR) {
@@ -206,8 +206,8 @@ function Pagos_1() {
 
   const Recargos = async () => {
     let recargo;
-    let prod = productos1.id;
-    let alumnoInvalido = alumnos1.id;
+    let prod = productos1.numero;
+    let alumnoInvalido = alumnos1.numero;
     if (!alumnoInvalido) {
       showSwal("Oppss!", "Alumno invalido", "error");
       return;
@@ -232,7 +232,7 @@ function Pagos_1() {
   };
 
   const Parciales = async () => {
-    let alumnoInvalido = alumnos1.id;
+    let alumnoInvalido = alumnos1.numero;
     if (!alumnoInvalido) {
       showSwal("Oppss!", "Alumno invalido", "error");
       return;
@@ -301,7 +301,10 @@ function Pagos_1() {
           const yyyy = today.getFullYear();
           const mm = String(today.getMonth() + 1).padStart(2, "0");
           const dd = String(today.getDate()).padStart(2, "0");
-          fecha = `${dd}-${mm}-${yyyy}`;
+          fecha = `${yyyy}-${mm}-${dd}`;
+        }
+        if (!data.fecha) {
+          data.fecha = format_Fecha_String(fecha);
         }
         const dateObject = new Date(fecha);
         const year = dateObject.getFullYear();
@@ -354,7 +357,7 @@ function Pagos_1() {
       precio_base: recargo || 0,
       neto: recargo || 0,
       total: totalFormat || 0,
-      alumno: alumnos1.id || 0,
+      alumno: alumnos1.numero || 0,
       numero: 9999,
       descripcion: dRecargo || "",
       cantidad_producto: data.cantidad_producto || 0,
@@ -387,7 +390,7 @@ function Pagos_1() {
       const dd = String(today.getDate()).padStart(2, "0");
       fecha = `${dd}-${mm}-${yyyy}`;
     }
-    let alumnoInvalido = alumnos1.id;
+    let alumnoInvalido = alumnos1.numero;
     if (!alumnoInvalido) {
       showSwal("Oppss!", "Alumno invalido", "error");
       return;
@@ -397,11 +400,11 @@ function Pagos_1() {
       return;
     }
     let dataP = await buscaPropietario(session.user.token, 1);
-    const formaPagoFind = formaPago.find((forma) => forma.id === 1);
+    const formaPagoFind = formaPago.find((forma) => forma.numero === 1);
     const newData = {
       pago: h1Total || 0,
       recibo: dataP.con_recibos || 0,
-      forma_pago_id: formaPagoFind.id || 0,
+      forma_pago_id: formaPagoFind.numero || 0,
       comentario_ad: data.comentarios || "",
       fecha: fecha || "",
     };
@@ -444,12 +447,12 @@ function Pagos_1() {
   };
 
   const handleEnterKey = async (data) => {
-    let productoInvalido = productos1.id;
+    let productoInvalido = productos1.numero;
     if (!productoInvalido) {
       showSwal("Oppss!", "Producto invalido", "error");
       return;
     }
-    let alumnoInvalido = alumnos1.id;
+    let alumnoInvalido = alumnos1.numero;
     if (!alumnoInvalido) {
       showSwal("Oppss!", "Alumno invalido", "error");
       return;
@@ -461,8 +464,8 @@ function Pagos_1() {
       precio_base: precio_base || 0,
       neto: precio_base || 0,
       total: totalFormat || 0,
-      alumno: alumnos1.id || 0,
-      numero: productos1.id || 0,
+      alumno: alumnos1.numero || 0,
+      numero: productos1.numero || 0,
       descripcion: productos1.descripcion || "",
       cantidad_producto: data.cantidad_producto || 0,
       documento: "",
@@ -482,13 +485,13 @@ function Pagos_1() {
     if (evt.target.value === "") return;
     datatype === "int"
       ? setPago((pago) => ({
-          ...pago,
-          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-        }))
+        ...pago,
+        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+      }))
       : setPago((pago) => ({
-          ...pago,
-          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-        }));
+        ...pago,
+        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+      }));
   };
 
   const handleKeyDown = (event) => {
@@ -582,7 +585,7 @@ function Pagos_1() {
                 errors={errors}
                 maxLength={15}
                 isDisabled={false}
-                // setValue={setFecha}
+              // setValue={setFecha}
               />
             </div>
 
