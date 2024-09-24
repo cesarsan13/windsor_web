@@ -1,6 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import { format_Fecha_String } from "../../globalfn";
+import { format_Fecha_String, formatNumber } from "../../globalfn";
 
 export const getRelaciondeFacturas = async (token, tomaFecha, tomaCanceladas, fecha_cobro_ini, fecha_cobro_fin, factura_ini, factura_fin) => {
     factura_ini = (factura_ini === '' || factura_ini === undefined) ? 0 : factura_ini;
@@ -35,27 +35,27 @@ const Enca1 = (doc,fecha_cobro_ini, fecha_cobro_fin, tomaFechas, tomaCanceladas)
             {
                 if(fecha_cobro_fin == '')
                 {
-                    doc.ImpPosX(`Reporte de Factura del ${fecha_cobro_ini} `,15,doc.tw_ren),
+                    doc.ImpPosX(`Reporte de Factura del ${fecha_cobro_ini} `,15,doc.tw_ren, 0, "L"),
                     doc.nextRow(5);
                 }
                 else{
-                    doc.ImpPosX(`Reporte de Facturas del ${fecha_cobro_ini} al ${fecha_cobro_fin}`,15,doc.tw_ren),
+                    doc.ImpPosX(`Reporte de Facturas del ${fecha_cobro_ini} al ${fecha_cobro_fin}`,15,doc.tw_ren, 0, "L"),
                     doc.nextRow(5);
                 }
             }
             
             if(tomaCanceladas === true){
-              doc.ImpPosX("Facturas Canceladas", 15, doc.tw_ren),
+              doc.ImpPosX("Facturas Canceladas", 15, doc.tw_ren, 0, "L"),
               doc.nextRow(5);
             }
 
-            doc.ImpPosX("Factura",15,doc.tw_ren),
-            doc.ImpPosX("Recibo",30,doc.tw_ren),
-            doc.ImpPosX("Fecha P",45,doc.tw_ren),
-            doc.ImpPosX("Nombre",68,doc.tw_ren),
-            doc.ImpPosX("Subtotal",145,doc.tw_ren),
-            doc.ImpPosX("I.V.A",165,doc.tw_ren),
-            doc.ImpPosX("Total",180,doc.tw_ren),
+            doc.ImpPosX("Factura",15,doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Recibo",30,doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Fecha P",45,doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Nombre",68,doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Subtotal",145,doc.tw_ren, 0, "L"),
+            doc.ImpPosX("I.V.A",167,doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Total",180,doc.tw_ren, 0, "L"),
             doc.nextRow(4);
             doc.printLineV();
             doc.nextRow(4);
@@ -105,13 +105,13 @@ export const ImprimirPDF = (configuracion, fecha_cobro_ini, fecha_cobro_fin, tom
           razon_social_cambio = razon_social;
        
         }
-          newPDF.ImpPosX(noFac.toString(), 15, newPDF.tw_ren);
-          newPDF.ImpPosX(recibo.toString(), 30, newPDF.tw_ren);
-          newPDF.ImpPosX(fecha, 45, newPDF.tw_ren);
-          newPDF.ImpPosX(razon_social_cambio, 68, newPDF.tw_ren);
-          newPDF.ImpPosX(total_importe.toFixed(2), 145, newPDF.tw_ren);
-          newPDF.ImpPosX(`${ivaimp} %`.toString(), 165, newPDF.tw_ren);
-          newPDF.ImpPosX(sub_total.toFixed(2), 180, newPDF.tw_ren);
+          newPDF.ImpPosX(noFac.toString(), 25, newPDF.tw_ren, 0, "R");
+          newPDF.ImpPosX(recibo.toString(), 40, newPDF.tw_ren, 0, "R");
+          newPDF.ImpPosX(fecha, 45, newPDF.tw_ren, 0, "L");
+          newPDF.ImpPosX(razon_social_cambio, 68, newPDF.tw_ren, 0, "L");
+          newPDF.ImpPosX(formatNumber(total_importe), 157, newPDF.tw_ren, 0, "R");
+          newPDF.ImpPosX(`${ivaimp} %`.toString(), 175, newPDF.tw_ren, 0, "R");
+          newPDF.ImpPosX(formatNumber(sub_total), 198, newPDF.tw_ren, 0, "R");
        
         Enca1(newPDF);
         if (newPDF.tw_ren >= newPDF.tw_endRen) {
@@ -122,8 +122,7 @@ export const ImprimirPDF = (configuracion, fecha_cobro_ini, fecha_cobro_fin, tom
 
     });
     newPDF.nextRow(4);
-    newPDF.ImpPosX(`TOTAL IMPORTE: ${total_general.toFixed(2)}`|| '', 149, newPDF.tw_ren);
-
+    newPDF.ImpPosX(`TOTAL IMPORTE: ${formatNumber(total_general)}`|| '', 150, newPDF.tw_ren,0, "L");
     newPDF.guardaReporte("rep_relacion_facturas");
 }
 
