@@ -63,11 +63,11 @@ const Enca1 = (doc) => {
   if (!doc.tiene_encabezado) {
     doc.imprimeEncabezadoPrincipalV();
     doc.nextRow(12);
-    doc.ImpPosX("No.", 14, doc.tw_ren);
-    doc.ImpPosX("Descripcion", 28, doc.tw_ren);
-    doc.ImpPosX("Comision", 132, doc.tw_ren);
-    doc.ImpPosX("Aplicacion", 152, doc.tw_ren);
-    doc.ImpPosX("Cue. Banco", 172, doc.tw_ren);
+    doc.ImpPosX("No.", 14, doc.tw_ren,0,"L");
+    doc.ImpPosX("Descripcion", 28, doc.tw_ren,0,"L");
+    doc.ImpPosX("Comision", 122, doc.tw_ren,0,"L");
+    doc.ImpPosX("Aplicacion", 152, doc.tw_ren,0,"L");
+    doc.ImpPosX("Cue. Banco", 172, doc.tw_ren,0,"L");
     doc.nextRow(4);
     doc.printLineV();
     doc.nextRow(4);
@@ -83,11 +83,11 @@ export const Imprimir = (configuracion) => {
   const { body } = configuracion;
   Enca1(newPDF);
   body.forEach((cajero) => {
-    newPDF.ImpPosX(cajero.numero.toString(), 14, newPDF.tw_ren, 10);
-    newPDF.ImpPosX(cajero.descripcion.toString(), 28, newPDF.tw_ren, 50);
-    newPDF.ImpPosX(cajero.comision.toString(), 132, newPDF.tw_ren, 50);
-    newPDF.ImpPosX(cajero.aplicacion.toString(), 152, newPDF.tw_ren, 50);
-    newPDF.ImpPosX(cajero.cue_banco.toString(), 172, newPDF.tw_ren, 50);
+    newPDF.ImpPosX(cajero.numero.toString(), 24, newPDF.tw_ren, 10,"R");
+    newPDF.ImpPosX(cajero.descripcion.toString(), 28, newPDF.tw_ren, 50,"L");
+    newPDF.ImpPosX(cajero.comision.toString(), 132, newPDF.tw_ren, 50,"R");
+    newPDF.ImpPosX(cajero.aplicacion.toString(), 152, newPDF.tw_ren, 50,"L");
+    newPDF.ImpPosX(cajero.cue_banco.toString(), 172, newPDF.tw_ren, 50,"L");
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
       newPDF.pageBreak();
