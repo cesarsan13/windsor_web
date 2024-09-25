@@ -63,15 +63,15 @@ function Alumnos() {
         : true;
       const coincideDescripcion = tb_desc
         ? alumno["nombre"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_desc.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_desc.toLowerCase())
         : true;
       const coincideGrado = tb_grado
         ? (alumno["horario_1_nombre"] || "")
-            .toString()
-            .toLowerCase()
-            .includes(tb_grado.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_grado.toLowerCase())
         : true;
       return coincideId && coincideDescripcion && coincideGrado;
     });
@@ -453,9 +453,8 @@ function Alumnos() {
         return;
       }
     }
-    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${
-      data.a_nombre || ""
-    }`.trim();
+    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${data.a_nombre || ""
+      }`.trim();
     data.nombre = nombreCompleto;
     const formData = new FormData();
     formData.append("numero", data.numero || "");
@@ -720,33 +719,43 @@ function Alumnos() {
         "esta es la fehca de inscr",
         alumno.fecha_inscripcion.toString()
       );
-      reporte.ImpPosX(alumno.numero.toString(), 10, reporte.tw_ren);
+      reporte.ImpPosX(alumno.numero.toString(), 19, reporte.tw_ren, 0, "R");
       reporte.ImpPosX(
         alumno.nombre.toString().substring(0, 20),
         25,
-        reporte.tw_ren
+        reporte.tw_ren,
+        0,
+        "L"
       );
       reporte.ImpPosX(
         alumno.direccion.toString().substring(0, 12),
         90,
-        reporte.tw_ren
+        reporte.tw_ren,
+        0,
+        "L"
       );
       reporte.ImpPosX(
         alumno.colonia.toString().substring(0, 20),
         120,
-        reporte.tw_ren
+        reporte.tw_ren,
+        0,
+        "L"
       );
       reporte.ImpPosX(
         format_Fecha_String(alumno.fecha_nac.toString().substring(0, 15)),
         175,
-        reporte.tw_ren
+        reporte.tw_ren,
+        0,
+        "L"
       );
       reporte.ImpPosX(
         format_Fecha_String(alumno.fecha_inscripcion.toString()),
         200,
-        reporte.tw_ren
+        reporte.tw_ren,
+        0,
+        "L"
       );
-      reporte.ImpPosX(alumno.telefono1.toString(), 230, reporte.tw_ren);
+      reporte.ImpPosX(alumno.telefono1.toString(), 254, reporte.tw_ren, 0, "R");
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRenH) {
         reporte.pageBreakH();

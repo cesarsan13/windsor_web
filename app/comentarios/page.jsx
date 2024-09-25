@@ -35,24 +35,24 @@ function Comentarios() {
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [busqueda, setBusqueda] = useState({ tb_numero: "", tb_comentario1: "" });
-useEffect(() => {
-  if (status === "loading" || !session) {
-    return;
-  }
-  const fetchData = async () => {
-    setisLoading(true);
-    const { token } = session.user;
-    const data = await getComentarios(token, bajas);
-    setFormasComentarios(data);
-    setFormaComentariosFiltrados(data);
-    setisLoading(false);
-  };
-  fetchData();
-}, [session, status, bajas]);
+  useEffect(() => {
+    if (status === "loading" || !session) {
+      return;
+    }
+    const fetchData = async () => {
+      setisLoading(true);
+      const { token } = session.user;
+      const data = await getComentarios(token, bajas);
+      setFormasComentarios(data);
+      setFormaComentariosFiltrados(data);
+      setisLoading(false);
+    };
+    fetchData();
+  }, [session, status, bajas]);
 
-useEffect(() => {
+  useEffect(() => {
     Buscar();
-}, [busqueda]);
+  }, [busqueda]);
 
   const {
     register,
@@ -78,9 +78,9 @@ useEffect(() => {
     });
   }, [formaComentarios, reset]);
   const Buscar = () => {
-    const {tb_numero, tb_comentario1} = busqueda;
+    const { tb_numero, tb_comentario1 } = busqueda;
 
-    if (tb_numero === "" && tb_comentario1 === ""){
+    if (tb_numero === "" && tb_comentario1 === "") {
       setFormaComentariosFiltrados(formasComentarios);
       return;
     }
@@ -88,9 +88,9 @@ useEffect(() => {
       const coincideID = tb_numero ? formaComentarios["numero"].toString().includes(tb_numero) : true;
       const coincideComentario1 = tb_comentario1 ?
         formaComentarios["comentario_1"]
-        .toString()
-        .toLowerCase()
-        .includes(tb_comentario1.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_comentario1.toLowerCase())
         : true;
       return coincideID && coincideComentario1;
     });
@@ -136,34 +136,18 @@ useEffect(() => {
 
     Enca1(reporte);
     body.forEach((comentarios) => {
-      reporte.ImpPosX(comentarios.numero.toString(), 15, reporte.tw_ren, 10);
-      reporte.ImpPosX(
-        comentarios.comentario_1.toString(),
-        30,
-        reporte.tw_ren,
-        40
-      );
-      reporte.ImpPosX(
-        comentarios.comentario_2.toString(),
-        110,
-        reporte.tw_ren,
-        40
-      );
-      reporte.ImpPosX(
-        comentarios.comentario_3.toString(),
-        190,
-        reporte.tw_ren,
-        40
-      );
-      let resultado = (comentarios.generales == 1) ? "Si" : (comentarios.generales == 0) ? "No": "No valido";
-      reporte.ImpPosX(resultado.toString(),270,reporte.tw_ren, 5);
+      reporte.ImpPosX(comentarios.numero.toString(), 20, reporte.tw_ren, 0, "R");
+      reporte.ImpPosX(comentarios.comentario_1.toString(), 30, reporte.tw_ren, 35, "L");
+      reporte.ImpPosX(comentarios.comentario_2.toString(), 110, reporte.tw_ren, 35, "L");
+      reporte.ImpPosX(comentarios.comentario_3.toString(), 190, reporte.tw_ren, 35, "L");
+      let resultado = (comentarios.generales == 1) ? "Si" : (comentarios.generales == 0) ? "No" : "No valido";
+      reporte.ImpPosX(resultado.toString(), 270, reporte.tw_ren, 0, "L");
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRenH) {
         reporte.pageBreakH();
         Enca1(reporte);
       }
     });
-
     const pdfData = reporte.doc.output("datauristring");
     setPdfData(pdfData);
     setPdfPreview(true);
@@ -344,7 +328,7 @@ useEffect(() => {
           </h1>
         </div>
         <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-        <div className="md:col-span-1 flex flex-col">
+          <div className="md:col-span-1 flex flex-col">
             <Acciones
               Buscar={Buscar}
               Alta={Alta}
@@ -356,7 +340,7 @@ useEffect(() => {
             ></Acciones>
           </div>
           <div className="md:col-span-7">
-          <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full">
               <Busqueda
                 setBajas={setBajas}
                 limpiarBusqueda={limpiarBusqueda}
@@ -365,14 +349,14 @@ useEffect(() => {
                 busqueda={busqueda}
               />
               <div className="overflow-x-auto">
-              <TablaComentarios
-                isLoading={isLoading}
-                formaComentariosFiltrados={formaComentariosFiltrados}
-                showModal={showModal}
-                setFormaComentarios={setFormaComentarios}
-                setAccion={setAccion}
-                setCurrentId={setCurrentId}
-              />
+                <TablaComentarios
+                  isLoading={isLoading}
+                  formaComentariosFiltrados={formaComentariosFiltrados}
+                  showModal={showModal}
+                  setFormaComentarios={setFormaComentarios}
+                  setAccion={setAccion}
+                  setCurrentId={setCurrentId}
+                />
               </div>
             </div>
           </div>
