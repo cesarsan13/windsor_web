@@ -241,11 +241,11 @@ function FormaPago() {
       if (!doc.tiene_encabezado) {
         doc.imprimeEncabezadoPrincipalV();
         doc.nextRow(12);
-        doc.ImpPosX("No.", 14, doc.tw_ren);
-        doc.ImpPosX("Descripcion", 28, doc.tw_ren);
-        doc.ImpPosX("Comision", 128, doc.tw_ren);
-        doc.ImpPosX("Aplicacion", 152, doc.tw_ren);
-        doc.ImpPosX("C. Banco", 182, doc.tw_ren);
+        doc.ImpPosX("No.", 14, doc.tw_ren,0,"L");
+        doc.ImpPosX("Descripcion", 28, doc.tw_ren,0,"L");
+        doc.ImpPosX("Comision", 128, doc.tw_ren,0,"L");
+        doc.ImpPosX("Aplicacion", 152, doc.tw_ren,0,"L");
+        doc.ImpPosX("C. Banco", 182, doc.tw_ren,0,"L");
         doc.nextRow(4);
         doc.printLineV();
         doc.nextRow(4);
@@ -258,11 +258,11 @@ function FormaPago() {
     const reporte = new ReportePDF(configuracion);
     Enca1(reporte);
     formaPagosFiltrados.forEach((producto) => {
-      reporte.ImpPosX(producto.numero.toString(), 14, reporte.tw_ren);
-      reporte.ImpPosX(producto.descripcion.toString(), 28, reporte.tw_ren);
-      reporte.ImpPosX(producto.comision.toString(), 128, reporte.tw_ren);
-      reporte.ImpPosX(producto.aplicacion.toString(), 152, reporte.tw_ren);
-      reporte.ImpPosX(producto.cue_banco.toString(), 182, reporte.tw_ren);
+      reporte.ImpPosX(producto.numero.toString(), 24, reporte.tw_ren,0,"R");
+      reporte.ImpPosX(producto.descripcion.toString(), 28, reporte.tw_ren,0,"L");
+      reporte.ImpPosX(producto.comision.toString(), 138, reporte.tw_ren,0,"R");
+      reporte.ImpPosX(producto.aplicacion.toString(), 152, reporte.tw_ren,0,"L");
+      reporte.ImpPosX(producto.cue_banco.toString(), 182, reporte.tw_ren,0,"L");
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRen) {
         reporte.pageBreak();

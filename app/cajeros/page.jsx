@@ -265,11 +265,11 @@ function Cajeros() {
       if (!doc.tiene_encabezado) {
         doc.imprimeEncabezadoPrincipalV();
         doc.nextRow(12);
-        doc.ImpPosX("No.", 14, doc.tw_ren);
-        doc.ImpPosX("Nombre", 28, doc.tw_ren);
-        doc.ImpPosX("Clave", 97, doc.tw_ren);
-        doc.ImpPosX("Telefono", 112, doc.tw_ren);
-        doc.ImpPosX("Correo", 142, doc.tw_ren);
+        doc.ImpPosX("No.", 14, doc.tw_ren,0,"L");
+        doc.ImpPosX("Nombre", 28, doc.tw_ren,0,"L");
+        doc.ImpPosX("Clave", 97, doc.tw_ren,0,"L");
+        doc.ImpPosX("Telefono", 112, doc.tw_ren,0,"L");
+        doc.ImpPosX("Correo", 142, doc.tw_ren,0,"L");
         doc.nextRow(4);
         doc.printLineV();
         doc.nextRow(4);
@@ -282,11 +282,11 @@ function Cajeros() {
     const reporte = new ReportePDF(configuracion);
     Enca1(reporte);
     cajerosFiltrados.forEach((cajero) => {
-      reporte.ImpPosX(cajero.numero.toString(), 14, reporte.tw_ren);
-      reporte.ImpPosX(cajero.nombre.toString(), 28, reporte.tw_ren);
-      reporte.ImpPosX(cajero.clave_cajero.toString(), 97, reporte.tw_ren);
-      reporte.ImpPosX(cajero.telefono.toString(), 112, reporte.tw_ren);
-      reporte.ImpPosX(cajero.mail.toString(), 142, reporte.tw_ren);
+      reporte.ImpPosX(cajero.numero.toString(), 24, reporte.tw_ren,0,"R");
+      reporte.ImpPosX(cajero.nombre.toString(), 28, reporte.tw_ren,0,"L");
+      reporte.ImpPosX(cajero.clave_cajero.toString(), 97, reporte.tw_ren,0,"L");
+      reporte.ImpPosX(cajero.telefono.toString(), 112, reporte.tw_ren,0,"L");
+      reporte.ImpPosX(cajero.mail.toString(), 142, reporte.tw_ren,0,"L");
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRen) {
         reporte.pageBreak();

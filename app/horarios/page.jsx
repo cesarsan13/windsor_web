@@ -277,14 +277,14 @@ function Horarios() {
     const reporte = new ReportePDF(configuracion)
     Enca1(reporte);
     horariosFiltrados.forEach((horario) => {
-      reporte.ImpPosX(horario.numero.toString(), 14, reporte.tw_ren)
-      reporte.ImpPosX(horario.cancha.toString(), 28, reporte.tw_ren)
+      reporte.ImpPosX(horario.numero.toString(), 24, reporte.tw_ren,0,"R")
+      reporte.ImpPosX(horario.cancha.toString(), 38, reporte.tw_ren,0,"R")
       reporte.ImpPosX(horario.dia.toString(), 42, reporte.tw_ren)
       reporte.ImpPosX(horario.horario.toString(), 82, reporte.tw_ren)
-      reporte.ImpPosX(horario.max_niños.toString(), 114, reporte.tw_ren)
+      reporte.ImpPosX(horario.max_niños.toString(), 124, reporte.tw_ren,0,"R")
       reporte.ImpPosX(horario.sexo.toString(), 134, reporte.tw_ren)
-      reporte.ImpPosX(horario.edad_ini.toString(), 154, reporte.tw_ren)
-      reporte.ImpPosX(horario.edad_fin.toString(), 174, reporte.tw_ren)
+      reporte.ImpPosX(horario.edad_ini.toString(), 164, reporte.tw_ren,0,"R")
+      reporte.ImpPosX(horario.edad_fin.toString(), 184, reporte.tw_ren,0,"R")
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRen) {
         reporte.pageBreak();
