@@ -25,7 +25,7 @@ function ModalVistaPreviaFormaPago({ pdfPreview, pdfData, PDF, Excel }) {
           ✕
         </button>
         <h3 className="font-bold text-lg mb-5 dark:text-white text-black">
-          Vista Previa Productos
+          Vista Previa Forma de Pagos
         </h3>
         <div className="flex flex-row space-x-4">
           <Tooltip Titulo={"Imprimir PDF"} posicion={"tooltip-top"}>
