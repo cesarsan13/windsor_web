@@ -89,44 +89,43 @@ export const Imprimir = (configuracion) => {
   const { body } = configuracion;
   Enca1(newPDF);
   body.forEach((alumnos) => {
-    const id = alumnos.numero.toString().substring(0, 25);
-    const nombre = `${alumnos.nombre.toString()} ${alumnos.a_paterno} ${
-      alumnos.a_materno
-    }`.substring(0, 20);
-    const direccion = alumnos.direccion.toString().substring(0, 12);
-    const colonia = alumnos.colonia.toString().substring(0, 20);
-    const fecha_nac = alumnos.fecha_nac.toString().substring(0, 15);
-    const fecha_inscripcion = alumnos.fecha_inscripcion
-      .toString()
-      .substring(0, 15);
-    const telefono = alumnos.telefono1.toString().substring(0, 15);
-    newPDF.ImpPosX(alumnos.numero.toString(), 10, newPDF.tw_ren);
+    newPDF.ImpPosX(alumnos.numero.toString(), 19, newPDF.tw_ren, 0, "R");
     newPDF.ImpPosX(
       alumnos.nombre.toString().substring(0, 20),
       25,
-      newPDF.tw_ren
+      newPDF.tw_ren,
+      0,
+      "L"
     );
     newPDF.ImpPosX(
       alumnos.direccion.toString().substring(0, 12),
       90,
-      newPDF.tw_ren
+      newPDF.tw_ren,
+      0,
+      "L"
     );
     newPDF.ImpPosX(
       alumnos.colonia.toString().substring(0, 20),
       120,
-      newPDF.tw_ren
+      newPDF.tw_ren,
+      0,
+      "L"
     );
     newPDF.ImpPosX(
       format_Fecha_String(alumnos.fecha_nac.toString().substring(0, 15)),
       175,
-      newPDF.tw_ren
+      newPDF.tw_ren,
+      0,
+      "L"
     );
     newPDF.ImpPosX(
       format_Fecha_String(alumnos.fecha_inscripcion.toString()),
       200,
-      newPDF.tw_ren
+      newPDF.tw_ren,
+      0,
+      "L"
     );
-    newPDF.ImpPosX(alumnos.telefono1.toString(), 230, newPDF.tw_ren);
+    newPDF.ImpPosX(alumnos.telefono1.toString(), 254, newPDF.tw_ren, 0, "R");
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRenH) {
       newPDF.pageBreakH();

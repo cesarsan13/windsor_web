@@ -364,17 +364,17 @@ function Productos() {
     const reporte = new ReportePDF(configuracion, "Landscape");
     Enca1(reporte);
     productosFiltrados.forEach((producto) => {
-      reporte.ImpPosX(producto.numero.toString(), 14, reporte.tw_ren);
-      reporte.ImpPosX(producto.descripcion.toString(), 28, reporte.tw_ren);
-      reporte.ImpPosX(producto.costo.toString(), 80, reporte.tw_ren);
-      reporte.ImpPosX(producto.frecuencia.toString(), 100, reporte.tw_ren);
-      reporte.ImpPosX(producto.por_recargo.toString(), 130, reporte.tw_ren);
-      reporte.ImpPosX(producto.aplicacion.toString(), 150, reporte.tw_ren);
-      reporte.ImpPosX(producto.iva.toString(), 175, reporte.tw_ren);
-      reporte.ImpPosX(producto.cond_1.toString(), 190, reporte.tw_ren);
+      reporte.ImpPosX(producto.numero.toString(), 24, reporte.tw_ren, 0, "R");
+      reporte.ImpPosX(producto.descripcion.toString(), 28, reporte.tw_ren, 25, "L");
+      reporte.ImpPosX(producto.costo.toString(), 93, reporte.tw_ren, 0, "R");
+      reporte.ImpPosX(producto.frecuencia.toString(), 100, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(producto.por_recargo.toString(), 143, reporte.tw_ren, 0, "R");
+      reporte.ImpPosX(producto.aplicacion.toString(), 150, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(producto.iva.toString(), 183, reporte.tw_ren, 0, "R");
+      reporte.ImpPosX(producto.cond_1.toString(), 203, reporte.tw_ren, 0, "R");
       const cam_precio = producto.cam_precio ? "Si" : "No";
-      reporte.ImpPosX(cam_precio.toString(), 215, reporte.tw_ren);
-      reporte.ImpPosX(producto.ref.toString(), 250, reporte.tw_ren);
+      reporte.ImpPosX(cam_precio.toString(), 215, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(producto.ref.toString(), 250, reporte.tw_ren, 0, "L");
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRenH) {
         reporte.pageBreakH();
