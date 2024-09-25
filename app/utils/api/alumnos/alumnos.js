@@ -38,7 +38,7 @@ export const getLastAlumnos = async (token) => {
   return resJson.data;
 };
 
-export const guardarAlumnos = async (token, formData, accion, id) => {
+export const guardarAlumnos = async (token, formData, accion, numero) => {
   let url = "";
   if (accion === "Alta") {
     url = `${process.env.DOMAIN_API}api/students/save`;
@@ -50,7 +50,7 @@ export const guardarAlumnos = async (token, formData, accion, id) => {
     } else {
       formData.append("baja", "n");
     }
-    url = `${process.env.DOMAIN_API}api/students/update/${id}`;
+    url = `${process.env.DOMAIN_API}api/students/update/${numero}`;
   }
   const res = await fetch(`${url}`, {
     method: "POST",
