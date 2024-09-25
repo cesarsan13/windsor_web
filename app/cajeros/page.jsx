@@ -300,8 +300,8 @@ function Cajeros() {
   };
   const showModalVista = (show) => {
     show
-      ? document.getElementById("modalVPAlumno").showModal()
-      : document.getElementById("modalVPAlumno").close();
+      ? document.getElementById("modalVPCajero").showModal()
+      : document.getElementById("modalVPCajero").close();
   };
   if (status === "loading") {
     return (

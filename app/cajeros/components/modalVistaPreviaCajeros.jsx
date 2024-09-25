@@ -15,16 +15,16 @@ function ModalVistaPreviaCajeros({ pdfPreview, pdfData, PDF, Excel }) {
     setIsModalOpen(pdfPreview && !isEmptyDataPDF);
   }, [pdfPreview, pdfData]);
   return (
-    <dialog id="modalVPAlumno" className="modal">
+    <dialog id="modalVPCajero" className="modal">
       <div className="modal-box w-full max-w-4xl h-full">
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black"
-          onClick={() => document.getElementById("modalVPAlumno").close()}
+          onClick={() => document.getElementById("modalVPCajero").close()}
         >
           ✕
         </button>
         <h3 className="font-bold text-lg mb-5 dark:text-white text-black">
-          Vista Previa Alumnos
+          Vista Previa Cajeros
         </h3>
         <div className="flex flex-row space-x-4">
           <Tooltip Titulo={"Imprimir PDF"} posicion={"tooltip-top"}>
