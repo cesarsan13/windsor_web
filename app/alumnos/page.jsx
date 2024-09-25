@@ -437,7 +437,7 @@ function Alumnos() {
     // const dataj = JSON.stringify(data);
     // alert(dataj);
     // return;
-    data.id = currentID;
+    data.numero = currentID;
     let res = null;
     if (accion === "Eliminar") {
       showModal(false);
@@ -715,10 +715,10 @@ function Alumnos() {
     const reporte = new ReportePDF(configuracion, "Landscape");
     Enca1(reporte);
     alumnosFiltrados.forEach((alumno) => {
-      console.log(
-        "esta es la fehca de inscr",
-        alumno.fecha_inscripcion.toString()
-      );
+      // console.log(
+      //   "esta es la fehca de inscr",
+      //   alumno.fecha_inscripcion.toString()
+      // );
       reporte.ImpPosX(alumno.numero.toString(), 19, reporte.tw_ren, 0, "R");
       reporte.ImpPosX(
         alumno.nombre.toString().substring(0, 20),

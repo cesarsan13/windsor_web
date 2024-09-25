@@ -46,7 +46,7 @@ function BuscarCat({
           break;
         case "horarios":
           fetchedData = await getHorarios(token, "");
-          setTiutloInput(["Número", "Horarios"]);
+          setTiutloInput(["numero", "horario"]);
           break;
         case "cajeros":
           fetchedData = await getCajeros(token, "");
@@ -59,7 +59,7 @@ function BuscarCat({
         case "formfact":
         case "formaPago":
           fetchedData = await getFormasPago(token, false);
-          setTiutloInput(["Id", "Descripcion"]);
+          setTiutloInput(["numero", "descripcion"]);
           break;
         case "proveedores":
         default:
@@ -171,9 +171,8 @@ function BuscarCat({
                 e.preventDefault();
               }
             }}
-            className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${
-              alignRight ? "text-right" : ""
-            } `}
+            className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${alignRight ? "text-right" : ""
+              } `}
             style={{ width: inputWidths.first }}
           />
         </label>
@@ -186,16 +185,16 @@ function BuscarCat({
         </button>
       </div>
       <div className="md:mt-0 lg:w-52 md:w-56 sm:w-60 w-full">
-  <input
-    id={nameInput[1]}
-    name={nameInput[1]}
-    type="text"
-    readOnly={true}
-    {...register(nameInput[1])}
-    className="input input-bordered  input-sm md:input-md join-item rounded-r-md bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md w-full mb-4"
-    style={{ maxWidth: '380px' }}
-  />
-</div>
+        <input
+          id={nameInput[1]}
+          name={nameInput[1]}
+          type="text"
+          readOnly={true}
+          {...register(nameInput[1])}
+          className="input input-bordered  input-sm md:input-md join-item rounded-r-md bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md w-full mb-4"
+          style={{ maxWidth: '380px' }}
+        />
+      </div>
 
       <ModalBuscarCat
         data={data}

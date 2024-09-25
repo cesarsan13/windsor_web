@@ -30,10 +30,12 @@ function ModalAlumnos({
   const [titulo, setTitulo] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
   const [activeTab, setActiveTab] = useState(1);
+
   const columnasBuscaCat = ["numero", "horario"];
   const nameInputs = ["horario_1", "horario_1_nombre"];
   const nameInputs2 = ["horario_2", "horario_2_nombre"];
-  const columnasBuscaCat1 = ["id", "descripcion"];
+
+  const columnasBuscaCat1 = ["numero", "descripcion"];
   const nameInputs3 = ["cond_1", "cond_1_nombre"];
   const nameInputs4 = ["cond_2", "cond_2_nombre"];
   const webcamRef = useRef(null);
@@ -62,10 +64,10 @@ function ModalAlumnos({
       accion === "Alta"
         ? `Nuevo Alumno: ${currentID}`
         : accion === "Editar"
-        ? `Editar Alumno: ${currentID}`
-        : accion === "Eliminar"
-        ? `Eliminar Alumno: ${currentID}`
-        : `Ver Alumno: ${currentID}`
+          ? `Editar Alumno: ${currentID}`
+          : accion === "Eliminar"
+            ? `Eliminar Alumno: ${currentID}`
+            : `Ver Alumno: ${currentID}`
     );
     // const alj = JSON.stringify(alumno);
     // console.log(alumno);
@@ -74,18 +76,18 @@ function ModalAlumnos({
     if (evt.target.value === "") return;
     datatype === "int"
       ? setAlumno((alumno) => ({
-          ...alumno,
-          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-        }))
+        ...alumno,
+        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+      }))
       : setAlumno((alumno) => ({
-          ...alumno,
-          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-        }));
+        ...alumno,
+        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+      }));
   };
   const handleTabs = (num) => {
     setActiveTab(num);
   };
-  console.log(JSON.stringify(alumno));
+  // console.log(JSON.stringify(alumno));
 
   return (
     <dialog id="my_modal_3" className="modal">
@@ -95,11 +97,10 @@ function ModalAlumnos({
             <h3 className="font-bold text-lg">{titulo}</h3>
             <div className="flex space-x-2 items-center">
               <div
-                className={`tooltip tooltip-bottom ${
-                  accion === "Ver"
-                    ? "hover:cursor-not-allowed hidden"
-                    : "hover:cursor-pointer"
-                }`}
+                className={`tooltip tooltip-bottom ${accion === "Ver"
+                  ? "hover:cursor-not-allowed hidden"
+                  : "hover:cursor-pointer"
+                  }`}
                 data-tip="Guardar"
               >
                 <button
@@ -136,9 +137,8 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
-                  activeTab === 1 ? "tab-active " : ""
-                }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 1 ? "tab-active " : ""
+                  }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6 px-3">
                   <Inputs
@@ -413,9 +413,8 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
-                  activeTab === 2 ? "tab-active " : ""
-                }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 2 ? "tab-active " : ""
+                  }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <Inputs
@@ -495,7 +494,7 @@ function ModalAlumnos({
                     errors={errors}
                     register={register}
                     message={"Codigo postal requerida"}
-                    maxLenght={10}
+                    maxLenght={6}
                     isDisabled={isDisabled}
                     handleBlur={handleBlur}
                   />
@@ -529,9 +528,8 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
-                  activeTab === 3 ? "tab-active " : ""
-                }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 3 ? "tab-active " : ""
+                  }`}
               >
                 <div>
                   {isCameraOn && (
@@ -591,9 +589,8 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
-                  activeTab === 4 ? "tab-active " : ""
-                }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 4 ? "tab-active " : ""
+                  }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <BuscarCat
@@ -606,6 +603,7 @@ function ModalAlumnos({
                     token={session.user.token}
                     modalId="modal_horarios"
                     array={alumno.horario_1}
+                    id={alumno.numero}
                     alignRight={true}
                     inputWidths={{ first: "60px", second: "380px" }}
                   />
@@ -623,9 +621,8 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
-                  activeTab === 5 ? "tab-active " : ""
-                }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 5 ? "tab-active " : ""
+                  }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <Inputs
@@ -668,6 +665,7 @@ function ModalAlumnos({
                     token={session.user.token}
                     modalId="modal_formaPago1"
                     array={alumno.cond_1}
+                    id={alumno.numero}
                     titulo="Forma pago: "
                     alignRight={true}
                     inputWidths={{ first: "80px", second: "380px" }}
@@ -680,48 +678,50 @@ function ModalAlumnos({
                     token={session.user.token}
                     modalId="modal_formaPago2"
                     array={alumno.cond_2}
+                    id={alumno.numero}
                     titulo={"Forma pago:"}
                     alignRight={true}
                     inputWidths={{ first: "80px", second: "380px" }}
                   />
-                  {/* <Inputs
-                                        dataType={"string"}
-                                        name={"cond_1"}
-                                        tamañolabel={""}
-                                        className={"form-select p-1.5 grow bg-[#1d232a] "}
-                                        Titulo={"Pago: "}
-                                        type={"select"}
-                                        requerido={true}
-                                        isNumero={false}
-                                        errors={errors}
-                                        register={register}
-                                        message={"Pago 1 requerido"}
-                                        maxLenght={50}
-                                        isDisabled={isDisabled}
-                                        handleBlur={handleBlur}
-                                        arreglos={[
-                                            { label: "PENDIENTE", value: "PENDIENTE" },
-                                        ]}
-                                    />
-                                    <Inputs
-                                        dataType={"string"}
-                                        name={"cond_2"}
-                                        tamañolabel={""}
-                                        className={"form-select p-1.5 grow bg-[#1d232a] "}
-                                        Titulo={"Pago: "}
-                                        type={"select"}
-                                        requerido={true}
-                                        isNumero={false}
-                                        errors={errors}
-                                        register={register}
-                                        message={"Pago 2 requerido"}
-                                        maxLenght={50}
-                                        isDisabled={isDisabled}
-                                        handleBlur={handleBlur}
-                                        arreglos={[
-                                            { label: "PENDIENTE", value: "PENDIENTE" },
-                                        ]}
-                                    /> */}
+                  {/*
+                  <Inputs
+                    dataType={"string"}
+                    name={"cond_1"}
+                    tamañolabel={""}
+                    className={"form-select p-1.5 grow bg-[#1d232a] "}
+                    Titulo={"Pago: "}
+                    type={"select"}
+                    requerido={true}
+                    isNumero={false}
+                    errors={errors}
+                    register={register}
+                    message={"Pago 1 requerido"}
+                    maxLenght={50}
+                    isDisabled={isDisabled}
+                    handleBlur={handleBlur}
+                    arreglos={[
+                      { label: "PENDIENTE", value: "PENDIENTE" },
+                    ]}
+                  />
+                  <Inputs
+                    dataType={"string"}
+                    name={"cond_2"}
+                    tamañolabel={""}
+                    className={"form-select p-1.5 grow bg-[#1d232a] "}
+                    Titulo={"Pago: "}
+                    type={"select"}
+                    requerido={true}
+                    isNumero={false}
+                    errors={errors}
+                    register={register}
+                    message={"Pago 2 requerido"}
+                    maxLenght={50}
+                    isDisabled={isDisabled}
+                    handleBlur={handleBlur}
+                    arreglos={[
+                      { label: "PENDIENTE", value: "PENDIENTE" },
+                    ]}
+                  /> */}
                 </div>
               </div>
 
@@ -736,9 +736,8 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
-                  activeTab === 6 ? "tab-active " : ""
-                }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 6 ? "tab-active " : ""
+                  }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <Inputs
@@ -915,9 +914,8 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
-                  activeTab === 7 ? "tab-active " : ""
-                }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 7 ? "tab-active " : ""
+                  }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <Inputs
@@ -1028,7 +1026,7 @@ function ModalAlumnos({
                     errors={errors}
                     register={register}
                     message={"Codigo postal requerido"}
-                    maxLenght={10}
+                    maxLenght={6}
                     isDisabled={isDisabled}
                     handleBlur={handleBlur}
                   />
@@ -1046,9 +1044,8 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
-                  activeTab === 8 ? "tab-active " : ""
-                }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 8 ? "tab-active " : ""
+                  }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <Inputs
