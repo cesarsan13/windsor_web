@@ -5,7 +5,7 @@ import Tooltip from '@/app/components/tooltip';
 import { Viewer, Worker,SpecialZoomLevel } from '@react-pdf-viewer/core'
 import React, { useEffect, useState } from 'react'
 
-function ModalVistaPreviaRepFemac11Anexo3({ pdfPreview, pdfData, PDF, Excel }) {
+function ModalVistaPreviaRepFemac10Anexo2({ pdfPreview, pdfData, PDF, Excel }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {        
@@ -30,14 +30,14 @@ function ModalVistaPreviaRepFemac11Anexo3({ pdfPreview, pdfData, PDF, Excel }) {
     }, []);
 
     return (
-        <dialog id='modalVPRepFemac11Anexo3' className='modal'>
+        <dialog id='modalVPRepFemac10Anexo2' className='modal'>
             <div className='modal-box w-full max-w-4xl h-full'>
                 <button className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black'
-                    onClick={() => document.getElementById("modalVPRepFemac11Anexo3").close()}
+                    onClick={() => document.getElementById("modalVPRepFemac10Anexo2").close()}
                 >
                     ✕
                 </button>
-                <h3 className='font-bold text-lg mb-5 dark:text-white text-black'>Vista Previa Reporte Cobranza por Alumno</h3>
+                <h3 className='font-bold text-lg mb-5 dark:text-white text-black'>Vista Previa Reporte Estado de Cuenta</h3>
                 <div className='flex flex-row space-x-4'>
                     <Tooltip Titulo={"Imprimir PDF"} posicion={"tooltip-top"}>
                         <button className='hover:bg-transparent border-none shadow-md hover:bg-slate-200 dark:hover:bg-neutral-700 bg-transparent text-black dark:text-white rounded-lg btn' onClick={PDF}>Imprimir PDF<i className='fa-solid fa-file-pdf'></i></button>                        
@@ -64,4 +64,4 @@ function ModalVistaPreviaRepFemac11Anexo3({ pdfPreview, pdfData, PDF, Excel }) {
     )
 }
 
-export default ModalVistaPreviaRepFemac11Anexo3
+export default ModalVistaPreviaRepFemac10Anexo2

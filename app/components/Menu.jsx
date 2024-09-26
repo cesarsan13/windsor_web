@@ -339,6 +339,9 @@ function Menu({ vertical, toogle }) {
             <Link href="/Rep_Femac_9_Anexo_4" onClick={handleClick}>Relación de Facturas</Link>
           </li>
           <li>
+            <Link href="/rep_femac_10_Anexo_2" onClick={handleClick}>Estado de Cuenta</Link>
+          </li>
+          <li>
             <Link href="/rep_femac_11_Anexo_3" onClick={handleClick}>Reporte Cobranza por Alumno</Link>
           </li>
           <li>
