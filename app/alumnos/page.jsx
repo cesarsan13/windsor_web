@@ -63,15 +63,15 @@ function Alumnos() {
         : true;
       const coincideDescripcion = tb_desc
         ? alumno["nombre"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_desc.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_desc.toLowerCase())
         : true;
       const coincideGrado = tb_grado
         ? (alumno["horario_1_nombre"] || "")
-            .toString()
-            .toLowerCase()
-            .includes(tb_grado.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_grado.toLowerCase())
         : true;
       return coincideId && coincideDescripcion && coincideGrado;
     });
@@ -306,7 +306,6 @@ function Alumnos() {
     setCurrentId("");
     setCapturedImage(null);
     const { token } = session.user;
-
     reset({
       numero: 0,
       nombre: "",
@@ -340,7 +339,7 @@ function Alumnos() {
       cancha_2: 0,
       cancha_3: 0,
       cancha_4: 0,
-      horario_1: 0,
+      horario_1: "0",
       horario_2: 0,
       horario_3: 0,
       horario_4: 0,
@@ -360,9 +359,9 @@ function Alumnos() {
       horario_18: 0,
       horario_19: 0,
       horario_20: 0,
-      cond_1: 0,
-      cond_2: 0,
-      cond_3: 0,
+      cond_1: "0",
+      cond_2: "0",
+      cond_3: "0",
       nom_pediatra: "",
       tel_p_1: "",
       tel_p_2: "",
@@ -399,6 +398,9 @@ function Alumnos() {
       referencia: 0,
       baja: "",
     });
+    setcond1({});
+    setcond2({});
+    setGrado({});
     let siguienteId = await getLastAlumnos(token);
     siguienteId = Number(siguienteId + 1);
     setCurrentId(siguienteId);
@@ -453,9 +455,8 @@ function Alumnos() {
         return;
       }
     }
-    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${
-      data.a_nombre || ""
-    }`.trim();
+    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${data.a_nombre || ""
+      }`.trim();
     data.nombre = nombreCompleto;
     const formData = new FormData();
     formData.append("numero", data.numero || "");
