@@ -64,10 +64,10 @@ function ModalAlumnos({
       accion === "Alta"
         ? `Nuevo Alumno: ${currentID}`
         : accion === "Editar"
-          ? `Editar Alumno: ${currentID}`
-          : accion === "Eliminar"
-            ? `Eliminar Alumno: ${currentID}`
-            : `Ver Alumno: ${currentID}`
+        ? `Editar Alumno: ${currentID}`
+        : accion === "Eliminar"
+        ? `Eliminar Alumno: ${currentID}`
+        : `Ver Alumno: ${currentID}`
     );
     // const alj = JSON.stringify(alumno);
     // console.log(alumno);
@@ -76,13 +76,13 @@ function ModalAlumnos({
     if (evt.target.value === "") return;
     datatype === "int"
       ? setAlumno((alumno) => ({
-        ...alumno,
-        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-      }))
+          ...alumno,
+          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+        }))
       : setAlumno((alumno) => ({
-        ...alumno,
-        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-      }));
+          ...alumno,
+          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+        }));
   };
   const handleTabs = (num) => {
     setActiveTab(num);
@@ -97,10 +97,11 @@ function ModalAlumnos({
             <h3 className="font-bold text-lg">{titulo}</h3>
             <div className="flex space-x-2 items-center">
               <div
-                className={`tooltip tooltip-bottom ${accion === "Ver"
-                  ? "hover:cursor-not-allowed hidden"
-                  : "hover:cursor-pointer"
-                  }`}
+                className={`tooltip tooltip-bottom ${
+                  accion === "Ver"
+                    ? "hover:cursor-not-allowed hidden"
+                    : "hover:cursor-pointer"
+                }`}
                 data-tip="Guardar"
               >
                 <button
@@ -118,7 +119,10 @@ function ModalAlumnos({
               </div>
               <button
                 className="btn btn-sm btn-circle btn-ghost"
-                onClick={() => document.getElementById("my_modal_3").close()}
+                onClick={(event) => {
+                  event.preventDefault();
+                  document.getElementById("my_modal_3").close();
+                }}
               >
                 ✕
               </button>
@@ -137,8 +141,9 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 1 ? "tab-active " : ""
-                  }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
+                  activeTab === 1 ? "tab-active " : ""
+                }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6 px-3">
                   <Inputs
@@ -413,8 +418,9 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 2 ? "tab-active " : ""
-                  }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
+                  activeTab === 2 ? "tab-active " : ""
+                }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <Inputs
@@ -528,8 +534,9 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 3 ? "tab-active " : ""
-                  }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
+                  activeTab === 3 ? "tab-active " : ""
+                }`}
               >
                 <div>
                   {isCameraOn && (
@@ -589,8 +596,9 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 4 ? "tab-active " : ""
-                  }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
+                  activeTab === 4 ? "tab-active " : ""
+                }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <BuscarCat
@@ -621,8 +629,9 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 5 ? "tab-active " : ""
-                  }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
+                  activeTab === 5 ? "tab-active " : ""
+                }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <Inputs
@@ -736,8 +745,9 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 6 ? "tab-active " : ""
-                  }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
+                  activeTab === 6 ? "tab-active " : ""
+                }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <Inputs
@@ -914,8 +924,9 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 7 ? "tab-active " : ""
-                  }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
+                  activeTab === 7 ? "tab-active " : ""
+                }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <Inputs
@@ -1044,8 +1055,9 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 8 ? "tab-active " : ""
-                  }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
+                  activeTab === 8 ? "tab-active " : ""
+                }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <Inputs

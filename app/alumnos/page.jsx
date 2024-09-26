@@ -63,15 +63,15 @@ function Alumnos() {
         : true;
       const coincideDescripcion = tb_desc
         ? alumno["nombre"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_desc.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
         : true;
       const coincideGrado = tb_grado
         ? (alumno["horario_1_nombre"] || "")
-          .toString()
-          .toLowerCase()
-          .includes(tb_grado.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_grado.toLowerCase())
         : true;
       return coincideId && coincideDescripcion && coincideGrado;
     });
@@ -453,8 +453,9 @@ function Alumnos() {
         return;
       }
     }
-    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${data.a_nombre || ""
-      }`.trim();
+    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${
+      data.a_nombre || ""
+    }`.trim();
     data.nombre = nombreCompleto;
     const formData = new FormData();
     formData.append("numero", data.numero || "");
@@ -491,7 +492,7 @@ function Alumnos() {
     formData.append("cancha_2", data.cancha_2 || "");
     formData.append("cancha_3", data.cancha_3 || "");
     formData.append("cancha_4", data.cancha_4 || "");
-    formData.append("horario_1", grado.numero || "");
+    formData.append("horario_1", data.horario_1 || "");
     formData.append("horario_2", data.horario_2 || "");
     formData.append("horario_3", data.horario_3 || "");
     formData.append("horario_4", data.horario_4 || "");

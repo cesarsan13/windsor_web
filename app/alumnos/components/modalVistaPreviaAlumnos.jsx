@@ -25,7 +25,10 @@ function ModalVistaPreviaAlumnos({ pdfPreview, pdfData, PDF, Excel }) {
       <div className="modal-box w-full max-w-4xl h-full">
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black"
-          onClick={() => document.getElementById("modalVPAlumno").close()}
+          onClick={(evt) => {
+            evt.preventDefault();
+            document.getElementById("modalVPAlumno").close();
+          }}
         >
           ✕
         </button>
