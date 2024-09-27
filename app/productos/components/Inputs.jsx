@@ -20,7 +20,7 @@ function Inputs({
     return (
       <div className="flex flex-col">
         <label
-          className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
+        className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel}  text-black dark:text-white`}
         >
           {Titulo}
           <input
@@ -28,7 +28,7 @@ function Inputs({
             name={name}
             id={name}
             type={"text"}
-            className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700  ${className}`}
+            className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 input-xs md:input-sm  ${className}`}
             {...(dataType === "int" && { onKeyDown: soloEnteros })}
             {...(dataType === "float" && { onKeyDown: soloDecimales })}
             {...register(name, {
@@ -53,7 +53,7 @@ function Inputs({
     return (
       <div className="flex flex-col">
         <label
-          className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
+          className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
         >
           {Titulo}
           <input
@@ -62,7 +62,7 @@ function Inputs({
             name={name}
             id={name}
             type={type}
-            className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700  ${className}`}
+            className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 input-xs md:input-sm  ${className}`}
             {...(dataType === "int" && { onKeyDown: soloEnteros })}
             {...(dataType === "float" && { onKeyDown: soloDecimales })}
             {...register(name, {

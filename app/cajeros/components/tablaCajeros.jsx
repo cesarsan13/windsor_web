@@ -51,7 +51,7 @@ function TablaCajeros({
                         data-tip={`Ver ${item.numero}`}
                         onClick={(evt) => tableAction(evt, item, `Ver`)}
                       >
-                        <Image src={iconos.ver} alt="Editar" />
+                        <Image src={iconos.ver} alt="Ver" />
                         </div>
                       <div
                         className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
@@ -65,7 +65,7 @@ function TablaCajeros({
                         data-tip={`Eliminar ${item.numero}`}
                         onClick={(evt) => tableAction(evt, item, "Eliminar")}
                       >
-                        <Image src={iconos.eliminar} alt="Editar" />
+                        <Image src={iconos.eliminar} alt="Eliminar" />
                         </div>
                     </div>
                   </th>

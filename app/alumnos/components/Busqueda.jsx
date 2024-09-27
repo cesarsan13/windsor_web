@@ -53,7 +53,7 @@ function Busqueda({
       <div className="col-span-1 md:col-span-1">
         <div className=" tooltip" data-tip="Limpiar">
           <button
-            className=" join-item  dark:text-neutral-200 text-neutral-600 border-none shadow-none w-6 h-6 md:w-8 md:h-8 mt-2 "
+            className=" join-item  dark:text-neutral-200 text-neutral-600 border-none shadow-none w-5 h-5 md:w-6 md:h-6 mt-4 "
             onClick={(evt) => limpiarBusqueda(evt)}
           >
                 <Image src={iconos.limpiar} alt="Limpiar" />
@@ -69,8 +69,13 @@ function Busqueda({
               className=" checkbox mx-2 checkbox-md md:mt-2"
               onClick={(evt) => setBajas(evt.target.checked)}
             />
-            <span className="fas fa-trash block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200 md:mt-2"></span>
-            <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200 md:mt-2">
+            <button
+            className=" join-item  dark:text-neutral-200 text-neutral-600 border-none shadow-none w-5 h-5 md:w-6 md:h-6 mt-2 "
+            >
+
+              <Image src={iconos.eliminar} alt="Bajas"></Image>
+            </button>
+              <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200 w-5 h-5 md:w-6 md:h-6 md:mt-2">
               Bajas
             </span>
           </label>

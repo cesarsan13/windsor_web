@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
+import iconos from "@/app/utils/iconos";
+import Image from "next/image";
 
 function Busqueda({
   setBajas,
@@ -41,11 +43,11 @@ function Busqueda({
       <div className="md:col-span-1">
         <div className=" tooltip" data-tip="Limpiar">
           <button
-            className="btn btn-square join-item input input-sm  dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 border-none shadow-none "
+            className="join-item dark:text-neutral-200 text-neutral-600 border-none  w-6 h-6 md:w-8 md:h-8 mt-2"
             onClick={(evt) => limpiarBusqueda(evt)}
           >
-            <i className="fa-solid fa-broom"></i>
-          </button>
+            <Image src={iconos.limpiar} alt="Limpiar" />
+            </button>
         </div>
       </div>
       <div className="md:col-span-1">

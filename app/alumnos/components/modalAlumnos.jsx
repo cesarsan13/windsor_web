@@ -93,7 +93,7 @@ function ModalAlumnos({
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box w-full max-w-3xl h-full">
         <form onSubmit={onSubmit} encType="multipart/form-data">
-          <div className="sticky -top-3 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
+          <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
             <h3 className="font-bold text-lg">{titulo}</h3>
             <div className="flex space-x-2 items-center">
               <div
@@ -106,12 +106,12 @@ function ModalAlumnos({
                 <button
                   type="submit"
                   id="btn_guardar"
-                  className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
+                  className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm "
                 >
                   <Image
                     src={iconos.guardar}
                     alt="Guardar"
-                    className="w-4 h-4 mr-1"
+                    className="w-5 h-5 md:w-6 md:h-6 mr-1"
                   />
                   <span className="hidden sm:inline">Guardar</span>
                 </button>
