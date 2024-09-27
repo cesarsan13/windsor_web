@@ -17,7 +17,7 @@ function TablaProductos({
 
 
     return !isLoading ? (
-        <div className="overflow-x-auto mt-3 h-[calc(55vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-12/12 justify-between">
+        <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white  w-full lg:w-full">
             {productosFiltrados.length > 0 ? (
                 <table className='table table-sm table-zebra w-full'>
                     <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
@@ -29,7 +29,9 @@ function TablaProductos({
                             <td className="w-[10%]">Recargo</td>
                             <td className="w-[10%]">Condición</td>
                             <td className="w-[10%]">IVA</td>
-                            <th className="w-[calc(10%)]">Acciones</th>
+                            <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Ver</th>
+                            <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Editar</th>
+                            <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Eliminar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,37 +46,42 @@ function TablaProductos({
                                 >
                                     {item.numero}
                                 </th>
-                                <td>{item.descripcion}</td>
+                                <td className="w-[40%] max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap pt-[.10rem] pb-[.10rem]">
+                                {item.descripcion}</td>
                                 <td>{item.aplicacion}</td>
                                 <td className="text-right">{formatNumber(item.costo)}</td>
                                 <td className="text-right">{formatNumber(item.por_recargo)}</td>
                                 <td className="text-right">{item.cond_1}</td>
                                 <td className="text-right">{formatNumber(item.iva)}</td>
-                                <th>
-                                    <div className="flex flex-row space-x-3">
+
+                                <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                                         <div
-                                            className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
+                                            className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
                                             data-tip={`Ver ${item.numero}`}
                                             onClick={(evt) => tableAction(`Ver`, item.numero)}
                                         >
                                             <Image src={iconos.ver} alt="Ver"/>
                                         </div>
+                                        </th>
+                                        <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                                         <div
-                                            className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
+                                            className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
                                             data-tip={`Editar ${item.numero}`}
                                             onClick={(evt) => tableAction(`Editar`, item.numero)}
                                         >
                                             <Image src={iconos.editar} alt="Editar" />
                                             </div>
+                                            </th>
+                                            <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
+
                                         <div
-                                            className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
+                                            className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
                                             data-tip={`Eliminar  ${item.numero}`}
                                             onClick={(evt) => tableAction("Eliminar", item.numero)}
                                         >
                                             <Image src={iconos.eliminar} alt="Eliminar" />
                                             </div>
-                                    </div>
-                                </th>
+                                            </th>
                             </tr>
                         ))}
                     </tbody>
