@@ -90,7 +90,7 @@ function Menu({ vertical, toogle }) {
           open={isOpen.archivos}
           onClick={() => handleToggle("archivos")}
         >
-          <summary>Archivos</summary>
+          <summary>Catálogos</summary>
           <ul>
             <li className="">
               <Link href="/alumnos" onClick={toogle}>Alumnos</Link>
@@ -217,7 +217,7 @@ function Menu({ vertical, toogle }) {
         >
           <label className="swap">
             <input type="checkbox" />
-            Archivos
+            Catálogos
           </label>
         </div>
         <ul

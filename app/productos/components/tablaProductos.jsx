@@ -2,6 +2,8 @@
 import Loading from "@/app/components/loading";
 import NoData from "@/app/components/noData";
 import React from "react";
+import iconos from "@/app/utils/iconos";
+import Image from "next/image";
 function TablaProductos({
     productosFiltrados,
     isLoading,
@@ -15,10 +17,10 @@ function TablaProductos({
 
 
     return !isLoading ? (
-        <div className="overflow-x-auto mt-3 h-[calc(55vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-3/4">
+        <div className="overflow-x-auto mt-3 h-[calc(55vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-12/12 justify-between">
             {productosFiltrados.length > 0 ? (
-                <table className='table table-xs table-zebra w-full'>
-                    <thead className="sticky top-0 bg-white dark:bg-[#1d232a]">
+                <table className='table table-sm table-zebra w-full'>
+                    <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
                         <tr>
                             <th></th>
                             <td className="w-[40%]" >Descripcion</td>
@@ -55,22 +57,22 @@ function TablaProductos({
                                             data-tip={`Ver ${item.numero}`}
                                             onClick={(evt) => tableAction(`Ver`, item.numero)}
                                         >
-                                            <i className="fa-solid fa-eye"></i>
+                                            <Image src={iconos.ver} alt="Ver"/>
                                         </div>
                                         <div
                                             className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                                             data-tip={`Editar ${item.numero}`}
                                             onClick={(evt) => tableAction(`Editar`, item.numero)}
                                         >
-                                            <i className="fa-solid fa-file"></i>
-                                        </div>
+                                            <Image src={iconos.editar} alt="Editar" />
+                                            </div>
                                         <div
                                             className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
                                             data-tip={`Eliminar  ${item.numero}`}
                                             onClick={(evt) => tableAction("Eliminar", item.numero)}
                                         >
-                                            <i className="fa-solid fa-trash"></i>
-                                        </div>
+                                            <Image src={iconos.eliminar} alt="Eliminar" />
+                                            </div>
                                     </div>
                                 </th>
                             </tr>

@@ -2,6 +2,8 @@
 import Tooltip from '@/app/components/tooltip';
 import { Viewer, Worker } from '@react-pdf-viewer/core'
 import React, { useEffect, useState } from 'react'
+import Image from 'next/image';
+import iconos from '@/app/utils/iconos';
 
 function ModalVistaPreviaProductos({ pdfPreview, pdfData, PDF, Excel }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,12 +24,24 @@ function ModalVistaPreviaProductos({ pdfPreview, pdfData, PDF, Excel }) {
                 </button>
                 <h3 className='font-bold text-lg mb-5 dark:text-white text-black'>Vista Previa Productos</h3>
                 <div className='flex flex-row space-x-4'>
-                    <Tooltip Titulo={"Imprimir PDF"} posicion={"tooltip-top"}>
-                        <button className='bg-transparent over:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn' onClick={PDF}>Imprimir PDF<i className='fa-solid fa-file-pdf'></i></button>                        
-                    </Tooltip>
-                    <Tooltip Titulo={"Imprimir Excel"} posicion={"tooltip-top"}>
-                    <button className='bg-transparent over:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn' onClick={Excel}>Imprimir Excel<i className='fa-solid fa-file-excel'></i></button>                        
-                    </Tooltip>
+                <Tooltip Titulo={"Imprimir PDF"} posicion={"tooltip-top"}>
+            <button
+              className="bg-transparent over:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn"
+              onClick={PDF}
+            >
+              <span className="hidden sm:inline">Generar PDF</span>
+              <Image src={iconos.imprimir} alt="Imprimir" />
+            </button>
+          </Tooltip>
+          <Tooltip Titulo={"Imprimir Excel"} posicion={"tooltip-top"}>
+            <button
+              className="bg-transparent over:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn"
+              onClick={Excel}
+            >
+              <span className="hidden sm:inline">Generar Excel</span>
+              <Image src={iconos.excel} alt="Excel" />
+            </button>
+          </Tooltip>
                 </div>
                 {pdfPreview && pdfData && (
                     <div className='mt-4'>
