@@ -20,6 +20,7 @@ function BuscarCat({
   alignRight = false,
   id,
   inputWidths = { contdef: "180px", first: "100px", second: "150px" },
+  accion,
 }) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -31,6 +32,14 @@ function BuscarCat({
       [nameInput[1]]: "",
     },
   });
+
+  useEffect(() => {
+    // console.log(accion);
+    if (accion === "Alta") {
+      setValue(nameInput[0], 0);
+      setValue(nameInput[1], "");
+    }
+  }, [accion])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -82,7 +91,7 @@ function BuscarCat({
       }
     };
     fetchData();
-  }, [table, token, id]);
+  }, [table, token, id, array]);
 
   const inputValue = watch(nameInput[0]);
   const inputValueDesc = watch(nameInput[1]);
