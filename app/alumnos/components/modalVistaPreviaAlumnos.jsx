@@ -38,11 +38,11 @@ function ModalVistaPreviaAlumnos({ pdfPreview, pdfData, PDF, Excel }) {
         <div className="flex flex-row space-x-4">
           <Tooltip Titulo={"Imprimir PDF"} posicion={"tooltip-top"}>
             <button
-              className="hover:bg-transparent border-none shadow-md hover:bg-slate-200 dark:hover:bg-neutral-700 bg-transparent text-black dark:text-white rounded-lg btn"
+              className="hover:bg-transparent border-none shadow-md hover:bg-slate-200 dark:hover:bg-neutral-700 bg-transparent text-black dark:text-white rounded-lg btn "
               onClick={PDF}
             >
-              <span className="hidden sm:inline">Generar PDF</span>
-              <Image src={iconos.imprimir} alt="Imprimir" />
+              <span className="hidden sm:inline ">Generar PDF</span>
+              <Image src={iconos.imprimir} alt="Imprimir" className="w-5 h-5 md:w-6 md:h-6"/>
             </button>
           </Tooltip>
           <Tooltip Titulo={"Imprimir Excel"} posicion={"tooltip-top"}>
@@ -51,7 +51,7 @@ function ModalVistaPreviaAlumnos({ pdfPreview, pdfData, PDF, Excel }) {
               onClick={Excel}
             >
               <span className="hidden sm:inline">Generar Excel</span>
-              <Image src={iconos.excel} alt="Excel" />
+              <Image src={iconos.excel} alt="Excel" className="w-5 h-5 md:w-6 md:h-6"/>
             </button>
           </Tooltip>
         </div>

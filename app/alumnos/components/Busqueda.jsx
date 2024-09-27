@@ -70,12 +70,12 @@ function Busqueda({
               onClick={(evt) => setBajas(evt.target.checked)}
             />
             <button
-            className=" join-item  dark:text-neutral-200 text-neutral-600 border-none shadow-none w-5 h-5 md:w-6 md:h-6 mt-2 "
+            className=" join-item  dark:text-neutral-200 text-neutral-600 border-none shadow-none w-5 h-5 md:w-6 md:h-6 mt-2"
             >
 
               <Image src={iconos.eliminar} alt="Bajas"></Image>
             </button>
-              <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200 w-5 h-5 md:w-6 md:h-6 md:mt-2">
+              <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200 w-5 h-5 md:w-6 md:h-6 md:mt-0">
               Bajas
             </span>
           </label>
