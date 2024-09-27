@@ -320,23 +320,25 @@ function Horarios() {
         setDia={setDia}
       />
       <ModalVistaPreviaHorarios pdfData={pdfData} pdfPreview={pdfPreview} PDF={ImprimePDF} Excel={ImprimeExcel} />
-      <div className="h-[83vh] max-h-[83vh] container w-full bg-slate-100 rounded-3xl shadow-xl px-3 dark:bg-slate-700 overflow-y-auto">
-        <div className="flex justify-start p-3">
-          <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
-            Horarios.
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+        <div className="flex flex-col justify-start p-3">
+          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
+            <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
+              <Acciones
+                Buscar={Buscar}
+                Alta={Alta}
+                home={home}
+                Ver={handleVerClick}
+              />
+            </div>
+
+            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-2/12">
+              Horarios
           </h1>
         </div>
-        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-          <div className="md:col-span-1 flex flex-col">
-            <Acciones
-              Buscar={Buscar}
-              Alta={Alta}
-              home={home}
-              Ver={handleVerClick}
-            />
-          </div>
-          <div className="md:col-span-7">
-            <div className="flex flex-col h-full">
+        </div>
+        <div className="flex flex-col items-center h-full">
+          <div className="w-full max-w-4xl">
               <Busqueda
                 setBajas={setBajas}
                 limpiarBusqueda={limpiarBusqueda}
@@ -355,7 +357,6 @@ function Horarios() {
             </div>
           </div>
         </div>
-      </div>
     </>
 
   );
