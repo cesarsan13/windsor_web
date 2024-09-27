@@ -21,16 +21,18 @@ function TablaCajeros({
 
   return !isLoading ? (
     <>
-      <div className="overflow-x-auto mt-3 h-[calc(55vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-12/12 justify-between">
-        {cajerosFiltrados.length > 0 ? (
-          <table className="table table-sm table-zebra w-full">
+    <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white  w-full lg:w-full">
+    {cajerosFiltrados.length > 0 ? (
+          <table className="table table-xs table-zebra w-full">
             <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
               <tr>
                 <th className="sm:w-[10%]"></th>
                 <td className="sm:w-[35%]">Nombre</td>
                 <td className="w-[20%]">Telefono</td>
                 <td className="w-[30%]">Correo</td>
-                <th className="w-[25%] sm:w-[10%]">Acciones</th>
+                <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Ver</th>
+              <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Editar</th>
+              <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Eliminar</th>
               </tr>
             </thead>
             <tbody>
@@ -41,38 +43,40 @@ function TablaCajeros({
                     ? "text-left"
                     : "text-right"
                   }>{item.numero}</th>
-                  <td className="sm:w-[35%]">{item.nombre}</td>
+                  <td className="sm:w-[35%] truncate">{item.nombre}</td>
                   <td className="w-[20%]">{item.telefono}</td>
                   <td className="w-[30%]">{item.mail}</td>
-                  <th className="w-[25%] sm:w-[10%]">
-                    <div className="flex flex-row space-x-1">
+                  
+                  <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                       <div
-                        className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
+                        className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
                         data-tip={`Ver ${item.numero}`}
                         onClick={(evt) => tableAction(evt, item, `Ver`)}
                       >
                         <Image src={iconos.ver} alt="Ver" />
                         </div>
+                        </th>
+                        <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                       <div
-                        className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
+                        className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
                         data-tip={`Editar ${item.numero}`}
                         onClick={(evt) => tableAction(evt, item, `Editar`)}
                       >
                         <Image src={iconos.editar} alt="Editar" />
                         </div>
+                        </th>
+                        <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                       <div
-                        className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
+                        className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
                         data-tip={`Eliminar ${item.numero}`}
                         onClick={(evt) => tableAction(evt, item, "Eliminar")}
                       >
                         <Image src={iconos.eliminar} alt="Eliminar" />
                         </div>
-                    </div>
                   </th>
                 </tr>
               ))}
             </tbody>
-            <tfoot />
           </table>
         ) : (
           <NoData />

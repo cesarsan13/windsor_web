@@ -67,7 +67,7 @@ function ModalCajeros({
               id="btn_guardar"
               className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
             >
-              <Image src={iconos.guardar} alt="Guardar" className="w-4 h-4 mr-1" />
+              <Image src={iconos.guardar} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 mr-1" />
               <span className="hidden sm:inline">Guardar</span>
             </button>
           </div>

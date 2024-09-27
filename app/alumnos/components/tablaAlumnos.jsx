@@ -27,7 +27,6 @@ function TablaAlumnos({
     let digitoBvba = calculaDigitoBvba(ref);
     let resultado = `${ref}${digitoBvba}`;
     alumno.referencia = resultado;
-    console.log("holaaaaa", alumno.sexo);
     setAlumno(alumno);
     setAccion(accion);
     setCurrentId(alumno.numero);

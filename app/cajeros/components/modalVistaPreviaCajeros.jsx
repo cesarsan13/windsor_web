@@ -33,7 +33,7 @@ function ModalVistaPreviaCajeros({ pdfPreview, pdfData, PDF, Excel }) {
               onClick={PDF}
             >
               <span className="hidden sm:inline">Generar PDF</span>
-              <Image src={iconos.imprimir} alt="Imprimir" />
+              <Image src={iconos.imprimir} alt="Imprimir" className="w-5 h-5 md:w-6 md:h-6" />
             </button>
           </Tooltip>
           <Tooltip Titulo={"Imprimir Excel"} posicion={"tooltip-top"}>
@@ -42,7 +42,7 @@ function ModalVistaPreviaCajeros({ pdfPreview, pdfData, PDF, Excel }) {
               onClick={Excel}
             >
               <span className="hidden sm:inline">Generar Excel</span>
-              <Image src={iconos.excel} alt="Excel" />
+              <Image src={iconos.excel} alt="Excel" className="w-5 h-5 md:w-6 md:h-6"/>
             </button>
           </Tooltip>
         </div>
