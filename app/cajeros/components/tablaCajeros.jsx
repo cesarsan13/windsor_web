@@ -43,7 +43,8 @@ function TablaCajeros({
                     ? "text-left"
                     : "text-right"
                   }>{item.numero}</th>
-                  <td className="sm:w-[35%] truncate">{item.nombre}</td>
+                  <td className="w-[35%] max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap pt-[.10rem] pb-[.10rem]">
+                    {item.nombre}</td>
                   <td className="w-[20%]">{item.telefono}</td>
                   <td className="w-[30%]">{item.mail}</td>
                   
