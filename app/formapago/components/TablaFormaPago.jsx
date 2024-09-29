@@ -2,6 +2,8 @@
 import Loading from "@/app/components/loading";
 import NoData from "@/app/components/noData";
 import React from "react";
+import iconos from "@/app/utils/iconos";
+import Image from "next/image";
 function TablaFormaPago({
   formaPagosFiltrados,
   isLoading,
@@ -18,7 +20,7 @@ function TablaFormaPago({
   };
 
   return !isLoading ? (
-    <div className="overflow-x-auto mt-3 h-[calc(55vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-3/4">
+    <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-full">
       {formaPagosFiltrados.length > 0 ? (
         <table className="table table-xs table-zebra w-full">
           <thead className="sticky top-0 bg-white dark:bg-[#1d232a]">
@@ -28,7 +30,9 @@ function TablaFormaPago({
               <td className="w-[8%]">Comision</td>
               <td className="w-[15%]">Aplicacion</td>
               <td className="w-[20%]">Cuenta Banco</td>
-              <th className="w-[calc(10%)]">Acciones</th>
+              <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Ver</th>
+              <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Editar</th>
+              <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Eliminar</th>
             </tr>
           </thead>
           <tbody>
@@ -39,29 +43,31 @@ function TablaFormaPago({
                 <td className={`text-right w-11`}>{item.comision}</td>
                 <td>{item.aplicacion}</td>
                 <td>{item.cue_banco}</td>
-                <th className="w-[30%] sm:w-[10%]">
-                  <div className="flex flex-row space-x-1 sm:space-x-3">
-                    <div
-                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                      data-tip={`Ver ${item.numero}`}
-                      onClick={(evt) => tableAction(evt, item, `Ver`)}
-                    >
-                      <i className="fa-solid fa-eye"></i>
-                    </div>
-                    <div
-                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                      data-tip={`Editar ${item.numero}`}
-                      onClick={(evt) => tableAction(evt, item, `Editar`)}
-                    >
-                      <i className="fa-solid fa-file"></i>
-                    </div>
-                    <div
-                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                      data-tip={`Eliminar  ${item.numero}`}
-                      onClick={(evt) => tableAction(evt, item, "Eliminar")}
-                    >
-                      <i className="fa-solid fa-trash"></i>
-                    </div>
+                <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
+                  <div
+                    className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
+                    data-tip={`Ver`}
+                    onClick={(evt) => tableAction(evt, item, `Ver`)}
+                  >
+                    <Image src={iconos.ver} alt="Ver" />
+                  </div>
+                </th>
+                <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
+                  <div
+                    className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
+                    data-tip={`Editar`}
+                    onClick={(evt) => tableAction(evt, item, `Editar`)}
+                  >
+                    <Image src={iconos.editar} alt="Editar" />
+                  </div>
+                </th>
+                <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
+                  <div
+                    className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
+                    data-tip={`Eliminar`}
+                    onClick={(evt) => tableAction(evt, item, "Eliminar")}
+                  >
+                    <Image src={iconos.eliminar} alt="Eliminar" />
                   </div>
                 </th>
               </tr>

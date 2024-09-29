@@ -3,6 +3,8 @@ import React from "react";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import { useState, useEffect } from "react";
 import Inputs from "@/app/formapago/components/Inputs";
+import Image from "next/image";
+import iconos from "@/app/utils/iconos";
 
 function ModalFormaPago({
   accion,
@@ -35,7 +37,7 @@ function ModalFormaPago({
         ? `Eliminar Forma de Pago: ${currentID}`
         : `Ver Forma de Pago: ${currentID}`
     );
-  }, [accion,currentID]);
+  }, [accion, currentID]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
@@ -51,17 +53,40 @@ function ModalFormaPago({
   return (
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box">
-        <button
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black"
-          onClick={() => document.getElementById("my_modal_3").close()}
-        >
-          ✕
-        </button>
-        {/* if there is a button in form, it will close the modal */}
         <form onSubmit={onSubmit}>
-          <h3 className="font-bold text-lg mb-5  text-black dark:text-white">
-            {titulo}
-          </h3>
+          <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
+            <h3 className="font-bold text-lg">{titulo}</h3>
+            <div className="flex space-x-2 items-center">
+              <div
+                className={`tooltip tooltip-bottom ${
+                  accion === "Ver"
+                    ? "hover:cursor-not-allowed hidden"
+                    : "hover:cursor-pointer"
+                }`}
+                data-tip="Guardar"
+              >
+                <button
+                  type="submit"
+                  id="btn_guardar"
+                  className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
+                >
+                  <Image
+                    src={iconos.guardar}
+                    alt="Guardar"
+                    className="w-5 h-5 md:w-6 md:h-6 mr-1"
+                  />
+                  <span className="hidden sm:inline">Guardar</span>
+                </button>
+              </div>
+              <button
+                type="button"
+                className="btn btn-sm btn-circle btn-ghost"
+                onClick={() => document.getElementById("my_modal_3").close()}
+              >
+                ✕
+              </button>
+            </div>
+          </div>
           <fieldset id="fs_formapago">
             <div className="container flex flex-col space-y-5">
               <Inputs
@@ -144,7 +169,7 @@ function ModalFormaPago({
               />
             </div>
           </fieldset>
-          <div className=" modal-action">
+          {/* <div className=" modal-action">
             <div
               className={`tooltip tooltip-top my-5 ${
                 accion === "Ver"
@@ -161,8 +186,15 @@ function ModalFormaPago({
                 <i className="fa-regular fa-floppy-disk mx-2"></i> Guardar
               </button>
             </div>
-          </div>
+          </div> */}
         </form>
+        {/* <button
+          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black"
+          onClick={() => document.getElementById("my_modal_3").close()}
+        >
+          ✕
+        </button> */}
+        {/* if there is a button in form, it will close the modal */}
       </div>
     </dialog>
   );

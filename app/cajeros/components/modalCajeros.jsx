@@ -80,6 +80,7 @@ function ModalCajeros({
           </button>
         </div>
       </div>
+      
           <fieldset id="fs_formapago">
             <div className="container flex flex-col space-y-5">
               <Inputs
