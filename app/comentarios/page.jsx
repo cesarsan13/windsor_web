@@ -26,7 +26,9 @@ function Comentarios() {
   const { data: session, status } = useSession();
   const [formasComentarios, setFormasComentarios] = useState([]);
   const [formaComentarios, setFormaComentarios] = useState({});
-  const [formaComentariosFiltrados, setFormaComentariosFiltrados] = useState([]);
+  const [formaComentariosFiltrados, setFormaComentariosFiltrados] = useState(
+    []
+  );
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
@@ -34,7 +36,10 @@ function Comentarios() {
   const [currentID, setCurrentId] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
-  const [busqueda, setBusqueda] = useState({ tb_numero: "", tb_comentario1: "" });
+  const [busqueda, setBusqueda] = useState({
+    tb_numero: "",
+    tb_comentario1: "",
+  });
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
@@ -85,12 +90,14 @@ function Comentarios() {
       return;
     }
     const infoFiltrada = formasComentarios.filter((formaComentarios) => {
-      const coincideID = tb_numero ? formaComentarios["numero"].toString().includes(tb_numero) : true;
-      const coincideComentario1 = tb_comentario1 ?
-        formaComentarios["comentario_1"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_comentario1.toLowerCase())
+      const coincideID = tb_numero
+        ? formaComentarios["numero"].toString().includes(tb_numero)
+        : true;
+      const coincideComentario1 = tb_comentario1
+        ? formaComentarios["comentario_1"]
+            .toString()
+            .toLowerCase()
+            .includes(tb_comentario1.toLowerCase())
         : true;
       return coincideID && coincideComentario1;
     });
@@ -136,11 +143,40 @@ function Comentarios() {
 
     Enca1(reporte);
     body.forEach((comentarios) => {
-      reporte.ImpPosX(comentarios.numero.toString(), 20, reporte.tw_ren, 0, "R");
-      reporte.ImpPosX(comentarios.comentario_1.toString(), 30, reporte.tw_ren, 35, "L");
-      reporte.ImpPosX(comentarios.comentario_2.toString(), 110, reporte.tw_ren, 35, "L");
-      reporte.ImpPosX(comentarios.comentario_3.toString(), 190, reporte.tw_ren, 35, "L");
-      let resultado = (comentarios.generales == 1) ? "Si" : (comentarios.generales == 0) ? "No" : "No valido";
+      reporte.ImpPosX(
+        comentarios.numero.toString(),
+        20,
+        reporte.tw_ren,
+        0,
+        "R"
+      );
+      reporte.ImpPosX(
+        comentarios.comentario_1.toString(),
+        30,
+        reporte.tw_ren,
+        35,
+        "L"
+      );
+      reporte.ImpPosX(
+        comentarios.comentario_2.toString(),
+        110,
+        reporte.tw_ren,
+        35,
+        "L"
+      );
+      reporte.ImpPosX(
+        comentarios.comentario_3.toString(),
+        190,
+        reporte.tw_ren,
+        35,
+        "L"
+      );
+      let resultado =
+        comentarios.generales == 1
+          ? "Si"
+          : comentarios.generales == 0
+          ? "No"
+          : "No valido";
       reporte.ImpPosX(resultado.toString(), 270, reporte.tw_ren, 0, "L");
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRenH) {
@@ -252,7 +288,9 @@ function Comentarios() {
         }
       }
       if (accion === "Eliminar" || accion === "Editar") {
-        const index = formasComentarios.findIndex((fp) => fp.numero === data.numero);
+        const index = formasComentarios.findIndex(
+          (fp) => fp.numero === data.numero
+        );
         if (index !== -1) {
           if (accion === "Eliminar") {
             const fpFiltrados = formasComentarios.filter(
@@ -321,44 +359,44 @@ function Comentarios() {
         Excel={ImprimeExcel}
       />
 
-      <div className="container h-[80vh] w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 overflow-y-auto">
-        <div className="flex justify-start p-3 ">
-          <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
-            Comentarios.
-          </h1>
-        </div>
-        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-          <div className="md:col-span-1 flex flex-col">
-            <Acciones
-              Buscar={Buscar}
-              Alta={Alta}
-              ImprimePDF={ImprimePDF}
-              ImprimeExcel={ImprimeExcel}
-              home={home}
-              Ver={handleVerClick}
-              CerrarView={CerrarView}
-            ></Acciones>
-          </div>
-          <div className="md:col-span-7">
-            <div className="flex flex-col h-full">
-              <Busqueda
-                setBajas={setBajas}
-                limpiarBusqueda={limpiarBusqueda}
+      <div className="container h-[80vh] w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 overflow-y-auto md:overflow-y-auto lg:overflow-y-hidden">
+        <div className="flex flex-col justify-start p-3 ">
+          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
+            <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
+              <Acciones
                 Buscar={Buscar}
-                handleBusquedaChange={handleBusquedaChange}
-                busqueda={busqueda}
-              />
-              <div className="overflow-x-auto">
-                <TablaComentarios
-                  isLoading={isLoading}
-                  formaComentariosFiltrados={formaComentariosFiltrados}
-                  showModal={showModal}
-                  setFormaComentarios={setFormaComentarios}
-                  setAccion={setAccion}
-                  setCurrentId={setCurrentId}
-                />
-              </div>
+                Alta={Alta}
+                // ImprimePDF={ImprimePDF}
+                // ImprimeExcel={ImprimeExcel}
+                home={home}
+                Ver={handleVerClick}
+                // CerrarView={CerrarView}
+              ></Acciones>
             </div>
+
+            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-2/12">
+              Comentarios.
+            </h1>
+          </div>
+        </div>
+
+        <div className="flex flex-col items-center h-full">
+          <div className="w-full max-w-4xl">
+            <Busqueda
+              setBajas={setBajas}
+              limpiarBusqueda={limpiarBusqueda}
+              Buscar={Buscar}
+              handleBusquedaChange={handleBusquedaChange}
+              busqueda={busqueda}
+            />
+            <TablaComentarios
+              isLoading={isLoading}
+              formaComentariosFiltrados={formaComentariosFiltrados}
+              showModal={showModal}
+              setFormaComentarios={setFormaComentarios}
+              setAccion={setAccion}
+              setCurrentId={setCurrentId}
+            />
           </div>
         </div>
       </div>
