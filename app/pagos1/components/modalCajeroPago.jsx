@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import Inputs from "@/app/cajeros/components/Inputs";
 import BuscarCat from "@/app/components/BuscarCat";
 import { useForm } from "react-hook-form";
+import Image from "next/image";
+import iconos from "@/app/utils/iconos";
 function ModalCajeroPago({
   session,
   validarClaveCajero,
@@ -69,14 +71,32 @@ function ModalCajeroPago({
   return (
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box w-full max-w-md sm:max-w-lg p-6">
-        <button
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-          onClick={() => home()}
-        >
-          ✕
-        </button>
         <form onSubmit={onSubmitModal}>
-          <h3 className="font-bold text-lg mb-5">Ingresa Clave del Cajero</h3>
+          <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
+            <h3 className="font-bold text-lg">Ingresa Clave del Cajero</h3>
+            <div className="flex space-x-2 items-center">
+              <div
+                className={`tooltip tooltip-bottom`}
+                data-tip="Validar"
+              >
+                <button
+                  type="submit"
+                  id="btn_guardar"
+                  className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
+                >
+                  <Image src={iconos.guardar} alt="Validar" className="w-5 h-5 md:w-6 md:h-6 mr-1" />
+                  <span className="hidden sm:inline">Validar</span>
+                </button>
+              </div>
+              <button
+                type="button"
+                className="btn btn-sm btn-circle btn-ghost"
+                onClick={() => document.getElementById("my_modal_3").close()}
+              >
+                ✕
+              </button>
+            </div>
+          </div>
           <fieldset id="fs_cajeropago">
             <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row lg:flex-row">
               <BuscarCat
@@ -107,20 +127,6 @@ function ModalCajeroPago({
               />
             </div>
           </fieldset>
-          <div className="modal-action flex justify-end mt-5">
-            <div
-              className="tooltip tooltip-top hover:cursor-pointer"
-              data-tip="Guardar"
-            >
-              <button
-                type="submit"
-                id="btn_validar"
-                className="btn bg-blue-500 hover:bg-blue-700 text-white"
-              >
-                <i className="fa-regular fa-floppy-disk mx-2"></i> Validar
-              </button>
-            </div>
-          </div>
         </form>
       </div>
     </dialog>
