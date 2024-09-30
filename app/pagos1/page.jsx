@@ -551,17 +551,39 @@ function Pagos_1() {
           docFiltrados={docFiltrados}
           isLoading={isLoading}
         />
-        <div className="flex justify-start p-3">
+
+        <div className="flex flex-col justify-start p-3">
+          <div className="flex flex-wrap md:flex-nowrap items-center justify-between w-full">
+            <div className="flex items-center space-x-4">
+              <Acciones
+                ImprimePDF={btnPDF}
+                home={home}
+                Documento={Documento}
+                Recargos={Recargos}
+                Parciales={Parciales}
+              />
+              <h1 className="text-4xl font-xthin text-black dark:text-white">
+                Pagos.
+              </h1>
+            </div>
+            <h1 className="text-4xl font-xthin text-black dark:text-white ml-auto">
+              {h1Total}
+            </h1>
+          </div>
+        </div>
+
+
+        {/* <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
             Pagos.
           </h1>
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12 ml-auto">
             {h1Total}
           </h1>
-        </div>
+        </div> */}
 
         <div className="grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
-          <div className="col-span-1 flex flex-col">
+          {/* <div className="col-span-1 flex flex-col">
             <Acciones
               ImprimePDF={btnPDF}
               home={home}
@@ -569,7 +591,7 @@ function Pagos_1() {
               Recargos={Recargos}
               Parciales={Parciales}
             />
-          </div>
+          </div> */}
 
           <div className="col-span-7">
             <div className="flex flex-col md:flex-row lg:flex-row pb-4">
