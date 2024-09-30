@@ -2,6 +2,8 @@
 import Loading from "@/app/components/loading";
 import NoData from "@/app/components/noData";
 import React, { useState } from "react";
+import iconos from "@/app/utils/iconos";
+import Image from "next/image";
 
 function TablaPagos1({
   pagosFiltrados,
@@ -51,11 +53,10 @@ function TablaPagos1({
               {pagosFiltrados.map((item) => (
                 <tr
                   key={item.numero}
-                  className={`hover:cursor-pointer ${
-                    selectedRow === item.numero
-                      ? "dark:bg-[#334155] bg-[#f1f5f9]"
-                      : ""
-                  }`}
+                  className={`hover:cursor-pointer ${selectedRow === item.numero
+                    ? "dark:bg-[#334155] bg-[#f1f5f9]"
+                    : ""
+                    }`}
                   // className={`hover:cursor-pointer ${selectedRow === item.numero ? 'selected-row' : ''}`}
                   onClick={() => setSelectedRow(item.numero)}
                 >
@@ -76,14 +77,14 @@ function TablaPagos1({
                         data-tip={`Eliminar ${item.numero}`}
                         onClick={(evt) => tableAction(evt, item, "Eliminar")}
                       >
-                        <i className="fa-solid fa-trash pt-2"></i>
+                        <Image src={iconos.eliminar} alt="Eliminar" />
                       </div>
                       <div
                         className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
                         data-tip={`Seleccionar ${item.numero}`}
                         onClick={(evt) => tableAction(evt, item, "Seleccionar")}
                       >
-                        <i className="fa-regular fa-hand-pointer pt-2"></i>
+                        <Image src={iconos.seleccionar} alt="Seleccionar" />
                       </div>
                     </div>
                   </th>

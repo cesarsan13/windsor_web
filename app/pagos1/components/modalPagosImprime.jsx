@@ -6,6 +6,8 @@ import BuscarCat from "@/app/components/BuscarCat";
 import { useForm } from "react-hook-form";
 import { showSwalAndWait } from "@/app/utils/alerts";
 import { format_Fecha_String } from "@/app/utils/globalfn";
+import Image from 'next/image';
+import iconos from '@/app/utils/iconos';
 import {
   guardarDetallePedido,
   guardaEcabYCobrD,
@@ -104,12 +106,13 @@ function ModalPagoImprime({
         return;
       }
       setisLoading(true);
+      const fecha_page = format_Fecha_String(formaPagoPage.fecha);
       for (const pago of pagosFiltrados) {
         const pagoUnitF = Elimina_Comas(pago.precio_base);
         newData = {
           recibo: data.recibo_imprimir || 0,
           alumno: pago.alumno || 0,
-          fecha: format_Fecha_String(formaPagoPage.fecha) || "",
+          fecha: fecha_page || "",
           articulo: pago.numero || 0,
           cantidad: pago.cantidad_producto || 0,
           precio_unitario: pagoUnitF || 0,
@@ -123,7 +126,7 @@ function ModalPagoImprime({
       const postNewData = {
         recibo: data.recibo_imprimir || 0,
         alumno: alumnos1.numero || 0,
-        fecha: format_Fecha_String(formaPagoPage.fecha) || "",
+        fecha: fecha_page || "",
         articulo: productos1.numero || 0,
         cajero: cajero.numero || 0,
         total_neto: totalFormat || 0,
@@ -155,6 +158,7 @@ function ModalPagoImprime({
       setisLoading(false);
       showModal(false);
     } catch (e) {
+      console.log(e.message);
       setisLoading(false);
     }
     // } else { }
@@ -181,8 +185,9 @@ function ModalPagoImprime({
   };
 
   const formaEnca = (dataSubmit) => {
+    const fecha_page = format_Fecha_String(formaPagoPage.fecha);
     let data = {
-      fecha: formaPagoPage.fecha || "",
+      fecha: fecha_page || "",
       alumno_seleccionado: alumnos1.numero || "",
       numero_recibo: formaPagoPage.recibo || "",
       forma_pago_descripcion: formpago.descripcion || "",
@@ -394,7 +399,7 @@ function ModalPagoImprime({
                 {isLoading ? (
                   <FaSpinner className="animate-spin mx-2" />
                 ) : (
-                  <i className="fas fa-file-pdf mx-2"></i>
+                  <Image src={iconos.imprimir} alt="Imprimir" className="w-5 h-5 md:w-6 md:h-6" />
                 )}
                 {isLoading ? " Cargando..." : " Imprimir"}
               </button>
