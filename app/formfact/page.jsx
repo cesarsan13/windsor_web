@@ -249,24 +249,25 @@ function FormFact() {
         setFormFact={setFormFact}
         formFact={formFact}
       />
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+       <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
               <Acciones
                 Buscar={Buscar}
                 Alta={Alta}
-                home={home} /*imprimir={imprimir} excel={excel}*/
+                home={home} 
               ></Acciones>
             </div>
-            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-2/12">
-              Formas Facturas.
-            </h1>
+            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-full md:w-auto">
+              Formas Facturas
+              </h1>
+
           </div>
         </div>
-        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-          <div className="md:col-span-7">
-            <div className="flex flex-col h-full">
+
+        <div className="flex flex-col items-center h-full">
+          <div className="w-full max-w-4xl">
               <Busqueda
                 setBajas={setBajas}
                 limpiarBusqueda={limpiarBusqueda}
@@ -300,7 +301,6 @@ function FormFact() {
             </div>
           </div>
         </div>
-      </div>
     </>
   );
 }

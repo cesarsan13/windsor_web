@@ -1,5 +1,7 @@
 import React from "react";
 import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
+import Image from "next/image";
+import iconos from "@/app/utils/iconos";
 
 function Busqueda({
   setBajas,
@@ -22,7 +24,7 @@ function Busqueda({
           <input
             id="tb_id"
             className="input input-bordered input-md max-w-xs w-full dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 text-right"
-            placeholder="Id..."
+            placeholder="Num..."
             onChange={(event) => handleBusquedaChange(event)}
             onKeyDown={(evt) => {
               soloEnteros(evt);
@@ -44,11 +46,11 @@ function Busqueda({
         <div className="md:col-span-1">
           <div className=" tooltip" data-tip="Limpiar">
             <button
-              className="btn btn-square join-item input input-sm  dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 border-none shadow-none "
-              onClick={(evt) => limpiarBusqueda(evt)}
+            className="join-item dark:text-neutral-200 text-neutral-600 border-none  w-5 h-5 md:w-6 md:h-6 mt-4"
+            onClick={(evt) => limpiarBusqueda(evt)}
             >
-              <i className="fa-solid fa-broom"></i>
-            </button>
+                <Image src={iconos.limpiar} alt="Limpiar" />
+                </button>
           </div>
         </div>
         <div className="md:col-span-1">
@@ -59,12 +61,15 @@ function Busqueda({
                 type="checkbox"
                 className=" checkbox mx-2 checkbox-md"
                 onClick={(evt) => setBajas(evt.target.checked)}
-              />
-              <span className="fas fa-trash block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
-              <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
-                Bajas
-              </span>
-            </label>
+                />
+                <button
+               className=" join-item  dark:text-neutral-200 text-neutral-600 border-none shadow-none w-5 h-5 md:w-6 md:h-6 mt-1"
+               >
+   
+                 <Image src={iconos.eliminar} alt="Bajas"></Image>
+               </button>
+               <span className=" text-lg font-xthin text-black hidden sm:inline">Bajas</span>
+             </label>
           </div>
         </div>
       </div>
