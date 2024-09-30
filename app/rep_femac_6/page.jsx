@@ -135,9 +135,9 @@ function Rep_Femac_6() {
         const Tw_Pago = Array.from({ length: 100 }, () => Array(2).fill(0));
         if (cajero.numero === 0 || cajero.numero === undefined) {
             if (configuracion.body.producto.length > 0) {
-                reporte.ImpPosX("Producto", 14, reporte.tw_ren, 0,"L");
-                reporte.ImpPosX("Descripcion", 34, reporte.tw_ren, 0,"L");
-                reporte.ImpPosX("Importe", 154, reporte.tw_ren, 0,"L");
+                reporte.ImpPosX("Producto", 14, reporte.tw_ren, 0, "L");
+                reporte.ImpPosX("Descripcion", 34, reporte.tw_ren, 0, "L");
+                reporte.ImpPosX("Importe", 154, reporte.tw_ren, 0, "L");
                 reporte.nextRow(4);
                 let atr_ant = 0;
                 let tot_ant = 0;
@@ -147,8 +147,8 @@ function Rep_Femac_6() {
                 configuracion.body.producto.forEach((producto) => {
                     if (atr_ant !== producto.articulo && atr_ant !== 0) {
                         reporte.ImpPosX(atr_ant.toString(), 27, reporte.tw_ren, 0, "R");
-                        reporte.ImpPosX(atr_des_ant.toString(), 34, reporte.tw_ren, 0,"L");
-                        reporte.ImpPosX(formatNumber(tot_ant), 166, reporte.tw_ren, 0,"R");
+                        reporte.ImpPosX(atr_des_ant.toString(), 34, reporte.tw_ren, 0, "L");
+                        reporte.ImpPosX(formatNumber(tot_ant), 166, reporte.tw_ren, 0, "R");
                         total_productos = total_productos + tot_ant;
                         Enca1(reporte);
                         if (reporte.tw_ren >= reporte.tw_endRen) {
@@ -168,16 +168,16 @@ function Rep_Femac_6() {
                 })
                 total_productos = total_productos + tot_ant;
                 reporte.ImpPosX(atr_ant.toString(), 27, reporte.tw_ren, 0, "R");
-                reporte.ImpPosX(atr_des_ant.toString(), 34, reporte.tw_ren, 0,"L")
-                reporte.ImpPosX(formatNumber(tot_ant), 166, reporte.tw_ren, 0,"R");
+                reporte.ImpPosX(atr_des_ant.toString(), 34, reporte.tw_ren, 0, "L")
+                reporte.ImpPosX(formatNumber(tot_ant), 166, reporte.tw_ren, 0, "R");
                 reporte.nextRow(5);
                 reporte.ImpPosX("Total Productos", 34, reporte.tw_ren, 0, "L");
                 reporte.ImpPosX(formatNumber(total_productos), 166, reporte.tw_ren, 0, "R");
                 reporte.nextRow(15);
             } else {
-                reporte.ImpPosX("Producto", 14, reporte.tw_ren, 0,"L");
-                reporte.ImpPosX("Descripcion", 34, reporte.tw_ren, 0,"L");
-                reporte.ImpPosX("Importe", 154, reporte.tw_ren, 0,"L");
+                reporte.ImpPosX("Producto", 14, reporte.tw_ren, 0, "L");
+                reporte.ImpPosX("Descripcion", 34, reporte.tw_ren, 0, "L");
+                reporte.ImpPosX("Importe", 154, reporte.tw_ren, 0, "L");
                 reporte.nextRow(5);
                 let total_productos = 0;
                 reporte.ImpPosX("Total Productos", 34, reporte.tw_ren, 0, "L");
@@ -192,9 +192,9 @@ function Rep_Femac_6() {
             Tw_Pago[Tw_count][2] = "";
         }
         if (configuracion.body.tipo_pago.length > 0) {
-            reporte.ImpPosX("Tipo Pago", 14, reporte.tw_ren, 0,"L");
-            reporte.ImpPosX("Descripcion", 34, reporte.tw_ren, 0,"L");
-            reporte.ImpPosX("Importe", 154, reporte.tw_ren, 0,"L");
+            reporte.ImpPosX("Tipo Pago", 14, reporte.tw_ren, 0, "L");
+            reporte.ImpPosX("Descripcion", 34, reporte.tw_ren, 0, "L");
+            reporte.ImpPosX("Importe", 154, reporte.tw_ren, 0, "L");
             reporte.nextRow(4);
             configuracion.body.tipo_pago.forEach((tipoPago) => {
                 for (let Tw_count = 0; Tw_count < 20; Tw_count++) {
@@ -316,16 +316,24 @@ function Rep_Femac_6() {
         <>
             <ModalVistaPreviaRep6 pdfPreview={pdfPreview} pdfData={pdfData} PDF={ImprimePDF} Excel={ImprimeExcel} />
 
-            <div className='container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3'>
-                <div className='flex justify-start p-3'>
-                    <h1 className='text-4xl font-xthin text-black dark:text-white md:px-12'>
-                        Reporte Resumen de Cobranza
-                    </h1>
-                </div>
-                <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-                <div className="md:col-span-1 flex flex-col">
-                        <Acciones home={home} ImprimePDF={ImprimePDF} Ver={handleVerClick} ImprimeExcel={ImprimeExcel} CerrarView={CerrarView} />
+            <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+                <div className="flex flex-col justify-start p-3">
+                    <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
+                        <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
+                            <Acciones
+                                home={home}
+                                Ver={handleVerClick}
+                            />
+                        </div>
+
+                        <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-auto">
+                            Reporte Resumen de Cobranza
+                        </h1>
                     </div>
+                </div>
+
+
+                <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
                     <div className='col-span-7'>
                         <div className='flex flex-col h-[calc(100%)]'>
                             <div className='flex flex-col md:flex-row gap-4'>
@@ -362,7 +370,7 @@ function Rep_Femac_6() {
                                     setItem={setCajero}
                                     modalId={"modal_Cajeros"}
                                     alignRight={true}
-                                    />
+                                />
                             </div>
                         </div>
                     </div>
