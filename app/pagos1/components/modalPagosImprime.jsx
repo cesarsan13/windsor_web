@@ -213,15 +213,39 @@ function ModalPagoImprime({
 
   return (
     <dialog id="my_modal_4" className="modal">
-      <div className="modal-box w-full h-full">
-        <button
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-          onClick={() => document.getElementById("my_modal_4").close()}
-        >
-          ✕
-        </button>
+      <div className="modal-box">
         <form onSubmit={onSubmitModal}>
-          <h3 className="font-bold text-lg mb-5">Imprime</h3>
+          <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
+            <h3 className="font-bold text-lg">Imprime.</h3>
+            <div className="flex space-x-2 items-center">
+              <div
+                className={`tooltip tooltip-bottom`}
+                data-tip="Guardar"
+              >
+                <button
+                  type="submit"
+                  id="btn_imprimir"
+                  className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
+                  onClick={handleSubmit}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <FaSpinner className="animate-spin mx-2" />
+                  ) : (
+                    <Image src={iconos.imprimir} alt="Imprimir" className="w-5 h-5 md:w-6 md:h-6" />
+                  )}
+                  {isLoading ? " Cargando..." : " Imprimir"}
+                </button>
+              </div>
+              <button
+                type="button"
+                className="btn btn-sm btn-circle btn-ghost"
+                onClick={() => document.getElementById("my_modal_4").close()}
+              >
+                ✕
+              </button>
+            </div>
+          </div>
           <fieldset id="fs_pagoimprime">
             <div className="container flex flex-col space-y-5">
               <div className="w-auto p-4 border dark:border-gray-300 border-black rounded-lg">
@@ -384,27 +408,6 @@ function ModalPagoImprime({
               />
             </div>
           </fieldset>
-          <div className="modal-action">
-            <div
-              className="tooltip tooltip-top my-5 hover:cursor-pointer"
-              data-tip="Imprimir"
-            >
-              <button
-                type="submit"
-                id="btn_imprimir"
-                className="btn bg-blue-500 hover:bg-blue-700 text-white relative"
-                onClick={handleSubmit}
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <FaSpinner className="animate-spin mx-2" />
-                ) : (
-                  <Image src={iconos.imprimir} alt="Imprimir" className="w-5 h-5 md:w-6 md:h-6" />
-                )}
-                {isLoading ? " Cargando..." : " Imprimir"}
-              </button>
-            </div>
-          </div>
         </form>
       </div>
     </dialog>
