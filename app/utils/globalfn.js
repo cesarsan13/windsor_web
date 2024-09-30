@@ -112,11 +112,14 @@ export function formatDate(date) {
 
 export function format_Fecha_String(date) {
   if (date === "" || date === null || !date || date === " ") return "";
-  let fechaObj = new Date(date.replace(/\//g, "-"));
-  const year = fechaObj.getFullYear();
-  const month = String(fechaObj.getMonth() + 1).padStart(2, "0");
-  const day = String(fechaObj.getDate()).padStart(2, "0");
-  return `${year}/${month}/${day}`;
+  const [day, month, year] = date.split(/[-\/]/);
+  if (!day || !month || !year) return "";
+  const fechaObj = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+  if (isNaN(fechaObj.getTime())) return "";
+  const formattedYear = fechaObj.getFullYear();
+  const formattedMonth = String(fechaObj.getMonth() + 1).padStart(2, "0");
+  const formattedDay = String(fechaObj.getDate()).padStart(2, "0");
+  return `${formattedYear}/${formattedMonth}/${formattedDay}`;
 }
 export function Fecha_de_Ctod(date, diasmas) {
   if (!(date instanceof Date)) {
