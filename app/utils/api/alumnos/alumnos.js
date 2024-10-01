@@ -1,6 +1,19 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { format_Fecha_String } from "../../globalfn";
+
+export const getDataSex = async (token) => {
+  let url = "";
+  url = `${process.env.DOMAIN_API}api/students/datasex`;
+  const res = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const resJson = await res.json();
+  return resJson.data;
+};
+
 export const getAlumnos = async (token, baja) => {
   let url = "";
   baja
