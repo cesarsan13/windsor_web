@@ -7,7 +7,7 @@ import PieChart from "@/app/components/PieChart";
 export default function Home() {
   return (
     <main className="flex flex-col items-center justify-between h-[80vh] w-full max-w-screen-xl">
-      <div className="carousel w-10/12 ">
+      <div className="carousel w-full ">
         <div id="slide1" className="carousel-item relative w-full">
           <Image
             alt="Menu"
@@ -36,8 +36,8 @@ export default function Home() {
         </div>
         <div id="slide2" className="carousel-item relative w-full">
           <div className="container">
-            <div className="grid grid-rows-2 md:grid-rows-1 gap-10">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+            <div className="grid grid-rows-2 md:grid-rows-1">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 place-content-center">
                 <div className="stats shadow">
                   <div className="stat">
                     <div className="stat-title">Total Page Views</div>
