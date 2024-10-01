@@ -36,34 +36,36 @@ export default function Home() {
         </div>
         <div id="slide2" className="carousel-item relative w-full">
           <div className="container">
-            <div className="grid grid-rows-2 md:grid-rows-1">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 place-content-center">
-                <div className="stats shadow">
-                  <div className="stat">
-                    <div className="stat-title">Total Page Views</div>
-                    <div className="stat-value">89,400</div>
-                    <div className="stat-desc">21% more than last month</div>
+            <div className="grid gap-10">
+              <div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 place-content-start">
+                  <div className="stats shadow">
+                    <div className="stat">
+                      <div className="stat-title">Total Page Views</div>
+                      <div className="stat-value">89,400</div>
+                      <div className="stat-desc">21% more than last month</div>
+                    </div>
                   </div>
-                </div>
-                <div className="stats shadow">
-                  <div className="stat">
-                    <div className="stat-title">Total Page Views</div>
-                    <div className="stat-value">89,400</div>
-                    <div className="stat-desc">21% more than last month</div>
+                  <div className="stats shadow">
+                    <div className="stat">
+                      <div className="stat-title">Total Page Views</div>
+                      <div className="stat-value">89,400</div>
+                      <div className="stat-desc">21% more than last month</div>
+                    </div>
                   </div>
-                </div>
-                <div className="stats shadow">
-                  <div className="stat">
-                    <div className="stat-title">Total Page Views</div>
-                    <div className="stat-value">89,400</div>
-                    <div className="stat-desc">21% more than last month</div>
+                  <div className="stats shadow">
+                    <div className="stat">
+                      <div className="stat-title">Total Page Views</div>
+                      <div className="stat-value">89,400</div>
+                      <div className="stat-desc">21% more than last month</div>
+                    </div>
                   </div>
-                </div>
-                <div className="stats shadow">
-                  <div className="stat">
-                    <div className="stat-title">Total Page Views</div>
-                    <div className="stat-value">89,400</div>
-                    <div className="stat-desc">21% more than last month</div>
+                  <div className="stats shadow">
+                    <div className="stat">
+                      <div className="stat-title">Total Page Views</div>
+                      <div className="stat-value">89,400</div>
+                      <div className="stat-desc">21% more than last month</div>
+                    </div>
                   </div>
                 </div>
               </div>
