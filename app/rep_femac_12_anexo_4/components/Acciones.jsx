@@ -1,28 +1,29 @@
 import React from 'react'
 import Tooltip from "@/app/components/tooltip";
 import Button from "@/app/components/button";
-import { TbLoader3 } from "react-icons/tb";
+import Image from "next/image";
+import iconos from "@/app/utils/iconos";
+function Acciones({home, Ver }) {
+  const images = [
+    { src: iconos.vistaPrevia, alt: 'Vista previa', tooltipTitle: 'Vista previa', onClick: Ver },
+    { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home },
+  ];
 
-function Acciones({ home, Ver, isLoading }) {
+  const ImageTooltip = ({ src, tooltipTitle, onClick }) => {
     return (
-        <div className='join join-horizontal justify-around md:join-vertical'>
-            <Tooltip Titulo={"Vista Previa"} posicion={"tooltip-top"}>
-                <button
-                    className=" w-10 h-10  bg-transparent hover:bg-transparent border-none shadow-none text-black dark:text-white rounded-lg btn"
-                    onClick={(evt) => Ver(evt)}
-                >
-                    {isLoading ? (
-                        <TbLoader3 className="animate-spin -mx-2 text-4xl" />
-                    ) : (
-                        <i className={`fas fa-eye text-lg`}></i>
-                    )}
-                </button>
-            </Tooltip>
-            <Tooltip Titulo={"Inicio"} posicion={"tooltip-top"}>
-                <Button icono={"fas fa-home"} onClick={home}></Button>
-            </Tooltip>
-        </div>
+      <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
+        <Image src={src} alt={tooltipTitle} onClick={onClick} className="w-5 h-5 md:w-6 md:h-6" />
+      </Tooltip>
     );
+  };
+
+  return (
+    <div className="grid grid-flow-col gap-5 justify-around w-full">
+      {images.map((image, idx) => (
+        <ImageTooltip key={idx} src={image.src} {...image} />
+      ))}
+    </div>
+  );
 }
 
 export default Acciones
