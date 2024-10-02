@@ -1,11 +1,47 @@
 "use client";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 const menu = require("@/public/home.jpg");
 const menu2 = require("@/public/home_movil.jpg");
+import { getEstadisticasTotales } from "@/app/utils/api/estadisticas/estadisticas"
 import LineChart from "@/app/components/LineChart";
 import BarChart from "@/app/components/BarChart";
 import PieChart from "@/app/components/PieChart";
 export default function Home() {
+  const { data: session, status } = useSession();
+  const [totalAlumnos, setTotalAlumnos] = useState("");
+  const [totalCursos, setTotalCursos] = useState("");
+  const [totalAlPorGrado, setAlPorGrado] = useState("");
+  const [horarioCantidadAlumnos, setHorarioCantidadAlumnos] = useState("");
+  const [isLoading, setisLoading] = useState(false);
+
+  useEffect(() => {
+    if (status === "loading" || !session) {
+      return;
+    }
+    const fetchChart = async () => {
+      setisLoading(true);
+      const { token } = session.user;
+      const res = await getEstadisticasTotales(token);
+      console.log(res);
+      const totalEstudiantes = res.promedio_alumnos_por_curso.reduce((acc, cur) => acc + cur.total_estudiantes, 0);
+      const totalGrados = res.promedio_alumnos_por_curso.length;
+      const promedioTotal = totalGrados > 0 ? Math.round(totalEstudiantes / totalGrados) : 0;
+      setTotalAlumnos(res.total_alumnos);
+      setTotalCursos(res.total_cursos);
+      setAlPorGrado(promedioTotal);
+      setHorarioCantidadAlumnos(res.horarios_populares)
+      setisLoading(false);
+    };
+    fetchChart();
+  }, [session, status]);
+
+  if (status === "loading" || isLoading === true) {
+    return (
+      <div className="container skeleton w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
+    );
+  }
   return (
     <main className="flex flex-col items-center justify-between h-[80vh] w-full max-w-screen-xl">
       <div className="carousel w-full ">
@@ -42,33 +78,36 @@ export default function Home() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 place-content-start">
                   <div className="stats shadow">
                     <div className="stat">
-                      <div className="stat-title">Total Page Views</div>
-                      <div className="stat-value">89,400</div>
-                      <div className="stat-desc">21% more than last month</div>
+                      <div className="stat-title">Total de Alumnos</div>
+                      <div className="stat-value">{totalAlumnos}</div>
+                      <div className="stat-desc">Número total de estudiantes inscritos en la escuela.</div>
                     </div>
                   </div>
                   <div className="stats shadow">
                     <div className="stat">
-                      <div className="stat-title">Total Page Views</div>
-                      <div className="stat-value">89,400</div>
-                      <div className="stat-desc">21% more than last month</div>
+                      <div className="stat-title">Total de Grados</div>
+                      <div className="stat-value">{totalCursos || ""}</div>
+                      <div className="stat-desc">Total de cursos disponibles para los estudiantes.</div>
                     </div>
                   </div>
                   <div className="stats shadow">
                     <div className="stat">
-                      <div className="stat-title">Total Page Views</div>
-                      <div className="stat-value">89,400</div>
-                      <div className="stat-desc">21% more than last month</div>
+                      <div className="stat-title">Promedio General de Alumnos por Grado</div>
+                      <div className="stat-value">{totalAlPorGrado || ""}</div>
+                      <div className="stat-desc">Promedio de estudiantes en cada curso, reflejando la carga educativa.</div>
                     </div>
                   </div>
                   <div className="stats shadow">
                     <div className="stat">
-                      <div className="stat-title">Total Page Views</div>
-                      <div className="stat-value">89,400</div>
-                      <div className="stat-desc">21% more than last month</div>
+                      <div className="stat-title">Grado con más Alumnos</div>
+                      <div className="stat-value">{horarioCantidadAlumnos?.horario || 'N/A'}</div>
+                      <div className="stat-desc">
+                        {horarioCantidadAlumnos ? `${horarioCantidadAlumnos.total_estudiantes} estudiantes contiene este curso` : 'No hay información disponible.'}
+                      </div>
                     </div>
                   </div>
                 </div>
+
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 justify-items-center">

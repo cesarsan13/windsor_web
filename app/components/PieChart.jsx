@@ -20,7 +20,7 @@ const PieChart = () => {
       setisLoading(true);
       const { token } = session.user;
       const data = await getDataSex(token);
-      console.log(data);
+      // console.log(data);
       setSexData(data);
       setisLoading(false);
     };
@@ -42,6 +42,11 @@ const PieChart = () => {
       },
     ],
   };
+  if (status === "loading" || isLoading === true) {
+    return (
+      <div className="container skeleton w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
+    );
+  }
   return (
     <div className="w-80 h-25 card shadow items-center py-2">
       <h1 className="font-bold">Diversidad de Alumnos</h1>

@@ -22,7 +22,7 @@ const BarChart = () => {
       setisLoading(true);
       const { token } = session.user;
       const data = await getAlumnoXHorario(token);
-      console.log(data);
+      // console.log(data);
       setHData(data);
       setisLoading(false);
     };
@@ -46,6 +46,11 @@ const BarChart = () => {
     ],
   };
 
+  if (status === "loading" || isLoading === true) {
+    return (
+      <div className="container skeleton w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
+    );
+  }
   return (
     <div className="w-full  card shadow-md  bg-base-100 items-center">
       <h1 className="font-bold">Alumnos por Horario</h1>
