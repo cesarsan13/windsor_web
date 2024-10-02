@@ -29,9 +29,9 @@ function AltasBajasAlumnos() {
   const [selectedOptionAB, setSelectedOptionAB] = useState("alta");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
-  const {formState: { errors },} = useForm({});
- 
- 
+  const { formState: { errors }, } = useForm({});
+
+
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
   };
@@ -114,66 +114,65 @@ function AltasBajasAlumnos() {
       );
 
     } else {
-    const alumnosFiltrados = await formaImprime();
-    const configuracion = {
-      Encabezado: {
-        Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: "Reporte Altas Bajas de Alumnos por Periodo",
-        Nombre_Usuario: `Usuario: ${session.user.name}`,
-      },
-      body: alumnosFiltrados,
-    };
-    
-    const newPDF = new ReportePDF(configuracion);
-    const { body } = configuracion;
-    const Enca2 = (doc) => {
-      if (!doc.tiene_encabezado) {
-        doc.imprimeEncabezadoPrincipalV();
-        doc.nextRow(12);
-        doc.ImpPosX("No", 15, doc.tw_ren);
-        doc.ImpPosX("Nombre", 35, doc.tw_ren);
-        doc.ImpPosX("Dia", 150, doc.tw_ren);
-        doc.ImpPosX("Mes", 160, doc.tw_ren);
-        doc.ImpPosX("Año", 170, doc.tw_ren);
-        doc.nextRow(4);
-        doc.printLineV();
-        doc.nextRow(4);
-        doc.tiene_encabezado = true;
-      } else {
-        doc.nextRow(6);
-        doc.tiene_encabezado = true;
-      }
-    };
+      const alumnosFiltrados = await formaImprime();
+      const configuracion = {
+        Encabezado: {
+          Nombre_Aplicacion: "Sistema de Control Escolar",
+          Nombre_Reporte: "Reporte Altas Bajas de Alumnos por Periodo",
+          Nombre_Usuario: `Usuario: ${session.user.name}`,
+        },
+        body: alumnosFiltrados,
+      };
 
-    Enca2(newPDF);
-    body.forEach((alumno) => {
-      const nombre = `${alumno.a_nombre || ""} ${alumno.a_paterno || ""} ${
-        alumno.a_materno || ""
-      }`;
-      const id = calculaDigitoBvba((alumno.numero || '').toString() || '');
-      let fecha;
-      fecha = new Date(alumno.fecha_nac);
-      const diaFor = fecha.getDate().toString().padStart(2, "0");
-      const mesFor = (fecha.getMonth() + 1).toString().padStart(2, "0");
-      const añoFor = fecha.getFullYear().toString();
-      newPDF.ImpPosX(`${alumno.numero}-${id}`, 15, newPDF.tw_ren);
-      newPDF.ImpPosX(nombre, 35, newPDF.tw_ren);
-      newPDF.ImpPosX(diaFor, 150, newPDF.tw_ren);
-      newPDF.ImpPosX(mesFor, 160, newPDF.tw_ren);
-      newPDF.ImpPosX(añoFor, 170, newPDF.tw_ren);
+      const newPDF = new ReportePDF(configuracion);
+      const { body } = configuracion;
+      const Enca2 = (doc) => {
+        if (!doc.tiene_encabezado) {
+          doc.imprimeEncabezadoPrincipalV();
+          doc.nextRow(12);
+          doc.ImpPosX("No", 15, doc.tw_ren);
+          doc.ImpPosX("Nombre", 35, doc.tw_ren);
+          doc.ImpPosX("Dia", 150, doc.tw_ren);
+          doc.ImpPosX("Mes", 160, doc.tw_ren);
+          doc.ImpPosX("Año", 170, doc.tw_ren);
+          doc.nextRow(4);
+          doc.printLineV();
+          doc.nextRow(4);
+          doc.tiene_encabezado = true;
+        } else {
+          doc.nextRow(6);
+          doc.tiene_encabezado = true;
+        }
+      };
+
       Enca2(newPDF);
-      if (newPDF.tw_ren >= newPDF.tw_endRen) {
-        newPDF.pageBreak();
+      body.forEach((alumno) => {
+        const nombre = `${alumno.a_nombre || ""} ${alumno.a_paterno || ""} ${alumno.a_materno || ""
+          }`;
+        const id = calculaDigitoBvba((alumno.numero || '').toString() || '');
+        let fecha;
+        fecha = new Date(alumno.fecha_nac);
+        const diaFor = fecha.getDate().toString().padStart(2, "0");
+        const mesFor = (fecha.getMonth() + 1).toString().padStart(2, "0");
+        const añoFor = fecha.getFullYear().toString();
+        newPDF.ImpPosX(`${alumno.numero}-${id}`, 15, newPDF.tw_ren);
+        newPDF.ImpPosX(nombre, 35, newPDF.tw_ren);
+        newPDF.ImpPosX(diaFor, 150, newPDF.tw_ren);
+        newPDF.ImpPosX(mesFor, 160, newPDF.tw_ren);
+        newPDF.ImpPosX(añoFor, 170, newPDF.tw_ren);
         Enca2(newPDF);
-      }
-    });
-    const pdfData = newPDF.doc.output("datauristring");
+        if (newPDF.tw_ren >= newPDF.tw_endRen) {
+          newPDF.pageBreak();
+          Enca2(newPDF);
+        }
+      });
+      const pdfData = newPDF.doc.output("datauristring");
 
-    setPdfData(pdfData);
-    setPdfPreview(true);
-    showModalVista(true);
-  }
-};
+      setPdfData(pdfData);
+      setPdfPreview(true);
+      showModalVista(true);
+    }
+  };
 
   const showModalVista = (show) => {
     show
@@ -193,47 +192,50 @@ function AltasBajasAlumnos() {
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
       />
-      <div className="container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
-        <div className="flex justify-start p-3">
-          <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
-            Relación General de Alumnos
-          </h1>
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+        <div className="flex flex-col justify-start p-3">
+          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
+            <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
+              <Acciones
+                home={home}
+                Ver={handleVerClick}
+              />
+            </div>
+
+            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-auto">
+              Altas y Bajas de Alumnos
+            </h1>
+          </div>
         </div>
         <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-        <div className="md:col-span-1 flex flex-col">
-            <Acciones
-              home={home}
-              Ver={handleVerClick}
-            />
-          </div>
           <div className="col-span-7">
-          <div className='flex flex-col h-[calc(100%)]'>
-          <div className='flex flex-col md:flex-row gap-4'>
-          <div className='w-11/12 md:w-4/12 lg:w-3/12'>
-                <Inputs
-                  name={"fecha_ini"}
-                  tamañolabel={""}
-                  className={"rounded block grow"}
-                  Titulo={"Fecha Inicial: "}
-                  type={"date"}
-                  errors={errors}
-                  maxLength={15}
-                  isDisabled={false}
-                  setValue={setFecha_ini}
-                />
+            <div className='flex flex-col h-[calc(100%)]'>
+              <div className='flex flex-col md:flex-row gap-4'>
+                <div className='w-11/12 md:w-4/12 lg:w-3/12'>
+                  <Inputs
+                    name={"fecha_ini"}
+                    tamañolabel={""}
+                    className={"rounded block grow"}
+                    Titulo={"Fecha Inicial: "}
+                    type={"date"}
+                    errors={errors}
+                    maxLength={15}
+                    isDisabled={false}
+                    setValue={setFecha_ini}
+                  />
                 </div>
                 <div className='w-11/12 md:w-4/12 lg:w-3/12'>
-                <Inputs
-                  name={"fecha_fin"}
-                  tamañolabel={""}
-                  className={"rounded block grow"}
-                  Titulo={"Fecha Final: "}
-                  type={"date"}
-                  errors={errors}
-                  maxLength={15}
-                  isDisabled={false}
-                  setValue={setFecha_fin}
-                />
+                  <Inputs
+                    name={"fecha_fin"}
+                    tamañolabel={""}
+                    className={"rounded block grow"}
+                    Titulo={"Fecha Final: "}
+                    type={"date"}
+                    errors={errors}
+                    maxLength={15}
+                    isDisabled={false}
+                    setValue={setFecha_fin}
+                  />
                 </div>
               </div>
               <div className=" col-7">
@@ -269,10 +271,10 @@ function AltasBajasAlumnos() {
                 </label>
               </div>
               <div className=" col-8 flex flex-col">
-              <label className="text-black dark:text-white flex flex-col gap-3 md:flex-row">
-              <span className="text-black dark:text-white">Ordenar por:</span>
-              <label className="flex items-center gap-3">
-              <span className="text-black dark:text-white">Nombre</span>
+                <label className="text-black dark:text-white flex flex-col gap-3 md:flex-row">
+                  <span className="text-black dark:text-white">Ordenar por:</span>
+                  <label className="flex items-center gap-3">
+                    <span className="text-black dark:text-white">Nombre</span>
                     <input
                       type="radio"
                       name="ordenar"

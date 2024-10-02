@@ -3,7 +3,7 @@ import Tooltip from "@/app/components/tooltip";
 import Button from "@/app/components/button";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
-function Acciones({ ImprimePDF, ImprimeExcel, home, Ver, CerrarView }) {
+function Acciones({ home, Ver }) {
     const images = [
         { src: iconos.vistaPrevia, alt: 'Vista previa', tooltipTitle: 'Vista previa', onClick: Ver },
         { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home },
