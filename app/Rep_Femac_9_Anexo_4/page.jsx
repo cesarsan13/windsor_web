@@ -5,9 +5,9 @@ import Acciones from "./components/Acciones";
 import Inputs from "./components/Inputs";
 import { useForm } from "react-hook-form";
 import {
-    getRelaciondeFacturas,
-    ImprimirPDF,
-    ImprimirExcel,
+  getRelaciondeFacturas,
+  ImprimirPDF,
+  ImprimirExcel,
 } from "@/app/utils/api/rep_femac_9_anexo_4/rep_femac_9_anexo_4";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -18,313 +18,315 @@ import ModalVistaPreviaRepFemac9Anexo4 from "./components/modalVistaPreviaRepFem
 import { formatNumber } from "../utils/globalfn";
 
 
-function RelaciondeFacturas(){
-    const router = useRouter();
-    const { data: session, status } = useSession();
-    let [fecha_cobro_ini, setFecha_cobro_ini] = useState("");
-    let [fecha_cobro_fin, setFecha_cobro_fin] = useState("");
-    let [factura_ini, setFacturaIni] = useState("");
-    let [factura_fin, setFacturaFin] = useState("");
-  
-    const [tomaFechas, setTomaFechas] = useState(true);
-    const [tomaCanceladas, setTomaCanceladas] = useState(false);
-    const [pdfPreview, setPdfPreview] = useState(false);
-    const [pdfData, setPdfData] = useState("");
-    const [FormaRepRelaciondeFacturas, setFormaRelaciondeFacturas] =  useState([]);
+function RelaciondeFacturas() {
+  const router = useRouter();
+  const { data: session, status } = useSession();
+  let [fecha_cobro_ini, setFecha_cobro_ini] = useState("");
+  let [fecha_cobro_fin, setFecha_cobro_fin] = useState("");
+  let [factura_ini, setFacturaIni] = useState("");
+  let [factura_fin, setFacturaFin] = useState("");
 
-    useEffect(()=> {
-        if(status === "loading" || !session) {
-          return;
-        }
-        const fetchData = async () => {
-          const { token } = session.user
-          const data = await getRelaciondeFacturas(token, tomaFechas, tomaCanceladas, fecha_cobro_ini, fecha_cobro_fin, factura_ini, factura_fin);
-          setFormaRelaciondeFacturas(data);
-          console.log(data);
-        }
-        fetchData()
-      }, [session, status, tomaFechas, tomaCanceladas, fecha_cobro_ini, fecha_cobro_fin, factura_ini, factura_fin]);
-  
+  const [tomaFechas, setTomaFechas] = useState(true);
+  const [tomaCanceladas, setTomaCanceladas] = useState(false);
+  const [pdfPreview, setPdfPreview] = useState(false);
+  const [pdfData, setPdfData] = useState("");
+  const [FormaRepRelaciondeFacturas, setFormaRelaciondeFacturas] = useState([]);
 
-    const {
-        formState: { errors },
-    } = useForm({});
+  useEffect(() => {
+    if (status === "loading" || !session) {
+      return;
+    }
+    const fetchData = async () => {
+      const { token } = session.user
+      const data = await getRelaciondeFacturas(token, tomaFechas, tomaCanceladas, fecha_cobro_ini, fecha_cobro_fin, factura_ini, factura_fin);
+      setFormaRelaciondeFacturas(data);
+      console.log(data);
+    }
+    fetchData()
+  }, [session, status, tomaFechas, tomaCanceladas, fecha_cobro_ini, fecha_cobro_fin, factura_ini, factura_fin]);
 
-    const home = () => {
-        router.push("/");
+
+  const {
+    formState: { errors },
+  } = useForm({});
+
+  const home = () => {
+    router.push("/");
+  };
+
+  const handleVerClick = () => {
+
+    const configuracion = {
+      Encabezado: {
+        Nombre_Aplicacion: "Sistema de Control Escolar",
+        Nombre_Reporte: "Reporte de relación de facturas",
+        Nombre_Usuario: `Usuario: ${session.user.name}`,
+      },
+      body: FormaRepRelaciondeFacturas,
     };
 
-    const handleVerClick = () => {
-     
-        const configuracion = {
-            Encabezado: {
-              Nombre_Aplicacion: "Sistema de Control Escolar",
-              Nombre_Reporte: "Reporte de relación de facturas",
-              Nombre_Usuario: `Usuario: ${session.user.name}`,
-            },
-            body: FormaRepRelaciondeFacturas,
-        };
-        
-        const reporte = new ReportePDF(configuracion);
-        const { body } = configuracion;
-        const Enca1 = (doc) => {
-          if (!doc.tiene_encabezado) {
-            doc.imprimeEncabezadoPrincipalV();
-            doc.nextRow(8);
-            if(tomaFechas === true)
-            {
-                if(fecha_cobro_fin == '')
-                {
-                    doc.ImpPosX(`Reporte de Factura del ${fecha_cobro_ini} `,15,doc.tw_ren, 0, "L"),
-                    doc.nextRow(5);
-                }
-                else{
-                    doc.ImpPosX(`Reporte de Facturas del ${fecha_cobro_ini} al ${fecha_cobro_fin}`,15,doc.tw_ren, 0, "L"),
-                    doc.nextRow(5);
-                }
-            }
-            
-            if(tomaCanceladas === true){
-              doc.ImpPosX("Facturas Canceladas", 15, doc.tw_ren, 0, "L"),
+    const reporte = new ReportePDF(configuracion);
+    const { body } = configuracion;
+    const Enca1 = (doc) => {
+      if (!doc.tiene_encabezado) {
+        doc.imprimeEncabezadoPrincipalV();
+        doc.nextRow(8);
+        if (tomaFechas === true) {
+          if (fecha_cobro_fin == '') {
+            doc.ImpPosX(`Reporte de Factura del ${fecha_cobro_ini} `, 15, doc.tw_ren, 0, "L"),
               doc.nextRow(5);
-            }
-
-            doc.ImpPosX("Factura",15,doc.tw_ren, 0, "L"),
-            doc.ImpPosX("Recibo",30,doc.tw_ren, 0, "L"),
-            doc.ImpPosX("Fecha P",45,doc.tw_ren, 0, "L"),
-            doc.ImpPosX("Nombre",68,doc.tw_ren, 0, "L"),
-            doc.ImpPosX("Subtotal",145,doc.tw_ren, 0, "L"),
-            doc.ImpPosX("I.V.A",167,doc.tw_ren, 0, "L"),
-            doc.ImpPosX("Total",180,doc.tw_ren, 0, "L"),
-            doc.nextRow(4);
-            doc.printLineV();
-            doc.nextRow(4);
-            doc.tiene_encabezado = true;
-          } else {
-            doc.nextRow(6);
-            doc.tiene_encabezado = true;
           }
-        };
-        
-        let total_general = 0;
+          else {
+            doc.ImpPosX(`Reporte de Facturas del ${fecha_cobro_ini} al ${fecha_cobro_fin}`, 15, doc.tw_ren, 0, "L"),
+              doc.nextRow(5);
+          }
+        }
 
+        if (tomaCanceladas === true) {
+          doc.ImpPosX("Facturas Canceladas", 15, doc.tw_ren, 0, "L"),
+            doc.nextRow(5);
+        }
+
+        doc.ImpPosX("Factura", 15, doc.tw_ren, 0, "L"),
+          doc.ImpPosX("Recibo", 30, doc.tw_ren, 0, "L"),
+          doc.ImpPosX("Fecha P", 45, doc.tw_ren, 0, "L"),
+          doc.ImpPosX("Nombre", 68, doc.tw_ren, 0, "L"),
+          doc.ImpPosX("Subtotal", 145, doc.tw_ren, 0, "L"),
+          doc.ImpPosX("I.V.A", 167, doc.tw_ren, 0, "L"),
+          doc.ImpPosX("Total", 180, doc.tw_ren, 0, "L"),
+          doc.nextRow(4);
+        doc.printLineV();
+        doc.nextRow(4);
+        doc.tiene_encabezado = true;
+      } else {
+        doc.nextRow(6);
+        doc.tiene_encabezado = true;
+      }
+    };
+
+    let total_general = 0;
+
+    Enca1(reporte);
+    body.forEach((imp) => {
+      const noFac = imp.numero_factura;
+      const recibo = imp.recibo;
+      const fecha = imp.fecha;
+      const razon_social = imp.razon_social;
+      const ivaimp = imp.iva;
+      const iva = imp.iva;
+      const cantidad = imp.cantidad;
+      const precio_unitario = imp.precio_unitario;
+      const descuento = imp.descuento;
+
+
+      let total_importe = 0;
+      let sub_total = 0;
+      const r_s_nombre = "FACTURA GLOBAL DEL DIA";
+      let razon_social_cambio = "";
+
+      /*Para hacer las operaciones*/
+      total_importe = cantidad * precio_unitario;
+      total_importe = total_importe - (total_importe * (descuento / 100));
+
+      if (iva > 0) {
+        sub_total = total_importe * (iva / 100);
+        sub_total += total_importe;
+
+      } else if (iva < 0 || iva === 0) {
+        sub_total = total_importe;
+      }
+
+      if (razon_social === '' || razon_social === ' ') {
+        razon_social_cambio = r_s_nombre;
+      } else {
+        razon_social_cambio = razon_social;
+
+      }
+      reporte.ImpPosX(noFac.toString(), 25, reporte.tw_ren, 0, "R");
+      reporte.ImpPosX(recibo.toString(), 40, reporte.tw_ren, 0, "R");
+      reporte.ImpPosX(fecha, 45, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(razon_social_cambio, 68, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(formatNumber(total_importe), 157, reporte.tw_ren, 0, "R");
+      reporte.ImpPosX(`${ivaimp} %`.toString(), 175, reporte.tw_ren, 0, "R");
+      reporte.ImpPosX(formatNumber(sub_total), 198, reporte.tw_ren, 0, "R");
+
+      Enca1(reporte);
+      if (reporte.tw_ren >= reporte.tw_endRen) {
+        reporte.pageBreak();
         Enca1(reporte);
-        body.forEach((imp) => {
-          const noFac = imp.numero_factura;
-          const recibo = imp.recibo;
-          const fecha = imp.fecha;
-          const razon_social = imp.razon_social;
-          const ivaimp = imp.iva;
-          const iva = imp.iva;
-          const cantidad = imp.cantidad;
-          const precio_unitario = imp.precio_unitario;
-          const descuento = imp.descuento;
+      }
+      total_general = total_general + sub_total;
 
-          
-          let total_importe = 0; 
-          let sub_total = 0;
-          const r_s_nombre = "FACTURA GLOBAL DEL DIA";
-          let razon_social_cambio = "";
+    });
+    reporte.nextRow(4);
+    reporte.ImpPosX(`TOTAL IMPORTE: ${formatNumber(total_general)}` || '', 150, reporte.tw_ren, 0, "L");
 
-          /*Para hacer las operaciones*/
-          total_importe = cantidad * precio_unitario;
-          total_importe = total_importe - (total_importe *(descuento / 100));
-  
-          if (iva > 0 ){
-            sub_total = total_importe * (iva / 100);
-            sub_total += total_importe;
+    const pdfData = reporte.doc.output("datauristring");
+    setPdfData(pdfData);
+    setPdfPreview(true);
+    showModalVista(true);
 
-          } else if (iva < 0 || iva === 0){
-            sub_total = total_importe;
-          }
+  };
 
-          if(razon_social === '' || razon_social === ' '){
-            razon_social_cambio = r_s_nombre;
-          } else {
-            razon_social_cambio = razon_social;
-         
-          }
-            reporte.ImpPosX(noFac.toString(), 25, reporte.tw_ren, 0, "R");
-            reporte.ImpPosX(recibo.toString(), 40, reporte.tw_ren, 0, "R");
-            reporte.ImpPosX(fecha, 45, reporte.tw_ren, 0, "L");
-            reporte.ImpPosX(razon_social_cambio, 68, reporte.tw_ren, 0, "L");
-            reporte.ImpPosX(formatNumber(total_importe), 157, reporte.tw_ren, 0, "R");
-            reporte.ImpPosX(`${ivaimp} %`.toString(), 175, reporte.tw_ren, 0, "R");
-            reporte.ImpPosX(formatNumber(sub_total), 198, reporte.tw_ren, 0, "R");
-         
-          Enca1(reporte);
-          if (reporte.tw_ren >= reporte.tw_endRen) {
-            reporte.pageBreak();
-            Enca1(reporte);
-          }
-          total_general = total_general + sub_total;
+  //hasta aqui
 
-        });
-        reporte.nextRow(4);
-        reporte.ImpPosX(`TOTAL IMPORTE: ${formatNumber(total_general)}`|| '', 150, reporte.tw_ren,0, "L");
+  const showModalVista = (show) => {
+    show
+      ? document.getElementById("modalVPRepFemac9Anexo4").showModal()
+      : document.getElementById("modalVPRepFemac9Anexo4").close();
+  }
 
-        const pdfData = reporte.doc.output("datauristring");
-        setPdfData(pdfData);
-        setPdfPreview(true);
-        showModalVista(true);
-      
-    };
 
-    //hasta aqui
+  const ImprimePDF = async () => {
+    const configuracion = {
+      Encabezado: {
+        Nombre_Aplicacion: "Sistema de Control Escolar",
+        Nombre_Reporte: "Reporte de relación de facturas",
+        Nombre_Usuario: `Usuario: ${session.user.name}`,
+      },
+      body: FormaRepRelaciondeFacturas,
+    }
+    ImprimirPDF(configuracion, fecha_cobro_ini, fecha_cobro_fin, tomaFechas, tomaCanceladas)
+  };
 
-    const showModalVista = (show) => {
-      show
-        ? document.getElementById("modalVPRepFemac9Anexo4").showModal()
-        : document.getElementById("modalVPRepFemac9Anexo4").close();
+  const ImprimeExcel = async () => {
+    let detallefecha = "";
+    let detallecanceladas = "";
+    if (tomaFechas === true) {
+      if (fecha_cobro_fin == '') {
+        detallefecha = `Reporte de Factura del ${fecha_cobro_ini} `;
+      }
+      else {
+        detallefecha = `Reporte de Facturas del ${fecha_cobro_ini} al ${fecha_cobro_fin}`;
+      }
     }
 
-
-    const ImprimePDF = async () => {
-        const configuracion = {
-            Encabezado: {
-              Nombre_Aplicacion: "Sistema de Control Escolar",
-              Nombre_Reporte: "Reporte de relación de facturas",
-              Nombre_Usuario: `Usuario: ${session.user.name}`,
-            },
-            body: FormaRepRelaciondeFacturas,
-        }
-        ImprimirPDF(configuracion, fecha_cobro_ini, fecha_cobro_fin, tomaFechas, tomaCanceladas)
-    };
-
-    const ImprimeExcel = async () => {
-        let detallefecha = "";
-        let detallecanceladas = "";
-        if(tomaFechas === true)
-          {
-              if(fecha_cobro_fin == '')
-              {
-                  detallefecha = `Reporte de Factura del ${fecha_cobro_ini} `;
-              }
-              else{
-                  detallefecha = `Reporte de Facturas del ${fecha_cobro_ini} al ${fecha_cobro_fin}`;
-              }
-          }
-          
-          if(tomaCanceladas === true){
-            detallecanceladas = "Facturas Canceladas";
-          }
-
-        const configuracion = {
-            Encabezado: {
-                Nombre_Aplicacion: "Sistema de Control Escolar",
-                Nombre_Reporte: "Reporte de relación de facturas",
-                Nombre_Usuario: `${session.user.name}`,
-                Clase: detallefecha,
-                Profesor: detallecanceladas,
-                FechaE: "",
-            },
-            body: FormaRepRelaciondeFacturas,
-            columns: [
-                { header: "Factura", dataKey: "facturaI" },
-                { header: "Recibo", dataKey: "reciboI" },
-                { header: "Fecha P", dataKey: "fechapI" },
-                { header: "Nombre", dataKey: "nombreI" },
-                { header: "Subtotal", dataKey: "subtotalI" },
-                { header: "I.V.A", dataKey: "ivaI" },
-                { header: "Total", dataKey: "totalI" },
-            ],
-            nombre: "Reporte de relación de facturas"
-        }
-        ImprimirExcel(configuracion) 
-    };
-
-
-
- if (status === "loading") {
-        return (
-            <div className="container skeleton w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
-        );
+    if (tomaCanceladas === true) {
+      detallecanceladas = "Facturas Canceladas";
     }
-    return ( 
-        <>
-        <ModalVistaPreviaRepFemac9Anexo4
-        pdfPreview={pdfPreview} 
-        pdfData={pdfData} 
-        PDF={ImprimePDF} 
-        Excel = {ImprimeExcel}/>
 
-        <div className="container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
-          <div className="flex justify-start p-3">
-            <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
+    const configuracion = {
+      Encabezado: {
+        Nombre_Aplicacion: "Sistema de Control Escolar",
+        Nombre_Reporte: "Reporte de relación de facturas",
+        Nombre_Usuario: `${session.user.name}`,
+        Clase: detallefecha,
+        Profesor: detallecanceladas,
+        FechaE: "",
+      },
+      body: FormaRepRelaciondeFacturas,
+      columns: [
+        { header: "Factura", dataKey: "facturaI" },
+        { header: "Recibo", dataKey: "reciboI" },
+        { header: "Fecha P", dataKey: "fechapI" },
+        { header: "Nombre", dataKey: "nombreI" },
+        { header: "Subtotal", dataKey: "subtotalI" },
+        { header: "I.V.A", dataKey: "ivaI" },
+        { header: "Total", dataKey: "totalI" },
+      ],
+      nombre: "Reporte de relación de facturas"
+    }
+    ImprimirExcel(configuracion)
+  };
+
+
+
+  if (status === "loading") {
+    return (
+      <div className="container skeleton w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
+    );
+  }
+  return (
+    <>
+      <ModalVistaPreviaRepFemac9Anexo4
+        pdfPreview={pdfPreview}
+        pdfData={pdfData}
+        PDF={ImprimePDF}
+        Excel={ImprimeExcel} />
+
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+        <div className="flex flex-col justify-start p-3">
+          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
+            <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
+              <Acciones
+                home={home}
+                Ver={handleVerClick}
+              />
+            </div>
+
+            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-auto">
               Relación de Facturas
             </h1>
           </div>
-          <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-            <div className="md:col-span-1 flex flex-col">
-              <Acciones home={home} Ver={handleVerClick} />
-            </div>
-            <div className="col-span-7">
-              <div className="flex flex-col h-[calc(80%)] overflow-y-auto">
-                <div className="flex flex-col md:flex-row gap-4">
-                  <div className='w-11/12 md:w-4/12 lg:w-3/12'>
-                    <Inputs
-                      name={"fecha_cobro_ini"}
-                      tamañolabel={""}
-                      className={"rounded block grow"}
-                      Titulo={"Fecha Inicial: "}
-                      type={"date"}
-                      errors={errors}
-                      maxLength={15}
-                      isDisabled={false}
-                      setValue={setFecha_cobro_ini}
-                    />
-                  </div>
-                  <div className='w-11/12 md:w-4/12 lg:w-3/12'>
-                    <Inputs
-                      name={"fecha_cobro_fin"}
-                      tamañolabel={""}
-                      className={"rounded block grow"}
-                      Titulo={"Fecha Final: "}
-                      type={"date"}
-                      errors={errors}
-                      maxLength={15}
-                      isDisabled={false}
-                      setValue={setFecha_cobro_fin}
-                    />
-                  </div>
+        </div>
+        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
+          <div className="col-span-7">
+            <div className="flex flex-col h-[calc(80%)] overflow-y-auto">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className='w-11/12 md:w-4/12 lg:w-3/12'>
+                  <Inputs
+                    name={"fecha_cobro_ini"}
+                    tamañolabel={""}
+                    className={"rounded block grow"}
+                    Titulo={"Fecha Inicial: "}
+                    type={"date"}
+                    errors={errors}
+                    maxLength={15}
+                    isDisabled={false}
+                    setValue={setFecha_cobro_ini}
+                  />
                 </div>
-                <div >
-                  <div className="tooltip" data-tip="Tomar Fechas">
-                    <label
-                      htmlFor="ch_tomaFechas"
-                      className="label cursor-pointer flex justify-start space-x-2">
-                      <input
-                        id="ch_tomaFechas"
-                        type="checkbox"
-                        className="checkbox checkbox-md"
-                        defaultChecked={true}
-                        onClick={(evt) => setTomaFechas(evt.target.checked)}
-                      />
-                      <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
-                      <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
-                        Toma Fechas
-                      </span>
-                    </label>
-                  </div>
-                  <div className="tooltip" data-tip="Tomar Facturas Canceladas">
-                    <label
-                      htmlFor="ch_tomaCanceladas"
-                      className="label cursor-pointer flex justify-start space-x-2">
-                      <input
-                        id="ch_tomaCanceladas"
-                        type="checkbox"
-                        className="checkbox checkbox-md"
-                        defaultChecked={false}
-                        onClick={(evt) => setTomaCanceladas(evt.target.checked)}
-                      />
-                      <span className="fa-regular fa-file-lines block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
-                      <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
-                        Toma Facturas Canceladas
-                      </span>
-                    </label>
-                  </div>
+                <div className='w-11/12 md:w-4/12 lg:w-3/12'>
+                  <Inputs
+                    name={"fecha_cobro_fin"}
+                    tamañolabel={""}
+                    className={"rounded block grow"}
+                    Titulo={"Fecha Final: "}
+                    type={"date"}
+                    errors={errors}
+                    maxLength={15}
+                    isDisabled={false}
+                    setValue={setFecha_cobro_fin}
+                  />
                 </div>
-              
+              </div>
+              <div >
+                <div className="tooltip" data-tip="Tomar Fechas">
+                  <label
+                    htmlFor="ch_tomaFechas"
+                    className="label cursor-pointer flex justify-start space-x-2">
+                    <input
+                      id="ch_tomaFechas"
+                      type="checkbox"
+                      className="checkbox checkbox-md"
+                      defaultChecked={true}
+                      onClick={(evt) => setTomaFechas(evt.target.checked)}
+                    />
+                    <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
+                    <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
+                      Toma Fechas
+                    </span>
+                  </label>
+                </div>
+                <div className="tooltip" data-tip="Tomar Facturas Canceladas">
+                  <label
+                    htmlFor="ch_tomaCanceladas"
+                    className="label cursor-pointer flex justify-start space-x-2">
+                    <input
+                      id="ch_tomaCanceladas"
+                      type="checkbox"
+                      className="checkbox checkbox-md"
+                      defaultChecked={false}
+                      onClick={(evt) => setTomaCanceladas(evt.target.checked)}
+                    />
+                    <span className="fa-regular fa-file-lines block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
+                    <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
+                      Toma Facturas Canceladas
+                    </span>
+                  </label>
+                </div>
+              </div>
+
               <div className="flex md:flex-row lg:flex-row md:space-x-1 gap-3">
                 <Inputs
                   name={"factura_ini"}
@@ -351,13 +353,13 @@ function RelaciondeFacturas(){
                   setValue={setFacturaFin}
                 />
               </div>
-              </div>
             </div>
           </div>
-        </div> 
+        </div>
+      </div>
 
     </>
-    );
+  );
 }
 
 export default RelaciondeFacturas;

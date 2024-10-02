@@ -128,45 +128,51 @@ function AltasBajasAlumnos() {
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
       />
-       <div className="container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
-        <div className="flex justify-start p-3">
-          <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
-            Relación de Recibos
-          </h1>
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+        <div className="flex flex-col justify-start p-3">
+          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
+            <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
+              <Acciones
+                home={home}
+                Ver={handleVerClick}
+              />
+            </div>
+
+            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-auto">
+              Relación de Recibos
+            </h1>
+          </div>
         </div>
         <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-          <div className="md:col-span-1 flex flex-col">
-            <Acciones home={home} Ver={handleVerClick} />
-          </div>
           <div className="col-span-7">
             <div className="flex flex-col h-[calc(80%)] overflow-y-auto">
-            <div className='flex flex-col md:flex-row gap-4 '>
-              <div className='w-11/12 md:w-4/12 lg:w-3/12'>
-                <Inputs
-                  name={"fecha_ini"}
-                  tamañolabel={""}
-                  className={"rounded  block grow"}
-                  Titulo={"Fecha Inicial: "}
-                  type={"date"}
-                  errors={errors}
-                  maxLength={15}
-                  isDisabled={false}
-                  setValue={setFecha_ini}
-                />
+              <div className='flex flex-col md:flex-row gap-4 '>
+                <div className='w-11/12 md:w-4/12 lg:w-3/12'>
+                  <Inputs
+                    name={"fecha_ini"}
+                    tamañolabel={""}
+                    className={"rounded  block grow"}
+                    Titulo={"Fecha Inicial: "}
+                    type={"date"}
+                    errors={errors}
+                    maxLength={15}
+                    isDisabled={false}
+                    setValue={setFecha_ini}
+                  />
                 </div>
                 <div className='w-11/12 md:w-4/12 lg:w-3/12'>
-             
-                <Inputs
-                  name={"fecha_fin"}
-                  tamañolabel={""}
-                  className={"rounded block grow "}
-                  Titulo={"Fecha Final: "}
-                  type={"date"}
-                  errors={errors}
-                  maxLength={15}
-                  isDisabled={false}
-                  setValue={setFecha_fin}
-                />
+
+                  <Inputs
+                    name={"fecha_fin"}
+                    tamañolabel={""}
+                    className={"rounded block grow "}
+                    Titulo={"Fecha Final: "}
+                    type={"date"}
+                    errors={errors}
+                    maxLength={15}
+                    isDisabled={false}
+                    setValue={setFecha_fin}
+                  />
                 </div>
               </div>
               <div className="tooltip" data-tip="Tomar Fechas">
@@ -187,87 +193,87 @@ function AltasBajasAlumnos() {
                   </span>
                 </label>
               </div>
-            
-            <div className="flex md:flex-row lg:flex-row md:space-x-1p-1">
-              <Inputs
-                name={"recibo_ini"}
-                tamañolabel={""}
-                className={"rounded block grow w-full md:w-1/2 "}
-                Titulo={"Recibos: "}
-                type={"text"}
-                errors={errors}
-                maxLength={15}
-                dataType={"int"}
-                isDisabled={false}
-                setValue={setRecibeIni}
-              />
-              <Inputs
-                name={"recibo_fin"}
-                tamañolabel={""}
-                className={"rounded block grow w-full md:w-1/2"}
-                Titulo={""}
-                type={"text"}
-                errors={errors}
-                maxLength={15}
-                dataType={"int"}
-                isDisabled={false}
-                setValue={setRecibeFin}
-              />
-            </div>
 
-            <div className="flex md:flex-row lg:flex-row md:space-x-1 gap-3 p-1">
-              <Inputs
-                name={"factura_ini"}
-                tamañolabel={""}
-                className={"rounded block grow w-full md:w-1/2"}
-                Titulo={"Facturas: "}
-                type={"text"}
-                errors={errors}
-                maxLength={15}
-                dataType={"int"}
-                isDisabled={false}
-                setValue={setFacturaIni}
-              />
-              <Inputs
-                name={"factura_fin"}
-                tamañolabel={""}
-                className={"rounded block grow w-full md:w-1/2"}
-                Titulo={""}
-                type={"text"}
-                errors={errors}
-                maxLength={15}
-                dataType={"int"}
-                isDisabled={false}
-                setValue={setFacturaFin}
-              />
-            </div>
-            <div className="p-1">
-              <BuscarCat
-                table="alumnos"
-                itemData={[]}
-                fieldsToShow={["numero", "nombre_completo"]}
-                nameInput={["numero", "nombre_completo"]}
-                titulo={"Inicio: "}
-                setItem={setAlumnoIni}
-                token={session.user.token}
-                modalId="modal_alumnos1"
-                inputWidths={{ first: "100px", second: "300px" }}
-              />
+              <div className="flex md:flex-row lg:flex-row md:space-x-1p-1">
+                <Inputs
+                  name={"recibo_ini"}
+                  tamañolabel={""}
+                  className={"rounded block grow w-full md:w-1/2 "}
+                  Titulo={"Recibos: "}
+                  type={"text"}
+                  errors={errors}
+                  maxLength={15}
+                  dataType={"int"}
+                  isDisabled={false}
+                  setValue={setRecibeIni}
+                />
+                <Inputs
+                  name={"recibo_fin"}
+                  tamañolabel={""}
+                  className={"rounded block grow w-full md:w-1/2"}
+                  Titulo={""}
+                  type={"text"}
+                  errors={errors}
+                  maxLength={15}
+                  dataType={"int"}
+                  isDisabled={false}
+                  setValue={setRecibeFin}
+                />
+              </div>
+
+              <div className="flex md:flex-row lg:flex-row md:space-x-1 gap-3 p-1">
+                <Inputs
+                  name={"factura_ini"}
+                  tamañolabel={""}
+                  className={"rounded block grow w-full md:w-1/2"}
+                  Titulo={"Facturas: "}
+                  type={"text"}
+                  errors={errors}
+                  maxLength={15}
+                  dataType={"int"}
+                  isDisabled={false}
+                  setValue={setFacturaIni}
+                />
+                <Inputs
+                  name={"factura_fin"}
+                  tamañolabel={""}
+                  className={"rounded block grow w-full md:w-1/2"}
+                  Titulo={""}
+                  type={"text"}
+                  errors={errors}
+                  maxLength={15}
+                  dataType={"int"}
+                  isDisabled={false}
+                  setValue={setFacturaFin}
+                />
               </div>
               <div className="p-1">
-              <BuscarCat
-                table="alumnos"
-                itemData={[]}
-                fieldsToShow={["numero", "nombre_completo"]}
-                nameInput={["numero", "nombre_completo"]}
-                titulo={"Fin: "}
-                setItem={setAlumnoFin}
-                token={session.user.token}
-                modalId="modal_alumnos2"
-                inputWidths={{ first: "115px", second: "300px" }}
-              />
+                <BuscarCat
+                  table="alumnos"
+                  itemData={[]}
+                  fieldsToShow={["numero", "nombre_completo"]}
+                  nameInput={["numero", "nombre_completo"]}
+                  titulo={"Inicio: "}
+                  setItem={setAlumnoIni}
+                  token={session.user.token}
+                  modalId="modal_alumnos1"
+                  inputWidths={{ first: "100px", second: "300px" }}
+                />
               </div>
-          </div>
+              <div className="p-1">
+                <BuscarCat
+                  table="alumnos"
+                  itemData={[]}
+                  fieldsToShow={["numero", "nombre_completo"]}
+                  nameInput={["numero", "nombre_completo"]}
+                  titulo={"Fin: "}
+                  setItem={setAlumnoFin}
+                  token={session.user.token}
+                  modalId="modal_alumnos2"
+                  inputWidths={{ first: "115px", second: "300px" }}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
