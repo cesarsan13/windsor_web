@@ -1,18 +1,29 @@
-import React from "react";
+import React from 'react'
 import Tooltip from "@/app/components/tooltip";
 import Button from "@/app/components/button";
-function Acciones({ home, Ver}) {
-  return (
-    <div className="join join-horizontal justify-around md:join-vertical">
+import Image from "next/image";
+import iconos from "@/app/utils/iconos";
+function Acciones({ home, Ver }) {
+  const images = [
+    { src: iconos.vistaPrevia, alt: 'Vista previa', tooltipTitle: 'Vista previa', onClick: Ver },
+    { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home },
+  ];
 
-      <Tooltip Titulo={"Vista Previa"} posicion={"tooltip-top"}>
-        <Button icono={"fas fa-eye"} onClick={Ver}></Button>
+  const ImageTooltip = ({ src, tooltipTitle, onClick }) => {
+    return (
+      <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
+        <Image src={src} alt={tooltipTitle} onClick={onClick} className="w-5 h-5 md:w-6 md:h-6" />
       </Tooltip>
-      <Tooltip Titulo={"Inicio"} posicion={"tooltip-top"}>
-        <Button icono={"fas fa-home"} onClick={home}></Button>
-      </Tooltip>
+    );
+  };
+
+  return (
+    <div className="grid grid-flow-col gap-5 justify-around w-full">
+      {images.map((image, idx) => (
+        <ImageTooltip key={idx} src={image.src} {...image} />
+      ))}
     </div>
   );
 }
 
-export default Acciones;
+export default Acciones

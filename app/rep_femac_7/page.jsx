@@ -182,7 +182,7 @@ function Repo_Femac_7() {
 
                 if (isLastRecordForAlumno) {
                     reporte.ImpPosX(saldoTotal.toFixed(2).toString(), 248, reporte.tw_ren);
-                    reporte.ImpPosX(data.telefono_1.toString(), 268, reporte.tw_ren);
+                    reporte.ImpPosX(data.telefono_1?.toString() ?? "", 268, reporte.tw_ren);
                     saldoTotal = 0;
                     reporte.nextRow(5);
                 }
@@ -206,49 +206,55 @@ function Repo_Femac_7() {
 
     const showModalVista = (show) => {
         show
-          ? document.getElementById("modalVPRepAdeudosPendientes").showModal()
-          : document.getElementById("modalVPRepAdeudosPendientes").close();
-      }
+            ? document.getElementById("modalVPRepAdeudosPendientes").showModal()
+            : document.getElementById("modalVPRepAdeudosPendientes").close();
+    }
     return (
         <>
-        <ModalVistaPreviaReporteAdeudoPendientes
-           pdfPreview={pdfPreview} 
-           pdfData={pdfData} 
-           PDF={ImprimePDF} 
-           Excel = {ImprimeExcel} 
-        />
-            <div className='container w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3'>
-                <div className='flex justify-start p-3 '>
-                    <h1 className='text-4xl font-xthin text-black dark:text-white md:px-12'>
-                        Reporte Adeudos Pendientes
-                    </h1>
+            <ModalVistaPreviaReporteAdeudoPendientes
+                pdfPreview={pdfPreview}
+                pdfData={pdfData}
+                PDF={ImprimePDF}
+                Excel={ImprimeExcel}
+            />
+            <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+                <div className="flex flex-col justify-start p-3">
+                    <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
+                        <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
+                            <Acciones
+                                home={home}
+                                Ver={handleVerClick}
+                            />
+                        </div>
+
+                        <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-auto">
+                            Reporte Adeudos Pendientes
+                        </h1>
+                    </div>
                 </div>
                 <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-                <div className="md:col-span-1 flex flex-col">
-                        <Acciones home={home} Ver={handleVerClick} />
-                    </div>
                     <div className='col-span-7'>
                         <div className='flex flex-col h-[calc(100%)]'>
                             <div className='flex flex-col gap-4 md:flex-row'>
-                                    <label className='input input-bordered input-md text-black dark:text-white flex items-center gap-3'>
-                                        Fecha
-                                        <input
-                                            type="date"
-                                            value={fecha}
-                                            onChange={(e) => setFecha(e.target.value)}
-                                            className='text-black dark:text-white'
-                                        />
-                                    </label>
+                                <label className='input input-bordered input-md text-black dark:text-white flex items-center gap-3'>
+                                    Fecha
+                                    <input
+                                        type="date"
+                                        value={fecha}
+                                        onChange={(e) => setFecha(e.target.value)}
+                                        className='text-black dark:text-white'
+                                    />
+                                </label>
 
-                                    <label className='input input-bordered input-md text-black dark:text-white flex items-center gap-3'>
-                                        Documento
-                                        <input
-                                            type="text"
-                                            value={documento}
-                                            onChange={(e) => setDocumento(e.target.value)}
-                                            className='text-black dark:text-white'
-                                        />
-                                    </label>
+                                <label className='input input-bordered input-md text-black dark:text-white flex items-center gap-3'>
+                                    Documento
+                                    <input
+                                        type="text"
+                                        value={documento}
+                                        onChange={(e) => setDocumento(e.target.value)}
+                                        className='text-black dark:text-white'
+                                    />
+                                </label>
 
                                 <div className='w-full sm:w-full m:w-full lg:w-7/12 flex flex-col sm:flex-col md:flex-row lg:flex-row items-start gap-2'>
                                     <label htmlFor="ch_sinDeudores" className="label cursor-pointer flex items-center space-x-2">
