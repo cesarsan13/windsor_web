@@ -217,19 +217,20 @@ function Rep_Femac_13() {
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
       />
-      <div className="container w-full max-w-screen-xl  bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
-        <div className="flex justify-start p-3">
-          <h1 className="text-4xl font-xthin  text-black dark:text-white md:px-12">
-            Reporte de Alumnos por Clase Semanal.
-          </h1>
-        </div>
-        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-          <div className="md:col-span-1 flex flex-col">
-            <Acciones
-              Ver={handleClickVer}
-              home={home}
-            />
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="flex flex-col justify-start p-3">
+          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
+            <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
+              <Acciones
+                home={home}
+                Ver={handleClickVer}
+              />
+            </div>
+            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-auto">
+            Reporte de Alumnos por Clase Semanal
+            </h1>
           </div>
+        </div>
           <div className="col-span-7">
             <div className="flex flex-col h-[calc(100%)] space-y-4">
               <div className='flex flex-col md:flex-row gap-3'>
@@ -285,7 +286,6 @@ function Rep_Femac_13() {
             </div>
           </div>
         </div>
-      </div>
     </>
   );
 }
