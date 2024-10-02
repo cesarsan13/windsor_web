@@ -33,7 +33,7 @@ const BarChart = () => {
     labels: hData.map((row) => row.horario),
     datasets: [
       {
-        label: "Alumnos por Horario",
+        label: "Total Alumnos",
         data: hData.map((item) => item.Tot_Alumnos),
         options: {
           scales: {
@@ -47,8 +47,8 @@ const BarChart = () => {
   };
 
   return (
-    <div className="w-full card bg-base-100">
-      <h1>Alumnos por Horario</h1>
+    <div className="w-full  card shadow-md  bg-base-100 items-center">
+      <h1 className="font-bold">Alumnos por Horario</h1>
       <Bar data={data} />
     </div>
   );

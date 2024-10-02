@@ -31,7 +31,7 @@ const PieChart = () => {
     labels: sexData.map((row) => row.categoria),
     datasets: [
       {
-        label: "Diversidad de Alumnos",
+        label: "Total",
         data: sexData.map((item) => item.Cantidad),
         fill: false,
         backgroundColor: [
@@ -43,8 +43,8 @@ const PieChart = () => {
     ],
   };
   return (
-    <div className="w-2/3 h-1/8 card bg-slate-100">
-      <h1>Grafica de Diversidad de Alumnos</h1>
+    <div className="w-80 h-25 card shadow items-center py-2">
+      <h1 className="font-bold">Diversidad de Alumnos</h1>
       <Pie data={data} />
     </div>
   );
