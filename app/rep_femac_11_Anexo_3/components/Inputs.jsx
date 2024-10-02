@@ -17,14 +17,15 @@ function Inputs({
   return (
     <div className="flex flex-col">
       <label
-        className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
-        {Titulo}
+        className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel}  text-black dark:text-white`}
+        >
+          {Titulo}
         <input
           {...(maxLenght !== 0 && { maxLength: maxLenght })}
           name={name}
           id={name}
           type={type}
-          className={`text-black dark:text-white ${className}  grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none  `}
+          className={`text-black dark:text-white  border-b-2 border-slate-300 dark:border-slate-700 input-xs md:input-sm ${className}`}
           {...(dataType === "int" && { onKeyDown: soloEnteros })}
           {...(dataType === "float" && { onKeyDown: soloDecimales })}
           {...(dataType === "int" ||
