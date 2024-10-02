@@ -3,6 +3,7 @@ import Image from "next/image";
 const menu = require("@/public/home.jpg");
 const menu2 = require("@/public/home_movil.jpg");
 import LineChart from "@/app/components/LineChart";
+import BarChart from "@/app/components/BarChart";
 import PieChart from "@/app/components/PieChart";
 export default function Home() {
   return (
@@ -71,7 +72,7 @@ export default function Home() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 justify-items-center">
-                <LineChart></LineChart>
+                <BarChart></BarChart>
                 <PieChart></PieChart>
               </div>
             </div>

@@ -1,6 +1,17 @@
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
 
+export const getAlumnoXHorario = async (token) => {
+  let url = "";
+  url = `${process.env.DOMAIN_API}api/horarios/alumnosxhorario`;
+  const res = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const resJson = await res.json();
+  return resJson.data;
+};
 export const getHorarios = async (token, baja) => {
   let url = "";
   baja
@@ -66,14 +77,14 @@ const Enca1 = (doc) => {
   if (!doc.tiene_encabezado) {
     doc.imprimeEncabezadoPrincipalV();
     doc.nextRow(12);
-    doc.ImpPosX("Numero", 14, doc.tw_ren,0,"L");
-    doc.ImpPosX("Cancha", 28, doc.tw_ren,0,"L");
-    doc.ImpPosX("Dia", 42, doc.tw_ren,0,"L");
-    doc.ImpPosX("Horario", 82, doc.tw_ren,0,"L");
-    doc.ImpPosX("Niños", 114, doc.tw_ren,0,"L");
-    doc.ImpPosX("Sexo", 134, doc.tw_ren,0,"L");
-    doc.ImpPosX("Edad Ini", 154, doc.tw_ren,0,"L");
-    doc.ImpPosX("Edad Fin", 174, doc.tw_ren,0,"L");
+    doc.ImpPosX("Numero", 14, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Cancha", 28, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Dia", 42, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Horario", 82, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Niños", 114, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Sexo", 134, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Edad Ini", 154, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Edad Fin", 174, doc.tw_ren, 0, "L");
     doc.nextRow(4);
     doc.printLineV();
     doc.nextRow(4);
@@ -89,28 +100,28 @@ export const Imprimir = (configuracion) => {
   const { body } = configuracion;
   Enca1(newPDF);
   body.forEach((horario) => {
-    newPDF.ImpPosX(horario.numero.toString(),24,newPDF.tw_ren,0,"R")
-    newPDF.ImpPosX(horario.cancha.toString(),38,newPDF.tw_ren,0,"R")
-    newPDF.ImpPosX(horario.dia.toString(),42,newPDF.tw_ren)
-    newPDF.ImpPosX(horario.horario.toString(),82,newPDF.tw_ren)
-    newPDF.ImpPosX(horario.max_niños.toString(),124,newPDF.tw_ren,0,"R")
-    newPDF.ImpPosX(horario.sexo.toString(),134,newPDF.tw_ren)
-    newPDF.ImpPosX(horario.edad_ini.toString(),164,newPDF.tw_ren,0,"R")
-    newPDF.ImpPosX(horario.edad_fin.toString(),184,newPDF.tw_ren,0,"R")
+    newPDF.ImpPosX(horario.numero.toString(), 24, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(horario.cancha.toString(), 38, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(horario.dia.toString(), 42, newPDF.tw_ren);
+    newPDF.ImpPosX(horario.horario.toString(), 82, newPDF.tw_ren);
+    newPDF.ImpPosX(horario.max_niños.toString(), 124, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(horario.sexo.toString(), 134, newPDF.tw_ren);
+    newPDF.ImpPosX(horario.edad_ini.toString(), 164, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(horario.edad_fin.toString(), 184, newPDF.tw_ren, 0, "R");
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
       newPDF.pageBreak();
       Enca1(newPDF);
     }
   });
-  newPDF.guardaReporte("Horarios")
+  newPDF.guardaReporte("Horarios");
 };
-export const ImprimirExcel = (configuracion)=>{
-  const newExcel = new ReporteExcel(configuracion)
-  const {columns} = configuracion
-  const {body} = configuracion
-  const {nombre}=configuracion
+export const ImprimirExcel = (configuracion) => {
+  const newExcel = new ReporteExcel(configuracion);
+  const { columns } = configuracion;
+  const { body } = configuracion;
+  const { nombre } = configuracion;
   newExcel.setColumnas(columns);
   newExcel.addData(body);
   newExcel.guardaReporte(nombre);
-}
+};
