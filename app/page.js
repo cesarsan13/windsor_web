@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 const menu = require("@/public/home.jpg");
 const menu2 = require("@/public/home_movil.jpg");
-import { getEstadisticasTotales } from "@/app/utils/api/estadisticas/estadisticas"
+import { getEstadisticasTotales } from "@/app/utils/api/estadisticas/estadisticas";
 import LineChart from "@/app/components/LineChart";
 import BarChart from "@/app/components/BarChart";
 import PieChart from "@/app/components/PieChart";
@@ -25,13 +25,17 @@ export default function Home() {
       const { token } = session.user;
       const res = await getEstadisticasTotales(token);
       console.log(res);
-      const totalEstudiantes = res.promedio_alumnos_por_curso.reduce((acc, cur) => acc + cur.total_estudiantes, 0);
+      const totalEstudiantes = res.promedio_alumnos_por_curso.reduce(
+        (acc, cur) => acc + cur.total_estudiantes,
+        0
+      );
       const totalGrados = res.promedio_alumnos_por_curso.length;
-      const promedioTotal = totalGrados > 0 ? Math.round(totalEstudiantes / totalGrados) : 0;
+      const promedioTotal =
+        totalGrados > 0 ? Math.round(totalEstudiantes / totalGrados) : 0;
       setTotalAlumnos(res.total_alumnos);
       setTotalCursos(res.total_cursos);
       setAlPorGrado(promedioTotal);
-      setHorarioCantidadAlumnos(res.horarios_populares)
+      setHorarioCantidadAlumnos(res.horarios_populares);
       setisLoading(false);
     };
     fetchChart();
@@ -80,34 +84,45 @@ export default function Home() {
                     <div className="stat">
                       <div className="stat-title">Total de Alumnos</div>
                       <div className="stat-value">{totalAlumnos}</div>
-                      <div className="stat-desc">Número total de estudiantes inscritos en la escuela.</div>
+                      <div className="stat-desc">
+                        Alumnos inscritos en la institución.
+                      </div>
                     </div>
                   </div>
                   <div className="stats shadow">
                     <div className="stat">
                       <div className="stat-title">Total de Grados</div>
                       <div className="stat-value">{totalCursos || ""}</div>
-                      <div className="stat-desc">Total de cursos disponibles para los estudiantes.</div>
+                      <div className="stat-desc">
+                        Grados disponibles para los estudiantes.
+                      </div>
                     </div>
                   </div>
                   <div className="stats shadow">
                     <div className="stat">
-                      <div className="stat-title">Promedio General de Alumnos por Grado</div>
+                      <div className="stat-title">
+                        Promedio Alumnos por Grado
+                      </div>
                       <div className="stat-value">{totalAlPorGrado || ""}</div>
-                      <div className="stat-desc">Promedio de estudiantes en cada curso, reflejando la carga educativa.</div>
+                      <div className="stat-desc">
+                        Reflejando la carga educativa.
+                      </div>
                     </div>
                   </div>
                   <div className="stats shadow">
                     <div className="stat">
                       <div className="stat-title">Grado con más Alumnos</div>
-                      <div className="stat-value">{horarioCantidadAlumnos?.horario || 'N/A'}</div>
+                      <div className="stat-value">
+                        {horarioCantidadAlumnos?.horario || "N/A"}
+                      </div>
                       <div className="stat-desc">
-                        {horarioCantidadAlumnos ? `${horarioCantidadAlumnos.total_estudiantes} estudiantes contiene este curso` : 'No hay información disponible.'}
+                        {horarioCantidadAlumnos
+                          ? `Con ${horarioCantidadAlumnos.total_estudiantes} alumnos cursandolo`
+                          : "No hay información disponible."}
                       </div>
                     </div>
                   </div>
                 </div>
-
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 justify-items-center">
