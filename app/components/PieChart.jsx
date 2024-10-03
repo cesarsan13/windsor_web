@@ -3,29 +3,28 @@ import "chart.js/auto";
 import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { getDataSex } from "@/app/utils/api/alumnos/alumnos";
 import { useState } from "react";
 const Pie = dynamic(() => import("react-chartjs-2").then((mod) => mod.Pie), {
   ssr: false,
 });
-const PieChart = () => {
+const PieChart = ({ sexData, isLoading }) => {
   const { data: session, status } = useSession();
-  const [sexData, setSexData] = useState([]);
-  const [isLoading, setisLoading] = useState(false);
-  useEffect(() => {
-    if (status === "loading" || !session) {
-      return;
-    }
-    const fetchData = async () => {
-      setisLoading(true);
-      const { token } = session.user;
-      const data = await getDataSex(token);
-      // console.log(data);
-      setSexData(data);
-      setisLoading(false);
-    };
-    fetchData();
-  }, [session, status]);
+  // const [sexData, setSexData] = useState([]);
+  // const [isLoading, setisLoading] = useState(false);
+  // useEffect(() => {
+  //   if (status === "loading" || !session) {
+  //     return;
+  //   }
+  //   const fetchData = async () => {
+  //     setisLoading(true);
+  //     const { token } = session.user;
+  //     const data = await getDataSex(token);
+  //     // console.log(data);
+  //     setSexData(data);
+  //     setisLoading(false);
+  //   };
+  //   fetchData();
+  // }, [session, status]);
 
   const data = {
     labels: sexData.map((row) => row.categoria),

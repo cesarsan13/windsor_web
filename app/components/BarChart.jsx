@@ -3,32 +3,31 @@ import "chart.js/auto";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { getAlumnoXHorario } from "@/app/utils/api/horarios/horarios";
+
 
 const Bar = dynamic(() => import("react-chartjs-2").then((mod) => mod.Bar), {
   ssr: false,
 });
 
-const BarChart = () => {
+const BarChart = ({ hData, isLoading }) => {
   const { data: session, status } = useSession();
-  const [hData, setHData] = useState([]);
-  const [isLoading, setisLoading] = useState(false);
+  // const [hData, setHData] = useState([]);
+  // const [isLoading, setisLoading] = useState(false);
 
-  useEffect(() => {
-    if (status === "loading" || !session) {
-      return;
-    }
-    const fetchData = async () => {
-      setisLoading(true);
-      const { token } = session.user;
-      const data = await getAlumnoXHorario(token);
-      setHData(data);
-      setisLoading(false);
-    };
-    fetchData();
-  }, [session, status]);
+  // useEffect(() => {
+  //   if (status === "loading" || !session) {
+  //     return;
+  //   }
+  //   const fetchData = async () => {
+  //     setisLoading(true);
+  //     const { token } = session.user;
+  //     const data = await getAlumnoXHorario(token);
+  //     setHData(data);
+  //     setisLoading(false);
+  //   };
+  //   fetchData();
+  // }, [session, status]);
 
-  // Generar colores de manera dinámica
   const generateColors = (length) => {
     const colors = [];
     for (let i = 0; i < length; i++) {

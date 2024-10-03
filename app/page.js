@@ -5,6 +5,9 @@ import Image from "next/image";
 const menu = require("@/public/home.jpg");
 const menu2 = require("@/public/home_movil.jpg");
 import { getEstadisticasTotales } from "@/app/utils/api/estadisticas/estadisticas";
+import { getAlumnoXHorario } from "@/app/utils/api/horarios/horarios";
+import { getDataSex } from "@/app/utils/api/alumnos/alumnos";
+import CardsHome from "@/app/components/CardsHome";
 import LineChart from "@/app/components/LineChart";
 import BarChart from "@/app/components/BarChart";
 import PieChart from "@/app/components/PieChart";
@@ -14,6 +17,8 @@ export default function Home() {
   const [totalCursos, setTotalCursos] = useState("");
   const [totalAlPorGrado, setAlPorGrado] = useState("");
   const [horarioCantidadAlumnos, setHorarioCantidadAlumnos] = useState("");
+  const [hData, setHData] = useState([]);
+  const [sexData, setSexData] = useState([]);
   const [isLoading, setisLoading] = useState(false);
 
   useEffect(() => {
@@ -23,8 +28,12 @@ export default function Home() {
     const fetchChart = async () => {
       setisLoading(true);
       const { token } = session.user;
-      const res = await getEstadisticasTotales(token);
-      console.log(res);
+      const [res, dataAlHor, DataAlSex] = await Promise.all([
+        getEstadisticasTotales(token),
+        getAlumnoXHorario(token),
+        getDataSex(token),
+      ]);
+      // console.log(res);
       const totalEstudiantes = res.promedio_alumnos_por_curso.reduce(
         (acc, cur) => acc + cur.total_estudiantes,
         0
@@ -34,6 +43,8 @@ export default function Home() {
         totalGrados > 0 ? Math.round(totalEstudiantes / totalGrados) : 0;
       setTotalAlumnos(res.total_alumnos);
       setTotalCursos(res.total_cursos);
+      setHData(dataAlHor);
+      setSexData(DataAlSex);
       setAlPorGrado(promedioTotal);
       setHorarioCantidadAlumnos(res.horarios_populares);
       setisLoading(false);
@@ -80,54 +91,39 @@ export default function Home() {
             <div className="grid gap-10">
               <div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 place-content-start">
-                <div className="stats shadow">
-                  <div className="stat">
-                    <div className="stat-title text-sm truncate">Total de Alumnos</div>
-                    <div className="stat-value text-xl md:text-4xl">{totalAlumnos}</div>
-                    <div className="stat-desc text-xs md:text-sm truncate">
-                    Alumnos inscritos en la institución.
-                      </div>
-                      </div>
-                  </div>
-                  <div className="stats shadow">
-                    <div className="stat">
-                      <div className="stat-title text-sm truncate">Total de Grados</div>
-                      <div className="stat-value text-xl md:text-4xl">{totalCursos || ""}</div>
-                      <div className="stat-desc text-xs md:text-sm truncate">
-                      Grados disponibles para los estudiantes.
-                      </div>
-                    </div>
-                  </div>
-                  <div className="stats shadow">
-                    <div className="stat">
-                      <div className="stat-title text-sm truncate">
-                        Promedio Alumnos por Grado
-                      </div>
-                      <div className="stat-value text-xl md:text-4xl">{totalAlPorGrado || ""}</div>
-                      <div className="stat-desc text-xs md:text-sm truncate">
-                      Reflejando la carga educativa.
-                      </div>
-                    </div>
-                  </div>
-                  <div className="stats shadow">
-                    <div className="stat">
-                      <div className="stat-title text-sm truncate">Grado con más Alumnos</div>
-                      <div className="stat-value text-xl md:text-4xl">
-                        {horarioCantidadAlumnos?.horario || "N/A"}
-                      </div>
-                      <div className="stat-desc text-xs md:text-sm truncate">
-                      {horarioCantidadAlumnos
-                          ? `Con ${horarioCantidadAlumnos.total_estudiantes} alumnos cursandolo`
-                          : "No hay información disponible."}
-                      </div>
-                    </div>
-                  </div>
+                  < CardsHome
+                    titulo={`Total de Alumnos`}
+                    value={totalAlumnos}
+                    descripcion={`Alumnos inscritos en la institución.`}
+                  />
+                  < CardsHome
+                    titulo={`Total de Grados`}
+                    value={totalCursos}
+                    descripcion={`Grados disponibles para los estudiantes.`}
+                  />
+                  < CardsHome
+                    titulo={`Promedio Alumnos por Grado`}
+                    value={totalAlPorGrado}
+                    descripcion={`Reflejando la carga educativa.`}
+                  />
+                  < CardsHome
+                    titulo={`Grado con más Alumnos`}
+                    value={horarioCantidadAlumnos?.horario || "N/A"}
+                    descripcion={horarioCantidadAlumnos
+                      ? `Con ${horarioCantidadAlumnos.total_estudiantes} alumnos cursandolo`
+                      : "No hay información disponible."}
+                  />
                 </div>
               </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 justify-items-center">
-                <BarChart></BarChart>
-                <PieChart></PieChart>
+                <BarChart
+                  hData={hData}
+                  isLoading={isLoading}
+                />
+                <PieChart
+                  sexData={sexData}
+                  isLoading={isLoading}
+                />
               </div>
             </div>
           </div>
