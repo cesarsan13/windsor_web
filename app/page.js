@@ -80,43 +80,43 @@ export default function Home() {
             <div className="grid gap-10">
               <div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 place-content-start">
+                <div className="stats shadow">
+                  <div className="stat">
+                    <div className="stat-title text-sm truncate">Total de Alumnos</div>
+                    <div className="stat-value text-xl md:text-4xl">{totalAlumnos}</div>
+                    <div className="stat-desc text-xs md:text-sm truncate">
+                    Alumnos inscritos en la institución.
+                      </div>
+                      </div>
+                  </div>
                   <div className="stats shadow">
                     <div className="stat">
-                      <div className="stat-title">Total de Alumnos</div>
-                      <div className="stat-value">{totalAlumnos}</div>
-                      <div className="stat-desc">
-                        Alumnos inscritos en la institución.
+                      <div className="stat-title text-sm truncate">Total de Grados</div>
+                      <div className="stat-value text-xl md:text-4xl">{totalCursos || ""}</div>
+                      <div className="stat-desc text-xs md:text-sm truncate">
+                      Grados disponibles para los estudiantes.
                       </div>
                     </div>
                   </div>
                   <div className="stats shadow">
                     <div className="stat">
-                      <div className="stat-title">Total de Grados</div>
-                      <div className="stat-value">{totalCursos || ""}</div>
-                      <div className="stat-desc">
-                        Grados disponibles para los estudiantes.
-                      </div>
-                    </div>
-                  </div>
-                  <div className="stats shadow">
-                    <div className="stat">
-                      <div className="stat-title">
+                      <div className="stat-title text-sm truncate">
                         Promedio Alumnos por Grado
                       </div>
-                      <div className="stat-value">{totalAlPorGrado || ""}</div>
-                      <div className="stat-desc">
-                        Reflejando la carga educativa.
+                      <div className="stat-value text-xl md:text-4xl">{totalAlPorGrado || ""}</div>
+                      <div className="stat-desc text-xs md:text-sm truncate">
+                      Reflejando la carga educativa.
                       </div>
                     </div>
                   </div>
                   <div className="stats shadow">
                     <div className="stat">
-                      <div className="stat-title">Grado con más Alumnos</div>
-                      <div className="stat-value">
+                      <div className="stat-title text-sm truncate">Grado con más Alumnos</div>
+                      <div className="stat-value text-xl md:text-4xl">
                         {horarioCantidadAlumnos?.horario || "N/A"}
                       </div>
-                      <div className="stat-desc">
-                        {horarioCantidadAlumnos
+                      <div className="stat-desc text-xs md:text-sm truncate">
+                      {horarioCantidadAlumnos
                           ? `Con ${horarioCantidadAlumnos.total_estudiantes} alumnos cursandolo`
                           : "No hay información disponible."}
                       </div>
