@@ -67,6 +67,7 @@ function Pagos_1() {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -96,12 +97,18 @@ function Pagos_1() {
     }
     const fetchData = async () => {
       setisLoading(true);
+      if (!validar) {
+        showModal(true);
+      } else {
+        showModal(false);
+      }
       const today = new Date();
       const yyyy = today.getFullYear();
       const mm = String(today.getMonth() + 1).padStart(2, "0");
       const dd = String(today.getDate()).padStart(2, "0");
       const formattedToday = `${yyyy}-${mm}-${dd}`;
-      document.getElementById("fecha").value = formattedToday;
+      setValue("fecha", formattedToday);
+      // document.getElementById("fecha").value = formattedToday;
       if (cargado === false) {
         const [dataF, dataA] = await Promise.all([
           getFormasPago(session.user.token, false),
@@ -110,11 +117,6 @@ function Pagos_1() {
         setAlumnos(dataA);
         setFormaPago(dataF);
         setCargado(true);
-      }
-      if (!validar) {
-        showModal(true);
-      } else {
-        showModal(false);
       }
       setisLoading(false);
     };
@@ -518,7 +520,7 @@ function Pagos_1() {
 
   if (status === "loading") {
     return (
-      <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
+      <div className="container skeleton w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
     );
   }
   return (
@@ -532,6 +534,7 @@ function Pagos_1() {
           home={home}
           setCajero={setCajero}
           cajero={cajero}
+          isLoading={isLoading}
         />
         <ModalPagoImprime
           session={session}

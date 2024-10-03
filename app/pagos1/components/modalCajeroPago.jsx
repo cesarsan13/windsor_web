@@ -7,6 +7,7 @@ import BuscarCat from "@/app/components/BuscarCat";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
+import { FaSpinner } from "react-icons/fa";
 function ModalCajeroPago({
   session,
   validarClaveCajero,
@@ -15,8 +16,7 @@ function ModalCajeroPago({
   home,
   cajero,
   setCajero,
-  // validar,
-  // pago,
+  isLoading,
 }) {
   const [error, setError] = useState(null);
   const columnasBuscaCat = ["numero", "nombre"];
@@ -68,6 +68,11 @@ function ModalCajeroPago({
     }
   });
 
+  const backCloseAndHome = () => {
+    document.getElementById("my_modal_3").close();
+    home();
+  }
+
   return (
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box w-full max-w-md sm:max-w-lg p-6">
@@ -91,7 +96,7 @@ function ModalCajeroPago({
               <button
                 type="button"
                 className="btn btn-sm btn-circle btn-ghost"
-                onClick={() => document.getElementById("my_modal_3").close()}
+                onClick={() => backCloseAndHome()}
               >
                 ✕
               </button>
