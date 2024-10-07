@@ -2,8 +2,10 @@
 import Loading from "@/app/components/loading";
 import NoData from "@/app/components/noData";
 import React from "react";
+import iconos from "@/app/utils/iconos";
+import Image from "next/image";
 
-function TablaDoc({ docFiltrados, isLoading }) {
+function TablaDoc({ docFiltrados, isLoading, tableSelect }) {
     return !isLoading ? (
         <div className="overflow-x-auto mt-3 text-black bg-white dark:bg-[#1d232a] dark:text-white m-2 w-full lg:w-5/8 h-auto">
             {docFiltrados.length > 0 ? (
@@ -15,6 +17,9 @@ function TablaDoc({ docFiltrados, isLoading }) {
                             <td>Fecha</td>
                             <td>Saldo</td>
                             <td>Desc</td>
+                            <td className="hidden">nombre_producto</td>
+                            <td className="hidden">alumno</td>
+                            <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Seleccionar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -25,6 +30,17 @@ function TablaDoc({ docFiltrados, isLoading }) {
                                 <td>{item.fecha}</td>
                                 <td>{item.saldo}</td>
                                 <td>{item.descuento}</td>
+                                <td className="hidden">{item.nombre_producto}</td>
+                                <td className="hidden">{item.alumno}</td>
+                                <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
+                                    <div
+                                        className="kbd pt-1 tooltip text-xl tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
+                                        data-tip={`Seleccionar`}
+                                        onClick={(evt) => tableSelect(evt, item)}
+                                    >
+                                        <Image src={iconos.seleccionar} alt="Seleccionar" />
+                                    </div>
+                                </th>
                             </tr>
                         ))}
                     </tbody>

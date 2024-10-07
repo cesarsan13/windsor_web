@@ -63,6 +63,7 @@ function Pagos_1() {
   const [cargado, setCargado] = useState(false);
   const [docFiltrados, setdDocFiltrados] = useState([]);
   const [alumnos, setAlumnos] = useState([]);
+  const [accionB, setAccionB] = useState("");
   const {
     register,
     handleSubmit,
@@ -196,6 +197,8 @@ function Pagos_1() {
             newData.saldo = formatNumber(saldoF);
             const descF = parseFloat(item.descuento.toFixed(2));
             newData.descuento = formatNumber(descF);
+            newData.nombre_producto = item.nombre_producto || "";
+            newData.alumno = item.alumno || "";
           }
         }
       }
@@ -448,6 +451,12 @@ function Pagos_1() {
     }
   };
 
+  useEffect(() => {
+    if (accionB === "Alta") {
+      setAccionB("");
+    }
+  }, [accionB]);
+
   const handleEnterKey = async (data) => {
     let productoInvalido = productos1.numero;
     if (!productoInvalido) {
@@ -481,6 +490,9 @@ function Pagos_1() {
     muestraTotal(nuevoPago);
     setPagos((prevPagos) => [...prevPagos, nuevoPago]);
     setPagosFiltrados((prevPagos) => [...prevPagos, nuevoPago]);
+    setValue("cantidad_producto", "1");
+    setPrecioBase("");
+    setAccionB("Alta");
   };
 
   const handleBlur = (evt, datatype) => {
@@ -518,6 +530,31 @@ function Pagos_1() {
     }
   };
 
+  const tableSelect = (evt, item) => {
+    console.log(item);
+    const nuevoPago = {
+      numero: item.numero,
+      descripcion: item.nombre_producto,
+      documento: "",
+      cantidad_producto: 1,
+      precio_base: item.paquete,
+      descuento: item.descuento,
+      neto: item.paquete,
+      total: item.saldo,
+      alumno: item.alumno,
+    };
+    const numeroExiste = pagos.some((pago) => pago.numero === nuevoPago.numero);
+    if (numeroExiste) {
+      document.getElementById("my_modal_5").close()
+      showSwal("Oppss!", "Numero de articulo existente en recibo", "error");
+      return;
+    };
+    muestraTotal(nuevoPago);
+    setPagos((prevPagos) => [...prevPagos, nuevoPago]);
+    setPagosFiltrados((prevPagos) => [...prevPagos, nuevoPago]);
+    document.getElementById("my_modal_5").close()
+  }
+
   if (status === "loading") {
     return (
       <div className="container skeleton w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -553,6 +590,7 @@ function Pagos_1() {
           showModal={showModal3}
           docFiltrados={docFiltrados}
           isLoading={isLoading}
+          tableSelect={tableSelect}
         />
 
         <div className="flex flex-col justify-start p-3">
@@ -664,6 +702,7 @@ function Pagos_1() {
                 setItem={setProductos1}
                 token={session.user.token}
                 modalId="modal_articulos1"
+                accion={accionB}
               />
               <Inputs
                 tipoInput={"enterEvent"}

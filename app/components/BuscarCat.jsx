@@ -38,10 +38,10 @@ function BuscarCat({
   useEffect(() => {
     // console.log(accion);
     if (accion === "Alta") {
-      setValue(nameInput[0], 0);
+      setValue(nameInput[0], "");
       setValue(nameInput[1], "");
     }
-  }, [accion])
+  }, [accion]);
 
   useEffect(() => {
     const fetchData = async () => {
