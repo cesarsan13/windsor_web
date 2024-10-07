@@ -663,6 +663,8 @@ function Pagos_1() {
                   setItem={setAlumnos1}
                   token={session.user.token}
                   modalId="modal_alumnos1"
+                  alignRight={"text-right"}
+                  inputWidths={{ contdef: "180px", first: "70px", second: "150px" }}
                 />
               </div>
               <div className="w-full">
@@ -675,6 +677,8 @@ function Pagos_1() {
                   setItem={setComentarios1}
                   token={session.user.token}
                   modalId="modal_comentarios1"
+                  alignRight={"text-right"}
+                  inputWidths={{ contdef: "180px", first: "70px", second: "150px" }}
                 />
               </div>
             </div>
@@ -703,13 +707,15 @@ function Pagos_1() {
                 token={session.user.token}
                 modalId="modal_articulos1"
                 accion={accionB}
+                alignRight={"text-right"}
+                inputWidths={{ contdef: "180px", first: "70px", second: "150px" }}
               />
               <Inputs
                 tipoInput={"enterEvent"}
                 dataType={"int"}
                 name={"cantidad_producto"}
-                tamañolabel={""}
-                className={`${colorInput}`}
+                tamañolabel={"w-[calc(55%)]"}
+                className={`${colorInput} text-right w-[calc(55%)]`}
                 Titulo={"Cantidad: "}
                 type={"text"}
                 requerido={false}
@@ -727,8 +733,8 @@ function Pagos_1() {
                 tipoInput={"numberDouble"}
                 dataType={"double"}
                 name={"precio_base"}
-                tamañolabel={"w-1/2"}
-                className={`w-1/2 text-right ${colorInput}`}
+                tamañolabel={"w-[calc(32%)]"}
+                className={`w-[calc(32%)] text-right ${colorInput}`}
                 Titulo={"Precio Base: "}
                 type={"text"}
                 requerido={false}
