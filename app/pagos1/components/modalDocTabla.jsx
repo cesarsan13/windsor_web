@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import TablaDoc from "@/app/pagos1/components/tablaDoc";
 
-function ModalDocTabla({ session, docFiltrados, isLoading }) {
+function ModalDocTabla({ session, docFiltrados, isLoading, tableSelect }) {
     return (
         <dialog id="my_modal_5" className="modal">
             <div className="modal-box w-auto h-auto">
@@ -17,6 +17,7 @@ function ModalDocTabla({ session, docFiltrados, isLoading }) {
                         <TablaDoc
                             docFiltrados={docFiltrados}
                             isLoading={isLoading}
+                            tableSelect={tableSelect}
                         />
                     </div>
                 </fieldset>
