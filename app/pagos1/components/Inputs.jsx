@@ -79,7 +79,7 @@ function Inputs({
             name={name}
             id={name}
             type={type}
-            className={`text-black dark:text-white ${className}`}
+            className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none  ${className}`}
             disabled={isDisabled}
             // onKeyDown={soloEnteros}
             onKeyDown={(evt) => eventInput(evt)}
@@ -122,7 +122,7 @@ function Inputs({
             name={name}
             id={name}
             type={type}
-            className={`text-black dark:text-white ${className}`}
+            className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none  ${className}`}
             {...(dataType === "int" && { onKeyDown: soloEnteros })}
             {...(dataType === "float" && { onKeyDown: soloDecimales })}
             {...(dataType === "int" ||
@@ -154,7 +154,7 @@ function Inputs({
             name={name}
             id={name}
             type={type}
-            className={`text-black dark:text-white ${className}`}
+            className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${className}`}
             disabled={isDisabled}
             {...(dataType === "int" && { onKeyDown: soloEnteros })}
             {...(dataType === "float" && { onKeyDown: soloDecimales })}

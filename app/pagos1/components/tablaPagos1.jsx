@@ -37,16 +37,16 @@ function TablaPagos1({
           <table className='table table-xs table-zebra w-full'>
             <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
               <tr>
-                <th></th>
+                <th className="w-[5%]"></th>
                 {/* <td className="hidden">Clave</td> */}
-                <td className="w-[40%]">Descripción</td>
-                <td className="w-[10%]">Documento</td>
-                <td className="w-[10%]">Cantidad</td>
-                <td className="w-[10%]">Precio</td>
-                <td className="w-[10%]">Descuento</td>
-                <td className="w-[10%]">Neto</td>
-                <td className="w-[10%]">Total</td>
-                <td className="w-[10%]">Alumno</td>
+                <td className="w-[35%]">Descripción</td>
+                <td className="w-[5%]">Documento</td>
+                <td className="w-[5%] text-right">Cantidad</td>
+                <td className="w-[6%] text-right">Precio</td>
+                <td className="w-[6%] text-right">Descuento</td>
+                <td className="w-[6%] text-right">Neto</td>
+                <td className="w-[6%] text-right">Total</td>
+                <td className="w-[5%] text-right">Alumno</td>
                 <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Eliminar</th>
                 <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Seleccionar</th>
               </tr>
