@@ -263,6 +263,8 @@ function ModalPagoImprime({
                       token={session.user.token}
                       modalId="modal_formpago"
                       id={formaPagoPage.forma_pago_id}
+                      alignRight={"text-right"}
+                      inputWidths={{ contdef: "180px", first: "70px", second: "150px" }}
                     />
                   </label>
                   <label className=" items-center space-x-2 dark:text-white text-black">
@@ -318,6 +320,8 @@ function ModalPagoImprime({
                       setItem={setFormPago2}
                       token={session.user.token}
                       modalId="modal_formpago2"
+                      alignRight={"text-right"}
+                      inputWidths={{ contdef: "180px", first: "70px", second: "150px" }}
                     />
                   </label>
                   <label className="items-center space-x-2 dark:text-white text-black">
