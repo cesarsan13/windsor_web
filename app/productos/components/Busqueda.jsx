@@ -17,11 +17,11 @@ function Busqueda({
 
   return (
     <div className="grid grid-cols-3 md:grid-cols-12 gap-2">
-      <div className="col-span-1 md:col-span-2">
+      <div className="col-span-1 md:col-span-1/2">
         <input
           id="tb_id"
-          className="input input-bordered input-md max-w-xs w-full dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 text-right"
-          placeholder="Id..."
+          className="input input-bordered input-sm md:input-md w-full sm:w-full dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 text-right"
+          placeholder="Núm..."
           onChange={(event) => handleBusquedaChange(event)}
           onKeyDown={(evt) => {
             soloEnteros(evt);
@@ -33,7 +33,7 @@ function Busqueda({
       <div className="col-span-2 md:col-span-4">
         <input
           id="tb_desc"
-          className="input input-bordered input-md join-item w-full max-w-lg dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600"
+          className="input input-bordered input-sm md:input-md w-full sm:w-full dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 text-left"
           placeholder="Descripcion..."
           onChange={(event) => handleBusquedaChange(event)}
           onKeyDown={(evt) => handleKeyDown(evt)}
