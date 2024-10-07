@@ -112,6 +112,8 @@ function ModalCajeroPago({
                 setItem={setCajero}
                 token={session.user.token}
                 modalId="modal_cajeros"
+                alignRight={"text-right"}
+                inputWidths={{ contdef: "180px", first: "70px", second: "150px" }}
               />
             </div>
             <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row lg:flex-row mt-4">
