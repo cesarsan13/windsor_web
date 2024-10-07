@@ -223,7 +223,7 @@ function Pagos_1() {
     ]);
     let desPr = ar9999.descripcion;
     if (arFind) {
-      recargo = formatNumber(arFind.pro_recargo);
+      recargo = formatNumber(arFind.por_recargo);
     } else {
       recargo = formatNumber(0);
     }
@@ -352,9 +352,9 @@ function Pagos_1() {
   };
 
   const submitRecargo = async (data) => {
-    if (dRecargo) {
-      return;
-    }
+    // if (dRecargo) {
+    //   return;
+    // }
     const recargo = formatNumber(data.recargo);
     const total = data.recargo * data.cantidad_producto;
     const totalFormat = formatNumber(total);
@@ -454,6 +454,7 @@ function Pagos_1() {
   useEffect(() => {
     if (accionB === "Alta") {
       setAccionB("");
+      // setProductos1({});
     }
   }, [accionB]);
 
