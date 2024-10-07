@@ -40,7 +40,7 @@ function TablaAlumnos({
         <table className="table table-xs table-zebra w-full">
           <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
             <tr>
-              <th className="sm:w-[10%] pt-[.10rem] pb-[.10rem]"></th>
+              <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
               <td className="w-[40%] pt-[.10rem] pb-[.10rem]">Nombre</td>
               <td className="sm:table-cell pt-[.10rem] pb-[.10rem]">Grado</td>
               <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Ver</th>
