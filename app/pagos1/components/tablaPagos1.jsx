@@ -9,7 +9,7 @@ import { formatNumber } from "@/app/utils/globalfn";
 function TablaPagos1({
   pagosFiltrados,
   isLoading,
-  setPagos,
+  setPago,
   setAccion,
   setSelectedTable,
   deleteRow,
@@ -18,10 +18,12 @@ function TablaPagos1({
   const [selectedRow, setSelectedRow] = useState(null);
 
   const tableAction = (evt, pago, accion) => {
-    setPagos(pago);
+    setPago(pago);
     setAccion(accion);
-    setSelectedTable(pago);
-    setSelectedRow(pago.numero);
+    if (accion === "Seleccionar") {
+      setSelectedTable(pago);
+      setSelectedRow(pago.numero);
+    }
     if (accion === "Eliminar") {
       deleteRow(pago);
     }
@@ -34,7 +36,7 @@ function TablaPagos1({
         style={{ height: `auto` }}
       >
         {pagosFiltrados.length > 0 ? (
-          <table className='table table-xs table-zebra w-full'>
+          <table className='table table-xs w-full'>
             <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
               <tr>
                 <th className="w-[5%]"></th>
@@ -59,8 +61,8 @@ function TablaPagos1({
                     ? "dark:bg-[#334155] bg-[#f1f5f9]"
                     : ""
                     }`}
-                  // className={`hover:cursor-pointer ${selectedRow === item.numero ? 'selected-row' : ''}`}
-                  onClick={() => setSelectedRow(item.numero)}
+                // className={`hover:cursor-pointer ${selectedRow === item.numero ? 'selected-row' : ''}`}
+                // onClick={() => setSelectedRow(item.numero)}
                 >
                   <th className="text-right">{item.numero}</th>
                   <td className="hidden">{item.numero}</td>
@@ -75,7 +77,7 @@ function TablaPagos1({
 
                   <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                     <div
-                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
+                      className="kbd pt-1 text-xl tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
                       data-tip={`Eliminar`}
                       onClick={(evt) => tableAction(evt, item, "Eliminar")}
                     >
@@ -84,7 +86,7 @@ function TablaPagos1({
                   </th>
                   <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                     <div
-                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
+                      className="kbd pt-1 text-xl tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
                       data-tip={`Seleccionar`}
                       onClick={(evt) => tableAction(evt, item, "Seleccionar")}
                     >

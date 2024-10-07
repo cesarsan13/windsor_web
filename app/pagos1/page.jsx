@@ -92,6 +92,10 @@ function Pagos_1() {
     },
   });
 
+  // useEffect(() => {
+  //   console.log(selectedTable);
+  // }, [selectedTable])
+
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
@@ -210,7 +214,7 @@ function Pagos_1() {
   };
 
   const Recargos = async () => {
-    let recargo;
+    let recargo = 0;
     let prod = productos1.numero;
     let alumnoInvalido = alumnos1.numero;
     if (!alumnoInvalido) {
@@ -263,7 +267,7 @@ function Pagos_1() {
     let validar = selectedTable.numero;
 
     if (!validar) {
-      showSwal("Error!", "No hay ningun articulo seleccionado' ", "error");
+      showSwal("Error!", "No hay ningun articulo seleccionado ", "error");
       return;
     }
     Monto_Pago = Elimina_Comas(data.monto_parcial);
@@ -333,6 +337,14 @@ function Pagos_1() {
         res = await buscaDocumento(token, newData);
         if (res.status) {
           res2 = await guardarDocumento(token, newData);
+          if (res2.status) {
+            showSwal(res2.alert_title, res2.alert_text, res2.alert_icon);
+            setValue("monto_parcial", "");
+            setValue("clave_acceso", "");
+            setMuestraParciales(false);
+          } else {
+            showSwal(res2.alert_title, res2.alert_text, res2.alert_icon);
+          }
         } else {
           showSwal(
             "",
@@ -375,9 +387,11 @@ function Pagos_1() {
       setMuestraRecargos(false);
       return;
     }
+    const nuevoPagoArray = Array.isArray(nuevoPago) ? nuevoPago : [nuevoPago];
+
     muestraTotal(nuevoPago);
-    setPagos((prevPagos) => [...prevPagos, nuevoPago]);
-    setPagosFiltrados((prevPagos) => [...prevPagos, nuevoPago]);
+    setPagos((prevPagos) => [...prevPagos, ...nuevoPagoArray]);
+    setPagosFiltrados((prevPagos) => [...prevPagos, ...nuevoPagoArray]);
     setMuestraRecargos(false);
   };
 
@@ -485,12 +499,14 @@ function Pagos_1() {
     };
     const numeroExiste = pagos.some((pago) => pago.numero === nuevoPago.numero);
     if (numeroExiste) {
-      showSwal("Oppss!", "Numero de articulo existente en recibo' ", "error");
+      showSwal("Oppss!", "Numero de articulo existente en recibo ", "error");
       return;
     }
+    const nuevoPagoArray = Array.isArray(nuevoPago) ? nuevoPago : [nuevoPago];
+
     muestraTotal(nuevoPago);
-    setPagos((prevPagos) => [...prevPagos, nuevoPago]);
-    setPagosFiltrados((prevPagos) => [...prevPagos, nuevoPago]);
+    setPagos((prevPagos) => [...prevPagos, ...nuevoPagoArray]);
+    setPagosFiltrados((prevPagos) => [...prevPagos, ...nuevoPagoArray]);
     setValue("cantidad_producto", "1");
     setPrecioBase("");
     setAccionB("Alta");
@@ -550,9 +566,11 @@ function Pagos_1() {
       showSwal("Oppss!", "Numero de articulo existente en recibo", "error");
       return;
     };
+    const nuevoPagoArray = Array.isArray(nuevoPago) ? nuevoPago : [nuevoPago];
+
     muestraTotal(nuevoPago);
-    setPagos((prevPagos) => [...prevPagos, nuevoPago]);
-    setPagosFiltrados((prevPagos) => [...prevPagos, nuevoPago]);
+    setPagos((prevPagos) => [...prevPagos, ...nuevoPagoArray]);
+    setPagosFiltrados((prevPagos) => [...prevPagos, ...nuevoPagoArray]);
     document.getElementById("my_modal_5").close()
   }
 
@@ -855,7 +873,7 @@ function Pagos_1() {
               <TablaPagos1
                 isLoading={isLoading}
                 pagosFiltrados={pagosFiltrados}
-                setPagos={setPagos}
+                setPago={setPago}
                 setAccion={setAccion}
                 setSelectedTable={setSelectedTable}
                 deleteRow={EliminarCampo}
