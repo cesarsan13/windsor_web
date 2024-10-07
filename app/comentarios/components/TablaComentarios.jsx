@@ -25,8 +25,8 @@ function TablaComentarios({
         <table className="table table-xs table-zebra w-full">
           <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
             <tr>
-              <th className="sm:w-[10%]"></th>
-              <td className="w-[45%]">Comentario 1</td>
+            <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
+            <td className="w-[45%]">Comentario 1</td>
               <td className="w-[25%] hidden sm:table-cell">Comentario 2</td>
               <td className="w-[25%] hidden sm:table-cell">Comentario 3</td>
               {/* <th className="w-[30%] sm:w-[10%]">Acciones</th> */}

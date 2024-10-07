@@ -24,8 +24,8 @@ function TablaHorarios({
         <table className="table table-xs table-zebra w-full">
             <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
             <tr>
-              <th></th>
-              <th className="w-[5%]">Cancha</th>
+            <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
+            <th className="w-[5%]">Cancha</th>
               <th className="w-[40%]">Dia</th>
               <th className="w-[15%]">Horario</th>
               <th className="w-[10%]">Max Niños</th>

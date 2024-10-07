@@ -25,8 +25,8 @@ function TablaFormaPago({
         <table className="table table-xs table-zebra w-full">
           <thead className="sticky top-0 bg-white dark:bg-[#1d232a]">
             <tr>
-              <th className="w-[10%]">id</th>
-              <td className="w-[50%]">Descripcion</td>
+            <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
+            <td className="w-[50%]">Descripcion</td>
               <td className="w-[8%]">Comision</td>
               <td className="w-[15%]">Aplicacion</td>
               <td className="w-[20%]">Cuenta Banco</td>
