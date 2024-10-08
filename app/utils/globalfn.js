@@ -112,7 +112,7 @@ export function formatDate(date) {
 
 export function format_Fecha_String(date) {
   if (date === "" || date === null || !date || date === " ") return "";
-  const [day, month, year] = date.split(/[-\/]/);
+  const [year, month, day] = date.split(/[-\/]/);
   if (!day || !month || !year) return "";
   const fechaObj = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
   if (isNaN(fechaObj.getTime())) return "";
