@@ -439,7 +439,7 @@ function Pagos_1() {
   };
 
   const muestraTotal = (data) => {
-    const dataTotal = parseFloat(data.total.replace(/,/g, ""));
+    const dataTotal = data.total ? parseFloat(data.total.replace(/,/g, "")) : 0;
     const nuevoTotal = pagosFiltrados.reduce(
       (acc, pago) => acc + parseFloat(pago.total.replace(/,/g, "")),
       dataTotal
