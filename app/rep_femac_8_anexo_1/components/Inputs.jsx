@@ -12,6 +12,7 @@ function Inputs({
   maxLenght,
   isDisabled,
   setValue,
+  value,
 }) {
   return (
     <div className="flex flex-col">
@@ -31,6 +32,7 @@ function Inputs({
               onBlur: (event) => handleBlur(event, dataType),
             }))}
           disabled={isDisabled}
+          value={value} 
           onChange={(event) => setValue(event.target.value)}
           
         />

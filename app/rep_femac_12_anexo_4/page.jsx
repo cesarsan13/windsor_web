@@ -17,6 +17,7 @@ import { ReportePDF } from "../utils/ReportesPDF";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import ModalVistaPreviaRepFemac12Anexo4 from "./components/ModalVistaPreviaRepFemac12Anexo4";
+import { useEffect } from "react";
 
 function RepFemac12Anexo() {
   const date = new Date();
@@ -24,14 +25,33 @@ function RepFemac12Anexo() {
   const dateStr = formatDate(date);
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [fecha1, setFecha1] = useState(dateStr.replace(/\//g, "-"));
-  const [fecha2, setFecha2] = useState(dateStr.replace(/\//g, "-"));
+  const [fecha1, setFecha1] = useState("");
+  const [fecha2, setFecha2] = useState("");
   const [producto1, setProducto1] = useState({});
   const [producto2, setProducto2] = useState({});
   const [sOrdenar, ssetordenar] = useState("nombre");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [isLoading, setisLoading] = useState(false);
+
+  const getPrimerDiaDelMes = () => {
+    const fechaActual = new Date();
+    return new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1)
+      .toISOString()
+      .split('T')[0];
+  };
+
+  const getUltimoDiaDelMes = () => {
+    const fechaActual = new Date();
+    return new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0)
+      .toISOString()
+      .split('T')[0];
+  };
+
+  useEffect(() => {
+    setFecha1(getPrimerDiaDelMes());
+    setFecha2(getUltimoDiaDelMes());
+  }, []);
 
   if (status === "loading") {
     return (

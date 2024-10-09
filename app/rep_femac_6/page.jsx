@@ -22,12 +22,30 @@ function Rep_Femac_6() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [cajero, setCajero] = useState({});
-  const [fechaIni, setFechaIni] = useState(dateStr.replace(/\//g, "-"));
-  const [fechaFin, setFechaFin] = useState(dateStr.replace(/\//g, "-"));
+  const [fechaIni, setFechaIni] = useState(""); 
+  const [fechaFin, setFechaFin] = useState(""); 
   const [dataCobranza, setDataCobranza] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const getPrimerDiaDelMes = () => {
+    const fechaActual = new Date();
+    return new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1)
+      .toISOString()
+      .split('T')[0];
+  };
+
+  const getUltimoDiaDelMes = () => {
+    const fechaActual = new Date();
+    return new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0)
+      .toISOString()
+      .split('T')[0];
+  };
+
+  useEffect(() => {
+    setFechaIni(getPrimerDiaDelMes());
+    setFechaFin(getUltimoDiaDelMes());
+  }, []);
   useEffect(() => {
     if (status === "loading" || !session) {
       return;

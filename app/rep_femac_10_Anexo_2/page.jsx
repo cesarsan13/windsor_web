@@ -28,6 +28,25 @@ function EstadodeCuenta() {
   const [pdfData, setPdfData] = useState("");
   const [FormaRepEstadodeCuenta, setFormaReporteEstadodeCuenta] = useState([]);
 
+  const getPrimerDiaDelMes = () => {
+    const fechaActual = new Date();
+    return new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1)
+      .toISOString()
+      .split('T')[0];
+  };
+
+  const getUltimoDiaDelMes = () => {
+    const fechaActual = new Date();
+    return new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0)
+      .toISOString()
+      .split('T')[0];
+  };
+
+  useEffect(() => {
+    setFecha_ini(getPrimerDiaDelMes());
+    setFecha_fin(getUltimoDiaDelMes());
+  }, []);
+
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
@@ -303,6 +322,7 @@ function EstadodeCuenta() {
                 errors={errors}
                 maxLength={11}
                 isDisabled={false}
+                value={fecha_ini}
                 setValue={setFecha_ini}>
 
                 </Inputs>
@@ -317,6 +337,7 @@ function EstadodeCuenta() {
                 errors={errors}
                 maxLength={11}
                 isDisabled={false}
+                value={fecha_fin}
                 setValue={setFecha_fin}
                 ></Inputs>
               </div>

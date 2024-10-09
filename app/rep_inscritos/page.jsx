@@ -33,6 +33,25 @@ function AltasBajasAlumnos() {
         formState: { errors },
     } = useForm({});
 
+    const getPrimerDiaDelMes = () => {
+        const fechaActual = new Date();
+        return new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1)
+          .toISOString()
+          .split('T')[0];
+      };
+    
+      const getUltimoDiaDelMes = () => {
+        const fechaActual = new Date();
+        return new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0)
+          .toISOString()
+          .split('T')[0];
+      };
+    
+      useEffect(() => {
+        setFecha_ini(getPrimerDiaDelMes());
+        setFecha_fin(getUltimoDiaDelMes());
+      }, []);
+
     // const formaImprime = async () => {
     //     let res;
     //     let si_inscrito = false;
