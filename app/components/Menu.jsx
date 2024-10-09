@@ -7,13 +7,14 @@ function Menu({ vertical, toogle }) {
     archivos: false,
     reportes: false,
     pagos: false,
+    procesos: false,
   });
   const menuRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
 
   const handleClickOutside = (event) => {
     if (menuRef.current && !menuRef.current.contains(event.target)) {
-      setIsOpen({ archivos: false, reportes: false, pagos: false });
+      setIsOpen({ archivos: false, reportes: false, pagos: false, procesos: false });
     }
   };
 
@@ -26,7 +27,7 @@ function Menu({ vertical, toogle }) {
 
   const handleClick = () => {
     if (isMobile) {
-      setIsOpen({ archivos: false, reportes: false, pagos: false });
+      setIsOpen({ archivos: false, reportes: false, pagos: false, procesos: false });
       closeAllDetails();
     }
     const elem = document.activeElement;
@@ -37,7 +38,7 @@ function Menu({ vertical, toogle }) {
 
   const handleToggle = (menu) => {
     setIsOpen((prevState) => {
-      const newState = { archivos: false, reportes: false, pagos: false };
+      const newState = { archivos: false, reportes: false, pagos: false, procesos: false };
       newState[menu] = !prevState[menu];
       return newState;
     });
@@ -66,7 +67,7 @@ function Menu({ vertical, toogle }) {
     const handleSubmenuClick = (event) => {
       if (window.innerWidth <= 768) {
         if (isMobile && event.target.closest("a")) {
-          setIsOpen({ archivos: false, reportes: false, pagos: false });
+          setIsOpen({ archivos: false, reportes: false, pagos: false, procesos: false });
           closeAllDetails();
         }
       }
@@ -169,6 +170,19 @@ function Menu({ vertical, toogle }) {
           </ul>
         </details>
       </li>
+      <li>
+        <details open={isOpen.procesos} onClick={() => handleToggle("procesos")}>
+          <summary>Procesos</summary>
+          <ul>
+            <li>
+              <Link href="/cambio_ciclo_escolar" onClick={toogle}>Cambio de Ciclo Escolar</Link>
+            </li>
+            <li>
+              <Link href="/cambio_numero_alumno" onClick={toogle}>Cambio Numero Alumno</Link>
+            </li>
+          </ul>
+        </details>
+      </li>
 
       <li className="hidden">
         <details>
@@ -261,7 +275,7 @@ function Menu({ vertical, toogle }) {
           </li>
         </ul>
       </div>
-      <div className="dropdown hidden">
+      <div className="dropdown">
         <div
           tabIndex={0}
           role="button"
@@ -272,7 +286,7 @@ function Menu({ vertical, toogle }) {
           tabIndex={0}
           className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
         >
-          <li>
+          {/* <li>
             <Link href="" style={{ color: "red" }} onClick={handleClick}>Adición de Productos a Cartera</Link>
           </li>
           <li>
@@ -289,15 +303,15 @@ function Menu({ vertical, toogle }) {
           </li>
           <li>
             <Link href="" style={{ color: "red" }} onClick={handleClick}>Actualiza Cobranza</Link>
-          </li>
+          </li> */}
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>Cambio de Ciclo Escolar</Link>
+            <Link href="cambio_ciclo_escolar" onClick={handleClick}>Cambio de Ciclo Escolar</Link>
           </li>
-          <li>
+          {/* <li>
             <Link href="" style={{ color: "red" }} onClick={handleClick}>Cobranza Diaria</Link>
-          </li>
+          </li> */}
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>Cambio Numero de Alumno</Link>
+            <Link href="cambio_numero_alumno" onClick={handleClick}>Cambio Numero de Alumno</Link>
           </li>
         </ul>
       </div>
