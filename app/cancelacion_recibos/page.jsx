@@ -2,21 +2,17 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import Acciones from "@/app/adicion_productos_cartera/components/Acciones";
+import Acciones from "@/app/cancelacion_recibos/components/Acciones";
 import { useSession } from "next-auth/react";
-import BuscarCat from "../components/BuscarCat";
-import Inputs from "@/app/adicion_productos_cartera/components/Inputs";
-import { actualizarCartera, procesoCartera } from "@/app/utils/api/adicion_productos_cartera/adicion_productos_cartera";
+import Inputs from "@/app/cancelacion_recibos/components/Inputs";
+import { procesoCartera } from "@/app/utils/api/cancelacion_recibo/cancelacion_recibo";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
-import { formatDate } from "../utils/globalfn";
+import { format_Fecha_String } from "../utils/globalfn";
 
-function Adicion_Productos_Cartera() {
+function Cancelacion_Recibo() {
     const router = useRouter();
     const { data: session, status } = useSession();
-    const [articulo, setArticulos] = useState("");
-    const [cond_ant, setCondAnt] = useState("");
     const [isLoading, setisLoading] = useState(false);
-    const [isLoading2, setisLoading2] = useState(false);
     const today = new Date();
     const yyyy = today.getFullYear();
     const mm = String(today.getMonth() + 1).padStart(2, "0");
@@ -25,59 +21,38 @@ function Adicion_Productos_Cartera() {
     const {
         register,
         handleSubmit,
-        watch,
         formState: { errors },
     } = useForm({
         defaultValues: {
             fecha: date,
-            periodo: 0,
+            recibo: 0,
         },
     });
 
-    const ActRef = async () => {
+    const Proceso = handleSubmit(async (data) => {
         const { token } = session.user;
         setisLoading(true);
-        const res = await actualizarCartera(token);
+        if (data.recibo === 0) {
+            showSwal(
+                "Error: Cancelación de Recibo",
+                "Número de recibo invalido.",
+                "error"
+            );
+            setisLoading(false);
+            return;
+        }
+        const year = data.fecha.substring(0, 4);
+        const mes = parseInt(data.fecha.substring(5, 7));
+        const dia = data.fecha.substring(8, 10);
+        const formatdate = `${year}/${mes}/${dia}`;
+        data.fecha = formatdate;
+        const res = await procesoCartera(token, data);
         if (res.status) {
             showSwal(res.alert_title, res.alert_text, res.alert_icon);
-            setCondAnt(res.data);
         } else {
             showSwal(res.alert_title, res.alert_text, res.alert_icon);
         }
         setisLoading(false);
-    };
-
-    const onSubmitProceso = handleSubmit(async (data) => {
-        const { token } = session.user;
-        setisLoading2(true);
-        if (articulo.cond_1 === 0) {
-            showSwal(
-                "Error: Generacion Cobranza",
-                "Condicion Invalida.",
-                "error"
-            );
-            setisLoading2(false);
-            return;
-        }
-        if (data.periodo === 0) {
-            showSwal(
-                "Error: Generacion Cobranza",
-                "Numero de periodo en 0.",
-                "error"
-            );
-            setisLoading2(false);
-            return;
-        }
-        data.cond_ant = cond_ant;
-        data.cond_1 = articulo.cond_1;
-        const res = await procesoCartera(token, data);
-        if (res.status) {
-            showSwal(res.alert_title, res.alert_text, res.alert_icon);
-            setisLoading2(false);
-        } else {
-            showSwal(res.alert_title, res.alert_text, res.alert_icon);
-            setisLoading2(false);
-        }
     });
 
     const home = () => {
@@ -97,15 +72,13 @@ function Adicion_Productos_Cartera() {
                         <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0 pr-4">
                             <Acciones
                                 isLoadingRef={isLoading}
-                                isLoadingProc={isLoading2}
-                                BRef={ActRef}
-                                Bproceso={onSubmitProceso}
+                                Bproceso={Proceso}
                                 home={home}
                             />
                         </div>
 
                         <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-auto">
-                            Proceso de Adición a Cobranza.
+                            Cancelación de Recibo.
                         </h1>
                     </div>
                 </div>
@@ -113,17 +86,19 @@ function Adicion_Productos_Cartera() {
                     <div className="col-span-7">
                         {/* <form onSubmit={onSubmit}> */}
                         <div className="flex flex-col h-[calc(100%)] space-y-4">
-                            <BuscarCat
-                                table="productos_cond"
-                                itemData={[]}
-                                fieldsToShow={["cond_1", "descripcion"]}
-                                nameInput={["cond_1", "descripcion"]}
-                                titulo={"Articulos: "}
-                                setItem={setArticulos}
-                                token={session.user.token}
-                                modalId="modal_articulos1"
-                                alignRight={"text-right"}
-                                inputWidths={{ contdef: "180px", first: "70px", second: "150px" }}
+                            <Inputs
+                                dataType={"int"}
+                                name={"recibo"}
+                                tamañolabel={"w-[22%]"}
+                                className={"w-[50%] text-right"}
+                                Titulo={"Recibo: "}
+                                type={"text"}
+                                requerido={true}
+                                errors={errors}
+                                register={register}
+                                message={"Recibo Requerido"}
+                                isDisabled={false}
+                                maxLenght={7}
                             />
                             <Inputs
                                 dataType={"string"}
@@ -139,20 +114,6 @@ function Adicion_Productos_Cartera() {
                                 isDisabled={false}
                                 maxLenght={7}
                             />
-                            <Inputs
-                                dataType={"int"}
-                                name={"periodo"}
-                                tamañolabel={"w-[25%]"}
-                                className={"w-[50%] text-right"}
-                                Titulo={"Periodo: "}
-                                type={"text"}
-                                requerido={true}
-                                errors={errors}
-                                register={register}
-                                message={"Periodo Requerido"}
-                                isDisabled={false}
-                                maxLenght={7}
-                            />
                         </div>
                         {/* </form> */}
                     </div>
@@ -162,4 +123,4 @@ function Adicion_Productos_Cartera() {
     );
 }
 
-export default Adicion_Productos_Cartera;
+export default Cancelacion_Recibo;
