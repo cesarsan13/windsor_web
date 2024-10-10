@@ -77,8 +77,8 @@ function TablaPagos1({
 
                   <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                     <div
-                      className="kbd pt-1 text-xl tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
-                      data-tip={`Eliminar`}
+                        className="hidden sm:hidden md:block lg:block kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[2rem] md:h-[2rem] content-center"
+                        data-tip={`Eliminar`}
                       onClick={(evt) => tableAction(evt, item, "Eliminar")}
                     >
                       <Image src={iconos.eliminar} alt="Eliminar" />
@@ -86,11 +86,11 @@ function TablaPagos1({
                   </th>
                   <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                     <div
-                      className="kbd pt-1 text-xl tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
-                      data-tip={`Seleccionar`}
+                        className="hidden sm:hidden md:block lg:block kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[2rem] md:h-[2rem] content-center"
+                        data-tip={`Seleccionar`}
                       onClick={(evt) => tableAction(evt, item, "Seleccionar")}
                     >
-                      <Image src={iconos.seleccionar} alt="Seleccionar" />
+                      <Image src={iconos.documento} alt="Seleccionar" />
                     </div>
                   </th>
                 </tr>

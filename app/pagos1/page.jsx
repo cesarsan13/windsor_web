@@ -623,7 +623,7 @@ function Pagos_1() {
                 Parciales={Parciales}
               />
               <h1 className="text-4xl font-xthin text-black dark:text-white">
-                Pagos.
+                Pagos
               </h1>
             </div>
             <h1 className="text-4xl font-xthin text-black dark:text-white ml-auto">
