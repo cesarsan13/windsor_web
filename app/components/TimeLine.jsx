@@ -2,9 +2,11 @@ import React from "react";
 import iconos from "@/app/utils/iconos";
 import Image from "next/image";
 import { useRef, useEffect } from "react";
+import { useState } from "react";
 
 function TimeLine({ cumpleañeros, mesActual }) {
   const cumpleañeroRef = useRef(null);
+  const primerCumpleañero = useRef(null);
 
   useEffect(() => {
     if (cumpleañeroRef.current) {
@@ -32,14 +34,19 @@ function TimeLine({ cumpleañeros, mesActual }) {
             );
             let numero_em_curso = nueva_fecha.getDate();
             let numero_fecha_hoy = fecha_hoy.getDate();
-            let es_cumpleañero =
-              numero_em_curso === numero_fecha_hoy ? true : false;
+            let es_cumpleañero = numero_em_curso === numero_fecha_hoy;
+
             return (
               <li
                 key={idx}
                 ref={
-                  es_cumpleañero && !cumpleañeroRef.current
-                    ? cumpleañeroRef
+                  es_cumpleañero
+                    ? (element) => {
+                        if (!primerCumpleañero.current) {
+                          cumpleañeroRef.current = element;
+                          primerCumpleañero.current = true;
+                        }
+                      }
                     : null
                 }
               >
