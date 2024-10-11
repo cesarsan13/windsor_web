@@ -240,6 +240,21 @@ function ModalHorario({
                 maxLenght={50}
                 isDisabled={isDisabled}
               />
+              <Inputs
+              dataType={"string"}
+              name={"salon"}
+              tamañolabel={"w-3/6"}
+              className={"w-5/6"}
+              Titulo={"Salón: "}
+              type={"text"}
+              requerido={true}
+              isNumero={false}
+              errors={errors}
+              register={register}
+              message={"salon requerido"}
+              maxLenght={10}
+              isDisabled={isDisabled}
+              />
             </div>
           </fieldset>
         </form>

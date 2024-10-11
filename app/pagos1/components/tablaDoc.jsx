@@ -34,11 +34,11 @@ function TablaDoc({ docFiltrados, isLoading, tableSelect }) {
                                 <td className="hidden">{item.alumno}</td>
                                 <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                                     <div
-                                        className="kbd pt-1 tooltip text-xl tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
-                                        data-tip={`Seleccionar`}
+                        className="hidden sm:hidden md:block lg:block kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-6 h-6 md:w-[2rem] md:h-[2rem] content-center"
+                        data-tip={`Seleccionar`}
                                         onClick={(evt) => tableSelect(evt, item)}
                                     >
-                                        <Image src={iconos.seleccionar} alt="Seleccionar" />
+                                        <Image src={iconos.documento} alt="Seleccionar" />
                                     </div>
                                 </th>
                             </tr>

@@ -25,9 +25,10 @@ function TablaHorarios({
             <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
             <tr>
             <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
-            <th className="w-[5%]">Cancha</th>
-              <th className="w-[40%]">Dia</th>
               <th className="w-[15%]">Horario</th>
+              <th className="w-[5%]">Salón</th>
+              <th className="w-[25%]">Dia</th>
+            <th className="w-[5%]">Cancha</th>
               <th className="w-[10%]">Max Niños</th>
               <th className="w-[5%]">Sexo</th>
               <th className="w-[5%]">Edad Ini</th>
@@ -47,15 +48,15 @@ function TablaHorarios({
                 >
                   {item.numero}
                 </th>
+                <td>{item.horario}</td>
+                <td>{item.salon}</td>
+                <td>{item.dia}</td>
                 <td
                   className={
                     typeof item.numero === "number" ? "text-left" : "text-right"
                   }
-                >
-                  {item.cancha}
+                >{item.cancha}
                 </td>
-                <td>{item.dia}</td>
-                <td>{item.horario}</td>
                 <td className="text-right">{item.max_niños}</td>
                 <td>{item.sexo}</td>
                 <td className="text-right">{item.edad_ini}</td>
