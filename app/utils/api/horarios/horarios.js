@@ -62,6 +62,7 @@ export const guardarHorario = async (token, data, accion) => {
       sexo: data.sexo,
       edad_ini: data.edad_ini,
       edad_fin: data.edad_fin,
+      salon: data.salon,
       baja: data.baja,
     }),
     headers: new Headers({
@@ -78,13 +79,14 @@ const Enca1 = (doc) => {
     doc.imprimeEncabezadoPrincipalV();
     doc.nextRow(12);
     doc.ImpPosX("Numero", 14, doc.tw_ren, 0, "L");
-    doc.ImpPosX("Cancha", 28, doc.tw_ren, 0, "L");
-    doc.ImpPosX("Dia", 42, doc.tw_ren, 0, "L");
-    doc.ImpPosX("Horario", 82, doc.tw_ren, 0, "L");
-    doc.ImpPosX("Niños", 114, doc.tw_ren, 0, "L");
-    doc.ImpPosX("Sexo", 134, doc.tw_ren, 0, "L");
-    doc.ImpPosX("Edad Ini", 154, doc.tw_ren, 0, "L");
-    doc.ImpPosX("Edad Fin", 174, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Horario", 28, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Salón", 62, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Dia", 90, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Cancha", 117, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Niños", 134, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Sexo", 149, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Edad Ini", 164, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Edad Fin", 184, doc.tw_ren, 0, "L");
     doc.nextRow(4);
     doc.printLineV();
     doc.nextRow(4);
@@ -101,13 +103,14 @@ export const Imprimir = (configuracion) => {
   Enca1(newPDF);
   body.forEach((horario) => {
     newPDF.ImpPosX(horario.numero.toString(), 24, newPDF.tw_ren, 0, "R");
-    newPDF.ImpPosX(horario.cancha.toString(), 38, newPDF.tw_ren, 0, "R");
-    newPDF.ImpPosX(horario.dia.toString(), 42, newPDF.tw_ren);
-    newPDF.ImpPosX(horario.horario.toString(), 82, newPDF.tw_ren);
-    newPDF.ImpPosX(horario.max_niños.toString(), 124, newPDF.tw_ren, 0, "R");
-    newPDF.ImpPosX(horario.sexo.toString(), 134, newPDF.tw_ren);
-    newPDF.ImpPosX(horario.edad_ini.toString(), 164, newPDF.tw_ren, 0, "R");
-    newPDF.ImpPosX(horario.edad_fin.toString(), 184, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(horario.horario.toString(), 28, newPDF.tw_ren);
+    newPDF.ImpPosX(horario.salon.toString(), 62, newPDF.tw_ren);
+    newPDF.ImpPosX(horario.dia.toString(), 90, newPDF.tw_ren);
+    newPDF.ImpPosX(horario.cancha.toString(), 127, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(horario.max_niños.toString(), 144, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(horario.sexo.toString(), 149, newPDF.tw_ren);
+    newPDF.ImpPosX(horario.edad_ini.toString(), 174, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(horario.edad_fin.toString(), 194, newPDF.tw_ren, 0, "R");
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
       newPDF.pageBreak();
