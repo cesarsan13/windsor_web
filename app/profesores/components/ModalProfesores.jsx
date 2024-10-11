@@ -3,7 +3,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Inputs from "@/app/profesores/components/Inputs";
 import Image from "next/image";
-import iconos from "@/app/utils/iconos";
+import iconos from "@/app/utils/iconos"; 
 import { FaSpinner } from "react-icons/fa";
 
 function ModalProfesores({
