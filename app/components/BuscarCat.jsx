@@ -57,6 +57,10 @@ function BuscarCat({
             fetchedData = await getProductos(token, "");
             setTiutloInput(["Id", "Descripción"]);
             break;
+          case "productos_cond":
+            fetchedData = await getProductos(token, "");
+            setTiutloInput(["Cond", "Descripción"]);
+            break;
           case "horarios":
             fetchedData = await getHorarios(token, "");
             setTiutloInput(["numero", "horario"]);

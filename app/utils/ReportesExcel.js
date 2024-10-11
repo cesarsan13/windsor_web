@@ -7,6 +7,8 @@ export class ReporteExcel {
     this.worksheetData = [];
     this.condition = null; // Inicializa condition como propiedad de la clase
     this.conditionColumn = null; // Inicializa conditionColumn como propiedad de la clase
+    this.data = [];
+    this.columns = [];
     this.imprimeEncabezadoPrincipal();
   }
   imprimeEncabezadoPrincipal() {
@@ -70,5 +72,15 @@ export class ReporteExcel {
   setCondition(conditionColumn, conditionFunction) {
     this.conditionColumn = conditionColumn;
     this.condition = conditionFunction;
+  }
+  setColumnas(columns) {
+    this.columns = columns;
+  }
+  addData(row) {
+    this.data.push(row);
+  }
+  saltarFila() {
+    const emptyRow = new Array(this.columns.length).fill('');
+    this.addData(emptyRow);
   }
 }
