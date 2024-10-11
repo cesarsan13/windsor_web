@@ -10,7 +10,8 @@ function TimeLine({ cumpleañeros, mesActual }) {
     if (cumpleañeroRef.current) {
       cumpleañeroRef.current.scrollIntoView({
         behavior: "smooth",
-        block: "center",
+        inline: "center", // Centra el elemento horizontalmente
+        block: "nearest",
       });
     }
   }, []);
@@ -19,7 +20,7 @@ function TimeLine({ cumpleañeros, mesActual }) {
       <div className="w-full sticky top-0 flex justify-center">
         <h1 className="font-bold">Cumpleañeros del mes de {mesActual}</h1>
       </div>
-      <div className="overflow-ellipsis overflow-x-scroll p-5">
+      <div className="overflow-x-scroll p-5">
         <ul className="timeline md:timeline-horizontal">
           {cumpleañeros.map((alumno, idx) => {
             let nueva_fecha = new Date(alumno.fecha_nac);
@@ -56,7 +57,7 @@ function TimeLine({ cumpleañeros, mesActual }) {
                   <Image src={iconos.calendario} alt="Editar" width={22} />
                 </div>
                 <div
-                  className={`timeline-end timeline-box ${
+                  className={`text-center timeline-end timeline-box ${
                     es_cumpleañero
                       ? "font-bold border-green-500 bg-green-300  shadow-lg shadow-black"
                       : "font-thin"
