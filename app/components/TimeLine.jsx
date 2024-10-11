@@ -45,7 +45,9 @@ function TimeLine({ cumpleañeros, mesActual }) {
                 {idx > 0 ? <hr /> : <></>}
                 <div
                   className={`timeline-start  ${
-                    es_cumpleañero ? "font-bold" : "font-thin"
+                    es_cumpleañero
+                      ? "font-bold  shadow-sm   border-none rounded-lg bg-transparent "
+                      : "font-thin "
                   }`}
                 >
                   {fechaFormateada}
@@ -56,7 +58,7 @@ function TimeLine({ cumpleañeros, mesActual }) {
                 <div
                   className={`timeline-end timeline-box ${
                     es_cumpleañero
-                      ? "font-bold border-green-500 bg-green-300"
+                      ? "font-bold border-green-500 bg-green-300  shadow-lg shadow-black"
                       : "font-thin"
                   }`}
                 >
