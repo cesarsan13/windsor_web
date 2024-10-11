@@ -22,8 +22,8 @@ function TablaProductos({
                 <table className='table table-xs table-zebra w-full'>
                     <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
                         <tr>
-                            <th></th>
-                            <td className="w-[40%]" >Descripcion</td>
+                        <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
+                        <td className="w-[40%]" >Descripcion</td>
                             <td className="w-[15%]">Aplicacion</td>
                             <td className="w-[15%]">Costo</td>
                             <td className="w-[10%]">Recargo</td>

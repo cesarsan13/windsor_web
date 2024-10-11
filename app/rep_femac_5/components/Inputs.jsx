@@ -8,9 +8,10 @@ function Inputs({
   className,
   errors,
   tamañolabel,
-  maxLenght,
+  maxLength,
   isDisabled,
   setValue,
+  value,
 }) {
   return (
     <div className="flex flex-col">
@@ -18,12 +19,13 @@ function Inputs({
         className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
         {Titulo}
         <input
-          {...(maxLenght !== 0 && { maxLength: maxLenght })}
+          {...(maxLength !== 0 && { maxLength: maxLength })}
           name={name}
           id={name}
           type={type}
           className={`text-black dark:text-white ${className}`}
           disabled={isDisabled}
+          value={value} 
           onChange={(event) => setValue(event.target.value)}
         />
       </label>

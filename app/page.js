@@ -4,13 +4,17 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 const menu = require("@/public/home.jpg");
 const menu2 = require("@/public/home_movil.jpg");
-import { getEstadisticasTotales } from "@/app/utils/api/estadisticas/estadisticas";
+import {
+  getEstadisticasTotales,
+  getCumpleañosMes,
+} from "@/app/utils/api/estadisticas/estadisticas";
 import { getAlumnoXHorario } from "@/app/utils/api/horarios/horarios";
 import { getDataSex } from "@/app/utils/api/alumnos/alumnos";
 import CardsHome from "@/app/components/CardsHome";
 import LineChart from "@/app/components/LineChart";
 import BarChart from "@/app/components/BarChart";
 import PieChart from "@/app/components/PieChart";
+import TimeLine from "@/app/components/TimeLine";
 export default function Home() {
   const { data: session, status } = useSession();
   const [totalAlumnos, setTotalAlumnos] = useState("");
@@ -19,19 +23,29 @@ export default function Home() {
   const [horarioCantidadAlumnos, setHorarioCantidadAlumnos] = useState("");
   const [hData, setHData] = useState([]);
   const [sexData, setSexData] = useState([]);
+  const [Cumpleañeros, setCumpleañeros] = useState([]);
   const [isLoading, setisLoading] = useState(false);
-
+  const [mesActual, setMesActual] = useState("");
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
     }
     const fetchChart = async () => {
       setisLoading(true);
+
+      // Crear una nueva fecha
+      const fecha = new Date();
+      // Obtener el nombre del mes en español
+      const nombreMes = fecha.toLocaleString("es-ES", { month: "long" });
+      // Capitalizar la primera letra
+      setMesActual(nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1));
+
       const { token } = session.user;
-      const [res, dataAlHor, DataAlSex] = await Promise.all([
+      const [res, dataAlHor, DataAlSex, cumpleañerosMes] = await Promise.all([
         getEstadisticasTotales(token),
         getAlumnoXHorario(token),
         getDataSex(token),
+        getCumpleañosMes(token),
       ]);
       // console.log(res);
       const totalEstudiantes = res.promedio_alumnos_por_curso.reduce(
@@ -46,6 +60,7 @@ export default function Home() {
       setHData(dataAlHor);
       setSexData(DataAlSex);
       setAlPorGrado(promedioTotal);
+      setCumpleañeros(cumpleañerosMes);
       setHorarioCantidadAlumnos(res.horarios_populares);
       setisLoading(false);
     };
@@ -91,39 +106,41 @@ export default function Home() {
             <div className="grid gap-10">
               <div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 place-content-start">
-                  < CardsHome
+                  <CardsHome
                     titulo={`Total de Alumnos`}
                     value={totalAlumnos}
                     descripcion={`Alumnos inscritos en la institución.`}
                   />
-                  < CardsHome
+                  <CardsHome
                     titulo={`Total de Grados`}
                     value={totalCursos}
                     descripcion={`Grados disponibles para los estudiantes.`}
                   />
-                  < CardsHome
+                  <CardsHome
                     titulo={`Promedio Alumnos por Grado`}
                     value={totalAlPorGrado}
                     descripcion={`Reflejando la carga educativa.`}
                   />
-                  < CardsHome
+                  <CardsHome
                     titulo={`Grado con más Alumnos`}
                     value={horarioCantidadAlumnos?.horario || "N/A"}
-                    descripcion={horarioCantidadAlumnos
-                      ? `Con ${horarioCantidadAlumnos.total_estudiantes} alumnos cursandolo`
-                      : "No hay información disponible."}
+                    descripcion={
+                      horarioCantidadAlumnos
+                        ? `Con ${horarioCantidadAlumnos.total_estudiantes} alumnos cursandolo`
+                        : "No hay información disponible."
+                    }
                   />
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 justify-items-center">
-                <BarChart
-                  hData={hData}
-                  isLoading={isLoading}
-                />
-                <PieChart
-                  sexData={sexData}
-                  isLoading={isLoading}
-                />
+                <BarChart hData={hData} isLoading={isLoading} />
+                <PieChart sexData={sexData} isLoading={isLoading} />
+              </div>
+              <div className="grid grid-cols-1 gap-4  justify-items-center">
+                <TimeLine
+                  cumpleañeros={Cumpleañeros}
+                  mesActual={mesActual}
+                ></TimeLine>
               </div>
             </div>
           </div>

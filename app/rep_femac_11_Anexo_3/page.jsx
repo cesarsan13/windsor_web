@@ -33,6 +33,25 @@ function CobranzaPorAlumno() {
   const [pdfData, setPdfData] = useState("");
   const [FormaRepCobranzaporAlumno, setFormaReporteCobranzaporAlumno] = useState([]);
 
+  const getPrimerDiaDelMes = () => {
+    const fechaActual = new Date();
+    return new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1)
+      .toISOString()
+      .split('T')[0];
+  };
+
+  const getUltimoDiaDelMes = () => {
+    const fechaActual = new Date();
+    return new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0)
+      .toISOString()
+      .split('T')[0];
+  };
+
+  useEffect(() => {
+    setFecha_ini(getPrimerDiaDelMes());
+    setFecha_fin(getUltimoDiaDelMes());
+  }, []);
+
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
@@ -319,7 +338,7 @@ function CobranzaPorAlumno() {
                 Ver={handleVerClick}
               />
             </div>
-            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-auto">
+            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
             Reporte Cobranza por Alumno
             </h1>
           </div>
@@ -337,6 +356,7 @@ function CobranzaPorAlumno() {
                   errors={errors}
                   maxLength={11}
                   isDisabled={false}
+                  value={fecha_ini}
                   setValue={setFecha_ini}
                 />
               </div>
@@ -350,6 +370,7 @@ function CobranzaPorAlumno() {
                   errors={errors}
                   maxLength={11}
                   isDisabled={false}
+                  value={fecha_fin}
                   setValue={setFecha_fin}
                 />
               </div>

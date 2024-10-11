@@ -21,7 +21,7 @@ function Busqueda({
         <input
           id="tb_id"
           className="input input-bordered input-sm md:input-md w-full sm:w-full dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 text-right"
-          placeholder="Id..."
+          placeholder="Núm..."
           onChange={(event) => handleBusquedaChange(event)}
           onKeyDown={(evt) => {
             soloEnteros(evt);

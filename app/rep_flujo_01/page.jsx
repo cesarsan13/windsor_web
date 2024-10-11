@@ -271,17 +271,20 @@ function Rep_Flujo_01() {
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
       />
-      <div className="container w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
-        <div className="flex justify-start p-3 ">
-          <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+        <div className="flex flex-col justify-start p-3">
+          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
+            <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
+              <Acciones
+                home={home}
+                Ver={handleVerClick}
+              />
+            </div>
+            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
             Reporte Adeudos Pendientes
           </h1>
         </div>
-        <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
-          <div className="col-span-1 flex flex-col">
-            <Acciones home={home} Ver={handleVerClick} />
-          </div>
-          <div className="col-span-7">
+        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
             <div className="flex flex-col h-full space-y-4">
               <div className="flex flex-col md:flex-row lg:space-x-4">
                 <Inputs

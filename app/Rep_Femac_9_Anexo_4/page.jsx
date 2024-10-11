@@ -32,6 +32,25 @@ function RelaciondeFacturas() {
   const [pdfData, setPdfData] = useState("");
   const [FormaRepRelaciondeFacturas, setFormaRelaciondeFacturas] = useState([]);
 
+  const getPrimerDiaDelMes = () => {
+    const fechaActual = new Date();
+    return new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1)
+      .toISOString()
+      .split('T')[0];
+  };
+
+  const getUltimoDiaDelMes = () => {
+    const fechaActual = new Date();
+    return new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0)
+      .toISOString()
+      .split('T')[0];
+  };
+
+  useEffect(() => {
+    setFecha_cobro_ini(getPrimerDiaDelMes());
+    setFecha_cobro_fin(getUltimoDiaDelMes());
+  }, []);
+
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
@@ -254,7 +273,7 @@ function RelaciondeFacturas() {
               />
             </div>
 
-            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-auto">
+            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Relación de Facturas
             </h1>
           </div>
@@ -273,6 +292,7 @@ function RelaciondeFacturas() {
                     errors={errors}
                     maxLength={15}
                     isDisabled={false}
+                    value={fecha_cobro_ini}
                     setValue={setFecha_cobro_ini}
                   />
                 </div>
@@ -286,6 +306,7 @@ function RelaciondeFacturas() {
                     errors={errors}
                     maxLength={15}
                     isDisabled={false}
+                    value={fecha_cobro_fin}
                     setValue={setFecha_cobro_fin}
                   />
                 </div>

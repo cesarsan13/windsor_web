@@ -26,8 +26,8 @@ function TablaCajeros({
           <table className="table table-xs table-zebra w-full">
             <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
               <tr>
-                <th className="sm:w-[10%]"></th>
-                <td className="sm:w-[35%]">Nombre</td>
+              <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
+              <td className="sm:w-[35%]">Nombre</td>
                 <td className="w-[20%]">Telefono</td>
                 <td className="w-[30%]">Correo</td>
                 <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Ver</th>

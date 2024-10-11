@@ -30,6 +30,24 @@ function AltasBajasAlumnos() {
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const { formState: { errors }, } = useForm({});
+  const getPrimerDiaDelMes = () => {
+    const fechaActual = new Date();
+    return new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1)
+      .toISOString()
+      .split('T')[0];
+  };
+
+  const getUltimoDiaDelMes = () => {
+    const fechaActual = new Date();
+    return new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0)
+      .toISOString()
+      .split('T')[0];
+  };
+
+  useEffect(() => {
+    setFecha_ini(getPrimerDiaDelMes());
+    setFecha_fin(getUltimoDiaDelMes());
+  }, []);
 
 
   const handleOptionChange = (event) => {
@@ -202,7 +220,7 @@ function AltasBajasAlumnos() {
               />
             </div>
 
-            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-auto">
+            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Altas y Bajas de Alumnos
             </h1>
           </div>
@@ -221,6 +239,7 @@ function AltasBajasAlumnos() {
                     errors={errors}
                     maxLength={15}
                     isDisabled={false}
+                    value={fecha_ini}
                     setValue={setFecha_ini}
                   />
                 </div>
@@ -234,6 +253,7 @@ function AltasBajasAlumnos() {
                     errors={errors}
                     maxLength={15}
                     isDisabled={false}
+                    value={fecha_fin}
                     setValue={setFecha_fin}
                   />
                 </div>
