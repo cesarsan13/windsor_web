@@ -15,6 +15,7 @@ import LineChart from "@/app/components/LineChart";
 import BarChart from "@/app/components/BarChart";
 import PieChart from "@/app/components/PieChart";
 import TimeLine from "@/app/components/TimeLine";
+import SliderControl from "@/app/components/SliderControl";
 export default function Home() {
   const { data: session, status } = useSession();
   const [totalAlumnos, setTotalAlumnos] = useState("");
@@ -92,14 +93,12 @@ export default function Home() {
             height={""}
           />
 
-          <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-            <a href="#slide2" className="btn btn-circle">
-              ❮
-            </a>
-            <a href="#slide2" className="btn btn-circle">
-              ❯
-            </a>
-          </div>
+          <SliderControl
+            text1={"❮"}
+            text2={"❯"}
+            ref1={"slide2"}
+            ref2={"slide2"}
+          ></SliderControl>
         </div>
         <div id="slide2" className="carousel-item relative w-full">
           <div className="container">
@@ -144,14 +143,12 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-            <a href="#slide1" className="btn btn-circle">
-              ❮
-            </a>
-            <a href="#slide1" className="btn btn-circle">
-              ❯
-            </a>
-          </div>
+          <SliderControl
+            text1={"❮"}
+            text2={"❯"}
+            ref1={"slide1"}
+            ref2={"slide1"}
+          ></SliderControl>
         </div>
       </div>
     </main>
