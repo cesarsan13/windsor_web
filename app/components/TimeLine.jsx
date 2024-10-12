@@ -66,7 +66,7 @@ function TimeLine({ cumpleañeros, mesActual }) {
                 <div
                   className={`text-center timeline-end timeline-box ${
                     es_cumpleañero
-                      ? "font-bold border-slate-500 bg-slate-300  shadow-lg shadow-black"
+                      ? "font-bold border-slate-400 bg-slate-100  shadow-lg "
                       : "font-thin"
                   }`}
                 >
