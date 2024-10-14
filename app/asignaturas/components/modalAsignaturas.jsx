@@ -119,7 +119,7 @@ function ModalAsignaturas({
                 <Inputs
                   dataType={"int"}
                   name={"numero"}
-                  tamañolabel={"sm:w-2/4"}
+                  tamañolabel={"w-2/4"}
                   className={"w-3/6  text-right uppercase"}
                   Titulo={"Numero: "}
                   type={"inputNum"}
@@ -144,7 +144,7 @@ function ModalAsignaturas({
                   isNumero={false}
                   errors={errors}
                   register={register}
-                  message={"Asignatura requerido"}
+                  message={"Asignatura requerida"}
                   maxLenght={100}
                   isDisabled={isDisabled}
                   handleBlur={handleBlur}
@@ -207,7 +207,7 @@ function ModalAsignaturas({
                     isNumero={false}
                     errors={errors}
                     register={register}
-                    message={"Area requerido"}
+                    message={"Area requerida"}
                     maxLenght={15}
                     isDisabled={isDisabled}
                     handleBlur={handleBlur}
@@ -239,7 +239,7 @@ function ModalAsignaturas({
                 
               </div>
 
-              <div className="flex flex-row w-full gap-x-5">
+              <div className="flex flex-row w-full gap-x-5 gap-y-5 max-[420px]:flex-wrap">
                 <div className="flex flex-col w-3/6">
                     <Inputs
                       dataType={"int"}
@@ -252,23 +252,23 @@ function ModalAsignaturas({
                       errors={errors}
                       register={register}
                       maxLenght={6}
-                      message={"Evaluaciones requerido"}
+                      message={"Evaluaciones requerida"}
                       isDisabled={isDisabled}
                       handleBlur={handleBlurOut}
                     />
                 </div>
-                <div className="flex flex-col w-3/6">
+                <div className="flex flex-col max-[420px]:w-full w-3/6">
                   <Inputs
                     dataType={"boolean"}
                     name={"actividad"}
-                    tamañolabel={"w-full"}
-                    className={"w-2/6 "}
+                    tamañolabel={"max-[420px]:w-full"}
+                    className={"max-[420px]:w-full w-2/6 "}
                     Titulo={"Evaluación por Actividades."}
                     type={"checkbox"}
                     requerido={false}
                     errors={errors}
                     register={register}
-                    message={"Evaluación por Actividades requerido"}
+                    message={"Evaluación por Actividades requerida"}
                     maxLenght={5}
                     isDisabled={isDisabled}
                     handleBlur={handleBlur}
