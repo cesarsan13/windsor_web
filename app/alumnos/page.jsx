@@ -544,8 +544,8 @@ function Alumnos() {
     );
     if (res.status) {
       if (accion === "Alta") {
+        data.numero = res.data;
         const nuevosAlumnos = { ...data };
-
         setAlumnos([...alumnos, nuevosAlumnos]);
         if (!bajas) {
           setAlumnosFiltrados([...alumnosFiltrados, nuevosAlumnos]);

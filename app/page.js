@@ -1,21 +1,22 @@
 "use client";
+import React from "react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import Image from "next/image";
-const menu = require("@/public/home.jpg");
-const menu2 = require("@/public/home_movil.jpg");
 import {
   getEstadisticasTotales,
   getCumpleañosMes,
 } from "@/app/utils/api/estadisticas/estadisticas";
 import { getAlumnoXHorario } from "@/app/utils/api/horarios/horarios";
 import { getDataSex } from "@/app/utils/api/alumnos/alumnos";
-import CardsHome from "@/app/components/CardsHome";
-import LineChart from "@/app/components/LineChart";
-import BarChart from "@/app/components/BarChart";
-import PieChart from "@/app/components/PieChart";
-import TimeLine from "@/app/components/TimeLine";
-import SliderControl from "@/app/components/SliderControl";
+
+const CardsHome = React.lazy(() => import("@/app/components/CardsHome"));
+const BarChart = React.lazy(() => import("@/app/components/BarChart"));
+const PieChart = React.lazy(() => import("@/app/components/PieChart"));
+const TimeLine = React.lazy(() => import("@/app/components/TimeLine"));
+const SliderControl = React.lazy(() =>
+  import("@/app/components/SliderControl")
+);
+
 export default function Home() {
   const { data: session, status } = useSession();
   const [totalAlumnos, setTotalAlumnos] = useState("");
@@ -26,9 +27,10 @@ export default function Home() {
   const [sexData, setSexData] = useState([]);
   const [Cumpleañeros, setCumpleañeros] = useState([]);
   const [isLoading, setisLoading] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
   const [mesActual, setMesActual] = useState("");
   useEffect(() => {
-    if (status === "loading" || !session) {
+    if (status === "loading" || !session || dataLoaded) {
       return;
     }
     const fetchChart = async () => {
@@ -64,6 +66,7 @@ export default function Home() {
       setCumpleañeros(cumpleañerosMes);
       setHorarioCantidadAlumnos(res.horarios_populares);
       setisLoading(false);
+      setDataLoaded(true);
     };
     fetchChart();
   }, [session, status]);
@@ -76,7 +79,7 @@ export default function Home() {
   return (
     <main className="flex flex-col items-center justify-between h-[80vh] w-full max-w-screen-xl">
       <div className="carousel w-full ">
-        <div id="slide1" className="carousel-item relative w-full">
+        {/* <div id="slide1" className="carousel-item relative w-full">
           <Image
             alt="Menu"
             src={menu}
@@ -99,7 +102,7 @@ export default function Home() {
             ref1={"slide2"}
             ref2={"slide2"}
           ></SliderControl>
-        </div>
+        </div> */}
         <div id="slide2" className="carousel-item relative w-full">
           <div className="container">
             <div className="grid gap-10">
