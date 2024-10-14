@@ -230,3 +230,12 @@ export const Fecha_AMD = (Tw_Fecha) => {
     Format(Tw_Fecha.Day, "0#")
   );
 };
+
+export const snToBool = (string) =>{
+  console.log("Valor SN => ",string);
+  if(string == "Si" || string == true){
+    return true;
+  }else{
+    return false;
+  }
+}
