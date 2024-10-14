@@ -115,7 +115,7 @@ function Menu({ vertical, toogle }) {
               <Link href="/formfact" onClick={toogle}>Formato Variable</Link>
             </li>
             <li>
-              <Link href="/profesores" onClick={toogle}>Profesores</Link>
+              <Link href="/asignaturas" onClick={toogle}>Asignaturas</Link>
             </li>
           </ul>
         </details>
@@ -266,6 +266,9 @@ function Menu({ vertical, toogle }) {
           </li>
           <li>
             <Link href="/formfact" onClick={handleClick}>Formato Variable</Link>
+          </li>
+          <li>
+            <Link href="/asignaturas" onClick={handleClick}>Asignaturas</Link>
           </li>
           <li>
             <Link href="/profesores" onClick={handleClick}>Profesores</Link>

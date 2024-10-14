@@ -230,6 +230,15 @@ export const Fecha_AMD = (Tw_Fecha) => {
     Format(Tw_Fecha.Day, "0#")
   );
 };
+
+export const snToBool = (string) =>{
+  console.log("Valor SN => ",string);
+  if(string == "Si" || string == true){
+    return true;
+  }else{
+    return false;
+  }
+}
 export const validarRFC = (rfc) => {
   const regexRFC =
     /^([A-ZÑ&]{3,4})\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])[A-Z\d]{2}\d$/;
