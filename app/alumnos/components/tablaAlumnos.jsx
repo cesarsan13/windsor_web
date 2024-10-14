@@ -1,6 +1,6 @@
 "use client";
 import Loading from "@/app/components/loading";
-import NoData from "@/app/components/noData";
+import NoData from "@/app/components/NoData";
 import { getFotoAlumno } from "@/app/utils/api/alumnos/alumnos";
 import { calculaDigitoBvba, poneCeros } from "@/app/utils/globalfn";
 import Image from "next/image";
@@ -61,37 +61,38 @@ function TablaAlumnos({
                   {item.numero}
                 </th>
                 <td className="w-[40%] max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap pt-[.10rem] pb-[.10rem]">
-                {`${item.a_nombre} ${item.a_paterno} ${item.a_materno}`}</td>
-                <td className=" sm:table-cell pt-[.10rem] pb-[.10rem] truncate">{item.horario_1_nombre}</td>
+                  {`${item.a_nombre} ${item.a_paterno} ${item.a_materno}`}
+                </td>
+                <td className=" sm:table-cell pt-[.10rem] pb-[.10rem] truncate">
+                  {item.horario_1_nombre}
+                </td>
 
-                      <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
-                        <div
-                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
-                      data-tip={`Ver`}
-                      onClick={(evt) => tableAction(evt, item, `Ver`)}
-                    >
-                      <Image src={iconos.ver} alt="Editar" />
-                    </div>
-                    </th>
-                    <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
-
-                    <div
-                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
-                      data-tip={`Editar`}
-                      onClick={(evt) => tableAction(evt, item, `Editar`)}
-                    >
-                      <Image src={iconos.editar} alt="Editar" />
-                    </div>
-                    </th>
-                    <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
-
-                    <div
-                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center" 
-                      data-tip={`Eliminar`}
-                      onClick={(evt) => tableAction(evt, item, "Eliminar")}
-                    >
-                      <Image src={iconos.eliminar} alt="Editar" />
-                    </div>
+                <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
+                  <div
+                    className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
+                    data-tip={`Ver`}
+                    onClick={(evt) => tableAction(evt, item, `Ver`)}
+                  >
+                    <Image src={iconos.ver} alt="Editar" />
+                  </div>
+                </th>
+                <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
+                  <div
+                    className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
+                    data-tip={`Editar`}
+                    onClick={(evt) => tableAction(evt, item, `Editar`)}
+                  >
+                    <Image src={iconos.editar} alt="Editar" />
+                  </div>
+                </th>
+                <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
+                  <div
+                    className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
+                    data-tip={`Eliminar`}
+                    onClick={(evt) => tableAction(evt, item, "Eliminar")}
+                  >
+                    <Image src={iconos.eliminar} alt="Editar" />
+                  </div>
                 </th>
               </tr>
             ))}
