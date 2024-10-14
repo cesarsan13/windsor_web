@@ -44,11 +44,6 @@ function Inputs({
                 {arreglo.descripcion}
               </option>
             ))}
-            {/* <option value={"Activo"}>Activo</option>
-            <option value={"Enfermo"}>Enfermo</option>
-            <option value={"Permiso"}>Permiso</option>
-            <option value={"Cartera"}>Cartera</option>
-            <option value={"Baja"}>Baja</option> */}
           </select>
         </label>
         {errors[name] && (

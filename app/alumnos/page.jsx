@@ -310,7 +310,7 @@ function Alumnos() {
     setCapturedImage(null);
     const { token } = session.user;
     reset({
-      numero: 0,
+      numero: "",
       nombre: "",
       a_paterno: "",
       a_materno: "",
@@ -404,10 +404,10 @@ function Alumnos() {
     setcond1({});
     setcond2({});
     setGrado({});
-    let siguienteId = await getLastAlumnos(token);
-    siguienteId = Number(siguienteId + 1);
-    setCurrentId(siguienteId);
-    setAlumno({ numero: siguienteId, fecha_inscripcion: fecha_hoy });
+    // // let siguienteId = await getLastAlumnos(token);
+    // // siguienteId = Number(siguienteId + 1);
+    // // setCurrentId(siguienteId);
+    setAlumno({ numero: "", fecha_inscripcion: fecha_hoy });
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);
@@ -416,7 +416,7 @@ function Alumnos() {
   };
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
-    data.numero = currentID;
+    accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
     let res = null;
     if (accion === "Eliminar") {
       showModal(false);

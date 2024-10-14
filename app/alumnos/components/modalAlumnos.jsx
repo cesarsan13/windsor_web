@@ -67,7 +67,7 @@ function ModalAlumnos({
     }
     setTitulo(
       accion === "Alta"
-        ? `Nuevo Alumno: ${currentID}`
+        ? `Nuevo Alumno`
         : accion === "Editar"
         ? `Editar Alumno: ${currentID}`
         : accion === "Eliminar"
@@ -78,17 +78,6 @@ function ModalAlumnos({
     // console.log(alumno);
   }, [accion, currentID]);
   const handleBlur = (evt, datatype) => {
-    // if (evt.target.name === "rfc_factura") {
-    //   if (!validarRFC(evt.target.value)) {
-    //     showSwal(
-    //       "¡Error de Validacion!",
-    //       "Intenta con un RFC válido",
-    //       "error",
-    //       "my_modal_3"
-    //     );
-    //     return;
-    //   }
-    // }
     if (evt.target.value === "") return;
     datatype === "int"
       ? setAlumno((alumno) => ({
@@ -169,7 +158,7 @@ function ModalAlumnos({
                     className={"rounded block grow text-right"}
                     Titulo={"Numero: "}
                     type={"text"}
-                    requerido={true}
+                    requerido={accion === "Alta" ? false : true}
                     errors={errors}
                     register={register}
                     message={"id Requerido"}
