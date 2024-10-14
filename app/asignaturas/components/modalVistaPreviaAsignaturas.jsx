@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import iconos from '@/app/utils/iconos';
 
-function ModalVistaPreviaProductos({ pdfPreview, pdfData, PDF, Excel }) {
+function ModalVistaPreviaAsignaturas({ pdfPreview, pdfData, PDF, Excel }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
@@ -15,14 +15,14 @@ function ModalVistaPreviaProductos({ pdfPreview, pdfData, PDF, Excel }) {
     }, [pdfPreview, pdfData]);
 
     return (
-        <dialog id='modalVProducto' className='modal'>
+        <dialog id='modalVAsignatura' className='modal'>
             <div className='modal-box w-full max-w-4xl h-full'>
                 <button className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black'
-                    onClick={() => document.getElementById("modalVProducto").close()}
+                    onClick={() => document.getElementById("modalVAsignatura").close()}
                 >
                     ✕
                 </button>
-                <h3 className='font-bold text-lg mb-5 dark:text-white text-black'>Vista Previa Productos</h3>
+                <h3 className='font-bold text-lg mb-5 dark:text-white text-black'>Vista Previa Asignaturas</h3>
                 <div className='flex flex-row space-x-4'>
                 <Tooltip Titulo={"Imprimir PDF"} posicion={"tooltip-top"}>
             <button
@@ -61,4 +61,4 @@ function ModalVistaPreviaProductos({ pdfPreview, pdfData, PDF, Excel }) {
     )
 }
 
-export default ModalVistaPreviaProductos
+export default ModalVistaPreviaAsignaturas

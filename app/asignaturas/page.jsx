@@ -209,10 +209,10 @@ function Asignaturas() {
       res = await guardarAsinatura(session.user.token, data, accion);
       if (res.status) {
         if (accion === "Alta") {
-          const nuevosProductos = { currentID, ...data };
-          setAsignaturas([...asignaturas, nuevosProductos]);
+          const nuevasAsignaturas = { currentID, ...data };
+          setAsignaturas([...asignaturas, nuevasAsignaturas]);
           if (!bajas) {
-            setAsignaturasFiltrados([...asignaturasFiltrados, nuevosProductos]);
+            setAsignaturasFiltrados([...asignaturasFiltrados, nuevasAsignaturas]);
           }
         }
         if (accion === "Eliminar" || accion === "Editar") {
@@ -271,8 +271,8 @@ function Asignaturas() {
     };
     const showModalVista = (show) => {
         show
-            ? document.getElementById("modalVProducto").showModal()
-            : document.getElementById("modalVProducto").close();
+            ? document.getElementById("modalVAsignatura").showModal()
+            : document.getElementById("modalVAsignatura").close();
     };
     const home = () => {
         router.push("/");
