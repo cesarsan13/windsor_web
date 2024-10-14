@@ -1,9 +1,8 @@
 import Loading from "@/app/components/loading";
-import NoData from "@/app/components/NoData";
 import iconos from "@/app/utils/iconos";
 import Image from "next/image";
 import React from "react";
-
+import NoData from "@/app/components/NoData";
 function TablaActividades({
   ActividadesFiltradas,
   isLoading,
