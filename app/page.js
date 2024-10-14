@@ -2,13 +2,15 @@
 import React from "react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import {
   getEstadisticasTotales,
   getCumpleañosMes,
 } from "@/app/utils/api/estadisticas/estadisticas";
 import { getAlumnoXHorario } from "@/app/utils/api/horarios/horarios";
 import { getDataSex } from "@/app/utils/api/alumnos/alumnos";
-
+const menu = require("@/public/home.jpg");
+const menu2 = require("@/public/home_movil.jpg");
 const CardsHome = React.lazy(() => import("@/app/components/CardsHome"));
 const BarChart = React.lazy(() => import("@/app/components/BarChart"));
 const PieChart = React.lazy(() => import("@/app/components/PieChart"));
@@ -79,31 +81,7 @@ export default function Home() {
   return (
     <main className="flex flex-col items-center justify-between h-[80vh] w-full max-w-screen-xl">
       <div className="carousel w-full ">
-        {/* <div id="slide1" className="carousel-item relative w-full">
-          <Image
-            alt="Menu"
-            src={menu}
-            className="hidden md:block h-full w-full "
-            width={""}
-            height={""}
-          />
-
-          <Image
-            alt="Menu"
-            src={menu2}
-            className="w-full h-full md:hidden"
-            width={""}
-            height={""}
-          />
-
-          <SliderControl
-            text1={"❮"}
-            text2={"❯"}
-            ref1={"slide2"}
-            ref2={"slide2"}
-          ></SliderControl>
-        </div> */}
-        <div id="slide2" className="carousel-item relative w-full">
+        <div id="slide1" className="carousel-item relative w-full">
           <div className="container">
             <div className="grid gap-10">
               <div>
@@ -146,6 +124,30 @@ export default function Home() {
               </div>
             </div>
           </div>
+          <SliderControl
+            text1={"❮"}
+            text2={"❯"}
+            ref1={"slide2"}
+            ref2={"slide2"}
+          ></SliderControl>
+        </div>
+        <div id="slide2" className="carousel-item relative w-full">
+          <Image
+            alt="Menu"
+            src={menu}
+            className="hidden md:block h-full w-full "
+            width={""}
+            height={""}
+          />
+
+          <Image
+            alt="Menu"
+            src={menu2}
+            className="w-full h-full md:hidden"
+            width={""}
+            height={""}
+          />
+
           <SliderControl
             text1={"❮"}
             text2={"❯"}
