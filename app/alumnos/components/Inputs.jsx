@@ -16,6 +16,8 @@ function Inputs({
   isDisabled,
   handleBlur,
   arreglos,
+  pattern,
+  message_pattern,
 }) {
   if (type === "select") {
     return (
@@ -76,6 +78,9 @@ function Inputs({
                 value: maxLenght,
                 message: `El campo ${name} no puede tener más de ${maxLenght} caracteres`,
               },
+              ...(pattern && {
+                pattern: { value: pattern, message: message_pattern },
+              }),
               ...(requerido && { required: message }),
             })}
             {...(dataType === "int" ||

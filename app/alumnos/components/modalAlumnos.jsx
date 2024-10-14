@@ -1,4 +1,9 @@
-import { soloEnteros, soloDecimales, pone_ceros } from "@/app/utils/globalfn";
+import {
+  soloEnteros,
+  soloDecimales,
+  pone_ceros,
+  validarRFC,
+} from "@/app/utils/globalfn";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import { useState, useEffect, useRef } from "react";
 import Inputs from "@/app/alumnos/components/Inputs";
@@ -64,25 +69,36 @@ function ModalAlumnos({
       accion === "Alta"
         ? `Nuevo Alumno: ${currentID}`
         : accion === "Editar"
-          ? `Editar Alumno: ${currentID}`
-          : accion === "Eliminar"
-            ? `Eliminar Alumno: ${currentID}`
-            : `Ver Alumno: ${currentID}`
+        ? `Editar Alumno: ${currentID}`
+        : accion === "Eliminar"
+        ? `Eliminar Alumno: ${currentID}`
+        : `Ver Alumno: ${currentID}`
     );
     // const alj = JSON.stringify(alumno);
     // console.log(alumno);
   }, [accion, currentID]);
   const handleBlur = (evt, datatype) => {
+    // if (evt.target.name === "rfc_factura") {
+    //   if (!validarRFC(evt.target.value)) {
+    //     showSwal(
+    //       "¡Error de Validacion!",
+    //       "Intenta con un RFC válido",
+    //       "error",
+    //       "my_modal_3"
+    //     );
+    //     return;
+    //   }
+    // }
     if (evt.target.value === "") return;
     datatype === "int"
       ? setAlumno((alumno) => ({
-        ...alumno,
-        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-      }))
+          ...alumno,
+          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+        }))
       : setAlumno((alumno) => ({
-        ...alumno,
-        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-      }));
+          ...alumno,
+          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+        }));
   };
   const handleTabs = (num) => {
     setActiveTab(num);
@@ -97,10 +113,11 @@ function ModalAlumnos({
             <h3 className="font-bold text-lg">{titulo}</h3>
             <div className="flex space-x-2 items-center">
               <div
-                className={`tooltip tooltip-bottom ${accion === "Ver"
-                  ? "hover:cursor-not-allowed hidden"
-                  : "hover:cursor-pointer"
-                  }`}
+                className={`tooltip tooltip-bottom ${
+                  accion === "Ver"
+                    ? "hover:cursor-not-allowed hidden"
+                    : "hover:cursor-pointer"
+                }`}
                 data-tip="Guardar"
               >
                 <button
@@ -140,8 +157,9 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 1 ? "tab-active " : ""
-                  }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
+                  activeTab === 1 ? "tab-active " : ""
+                }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6 px-3">
                   <Inputs
@@ -416,8 +434,9 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 2 ? "tab-active " : ""
-                  }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
+                  activeTab === 2 ? "tab-active " : ""
+                }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <Inputs
@@ -507,7 +526,7 @@ function ModalAlumnos({
                     tamañolabel={""}
                     className={"rounded block grow"}
                     Titulo={"Email: "}
-                    type={"email"}
+                    type={"text"}
                     requerido={true}
                     isNumero={false}
                     errors={errors}
@@ -516,6 +535,8 @@ function ModalAlumnos({
                     maxLenght={255}
                     isDisabled={isDisabled}
                     handleBlur={handleBlur}
+                    pattern={/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/}
+                    message_pattern={"Formato de Correo inválido"}
                   />
                 </div>
               </div>
@@ -531,8 +552,9 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 3 ? "tab-active " : ""
-                  }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
+                  activeTab === 3 ? "tab-active " : ""
+                }`}
               >
                 <div>
                   {isCameraOn && (
@@ -592,8 +614,9 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 4 ? "tab-active " : ""
-                  }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
+                  activeTab === 4 ? "tab-active " : ""
+                }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <BuscarCat
@@ -625,8 +648,9 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 5 ? "tab-active " : ""
-                  }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
+                  activeTab === 5 ? "tab-active " : ""
+                }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <Inputs
@@ -742,8 +766,9 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 6 ? "tab-active " : ""
-                  }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
+                  activeTab === 6 ? "tab-active " : ""
+                }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <Inputs
@@ -920,8 +945,9 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 7 ? "tab-active " : ""
-                  }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
+                  activeTab === 7 ? "tab-active " : ""
+                }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <Inputs
@@ -944,7 +970,7 @@ function ModalAlumnos({
                     dataType={"string"}
                     name={"rfc_factura"}
                     tamañolabel={""}
-                    className={"rounded block grow"}
+                    className={"rounded block grow uppercase"}
                     Titulo={"RFC Factura: "}
                     type={"text"}
                     requerido={false}
@@ -955,6 +981,10 @@ function ModalAlumnos({
                     maxLenght={50}
                     isDisabled={isDisabled}
                     handleBlur={handleBlur}
+                    pattern={
+                      /^([A-ZÑ&]{3,4})\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])[A-Z\d]{2}[A-Z\d]{1}$/i
+                    }
+                    message_pattern={"Formato de RFC Inválido"}
                   />
                   <Inputs
                     dataType={"string"}
@@ -1050,8 +1080,9 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 8 ? "tab-active " : ""
-                  }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
+                  activeTab === 8 ? "tab-active " : ""
+                }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <Inputs
@@ -1187,7 +1218,7 @@ function ModalAlumnos({
                     name={"nom_avi"}
                     tamañolabel={""}
                     className={"rounded block grow"}
-                    Titulo={"Avisar: "}
+                    Titulo={"Avisar:"}
                     type={"text"}
                     requerido={false}
                     isNumero={false}
