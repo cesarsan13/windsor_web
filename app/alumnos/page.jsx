@@ -192,6 +192,7 @@ function Alumnos() {
       rfc_factura: alumno.rfc_factura,
       estatus: alumno.estatus,
       escuela: alumno.escuela,
+      grupo: alumno.grupo,
       referencia: alumno.referencia,
     },
   });
@@ -285,6 +286,7 @@ function Alumnos() {
       rfc_factura: alumno.rfc_factura,
       estatus: alumno.estatus,
       escuela: alumno.escuela,
+      grupo: alumno.grupo,
       referencia: alumno.referencia,
     });
   }, [alumno, reset]);
@@ -395,6 +397,7 @@ function Alumnos() {
       rfc_factura: "",
       estatus: "",
       escuela: "",
+      grupo: "",
       referencia: 0,
       baja: "",
     });
@@ -549,6 +552,7 @@ function Alumnos() {
     formData.append("rfc_factura", data.rfc_factura || "");
     formData.append("estatus", data.estatus || "");
     formData.append("escuela", data.escuela || "");
+    formData.append("grupo", grado.horario || "");
     if (condicion === true) {
       const blob = dataURLtoBlob(capturedImage);
       formData.append(
@@ -802,8 +806,8 @@ function Alumnos() {
         PDF={imprimePDF}
         Excel={ImprimeExcel}
       />
-<div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
-<div className="flex flex-col justify-start p-3">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+        <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
               <Acciones

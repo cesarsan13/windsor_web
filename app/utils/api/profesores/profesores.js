@@ -132,3 +132,20 @@ export const ImprimirExcel = (configuracion) => {
     newExcel.addData(body);
     newExcel.guardaReporte(nombre);
 }
+
+export const getContraseñaProfe = async (token, grupo, materia) => {
+    let url = `${process.env.DOMAIN_API}api/proceso/profesor-contraseña`
+    const res = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({
+            materia: materia,
+            grupo: grupo
+        }),
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+    });
+    const resJson = await res.json();
+    return resJson;
+};

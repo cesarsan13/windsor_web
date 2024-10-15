@@ -189,6 +189,9 @@ function Menu({ vertical, toogle }) {
             <li>
               <Link href="/cancelacion_recibos" onClick={toogle}>Cancelación de Recibo</Link>
             </li>
+            <li>
+              <Link href="/c_calificaciones" onClick={toogle}>Calificaciones</Link>
+            </li>
           </ul>
         </details>
       </li>
@@ -303,6 +306,9 @@ function Menu({ vertical, toogle }) {
           </li>
           <li>
             <Link href="/cancelacion_recibos" onClick={handleClick}>Cancelación de Recibo</Link>
+          </li>
+          <li>
+            <Link href="/c_calificaciones" onClick={handleClick}>Calificaciones</Link>
           </li>
           {/* 
           <li>

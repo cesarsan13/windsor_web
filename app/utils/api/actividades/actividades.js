@@ -1,6 +1,22 @@
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
 
+export const getActividadSecuencia = async (token, materia) => {
+  let url = `${process.env.DOMAIN_API}api/proceso/actividad-secuencia`
+  const res = await fetch(url, {
+    method: 'POST',
+    body: JSON.stringify({
+      materia: materia
+    }),
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+  const resJson = await res.json();
+  return resJson;
+};
+
 export const getActividades = async (token, baja) => {
   let url = "";
   baja
@@ -72,8 +88,8 @@ export const Imprimir = (configuracion) => {
   const { body } = configuracion;
   Enca1(newPDF);
   body.forEach((actividad) => {
-    newPDF.ImpPosX(actividad.materia.toString(),24,newPDF.tw_ren,0,"R")
-    newPDF.ImpPosX(actividad.descripcion.toString(),38,newPDF.tw_ren,0,"L")
+    newPDF.ImpPosX(actividad.materia.toString(), 24, newPDF.tw_ren, 0, "R")
+    newPDF.ImpPosX(actividad.descripcion.toString(), 38, newPDF.tw_ren, 0, "L")
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
       newPDF.pageBreak();
@@ -98,11 +114,11 @@ const Enca1 = (doc) => {
     doc.tiene_encabezado = true;
   }
 };
-export const ImprimirExcel = (configuracion)=>{
+export const ImprimirExcel = (configuracion) => {
   const newExcel = new ReporteExcel(configuracion)
-  const {columns}=configuracion
-  const {body}=configuracion
-  const {nombre}=configuracion
+  const { columns } = configuracion
+  const { body } = configuracion
+  const { nombre } = configuracion
   newExcel.setColumnas(columns)
   newExcel.addData(body);
   newExcel.guardaReporte(nombre)

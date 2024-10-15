@@ -95,9 +95,9 @@ function Comentarios() {
         : true;
       const coincideComentario1 = tb_comentario1
         ? formaComentarios["comentario_1"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_comentario1.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_comentario1.toLowerCase())
         : true;
       return coincideID && coincideComentario1;
     });
@@ -175,8 +175,8 @@ function Comentarios() {
         comentarios.generales == 1
           ? "Si"
           : comentarios.generales == 0
-          ? "No"
-          : "No valido";
+            ? "No"
+            : "No valido";
       reporte.ImpPosX(resultado.toString(), 270, reporte.tw_ren, 0, "L");
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRenH) {
@@ -359,7 +359,7 @@ function Comentarios() {
         Excel={ImprimeExcel}
       />
 
-<div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
@@ -370,7 +370,7 @@ function Comentarios() {
                 // ImprimeExcel={ImprimeExcel}
                 home={home}
                 Ver={handleVerClick}
-                // CerrarView={CerrarView}
+              // CerrarView={CerrarView}
               ></Acciones>
             </div>
 
