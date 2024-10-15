@@ -15,11 +15,11 @@ import {
 } from "../utils/api/comentarios/comentarios";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { siguiente } from "../utils/api/comentarios/comentarios";
+import { siguiente } from "@/app/utils/api/comentarios/comentarios";
 import "jspdf-autotable";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import ModalVistaPreviaComentarios from "./components/modalVistaPreviaComentarios";
+import ModalVistaPreviaComentarios from "@/app/comentarios/components/modalVistaPreviaComentarios";
 
 function Comentarios() {
   const router = useRouter();
@@ -211,10 +211,10 @@ function Comentarios() {
       comentario_3: "",
       generales: "",
     });
-    let siguienteId = await siguiente(token);
-    siguienteId = Number(siguienteId) + 1;
-    setCurrentId(siguienteId);
-    setFormaComentarios({ numero: siguienteId });
+    // let siguienteId = await siguiente(token);
+    // siguienteId = Number(siguienteId) + 1;
+    // setCurrentId(siguienteId);
+    setFormaComentarios({ numero: "" });
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);
@@ -259,7 +259,8 @@ function Comentarios() {
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
     const dataj = JSON.stringify(data);
-    data.numero = currentID;
+    accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
+    // data.numero = currentID;
     let res = null;
     if (accion === "Eliminar") {
       showModal(false);
@@ -278,6 +279,8 @@ function Comentarios() {
     res = await guardaComentarios(session.user.token, data, accion);
     if (res.status) {
       if (accion === "Alta") {
+        data.numero = res.data;
+        setCurrentId(data.numero);
         const nuevaFormaComentarios = { currentID, ...data };
         setFormasComentarios([...formasComentarios, nuevaFormaComentarios]);
         if (!bajas) {
@@ -359,7 +362,7 @@ function Comentarios() {
         Excel={ImprimeExcel}
       />
 
-<div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
