@@ -73,6 +73,7 @@ function Horarios() {
       sexo: horario.sexo,
       edad_ini: horario.edad_ini,
       edad_fin: horario.edad_fin,
+      salon: horario.salon,
     },
   });
   useEffect(() => {
@@ -85,6 +86,7 @@ function Horarios() {
       sexo: horario.sexo,
       edad_ini: horario.edad_ini,
       edad_fin: horario.edad_fin,
+      salon: horario.salon,
     });
   }, [horario, reset]);
   const Buscar = () => {
@@ -121,6 +123,7 @@ function Horarios() {
       sexo: "",
       edad_ini: "",
       edad_fin: "",
+      salon: "",
     });
     let siguienteId = await getUltimoHorario(token);
     siguienteId = Number(siguienteId);
@@ -233,9 +236,10 @@ function Horarios() {
       body: horariosFiltrados,
       columns: [
         { header: "Numero", dataKey: "numero" },
-        { header: "Cancha", dataKey: "cancha" },
-        { header: "Dia", dataKey: "dia" },
         { header: "Horario", dataKey: "horario" },
+        { header: "Salón", dataKey: "salon" },
+        { header: "Dia", dataKey: "dia" },
+        { header: "Cancha", dataKey: "cancha" },
         { header: "Niños", dataKey: "max_niños" },
         { header: "Sexo", dataKey: "sexo" },
         { header: "Edad Ini", dataKey: "edad_ini" },
@@ -257,14 +261,16 @@ function Horarios() {
       if (!doc.tiene_encabezado) {
         doc.imprimeEncabezadoPrincipalV();
         doc.nextRow(12);
+        doc.nextRow(12);
         doc.ImpPosX("Numero", 14, doc.tw_ren);
-        doc.ImpPosX("Cancha", 28, doc.tw_ren);
-        doc.ImpPosX("Dia", 42, doc.tw_ren);
-        doc.ImpPosX("Horario", 82, doc.tw_ren);
-        doc.ImpPosX("Niños", 114, doc.tw_ren);
-        doc.ImpPosX("Sexo", 134, doc.tw_ren);
-        doc.ImpPosX("Edad Ini", 154, doc.tw_ren);
-        doc.ImpPosX("Edad Fin", 174, doc.tw_ren);
+        doc.ImpPosX("Horario", 28, doc.tw_ren);
+        doc.ImpPosX("Salón", 62, doc.tw_ren);
+        doc.ImpPosX("Dia", 90, doc.tw_ren);
+        doc.ImpPosX("Cancha", 117, doc.tw_ren);
+        doc.ImpPosX("Niños", 134, doc.tw_ren);
+        doc.ImpPosX("Sexo", 149, doc.tw_ren);
+        doc.ImpPosX("Edad Ini", 164, doc.tw_ren);
+        doc.ImpPosX("Edad Fin", 184, doc.tw_ren);
         doc.nextRow(4);
         doc.printLineV();
         doc.nextRow(4);
@@ -277,14 +283,15 @@ function Horarios() {
     const reporte = new ReportePDF(configuracion)
     Enca1(reporte);
     horariosFiltrados.forEach((horario) => {
-      reporte.ImpPosX(horario.numero.toString(), 24, reporte.tw_ren,0,"R")
-      reporte.ImpPosX(horario.cancha.toString(), 38, reporte.tw_ren,0,"R")
-      reporte.ImpPosX(horario.dia.toString(), 42, reporte.tw_ren)
-      reporte.ImpPosX(horario.horario.toString(), 82, reporte.tw_ren)
-      reporte.ImpPosX(horario.max_niños.toString(), 124, reporte.tw_ren,0,"R")
-      reporte.ImpPosX(horario.sexo.toString(), 134, reporte.tw_ren)
-      reporte.ImpPosX(horario.edad_ini.toString(), 164, reporte.tw_ren,0,"R")
-      reporte.ImpPosX(horario.edad_fin.toString(), 184, reporte.tw_ren,0,"R")
+      reporte.ImpPosX(horario.numero.toString(), 24, reporte.tw_ren, 0, "R");
+      reporte.ImpPosX(horario.horario.toString(), 28, reporte.tw_ren);
+      reporte.ImpPosX(horario.salon.toString(), 62, reporte.tw_ren);
+      reporte.ImpPosX(horario.dia.toString(), 90, reporte.tw_ren);
+      reporte.ImpPosX(horario.cancha.toString(), 127, reporte.tw_ren, 0, "R");
+      reporte.ImpPosX(horario.max_niños.toString(), 144, reporte.tw_ren,0,"R")
+      reporte.ImpPosX(horario.sexo.toString(), 149, reporte.tw_ren)
+      reporte.ImpPosX(horario.edad_ini.toString(), 174, reporte.tw_ren,0,"R")
+      reporte.ImpPosX(horario.edad_fin.toString(), 194, reporte.tw_ren,0,"R")
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRen) {
         reporte.pageBreak();

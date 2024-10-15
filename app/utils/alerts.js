@@ -9,23 +9,27 @@ export const showSwalAndWait = (title, text, icon) => {
       timer: 2000,
       showConfirmButton: false,
       customClass: {
-        popup: 'swal-popup'
-      }
+        popup: "swal-popup",
+      },
     }).then(() => {
       resolve();
     });
   });
 };
 
-export const showSwal = (titulo, mensaje, icono) => {
-  Swal.fire({
+export const showSwal = (titulo, mensaje, icono, target = "") => {
+  let options = {
     position: "center",
     icon: icono,
     title: titulo,
     text: mensaje,
     showConfirmButton: true,
     timer: 1500,
-  });
+  };
+  if (target !== "") {
+    options.target = document.getElementById(target);
+  }
+  Swal.fire(options);
 };
 
 export const confirmSwal = async (

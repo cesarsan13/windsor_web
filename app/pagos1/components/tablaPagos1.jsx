@@ -1,6 +1,6 @@
 "use client";
 import Loading from "@/app/components/loading";
-import NoData from "@/app/components/noData";
+import NoData from "@/app/components/NoData";
 import React, { useState } from "react";
 import iconos from "@/app/utils/iconos";
 import Image from "next/image";
@@ -36,7 +36,7 @@ function TablaPagos1({
         style={{ height: `auto` }}
       >
         {pagosFiltrados.length > 0 ? (
-          <table className='table table-xs w-full'>
+          <table className="table table-xs w-full">
             <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
               <tr>
                 <th className="w-[5%]"></th>
@@ -57,19 +57,22 @@ function TablaPagos1({
               {pagosFiltrados.map((item) => (
                 <tr
                   key={item.numero}
-                  className={`hover:cursor-pointer ${selectedRow === item.numero
-                    ? "dark:bg-[#334155] bg-[#f1f5f9]"
-                    : ""
-                    }`}
-                // className={`hover:cursor-pointer ${selectedRow === item.numero ? 'selected-row' : ''}`}
-                // onClick={() => setSelectedRow(item.numero)}
+                  className={`hover:cursor-pointer ${
+                    selectedRow === item.numero
+                      ? "dark:bg-[#334155] bg-[#f1f5f9]"
+                      : ""
+                  }`}
+                  // className={`hover:cursor-pointer ${selectedRow === item.numero ? 'selected-row' : ''}`}
+                  // onClick={() => setSelectedRow(item.numero)}
                 >
                   <th className="text-right">{item.numero}</th>
                   <td className="hidden">{item.numero}</td>
                   <td className="text-left">{item.descripcion}</td>
                   <td className="text-right">{item.documento}</td>
                   <td className="text-right">{item.cantidad_producto}</td>
-                  <td className="text-right">{formatNumber(item.precio_base)}</td>
+                  <td className="text-right">
+                    {formatNumber(item.precio_base)}
+                  </td>
                   <td className="text-right">{formatNumber(item.descuento)}</td>
                   <td className="text-right">{formatNumber(item.neto)}</td>
                   <td className="text-right">{formatNumber(item.total)}</td>
@@ -77,7 +80,7 @@ function TablaPagos1({
 
                   <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                     <div
-                      className="kbd pt-1 text-xl tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
+                      className="hidden sm:hidden md:block lg:block kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[2rem] md:h-[2rem] content-center"
                       data-tip={`Eliminar`}
                       onClick={(evt) => tableAction(evt, item, "Eliminar")}
                     >
@@ -86,11 +89,11 @@ function TablaPagos1({
                   </th>
                   <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                     <div
-                      className="kbd pt-1 text-xl tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
+                      className="hidden sm:hidden md:block lg:block kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[2rem] md:h-[2rem] content-center"
                       data-tip={`Seleccionar`}
                       onClick={(evt) => tableAction(evt, item, "Seleccionar")}
                     >
-                      <Image src={iconos.seleccionar} alt="Seleccionar" />
+                      <Image src={iconos.documento} alt="Seleccionar" />
                     </div>
                   </th>
                 </tr>
@@ -116,7 +119,7 @@ function TablaPagos1({
         ) : (
           <NoData />
         )}
-      </div >
+      </div>
     </>
   ) : (
     <Loading />

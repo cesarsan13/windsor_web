@@ -183,6 +183,12 @@ function Menu({ vertical, toogle }) {
             <li>
               <Link href="/cambio_numero_alumno" onClick={toogle}>Cambio Numero Alumno</Link>
             </li>
+            <li>
+              <Link href="/adicion_productos_cartera" onClick={toogle}>Adición de Productos a Cartera</Link>
+            </li>
+            <li>
+              <Link href="/cancelacion_recibos" onClick={toogle}>Cancelación de Recibo</Link>
+            </li>
           </ul>
         </details>
       </li>
@@ -264,6 +270,9 @@ function Menu({ vertical, toogle }) {
           <li>
             <Link href="/asignaturas" onClick={handleClick}>Asignaturas</Link>
           </li>
+          <li>
+            <Link href="/profesores" onClick={handleClick}>Profesores</Link>
+          </li>
         </ul>
       </div>
       <div className=" dropdown">
@@ -292,18 +301,20 @@ function Menu({ vertical, toogle }) {
           tabIndex={0}
           className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
         >
-          {/* <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>Adición de Productos a Cartera</Link>
+          <li>
+            <Link href="/adicion_productos_cartera" onClick={handleClick}>Adición de Productos a Cartera</Link>
           </li>
+          <li>
+            <Link href="/cancelacion_recibos" onClick={handleClick}>Cancelación de Recibo</Link>
+          </li>
+          {/* 
           <li>
             <Link href="" style={{ color: "red" }} onClick={handleClick}>Emisión de Facturas</Link>
           </li>
           <li>
             <Link href="" style={{ color: "red" }} onClick={handleClick}>Factura Global</Link>
           </li>
-          <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>Cancelación de Recibo</Link>
-          </li>
+         
           <li>
             <Link href="" style={{ color: "red" }} onClick={handleClick}>Cancelación de Factura</Link>
           </li>
