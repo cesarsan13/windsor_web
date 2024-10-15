@@ -24,7 +24,7 @@ export const showSwal = (titulo, mensaje, icono, target = "") => {
     title: titulo,
     text: mensaje,
     showConfirmButton: true,
-    timer: 1500,
+    timer: 2500,
   };
   if (target !== "") {
     options.target = document.getElementById(target);
