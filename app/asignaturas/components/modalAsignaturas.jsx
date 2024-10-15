@@ -123,12 +123,12 @@ function ModalAsignaturas({
                   className={"w-3/6  text-right uppercase"}
                   Titulo={"Numero: "}
                   type={"inputNum"}
-                  requerido={true}
+                  requerido={accion === "Alta" ? false : true}
                   errors={errors}
                   register={register}
                   maxLenght={6}
                   message={"Numero requerido"}
-                  isDisabled={disabledNum}
+                  isDisabled={!isDisabled}
                   handleBlur={handleBlurOut}
                 />
               </div>

@@ -45,7 +45,7 @@ export const getAsignaturas = async (token, baja) => {
     const resJson = await res.json();
     return resJson.data;
   };
-  export const guardarAsinatura = async (token, data, accion) => {
+  export const guardarAsinatura = async (token, data, accion, numero) => {
     console.log("Data a guardar: ",data);
     let url = "";
     let met = "";
@@ -61,7 +61,7 @@ export const getAsignaturas = async (token, baja) => {
       } else {
         data.baja = "n";
       }
-      url = `${process.env.DOMAIN_API}api/subject/update/${data.numero}`;
+      url = `${process.env.DOMAIN_API}api/subject/update/${numero}`;
       met = "put";
     }
     const res = await fetch(`${url}`, {
