@@ -35,6 +35,7 @@ function Asignaturas() {
     const [bajas, setBajas] = useState(false);
     const [openModal, setModal] = useState(false);
     const [accion, setAccion] = useState("");
+    const [animateLoading, setAnimateLoading] = useState(false);
     const [isLoading, setisLoading] = useState(false);
     const [currentID, setCurrentId] = useState("");
     const [filtro, setFiltro] = useState("id");
@@ -63,7 +64,7 @@ function Asignaturas() {
 
     useEffect(() => {
         Buscar();
-    }, [busqueda]);
+    }, [isLoading,busqueda]);
 
     const {
         register,
@@ -132,6 +133,7 @@ function Asignaturas() {
 
     const Alta = async (event) => {
         const { token } = session.user;
+        setCurrentId('');
         reset({
             numero: 0,
             descripcion: '',
@@ -142,12 +144,8 @@ function Asignaturas() {
             lenguaje: '',
             caso_evaluar: ''
         });
-        let siguienteId = await getLastSubject(token);
-        siguienteId = parseInt(siguienteId, 10) + 1;
-        setNum(siguienteId);
-        setCurrentId(siguienteId);
         setDisableNum(false);
-        setAsignatura({ numero: siguienteId });
+        setAsignatura({ numero: ''});
         setModal(!openModal);
         setAccion("Alta");
         showModal(true);
@@ -206,9 +204,11 @@ function Asignaturas() {
       }
       data.numero = num || currentID;
       data = await Elimina_Comas(data);
-      res = await guardarAsinatura(session.user.token, data, accion);
+      res = await guardarAsinatura(session.user.token, data, accion,data.numero);
+
       if (res.status) {
         if (accion === "Alta") {
+          data.numero = res.data;
           const nuevasAsignaturas = { currentID, ...data };
           setAsignaturas([...asignaturas, nuevasAsignaturas]);
           if (!bajas) {
@@ -270,9 +270,14 @@ function Asignaturas() {
             : document.getElementById("my_modal_3").close();
     };
     const showModalVista = (show) => {
-        show
-            ? document.getElementById("modalVAsignatura").showModal()
-            : document.getElementById("modalVAsignatura").close();
+      if(show){
+        document.getElementById("modalVAsignatura").showModal()
+      }
+    };
+    const cerrarModalVista = () => {
+        setPdfPreview(false);
+        setPdfData("");
+        document.getElementById("modalVAsignatura").close();
     };
     const home = () => {
         router.push("/");
@@ -286,6 +291,8 @@ function Asignaturas() {
 
     };
     const handleVerClick = () => {
+      setAnimateLoading(true);
+      cerrarModalVista();
         const configuracion = {
           Encabezado: {
             Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -319,10 +326,19 @@ function Asignaturas() {
             Enca1(reporte);
           }
         });
-        const pdfData = reporte.doc.output("datauristring");
-        setPdfData(pdfData);
-        setPdfPreview(true);
-        showModalVista(true);
+        setTimeout(() => {
+          const pdfData = reporte.doc.output("datauristring");
+          setPdfData(pdfData);
+          setPdfPreview(true);
+          showModalVista(true);
+          setAnimateLoading(false);
+        },500);
+
+        // const pdfData = reporte.doc.output("datauristring");
+        // setPdfData(pdfData);
+        // setPdfPreview(true);
+        // setAnimateLoading(true);
+        // showModalVista(true);
       };
     const tableAction = (acc, id) => {
         const asignatura = asignaturas.find((asignatura) => asignatura.numero === id);
@@ -383,7 +399,7 @@ function Asignaturas() {
             watch={watch}
             disabledNum={disabledNum}
             num={num}
-            setNum={setNum}
+            // setNum={setNum}
             getValues={getValues}
           />
           <ModalVistaPreviaAsignaturas
@@ -401,6 +417,7 @@ function Asignaturas() {
                     Alta={Alta}
                     home={home}
                     Ver={handleVerClick}
+                    isLoading={animateLoading}
                   />
                 </div>
     
