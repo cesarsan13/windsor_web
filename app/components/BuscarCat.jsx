@@ -22,6 +22,7 @@ function BuscarCat({
   id,
   inputWidths = { contdef: "180px", first: "100px", second: "150px" },
   accion,
+  descClassName = "md:mt-0 lg:w-52 md:w-56 sm:w-60 w-full"
 }) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -206,13 +207,13 @@ function BuscarCat({
             </label>
             <button
               type="button"
-              className="bg-transparent join-item hover:bg-transparent border-none shadow-none dark:text-white text-black btn rounded-r-lg"
+              className="bg-transparent join-item hover:bg-transparent border-none shadow-none dark:text-white text-black btn rounded-r-lg max-[499px]:pb-4 max-[768px]:pb-4 max-[499px]:pt-0 max-[499px]:pl-0 max-[499px]:pr-0"
               onClick={Buscar}
             >
               <i className="fa-solid fa-magnifying-glass"></i>
             </button>
           </div>
-          <div className="md:mt-0 lg:w-52 md:w-56 sm:w-60 w-full">
+          <div className={descClassName}>
             <input
               id={nameInput[1]}
               name={nameInput[1]}
