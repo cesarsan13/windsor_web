@@ -36,6 +36,7 @@ function Comentarios() {
   const [currentID, setCurrentId] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const [animateLoading, setAnimateLoading] = useState(false);
   const [busqueda, setBusqueda] = useState({
     tb_numero: "",
     tb_comentario1: "",
@@ -104,11 +105,12 @@ function Comentarios() {
     setFormaComentariosFiltrados(infoFiltrada);
   };
   const limpiarBusqueda = (evt) => {
-    evt.preventDefault;
+    evt.preventDefault();
     setBusqueda({ tb_numero: "", tb_comentario1: "" });
   };
 
   const handleVerClick = () => {
+    setAnimateLoading(true);
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -184,10 +186,13 @@ function Comentarios() {
         Enca1(reporte);
       }
     });
-    const pdfData = reporte.doc.output("datauristring");
-    setPdfData(pdfData);
-    setPdfPreview(true);
-    showModalVista(true);
+    setTimeout(() => {
+      const pdfData = reporte.doc.output("datauristring");
+      setPdfData(pdfData);
+      setPdfPreview(true);
+      showModalVista(true);
+      setAnimateLoading(false);
+    }, 500);
   };
 
   const showModalVista = (show) => {
@@ -199,6 +204,7 @@ function Comentarios() {
   const CerrarView = () => {
     setPdfPreview(false);
     setPdfData("");
+    document.getElementById("modalVPComentario").close();
   };
 
   const Alta = async (event) => {
@@ -211,14 +217,10 @@ function Comentarios() {
       comentario_3: "",
       generales: "",
     });
-    // let siguienteId = await siguiente(token);
-    // siguienteId = Number(siguienteId) + 1;
-    // setCurrentId(siguienteId);
     setFormaComentarios({ numero: "" });
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);
-
     document.getElementById("comentario_1").focus();
   };
 
@@ -360,6 +362,7 @@ function Comentarios() {
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
 
       <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
@@ -374,6 +377,7 @@ function Comentarios() {
                 home={home}
                 Ver={handleVerClick}
                 // CerrarView={CerrarView}
+                animateLoading={animateLoading}
               ></Acciones>
             </div>
 

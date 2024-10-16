@@ -6,7 +6,13 @@ import { Viewer, Worker } from "@react-pdf-viewer/core";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
-function ModalVistaPreviaComentarios({ pdfPreview, pdfData, PDF, Excel }) {
+function ModalVistaPreviaComentarios({
+  pdfPreview,
+  pdfData,
+  PDF,
+  Excel,
+  CerrarView,
+}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -24,7 +30,7 @@ function ModalVistaPreviaComentarios({ pdfPreview, pdfData, PDF, Excel }) {
       <div className="modal-box w-full max-w-4xl h-full">
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black"
-          onClick={() => document.getElementById("modalVPComentario").close()}
+          onClick={(evt) => CerrarView(evt)}
         >
           ✕
         </button>

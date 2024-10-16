@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalAlumnos from "@/app/alumnos/components/modalAlumnos";
@@ -22,7 +22,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import { formatFecha, format_Fecha_String } from "../utils/globalfn";
+import { formatFecha, format_Fecha_String, debounce } from "../utils/globalfn";
 function Alumnos() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -45,13 +45,15 @@ function Alumnos() {
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [fecha_hoy, setFechaHoy] = useState("");
+  const [animateLoading, setAnimateLoading] = useState(false);
   const [busqueda, setBusqueda] = useState({
     tb_id: "",
     tb_desc: "",
     tb_grado: "",
   });
 
-  const Buscar = () => {
+  //Memorizar la funcion
+  const Buscar = useCallback(() => {
     const { tb_id, tb_desc, tb_grado } = busqueda;
     if (tb_id === "" && tb_desc === "" && tb_grado === "") {
       setAlumnosFiltrados(alumnos);
@@ -76,8 +78,15 @@ function Alumnos() {
       return coincideId && coincideDescripcion && coincideGrado;
     });
     setAlumnosFiltrados(infoFiltrada);
-  };
+  }, [busqueda, alumnos]);
 
+  useEffect(() => {
+    const debouncedBuscar = debounce(Buscar, 300);
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar);
+    };
+  }, [busqueda, Buscar]);
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
@@ -95,10 +104,6 @@ function Alumnos() {
     };
     fetchData();
   }, [session, status, bajas]);
-
-  useEffect(() => {
-    Buscar();
-  }, [busqueda, alumnos]);
 
   const {
     register,
@@ -617,7 +622,6 @@ function Alumnos() {
     router.push("/");
   };
   const handleBusquedaChange = (event) => {
-    event.preventDefault;
     setBusqueda((estadoPrevio) => ({
       ...estadoPrevio,
       [event.target.id]: event.target.value,
@@ -661,9 +665,11 @@ function Alumnos() {
   const CerrarView = () => {
     setPdfPreview(false);
     setPdfData("");
+    document.getElementById("modalVPAlumno").close();
   };
 
   const handleVerClick = () => {
+    setAnimateLoading(true);
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Lista de Alumnos por clase",
@@ -738,10 +744,13 @@ function Alumnos() {
         Enca1(reporte);
       }
     });
-    const pdfData = reporte.doc.output("datauristring");
-    setPdfData(pdfData);
-    setPdfPreview(true);
-    showModalVista(true);
+    setTimeout(() => {
+      const pdfData = reporte.doc.output("datauristring");
+      setPdfData(pdfData);
+      setPdfPreview(true);
+      showModalVista(true);
+      setAnimateLoading(false);
+    }, 500);
   };
 
   if (status === "loading") {
@@ -775,6 +784,7 @@ function Alumnos() {
         pdfData={pdfData}
         PDF={imprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
       <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
@@ -787,7 +797,7 @@ function Alumnos() {
                 PDF={imprimePDF}
                 Excel={ImprimeExcel}
                 Ver={handleVerClick}
-                CerrarView={CerrarView}
+                animateLoading={animateLoading}
               />
             </div>
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
