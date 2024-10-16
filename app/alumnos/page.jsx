@@ -87,6 +87,7 @@ function Alumnos() {
       clearTimeout(debouncedBuscar);
     };
   }, [busqueda, Buscar]);
+  
   useEffect(() => {
     if (status === "loading" || !session) {
       return;

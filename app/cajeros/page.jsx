@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalCajeros from "@/app/cajeros/components/modalCajeros";
@@ -19,6 +19,7 @@ import { siguiente } from "@/app/utils/api/cajeros/cajeros";
 import "jspdf-autotable";
 import ModalVistaPreviaCajeros from "./components/modalVistaPreviaCajeros";
 import { ReportePDF } from "../utils/ReportesPDF";
+import { debounce } from "../utils/globalfn";
 
 function Cajeros() {
   const router = useRouter();
@@ -55,9 +56,6 @@ function Cajeros() {
     fetchData();
   }, [session, status, bajas]);
 
-  useEffect(() => {
-    Buscar();
-  }, [busqueda]);
   const {
     register,
     handleSubmit,
@@ -89,7 +87,7 @@ function Cajeros() {
       clave_cajero: cajero.clave_cajero,
     });
   }, [cajero, reset]);
-  const Buscar = () => {
+  const Buscar = useCallback(() => {
     const { tb_id, tb_desc, tb_correo, tb_tel } = busqueda;
     if (tb_id === "" && tb_desc === "" && tb_correo === "" && tb_tel === "") {
       setCajerosFiltrados(cajeros);
@@ -119,10 +117,18 @@ function Cajeros() {
       );
     });
     setCajerosFiltrados(infoFiltrada);
-  };
+  }, [busqueda, cajeros]);
+
+  useEffect(() => {
+    const debouncedBuscar = debounce(Buscar, 300);
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar);
+    };
+  }, [busqueda, Buscar]);
 
   const limpiarBusqueda = (evt) => {
-    evt.preventDefault;
+    evt.preventDefault();
     setBusqueda({ tb_id: "", tb_desc: "", tb_correo: "", tb_tel: "" });
   };
 
@@ -265,11 +271,11 @@ function Cajeros() {
       if (!doc.tiene_encabezado) {
         doc.imprimeEncabezadoPrincipalV();
         doc.nextRow(12);
-        doc.ImpPosX("No.", 14, doc.tw_ren,0,"L");
-        doc.ImpPosX("Nombre", 28, doc.tw_ren,0,"L");
-        doc.ImpPosX("Clave", 97, doc.tw_ren,0,"L");
-        doc.ImpPosX("Telefono", 112, doc.tw_ren,0,"L");
-        doc.ImpPosX("Correo", 142, doc.tw_ren,0,"L");
+        doc.ImpPosX("No.", 14, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Nombre", 28, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Clave", 97, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Telefono", 112, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Correo", 142, doc.tw_ren, 0, "L");
         doc.nextRow(4);
         doc.printLineV();
         doc.nextRow(4);
@@ -282,11 +288,17 @@ function Cajeros() {
     const reporte = new ReportePDF(configuracion);
     Enca1(reporte);
     cajerosFiltrados.forEach((cajero) => {
-      reporte.ImpPosX(cajero.numero.toString(), 24, reporte.tw_ren,0,"R");
-      reporte.ImpPosX(cajero.nombre.toString(), 28, reporte.tw_ren,0,"L");
-      reporte.ImpPosX(cajero.clave_cajero.toString(), 97, reporte.tw_ren,0,"L");
-      reporte.ImpPosX(cajero.telefono.toString(), 112, reporte.tw_ren,0,"L");
-      reporte.ImpPosX(cajero.mail.toString(), 142, reporte.tw_ren,0,"L");
+      reporte.ImpPosX(cajero.numero.toString(), 24, reporte.tw_ren, 0, "R");
+      reporte.ImpPosX(cajero.nombre.toString(), 28, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(
+        cajero.clave_cajero.toString(),
+        97,
+        reporte.tw_ren,
+        0,
+        "L"
+      );
+      reporte.ImpPosX(cajero.telefono.toString(), 112, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(cajero.mail.toString(), 142, reporte.tw_ren, 0, "L");
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRen) {
         reporte.pageBreak();

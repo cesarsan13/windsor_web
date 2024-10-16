@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalComentarios from "./components/ModalComentarios";
@@ -20,6 +20,7 @@ import "jspdf-autotable";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import ModalVistaPreviaComentarios from "@/app/comentarios/components/modalVistaPreviaComentarios";
+import { debounce } from "@/app/utils/globalfn";
 
 function Comentarios() {
   const router = useRouter();
@@ -56,10 +57,6 @@ function Comentarios() {
     fetchData();
   }, [session, status, bajas]);
 
-  useEffect(() => {
-    Buscar();
-  }, [busqueda]);
-
   const {
     register,
     handleSubmit,
@@ -83,7 +80,8 @@ function Comentarios() {
       generales: formaComentarios.generales,
     });
   }, [formaComentarios, reset]);
-  const Buscar = () => {
+
+  const Buscar = useCallback(() => {
     const { tb_numero, tb_comentario1 } = busqueda;
 
     if (tb_numero === "" && tb_comentario1 === "") {
@@ -96,14 +94,23 @@ function Comentarios() {
         : true;
       const coincideComentario1 = tb_comentario1
         ? formaComentarios["comentario_1"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_comentario1.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_comentario1.toLowerCase())
         : true;
       return coincideID && coincideComentario1;
     });
     setFormaComentariosFiltrados(infoFiltrada);
-  };
+  }, [busqueda, formasComentarios]);
+
+  useEffect(() => {
+    const debouncedBuscar = debounce(Buscar, 300);
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar);
+    };
+  }, [busqueda, Buscar]);
+
   const limpiarBusqueda = (evt) => {
     evt.preventDefault();
     setBusqueda({ tb_numero: "", tb_comentario1: "" });
@@ -177,8 +184,8 @@ function Comentarios() {
         comentarios.generales == 1
           ? "Si"
           : comentarios.generales == 0
-            ? "No"
-            : "No valido";
+          ? "No"
+          : "No valido";
       reporte.ImpPosX(resultado.toString(), 270, reporte.tw_ren, 0, "L");
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRenH) {

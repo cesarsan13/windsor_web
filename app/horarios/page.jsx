@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalHorario from "@/app/horarios/components/ModalHorario";
@@ -19,6 +19,7 @@ import { getUltimoHorario } from "@/app/utils/api/horarios/horarios";
 import { getProductos } from "../utils/api/productos/productos";
 import ModalVistaPreviaHorarios from "./components/modalVistaPreviaHorarios";
 import { ReportePDF } from "../utils/ReportesPDF";
+import { debounce } from "../utils/globalfn";
 
 function Horarios() {
   const router = useRouter();
@@ -53,10 +54,6 @@ function Horarios() {
     fetchData();
   }, [session, status, bajas]);
 
-  useEffect(() => {
-    Buscar();
-  }, [busqueda]);
-
   const {
     register,
     handleSubmit,
@@ -89,26 +86,38 @@ function Horarios() {
       salon: horario.salon,
     });
   }, [horario, reset]);
-  const Buscar = () => {
+
+  const Buscar = useCallback(() => {
     const { tb_id, tb_desc } = busqueda;
     if (tb_id === "" && tb_desc === "") {
       setHorariosFiltrados(horarios);
       return;
     }
     const infoFiltrada = horarios.filter((horario) => {
-      const coincideId = tb_id ? horario["numero"].toString().includes(tb_id) : true;
+      const coincideId = tb_id
+        ? horario["numero"].toString().includes(tb_id)
+        : true;
       const coincideDescripcion = tb_desc
         ? horario["horario"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_desc.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
         : true;
       return coincideId && coincideDescripcion;
     });
     setHorariosFiltrados(infoFiltrada);
-  };
+  }, [busqueda, horarios]);
+
+  useEffect(() => {
+    const debouncedBuscar = debounce(Buscar, 300);
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar);
+    };
+  }, [busqueda, Buscar]);
+
   const limpiarBusqueda = (evt) => {
-    evt.preventDefault;
+    evt.preventDefault();
     setBusqueda({ tb_id: "", tb_desc: "" });
   };
   const Alta = async (event) => {
@@ -171,7 +180,9 @@ function Horarios() {
         const index = horarios.findIndex((fp) => fp.numero === data.numero);
         if (index !== -1) {
           if (accion === "Eliminar") {
-            const fpFiltrados = horarios.filter((fp) => fp.numero !== data.numero);
+            const fpFiltrados = horarios.filter(
+              (fp) => fp.numero !== data.numero
+            );
             setHorarios(fpFiltrados);
             setHorariosFiltrados(fpFiltrados);
           } else {
@@ -204,10 +215,9 @@ function Horarios() {
     router.push("/");
   };
   const handleBusquedaChange = (event) => {
-    event.preventDefault;
     setBusqueda((estadoPrevio) => ({
       ...estadoPrevio,
-      [event.target.numero]: event.target.value,
+      [event.target.id]: event.target.value,
     }));
   };
   if (status === "loading") {
@@ -280,7 +290,7 @@ function Horarios() {
         doc.tiene_encabezado = true;
       }
     };
-    const reporte = new ReportePDF(configuracion)
+    const reporte = new ReportePDF(configuracion);
     Enca1(reporte);
     horariosFiltrados.forEach((horario) => {
       reporte.ImpPosX(horario.numero.toString(), 24, reporte.tw_ren, 0, "R");
@@ -288,26 +298,32 @@ function Horarios() {
       reporte.ImpPosX(horario.salon.toString(), 62, reporte.tw_ren);
       reporte.ImpPosX(horario.dia.toString(), 90, reporte.tw_ren);
       reporte.ImpPosX(horario.cancha.toString(), 127, reporte.tw_ren, 0, "R");
-      reporte.ImpPosX(horario.max_niños.toString(), 144, reporte.tw_ren,0,"R")
-      reporte.ImpPosX(horario.sexo.toString(), 149, reporte.tw_ren)
-      reporte.ImpPosX(horario.edad_ini.toString(), 174, reporte.tw_ren,0,"R")
-      reporte.ImpPosX(horario.edad_fin.toString(), 194, reporte.tw_ren,0,"R")
+      reporte.ImpPosX(
+        horario.max_niños.toString(),
+        144,
+        reporte.tw_ren,
+        0,
+        "R"
+      );
+      reporte.ImpPosX(horario.sexo.toString(), 149, reporte.tw_ren);
+      reporte.ImpPosX(horario.edad_ini.toString(), 174, reporte.tw_ren, 0, "R");
+      reporte.ImpPosX(horario.edad_fin.toString(), 194, reporte.tw_ren, 0, "R");
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRen) {
         reporte.pageBreak();
         Enca1(reporte);
       }
-    })
+    });
     const pdfData = reporte.doc.output("datauristring");
     setPdfData(pdfData);
     setPdfPreview(true);
-    showModalVista(true)
-  }
+    showModalVista(true);
+  };
   const showModalVista = (show) => {
     show
       ? document.getElementById("modalVPHorarios").showModal()
       : document.getElementById("modalVPHorarios").close();
-  }
+  };
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -326,7 +342,12 @@ function Horarios() {
         control={control}
         setDia={setDia}
       />
-      <ModalVistaPreviaHorarios pdfData={pdfData} pdfPreview={pdfPreview} PDF={ImprimePDF} Excel={ImprimeExcel} />
+      <ModalVistaPreviaHorarios
+        pdfData={pdfData}
+        pdfPreview={pdfPreview}
+        PDF={ImprimePDF}
+        Excel={ImprimeExcel}
+      />
       <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
@@ -341,31 +362,30 @@ function Horarios() {
 
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Horarios
-          </h1>
-        </div>
+            </h1>
+          </div>
         </div>
         <div className="flex flex-col items-center h-full">
           <div className="w-full max-w-4xl">
-              <Busqueda
-                setBajas={setBajas}
-                limpiarBusqueda={limpiarBusqueda}
-                Buscar={Buscar}
-                handleBusquedaChange={handleBusquedaChange}
-                busqueda={busqueda}
-              />
-              <TablaHorarios
-                isLoading={isLoading}
-                HorariosFiltrados={horariosFiltrados}
-                showModal={showModal}
-                setHorario={setHorario}
-                setAccion={setAccion}
-                setCurrentId={setCurrentId}
-              />
-            </div>
+            <Busqueda
+              setBajas={setBajas}
+              limpiarBusqueda={limpiarBusqueda}
+              Buscar={Buscar}
+              handleBusquedaChange={handleBusquedaChange}
+              busqueda={busqueda}
+            />
+            <TablaHorarios
+              isLoading={isLoading}
+              HorariosFiltrados={horariosFiltrados}
+              showModal={showModal}
+              setHorario={setHorario}
+              setAccion={setAccion}
+              setCurrentId={setCurrentId}
+            />
           </div>
         </div>
+      </div>
     </>
-
   );
 }
 

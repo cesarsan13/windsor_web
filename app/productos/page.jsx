@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalProductos from "@/app/productos/components/modalProductos";
@@ -8,6 +8,7 @@ import Busqueda from "@/app/productos/components/Busqueda";
 import Acciones from "@/app/productos/components/Acciones";
 import ModalVistaPreviaProductos from "./components/modalVistaPreviaProductos";
 import { useForm } from "react-hook-form";
+import { debounce } from "@/app/utils/globalfn";
 import {
   getProductos,
   guardarProductos,
@@ -59,10 +60,6 @@ function Productos() {
     fetchData();
   }, [session, status, bajas]);
 
-  useEffect(() => {
-    Buscar();
-  }, [busqueda]);
-
   const {
     register,
     handleSubmit,
@@ -99,7 +96,7 @@ function Productos() {
     });
   }, [producto, reset]);
 
-  const Buscar = () => {
+  const Buscar = useCallback(() => {
     const { tb_id, tb_desc } = busqueda;
     if (tb_id === "" && tb_desc === "") {
       setProductosFiltrados(productos);
@@ -118,7 +115,15 @@ function Productos() {
       return coincideId && coincideDescripcion;
     });
     setProductosFiltrados(infoFiltrada);
-  };
+  }, [busqueda, productos]);
+
+  useEffect(() => {
+    const debouncedBuscar = debounce(Buscar, 300);
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar);
+    };
+  }, [busqueda, Buscar]);
 
   const formatNumber = (num) => {
     if (!num) return "";
