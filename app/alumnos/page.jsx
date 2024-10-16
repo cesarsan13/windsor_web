@@ -87,7 +87,7 @@ function Alumnos() {
       clearTimeout(debouncedBuscar);
     };
   }, [busqueda, Buscar]);
-  
+
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
@@ -610,7 +610,7 @@ function Alumnos() {
     return new Blob(byteArrays, { type: contentType });
   };
   const limpiarBusqueda = (evt) => {
-    evt.preventDefault;
+    evt.preventDefault();
     setBusqueda({ tb_id: "", tb_desc: "", tb_grado: "" });
   };
   const showModal = (show) => {

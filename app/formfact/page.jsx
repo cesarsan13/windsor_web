@@ -1,5 +1,5 @@
 "use client";
-import React, { useTransition } from "react";
+import React, { useTransition, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalFormFact from "@/app/formfact/components/modalFormFact";
@@ -19,6 +19,7 @@ import { siguiente } from "@/app/utils/api/formfact/formfact";
 import "jspdf-autotable";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import ConfigReporte from "./components/configReporte";
+import { debounce } from "../utils/globalfn";
 function FormFact() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -69,9 +70,6 @@ function FormFact() {
     fetchData();
     setFormato("Facturas");
   }, [session, status, bajas]);
-  useEffect(() => {
-    Buscar();
-  }, [busqueda]);
 
   useEffect(() => {
     const reporte = new ReportePDF(configuracion, "portrait");
@@ -101,8 +99,8 @@ function FormFact() {
       longitud: formFact.longitud,
     });
   }, [formFact, reset]);
-  const Buscar = () => {
-    // alert(filtro);
+
+  const Buscar = useCallback(() => {
     const { tb_id, tb_desc } = busqueda;
     if (tb_id === "" && tb_desc === "") {
       setFormFactsFiltrados(formFacts);
@@ -117,20 +115,19 @@ function FormFact() {
         : true;
       return coincideId && coincideDescripcion;
     });
-    // const valorCampo = formFact[filtro];
-    // if (typeof valorCampo === "number") {
-    //   return valorCampo.toString().includes(TB_Busqueda);
-    // }
-    // return valorCampo
-    //   ?.toString()
-    //   .toLowerCase()
-    //   .includes(TB_Busqueda.toLowerCase());
-    // });
     setFormFactsFiltrados(infoFiltrada);
-  };
+  }, [busqueda, formFacts]);
+
+  useEffect(() => {
+    const debouncedBuscar = debounce(Buscar, 300);
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar);
+    };
+  }, [busqueda, Buscar]);
 
   const limpiarBusqueda = (evt) => {
-    evt.preventDefault;
+    evt.preventDefault();
     setBusqueda({ tb_id: "", tb_desc: "" });
   };
   const Alta = async (event) => {
@@ -249,58 +246,53 @@ function FormFact() {
         setFormFact={setFormFact}
         formFact={formFact}
       />
-       <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
-              <Acciones
-                Buscar={Buscar}
-                Alta={Alta}
-                home={home} 
-              ></Acciones>
+              <Acciones Buscar={Buscar} Alta={Alta} home={home}></Acciones>
             </div>
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-16">
               Formas Facturas
-              </h1>
-
+            </h1>
           </div>
         </div>
 
         <div className="flex flex-col items-center h-full">
           <div className="w-full max-w-4xl">
-              <Busqueda
-                setBajas={setBajas}
-                limpiarBusqueda={limpiarBusqueda}
-                Buscar={Buscar}
-                handleBusquedaChange={handleBusquedaChange}
-                setFormato={setFormato}
-                busqueda={busqueda}
+            <Busqueda
+              setBajas={setBajas}
+              limpiarBusqueda={limpiarBusqueda}
+              Buscar={Buscar}
+              handleBusquedaChange={handleBusquedaChange}
+              setFormato={setFormato}
+              busqueda={busqueda}
+            />
+            {showSheet ? (
+              <ConfigReporte
+                labels={labels}
+                setLabels={setLabels}
+                formato={formato}
+                propertyData={propertyData}
+                setShowSheet={setShowSheet}
+                currentID={currentID}
+              ></ConfigReporte>
+            ) : (
+              <TablaFormFact
+                isLoading={isLoading}
+                formFactsFiltrados={formFactsFiltrados}
+                showModal={showModal}
+                setFormFact={setFormFact}
+                setAccion={setAccion}
+                setCurrentId={setCurrentId}
+                setShowSheet={setShowSheet}
+                fetchFacturasFormato={fetchFacturasFormato}
+                formato={formato}
               />
-              {showSheet ? (
-                <ConfigReporte
-                  labels={labels}
-                  setLabels={setLabels}
-                  formato={formato}
-                  propertyData={propertyData}
-                  setShowSheet={setShowSheet}
-                  currentID={currentID}
-                ></ConfigReporte>
-              ) : (
-                <TablaFormFact
-                  isLoading={isLoading}
-                  formFactsFiltrados={formFactsFiltrados}
-                  showModal={showModal}
-                  setFormFact={setFormFact}
-                  setAccion={setAccion}
-                  setCurrentId={setCurrentId}
-                  setShowSheet={setShowSheet}
-                  fetchFacturasFormato={fetchFacturasFormato}
-                  formato={formato}
-                />
-              )}
-            </div>
+            )}
           </div>
         </div>
+      </div>
     </>
   );
 }
