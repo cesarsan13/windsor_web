@@ -153,7 +153,10 @@ function BuscarCat({
 
     if (inputValueStr === "") {
       setFilteredData(data);
-      reset();
+      reset({
+        [nameInput[0]]: "",
+        [nameInput[1]]: "",
+      });
       setItem({});
       return;
     }
