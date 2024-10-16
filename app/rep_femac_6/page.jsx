@@ -405,195 +405,55 @@ function Rep_Femac_6() {
             </div>
           </div>
         </div>
-        <div className="w-full py-3 ">
+        <div className="w-full py-3 flex flex-col gap-y-4">
           {/* Fila del formulario de la pagina */}
-          {/* <div className="max-[972px]:w-full w-1/2 mx-auto bg-white"> */}
-          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 w-1/2 mx-auto ">{/* max-[768px]:w-full */}
-            <div className="w-full grid grid-cols-1 max-[500px]:grid-cols-2 max-[766px]:grid-cols-2 md:grid-cols-2 min-[500px]:gap-4 max-[499px]:gap-y-5 px-1">
-              <div className="lg:w-fit md:w-fit">
-                <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3 w-auto lg:w-fit md:w-full">
-                  Fecha Ini.
-                  <input
-                    type="date"
-                    value={fechaIni}
-                    onChange={(e) => setFechaIni(e.target.value)}
-                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
-                  />
-                </label>
+          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 w-1/2 mx-auto ">
+          <div className="flex flex-row gap-4">
+            <div className="lg:w-fit md:w-fit">
+              <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3 w-auto lg:w-fit md:w-full">
+                Fecha Ini.
+                <input
+                  type="date"
+                  value={fechaIni}
+                  onChange={(e) => setFechaIni(e.target.value)}
+                  className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
+                />
+              </label>
+            </div>
+            <div className="lg:w-fit md:w-fit">
+              <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3 w-auto lg:w-fit md:w-fit">
+                Fecha Fin
+                <input
+                  type="date"
+                  value={fechaFin}
+                  onChange={(e) => setFechaFin(e.target.value)}
+                  className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
+                />
+              </label>
+            </div>
+            </div>
+          </div>
+          <div className="flex flex-row">
+          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 w-1/2 mx-auto ">
+            <div className="col-span-full md:col-span-full lg:col-span-full">
+              <div className="w-full">
+                <BuscarCat
+                  table={"cajeros"}
+                  titulo={"Cajeros: "}
+                  token={session.user.token}
+                  fieldsToShow={["numero", "nombre"]}
+                  nameInput={["numero", "nombre"]}
+                  setItem={setCajero}
+                  modalId={"modal_Cajeros"}
+                  alignRight={true}
+                  descClassName="md:mt-0 w-full"
+                />
               </div>
-              <div className="lg:w-fit md:w-fit">
-                <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3 w-auto lg:w-fit md:w-fit">
-                  Fecha Fin
-                  <input
-                    type="date"
-                    value={fechaFin}
-                    onChange={(e) => setFechaFin(e.target.value)}
-                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
-                  />
-                </label>
-              </div>
-              <div className="col-span-full md:col-span-full lg:col-span-full">
-                <div className="w-full">
-                  <BuscarCat
-                    table={"cajeros"}
-                    titulo={"Cajeros: "}
-                    token={session.user.token}
-                    fieldsToShow={["numero", "nombre"]}
-                    nameInput={["numero", "nombre"]}
-                    setItem={setCajero}
-                    modalId={"modal_Cajeros"}
-                    alignRight={true}
-                    descClassName="md:mt-0 w-full"
-                  />
-                </div>
               </div>
             </div>
           </div>
-
-          {/* <div className="w-full grid grid-cols-1 max-[500px]:grid-cols-2 max-[766px]:grid-cols-2 md:grid-cols-3 gap-4 px-1">
-            <div>
-              <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3 w-auto lg:w-fit md:w-fit">
-                Fecha Ini.
-                <input
-                  type="date"
-                  value={fechaIni}
-                  onChange={(e) => setFechaIni(e.target.value)}
-                  className="rounded block grow text-black max-[500px]:w-auto w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
-                />
-              </label>
-            </div>
-            <div>
-              <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3 w-auto lg:w-fit md:w-fit">
-                Fecha Fin
-                <input
-                  type="date"
-                  value={fechaFin}
-                  onChange={(e) => setFechaFin(e.target.value)}
-                  className="rounded block grow text-black max-[500px]:w-auto w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
-                />
-              </label>
-            </div>
-            <div className="max-[500px]:col-span-full">
-              <div className="w-full">
-                <BuscarCat
-                  table={"cajeros"}
-                  titulo={"Cajeros: "}
-                  token={session.user.token}
-                  fieldsToShow={["numero", "nombre"]}
-                  nameInput={["numero", "nombre"]}
-                  setItem={setCajero}
-                  modalId={"modal_Cajeros"}
-                  alignRight={true}
-                />
-              </div>
-            </div>
-          </div> */}
-
-          {/* <div class="w-full grid grid-cols-1 max-[500px]:grid-cols-2 max-[766px]:grid-cols-2 md:grid-cols-3 gap-4 px-1">
-            <div>
-              <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3 w-auto">
-                Fecha Ini.
-                <input
-                  type="date"
-                  value={fechaIni}
-                  onChange={(e) => setFechaIni(e.target.value)}
-                  className="rounded block grow text-black max-[500px]:w-3/4 w-full dark:text-white border-b-2 border-slate-300 dark:border-slate-700 w-auto"
-                />
-              </label>
-            </div>
-            <div>
-              <label className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 w-auto`}>
-                Fecha Fin
-                <input
-                  type="date"
-                  value={fechaFin}
-                  onChange={(e) => setFechaFin(e.target.value)}
-                  className="rounded block grow text-black max-[500px]:w-3/4 w-full dark:text-white border-b-2 border-slate-300 dark:border-slate-700 w-auto"
-                />
-              </label>
-            </div>
-            <div className="max-[500px]:col-span-full">
-              <div className="w-full">
-                <BuscarCat
-                  table={"cajeros"}
-                  titulo={"Cajeros: "}
-                  token={session.user.token}
-                  fieldsToShow={["numero", "nombre"]}
-                  nameInput={["numero", "nombre"]}
-                  setItem={setCajero}
-                  modalId={"modal_Cajeros"}
-                  alignRight={true}
-                />
-              </div>
-            </div>
-          </div> */}
         </div>
       </div>
-
-      {/* <div className="flex justify-center items-center h-[80vh] w-full max-[600px]:px-0 max-[600px]:mx-0">
-        <div className="container h-full w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden max-[600px]:px-0 max-[600px]:mx-0">
-          <div className="flex flex-col justify-start p-3 max-[600px]:px-0 max-[600px]:mx-0">
-            <div className="flex flex-wrap md:flex-nowrap items-start md:items-center md:mx-auto lg:mx-auto">
-              <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
-                <Acciones home={home} Ver={handleVerClick} />
-              </div>
-
-              <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
-                Reporte Resumen de Cobranza
-              </h1>
-            </div>
-          </div>
-          <div className="flex flex-col justify-center p-3 max-[600px]:px-0 max-[600px]:mx-0">
-            <div className="flex flex-col min-[500px]:w-full max-[600px]:w-full max-[420px]:w-full max-[768px]:flex-nowrap items-center md:items-center w-4/5 md:mx-auto lg:mx-auto">
-              <div className="flex flex-row w-full ">
-                <div className="flex flex-wrap max-[600px]:px-0 max-[600px]:mx-0 min-[500px]:w-full max-[600px]:w-full  md:-mx-3 md:mb-6 lg:-mx-3 lg:mb-6 px-3 md:gap-x-5 lg:gap-x-5 gap-y-5 w-full">
-                  <div className="flex flex-col max-[600px]:pl-0 max-[600px]:ml-0 min-[500px]:w-6/12 max-[600px]:w-6/12 max-[420px]:w-full  md:w-3/12 lg:w-3/12">
-                    <div className=" w-full">
-                      <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3">
-                        Fecha Ini.
-                        <input
-                          type="date"
-                          value={fechaIni}
-                          onChange={(e) => setFechaIni(e.target.value)}
-                          className="rounded block grow text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700"
-                        />
-                      </label>
-                    </div>
-                  </div>
-                  <div className="flex flex-col max-[600px]:pl-0 max-[600px]:ml-0 min-[500px]:w-6/12 max-[600px]:w-6/12 max-[420px]:w-full md:w-3/12 lg:w-3/12 ">
-                    <div className="w-full">
-                      <label
-                        className={`max-[600px]:pl-0 max-[600px]:ml-0 input input-bordered input-md text-black dark:text-white flex items-center gap-3`}
-                      >
-                        Fecha Fin
-                        <input
-                          type="date"
-                          value={fechaFin}
-                          onChange={(e) => setFechaFin(e.target.value)}
-                          className="rounded block grow text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700"
-                        />
-                      </label>
-                    </div>
-                  </div>
-                
-                  <div className="flex flex-col sm:w-11/12 md:w-4/12 lg:w-5/12 ">
-                    <div className="w-full">
-                      <BuscarCat
-                        table={"cajeros"}
-                        titulo={"Cajeros: "}
-                        token={session.user.token}
-                        fieldsToShow={["numero", "nombre"]}
-                        nameInput={["numero", "nombre"]}
-                        setItem={setCajero}
-                        modalId={"modal_Cajeros"}
-                        alignRight={true}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> */}
 
       {/* <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
           <div className="col-span-7">
