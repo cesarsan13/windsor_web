@@ -392,7 +392,6 @@ function Rep_Femac_6() {
 
       <div className="flex flex-col justify-start items-start bg-slate-100 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">
-          {" "}
           {/* Fila de la cabecera de la pagina */}
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
@@ -407,7 +406,7 @@ function Rep_Femac_6() {
         </div>
         <div className="w-full py-3 flex flex-col gap-y-4">
           {/* Fila del formulario de la pagina */}
-          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 w-1/2 mx-auto ">
+          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
           <div className="flex flex-row gap-4">
             <div className="lg:w-fit md:w-fit">
               <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3 w-auto lg:w-fit md:w-full">
@@ -434,7 +433,7 @@ function Rep_Femac_6() {
             </div>
           </div>
           <div className="flex flex-row">
-          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 w-1/2 mx-auto ">
+          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
             <div className="col-span-full md:col-span-full lg:col-span-full">
               <div className="w-full">
                 <BuscarCat
@@ -454,54 +453,6 @@ function Rep_Femac_6() {
           </div>
         </div>
       </div>
-
-      {/* <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-          <div className="col-span-7">
-            <div className="flex flex-col h-[calc(100%)]">
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="w-11/12 md:w-4/12 lg:w-3/12">
-                  <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3">
-                    Fecha Inicial
-                    <input
-                      type="date"
-                      value={fechaIni}
-                      onChange={(e) => setFechaIni(e.target.value)}
-                      className="rounded block grow text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700"
-                    />
-                  </label>
-                </div>
-                <div className="w-11/12 md:w-4/12 lg:w-3/12">
-                  <label
-                    className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3`}
-                  >
-                    Fecha Final
-                    <input
-                      type="date"
-                      value={fechaFin}
-                      onChange={(e) => setFechaFin(e.target.value)}
-                      className="rounded block grow text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700"
-                    />
-                  </label>
-                </div>
-              </div>
-              <div className="mt-4">
-                <BuscarCat
-                  table={"cajeros"}
-                  titulo={"Cajeros: "}
-                  token={session.user.token}
-                  fieldsToShow={["numero", "nombre"]}
-                  nameInput={["numero", "nombre"]}
-                  setItem={setCajero}
-                  modalId={"modal_Cajeros"}
-                  alignRight={true}
-                />
-              </div>
-            </div>
-          </div>
-        </div> */}
-      {/* </div> */}
-      {/* </div>
-      </div> */}
     </>
   );
 }
