@@ -41,6 +41,7 @@ function Productos() {
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
   const [disabledNum, setDisableNum] = useState(false);
   const [num, setNum] = useState("");
+  const [animateLoading, setAnimateLoading] = useState(false);
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -105,12 +106,14 @@ function Productos() {
       return;
     }
     const infoFiltrada = productos.filter((producto) => {
-      const coincideId = tb_id ? producto["numero"].toString().includes(tb_id) : true;
+      const coincideId = tb_id
+        ? producto["numero"].toString().includes(tb_id)
+        : true;
       const coincideDescripcion = tb_desc
         ? producto["descripcion"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_desc.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
         : true;
       return coincideId && coincideDescripcion;
     });
@@ -216,12 +219,16 @@ function Productos() {
         const index = productos.findIndex((p) => p.numero === data.numero);
         if (index !== -1) {
           if (accion === "Eliminar") {
-            const pFiltrados = productos.filter((p) => p.numero !== data.numero);
+            const pFiltrados = productos.filter(
+              (p) => p.numero !== data.numero
+            );
             setProductos(pFiltrados);
             setProductosFiltrados(pFiltrados);
           } else {
             if (bajas) {
-              const pFiltrados = productos.filter((p) => p.numero !== data.numero);
+              const pFiltrados = productos.filter(
+                (p) => p.numero !== data.numero
+              );
               setProductos(pFiltrados);
               setProductosFiltrados(pFiltrados);
             } else {
@@ -254,8 +261,7 @@ function Productos() {
         showModal(true);
         return;
       }
-
-    };
+    }
   });
   const formatValidationErrors = (errors) => {
     let errorMessages = [];
@@ -331,6 +337,7 @@ function Productos() {
     }));
   };
   const handleVerClick = () => {
+    setAnimateLoading(true);
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -365,11 +372,35 @@ function Productos() {
     Enca1(reporte);
     productosFiltrados.forEach((producto) => {
       reporte.ImpPosX(producto.numero.toString(), 24, reporte.tw_ren, 0, "R");
-      reporte.ImpPosX(producto.descripcion.toString(), 28, reporte.tw_ren, 25, "L");
+      reporte.ImpPosX(
+        producto.descripcion.toString(),
+        28,
+        reporte.tw_ren,
+        25,
+        "L"
+      );
       reporte.ImpPosX(producto.costo.toString(), 93, reporte.tw_ren, 0, "R");
-      reporte.ImpPosX(producto.frecuencia.toString(), 100, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(producto.por_recargo.toString(), 143, reporte.tw_ren, 0, "R");
-      reporte.ImpPosX(producto.aplicacion.toString(), 150, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(
+        producto.frecuencia.toString(),
+        100,
+        reporte.tw_ren,
+        0,
+        "L"
+      );
+      reporte.ImpPosX(
+        producto.por_recargo.toString(),
+        143,
+        reporte.tw_ren,
+        0,
+        "R"
+      );
+      reporte.ImpPosX(
+        producto.aplicacion.toString(),
+        150,
+        reporte.tw_ren,
+        0,
+        "L"
+      );
       reporte.ImpPosX(producto.iva.toString(), 183, reporte.tw_ren, 0, "R");
       reporte.ImpPosX(producto.cond_1.toString(), 203, reporte.tw_ren, 0, "R");
       const cam_precio = producto.cam_precio ? "Si" : "No";
@@ -381,14 +412,18 @@ function Productos() {
         Enca1(reporte);
       }
     });
-    const pdfData = reporte.doc.output("datauristring");
-    setPdfData(pdfData);
-    setPdfPreview(true);
-    showModalVista(true);
+    setTimeout(() => {
+      const pdfData = reporte.doc.output("datauristring");
+      setPdfData(pdfData);
+      setPdfPreview(true);
+      showModalVista(true);
+      setAnimateLoading(false);
+    }, 500);
   };
   const CerrarView = () => {
     setPdfPreview(false);
     setPdfData("");
+    document.getElementById("modalVProducto").close();
   };
   const tableAction = (acc, id) => {
     const producto = productos.find((producto) => producto.numero === id);
@@ -422,12 +457,14 @@ function Productos() {
         disabledNum={disabledNum}
         num={num}
         setNum={setNum}
+        productos={productos}
       />
       <ModalVistaPreviaProductos
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={imprimirPDF}
         Excel={ImprimirExcel}
+        CerrarView={CerrarView}
       />
       <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
@@ -438,6 +475,7 @@ function Productos() {
                 Alta={Alta}
                 home={home}
                 Ver={handleVerClick}
+                animateLoading={animateLoading}
               />
             </div>
 
@@ -448,7 +486,6 @@ function Productos() {
         </div>
         <div className="flex flex-col items-center h-full">
           <div className="w-full max-w-4xl">
-
             <Busqueda
               setBajas={setBajas}
               limpiarBusqueda={limpiarBusqueda}

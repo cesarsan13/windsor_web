@@ -28,12 +28,12 @@ function ModalComentarios({
     }
     setTitulo(
       accion === "Alta"
-        ? `Nuevos Comentarios: ${currentID}`
+        ? `Nuevo Comentario`
         : accion === "Editar"
-        ? `Editar Comentarios: ${currentID}`
+        ? `Editar Comentario: ${currentID}`
         : accion === "Eliminar"
-        ? `Eliminar Comentarios: ${currentID}`
-        : `Ver Comentarios: ${currentID}`
+        ? `Eliminar Comentario: ${currentID}`
+        : `Ver Comentario: ${currentID}`
     );
   }, [accion]);
   const handleBlur = (evt, datatype) => {
@@ -109,11 +109,11 @@ function ModalComentarios({
                   className={"w-3/6 text-right"}
                   Titulo={"Numero: "}
                   type={"text"}
-                  requerido={true}
+                  requerido={accion === "Alta" ? false : true}
                   errors={errors}
                   register={register}
                   message={"id Requerido"}
-                  isDisabled={isDisabled}
+                  isDisabled={accion === "Alta" ? !isDisabled : isDisabled}
                 />
               </fieldset>
               <Inputs
@@ -167,7 +167,7 @@ function ModalComentarios({
               <Inputs
                 name={"generales"}
                 tamañolabel={"w-3/6"}
-                className={"fyo8m-select p-1.5 grow bg-[#ffffff] "}
+                className={"select p-1.5 grow "}
                 Titulo={"Generales:"}
                 type={"select"}
                 requerido={true}
