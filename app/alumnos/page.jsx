@@ -200,6 +200,7 @@ function Alumnos() {
       rfc_factura: alumno.rfc_factura,
       estatus: alumno.estatus,
       escuela: alumno.escuela,
+      grupo: alumno.grupo,
       referencia: alumno.referencia,
     },
   });
@@ -293,6 +294,7 @@ function Alumnos() {
       rfc_factura: alumno.rfc_factura,
       estatus: alumno.estatus,
       escuela: alumno.escuela,
+      grupo: alumno.grupo,
       referencia: alumno.referencia,
     });
   }, [alumno, reset]);
@@ -403,6 +405,7 @@ function Alumnos() {
       rfc_factura: "",
       estatus: "",
       escuela: "",
+      grupo: "",
       referencia: 0,
       baja: "",
     });
@@ -532,6 +535,7 @@ function Alumnos() {
     formData.append("rfc_factura", data.rfc_factura || "");
     formData.append("estatus", data.estatus || "");
     formData.append("escuela", data.escuela || "");
+    formData.append("grupo", grado.horario || "");
     if (condicion === true) {
       const blob = dataURLtoBlob(capturedImage);
       formData.append(
