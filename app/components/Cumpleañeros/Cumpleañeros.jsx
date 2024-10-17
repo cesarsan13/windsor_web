@@ -2,14 +2,14 @@ import React from "react";
 import iconos from "@/app/utils/iconos";
 import Image from "next/image";
 import { useState } from "react";
-import CardsView from "./CardsView";
-import ListView from "./ListView";
+const CardsView = React.lazy(() =>
+  import("@/app/components/Cumpleañeros/CardsView")
+);
+const ListView = React.lazy(() =>
+  import("@/app/components/Cumpleañeros/ListView")
+);
 function Cumpleañeros({ cumpleañeros, mesActual }) {
- 
-
   const [cumpleView, setCumpleView] = useState(false);
-
- 
   return (
     <div className="w-full card shadow-lg bg-base-100  items-center p-5 mb-4">
       <div className="w-full sticky top-0 flex justify-center my-4">
