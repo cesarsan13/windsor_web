@@ -1,25 +1,24 @@
 "use client";
 import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "../utils/alerts";
-import ModalComentarios from "./components/ModalComentarios";
-import TablaComentarios from "./components/TablaComentarios";
-import Busqueda from "./components/Busqueda";
-import Acciones from "./components/Acciones";
+import { showSwal, confirmSwal } from "@/app/utils/alerts";
+import ModalComentarios from "@/app/catalogos/comentarios/components/ModalComentarios";
+import TablaComentarios from "@/app/catalogos/comentarios/components/TablaComentarios";
+import Busqueda from "@/app/catalogos/comentarios/components/Busqueda";
+import Acciones from "@/app/catalogos/comentarios/components/Acciones";
 import { useForm } from "react-hook-form";
 import {
   getComentarios,
   guardaComentarios,
   ImprimirPDF,
   ImprimirExcel,
-} from "../utils/api/comentarios/comentarios";
+} from "@/app/utils/api/comentarios/comentarios";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { siguiente } from "@/app/utils/api/comentarios/comentarios";
 import "jspdf-autotable";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import ModalVistaPreviaComentarios from "@/app/comentarios/components/modalVistaPreviaComentarios";
+import ModalVistaPreviaComentarios from "@/app/catalogos/comentarios/components/modalVistaPreviaComentarios";
 import { debounce } from "@/app/utils/globalfn";
 
 function Comentarios() {

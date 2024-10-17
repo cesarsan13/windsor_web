@@ -18,7 +18,7 @@ import {
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import "jspdf-autotable";
-import { ReportePDF } from "../utils/ReportesPDF";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 function Productos() {
   const router = useRouter();

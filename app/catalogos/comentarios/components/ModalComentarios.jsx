@@ -1,7 +1,7 @@
-import { soloEnteros, soloDecimales, pone_ceros } from "@/app/utils/globalfn";
+import { pone_ceros } from "@/app/utils/globalfn";
 import React from "react";
 import { useState, useEffect } from "react";
-import Inputs from "@/app/comentarios/components/Inputs";
+import Inputs from "@/app/catalogos/comentarios/components/Inputs";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 
