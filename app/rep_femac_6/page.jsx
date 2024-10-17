@@ -407,47 +407,47 @@ function Rep_Femac_6() {
         <div className="w-full py-3 flex flex-col gap-y-4">
           {/* Fila del formulario de la pagina */}
           <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
-          <div className="flex flex-row gap-4">
-            <div className="lg:w-fit md:w-fit">
-              <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3 w-auto lg:w-fit md:w-full">
-                Fecha Ini.
-                <input
-                  type="date"
-                  value={fechaIni}
-                  onChange={(e) => setFechaIni(e.target.value)}
-                  className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
-                />
-              </label>
-            </div>
-            <div className="lg:w-fit md:w-fit">
-              <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3 w-auto lg:w-fit md:w-fit">
-                Fecha Fin
-                <input
-                  type="date"
-                  value={fechaFin}
-                  onChange={(e) => setFechaFin(e.target.value)}
-                  className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
-                />
-              </label>
-            </div>
+            <div className="flex flex-row max-[499px]:gap-1 gap-4">
+              <div className="lg:w-fit md:w-fit">
+                <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3 w-auto lg:w-fit md:w-full">
+                  Fecha Ini.
+                  <input
+                    type="date"
+                    value={fechaIni}
+                    onChange={(e) => setFechaIni(e.target.value)}
+                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
+                  />
+                </label>
+              </div>
+              <div className="lg:w-fit md:w-fit">
+                <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3 w-auto lg:w-fit md:w-fit">
+                  Fecha Fin
+                  <input
+                    type="date"
+                    value={fechaFin}
+                    onChange={(e) => setFechaFin(e.target.value)}
+                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
+                  />
+                </label>
+              </div>
             </div>
           </div>
           <div className="flex flex-row">
-          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
-            <div className="col-span-full md:col-span-full lg:col-span-full">
-              <div className="w-full">
-                <BuscarCat
-                  table={"cajeros"}
-                  titulo={"Cajeros: "}
-                  token={session.user.token}
-                  fieldsToShow={["numero", "nombre"]}
-                  nameInput={["numero", "nombre"]}
-                  setItem={setCajero}
-                  modalId={"modal_Cajeros"}
-                  alignRight={true}
-                  descClassName="md:mt-0 w-full"
-                />
-              </div>
+            <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
+              <div className="col-span-full md:col-span-full lg:col-span-full">
+                <div className="w-full">
+                  <BuscarCat
+                    table={"cajeros"}
+                    titulo={"Cajeros: "}
+                    token={session.user.token}
+                    fieldsToShow={["numero", "nombre"]}
+                    nameInput={["numero", "nombre"]}
+                    setItem={setCajero}
+                    modalId={"modal_Cajeros"}
+                    alignRight={true}
+                    descClassName="md:mt-0 w-full"
+                  />
+                </div>
               </div>
             </div>
           </div>
