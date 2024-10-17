@@ -17,7 +17,7 @@ function ListView({ cumpleañeros }) {
     }
   }, []);
   return (
-    <div className="carousel carousel-vertical   h-96 w-64 grid grid-flow-row  gap-3">
+    <div className="carousel carousel-vertical carousel-center rounded-box  h-96 w-64 grid grid-flow-row  gap-1">
       {cumpleañeros.map((alumno, idx) => {
         let nueva_fecha = new Date(alumno.fecha_nac);
         let fecha_hoy = new Date();
@@ -31,9 +31,9 @@ function ListView({ cumpleañeros }) {
         let es_cumpleañero = numero_em_curso === numero_fecha_hoy;
         return (
           <div
-            className={`carousel-item ${
+            className={`flex carousel-item ${
               es_cumpleañero ? "bg-base-300 shadow-lg" : "bg-base-200"
-            }   rounded-box p-2 grid grid-rows-2 grid-cols-4 grid-flow-col `}
+            }   rounded-box p-2 m-2 grid grid-rows-2 grid-cols-4 grid-flow-col `}
             key={idx}
             ref={
               es_cumpleañero
