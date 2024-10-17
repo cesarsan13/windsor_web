@@ -383,25 +383,25 @@ function Menu({ vertical, toogle }) {
           </li>
         </ul>
       </div>
-      <div className="dropdown hidden">
+      <div className="dropdown">
         <div
           tabIndex={0}
           role="button"
           className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none">
-          Seguridad
+          Utilerias
         </div>
         <ul
           tabIndex={0}
           className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow">
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>Usuarios</Link>
+            <Link href="/usuarios" onClick={handleClick}>Usuarios</Link>
           </li>
-          <li>
+         {/* <li>
             <Link href="" style={{ color: "red" }} onClick={handleClick}>Acceso a Usuarios</Link>
           </li>
           <li>
             <Link href="" style={{ color: "red" }} onClick={handleClick}>Utilerias</Link>
-          </li>
+          </li>*/}
         </ul>
       </div>
       <div className="dropdown hidden">

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Inputs from "@/app/usuarios/components/Inputs";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
+import { showSwalTarget } from "@/app/utils/alerts";
 
 function ModalUsuarios({
   accion,
@@ -13,7 +14,6 @@ function ModalUsuarios({
   errors,
   watch
 }) {
-  const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
   useEffect(() => {
@@ -34,20 +34,11 @@ function ModalUsuarios({
     );
   }, [accion]);
 
+ 
+
   
 
-  {/*const handleBlur = (evt, datatype) => {
-    if (evt.target.value === "") return;
-    datatype === "int"
-      ? setUsuarios((usuarios) => ({
-          ...usuarios,
-          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-        }))
-      : setUsuarios((usuarios) => ({
-          ...usuarios,
-          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-        }));
-  };*/}
+  
 
   return (
     <dialog id="modal_usuarios" className="modal">
@@ -166,7 +157,7 @@ function ModalUsuarios({
                 className={"rounded block grow"}
                 Titulo={"Contraseña: "}
                 type={"password"}
-                requerido={true}
+                requerido={false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -176,12 +167,12 @@ function ModalUsuarios({
               />
                <Inputs
                 dataType={"string"}
-                name={"password_confirm"}
+                name={"match_password"}
                 tamañolabel={""}
                 className={"rounded block grow"}
                 Titulo={"Confirmar Contraseña: "}
                 type={"password"}
-                requerido={true}
+                requerido={false}
                 isNumero={false}
                 errors={errors}
                 register={register}
