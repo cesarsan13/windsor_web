@@ -127,35 +127,45 @@ function Rep_Femac_3() {
             ? reporte1.Num_Renglon.toString()
             : "",
           15,
-          reporte.tw_ren, 0, "R"
+          reporte.tw_ren,
+          0,
+          "R"
         );
         reporte.ImpPosX(
           reporte1.Numero_1.toString() !== "0"
             ? reporte1.Numero_1.toString()
             : "",
           25,
-          reporte.tw_ren, 0, "R"
+          reporte.tw_ren,
+          0,
+          "R"
         );
         reporte.ImpPosX(
           reporte1.Nombre_1.toString() !== "0"
             ? reporte1.Nombre_1.toString()
             : "",
           35,
-          reporte.tw_ren, 0, "L"
+          reporte.tw_ren,
+          0,
+          "L"
         );
         reporte.ImpPosX(
           reporte1.Año_Nac_1.toString().substring(0, 4) !== "0"
             ? reporte1.Año_Nac_1.toString().substring(0, 4)
             : "",
           130,
-          reporte.tw_ren, 0, "R"
+          reporte.tw_ren,
+          0,
+          "R"
         );
         reporte.ImpPosX(
           reporte1.Mes_Nac_1.toString().substring(4, 2) !== "0"
             ? reporte1.Mes_Nac_1.toString().substring(4, 2)
             : "",
           140,
-          reporte.tw_ren, 0, "R"
+          reporte.tw_ren,
+          0,
+          "R"
         );
 
         Enca1(reporte);
@@ -186,25 +196,25 @@ function Rep_Femac_3() {
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
       />
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
-        <div className="flex flex-col justify-start p-3">
-          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
-            <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
-              <Acciones
-                home={home}
-                Ver={handleVerClick}
-              />
+      <div className="flex flex-col justify-start items-start bg-slate-100 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+        <div className="w-full py-3">
+          {/* Fila de la cabecera de la pagina */}
+          <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
+            <div className="flex flex-wrap items-start md:items-center mx-auto">
+              <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
+                <Acciones home={home} Ver={handleVerClick} />
+              </div>
+              <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
+                Reporte Lista de Alumnos por Clase Mensual
+              </h1>
             </div>
-
-            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
-              Reporte Lista de Alumnos por Clase Mensual
-            </h1>
           </div>
         </div>
-        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-          <div className="col-span-7">
-            <div className="flex flex-col h-[calc(100%)] space-y-4">
-              {token && (
+        <div className="w-full py-3 flex flex-col gap-y-4">
+          {/* Fila del formulario de la pagina */}
+          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
+            <div className="col-span-full md:col-span-full lg:col-span-full">
+              <div className="w-full">
                 <BuscarCat
                   table={"horarios"}
                   titulo={"Horario: "}
@@ -213,38 +223,42 @@ function Rep_Femac_3() {
                   fieldsToShow={["numero", "horario"]}
                   setItem={setHorario}
                   modalId={"modal_horarios"}
+                  descClassName="md:mt-0 w-full"
                 />
-              )}
-
-              <div className="col-8 flex flex-col">
-                <div className="flex space-x-4">
-                  <label className="text-black dark:text-white flex flex-col md:flex-row space-x-4">
-                    <span className="text-black dark:text-white  flex items-center gap-3">Ordenar por:</span>
-                    <label className="flex items-center gap-3">
-                      <span className="text-black dark:text-white">Nombre</span>
-                      <input
-                        type="radio"
-                        name="options"
-                        value="nombre"
-                        checked={sOrdenar === "nombre"}
-                        onChange={handleCheckChange}
-                        className="radio checked:bg-blue-500"
-                      />
-                    </label>
-
-                    <label className="flex items-center gap-3">
-                      <span className="text-black dark:text-white">Número</span>
-                      <input
-                        type="radio"
-                        name="options"
-                        value="id"
-                        checked={sOrdenar === "id"}
-                        onChange={handleCheckChange}
-                        className="radio checked:bg-blue-500"
-                      />
-                    </label>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-row">
+            <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
+              <div className="flex space-x-4">
+                <label className="text-black dark:text-white flex flex-row md:flex-row space-x-4">
+                  <span className="text-black dark:text-white  flex items-center gap-3">
+                    Ordenar por:
+                  </span>
+                  <label className="flex items-center gap-3">
+                    <span className="text-black dark:text-white">Nombre</span>
+                    <input
+                      type="radio"
+                      name="options"
+                      value="nombre"
+                      checked={sOrdenar === "nombre"}
+                      onChange={handleCheckChange}
+                      className="radio checked:bg-blue-500"
+                    />
                   </label>
-                </div>
+
+                  <label className="flex items-center gap-3">
+                    <span className="text-black dark:text-white">Número</span>
+                    <input
+                      type="radio"
+                      name="options"
+                      value="id"
+                      checked={sOrdenar === "id"}
+                      onChange={handleCheckChange}
+                      className="radio checked:bg-blue-500"
+                    />
+                  </label>
+                </label>
               </div>
             </div>
           </div>
