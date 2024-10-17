@@ -14,7 +14,12 @@ function Menu({ vertical, toogle }) {
 
   const handleClickOutside = (event) => {
     if (menuRef.current && !menuRef.current.contains(event.target)) {
-      setIsOpen({ archivos: false, reportes: false, pagos: false, procesos: false });
+      setIsOpen({
+        archivos: false,
+        reportes: false,
+        pagos: false,
+        procesos: false,
+      });
     }
   };
 
@@ -27,7 +32,12 @@ function Menu({ vertical, toogle }) {
 
   const handleClick = () => {
     if (isMobile) {
-      setIsOpen({ archivos: false, reportes: false, pagos: false, procesos: false });
+      setIsOpen({
+        archivos: false,
+        reportes: false,
+        pagos: false,
+        procesos: false,
+      });
       closeAllDetails();
     }
     const elem = document.activeElement;
@@ -38,7 +48,12 @@ function Menu({ vertical, toogle }) {
 
   const handleToggle = (menu) => {
     setIsOpen((prevState) => {
-      const newState = { archivos: false, reportes: false, pagos: false, procesos: false };
+      const newState = {
+        archivos: false,
+        reportes: false,
+        pagos: false,
+        procesos: false,
+      };
       newState[menu] = !prevState[menu];
       return newState;
     });
@@ -67,16 +82,21 @@ function Menu({ vertical, toogle }) {
     const handleSubmenuClick = (event) => {
       if (window.innerWidth <= 768) {
         if (isMobile && event.target.closest("a")) {
-          setIsOpen({ archivos: false, reportes: false, pagos: false, procesos: false });
+          setIsOpen({
+            archivos: false,
+            reportes: false,
+            pagos: false,
+            procesos: false,
+          });
           closeAllDetails();
         }
       }
     };
 
-    document.addEventListener('click', handleSubmenuClick);
+    document.addEventListener("click", handleSubmenuClick);
 
     return () => {
-      document.removeEventListener('click', handleSubmenuClick);
+      document.removeEventListener("click", handleSubmenuClick);
     };
   }, [isMobile]);
 
@@ -94,28 +114,44 @@ function Menu({ vertical, toogle }) {
           <summary>Catálogos</summary>
           <ul>
             <li className="">
-              <Link href="/alumnos" onClick={toogle}>Alumnos</Link>
+              <Link href="/alumnos" onClick={toogle}>
+                Alumnos
+              </Link>
             </li>
             <li>
-              <Link href="/productos" onClick={toogle}>Productos</Link>
+              <Link href="/productos" onClick={toogle}>
+                Productos
+              </Link>
             </li>
             <li>
-              <Link href="/comentarios" onClick={toogle}>Comentarios</Link>
+              <Link href="/comentarios" onClick={toogle}>
+                Comentarios
+              </Link>
             </li>
             <li>
-              <Link href="/cajeros" onClick={toogle}>Cajeros</Link>
+              <Link href="/cajeros" onClick={toogle}>
+                Cajeros
+              </Link>
             </li>
             <li>
-              <Link href="/horarios" onClick={toogle}>Horarios</Link>
+              <Link href="/horarios" onClick={toogle}>
+                Horarios
+              </Link>
             </li>
             <li>
-              <Link href="/formapago" onClick={toogle}>Forma de Pago</Link>
+              <Link href="/formapago" onClick={toogle}>
+                Forma de Pago
+              </Link>
             </li>
             <li>
-              <Link href="/formfact" onClick={toogle}>Formato Variable</Link>
+              <Link href="/formfact" onClick={toogle}>
+                Formato Variable
+              </Link>
             </li>
             <li>
-              <Link href="/asignaturas" onClick={toogle}>Asignaturas</Link>
+              <Link href="/asignaturas" onClick={toogle}>
+                Asignaturas
+              </Link>
             </li>
           </ul>
         </details>
@@ -125,7 +161,9 @@ function Menu({ vertical, toogle }) {
           <summary>Pagos</summary>
           <ul>
             <li>
-              <Link href="/pagos1" onClick={toogle}>Pagos</Link>
+              <Link href="/pagos1" onClick={toogle}>
+                Pagos
+              </Link>
             </li>
           </ul>
         </details>
@@ -138,59 +176,99 @@ function Menu({ vertical, toogle }) {
           <summary>Reportes</summary>
           <ul>
             <li>
-              <Link href="/rep_femac_6" onClick={toogle}>Cobranza</Link>
+              <Link href="/rep_femac_6" onClick={toogle}>
+                Cobranza
+              </Link>
             </li>
             <li>
-              <Link href="/rep_femac_1" onClick={toogle}>Relación General de Alumnos</Link>
+              <Link href="/rep_femac_1" onClick={toogle}>
+                Relación General de Alumnos
+              </Link>
             </li>
             <li>
-              <Link href="/Rep_Femac_2" onClick={toogle}>Lista de Alumnos por clase</Link>
+              <Link href="/Rep_Femac_2" onClick={toogle}>
+                Lista de Alumnos por clase
+              </Link>
             </li>
             <li>
-              <Link href="/rep_femac_3" onClick={toogle}>Lista de Alumnos por clase del mes</Link>
+              <Link href="/rep_femac_3" onClick={toogle}>
+                Lista de Alumnos por clase del mes
+              </Link>
             </li>
             <li>
-              <Link href="/rep_femac_13" onClick={toogle}>Lista de alumnos por clase semanal</Link>
+              <Link href="/rep_femac_13" onClick={toogle}>
+                Lista de alumnos por clase semanal
+              </Link>
             </li>
             <li>
-              <Link href="/rep_femac_5" onClick={toogle}>Altas y Bajas de Alumnos</Link>
+              <Link href="/rep_femac_5" onClick={toogle}>
+                Altas y Bajas de Alumnos
+              </Link>
             </li>
             <li>
-              <Link href="/rep_femac_7" onClick={toogle}>Cartera</Link>
+              <Link href="/rep_femac_7" onClick={toogle}>
+                Cartera
+              </Link>
             </li>
             <li>
-              <Link href="/rep_femac_8_anexo_1" onClick={toogle}>Relación de Recibos</Link>
+              <Link href="/rep_femac_8_anexo_1" onClick={toogle}>
+                Relación de Recibos
+              </Link>
             </li>
             <li>
-              <Link href="/Rep_Femac_9_Anexo_4" onClick={toogle}>Relación de Facturas</Link>
+              <Link href="/Rep_Femac_9_Anexo_4" onClick={toogle}>
+                Relación de Facturas
+              </Link>
             </li>
             <li>
-              <Link href="/rep_femac_12_anexo_4" onClick={toogle}>Reporte Cobranza por Producto</Link>
+              <Link href="/rep_femac_12_anexo_4" onClick={toogle}>
+                Reporte Cobranza por Producto
+              </Link>
             </li>
             <li>
-              <Link href="/rep_inscritos" onClick={toogle}>Reporte Inscripción</Link>
+              <Link href="/rep_inscritos" onClick={toogle}>
+                Reporte Inscripción
+              </Link>
             </li>
           </ul>
         </details>
       </li>
       <li>
-        <details open={isOpen.procesos} onClick={() => handleToggle("procesos")}>
+        <details
+          open={isOpen.procesos}
+          onClick={() => handleToggle("procesos")}
+        >
           <summary>Procesos</summary>
           <ul>
             <li>
-              <Link href="/cambio_ciclo_escolar" onClick={toogle}>Cambio de Ciclo Escolar</Link>
+              <Link href="/clases" onClick={toogle}>
+                Asignacion de Asingnatura
+              </Link>
             </li>
             <li>
-              <Link href="/cambio_numero_alumno" onClick={toogle}>Cambio Numero Alumno</Link>
+              <Link href="/cambio_ciclo_escolar" onClick={toogle}>
+                Cambio de Ciclo Escolar
+              </Link>
             </li>
             <li>
-              <Link href="/adicion_productos_cartera" onClick={toogle}>Adición de Productos a Cartera</Link>
+              <Link href="/cambio_numero_alumno" onClick={toogle}>
+                Cambio Numero Alumno
+              </Link>
             </li>
             <li>
-              <Link href="/cancelacion_recibos" onClick={toogle}>Cancelación de Recibo</Link>
+              <Link href="/adicion_productos_cartera" onClick={toogle}>
+                Adición de Productos a Cartera
+              </Link>
             </li>
             <li>
-              <Link href="/c_calificaciones" onClick={toogle}>Calificaciones</Link>
+              <Link href="/cancelacion_recibos" onClick={toogle}>
+                Cancelación de Recibo
+              </Link>
+            </li>
+            <li>
+              <Link href="/c_calificaciones" onClick={toogle}>
+                Calificaciones
+              </Link>
             </li>
           </ul>
         </details>
@@ -201,13 +279,19 @@ function Menu({ vertical, toogle }) {
           <summary>Seguridad</summary>
           <ul>
             <li className="hidden">
-              <Link href="" style={{ color: "red" }}>Usuarios</Link>
+              <Link href="" style={{ color: "red" }}>
+                Usuarios
+              </Link>
             </li>
             <li className="hidden">
-              <Link href="" style={{ color: "red" }}>Acceso a Usuarios</Link>
+              <Link href="" style={{ color: "red" }}>
+                Acceso a Usuarios
+              </Link>
             </li>
             <li className="hidden">
-              <Link href="" style={{ color: "red" }}>Utilerias</Link>
+              <Link href="" style={{ color: "red" }}>
+                Utilerias
+              </Link>
             </li>
           </ul>
         </details>
@@ -217,7 +301,9 @@ function Menu({ vertical, toogle }) {
           <summary>Propietario</summary>
           <ul>
             <li className="hidden">
-              <Link href="" style={{ color: "red" }}>Propietario</Link>
+              <Link href="" style={{ color: "red" }}>
+                Propietario
+              </Link>
             </li>
           </ul>
         </details>
@@ -227,7 +313,9 @@ function Menu({ vertical, toogle }) {
           <summary>Video Ayuda</summary>
           <ul>
             <li className="hidden">
-              <Link href="" style={{ color: "red" }}>Carga de Cartera</Link>
+              <Link href="" style={{ color: "red" }}>
+                Carga de Cartera
+              </Link>
             </li>
           </ul>
         </details>
@@ -248,33 +336,52 @@ function Menu({ vertical, toogle }) {
         </div>
         <ul
           tabIndex={0}
-          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow">
+          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
+        >
           <li>
-            <Link href="/alumnos" onClick={handleClick}>Alumnos</Link>
+            <Link href="/alumnos" onClick={handleClick}>
+              Alumnos
+            </Link>
           </li>
           <li>
-            <Link href="/productos" onClick={handleClick}>Productos</Link>
+            <Link href="/productos" onClick={handleClick}>
+              Productos
+            </Link>
           </li>
           <li>
-            <Link href="/comentarios" onClick={handleClick}>Comentarios</Link>
+            <Link href="/comentarios" onClick={handleClick}>
+              Comentarios
+            </Link>
           </li>
           <li>
-            <Link href="/cajeros" onClick={handleClick}>Cajeros</Link>
+            <Link href="/cajeros" onClick={handleClick}>
+              Cajeros
+            </Link>
           </li>
           <li>
-            <Link href="/horarios" onClick={handleClick}>Horarios</Link>
+            <Link href="/horarios" onClick={handleClick}>
+              Horarios
+            </Link>
           </li>
           <li>
-            <Link href="/formapago" onClick={handleClick}>Forma de Pago</Link>
+            <Link href="/formapago" onClick={handleClick}>
+              Forma de Pago
+            </Link>
           </li>
           <li>
-            <Link href="/formfact" onClick={handleClick}>Formato Variable</Link>
+            <Link href="/formfact" onClick={handleClick}>
+              Formato Variable
+            </Link>
           </li>
           <li>
-            <Link href="/asignaturas" onClick={handleClick}>Asignaturas</Link>
+            <Link href="/asignaturas" onClick={handleClick}>
+              Asignaturas
+            </Link>
           </li>
           <li>
-            <Link href="/profesores" onClick={handleClick}>Profesores</Link>
+            <Link href="/profesores" onClick={handleClick}>
+              Profesores
+            </Link>
           </li>
         </ul>
       </div>
@@ -282,14 +389,18 @@ function Menu({ vertical, toogle }) {
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none">
+          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none"
+        >
           Pagos
         </div>
         <ul
           tabIndex={0}
-          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow">
+          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
+        >
           <li>
-            <Link href="/pagos1" onClick={handleClick}>Pagos</Link>
+            <Link href="/pagos1" onClick={handleClick}>
+              Pagos
+            </Link>
           </li>
         </ul>
       </div>
@@ -297,7 +408,8 @@ function Menu({ vertical, toogle }) {
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none">
+          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none"
+        >
           Procesos
         </div>
         <ul
@@ -305,13 +417,24 @@ function Menu({ vertical, toogle }) {
           className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
         >
           <li>
-            <Link href="/adicion_productos_cartera" onClick={handleClick}>Adición de Productos a Cartera</Link>
+            <Link href="/clases" onClick={handleClick}>
+              Asinacion de Asignatura
+            </Link>
           </li>
           <li>
-            <Link href="/cancelacion_recibos" onClick={handleClick}>Cancelación de Recibo</Link>
+            <Link href="/adicion_productos_cartera" onClick={handleClick}>
+              Adición de Productos a Cartera
+            </Link>
           </li>
           <li>
-            <Link href="/c_calificaciones" onClick={handleClick}>Calificaciones</Link>
+            <Link href="/cancelacion_recibos" onClick={handleClick}>
+              Cancelación de Recibo
+            </Link>
+          </li>
+          <li>
+            <Link href="/c_calificaciones" onClick={handleClick}>
+              Calificaciones
+            </Link>
           </li>
           {/* 
           <li>
@@ -328,13 +451,17 @@ function Menu({ vertical, toogle }) {
             <Link href="" style={{ color: "red" }} onClick={handleClick}>Actualiza Cobranza</Link>
           </li> */}
           <li>
-            <Link href="cambio_ciclo_escolar" onClick={handleClick}>Cambio de Ciclo Escolar</Link>
+            <Link href="cambio_ciclo_escolar" onClick={handleClick}>
+              Cambio de Ciclo Escolar
+            </Link>
           </li>
           {/* <li>
             <Link href="" style={{ color: "red" }} onClick={handleClick}>Cobranza Diaria</Link>
           </li> */}
           <li>
-            <Link href="cambio_numero_alumno" onClick={handleClick}>Cambio Numero de Alumno</Link>
+            <Link href="cambio_numero_alumno" onClick={handleClick}>
+              Cambio Numero de Alumno
+            </Link>
           </li>
         </ul>
       </div>
@@ -342,50 +469,78 @@ function Menu({ vertical, toogle }) {
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none">
+          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none"
+        >
           Reportes
         </div>
         <ul
           tabIndex={0}
-          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow">
+          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
+        >
           <li>
-            <Link href="/rep_femac_6" onClick={handleClick}>Cobranza</Link>
+            <Link href="/rep_femac_6" onClick={handleClick}>
+              Cobranza
+            </Link>
           </li>
           <li>
-            <Link href="/rep_femac_1" onClick={handleClick}>Relación General de Alumnos</Link>
+            <Link href="/rep_femac_1" onClick={handleClick}>
+              Relación General de Alumnos
+            </Link>
           </li>
           <li>
-            <Link href="/Rep_Femac_2" onClick={handleClick}>Lista de Alumnos por Clase</Link>
+            <Link href="/Rep_Femac_2" onClick={handleClick}>
+              Lista de Alumnos por Clase
+            </Link>
           </li>
           <li>
-            <Link href="/rep_femac_3" onClick={handleClick}>Lista de Alumnos por Clase de Mes</Link>
+            <Link href="/rep_femac_3" onClick={handleClick}>
+              Lista de Alumnos por Clase de Mes
+            </Link>
           </li>
           <li>
-            <Link href="/rep_femac_13" onClick={handleClick}>Lista de Alumnos por Clase Semanal</Link>
+            <Link href="/rep_femac_13" onClick={handleClick}>
+              Lista de Alumnos por Clase Semanal
+            </Link>
           </li>
           <li>
-            <Link href="/rep_femac_5" onClick={handleClick}>Altas Y Bajas de Alumnos</Link>
+            <Link href="/rep_femac_5" onClick={handleClick}>
+              Altas Y Bajas de Alumnos
+            </Link>
           </li>
           <li>
-            <Link href="/rep_femac_7" onClick={handleClick}>Cartera</Link>
+            <Link href="/rep_femac_7" onClick={handleClick}>
+              Cartera
+            </Link>
           </li>
           <li>
-            <Link href="/rep_femac_8_anexo_1" onClick={handleClick}>Relación de Recibos</Link>
+            <Link href="/rep_femac_8_anexo_1" onClick={handleClick}>
+              Relación de Recibos
+            </Link>
           </li>
           <li>
-            <Link href="/Rep_Femac_9_Anexo_4" onClick={handleClick}>Relación de Facturas</Link>
+            <Link href="/Rep_Femac_9_Anexo_4" onClick={handleClick}>
+              Relación de Facturas
+            </Link>
           </li>
           <li>
-            <Link href="/rep_femac_10_Anexo_2" onClick={handleClick}>Estado de Cuenta</Link>
+            <Link href="/rep_femac_10_Anexo_2" onClick={handleClick}>
+              Estado de Cuenta
+            </Link>
           </li>
           <li>
-            <Link href="/rep_femac_11_Anexo_3" onClick={handleClick}>Reporte Cobranza por Alumno</Link>
+            <Link href="/rep_femac_11_Anexo_3" onClick={handleClick}>
+              Reporte Cobranza por Alumno
+            </Link>
           </li>
           <li>
-            <Link href="/rep_femac_12_anexo_4" onClick={handleClick}>Reporte Cobranza por Producto</Link>
+            <Link href="/rep_femac_12_anexo_4" onClick={handleClick}>
+              Reporte Cobranza por Producto
+            </Link>
           </li>
           <li>
-            <Link href="/rep_inscritos" onClick={handleClick}>Reporte Inscripción</Link>
+            <Link href="/rep_inscritos" onClick={handleClick}>
+              Reporte Inscripción
+            </Link>
           </li>
         </ul>
       </div>
@@ -393,20 +548,28 @@ function Menu({ vertical, toogle }) {
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none">
+          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none"
+        >
           Seguridad
         </div>
         <ul
           tabIndex={0}
-          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow">
+          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
+        >
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>Usuarios</Link>
+            <Link href="" style={{ color: "red" }} onClick={handleClick}>
+              Usuarios
+            </Link>
           </li>
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>Acceso a Usuarios</Link>
+            <Link href="" style={{ color: "red" }} onClick={handleClick}>
+              Acceso a Usuarios
+            </Link>
           </li>
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>Utilerias</Link>
+            <Link href="" style={{ color: "red" }} onClick={handleClick}>
+              Utilerias
+            </Link>
           </li>
         </ul>
       </div>
@@ -414,14 +577,18 @@ function Menu({ vertical, toogle }) {
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none">
+          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none"
+        >
           Propietario
         </div>
         <ul
           tabIndex={0}
-          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow">
+          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
+        >
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>Propietario</Link>
+            <Link href="" style={{ color: "red" }} onClick={handleClick}>
+              Propietario
+            </Link>
           </li>
         </ul>
       </div>
@@ -429,14 +596,18 @@ function Menu({ vertical, toogle }) {
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none">
+          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none"
+        >
           Video Ayuda
         </div>
         <ul
           tabIndex={0}
-          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow">
+          className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
+        >
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>Carga de Cartera</Link>
+            <Link href="" style={{ color: "red" }} onClick={handleClick}>
+              Carga de Cartera
+            </Link>
           </li>
         </ul>
       </div>
