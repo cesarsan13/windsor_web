@@ -18,6 +18,7 @@ function ModalProductos({
   disabledNum,
   num,
   setNum,
+  productos,
 }) {
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
@@ -34,10 +35,10 @@ function ModalProductos({
       accion === "Alta"
         ? `Nuevo Producto: ${currentID}`
         : accion === "Editar"
-          ? `Editar Producto: ${currentID}`
-          : accion === "Eliminar"
-            ? `Eliminar Producto: ${currentID}`
-            : `Ver Producto: ${currentID}`
+        ? `Editar Producto: ${currentID}`
+        : accion === "Eliminar"
+        ? `Eliminar Producto: ${currentID}`
+        : `Ver Producto: ${currentID}`
     );
   }, [accion, currentID]);
 
@@ -47,30 +48,45 @@ function ModalProductos({
       accion === "Alta"
         ? `Nuevo Producto: ${num}`
         : accion === "Editar"
-          ? `Editar Producto: ${num}`
-          : accion === "Eliminar"
-            ? `Eliminar Producto: ${num}`
-            : `Ver Producto: ${num}`
+        ? `Editar Producto: ${num}`
+        : accion === "Eliminar"
+        ? `Eliminar Producto: ${num}`
+        : `Ver Producto: ${num}`
     );
   }, [num]);
 
   const handleBlurOut = (evt, datatype) => {
     if (evt.target.name === "numero") {
-      setNum(evt.target.value);
+      const valor = evt.target.value;
+      const existeId = productos.some((p) => p.numero === valor);
+      if (existeId) {
+        showSwal(
+          "¡Advertencia!",
+          "El numero capturado ya existe, intenta con otro",
+          "warning",
+          "my_modal_3"
+        );
+        const T_Numero = document.getElementById("numero");
+        T_Numero.value = "";
+        setNum("");
+        T_Numero.focus();
+        return;
+      }
+      setNum(valor);
     }
-  }
+  };
 
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
       ? setProducto((producto) => ({
-        ...producto,
-        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-      }))
+          ...producto,
+          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+        }))
       : setProducto((producto) => ({
-        ...producto,
-        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-      }));
+          ...producto,
+          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+        }));
   };
   return (
     <dialog id="my_modal_3" className="modal">
@@ -80,10 +96,11 @@ function ModalProductos({
             <h3 className="font-bold text-lg">{titulo}</h3>
             <div className="flex space-x-2 items-center">
               <div
-                className={`tooltip tooltip-bottom ${accion === "Ver"
+                className={`tooltip tooltip-bottom ${
+                  accion === "Ver"
                     ? "hover:cursor-not-allowed hidden"
                     : "hover:cursor-pointer"
-                  }`}
+                }`}
                 data-tip="Guardar"
               >
                 <button
@@ -91,7 +108,11 @@ function ModalProductos({
                   id="btn_guardar"
                   className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
                 >
-                  <Image src={iconos.guardar} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 mr-1" />
+                  <Image
+                    src={iconos.guardar}
+                    alt="Guardar"
+                    className="w-5 h-5 md:w-6 md:h-6 mr-1"
+                  />
                   <span className="hidden sm:inline">Guardar</span>
                 </button>
               </div>
@@ -136,7 +157,6 @@ function ModalProductos({
                 maxLenght={30}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
-
               />
               <Inputs
                 dataType={"string"}
@@ -153,7 +173,6 @@ function ModalProductos({
                 maxLenght={3}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
-
               />
               <Inputs
                 dataType={"string"}

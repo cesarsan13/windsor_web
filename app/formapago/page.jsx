@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalFormaPago from "@/app/formapago/components/ModalFormaPago";
@@ -18,7 +18,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/formapago/formapago";
 import { ReportePDF } from "../utils/ReportesPDF";
-
+import { debounce } from "../utils/globalfn";
 function FormaPago() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -49,11 +49,6 @@ function FormaPago() {
     fetchData();
   }, [session, status, bajas]);
 
-  useEffect(() => {
-    // const { tb_id, tb_desc } = busqueda;
-    Buscar();
-  }, [busqueda]);
-
   const {
     register,
     handleSubmit,
@@ -77,7 +72,7 @@ function FormaPago() {
       cue_banco: formaPago.cue_banco,
     });
   }, [formaPago, reset]);
-  const Buscar = () => {
+  const Buscar = useCallback(() => {
     const { tb_id, tb_desc } = busqueda;
     if (tb_id === "" && tb_desc === "") {
       setFormaPagosFiltrados(formasPago);
@@ -93,10 +88,17 @@ function FormaPago() {
       return coincideId && coincideDescripcion;
     });
     setFormaPagosFiltrados(infoFiltrada);
-  };
+  }, [busqueda, formasPago]);
 
+  useEffect(() => {
+    const debouncedBuscar = debounce(Buscar, 300);
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar);
+    };
+  }, [busqueda, Buscar]);
   const limpiarBusqueda = (evt) => {
-    evt.preventDefault;
+    evt.preventDefault();
     setBusqueda({ tb_id: "", tb_desc: "" });
   };
 
@@ -193,7 +195,6 @@ function FormaPago() {
     router.push("/");
   };
   const handleBusquedaChange = (event) => {
-    event.preventDefault;
     setBusqueda((estadoPrevio) => ({
       ...estadoPrevio,
       [event.target.id]: event.target.value,

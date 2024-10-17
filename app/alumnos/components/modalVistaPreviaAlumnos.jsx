@@ -7,7 +7,13 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 
-function ModalVistaPreviaAlumnos({ pdfPreview, pdfData, PDF, Excel }) {
+function ModalVistaPreviaAlumnos({
+  pdfPreview,
+  pdfData,
+  PDF,
+  Excel,
+  CerrarView,
+}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -25,10 +31,7 @@ function ModalVistaPreviaAlumnos({ pdfPreview, pdfData, PDF, Excel }) {
       <div className="modal-box w-full max-w-4xl h-full">
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black"
-          onClick={(evt) => {
-            evt.preventDefault();
-            document.getElementById("modalVPAlumno").close();
-          }}
+          onClick={(evt) => CerrarView(evt)}
         >
           ✕
         </button>
@@ -42,7 +45,11 @@ function ModalVistaPreviaAlumnos({ pdfPreview, pdfData, PDF, Excel }) {
               onClick={PDF}
             >
               <span className="hidden sm:inline ">Generar PDF</span>
-              <Image src={iconos.imprimir} alt="Imprimir" className="w-5 h-5 md:w-6 md:h-6"/>
+              <Image
+                src={iconos.imprimir}
+                alt="Imprimir"
+                className="w-5 h-5 md:w-6 md:h-6"
+              />
             </button>
           </Tooltip>
           <Tooltip Titulo={"Imprimir Excel"} posicion={"tooltip-top"}>
@@ -51,7 +58,11 @@ function ModalVistaPreviaAlumnos({ pdfPreview, pdfData, PDF, Excel }) {
               onClick={Excel}
             >
               <span className="hidden sm:inline">Generar Excel</span>
-              <Image src={iconos.excel} alt="Excel" className="w-5 h-5 md:w-6 md:h-6"/>
+              <Image
+                src={iconos.excel}
+                alt="Excel"
+                className="w-5 h-5 md:w-6 md:h-6"
+              />
             </button>
           </Tooltip>
         </div>

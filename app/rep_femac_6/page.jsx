@@ -22,8 +22,8 @@ function Rep_Femac_6() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [cajero, setCajero] = useState({});
-  const [fechaIni, setFechaIni] = useState(""); 
-  const [fechaFin, setFechaFin] = useState(""); 
+  const [fechaIni, setFechaIni] = useState("");
+  const [fechaFin, setFechaFin] = useState("");
   const [dataCobranza, setDataCobranza] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   const [pdfPreview, setPdfPreview] = useState(false);
@@ -32,14 +32,14 @@ function Rep_Femac_6() {
     const fechaActual = new Date();
     return new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1)
       .toISOString()
-      .split('T')[0];
+      .split("T")[0];
   };
 
   const getUltimoDiaDelMes = () => {
     const fechaActual = new Date();
     return new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0)
       .toISOString()
-      .split('T')[0];
+      .split("T")[0];
   };
 
   useEffect(() => {
@@ -390,20 +390,72 @@ function Rep_Femac_6() {
         Excel={ImprimeExcel}
       />
 
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
-        <div className="flex flex-col justify-start p-3">
-          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
-            <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
-              <Acciones home={home} Ver={handleVerClick} />
+      <div className="flex flex-col justify-start items-start bg-slate-100 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+        <div className="w-full py-3">
+          {" "}
+          {/* Fila de la cabecera de la pagina */}
+          <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
+            <div className="flex flex-wrap items-start md:items-center mx-auto">
+              <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
+                <Acciones home={home} Ver={handleVerClick} />
+              </div>
+              <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
+                Reporte Resumen de Cobranza
+              </h1>
             </div>
-
-            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
-              Reporte Resumen de Cobranza
-            </h1>
           </div>
         </div>
+        <div className="w-full py-3 flex flex-col gap-y-4">
+          {/* Fila del formulario de la pagina */}
+          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 w-1/2 mx-auto ">
+          <div className="flex flex-row gap-4">
+            <div className="lg:w-fit md:w-fit">
+              <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3 w-auto lg:w-fit md:w-full">
+                Fecha Ini.
+                <input
+                  type="date"
+                  value={fechaIni}
+                  onChange={(e) => setFechaIni(e.target.value)}
+                  className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
+                />
+              </label>
+            </div>
+            <div className="lg:w-fit md:w-fit">
+              <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3 w-auto lg:w-fit md:w-fit">
+                Fecha Fin
+                <input
+                  type="date"
+                  value={fechaFin}
+                  onChange={(e) => setFechaFin(e.target.value)}
+                  className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
+                />
+              </label>
+            </div>
+            </div>
+          </div>
+          <div className="flex flex-row">
+          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 w-1/2 mx-auto ">
+            <div className="col-span-full md:col-span-full lg:col-span-full">
+              <div className="w-full">
+                <BuscarCat
+                  table={"cajeros"}
+                  titulo={"Cajeros: "}
+                  token={session.user.token}
+                  fieldsToShow={["numero", "nombre"]}
+                  nameInput={["numero", "nombre"]}
+                  setItem={setCajero}
+                  modalId={"modal_Cajeros"}
+                  alignRight={true}
+                  descClassName="md:mt-0 w-full"
+                />
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
+      {/* <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
           <div className="col-span-7">
             <div className="flex flex-col h-[calc(100%)]">
               <div className="flex flex-col md:flex-row gap-4">
@@ -446,8 +498,10 @@ function Rep_Femac_6() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
+      {/* </div>
+      </div> */}
     </>
   );
 }

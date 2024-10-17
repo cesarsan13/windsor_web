@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalComentarios from "./components/ModalComentarios";
@@ -15,11 +15,12 @@ import {
 } from "../utils/api/comentarios/comentarios";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { siguiente } from "../utils/api/comentarios/comentarios";
+import { siguiente } from "@/app/utils/api/comentarios/comentarios";
 import "jspdf-autotable";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import ModalVistaPreviaComentarios from "./components/modalVistaPreviaComentarios";
+import ModalVistaPreviaComentarios from "@/app/comentarios/components/modalVistaPreviaComentarios";
+import { debounce } from "@/app/utils/globalfn";
 
 function Comentarios() {
   const router = useRouter();
@@ -36,6 +37,7 @@ function Comentarios() {
   const [currentID, setCurrentId] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const [animateLoading, setAnimateLoading] = useState(false);
   const [busqueda, setBusqueda] = useState({
     tb_numero: "",
     tb_comentario1: "",
@@ -54,10 +56,6 @@ function Comentarios() {
     };
     fetchData();
   }, [session, status, bajas]);
-
-  useEffect(() => {
-    Buscar();
-  }, [busqueda]);
 
   const {
     register,
@@ -82,7 +80,8 @@ function Comentarios() {
       generales: formaComentarios.generales,
     });
   }, [formaComentarios, reset]);
-  const Buscar = () => {
+
+  const Buscar = useCallback(() => {
     const { tb_numero, tb_comentario1 } = busqueda;
 
     if (tb_numero === "" && tb_comentario1 === "") {
@@ -102,13 +101,23 @@ function Comentarios() {
       return coincideID && coincideComentario1;
     });
     setFormaComentariosFiltrados(infoFiltrada);
-  };
+  }, [busqueda, formasComentarios]);
+
+  useEffect(() => {
+    const debouncedBuscar = debounce(Buscar, 300);
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar);
+    };
+  }, [busqueda, Buscar]);
+
   const limpiarBusqueda = (evt) => {
-    evt.preventDefault;
+    evt.preventDefault();
     setBusqueda({ tb_numero: "", tb_comentario1: "" });
   };
 
   const handleVerClick = () => {
+    setAnimateLoading(true);
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -184,10 +193,13 @@ function Comentarios() {
         Enca1(reporte);
       }
     });
-    const pdfData = reporte.doc.output("datauristring");
-    setPdfData(pdfData);
-    setPdfPreview(true);
-    showModalVista(true);
+    setTimeout(() => {
+      const pdfData = reporte.doc.output("datauristring");
+      setPdfData(pdfData);
+      setPdfPreview(true);
+      showModalVista(true);
+      setAnimateLoading(false);
+    }, 500);
   };
 
   const showModalVista = (show) => {
@@ -199,6 +211,7 @@ function Comentarios() {
   const CerrarView = () => {
     setPdfPreview(false);
     setPdfData("");
+    document.getElementById("modalVPComentario").close();
   };
 
   const Alta = async (event) => {
@@ -211,14 +224,10 @@ function Comentarios() {
       comentario_3: "",
       generales: "",
     });
-    let siguienteId = await siguiente(token);
-    siguienteId = Number(siguienteId) + 1;
-    setCurrentId(siguienteId);
-    setFormaComentarios({ numero: siguienteId });
+    setFormaComentarios({ numero: "" });
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);
-
     document.getElementById("comentario_1").focus();
   };
 
@@ -259,7 +268,8 @@ function Comentarios() {
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
     const dataj = JSON.stringify(data);
-    data.numero = currentID;
+    accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
+    // data.numero = currentID;
     let res = null;
     if (accion === "Eliminar") {
       showModal(false);
@@ -278,6 +288,8 @@ function Comentarios() {
     res = await guardaComentarios(session.user.token, data, accion);
     if (res.status) {
       if (accion === "Alta") {
+        data.numero = res.data;
+        setCurrentId(data.numero);
         const nuevaFormaComentarios = { currentID, ...data };
         setFormasComentarios([...formasComentarios, nuevaFormaComentarios]);
         if (!bajas) {
@@ -357,9 +369,10 @@ function Comentarios() {
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
 
-<div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
@@ -371,6 +384,7 @@ function Comentarios() {
                 home={home}
                 Ver={handleVerClick}
                 // CerrarView={CerrarView}
+                animateLoading={animateLoading}
               ></Acciones>
             </div>
 

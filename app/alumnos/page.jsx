@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalAlumnos from "@/app/alumnos/components/modalAlumnos";
@@ -22,7 +22,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import { formatFecha, format_Fecha_String } from "../utils/globalfn";
+import { formatFecha, format_Fecha_String, debounce } from "../utils/globalfn";
 function Alumnos() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -44,14 +44,16 @@ function Alumnos() {
   const [cond2, setcond2] = useState({});
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const [fecha_hoy, setFechaHoy] = useState("");
+  const [animateLoading, setAnimateLoading] = useState(false);
   const [busqueda, setBusqueda] = useState({
     tb_id: "",
     tb_desc: "",
     tb_grado: "",
   });
 
-  const Buscar = () => {
-    // alert("Busca al guardar");
+  //Memorizar la funcion
+  const Buscar = useCallback(() => {
     const { tb_id, tb_desc, tb_grado } = busqueda;
     if (tb_id === "" && tb_desc === "" && tb_grado === "") {
       setAlumnosFiltrados(alumnos);
@@ -63,20 +65,28 @@ function Alumnos() {
         : true;
       const coincideDescripcion = tb_desc
         ? alumno["nombre"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_desc.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
         : true;
       const coincideGrado = tb_grado
         ? (alumno["horario_1_nombre"] || "")
-          .toString()
-          .toLowerCase()
-          .includes(tb_grado.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_grado.toLowerCase())
         : true;
       return coincideId && coincideDescripcion && coincideGrado;
     });
     setAlumnosFiltrados(infoFiltrada);
-  };
+  }, [busqueda, alumnos]);
+
+  useEffect(() => {
+    const debouncedBuscar = debounce(Buscar, 300);
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar);
+    };
+  }, [busqueda, Buscar]);
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -89,13 +99,12 @@ function Alumnos() {
       setAlumnos(data);
       setAlumnosFiltrados(data);
       setisLoading(false);
+      let fecha_hoy = new Date();
+      const fechaFormateada = fecha_hoy.toISOString().split("T")[0];
+      setFechaHoy(fechaFormateada);
     };
     fetchData();
   }, [session, status, bajas]);
-
-  useEffect(() => {
-    Buscar();
-  }, [busqueda, alumnos]);
 
   const {
     register,
@@ -192,6 +201,7 @@ function Alumnos() {
       rfc_factura: alumno.rfc_factura,
       estatus: alumno.estatus,
       escuela: alumno.escuela,
+      grupo: alumno.grupo,
       referencia: alumno.referencia,
     },
   });
@@ -285,6 +295,7 @@ function Alumnos() {
       rfc_factura: alumno.rfc_factura,
       estatus: alumno.estatus,
       escuela: alumno.escuela,
+      grupo: alumno.grupo,
       referencia: alumno.referencia,
     });
   }, [alumno, reset]);
@@ -307,13 +318,13 @@ function Alumnos() {
     setCapturedImage(null);
     const { token } = session.user;
     reset({
-      numero: 0,
+      numero: "",
       nombre: "",
       a_paterno: "",
       a_materno: "",
       a_nombre: "",
       fecha_nac: "",
-      fecha_inscripcion: "",
+      fecha_inscripcion: formatFecha(fecha_hoy),
       fecha_baja: "",
       sexo: "",
       telefono_1: "",
@@ -395,51 +406,26 @@ function Alumnos() {
       rfc_factura: "",
       estatus: "",
       escuela: "",
+      grupo: "",
       referencia: 0,
       baja: "",
     });
     setcond1({});
     setcond2({});
     setGrado({});
-    let siguienteId = await getLastAlumnos(token);
-    siguienteId = Number(siguienteId + 1);
-    setCurrentId(siguienteId);
-    setAlumno({ numero: siguienteId });
+    // // let siguienteId = await getLastAlumnos(token);
+    // // siguienteId = Number(siguienteId + 1);
+    // // setCurrentId(siguienteId);
+    setAlumno({ numero: "", fecha_inscripcion: fecha_hoy });
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);
 
     document.getElementById("a_paterno").focus();
   };
-  const Elimina_Comas = (data) => {
-    const convertir = (alumno) => {
-      const alumnoConvertido = { ...alumno };
-
-      for (const key in alumnoConvertido) {
-        if (
-          typeof alumnoConvertido[key] === "string" &&
-          alumnoConvertido[key].match(/^\d{1,3}(,\d{3})*(\.\d+)?$/)
-        ) {
-          alumnoConvertido[key] = parseFloat(
-            alumnoConvertido[key].replace(/,/g, "")
-          );
-        }
-      }
-      return alumnoConvertido;
-    };
-    if (Array.isArray(data)) {
-      return data.map(convertir);
-    } else {
-      return convertir(data);
-    }
-  };
-
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
-    // const dataj = JSON.stringify(data);
-    // alert(dataj);
-    // return;
-    data.numero = currentID;
+    accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
     let res = null;
     if (accion === "Eliminar") {
       showModal(false);
@@ -455,8 +441,9 @@ function Alumnos() {
         return;
       }
     }
-    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${data.a_nombre || ""
-      }`.trim();
+    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${
+      data.a_nombre || ""
+    }`.trim();
     data.nombre = nombreCompleto;
     const formData = new FormData();
     formData.append("numero", data.numero || "");
@@ -549,6 +536,7 @@ function Alumnos() {
     formData.append("rfc_factura", data.rfc_factura || "");
     formData.append("estatus", data.estatus || "");
     formData.append("escuela", data.escuela || "");
+    formData.append("grupo", grado.horario || "");
     if (condicion === true) {
       const blob = dataURLtoBlob(capturedImage);
       formData.append(
@@ -566,8 +554,8 @@ function Alumnos() {
     );
     if (res.status) {
       if (accion === "Alta") {
+        data.numero = res.data;
         const nuevosAlumnos = { ...data };
-
         setAlumnos([...alumnos, nuevosAlumnos]);
         if (!bajas) {
           setAlumnosFiltrados([...alumnosFiltrados, nuevosAlumnos]);
@@ -622,7 +610,7 @@ function Alumnos() {
     return new Blob(byteArrays, { type: contentType });
   };
   const limpiarBusqueda = (evt) => {
-    evt.preventDefault;
+    evt.preventDefault();
     setBusqueda({ tb_id: "", tb_desc: "", tb_grado: "" });
   };
   const showModal = (show) => {
@@ -639,7 +627,6 @@ function Alumnos() {
     router.push("/");
   };
   const handleBusquedaChange = (event) => {
-    event.preventDefault;
     setBusqueda((estadoPrevio) => ({
       ...estadoPrevio,
       [event.target.id]: event.target.value,
@@ -683,9 +670,11 @@ function Alumnos() {
   const CerrarView = () => {
     setPdfPreview(false);
     setPdfData("");
+    document.getElementById("modalVPAlumno").close();
   };
 
   const handleVerClick = () => {
+    setAnimateLoading(true);
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Lista de Alumnos por clase",
@@ -717,10 +706,6 @@ function Alumnos() {
     const reporte = new ReportePDF(configuracion, "Landscape");
     Enca1(reporte);
     alumnosFiltrados.forEach((alumno) => {
-      // console.log(
-      //   "esta es la fehca de inscr",
-      //   alumno.fecha_inscripcion.toString()
-      // );
       reporte.ImpPosX(alumno.numero.toString(), 19, reporte.tw_ren, 0, "R");
       reporte.ImpPosX(
         alumno.nombre.toString().substring(0, 20),
@@ -764,10 +749,13 @@ function Alumnos() {
         Enca1(reporte);
       }
     });
-    const pdfData = reporte.doc.output("datauristring");
-    setPdfData(pdfData);
-    setPdfPreview(true);
-    showModalVista(true);
+    setTimeout(() => {
+      const pdfData = reporte.doc.output("datauristring");
+      setPdfData(pdfData);
+      setPdfPreview(true);
+      showModalVista(true);
+      setAnimateLoading(false);
+    }, 500);
   };
 
   if (status === "loading") {
@@ -801,9 +789,10 @@ function Alumnos() {
         pdfData={pdfData}
         PDF={imprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
-<div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
-<div className="flex flex-col justify-start p-3">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+        <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
               <Acciones
@@ -813,7 +802,7 @@ function Alumnos() {
                 PDF={imprimePDF}
                 Excel={ImprimeExcel}
                 Ver={handleVerClick}
-                CerrarView={CerrarView}
+                animateLoading={animateLoading}
               />
             </div>
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">

@@ -1,3 +1,15 @@
+export const debounce = (func, delay) => {
+  let timeoutId;
+  return (...args) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+};
+
 export const soloEnteros = (event) => {
   const key = event.key;
   const keyCode = event.keyCode;
@@ -229,4 +241,39 @@ export const Fecha_AMD = (Tw_Fecha) => {
     "/" &
     Format(Tw_Fecha.Day, "0#")
   );
+};
+
+export const snToBool = (string) => {
+  console.log("Valor SN => ", string);
+  if (string == "Si" || string == true) {
+    return true;
+  } else {
+    return false;
+  }
+};
+export const validarRFC = (rfc) => {
+  const regexRFC =
+    /^([A-ZÑ&]{3,4})\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])[A-Z\d]{2}\d$/;
+
+  if (rfc.match(regexRFC)) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export const globalVariables = {
+  grupo: null,
+};
+export const setGlobalVariable = (key, value) => {
+  globalVariables[key] = value;
+  localStorage.setItem(key, JSON.stringify(value));
+};
+export const loadGlobalVariables = () => {
+  Object.keys(globalVariables).forEach((key) => {
+    const savedValue = localStorage.getItem(key);
+    if (savedValue !== null) {
+      globalVariables[key] = JSON.parse(savedValue);
+    }
+  });
 };

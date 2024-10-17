@@ -8,6 +8,9 @@ import { getCajeros } from "@/app/utils/api/cajeros/cajeros";
 import { getFormasPago } from "@/app/utils/api/formapago/formapago";
 import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
 import { getComentarios } from "@/app/utils/api/comentarios/comentarios";
+import { getGrupos } from "@/app/utils/api/grupos/grupos";
+import { getClasesBuscaCat } from "@/app/utils/api/clases/clases"
+import { loadGlobalVariables, globalVariables } from "@/app/utils/globalfn";
 
 function BuscarCat({
   table,
@@ -22,6 +25,7 @@ function BuscarCat({
   id,
   inputWidths = { contdef: "180px", first: "100px", second: "150px" },
   accion,
+  descClassName = "md:mt-0 lg:w-52 md:w-56 sm:w-60 w-full"
 }) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -57,6 +61,10 @@ function BuscarCat({
             fetchedData = await getProductos(token, "");
             setTiutloInput(["Id", "Descripción"]);
             break;
+          case "productos_cond":
+            fetchedData = await getProductos(token, "");
+            setTiutloInput(["Cond", "Descripción"]);
+            break;
           case "horarios":
             fetchedData = await getHorarios(token, "");
             setTiutloInput(["numero", "horario"]);
@@ -68,6 +76,15 @@ function BuscarCat({
           case "comentarios":
             fetchedData = await getComentarios(token, "");
             setTiutloInput(["Id", "Comentario"]);
+            break;
+          case "grupos":
+            fetchedData = await getGrupos(token, false);
+            setTiutloInput(["Grupo", "Salon"]);
+            break;
+          case "clases":
+            loadGlobalVariables()
+            fetchedData = await getClasesBuscaCat(token, globalVariables.grupo);
+            setTiutloInput(["Grupo", "Salon"]);
             break;
           case "formfact":
           case "formaPago":
@@ -137,7 +154,10 @@ function BuscarCat({
 
     if (inputValueStr === "") {
       setFilteredData(data);
-      reset();
+      reset({
+        [nameInput[0]]: "",
+        [nameInput[1]]: "",
+      });
       setItem({});
       return;
     }
@@ -202,13 +222,13 @@ function BuscarCat({
             </label>
             <button
               type="button"
-              className="bg-transparent join-item hover:bg-transparent border-none shadow-none dark:text-white text-black btn rounded-r-lg"
+              className="bg-transparent join-item hover:bg-transparent border-none shadow-none dark:text-white text-black btn rounded-r-lg max-[499px]:pb-4 max-[768px]:pb-4 max-[499px]:pt-0 max-[499px]:pl-0 max-[499px]:pr-0"
               onClick={Buscar}
             >
               <i className="fa-solid fa-magnifying-glass"></i>
             </button>
           </div>
-          <div className="md:mt-0 lg:w-52 md:w-56 sm:w-60 w-full">
+          <div className={descClassName}>
             <input
               id={nameInput[1]}
               name={nameInput[1]}
