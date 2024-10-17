@@ -1,19 +1,19 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "../utils/alerts";
+import { showSwal, confirmSwal, showSwalTarget } from "@/app/utils/alerts";
 import ModalUsuarios from "./components/ModalUsuario";
 import Busqueda from "./components/Busqueda";
 import Acciones from "./components/Acciones";
 import { useForm } from "react-hook-form";
-import { getUsuarios } from "../utils/api/usuarios/usuarios";
+import { getUsuarios, ImprimirPDF, ImprimirExcel, guardaUsuario} from "../utils/api/usuarios/usuarios";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/comentarios/comentarios";
 import "jspdf-autotable";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import ModalVistaPreviaComentarios from "@/app/comentarios/components/modalVistaPreviaComentarios";
+import ModalVistaPreviaUsuarios from "./components/modalVistaPreviaUsuarios";
 import TablaUsuarios from "./components/TablaUsuarios";
 
 function Usuarios() {
@@ -66,7 +66,7 @@ function Usuarios() {
         name:usuario.name,
         email:usuario.email,
         password:usuario.password,
-        password_confirm:usuario.password_confirm
+        match_password:usuario.match_password
     },
   });
   useEffect(() => {
@@ -76,7 +76,7 @@ function Usuarios() {
         name:usuario.name,
         email:usuario.email,
         password:usuario.password,
-        password_confirm:usuario.password_confirm
+        match_password:usuario.match_password
     });
   }, [usuario, reset]);
 
@@ -110,27 +110,26 @@ function Usuarios() {
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: "Reporte de Comentarios",
+        Nombre_Reporte: "Reporte de Usuarios",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
       body: usuariosFiltrados,
     };
 
-    const orientacion = "Landscape";
+    const orientacion = "Portrait";
     const reporte = new ReportePDF(configuracion, orientacion);
     const { body } = configuracion;
     const Enca1 = (doc) => {
       if (!doc.tiene_encabezado) {
-        doc.imprimeEncabezadoPrincipalH();
+        doc.imprimeEncabezadoPrincipalV();
         doc.nextRow(12);
         doc.ImpPosX("Id", 15, doc.tw_ren);
-        doc.ImpPosX("Comentario 1", 30, doc.tw_ren);
-        doc.ImpPosX("Comentario 2", 110, doc.tw_ren);
-        doc.ImpPosX("Comentario 3", 190, doc.tw_ren);
-        doc.ImpPosX("Generales", 270, doc.tw_ren);
+        doc.ImpPosX("Usuario", 30, doc.tw_ren);
+        doc.ImpPosX("Nombre", 70, doc.tw_ren);
+        doc.ImpPosX("Email", 150, doc.tw_ren);
 
         doc.nextRow(4);
-        doc.printLineH();
+        doc.printLineV();
         doc.nextRow(4);
         doc.tiene_encabezado = true;
       } else {
@@ -140,45 +139,38 @@ function Usuarios() {
     };
 
     Enca1(reporte);
-    body.forEach((comentarios) => {
+    body.forEach((usuarios) => {
       reporte.ImpPosX(
-        comentarios.numero.toString(),
+        usuarios.id.toString(),
         20,
         reporte.tw_ren,
         0,
         "R"
       );
       reporte.ImpPosX(
-        comentarios.comentario_1.toString(),
+        usuarios.name.toString(),
         30,
         reporte.tw_ren,
         35,
         "L"
       );
       reporte.ImpPosX(
-        comentarios.comentario_2.toString(),
-        110,
+        usuarios.nombre.toString(),
+        70,
         reporte.tw_ren,
         35,
         "L"
       );
       reporte.ImpPosX(
-        comentarios.comentario_3.toString(),
-        190,
+        usuarios.email.toString(),
+        150,
         reporte.tw_ren,
         35,
         "L"
       );
-      let resultado =
-        comentarios.generales == 1
-          ? "Si"
-          : comentarios.generales == 0
-          ? "No"
-          : "No valido";
-      reporte.ImpPosX(resultado.toString(), 270, reporte.tw_ren, 0, "L");
       Enca1(reporte);
-      if (reporte.tw_ren >= reporte.tw_endRenH) {
-        reporte.pageBreakH();
+      if (reporte.tw_ren >= reporte.tw_endRen) {
+        reporte.pageBreak();
         Enca1(reporte);
       }
     });
@@ -190,9 +182,10 @@ function Usuarios() {
 
   const showModalVista = (show) => {
     show
-      ? document.getElementById("modalVPComentario").showModal()
-      : document.getElementById("modalVPComentario").close();
-  };
+      ? document.getElementById("modalVPUsuario").showModal()
+      : document.getElementById("modalVPUsuario").close();
+  
+    };
 
   const CerrarView = () => {
     setPdfPreview(false);
@@ -208,7 +201,7 @@ function Usuarios() {
       nombre: "",
       email: "",
       password: "",
-      password_confirm:""
+      match_password:""
     });
 
     setUsuario({ id: "" });
@@ -223,7 +216,7 @@ function Usuarios() {
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: "Reporte de Comentarios",
+        Nombre_Reporte: "Reporte de Usuarios",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
       body: usuariosFiltrados,
@@ -235,59 +228,69 @@ function Usuarios() {
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: "Reporte de Comentarios",
+        Nombre_Reporte: "Reporte de Usuarios",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
-
+      
       body: usuariosFiltrados,
       columns: [
-        { header: "Id", dataKey: "numero" },
-        { header: "Comentario 1", dataKey: "comentario_1" },
-        { header: "Comentario 2", dataKey: "comentario_2" },
-        { header: "Comentario 3", dataKey: "comentario_3" },
-        { header: "Generales", dataKey: "generales" },
+        { header: "Id", dataKey: "id" },
+        { header: "Usuario", dataKey: "name" },
+        { header: "Nombre", dataKey: "nombre" },
+        { header: "Email", dataKey: "email" }
       ],
-
-      nombre: "Comentarios",
+      nombre: "Usuarios",
     };
     ImprimirExcel(configuracion);
   };
 
+  
+
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
-    accion === "Alta" ? (data.id = "") : (data.id = currentID);
-    // data.numero = currentID;
+
+    const password1 = watch("password", "");
+    const password2 = watch("match_password", "");
+    
+    if (password1 !== password2) {
+      showSwal("Error de Validación", "Las contraseñas no coinciden", "error", "modal_usuarios");
+      return;
+    } else{
+
+    if (
+      (accion === "Alta" || accion === "Editar") &&
+      (password1 === "" || password2 === "")
+    ) {
+      showSwal(
+        "Error de Validación",
+        "Por favor capture las contraseñas",
+        "error",
+        "modal_usuarios"
+      );
+      return;
+    }
+
     let res = null;
+
     if (accion === "Eliminar") {
-      showModal(false);
       const confirmed = await confirmSwal(
         "¿Desea Continuar?",
-        "Se eliminara el comentario seleccionado",
+        "Se eliminara al usuario seleccionado",
         "warning",
         "Aceptar",
-        "Cancelar"
+        "Cancelar",
+        "modal_usuarios"
       );
       if (!confirmed) {
-        showModal(true);
         return;
       }
     }
 
-    const formData = new FormData();
-    formData.append("id", data.id || "");
-    formData.append("nombre", data.nombre || "");
-    formData.append("name", data.name || "");
-    formData.append("email", data.email || "");
-    formData.append("password", data.password || "");
-    formData.append("numero_prop", 1 || "");
+    data.numero_prop = 1;
 
-    res = await guardaComentarios(session.user.token, formData, accion);
+    res = await guardaUsuario(session.user.token, data, accion);
     if (res.status) {
       if (accion === "Alta") {
-        
-        //const password = watch("password");
-        //const password_confirm = watch("password_confirm");
-
         data.id = res.data;
         setCurrentId(data.id);
         const nuevoUsuarios = { currentID, ...data };
@@ -330,6 +333,7 @@ function Usuarios() {
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
     }
+    }
   });
 
   const showModal = (show) => {
@@ -365,7 +369,7 @@ function Usuarios() {
         Usuario={usuario}
         watch={watch}
       />
-      <ModalVistaPreviaComentarios
+      <ModalVistaPreviaUsuarios
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
@@ -379,11 +383,8 @@ function Usuarios() {
               <Acciones
                 Buscar={Buscar}
                 Alta={Alta}
-                // ImprimePDF={ImprimePDF}
-                // ImprimeExcel={ImprimeExcel}
                 home={home}
                 Ver={handleVerClick}
-                // CerrarView={CerrarView}
               ></Acciones>
             </div>
 
