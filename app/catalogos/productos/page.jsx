@@ -1,28 +1,24 @@
 "use client";
 import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "../utils/alerts";
-import ModalProductos from "@/app/productos/components/modalProductos";
-import TablaProductos from "@/app/productos/components/tablaProductos";
-import Busqueda from "@/app/productos/components/Busqueda";
-import Acciones from "@/app/productos/components/Acciones";
-import ModalVistaPreviaProductos from "./components/modalVistaPreviaProductos";
+import { showSwal, confirmSwal } from "@/app/utils/alerts";
+import ModalProductos from "@/app/catalogos/productos/components/modalProductos";
+import TablaProductos from "@/app/catalogos/productos/components/tablaProductos";
+import Busqueda from "@/app/catalogos/productos/components/Busqueda";
+import Acciones from "@/app/catalogos/productos/components/Acciones";
+import ModalVistaPreviaProductos from "@/app/catalogos/productos/components/modalVistaPreviaProductos";
 import { useForm } from "react-hook-form";
 import { debounce } from "@/app/utils/globalfn";
 import {
   getProductos,
   guardarProductos,
-  getLastProduct,
   Imprimir,
   ImprimirExcel,
 } from "@/app/utils/api/productos/productos";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import jsPDF from "jspdf";
 import "jspdf-autotable";
-import * as XLSX from "xlsx";
 import { ReportePDF } from "../utils/ReportesPDF";
-import { Viewer, Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 function Productos() {
   const router = useRouter();
