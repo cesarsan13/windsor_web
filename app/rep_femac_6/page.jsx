@@ -409,7 +409,7 @@ function Rep_Femac_6() {
           <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
             <div className="flex flex-row max-[499px]:gap-1 gap-4">
               <div className="lg:w-fit md:w-fit">
-                <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3 w-auto lg:w-fit md:w-full">
+                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full">
                   Fecha Ini.
                   <input
                     type="date"
@@ -420,7 +420,7 @@ function Rep_Femac_6() {
                 </label>
               </div>
               <div className="lg:w-fit md:w-fit">
-                <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3 w-auto lg:w-fit md:w-fit">
+                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-fit">
                   Fecha Fin
                   <input
                     type="date"
