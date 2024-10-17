@@ -14,7 +14,9 @@ const menu2 = require("@/public/home_movil.jpg");
 const CardsHome = React.lazy(() => import("@/app/components/CardsHome"));
 const BarChart = React.lazy(() => import("@/app/components/BarChart"));
 const PieChart = React.lazy(() => import("@/app/components/PieChart"));
-const TimeLine = React.lazy(() => import("@/app/components/TimeLine"));
+const CumpleañerosView = React.lazy(() =>
+  import("@/app/components/Cumpleañeros/Cumpleañeros")
+);
 const SliderControl = React.lazy(() =>
   import("@/app/components/SliderControl")
 );
@@ -116,11 +118,22 @@ export default function Home() {
                 <BarChart hData={hData} isLoading={isLoading} />
                 <PieChart sexData={sexData} isLoading={isLoading} />
               </div>
-              <div className="grid grid-cols-1 gap-4  justify-items-center">
-                <TimeLine
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4  justify-items-center">
+                <CumpleañerosView
                   cumpleañeros={Cumpleañeros}
                   mesActual={mesActual}
-                ></TimeLine>
+                ></CumpleañerosView>
+                {/* <div className="grid gap-4 w-full card  items-center p-5 mb-4">
+                  <div className="card w-full h-full bg-base-100 shadow-lg rounded-lg">
+                    Hola
+                  </div>
+                  <div className="card w-full h-full bg-base-100 shadow-lg rounded-lg">
+                    mudno
+                  </div>
+                  <div className="card w-full h-full bg-base-100 shadow-lg rounded-lg">
+                    .
+                  </div>
+                </div> */}
               </div>
             </div>
           </div>

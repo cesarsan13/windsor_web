@@ -15,6 +15,8 @@ const iconos = {
   recargo: require("@/public/Iconos/Btn_recargos.png"),
   actualizar_formato: require("@/public/Iconos/Btn_actualizar_formato.png"),
   calendario: require("@/public/Iconos/Btn_Periodo_Negro.png"),
+  lista: require("@/public/Iconos/lista.png"),
+  tarjetas: require("@/public/Iconos/tarjetas.png"),
 };
 
 export default iconos;
