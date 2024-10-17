@@ -8,6 +8,9 @@ import { getCajeros } from "@/app/utils/api/cajeros/cajeros";
 import { getFormasPago } from "@/app/utils/api/formapago/formapago";
 import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
 import { getComentarios } from "@/app/utils/api/comentarios/comentarios";
+import { getGrupos } from "@/app/utils/api/grupos/grupos";
+import { getClasesBuscaCat } from "@/app/utils/api/clases/clases"
+import { loadGlobalVariables, globalVariables } from "@/app/utils/globalfn";
 
 function BuscarCat({
   table,
@@ -72,6 +75,15 @@ function BuscarCat({
           case "comentarios":
             fetchedData = await getComentarios(token, "");
             setTiutloInput(["Id", "Comentario"]);
+            break;
+          case "grupos":
+            fetchedData = await getGrupos(token, false);
+            setTiutloInput(["Grupo", "Salon"]);
+            break;
+          case "clases":
+            loadGlobalVariables()
+            fetchedData = await getClasesBuscaCat(token, globalVariables.grupo);
+            setTiutloInput(["Grupo", "Salon"]);
             break;
           case "formfact":
           case "formaPago":

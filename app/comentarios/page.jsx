@@ -95,9 +95,9 @@ function Comentarios() {
         : true;
       const coincideComentario1 = tb_comentario1
         ? formaComentarios["comentario_1"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_comentario1.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_comentario1.toLowerCase())
         : true;
       return coincideID && coincideComentario1;
     });
@@ -175,8 +175,8 @@ function Comentarios() {
         comentarios.generales == 1
           ? "Si"
           : comentarios.generales == 0
-          ? "No"
-          : "No valido";
+            ? "No"
+            : "No valido";
       reporte.ImpPosX(resultado.toString(), 270, reporte.tw_ren, 0, "L");
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRenH) {
@@ -373,7 +373,7 @@ function Comentarios() {
                 // ImprimeExcel={ImprimeExcel}
                 home={home}
                 Ver={handleVerClick}
-                // CerrarView={CerrarView}
+              // CerrarView={CerrarView}
               ></Acciones>
             </div>
 

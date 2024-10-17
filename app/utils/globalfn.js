@@ -249,3 +249,19 @@ export const validarRFC = (rfc) => {
     return false;
   }
 };
+
+export const globalVariables = {
+  grupo: null,
+};
+export const setGlobalVariable = (key, value) => {
+  globalVariables[key] = value;
+  localStorage.setItem(key, JSON.stringify(value));
+};
+export const loadGlobalVariables = () => {
+  Object.keys(globalVariables).forEach((key) => {
+    const savedValue = localStorage.getItem(key);
+    if (savedValue !== null) {
+      globalVariables[key] = JSON.parse(savedValue);
+    }
+  });
+};
