@@ -25,7 +25,8 @@ function BuscarCat({
   id,
   inputWidths = { contdef: "180px", first: "100px", second: "150px" },
   accion,
-  descClassName = "md:mt-0 lg:w-52 md:w-56 sm:w-60 w-full"
+  descClassName = "md:mt-0 lg:w-52 md:w-56 sm:w-60 w-full",
+  contClassName = "flex flex-row md:flex-row justify-start gap-2 sm:flex-row",
 }) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -189,7 +190,7 @@ function BuscarCat({
   };
 
   return (
-    <div className="flex flex-row md:flex-row justify-start gap-2 sm:flex-row">
+    <div className={contClassName}>
       {isLoading ? (
         <div className="flex justify-center items-center text-gray-600 text-lg">
           <FaSpinner className="animate-spin mx-2" />

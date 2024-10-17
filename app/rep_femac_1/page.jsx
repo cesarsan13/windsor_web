@@ -132,9 +132,12 @@ function AlumnosPorClase() {
 
       Enca1(newPDF);
       body.forEach((alumno) => {
-        const numero = calculaDigitoBvba((alumno.numero || "").toString() || "");
-        const nombre = `${alumno.a_nombre || ""} ${alumno.a_paterno || ""} ${alumno.a_materno || ""
-          }`.substring(0, 50);
+        const numero = calculaDigitoBvba(
+          (alumno.numero || "").toString() || ""
+        );
+        const nombre = `${alumno.a_nombre || ""} ${alumno.a_paterno || ""} ${
+          alumno.a_materno || ""
+        }`.substring(0, 50);
         const estatus = (alumno.estatus || "").toString().substring(0, 12);
         const fecha_nac = (alumno.fecha_nac || "").toString().substring(0, 15);
         const horario_1_nombre = (alumno.horario_1_nombre || "")
@@ -152,7 +155,13 @@ function AlumnosPorClase() {
           const fecha_baja = (alumno.fecha_baja || "")
             .toString()
             .substring(0, 15);
-          newPDF.ImpPosX(`Fecha de Baja: ${fecha_baja}`, 25, newPDF.tw_ren, 0, "L");
+          newPDF.ImpPosX(
+            `Fecha de Baja: ${fecha_baja}`,
+            25,
+            newPDF.tw_ren,
+            0,
+            "L"
+          );
         }
         Enca1(newPDF);
         if (newPDF.tw_ren >= newPDF.tw_endRen) {
@@ -186,88 +195,97 @@ function AlumnosPorClase() {
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
       />
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
-        <div className="flex flex-col justify-start p-3">
-          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
-            <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
-              <Acciones
-                home={home}
-                Ver={handleVerClick}
-              />
+      <div className="flex flex-col justify-start items-start bg-slate-100 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+        <div className="w-full py-3">
+          {/* Fila de la cabecera de la pagina */}
+          <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
+            <div className="flex flex-wrap items-start md:items-center mx-auto">
+              <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
+                <Acciones home={home} Ver={handleVerClick} />
+              </div>
+              <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
+                Relación General de Alumnos
+              </h1>
             </div>
-            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
-              Relación General de Alumnos
-            </h1>
           </div>
         </div>
-
-        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-          <div className="col-span-7">
-            <div className="flex flex-col h-full space-y-4">
-              <BuscarCat
-                table="alumnos"
-                fieldsToShow={["numero", "nombre_completo"]}
-                nameInput={["numero", "nombre_completo"]}
-                titulo={"Inicio: "}
-                setItem={setAlumnos1}
-                token={session.user.token}
-                modalId="modal_alumnos1"
-                alignRight={true}
-                inputWidths={{ first: "100px", second: "300px" }}
-              />
-              <BuscarCat
-                table="alumnos"
-                fieldsToShow={["numero", "nombre_completo"]}
-                nameInput={["numero", "nombre_completo"]}
-                titulo={"Fin:"}
-                setItem={setAlumnos2}
-                token={session.user.token}
-                modalId="modal_alumnos2"
-                alignRight={true}
-                inputWidths={{ first: "100px", second: "300px" }}
-
-              />
-              <div className="col-8 flex flex-col">
-                <div className="flex space-x-4">
-                  <label className="text-black dark:text-white flex flex-col md:flex-row space-x-4">
-                    <span className="text-black dark:text-white flex items-center gap-3">Ordenar por:</span>
-                    <label className="flex items-center gap-3">
-                      <span className="text-black dark:text-white">Nombre</span>
-                      <input
-                        type="radio"
-                        name="ordenar"
-                        value="nombre"
-                        onChange={handleCheckChange}
-                        checked={selectedOption === "nombre"}
-                        className="radio checked:bg-blue-500"
-                      />
-                    </label>
-                    <label className="flex items-center gap-3">
-                      <span className="text-black dark:text-white">Número</span>
-                      <input
-                        type="radio"
-                        name="ordenar"
-                        value="numero"
-                        onChange={handleCheckChange}
-                        checked={selectedOption === "numero"}
-                        className="radio checked:bg-blue-500"
-                      />
-                    </label>
+        <div className="w-full py-3 flex flex-col gap-y-4">
+          {/* Fila del formulario de la pagina */}
+          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4  w-1/2 mx-auto ">{/*min-[1920px]:w-1/4*/}
+              <div className="flex min-[1920px]:flex-row flex-col min-[1920px]:space-x-4">
+                <BuscarCat
+                  table="alumnos"
+                  fieldsToShow={["numero", "nombre_completo"]}
+                  nameInput={["numero", "nombre_completo"]}
+                  titulo={"Alumno Inicio: "}
+                  setItem={setAlumnos1}
+                  token={session.user.token}
+                  modalId="modal_alumnos1"
+                  alignRight={true}
+                  inputWidths={{ first: "100px", second: "300px" }}
+                  descClassName="md:mt-0 w-full"
+                  contClassName="flex flex-row md:flex-row justify-start gap-2 sm:flex-row w-full"
+                />
+                <BuscarCat
+                  table="alumnos"
+                  fieldsToShow={["numero", "nombre_completo"]}
+                  nameInput={["numero", "nombre_completo"]}
+                  titulo={"Alumno Fin:"}
+                  setItem={setAlumnos2}
+                  token={session.user.token}
+                  modalId="modal_alumnos2"
+                  alignRight={true}
+                  inputWidths={{ first: "100px", second: "300px" }}
+                  descClassName="md:mt-0 w-full"
+                  contClassName="flex flex-row md:flex-row justify-start gap-2 sm:flex-row w-full"
+                />
+              </div>
+          </div>
+          <div className="flex flex-row">
+            <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 w-1/2 mx-auto ">{/*min-[1920px]:w-1/4*/}
+              <div className="flex space-x-4">
+                <label className="text-black dark:text-white flex flex-row md:flex-row space-x-4">
+                  <span className="text-black dark:text-white flex items-center gap-3">
+                    Ordenar por:
+                  </span>
+                  <label className="flex items-center gap-3">
+                    <span className="text-black dark:text-white">Nombre</span>
+                    <input
+                      type="radio"
+                      name="ordenar"
+                      value="nombre"
+                      onChange={handleCheckChange}
+                      checked={selectedOption === "nombre"}
+                      className="radio checked:bg-blue-500"
+                    />
                   </label>
-                  <div className="tooltip" data-tip="Ver Bajas">
-                    <label
-                      htmlFor="ch_bajas"
-                      className="label cursor-pointer flex items-center space-x-2">
-                      <input
-                        id="ch_bajas"
-                        type="checkbox"
-                        className="checkbox checkbox-md"
-                        onClick={(evt) => setBajas(evt.target.checked)} />
-                      <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
-                        Incluir bajas
-                      </span>
-                    </label>
-                  </div>
+                  <label className="flex items-center gap-3">
+                    <span className="text-black dark:text-white">Número</span>
+                    <input
+                      type="radio"
+                      name="ordenar"
+                      value="numero"
+                      onChange={handleCheckChange}
+                      checked={selectedOption === "numero"}
+                      className="radio checked:bg-blue-500"
+                    />
+                  </label>
+                </label>
+                <div className="tooltip" data-tip="Ver Bajas">
+                  <label
+                    htmlFor="ch_bajas"
+                    className="label cursor-pointer flex items-center space-x-2"
+                  >
+                    <input
+                      id="ch_bajas"
+                      type="checkbox"
+                      className="checkbox checkbox-md"
+                      onClick={(evt) => setBajas(evt.target.checked)}
+                    />
+                    <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
+                      Incluir bajas
+                    </span>
+                  </label>
                 </div>
               </div>
             </div>
