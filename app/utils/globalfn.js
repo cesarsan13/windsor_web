@@ -264,6 +264,9 @@ export const validarRFC = (rfc) => {
 
 export const globalVariables = {
   grupo: null,
+  vg_caso_evaluar: null,
+  vg_actividad: null,
+  vg_area: null,
 };
 export const setGlobalVariable = (key, value) => {
   globalVariables[key] = value;
