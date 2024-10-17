@@ -1,6 +1,6 @@
 "use client";
 import Loading from "@/app/components/loading";
-import NoData from "@/app/components/noData";
+import NoData from "@/app/components/NoData";
 import React from "react";
 import iconos from "@/app/utils/iconos";
 import Image from "next/image";
@@ -15,7 +15,7 @@ function TablaClases({
   const tableAction = (evt, clase, accion) => {
     setClase(clase);
     setAccion(accion);
-    setCurrentId({id_grupo:clase.id_grupo, id_materia:clase.id_materia});
+    setCurrentId({ id_grupo: clase.id_grupo, id_materia: clase.id_materia });
     showModal(true);
   };
 
@@ -26,7 +26,7 @@ function TablaClases({
           <table className="table table-xs table-zebra w-full">
             <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
               <tr>
-              <td className="sm:w-[10%]">Asignatura</td>
+                <td className="sm:w-[10%]">Asignatura</td>
                 <td className="w-[10%]">Grupo</td>
                 <td className="w-[10%]">Profesor</td>
                 <td className="w-[10%]">Lunes</td>
@@ -53,9 +53,7 @@ function TablaClases({
                   >
                     {item.id_grupo}
                   </th>
-                  <td className="w-[10%]">
-                    {item.id_materia}
-                  </td>
+                  <td className="w-[10%]">{item.id_materia}</td>
                   <td className="w-[10%]">{item.profesor?.nombre}</td>
                   <td className="w-[10%]">{item.lunes}</td>
                   <td className="w-[10%]">{item.martes}</td>
