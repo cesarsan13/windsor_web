@@ -1,6 +1,5 @@
 "use client";
 
-import Button from "@/app/components/button";
 import Tooltip from "@/app/components/tooltip";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import React, { useEffect, useState } from "react";

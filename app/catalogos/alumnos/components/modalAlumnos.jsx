@@ -1,12 +1,6 @@
-import {
-  soloEnteros,
-  soloDecimales,
-  pone_ceros,
-  validarRFC,
-} from "@/app/utils/globalfn";
-import { showSwal, confirmSwal } from "@/app/utils/alerts";
+import { pone_ceros } from "@/app/utils/globalfn";
 import { useState, useEffect, useRef } from "react";
-import Inputs from "@/app/alumnos/components/Inputs";
+import Inputs from "@/app/catalogos/alumnos/components/Inputs";
 import Webcam from "react-webcam";
 import Image from "next/image";
 import BuscarCat from "@/app/components/BuscarCat";

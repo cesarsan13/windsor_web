@@ -1,14 +1,14 @@
 "use client";
 import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "../utils/alerts";
-import ModalAlumnos from "@/app/alumnos/components/modalAlumnos";
-import TablaAlumnos from "@/app/alumnos/components/tablaAlumnos";
-import Busqueda from "@/app/alumnos/components/Busqueda";
-import Acciones from "@/app/alumnos/components/Acciones";
+import { showSwal, confirmSwal } from "@/app/utils/alerts";
+import ModalAlumnos from "@/app/catalogos/alumnos/components/modalAlumnos";
+import TablaAlumnos from "@/app/catalogos/alumnos/components/tablaAlumnos";
+import Busqueda from "@/app/catalogos/alumnos/components/Busqueda";
+import Acciones from "@/app/catalogos/alumnos/components/Acciones";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { useForm } from "react-hook-form";
-import ModalVistaPreviaAlumnos from "./components/modalVistaPreviaAlumnos";
+import ModalVistaPreviaAlumnos from "@/app/catalogos/alumnos/components/modalVistaPreviaAlumnos";
 import {
   getAlumnos,
   guardarAlumnos,
@@ -22,7 +22,11 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import { formatFecha, format_Fecha_String, debounce } from "../utils/globalfn";
+import {
+  formatFecha,
+  format_Fecha_String,
+  debounce,
+} from "@/app/utils/globalfn";
 function Alumnos() {
   const router = useRouter();
   const { data: session, status } = useSession();

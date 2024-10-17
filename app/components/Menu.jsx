@@ -114,42 +114,42 @@ function Menu({ vertical, toogle }) {
           <summary>Catálogos</summary>
           <ul>
             <li className="">
-              <Link href="/alumnos" onClick={toogle}>
+              <Link href="/catalogos/alumnos" onClick={toogle}>
                 Alumnos
               </Link>
             </li>
             <li>
-              <Link href="/productos" onClick={toogle}>
+              <Link href="/catalogos/productos" onClick={toogle}>
                 Productos
               </Link>
             </li>
             <li>
-              <Link href="/comentarios" onClick={toogle}>
+              <Link href="/catalogos/comentarios" onClick={toogle}>
                 Comentarios
               </Link>
             </li>
             <li>
-              <Link href="/cajeros" onClick={toogle}>
+              <Link href="/catalogos/cajeros" onClick={toogle}>
                 Cajeros
               </Link>
             </li>
             <li>
-              <Link href="/horarios" onClick={toogle}>
+              <Link href="/catalogos/horarios" onClick={toogle}>
                 Horarios
               </Link>
             </li>
             <li>
-              <Link href="/formapago" onClick={toogle}>
+              <Link href="/catalogos/formapago" onClick={toogle}>
                 Forma de Pago
               </Link>
             </li>
             <li>
-              <Link href="/formfact" onClick={toogle}>
+              <Link href="/catalogos/formfact" onClick={toogle}>
                 Formato Variable
               </Link>
             </li>
             <li>
-              <Link href="/asignaturas" onClick={toogle}>
+              <Link href="/catalogos/asignaturas" onClick={toogle}>
                 Asignaturas
               </Link>
             </li>
@@ -339,47 +339,47 @@ function Menu({ vertical, toogle }) {
           className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
         >
           <li>
-            <Link href="/alumnos" onClick={handleClick}>
+            <Link href="/catalogos/alumnos" onClick={handleClick}>
               Alumnos
             </Link>
           </li>
           <li>
-            <Link href="/productos" onClick={handleClick}>
+            <Link href="/catalogos/productos" onClick={handleClick}>
               Productos
             </Link>
           </li>
           <li>
-            <Link href="/comentarios" onClick={handleClick}>
+            <Link href="/catalogos/comentarios" onClick={handleClick}>
               Comentarios
             </Link>
           </li>
           <li>
-            <Link href="/cajeros" onClick={handleClick}>
+            <Link href="/catalogos/cajeros" onClick={handleClick}>
               Cajeros
             </Link>
           </li>
           <li>
-            <Link href="/horarios" onClick={handleClick}>
+            <Link href="/catalogos/horarios" onClick={handleClick}>
               Horarios
             </Link>
           </li>
           <li>
-            <Link href="/formapago" onClick={handleClick}>
+            <Link href="/catalogos/formapago" onClick={handleClick}>
               Forma de Pago
             </Link>
           </li>
           <li>
-            <Link href="/formfact" onClick={handleClick}>
+            <Link href="/catalogos/formfact" onClick={handleClick}>
               Formato Variable
             </Link>
           </li>
           <li>
-            <Link href="/asignaturas" onClick={handleClick}>
+            <Link href="/catalogos/asignaturas" onClick={handleClick}>
               Asignaturas
             </Link>
           </li>
           <li>
-            <Link href="/profesores" onClick={handleClick}>
+            <Link href="/catalogos/profesores" onClick={handleClick}>
               Profesores
             </Link>
           </li>
