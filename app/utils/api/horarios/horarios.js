@@ -128,3 +128,19 @@ export const ImprimirExcel = (configuracion) => {
   newExcel.addData(body);
   newExcel.guardaReporte(nombre);
 };
+
+export const getHorariosXAlumno = async (token, horario) => {
+  const res = await fetch(`${process.env.DOMAIN_API}api/AlumnosPC/Lista`, {
+    method: "post",
+    body: JSON.stringify({
+      horario: horario,
+    }),
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+  });
+
+  const resJson = await res.json();
+  return resJson.data;
+};

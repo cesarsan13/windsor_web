@@ -3,7 +3,7 @@ import ModalBuscarCat from "./ModalBuscarCat";
 import { FaSpinner } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { getProductos } from "@/app/utils/api/productos/productos";
-import { getHorarios } from "@/app/utils/api/horarios/horarios";
+import { getHorarios, getHorariosXAlumno } from "@/app/utils/api/horarios/horarios";
 import { getCajeros } from "@/app/utils/api/cajeros/cajeros";
 import { getFormasPago } from "@/app/utils/api/formapago/formapago";
 import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
@@ -23,6 +23,7 @@ function BuscarCat({
   array,
   alignRight = false,
   id,
+  idBusqueda,
   inputWidths = { contdef: "180px", first: "100px", second: "150px" },
   accion,
   descClassName = "md:mt-0 lg:w-52 md:w-56 sm:w-60 w-full",
@@ -82,6 +83,11 @@ function BuscarCat({
             fetchedData = await getGrupos(token, false);
             setTiutloInput(["Grupo", "Salon"]);
             break;
+          case "alumnogrupo":
+            loadGlobalVariables()
+            fetchedData = await getHorariosXAlumno(token, idBusqueda)
+            setTiutloInput(["Numero", "Nombre"])
+            break;
           case "clases":
             loadGlobalVariables()
             fetchedData = await getClasesBuscaCat(token, globalVariables.grupo);
@@ -117,7 +123,7 @@ function BuscarCat({
       }
     };
     fetchData();
-  }, [table, token, id, array]);
+  }, [table, token, id, array, idBusqueda]);
 
   const inputValue = watch(nameInput[0]);
   const inputValueDesc = watch(nameInput[1]);
