@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import {
   getReportAltaBajaAlumno,
   Imprimir,
-  ImprimirExcel
+  ImprimirExcel,
 } from "@/app/utils/api/rep_femac_5/rep_femac_5";
 import ModalVistaPreviaRep5 from "./components/modalVistaPreviaRep5";
 import { useState, useEffect } from "react";
@@ -17,7 +17,6 @@ import { showSwal } from "@/app/utils/alerts";
 import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-
 
 function AltasBajasAlumnos() {
   const router = useRouter();
@@ -29,26 +28,27 @@ function AltasBajasAlumnos() {
   const [selectedOptionAB, setSelectedOptionAB] = useState("alta");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
-  const { formState: { errors }, } = useForm({});
+  const {
+    formState: { errors },
+  } = useForm({});
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
     return new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1)
       .toISOString()
-      .split('T')[0];
+      .split("T")[0];
   };
 
   const getUltimoDiaDelMes = () => {
     const fechaActual = new Date();
     return new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0)
       .toISOString()
-      .split('T')[0];
+      .split("T")[0];
   };
 
   useEffect(() => {
     setFecha_ini(getPrimerDiaDelMes());
     setFecha_fin(getUltimoDiaDelMes());
   }, []);
-
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
@@ -83,7 +83,6 @@ function AltasBajasAlumnos() {
       return;
     }
   };
-
 
   const ImprimePDF = async () => {
     alumnosFiltrados = await formaImprime();
@@ -130,7 +129,6 @@ function AltasBajasAlumnos() {
         "Para imprimir, debes seleccionar un rango de fechas",
         "error"
       );
-
     } else {
       const alumnosFiltrados = await formaImprime();
       const configuracion = {
@@ -165,9 +163,10 @@ function AltasBajasAlumnos() {
 
       Enca2(newPDF);
       body.forEach((alumno) => {
-        const nombre = `${alumno.a_nombre || ""} ${alumno.a_paterno || ""} ${alumno.a_materno || ""
-          }`;
-        const id = calculaDigitoBvba((alumno.numero || '').toString() || '');
+        const nombre = `${alumno.a_nombre || ""} ${alumno.a_paterno || ""} ${
+          alumno.a_materno || ""
+        }`;
+        const id = calculaDigitoBvba((alumno.numero || "").toString() || "");
         let fecha;
         fecha = new Date(alumno.fecha_nac);
         const diaFor = fecha.getDate().toString().padStart(2, "0");
@@ -210,60 +209,112 @@ function AltasBajasAlumnos() {
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
       />
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
-        <div className="flex flex-col justify-start p-3">
-          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
-            <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
-              <Acciones
-                home={home}
-                Ver={handleVerClick}
-              />
+      <div className="flex flex-col justify-start items-start bg-slate-100 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+        <div className="w-full py-3">
+          {/* Fila de la cabecera de la pagina */}
+          <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
+            <div className="flex flex-wrap items-start md:items-center mx-auto">
+              <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
+                <Acciones home={home} Ver={handleVerClick} />
+              </div>
+              <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
+                Altas y Bajas de Alumnos
+              </h1>
             </div>
-
-            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
-              Altas y Bajas de Alumnos
-            </h1>
           </div>
         </div>
-        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-          <div className="col-span-7">
-            <div className='flex flex-col h-[calc(100%)]'>
-              <div className='flex flex-col md:flex-row gap-4'>
-                <div className='w-11/12 md:w-4/12 lg:w-3/12'>
-                  <Inputs
-                    name={"fecha_ini"}
-                    tamañolabel={""}
-                    className={"rounded block grow"}
-                    Titulo={"Fecha Inicial: "}
-                    type={"date"}
-                    errors={errors}
-                    maxLength={15}
-                    isDisabled={false}
-                    value={fecha_ini}
-                    setValue={setFecha_ini}
-                  />
-                </div>
-                <div className='w-11/12 md:w-4/12 lg:w-3/12'>
-                  <Inputs
-                    name={"fecha_fin"}
-                    tamañolabel={""}
-                    className={"rounded block grow"}
-                    Titulo={"Fecha Final: "}
-                    type={"date"}
-                    errors={errors}
-                    maxLength={15}
-                    isDisabled={false}
-                    value={fecha_fin}
-                    setValue={setFecha_fin}
-                  />
-                </div>
+        <div className="w-full py-3 flex flex-col gap-y-4">
+          {/* Fila del formulario de la pagina */}
+          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
+            <div className="flex flex-row max-[499px]:gap-1 gap-4">
+              <Inputs
+                name={"fecha_ini"}
+                tamañolabel={""}
+                Titulo={"Fecha Inicial: "}
+                type={"date"}
+                errors={errors}
+                maxLength={15}
+                isDisabled={false}
+                value={fecha_ini}
+                setValue={setFecha_ini}
+                conteClassName="lg:w-fit md:w-fit"
+                labelClassName="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full"
+                inputClassName="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700"
+              />
+              <Inputs
+                name={"fecha_fin"}
+                tamañolabel={""}
+                Titulo={"Fecha Final: "}
+                type={"date"}
+                errors={errors}
+                maxLength={15}
+                isDisabled={false}
+                value={fecha_fin}
+                setValue={setFecha_fin}
+                conteClassName="lg:w-fit md:w-fit"
+                labelClassName="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full"
+                inputClassName="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700"
+              />
+            </div>
+          </div>
+          <div className="flex flex-row">
+            <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
+              <div className="flex space-x-4">
+                <label className="text-black dark:text-white max-[499px]:flex-col flex flex-row gap-3 md:flex-row">
+                  <div className="flex  flex-row">
+                    <span className="text-black dark:text-white">
+                      Ordenar por:
+                    </span>
+                  </div>
+                  <div className="flex flex-row  max-[499px]:space-x-4 space-x-4">
+                    <label className="flex items-center gap-3">
+                      <span className="text-black dark:text-white">Nombre</span>
+                      <input
+                        type="radio"
+                        name="ordenar"
+                        value="nombre"
+                        onChange={handleOptionChange}
+                        checked={selectedOption === "nombre"}
+                        className="radio checked:bg-blue-500"
+                      />
+                    </label>
+                    <label className="flex items-center gap-3">
+                      <span className="text-black dark:text-white">Número</span>
+                      <input
+                        type="radio"
+                        name="ordenar"
+                        value="numero"
+                        onChange={handleOptionChange}
+                        checked={selectedOption === "numero"}
+                        className="radio checked:bg-blue-500"
+                      />
+                    </label>
+                    <label className="flex items-center gap-3">
+                      <span className="text-black dark:text-white">
+                        Fecha Nacimiento
+                      </span>
+                      <input
+                        type="radio"
+                        name="ordenar"
+                        value="fecha_nac"
+                        onChange={handleOptionChange}
+                        checked={selectedOption === "fecha_nac"}
+                        className="radio checked:bg-blue-500"
+                      />
+                    </label>
+                  </div>
+                </label>
               </div>
-              <div className=" col-7">
+            </div>
+          </div>
+          <div className="flex flex-row">
+            <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
+              <div className="flex space-x-4">
                 <label
-                  className={` input-md text-black dark:text-white flex items-center gap-3`}
+                  className={` input-md text-black dark:text-white flex flex-row items-center gap-3 pl-0`}
                 >
                   <label
-                    className={` input-md text-black dark:text-white flex items-center gap-3`}
+                    className={` input-md text-black dark:text-white flex items-center gap-3 pl-0`}
                   >
                     <span className="text-black dark:text-white">Altas</span>
                     <input
@@ -285,46 +336,6 @@ function AltasBajasAlumnos() {
                       value="bajas"
                       onChange={handleOptionChangeAB}
                       checked={selectedOptionAB === "bajas"}
-                      className="radio checked:bg-blue-500"
-                    />
-                  </label>
-                </label>
-              </div>
-              <div className=" col-8 flex flex-col">
-                <label className="text-black dark:text-white flex flex-col gap-3 md:flex-row">
-                  <span className="text-black dark:text-white">Ordenar por:</span>
-                  <label className="flex items-center gap-3">
-                    <span className="text-black dark:text-white">Nombre</span>
-                    <input
-                      type="radio"
-                      name="ordenar"
-                      value="nombre"
-                      onChange={handleOptionChange}
-                      checked={selectedOption === "nombre"}
-                      className="radio checked:bg-blue-500"
-                    />
-                  </label>
-                  <label className="flex items-center gap-3">
-                    <span className="text-black dark:text-white">Número</span>
-                    <input
-                      type="radio"
-                      name="ordenar"
-                      value="numero"
-                      onChange={handleOptionChange}
-                      checked={selectedOption === "numero"}
-                      className="radio checked:bg-blue-500"
-                    />
-                  </label>
-                  <label className="flex items-center gap-3">
-                    <span className="text-black dark:text-white">
-                      Fecha Nacimiento
-                    </span>
-                    <input
-                      type="radio"
-                      name="ordenar"
-                      value="fecha_nac"
-                      onChange={handleOptionChange}
-                      checked={selectedOption === "fecha_nac"}
                       className="radio checked:bg-blue-500"
                     />
                   </label>
