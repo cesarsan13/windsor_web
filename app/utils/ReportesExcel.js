@@ -1,5 +1,10 @@
 import * as XLSX from "xlsx";
-import { formatDate, formatTime, formatFecha, format_Fecha_String } from "./globalfn";
+import {
+  formatDate,
+  formatTime,
+  formatFecha,
+  format_Fecha_String,
+} from "./globalfn";
 
 export class ReporteExcel {
   constructor(configuracion) {
@@ -14,7 +19,9 @@ export class ReporteExcel {
   imprimeEncabezadoPrincipal() {
     const { Encabezado } = this.configuracion;
     const date = new Date();
-    const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+    const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
     const dateStr = format_Fecha_String(todayDate);
     const timeStr = formatTime(date);
     Encabezado;
@@ -33,13 +40,15 @@ export class ReporteExcel {
     this.worksheetData = this.worksheetData.concat(rowsData);
   }
   setColumnas(columnas) {
-    this.columnas = columnas;
+    this.columns = columnas;
     const headerRow = columnas.map((col) => col.header);
     this.addRow(headerRow);
   }
   addData(data) {
     data.forEach((row) => {
-      let rowData = this.columnas.map((col) => {
+      // const rowData = this.columns.map((col) => row[col.dataKey] || "");
+      // this.addRow(rowData);
+      let rowData = this.columns.map((col) => {
         if (col.dataKey === this.conditionColumn && this.condition) {
           return this.condition(row[col.dataKey]) ? "Si" : "No";
         }
@@ -73,14 +82,14 @@ export class ReporteExcel {
     this.conditionColumn = conditionColumn;
     this.condition = conditionFunction;
   }
-  setColumnas(columns) {
-    this.columns = columns;
-  }
-  addData(row) {
-    this.data.push(row);
-  }
+  // setColumnas(columns) {
+  //   this.columns = columns;
+  // }
+  // addData(row) {
+  //   this.data.push(row);
+  // }
   saltarFila() {
-    const emptyRow = new Array(this.columns.length).fill('');
+    const emptyRow = new Array(this.columns.length).fill("");
     this.addData(emptyRow);
   }
 }
