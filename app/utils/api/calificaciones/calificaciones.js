@@ -18,3 +18,37 @@ export const getProcesoCalificaciones = async (token, data) => {
     const resJson = await res.json();
     return resJson;
 };
+
+export const getMateriasGrupo = async (token,grupo)=>{
+    let url = `${process.env.DOMAIN_API}api/calificaciones/materias`
+    const res = await fetch(url,{
+        method:"post",
+        body:JSON.stringify({
+            grupo:grupo
+        }),
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+    });
+    const resJson = await res.json();
+    return resJson.data;
+}
+export const getCalificaciones = async(token,grupo,materia,bimestre,alumno)=>{
+    let url = `${process.env.DOMAIN_API}api/calificaciones`
+    const res = await fetch(url,{
+        method:"post",
+        body:JSON.stringify({
+            grupo:grupo,            
+            materia:materia,
+            bimestre:bimestre,
+            alumno:alumno,
+        }),
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+    });
+    const resJson = await res.json();
+    return resJson.data;
+}
