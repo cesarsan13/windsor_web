@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import Acciones from "@/app/rep_femac_1/components/Acciones";
+import Acciones from "@/app/reportes/rep_femac_1/components/Acciones";
 
 import {
   ImprimirPDF,
@@ -16,7 +16,7 @@ import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { calculaDigitoBvba } from "@/app/utils/globalfn";
-import ModalVistaPreviaRelacionGeneralAlumnos from "./components/ModalVistaPreviaRelacionGeneralAlumnos";
+import ModalVistaPreviaRelacionGeneralAlumnos from "@/app/reportes/rep_femac_1/components/ModalVistaPreviaRelacionGeneralAlumnos";
 
 function AlumnosPorClase() {
   const router = useRouter();
@@ -211,38 +211,40 @@ function AlumnosPorClase() {
         </div>
         <div className="w-full py-3 flex flex-col gap-y-4">
           {/* Fila del formulario de la pagina */}
-          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4  w-1/2 mx-auto ">{/*min-[1920px]:w-1/4*/}
-              <div className="flex min-[1920px]:flex-row flex-col min-[1920px]:space-x-4">
-                <BuscarCat
-                  table="alumnos"
-                  fieldsToShow={["numero", "nombre_completo"]}
-                  nameInput={["numero", "nombre_completo"]}
-                  titulo={"Alumno Inicio: "}
-                  setItem={setAlumnos1}
-                  token={session.user.token}
-                  modalId="modal_alumnos1"
-                  alignRight={true}
-                  inputWidths={{ first: "100px", second: "300px" }}
-                  descClassName="md:mt-0 w-full"
-                  contClassName="flex flex-row md:flex-row justify-start gap-2 sm:flex-row w-full"
-                />
-                <BuscarCat
-                  table="alumnos"
-                  fieldsToShow={["numero", "nombre_completo"]}
-                  nameInput={["numero", "nombre_completo"]}
-                  titulo={"Alumno Fin:"}
-                  setItem={setAlumnos2}
-                  token={session.user.token}
-                  modalId="modal_alumnos2"
-                  alignRight={true}
-                  inputWidths={{ first: "100px", second: "300px" }}
-                  descClassName="md:mt-0 w-full"
-                  contClassName="flex flex-row md:flex-row justify-start gap-2 sm:flex-row w-full"
-                />
-              </div>
+          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4  w-1/2 mx-auto ">
+            {/*min-[1920px]:w-1/4*/}
+            <div className="flex min-[1920px]:flex-row flex-col min-[1920px]:space-x-4">
+              <BuscarCat
+                table="alumnos"
+                fieldsToShow={["numero", "nombre_completo"]}
+                nameInput={["numero", "nombre_completo"]}
+                titulo={"Alumno Inicio: "}
+                setItem={setAlumnos1}
+                token={session.user.token}
+                modalId="modal_alumnos1"
+                alignRight={true}
+                inputWidths={{ first: "100px", second: "300px" }}
+                descClassName="md:mt-0 w-full"
+                contClassName="flex flex-row md:flex-row justify-start gap-2 sm:flex-row w-full"
+              />
+              <BuscarCat
+                table="alumnos"
+                fieldsToShow={["numero", "nombre_completo"]}
+                nameInput={["numero", "nombre_completo"]}
+                titulo={"Alumno Fin:"}
+                setItem={setAlumnos2}
+                token={session.user.token}
+                modalId="modal_alumnos2"
+                alignRight={true}
+                inputWidths={{ first: "100px", second: "300px" }}
+                descClassName="md:mt-0 w-full"
+                contClassName="flex flex-row md:flex-row justify-start gap-2 sm:flex-row w-full"
+              />
+            </div>
           </div>
           <div className="flex flex-row">
-            <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 w-1/2 mx-auto ">{/*min-[1920px]:w-1/4*/}
+            <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 w-1/2 mx-auto ">
+              {/*min-[1920px]:w-1/4*/}
               <div className="flex space-x-4">
                 <label className="text-black dark:text-white flex flex-row md:flex-row space-x-4">
                   <span className="text-black dark:text-white flex items-center gap-3">

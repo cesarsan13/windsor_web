@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Acciones from "@/app/rep_femac_3/components/Acciones";
-import ModalVistaPreviaRepFemac3 from "./components/modalVistaPreviaRepFemac3";
+import Acciones from "@/app/reportes/rep_femac_3/components/Acciones";
+import ModalVistaPreviaRepFemac3 from "@/app/reportes/rep_femac_3/components/modalVistaPreviaRepFemac3";
 import {
   getAlumnosPorMes,
   Imprimir,
@@ -12,7 +12,7 @@ import { useSession } from "next-auth/react";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "jspdf-autotable";
-import BuscarCat from "../components/BuscarCat";
+import BuscarCat from "@/app/components/BuscarCat";
 import { showSwal } from "@/app/utils/alerts";
 
 function Rep_Femac_3() {

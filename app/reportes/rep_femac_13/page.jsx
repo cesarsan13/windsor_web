@@ -1,19 +1,19 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Acciones from "@/app/rep_femac_13/components/Acciones";
-import ModalVistaPreviaRepFemac13 from "./components/modalVistaPreviaRepFemac13";
+import Acciones from "@/app/reportes/rep_femac_13/components/Acciones";
+import ModalVistaPreviaRepFemac13 from "@/app/reportes/rep_femac_13/components/modalVistaPreviaRepFemac13";
 import {
   getRepASem,
   ImprimirExcel,
-} from "../utils/api/Rep_Femac_13/Rep_Femac_13";
+} from "@/app/utils/api/Rep_Femac_13/Rep_Femac_13";
 import { useSession } from "next-auth/react";
 import "jspdf-autotable";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import BuscarCat from "../components/BuscarCat";
-import { formatDate } from "../utils/globalfn";
+import BuscarCat from "@/app/components/BuscarCat";
+import { formatDate } from "@/app/utils/globalfn";
 import { showSwal } from "@/app/utils/alerts";
 
 function Rep_Femac_13() {

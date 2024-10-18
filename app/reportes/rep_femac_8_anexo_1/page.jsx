@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import Acciones from "@/app/rep_femac_8_anexo_1/components/Acciones";
-import Inputs from "@/app/rep_femac_8_anexo_1/components/Inputs";
+import Acciones from "@/app/reportes/rep_femac_8_anexo_1/components/Acciones";
+import Inputs from "@/app/reportes/rep_femac_8_anexo_1/components/Inputs";
 import { useForm } from "react-hook-form";
 import {
   getRelaciondeRecibos,
@@ -14,7 +14,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import BuscarCat from "@/app/components/BuscarCat";
 import "jspdf-autotable";
-import ModalVistaPreviaRepFemac8Anexo1 from "./components/ModalVistaPreviaRepFemac8Anexo1";
+import ModalVistaPreviaRepFemac8Anexo1 from "@/app/reportes/components/ModalVistaPreviaRepFemac8Anexo1";
 
 function AltasBajasAlumnos() {
   const router = useRouter();
@@ -39,14 +39,14 @@ function AltasBajasAlumnos() {
     const fechaActual = new Date();
     return new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1)
       .toISOString()
-      .split('T')[0];
+      .split("T")[0];
   };
 
   const getUltimoDiaDelMes = () => {
     const fechaActual = new Date();
     return new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0)
       .toISOString()
-      .split('T')[0];
+      .split("T")[0];
   };
 
   useEffect(() => {
@@ -151,10 +151,7 @@ function AltasBajasAlumnos() {
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
-              <Acciones
-                home={home}
-                Ver={handleVerClick}
-              />
+              <Acciones home={home} Ver={handleVerClick} />
             </div>
 
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
@@ -165,8 +162,8 @@ function AltasBajasAlumnos() {
         <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
           <div className="col-span-7">
             <div className="flex flex-col h-[calc(80%)] overflow-y-auto">
-              <div className='flex flex-col md:flex-row gap-4 '>
-                <div className='w-11/12 md:w-4/12 lg:w-3/12'>
+              <div className="flex flex-col md:flex-row gap-4 ">
+                <div className="w-11/12 md:w-4/12 lg:w-3/12">
                   <Inputs
                     name={"fecha_ini"}
                     tamañolabel={""}
@@ -180,8 +177,7 @@ function AltasBajasAlumnos() {
                     setValue={setFecha_ini}
                   />
                 </div>
-                <div className='w-11/12 md:w-4/12 lg:w-3/12'>
-
+                <div className="w-11/12 md:w-4/12 lg:w-3/12">
                   <Inputs
                     name={"fecha_fin"}
                     tamañolabel={""}

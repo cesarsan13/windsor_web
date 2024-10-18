@@ -1,12 +1,12 @@
 "use client";
 import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "../utils/alerts";
-import ModalFormaPago from "@/app/formapago/components/ModalFormaPago";
-import TablaFormaPago from "@/app/formapago/components/TablaFormaPago";
-import Busqueda from "@/app/formapago/components/Busqueda";
-import Acciones from "@/app/formapago/components/Acciones";
-import ModalVistaPreviaFormaPago from "@/app/formapago/components/modalVistaPreviaFormaPago";
+import { showSwal, confirmSwal } from "@/app/utils/alerts";
+import ModalFormaPago from "@/app/catalogos/formapago/components/ModalFormaPago";
+import TablaFormaPago from "@/app/catalogos/formapago/components/TablaFormaPago";
+import Busqueda from "@/app/catalogos/formapago/components/Busqueda";
+import Acciones from "@/app/catalogos/formapago/components/Acciones";
+import ModalVistaPreviaFormaPago from "@/app/catalogos/formapago/components/modalVistaPreviaFormaPago";
 import { useForm } from "react-hook-form";
 import {
   getFormasPago,
@@ -17,8 +17,8 @@ import {
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/formapago/formapago";
-import { ReportePDF } from "../utils/ReportesPDF";
-import { debounce } from "../utils/globalfn";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { debounce } from "@/app/utils/globalfn";
 function FormaPago() {
   const router = useRouter();
   const { data: session, status } = useSession();

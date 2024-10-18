@@ -1,11 +1,11 @@
 "use client";
 import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "../utils/alerts";
-import ModalCajeros from "@/app/cajeros/components/modalCajeros";
-import TablaCajeros from "./components/tablaCajeros";
-import Busqueda from "./components/Busqueda";
-import Acciones from "@/app/cajeros/components/Acciones";
+import { showSwal, confirmSwal } from "@/app/utils/alerts";
+import ModalCajeros from "@/app/catalogos/cajeros/components/modalCajeros";
+import TablaCajeros from "@/app/catalogos/cajeros/components/tablaCajeros";
+import Busqueda from "@/app/catalogos/cajeros/components/Busqueda";
+import Acciones from "@/app/catalogos/cajeros/components/Acciones";
 import { useForm } from "react-hook-form";
 import {
   getCajeros,
@@ -17,9 +17,9 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/cajeros/cajeros";
 import "jspdf-autotable";
-import ModalVistaPreviaCajeros from "./components/modalVistaPreviaCajeros";
-import { ReportePDF } from "../utils/ReportesPDF";
-import { debounce } from "../utils/globalfn";
+import ModalVistaPreviaCajeros from "@/app/catalogos/cajeros/components/modalVistaPreviaCajeros";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { debounce } from "@/app/utils/globalfn";
 
 function Cajeros() {
   const router = useRouter();

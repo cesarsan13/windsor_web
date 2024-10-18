@@ -176,57 +176,57 @@ function Menu({ vertical, toogle }) {
           <summary>Reportes</summary>
           <ul>
             <li>
-              <Link href="/rep_femac_6" onClick={toogle}>
+              <Link href="/reportes/reportes/rep_femac_6" onClick={toogle}>
                 Cobranza
               </Link>
             </li>
             <li>
-              <Link href="/rep_femac_1" onClick={toogle}>
+              <Link href="/reportes/rep_femac_1" onClick={toogle}>
                 Relación General de Alumnos
               </Link>
             </li>
             <li>
-              <Link href="/Rep_Femac_2" onClick={toogle}>
+              <Link href="/reportes/Rep_Femac_2" onClick={toogle}>
                 Lista de Alumnos por clase
               </Link>
             </li>
             <li>
-              <Link href="/rep_femac_3" onClick={toogle}>
+              <Link href="/reportes/rep_femac_3" onClick={toogle}>
                 Lista de Alumnos por clase del mes
               </Link>
             </li>
             <li>
-              <Link href="/rep_femac_13" onClick={toogle}>
+              <Link href="/reportes/rep_femac_13" onClick={toogle}>
                 Lista de alumnos por clase semanal
               </Link>
             </li>
             <li>
-              <Link href="/rep_femac_5" onClick={toogle}>
+              <Link href="/reportes/rep_femac_5" onClick={toogle}>
                 Altas y Bajas de Alumnos
               </Link>
             </li>
             <li>
-              <Link href="/rep_femac_7" onClick={toogle}>
+              <Link href="/reportes/rep_femac_7" onClick={toogle}>
                 Cartera
               </Link>
             </li>
             <li>
-              <Link href="/rep_femac_8_anexo_1" onClick={toogle}>
+              <Link href="/reportes/rep_femac_8_anexo_1" onClick={toogle}>
                 Relación de Recibos
               </Link>
             </li>
             <li>
-              <Link href="/Rep_Femac_9_Anexo_4" onClick={toogle}>
+              <Link href="/reportes/Rep_Femac_9_Anexo_4" onClick={toogle}>
                 Relación de Facturas
               </Link>
             </li>
             <li>
-              <Link href="/rep_femac_12_anexo_4" onClick={toogle}>
+              <Link href="/reportes/rep_femac_12_anexo_4" onClick={toogle}>
                 Reporte Cobranza por Producto
               </Link>
             </li>
             <li>
-              <Link href="/rep_inscritos" onClick={toogle}>
+              <Link href="/reportes/rep_inscritos" onClick={toogle}>
                 Reporte Inscripción
               </Link>
             </li>
@@ -478,67 +478,67 @@ function Menu({ vertical, toogle }) {
           className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
         >
           <li>
-            <Link href="/rep_femac_6" onClick={handleClick}>
+            <Link href="/reportes/rep_femac_6" onClick={handleClick}>
               Cobranza
             </Link>
           </li>
           <li>
-            <Link href="/rep_femac_1" onClick={handleClick}>
+            <Link href="/reportes/rep_femac_1" onClick={handleClick}>
               Relación General de Alumnos
             </Link>
           </li>
           <li>
-            <Link href="/Rep_Femac_2" onClick={handleClick}>
+            <Link href="/reportes/Rep_Femac_2" onClick={handleClick}>
               Lista de Alumnos por Clase
             </Link>
           </li>
           <li>
-            <Link href="/rep_femac_3" onClick={handleClick}>
+            <Link href="/reportes/rep_femac_3" onClick={handleClick}>
               Lista de Alumnos por Clase de Mes
             </Link>
           </li>
           <li>
-            <Link href="/rep_femac_13" onClick={handleClick}>
+            <Link href="/reportes/rep_femac_13" onClick={handleClick}>
               Lista de Alumnos por Clase Semanal
             </Link>
           </li>
           <li>
-            <Link href="/rep_femac_5" onClick={handleClick}>
+            <Link href="/reportes/rep_femac_5" onClick={handleClick}>
               Altas Y Bajas de Alumnos
             </Link>
           </li>
           <li>
-            <Link href="/rep_femac_7" onClick={handleClick}>
+            <Link href="/reportes/rep_femac_7" onClick={handleClick}>
               Cartera
             </Link>
           </li>
           <li>
-            <Link href="/rep_femac_8_anexo_1" onClick={handleClick}>
+            <Link href="/reportes/rep_femac_8_anexo_1" onClick={handleClick}>
               Relación de Recibos
             </Link>
           </li>
           <li>
-            <Link href="/Rep_Femac_9_Anexo_4" onClick={handleClick}>
+            <Link href="/reportes/Rep_Femac_9_Anexo_4" onClick={handleClick}>
               Relación de Facturas
             </Link>
           </li>
           <li>
-            <Link href="/rep_femac_10_Anexo_2" onClick={handleClick}>
+            <Link href="/reportes/rep_femac_10_Anexo_2" onClick={handleClick}>
               Estado de Cuenta
             </Link>
           </li>
           <li>
-            <Link href="/rep_femac_11_Anexo_3" onClick={handleClick}>
+            <Link href="/reportes/rep_femac_11_Anexo_3" onClick={handleClick}>
               Reporte Cobranza por Alumno
             </Link>
           </li>
           <li>
-            <Link href="/rep_femac_12_anexo_4" onClick={handleClick}>
+            <Link href="/reportes/rep_femac_12_anexo_4" onClick={handleClick}>
               Reporte Cobranza por Producto
             </Link>
           </li>
           <li>
-            <Link href="/rep_inscritos" onClick={handleClick}>
+            <Link href="/reportes/rep_inscritos" onClick={handleClick}>
               Reporte Inscripción
             </Link>
           </li>

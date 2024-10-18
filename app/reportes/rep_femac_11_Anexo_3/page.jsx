@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import Acciones from "./components/Acciones";
-import Inputs from "./components/Inputs";
-import { calculaDigitoBvba, formatDate } from "../utils/globalfn";
+import Acciones from "@/app/reportes/rep_femac_11_Anexo_3/components/Acciones";
+import Inputs from "@/app/reportes/rep_femac_11_Anexo_3/components/Inputs";
+import { calculaDigitoBvba, formatDate } from "@/app/utils/globalfn";
 import { useForm } from "react-hook-form";
 import {
   getReporteCobranzaporAlumno,
@@ -17,7 +17,7 @@ import "jspdf-autotable";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import ModalVistaPreviaRepFemac11Anexo3 from "./components/modalVistaPreviaRepFemac11Anexo3";
+import ModalVistaPreviaRepFemac11Anexo3 from "@/app/reportes/rep_femac_11_Anexo_3/components/modalVistaPreviaRepFemac11Anexo3";
 
 function CobranzaPorAlumno() {
   const router = useRouter();
@@ -31,20 +31,21 @@ function CobranzaPorAlumno() {
   const [tomaFechas, setTomaFechas] = useState(true);
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
-  const [FormaRepCobranzaporAlumno, setFormaReporteCobranzaporAlumno] = useState([]);
+  const [FormaRepCobranzaporAlumno, setFormaReporteCobranzaporAlumno] =
+    useState([]);
 
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
     return new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1)
       .toISOString()
-      .split('T')[0];
+      .split("T")[0];
   };
 
   const getUltimoDiaDelMes = () => {
     const fechaActual = new Date();
     return new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0)
       .toISOString()
-      .split('T')[0];
+      .split("T")[0];
   };
 
   useEffect(() => {
@@ -329,24 +330,21 @@ function CobranzaPorAlumno() {
         Excel={ImprimeExcel}
       />
 
-<div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
-              <Acciones
-                home={home}
-                Ver={handleVerClick}
-              />
+              <Acciones home={home} Ver={handleVerClick} />
             </div>
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
-            Reporte Cobranza por Alumno
+              Reporte Cobranza por Alumno
             </h1>
           </div>
         </div>
-          <div className="col-span-7">
-          <div className='flex flex-col h-[calc(85%)] overflow-y-auto'>
+        <div className="col-span-7">
+          <div className="flex flex-col h-[calc(85%)] overflow-y-auto">
             <div className="flex flex-col md:flex-row gap-4">
-              <div className='w-11/12 md:w-4/12 lg:w-3/12'>
+              <div className="w-11/12 md:w-4/12 lg:w-3/12">
                 <Inputs
                   name={"fecha_ini"}
                   tamañolabel={""}
@@ -360,7 +358,7 @@ function CobranzaPorAlumno() {
                   setValue={setFecha_ini}
                 />
               </div>
-              <div className='w-11/12 md:w-4/12 lg:w-3/12'>
+              <div className="w-11/12 md:w-4/12 lg:w-3/12">
                 <Inputs
                   name={"fecha_fin"}
                   tamañolabel={""}
@@ -374,81 +372,81 @@ function CobranzaPorAlumno() {
                   setValue={setFecha_fin}
                 />
               </div>
-              </div>
-                <div className="tooltip " data-tip="Tomar Fechas">
-                  <label
-                    htmlFor="ch_tomaFechas"
-                    className="label cursor-pointer flex justify-start space-x-2"
-                  >
-                    <input
-                      id="ch_tomaFechas"
-                      type="checkbox"
-                      className="checkbox checkbox-md"
-                      defaultChecked={true}
-                      onClick={(evt) => setTomaFechas(evt.target.checked)}
-                    />
-                    <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
-                    <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
-                      Toma Fechas
-                    </span>
-                  </label>
-                </div>
-              
-                <div className="p-2">
-                <BuscarCat
-                  table="alumnos"
-                  itemData={[]}
-                  fieldsToShow={["numero", "nombre_completo"]}
-                  nameInput={["numero", "nombre_completo"]}
-                  titulo={"Alumno Inicio: "}
-                  setItem={setAlumnoIni}
-                  token={session.user.token}
-                  modalId="modal_alumnos1"
-                  inputWidths={{ first: "100px", second: "300px" }}
+            </div>
+            <div className="tooltip " data-tip="Tomar Fechas">
+              <label
+                htmlFor="ch_tomaFechas"
+                className="label cursor-pointer flex justify-start space-x-2"
+              >
+                <input
+                  id="ch_tomaFechas"
+                  type="checkbox"
+                  className="checkbox checkbox-md"
+                  defaultChecked={true}
+                  onClick={(evt) => setTomaFechas(evt.target.checked)}
                 />
-                </div>
-                <div className="p-2">
-                <BuscarCat
-                  table="alumnos"
-                  itemData={[]}
-                  fieldsToShow={["numero", "nombre_completo"]}
-                  nameInput={["numero", "nombre_completo"]}
-                  titulo={"Alumno Fin: "}
-                  setItem={setAlumnoFin}
-                  token={session.user.token}
-                  modalId="modal_alumnos2"
-                  inputWidths={{ first: "115px", second: "300px" }}
-                />
-                </div>
-                <div className="p-2">
-                <BuscarCat
-                  table="cajeros"
-                  itemData={[]}
-                  fieldsToShow={["numero", "nombre"]}
-                  nameInput={["numero", "nombre"]}
-                  titulo={"Cajero Inicio: "}
-                  setItem={setCajeroIni}
-                  token={session.user.token}
-                  modalId="modal_cajeros1"
-                  inputWidths={{ first: "109px", second: "300px" }}
-                />
-                </div>
-                <div className="p-2">
-                <BuscarCat
-                  table="cajeros"
-                  itemData={[]}
-                  fieldsToShow={["numero", "nombre"]}
-                  nameInput={["numero", "nombre"]}
-                  titulo={"Cajero Fin: "}
-                  setItem={setCajeroFin}
-                  token={session.user.token}
-                  modalId="modal_cajeros2"
-                  inputWidths={{ first: "124px", second: "300px" }}
-                />
-              </div>
+                <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
+                <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
+                  Toma Fechas
+                </span>
+              </label>
+            </div>
+
+            <div className="p-2">
+              <BuscarCat
+                table="alumnos"
+                itemData={[]}
+                fieldsToShow={["numero", "nombre_completo"]}
+                nameInput={["numero", "nombre_completo"]}
+                titulo={"Alumno Inicio: "}
+                setItem={setAlumnoIni}
+                token={session.user.token}
+                modalId="modal_alumnos1"
+                inputWidths={{ first: "100px", second: "300px" }}
+              />
+            </div>
+            <div className="p-2">
+              <BuscarCat
+                table="alumnos"
+                itemData={[]}
+                fieldsToShow={["numero", "nombre_completo"]}
+                nameInput={["numero", "nombre_completo"]}
+                titulo={"Alumno Fin: "}
+                setItem={setAlumnoFin}
+                token={session.user.token}
+                modalId="modal_alumnos2"
+                inputWidths={{ first: "115px", second: "300px" }}
+              />
+            </div>
+            <div className="p-2">
+              <BuscarCat
+                table="cajeros"
+                itemData={[]}
+                fieldsToShow={["numero", "nombre"]}
+                nameInput={["numero", "nombre"]}
+                titulo={"Cajero Inicio: "}
+                setItem={setCajeroIni}
+                token={session.user.token}
+                modalId="modal_cajeros1"
+                inputWidths={{ first: "109px", second: "300px" }}
+              />
+            </div>
+            <div className="p-2">
+              <BuscarCat
+                table="cajeros"
+                itemData={[]}
+                fieldsToShow={["numero", "nombre"]}
+                nameInput={["numero", "nombre"]}
+                titulo={"Cajero Fin: "}
+                setItem={setCajeroFin}
+                token={session.user.token}
+                modalId="modal_cajeros2"
+                inputWidths={{ first: "124px", second: "300px" }}
+              />
             </div>
           </div>
         </div>
+      </div>
     </>
   );
 }

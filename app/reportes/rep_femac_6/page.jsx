@@ -2,18 +2,18 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import Acciones from "./components/Acciones";
-import BuscarCat from "../components/BuscarCat";
+import Acciones from "@/app/reportes/rep_femac_6/components/Acciones";
+import BuscarCat from "@/app/components/BuscarCat";
 import { useRouter } from "next/navigation";
 import {
   Cobranza,
   Imprimir,
   ImprimirExcel,
-} from "../utils/api/Rep_Femac_6/Rep_Femac_6";
-import { formatDate, formatNumber } from "../utils/globalfn";
-import { ReportePDF } from "../utils/ReportesPDF";
+} from "@/app/utils/api/Rep_Femac_6/Rep_Femac_6";
+import { formatDate, formatNumber } from "@/app/utils/globalfn";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
-import ModalVistaPreviaRep6 from "./components/modalVistaPreviaRep6";
+import ModalVistaPreviaRep6 from "@/app/reportes/rep_femac_6/components/modalVistaPreviaRep6";
 import Swal from "sweetalert2"; // Importa SweetAlert2
 
 function Rep_Femac_6() {

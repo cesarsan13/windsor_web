@@ -1,20 +1,20 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import Acciones from "./components/Acciones";
+import Acciones from "@/app/reportes/Rep_Femac_2/components/Acciones";
 import {
   ImprimirPDF,
   ImprimirExcel,
   getRepDosSel,
-} from "../utils/api/Rep_Femac_2/Rep_Femac_2";
+} from "@/app/utils/api/Rep_Femac_2/Rep_Femac_2";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "jspdf-autotable";
-import BuscarCat from "../components/BuscarCat";
-import ModalVistaPreviaAlumnosPorClase from "./components/modalVistaPreviaRepFemac2";
+import BuscarCat from "@/app/components/BuscarCat";
+import ModalVistaPreviaAlumnosPorClase from "@/app/reportes/Rep_Femac_2/components/modalVistaPreviaRepFemac2";
 import { showSwal } from "@/app/utils/alerts";
 
 function AlumnosPorClase() {

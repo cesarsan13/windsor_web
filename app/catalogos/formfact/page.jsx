@@ -1,11 +1,11 @@
 "use client";
 import React, { useTransition, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "../utils/alerts";
-import ModalFormFact from "@/app/formfact/components/modalFormFact";
-import TablaFormFact from "@/app/formfact/components/tablaFormFact";
-import Busqueda from "@/app/formfact/components/Busqueda";
-import Acciones from "@/app/formfact/components/Acciones";
+import { showSwal, confirmSwal } from "@/app/utils/alerts";
+import ModalFormFact from "@/app/catalogos/formfact/components/modalFormFact";
+import TablaFormFact from "@/app/catalogos/formfact/components/tablaFormFact";
+import Busqueda from "@/app/catalogos/formfact/components/Busqueda";
+import Acciones from "@/app/catalogos/formfact/components/Acciones";
 import { useForm } from "react-hook-form";
 import { getPropertyData } from "@/app/utils/api/formfact/formfact";
 import {
@@ -18,8 +18,8 @@ import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/formfact/formfact";
 import "jspdf-autotable";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import ConfigReporte from "./components/configReporte";
-import { debounce } from "../utils/globalfn";
+import ConfigReporte from "@/app/catalogos/formfact/components/configReporte";
+import { debounce } from "@/app/utils/globalfn";
 function FormFact() {
   const router = useRouter();
   const { data: session, status } = useSession();

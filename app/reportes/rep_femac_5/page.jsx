@@ -1,23 +1,22 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import Acciones from "@/app/rep_femac_5/components/Acciones";
-import Inputs from "@/app/rep_femac_5/components/Inputs";
+import Acciones from "@/app/reportes/rep_femac_5/components/Acciones";
+import Inputs from "@/app/reportes/rep_femac_5/components/Inputs";
 import { calculaDigitoBvba } from "@/app/utils/globalfn";
 import { useForm } from "react-hook-form";
 import {
   getReportAltaBajaAlumno,
   Imprimir,
-  ImprimirExcel
+  ImprimirExcel,
 } from "@/app/utils/api/rep_femac_5/rep_femac_5";
-import ModalVistaPreviaRep5 from "./components/modalVistaPreviaRep5";
+import ModalVistaPreviaRep5 from "@/app/reportes/rep_femac_5/components/modalVistaPreviaRep5";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { showSwal } from "@/app/utils/alerts";
 import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-
 
 function AltasBajasAlumnos() {
   const router = useRouter();
@@ -29,26 +28,27 @@ function AltasBajasAlumnos() {
   const [selectedOptionAB, setSelectedOptionAB] = useState("alta");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
-  const { formState: { errors }, } = useForm({});
+  const {
+    formState: { errors },
+  } = useForm({});
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
     return new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1)
       .toISOString()
-      .split('T')[0];
+      .split("T")[0];
   };
 
   const getUltimoDiaDelMes = () => {
     const fechaActual = new Date();
     return new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0)
       .toISOString()
-      .split('T')[0];
+      .split("T")[0];
   };
 
   useEffect(() => {
     setFecha_ini(getPrimerDiaDelMes());
     setFecha_fin(getUltimoDiaDelMes());
   }, []);
-
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
@@ -83,7 +83,6 @@ function AltasBajasAlumnos() {
       return;
     }
   };
-
 
   const ImprimePDF = async () => {
     alumnosFiltrados = await formaImprime();
@@ -130,7 +129,6 @@ function AltasBajasAlumnos() {
         "Para imprimir, debes seleccionar un rango de fechas",
         "error"
       );
-
     } else {
       const alumnosFiltrados = await formaImprime();
       const configuracion = {
@@ -165,9 +163,10 @@ function AltasBajasAlumnos() {
 
       Enca2(newPDF);
       body.forEach((alumno) => {
-        const nombre = `${alumno.a_nombre || ""} ${alumno.a_paterno || ""} ${alumno.a_materno || ""
-          }`;
-        const id = calculaDigitoBvba((alumno.numero || '').toString() || '');
+        const nombre = `${alumno.a_nombre || ""} ${alumno.a_paterno || ""} ${
+          alumno.a_materno || ""
+        }`;
+        const id = calculaDigitoBvba((alumno.numero || "").toString() || "");
         let fecha;
         fecha = new Date(alumno.fecha_nac);
         const diaFor = fecha.getDate().toString().padStart(2, "0");
@@ -214,10 +213,7 @@ function AltasBajasAlumnos() {
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
-              <Acciones
-                home={home}
-                Ver={handleVerClick}
-              />
+              <Acciones home={home} Ver={handleVerClick} />
             </div>
 
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
@@ -227,9 +223,9 @@ function AltasBajasAlumnos() {
         </div>
         <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
           <div className="col-span-7">
-            <div className='flex flex-col h-[calc(100%)]'>
-              <div className='flex flex-col md:flex-row gap-4'>
-                <div className='w-11/12 md:w-4/12 lg:w-3/12'>
+            <div className="flex flex-col h-[calc(100%)]">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="w-11/12 md:w-4/12 lg:w-3/12">
                   <Inputs
                     name={"fecha_ini"}
                     tamañolabel={""}
@@ -243,7 +239,7 @@ function AltasBajasAlumnos() {
                     setValue={setFecha_ini}
                   />
                 </div>
-                <div className='w-11/12 md:w-4/12 lg:w-3/12'>
+                <div className="w-11/12 md:w-4/12 lg:w-3/12">
                   <Inputs
                     name={"fecha_fin"}
                     tamañolabel={""}
@@ -292,7 +288,9 @@ function AltasBajasAlumnos() {
               </div>
               <div className=" col-8 flex flex-col">
                 <label className="text-black dark:text-white flex flex-col gap-3 md:flex-row">
-                  <span className="text-black dark:text-white">Ordenar por:</span>
+                  <span className="text-black dark:text-white">
+                    Ordenar por:
+                  </span>
                   <label className="flex items-center gap-3">
                     <span className="text-black dark:text-white">Nombre</span>
                     <input

@@ -2,11 +2,11 @@
 import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
-import ModalProfesores from "@/app/profesores/components/ModalProfesores";
-import ModalVistaPreviaProfesores from "@/app/profesores/components/modalVistaPreviaProfesores";
-import TablaProfesores from "@/app/profesores/components/TablaProfesores";
-import Busqueda from "@/app/profesores/components/Busqueda";
-import Acciones from "@/app/profesores/components/Acciones";
+import ModalProfesores from "@/app/catalogos/profesores/components/ModalProfesores";
+import ModalVistaPreviaProfesores from "@/app/catalogos/profesores/components/modalVistaPreviaProfesores";
+import TablaProfesores from "@/app/catalogos/profesores/components/TablaProfesores";
+import Busqueda from "@/app/catalogos/profesores/components/Busqueda";
+import Acciones from "@/app/catalogos/profesores/components/Acciones";
 import { useForm } from "react-hook-form";
 import {
   getProfesores,
@@ -20,7 +20,7 @@ import { useSession } from "next-auth/react";
 import "jspdf-autotable";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import { debounce } from "../utils/globalfn";
+import { debounce } from "@/app/utils/globalfn";
 function Profesores() {
   const router = useRouter();
   const { data: session, status } = useSession();

@@ -2,17 +2,17 @@
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Inputs from "./components/Inputs";
+import Inputs from "@/app/reportes/rep_flujo_01/components/Inputs";
 import { useForm } from "react-hook-form";
-import Acciones from "./components/Acciones";
-import { Fecha_de_Ctod, formatDate } from "../utils/globalfn";
+import Acciones from "@/app/reportes/rep_flujo_01/components/Acciones";
+import { Fecha_de_Ctod, formatDate } from "@/app/utils/globalfn";
 import {
   DocumentosCobranza,
   ImprimirExcel,
   ImprimirPDF,
-} from "../utils/api/rep_flujo_01/rep_flujo_01";
-import ModalVistaPreviaRepFlujo01 from "./components/modalVistaPreviaRepFlujo01";
-import { ReportePDF } from "../utils/ReportesPDF";
+} from "@/app/utils/api/rep_flujo_01/rep_flujo_01";
+import ModalVistaPreviaRepFlujo01 from "@/app/reportes/rep_flujo_01/components/modalVistaPreviaRepFlujo01";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
 
 function Rep_Flujo_01() {
   const date = new Date();
@@ -275,16 +275,13 @@ function Rep_Flujo_01() {
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
-              <Acciones
-                home={home}
-                Ver={handleVerClick}
-              />
+              <Acciones home={home} Ver={handleVerClick} />
             </div>
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
-            Reporte Adeudos Pendientes
-          </h1>
-        </div>
-        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
+              Reporte Adeudos Pendientes
+            </h1>
+          </div>
+          <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
             <div className="flex flex-col h-full space-y-4">
               <div className="flex flex-col md:flex-row lg:space-x-4">
                 <Inputs

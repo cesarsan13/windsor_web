@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
+import React from "react";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 
@@ -23,7 +22,7 @@ function Busqueda({
           className="input input-bordered input-sm md:input-md w-full sm:w-full dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 text-right"
           placeholder="Materia..."
           onChange={(event) => handleBusquedaChange(event)}
-          onKeyDown={(evt) => {            
+          onKeyDown={(evt) => {
             handleKeyDown(evt);
           }}
           value={busqueda.tb_id}
@@ -46,7 +45,7 @@ function Busqueda({
             onClick={(evt) => limpiarBusqueda(evt)}
           >
             <Image src={iconos.limpiar} alt="Limpiar" />
-            </button>
+          </button>
         </div>
       </div>
       <div className="md:col-span-1">
@@ -58,11 +57,12 @@ function Busqueda({
               className=" checkbox mx-2 checkbox-md"
               onClick={(evt) => setBajas(evt.target.checked)}
             />
-            <button
-            className=" join-item  dark:text-neutral-200 text-neutral-600 border-none shadow-none w-5 h-5 md:w-6 md:h-6 mt-1"
-            ><Image src={iconos.eliminar} alt="Bajas"></Image>
+            <button className=" join-item  dark:text-neutral-200 text-neutral-600 border-none shadow-none w-5 h-5 md:w-6 md:h-6 mt-1">
+              <Image src={iconos.eliminar} alt="Bajas"></Image>
             </button>
-            <span className=" text-lg font-xthin text-black hidden sm:inline">Bajas</span>
+            <span className=" text-lg font-xthin text-black hidden sm:inline">
+              Bajas
+            </span>
           </label>
         </div>
       </div>

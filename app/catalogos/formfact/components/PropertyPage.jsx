@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import Inputs from "@/app/formfact/components/Inputs";
+import Inputs from "@/app/catalogos/formfact/components/Inputs";
 import { useEffect } from "react";
 import { confirmSwal, showSwal } from "@/app/utils/alerts";
 import { updateFormat } from "@/app/utils/api/formfact/formfact";
@@ -126,7 +126,7 @@ function PropertyPage({
     setLabels(resultado);
   };
   const handleKeyDown = async (evt) => {
-    if (evt.key === 'Enter') {
+    if (evt.key === "Enter") {
       console.log("entra");
       const { name } = evt.target;
       const resultado = [...labels];
@@ -139,7 +139,9 @@ function PropertyPage({
         [name]: value,
       };
       setLabels(resultado);
-    } else { console.log("no entra"); }
+    } else {
+      console.log("no entra");
+    }
   };
   const handleCancelarClick = (evt) => {
     evt.preventDefault();
@@ -252,7 +254,7 @@ function PropertyPage({
                 isDisabled={false}
                 data={propertyData.fuente}
                 handleChange={handleChange}
-              //defaultValue={formaPago.id}
+                //defaultValue={formaPago.id}
               />
               <Inputs
                 dataType={"int"}
@@ -358,7 +360,7 @@ function PropertyPage({
                 message={"Campo requerido"}
                 isDisabled={false}
                 data={propertyData.campo}
-              //defaultValue={formaPago.id}
+                //defaultValue={formaPago.id}
               />
               <Inputs
                 dataType={"string"}
@@ -373,7 +375,7 @@ function PropertyPage({
                 message={"Formato requerido"}
                 isDisabled={false}
                 data={propertyData.formato}
-              //defaultValue={formaPago.id}
+                //defaultValue={formaPago.id}
               />
               <Inputs
                 dataType={"string"}
@@ -388,7 +390,7 @@ function PropertyPage({
                 message={"Area requerida"}
                 isDisabled={false}
                 data={propertyData.area}
-              //defaultValue={formaPago.id}
+                //defaultValue={formaPago.id}
               />
             </div>
           </div>

@@ -1,9 +1,9 @@
 import { soloEnteros, soloDecimales, pone_ceros } from "@/app/utils/globalfn";
 import React from "react";
 import { useState, useEffect } from "react";
-import Inputs from "@/app/profesores/components/Inputs";
+import Inputs from "@/app/catalogos/profesores/components/Inputs";
 import Image from "next/image";
-import iconos from "@/app/utils/iconos"; 
+import iconos from "@/app/utils/iconos";
 import { FaSpinner } from "react-icons/fa";
 
 function ModalProfesores({
@@ -33,10 +33,10 @@ function ModalProfesores({
       accion === "Alta"
         ? `Nuevos Profesor: ${currentID}`
         : accion === "Editar"
-          ? `Editar Profesor: ${currentID}`
-          : accion === "Eliminar"
-            ? `Eliminar Profesor: ${currentID}`
-            : `Ver Profesor: ${currentID}`
+        ? `Editar Profesor: ${currentID}`
+        : accion === "Eliminar"
+        ? `Eliminar Profesor: ${currentID}`
+        : `Ver Profesor: ${currentID}`
     );
   }, [accion, accion]);
 
@@ -44,13 +44,13 @@ function ModalProfesores({
     if (evt.target.value === "") return;
     datatype === "int"
       ? setProfesor((profesores) => ({
-        ...profesores,
-        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-      }))
+          ...profesores,
+          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+        }))
       : setProfesor((profesores) => ({
-        ...profesores,
-        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-      }));
+          ...profesores,
+          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+        }));
   };
 
   return (
@@ -61,10 +61,11 @@ function ModalProfesores({
             <h3 className="font-bold text-lg">{titulo}</h3>
             <div className="flex space-x-2 items-center">
               <div
-                className={`tooltip tooltip-bottom ${accion === "Ver"
-                  ? "hover:cursor-not-allowed hidden"
-                  : "hover:cursor-pointer"
-                  }`}
+                className={`tooltip tooltip-bottom ${
+                  accion === "Ver"
+                    ? "hover:cursor-not-allowed hidden"
+                    : "hover:cursor-pointer"
+                }`}
                 data-tip="Guardar"
               >
                 <button
@@ -77,7 +78,11 @@ function ModalProfesores({
                   {isLoading ? (
                     <FaSpinner className="animate-spin mx-2" />
                   ) : (
-                    <Image src={iconos.guardar} alt="guardar" className="w-5 h-5 md:w-6 md:h-6" />
+                    <Image
+                      src={iconos.guardar}
+                      alt="guardar"
+                      className="w-5 h-5 md:w-6 md:h-6"
+                    />
                   )}
                   {isLoading ? " Cargando..." : " guardar"}
                 </button>
@@ -372,7 +377,6 @@ function ModalProfesores({
                 maxLenght={12}
                 isDisabled={isDisabled}
               />
-
             </div>
           </fieldset>
         </form>

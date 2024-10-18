@@ -1,11 +1,11 @@
 "use client";
 import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "../utils/alerts";
-import ModalHorario from "@/app/horarios/components/ModalHorario";
-import TablaHorarios from "@/app/horarios/components/tablaHorarios";
-import Busqueda from "@/app/horarios/components/Busqueda";
-import Acciones from "@/app/horarios/components/Acciones";
+import { showSwal, confirmSwal } from "@/app/utils/alerts";
+import ModalHorario from "@/app/catalogos/horarios/components/ModalHorario";
+import TablaHorarios from "@/app/catalogos/horarios/components/tablaHorarios";
+import Busqueda from "@/app/catalogos/horarios/components/Busqueda";
+import Acciones from "@/app/catalogos/horarios/components/Acciones";
 import { useForm } from "react-hook-form";
 import {
   getHorarios,
@@ -16,10 +16,9 @@ import {
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { getUltimoHorario } from "@/app/utils/api/horarios/horarios";
-import { getProductos } from "../utils/api/productos/productos";
-import ModalVistaPreviaHorarios from "./components/modalVistaPreviaHorarios";
-import { ReportePDF } from "../utils/ReportesPDF";
-import { debounce } from "../utils/globalfn";
+import ModalVistaPreviaHorarios from "@/app/catalogos/horarios/components/modalVistaPreviaHorarios";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { debounce } from "@/app/utils/globalfn";
 
 function Horarios() {
   const router = useRouter();

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "../utils/alerts";
+import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import ModalUsuarios from "./components/ModalUsuario";
 import Busqueda from "./components/Busqueda";
 import Acciones from "./components/Acciones";
@@ -61,22 +61,22 @@ function Usuarios() {
     watch,
   } = useForm({
     defaultValues: {
-        id:usuario.id,
-        nombre:usuario.nombre,
-        name:usuario.name,
-        email:usuario.email,
-        password:usuario.password,
-        password_confirm:usuario.password_confirm
+      id: usuario.id,
+      nombre: usuario.nombre,
+      name: usuario.name,
+      email: usuario.email,
+      password: usuario.password,
+      password_confirm: usuario.password_confirm,
     },
   });
   useEffect(() => {
     reset({
-        id:usuario.id,
-        nombre:usuario.nombre,
-        name:usuario.name,
-        email:usuario.email,
-        password:usuario.password,
-        password_confirm:usuario.password_confirm
+      id: usuario.id,
+      nombre: usuario.nombre,
+      name: usuario.name,
+      email: usuario.email,
+      password: usuario.password,
+      password_confirm: usuario.password_confirm,
     });
   }, [usuario, reset]);
 
@@ -208,7 +208,7 @@ function Usuarios() {
       nombre: "",
       email: "",
       password: "",
-      password_confirm:""
+      password_confirm: "",
     });
 
     setUsuario({ id: "" });
@@ -284,7 +284,6 @@ function Usuarios() {
     res = await guardaComentarios(session.user.token, formData, accion);
     if (res.status) {
       if (accion === "Alta") {
-        
         //const password = watch("password");
         //const password_confirm = watch("password_confirm");
 
@@ -293,36 +292,27 @@ function Usuarios() {
         const nuevoUsuarios = { currentID, ...data };
         setUsuarios([...usuarios, nuevoUsuarios]);
         if (!bajas) {
-          setUsuariosFiltrados([
-            ...usuariosFiltrados,
-            nuevoUsuarios,
-          ]);
+          setUsuariosFiltrados([...usuariosFiltrados, nuevoUsuarios]);
         }
       }
       if (accion === "Eliminar" || accion === "Editar") {
-        const index = usuarios.findIndex(
-          (fp) => fp.id === data.id
-        );
+        const index = usuarios.findIndex((fp) => fp.id === data.id);
         if (index !== -1) {
           if (accion === "Eliminar") {
-            const fpFiltrados = usuarios.filter(
-              (fp) => fp.id !== data.id
-            );
-                setUsuarios(fpFiltrados);
-                setUsuariosFiltrados(fpFiltrados);
+            const fpFiltrados = usuarios.filter((fp) => fp.id !== data.id);
+            setUsuarios(fpFiltrados);
+            setUsuariosFiltrados(fpFiltrados);
           } else {
             if (bajas) {
-              const fpFiltrados = usuarios.filter(
-                (fp) => fp.id !== data.id
-              );
-                setUsuarios(fpFiltrados);
-                setUsuariosFiltrados(fpFiltrados);
+              const fpFiltrados = usuarios.filter((fp) => fp.id !== data.id);
+              setUsuarios(fpFiltrados);
+              setUsuariosFiltrados(fpFiltrados);
             } else {
               const fpActualizadas = usuarios.map((fp) =>
                 fp.id === currentID ? { ...fp, ...data } : fp
               );
-                setUsuarios(fpActualizadas);
-                setUsuariosFiltrados(fpActualizadas);
+              setUsuarios(fpActualizadas);
+              setUsuariosFiltrados(fpActualizadas);
             }
           }
         }

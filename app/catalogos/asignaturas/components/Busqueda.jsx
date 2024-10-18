@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
+import React from "react";
+import { soloEnteros } from "@/app/utils/globalfn";
 import iconos from "@/app/utils/iconos";
 import Image from "next/image";
 
@@ -47,7 +47,7 @@ function Busqueda({
             onClick={(evt) => limpiarBusqueda(evt)}
           >
             <Image src={iconos.limpiar} alt="Limpiar" />
-            </button>
+          </button>
         </div>
       </div>
       <div className="md:col-span-1">
@@ -59,13 +59,12 @@ function Busqueda({
               className=" checkbox mx-2 checkbox-md"
               onClick={(evt) => setBajas(evt.target.checked)}
             />
-            <button
-            className=" join-item  dark:text-neutral-200 text-neutral-600 border-none shadow-none w-5 h-5 md:w-6 md:h-6 mt-1"
-            >
-
+            <button className=" join-item  dark:text-neutral-200 text-neutral-600 border-none shadow-none w-5 h-5 md:w-6 md:h-6 mt-1">
               <Image src={iconos.eliminar} alt="Bajas"></Image>
             </button>
-            <span className=" text-lg font-xthin text-black hidden sm:inline">Bajas</span>
+            <span className=" text-lg font-xthin text-black hidden sm:inline">
+              Bajas
+            </span>
           </label>
         </div>
       </div>

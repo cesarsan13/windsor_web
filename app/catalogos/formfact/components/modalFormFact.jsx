@@ -2,7 +2,7 @@ import { soloEnteros, soloDecimales, pone_ceros } from "@/app/utils/globalfn";
 import React from "react";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import { useState, useEffect } from "react";
-import Inputs from "@/app/formfact/components/Inputs";
+import Inputs from "@/app/catalogos/formfact/components/Inputs";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 
@@ -29,57 +29,61 @@ function ModalFormFact({
       accion === "Alta"
         ? `Nuevo Factura: ${currentID}`
         : accion === "Editar"
-          ? `Editar Factura: ${currentID}`
-          : accion === "Eliminar"
-            ? `Eliminar Factura: ${currentID}`
-            : `Ver Factura: ${currentID}`
+        ? `Editar Factura: ${currentID}`
+        : accion === "Eliminar"
+        ? `Eliminar Factura: ${currentID}`
+        : `Ver Factura: ${currentID}`
     );
-  }, [accion,currentID]);
+  }, [accion, currentID]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
       ? setFormFact((formFact) => ({
-        ...formFact,
-        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-      }))
+          ...formFact,
+          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+        }))
       : setFormFact((formFact) => ({
-        ...formFact,
-        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-      }));
+          ...formFact,
+          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+        }));
   };
   return (
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box">
         <form onSubmit={onSubmit}>
-        <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
-        <h3 className="font-bold text-lg">{titulo}</h3>
-        <div className="flex space-x-2 items-center">
-          <div
-            className={`tooltip tooltip-bottom ${
-              accion === "Ver"
-                ? "hover:cursor-not-allowed hidden"
-                : "hover:cursor-pointer"
-            }`}
-            data-tip="Guardar"
-          >
-            <button
-              type="submit"
-              id="btn_guardar"
-              className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
-            >
-              <Image src={iconos.guardar} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 mr-1" />
-              <span className="hidden sm:inline">Guardar</span>
-            </button>
+          <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
+            <h3 className="font-bold text-lg">{titulo}</h3>
+            <div className="flex space-x-2 items-center">
+              <div
+                className={`tooltip tooltip-bottom ${
+                  accion === "Ver"
+                    ? "hover:cursor-not-allowed hidden"
+                    : "hover:cursor-pointer"
+                }`}
+                data-tip="Guardar"
+              >
+                <button
+                  type="submit"
+                  id="btn_guardar"
+                  className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
+                >
+                  <Image
+                    src={iconos.guardar}
+                    alt="Guardar"
+                    className="w-5 h-5 md:w-6 md:h-6 mr-1"
+                  />
+                  <span className="hidden sm:inline">Guardar</span>
+                </button>
+              </div>
+              <button
+                type="button"
+                className="btn btn-sm btn-circle btn-ghost"
+                onClick={() => document.getElementById("my_modal_3").close()}
+              >
+                ✕
+              </button>
+            </div>
           </div>
-          <button
-            type="button"
-            className="btn btn-sm btn-circle btn-ghost"
-            onClick={() => document.getElementById("my_modal_3").close()}
-          >
-            ✕
-          </button>
-        </div>
-      </div>
           <fieldset id="fs_formapago">
             <div className="container flex flex-col space-y-5">
               <Inputs
@@ -95,7 +99,7 @@ function ModalFormFact({
                 message={"numero requerido"}
                 isDisabled={true}
                 handleBlur={handleBlur}
-              //defaultValue={formaPago.id}
+                //defaultValue={formaPago.id}
               />
               <Inputs
                 dataType={"string"}
@@ -112,7 +116,7 @@ function ModalFormFact({
                 maxLenght={30}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
-              //defaultValue={formaPago.descripcion}
+                //defaultValue={formaPago.descripcion}
               />
               <Inputs
                 dataType={"float"}
@@ -129,7 +133,7 @@ function ModalFormFact({
                 maxLenght={7}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
-              //defaultValue={formaPago.descripcion}
+                //defaultValue={formaPago.descripcion}
               />
             </div>
           </fieldset>

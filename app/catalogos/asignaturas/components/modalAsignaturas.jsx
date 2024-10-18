@@ -1,10 +1,8 @@
-import { soloEnteros, soloDecimales, pone_ceros } from "@/app/utils/globalfn";
-import { useForm } from "react-hook-form";
+import { pone_ceros } from "@/app/utils/globalfn";
 
 import React from "react";
-import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import { useState, useEffect } from "react";
-import Inputs from "@/app/asignaturas/components/Inputs";
+import Inputs from "@/app/catalogos/asignaturas/components/Inputs";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 
@@ -236,26 +234,25 @@ function ModalAsignaturas({
                     handleBlur={handleBlurOut}
                   />
                 </div>
-                
               </div>
 
               <div className="flex flex-row w-full gap-x-5 gap-y-5 max-[420px]:flex-wrap">
                 <div className="flex flex-col w-3/6">
-                    <Inputs
-                      dataType={"int"}
-                      name={"evaluaciones"}
-                      tamañolabel={"w-full"}
-                      className={"w-3/6 text-right"}
-                      Titulo={"Evaluaciones: "}
-                      type={"inputNum"}
-                      requerido={false}
-                      errors={errors}
-                      register={register}
-                      maxLenght={6}
-                      message={"Evaluaciones requerida"}
-                      isDisabled={isDisabled}
-                      handleBlur={handleBlurOut}
-                    />
+                  <Inputs
+                    dataType={"int"}
+                    name={"evaluaciones"}
+                    tamañolabel={"w-full"}
+                    className={"w-3/6 text-right"}
+                    Titulo={"Evaluaciones: "}
+                    type={"inputNum"}
+                    requerido={false}
+                    errors={errors}
+                    register={register}
+                    maxLenght={6}
+                    message={"Evaluaciones requerida"}
+                    isDisabled={isDisabled}
+                    handleBlur={handleBlurOut}
+                  />
                 </div>
                 <div className="flex flex-col max-[420px]:w-full w-3/6">
                   <Inputs

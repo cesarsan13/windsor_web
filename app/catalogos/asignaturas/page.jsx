@@ -1,31 +1,26 @@
 "use client";
 import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "../utils/alerts";
-import ModalAsignaturas from "@/app/asignaturas/components/modalAsignaturas";
-import TablaAsignaturas from "@/app/asignaturas/components/tablaAsignaturas";
-import Busqueda from "@/app/asignaturas/components/Busqueda";
-import Acciones from "@/app/asignaturas/components/Acciones";
-import ModalVistaPreviaAsignaturas from "./components/modalVistaPreviaAsignaturas";
-import { soloDecimales, soloEnteros, snToBool } from "@/app/utils/globalfn";
+import { showSwal, confirmSwal } from "@/app/utils/alerts";
+import ModalAsignaturas from "@/app/catalogos/asignaturas/components/modalAsignaturas";
+import TablaAsignaturas from "@/app/catalogos/asignaturas/components/tablaAsignaturas";
+import Busqueda from "@/app/catalogos/asignaturas/components/Busqueda";
+import Acciones from "@/app/catalogos/asignaturas/components/Acciones";
+import ModalVistaPreviaAsignaturas from "@/app/catalogos/asignaturas/components/modalVistaPreviaAsignaturas";
+import { snToBool } from "@/app/utils/globalfn";
 import { useForm } from "react-hook-form";
 import {
   getAsignaturas,
-  filtroAsignaturas,
   guardarAsinatura,
-  getLastSubject,
   Imprimir,
   ImprimirExcel,
 } from "@/app/utils/api/asignaturas/asignaturas";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import jsPDF from "jspdf";
 import "jspdf-autotable";
-import * as XLSX from "xlsx";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import { Viewer, Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import { debounce } from "../utils/globalfn";
+import { debounce } from "@/app/utils/globalfn";
 
 function Asignaturas() {
   const router = useRouter();

@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import Inputs from "@/app/horarios/components/Inputs";
+import Inputs from "@/app/catalogos/horarios/components/Inputs";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 
@@ -78,7 +78,7 @@ function ModalHorario({
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box">
         <form onSubmit={onSubmit}>
-        <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
+          <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
             <h3 className="font-bold text-lg">{titulo}</h3>
             <div className="flex space-x-2 items-center">
               <div
@@ -241,19 +241,19 @@ function ModalHorario({
                 isDisabled={isDisabled}
               />
               <Inputs
-              dataType={"string"}
-              name={"salon"}
-              tamañolabel={"w-3/6"}
-              className={"w-5/6"}
-              Titulo={"Salón: "}
-              type={"text"}
-              requerido={true}
-              isNumero={false}
-              errors={errors}
-              register={register}
-              message={"salon requerido"}
-              maxLenght={10}
-              isDisabled={isDisabled}
+                dataType={"string"}
+                name={"salon"}
+                tamañolabel={"w-3/6"}
+                className={"w-5/6"}
+                Titulo={"Salón: "}
+                type={"text"}
+                requerido={true}
+                isNumero={false}
+                errors={errors}
+                register={register}
+                message={"salon requerido"}
+                maxLenght={10}
+                isDisabled={isDisabled}
               />
             </div>
           </fieldset>
