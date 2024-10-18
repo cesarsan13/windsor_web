@@ -1,21 +1,21 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Acciones from "./components/Acciones";
-import BuscarCat from "../components/BuscarCat";
+import Acciones from "@/app/procesos/act_cobranza/components/Acciones";
+import BuscarCat from "@/app/components/BuscarCat";
 import { useSession } from "next-auth/react";
-import { getAlumnos } from "../utils/api/alumnos/alumnos";
-import TablaActCobranzaAlumnos from "./components/tablaActCobranzaAlumnos";
-import TablaDocumentosCobranza from "./components/tablaDocumentosCobranza";
+import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
+import TablaActCobranzaAlumnos from "@/app/procesos/act_cobranza/components/tablaActCobranzaAlumnos";
+import TablaDocumentosCobranza from "@/app/procesos/act_cobranza/components/tablaDocumentosCobranza";
 import {
   getDocumentosAlumno,
   guardarActCobranza,
-} from "../utils/api/act_cobranza/act_cobranza";
+} from "@/app/utils/api/act_cobranza/act_cobranza";
 import { confirmSwal, showSwal, showSwalAndWait } from "@/app/utils/alerts";
-import ModalActCobranza from "./components/ModalActCobranza";
+import ModalActCobranza from "@/app/procesos/act_cobranza/components/ModalActCobranza";
 import { useForm } from "react-hook-form";
-import { formatFecha } from "../utils/globalfn";
+import { formatFecha } from "@/app/utils/globalfn";
 import { useRouter } from "next/navigation";
-import Busqueda from "./components/Busqueda";
+import Busqueda from "@/app/procesos/act_cobranza/components/Busqueda";
 
 function Act_Cobranza() {
   const router = useRouter();
