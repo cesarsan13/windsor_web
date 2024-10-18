@@ -241,32 +241,32 @@ function Menu({ vertical, toogle }) {
           <summary>Procesos</summary>
           <ul>
             <li>
-              <Link href="/clases" onClick={toogle}>
+              <Link href="/procesos/clases" onClick={toogle}>
                 Asignacion de Asingnatura
               </Link>
             </li>
             <li>
-              <Link href="/cambio_ciclo_escolar" onClick={toogle}>
+              <Link href="/procesos/cambio_ciclo_escolar" onClick={toogle}>
                 Cambio de Ciclo Escolar
               </Link>
             </li>
             <li>
-              <Link href="/cambio_numero_alumno" onClick={toogle}>
+              <Link href="/procesos/cambio_numero_alumno" onClick={toogle}>
                 Cambio Numero Alumno
               </Link>
             </li>
             <li>
-              <Link href="/adicion_productos_cartera" onClick={toogle}>
+              <Link href="/procesos/adicion_productos_cartera" onClick={toogle}>
                 Adición de Productos a Cartera
               </Link>
             </li>
             <li>
-              <Link href="/cancelacion_recibos" onClick={toogle}>
+              <Link href="/procesos/cancelacion_recibos" onClick={toogle}>
                 Cancelación de Recibo
               </Link>
             </li>
             <li>
-              <Link href="/c_calificaciones" onClick={toogle}>
+              <Link href="/procesos/c_calificaciones" onClick={toogle}>
                 Calificaciones
               </Link>
             </li>
@@ -417,49 +417,37 @@ function Menu({ vertical, toogle }) {
           className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
         >
           <li>
-            <Link href="/clases" onClick={handleClick}>
+            <Link href="/procesos/clases" onClick={handleClick}>
               Asinacion de Asignatura
             </Link>
           </li>
           <li>
-            <Link href="/adicion_productos_cartera" onClick={handleClick}>
+            <Link
+              href="/procesos/adicion_productos_cartera"
+              onClick={handleClick}
+            >
               Adición de Productos a Cartera
             </Link>
           </li>
           <li>
-            <Link href="/cancelacion_recibos" onClick={handleClick}>
+            <Link href="/procesos/cancelacion_recibos" onClick={handleClick}>
               Cancelación de Recibo
             </Link>
           </li>
           <li>
-            <Link href="/c_calificaciones" onClick={handleClick}>
+            <Link href="/procesos/c_calificaciones" onClick={handleClick}>
               Calificaciones
             </Link>
           </li>
-          {/* 
+
           <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>Emisión de Facturas</Link>
-          </li>
-          <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>Factura Global</Link>
-          </li>
-         
-          <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>Cancelación de Factura</Link>
-          </li>
-          <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>Actualiza Cobranza</Link>
-          </li> */}
-          <li>
-            <Link href="cambio_ciclo_escolar" onClick={handleClick}>
+            <Link href="/procesos/cambio_ciclo_escolar" onClick={handleClick}>
               Cambio de Ciclo Escolar
             </Link>
           </li>
-          {/* <li>
-            <Link href="" style={{ color: "red" }} onClick={handleClick}>Cobranza Diaria</Link>
-          </li> */}
+
           <li>
-            <Link href="cambio_numero_alumno" onClick={handleClick}>
+            <Link href="/procesos/cambio_numero_alumno" onClick={handleClick}>
               Cambio Numero de Alumno
             </Link>
           </li>
