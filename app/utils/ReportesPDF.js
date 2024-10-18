@@ -106,7 +106,7 @@ export class ReportePDF {
   //Para la impresion Vertical
   imprimeEncabezadoPrincipalV() {
     const { Encabezado } = this.configuracion;
-    const ImagenL = "resources/Logo_Interaccion.png";
+    const ImagenL = "../resources/Logo_Interaccion.png";
 
     if (!this.tiene_encabezado) {
       this.doc.addImage(ImagenL, "PNG", 10, 10, 26, 25);
@@ -135,7 +135,7 @@ export class ReportePDF {
 
   imprimeEncabezadoPrincipalP(body, fecha) {
     const { Encabezado } = this.configuracion;
-    const ImagenL = "resources/Logo_Interaccion.png";
+    const ImagenL = "../resources/Logo_Interaccion.png";
     if (!this.tiene_encabezado) {
       this.doc.addImage(ImagenL, "PNG", 10, 10, 26, 25);
       this.setFontSize(14);
@@ -179,7 +179,7 @@ export class ReportePDF {
     const { Encabezado } = this.configuracion;
 
     //la imagen tiene que ser en png para que la imprima
-    const ImagenL = "resources/Logo_Interaccion.png";
+    const ImagenL = "../resources/Logo_Interaccion.png";
     if (!this.tiene_encabezado) {
       this.doc.addImage(ImagenL, "PNG", 10, 10, 26, 25);
       this.setFontSize(14);
