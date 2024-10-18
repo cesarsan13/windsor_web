@@ -4,7 +4,7 @@ import { ReportePDF } from "../../ReportesPDF";
 export const getUsuarios = async (token, baja) => {
   let url = "";
   baja
-    ? (url = `${process.env.DOMAIN_API}api/usuario/getBaja`)
+    ? (url = `${process.env.DOMAIN_API}api/usuario/baja`)
     : (url = `${process.env.DOMAIN_API}api/usuario/get`);
 
   const res = await fetch(url, {
@@ -15,62 +15,18 @@ export const getUsuarios = async (token, baja) => {
   const resJson = await res.json();
   return resJson.data;
 };
-export const siguiente = async (token) => {
-  const res = await fetch(`${process.env.DOMAIN_API}api/comentarios/siguiente`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  const resJson = await res.json();
-  return resJson.data;
-};
-export const guardaComentarios = async (token, data, accion) => {
-  let url_api = "";
-  if (accion === "Alta") {
-    url_api = `${process.env.DOMAIN_API}api/comentarios`;
-    data.baja = "";
-  }
-  if (accion === "Eliminar" || accion === "Editar") {
-    if (accion === "Eliminar") {
-      data.baja = "*";
-    } else {
-      data.baja = "";
-    }
-    url_api = `${process.env.DOMAIN_API}api/comentarios/update`;
-  }
-
-  const res = await fetch(`${url_api}`, {
-    method: "post",
-    body: JSON.stringify({
-      numero: data.numero,
-      comentario_1: data.comentario_1,
-      comentario_2: data.comentario_2,
-      comentario_3: data.comentario_3,
-      generales: data.generales,
-      baja: data.baja,
-    }),
-    headers: new Headers({
-      Authorization: "Bearer " + token,
-      "Content-Type": "application/json",
-    }),
-  });
-  const resJson = await res.json();
-  return resJson;
-};
-
 
 const Enca1 = (doc) => {
   if (!doc.tiene_encabezado) {
-    doc.imprimeEncabezadoPrincipalH();
+    doc.imprimeEncabezadoPrincipalV();
     doc.nextRow(12);
-    doc.ImpPosX("id", 15, doc.tw_ren);
-    doc.ImpPosX("Comentario 1", 30, doc.tw_ren);
-    doc.ImpPosX("Comentario 2", 110, doc.tw_ren);
-    doc.ImpPosX("Comentario 3", 190, doc.tw_ren);
-    doc.ImpPosX("Generales", 270, doc.tw_ren);
+    doc.ImpPosX("Id", 15, doc.tw_ren);
+    doc.ImpPosX("Usuario", 30, doc.tw_ren);
+    doc.ImpPosX("Nombre", 70, doc.tw_ren);
+    doc.ImpPosX("email", 150, doc.tw_ren);
 
     doc.nextRow(4);
-    doc.printLineH();
+    doc.printLineV();
     doc.nextRow(4);
     doc.tiene_encabezado = true;
   } else {
@@ -80,24 +36,22 @@ const Enca1 = (doc) => {
 };
 
 export const ImprimirPDF = (configuracion) => {
-  const orientacion = 'Landscape'  //Aqui se agrega la orientacion del documento PDF puede ser Landscape(Horizontal) o Portrait (Vertical)
+  const orientacion = 'Portrait'  //Aqui se agrega la orientacion del documento PDF puede ser Landscape(Horizontal) o Portrait (Vertical)
   const newPDF = new ReportePDF(configuracion, orientacion);
   const { body } = configuracion;
   Enca1(newPDF);
-  body.forEach((comentarios) => {
-    newPDF.ImpPosX(comentarios.numero.toString(), 20, newPDF.tw_ren, 0, "R");
-    newPDF.ImpPosX(comentarios.comentario_1.toString(), 30, newPDF.tw_ren, 35, "L");
-    newPDF.ImpPosX(comentarios.comentario_2.toString(), 110, newPDF.tw_ren, 35, "L");
-    newPDF.ImpPosX(comentarios.comentario_3.toString(), 190, newPDF.tw_ren, 35, "L");
-    let resultado = (comentarios.generales == 1) ? "Si" : (comentarios.generales == 0) ? "No" : "No valido";
-    newPDF.ImpPosX(resultado.toString(), 270, newPDF.tw_ren, 0, "L");
+  body.forEach((usuarios) => {
+    newPDF.ImpPosX(usuarios.id.toString(), 20, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(usuarios.name.toString(), 30, newPDF.tw_ren, 35, "L");
+    newPDF.ImpPosX(usuarios.nombre.toString(), 70, newPDF.tw_ren, 35, "L");
+    newPDF.ImpPosX(usuarios.email.toString(), 150, newPDF.tw_ren, 35, "L");
     Enca1(newPDF);
-    if (newPDF.tw_ren >= newPDF.tw_endRenH) {
-      newPDF.pageBreakH();
+    if (newPDF.tw_ren >= newPDF.tw_endRen) {
+      newPDF.pageBreak();
       Enca1(newPDF);
     }
   });
-  newPDF.guardaReporte("Comentarios")
+  newPDF.guardaReporte("Usuarios")
 };
 export const ImprimirExcel = (configuracion) => {
   const newExcel = new ReporteExcel(configuracion)
@@ -109,3 +63,59 @@ export const ImprimirExcel = (configuracion) => {
   newExcel.guardaReporte(nombre);
 }
 
+export const updateContraseña = async (data, $id) => {
+  //console.log(data);
+  let url = `${process.env.DOMAIN_API}api/usuario/update-password/` + $id;
+  const res = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify({
+      new_password: data.new_password,
+      confirm_new_password: data.confirm_new_password,
+      name: data.name,
+      email: data.email,
+      revoke_tokens: data.revoke_tokens,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  // console.log(res);
+  const resJson = await res.json();
+  return resJson;
+};
+
+export const guardaUsuario = async (token, data, accion) => {
+  let url_api = "";
+  if (accion === "Alta") {
+    url_api = `${process.env.DOMAIN_API}api/usuario/post`;
+    data.baja = "";
+  }
+  if (accion === "Eliminar" || accion === "Editar") {
+    if (accion === "Eliminar") {
+      data.baja = "*";
+      url_api = `${process.env.DOMAIN_API}api/usuario/delete`;
+    } else {
+      data.baja = "";
+      url_api = `${process.env.DOMAIN_API}api/usuario/update`;
+    }
+  }
+  console.log(data);
+  const res = await fetch(`${url_api}`, {
+    method: "POST",
+    body: JSON.stringify({
+      id: data.id,
+      name: data.name,
+      nombre: data.nombre,
+      email: data.email,
+      password: data.password,
+      baja: data.baja,
+      numero_prop: data.numero_prop
+    }),
+    headers: new Headers({
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    }),
+  });
+  const resJson = await res.json();
+  return resJson;
+};
