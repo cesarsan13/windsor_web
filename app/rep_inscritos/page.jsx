@@ -205,7 +205,65 @@ function AltasBajasAlumnos() {
                 PDF={ImprimePDF}
                 Excel={ImprimeExcel}
             />
-            <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+            <div className="flex flex-col justify-start items-start bg-slate-100 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+        <div className="w-full py-3">
+          {/* Fila de la cabecera de la pagina */}
+          <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
+            <div className="flex flex-wrap items-start md:items-center mx-auto">
+              <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
+                <Acciones home={home} Ver={handleVerClick} />
+              </div>
+              <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
+                Relación de Alumnos Inscritos
+              </h1>
+            </div>
+          </div>
+        </div>
+        <div className="w-full py-3 flex flex-col gap-y-4">
+          {/* Fila del formulario de la pagina */}
+          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
+            <div className="flex flex-row max-[499px]:gap-1 gap-4">
+              <div className="lg:w-fit md:w-fit">
+                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full">
+                  Fecha Ini.
+                  <input
+                    name={"fecha_ini"}
+                    tamañolabel={""}
+                    // className={"rounded block grow"}
+                    Titulo={"Fecha Inicial: "}
+                    type={"date"}
+                    errors={errors}
+                    maxLength={11}
+                    isDisabled={false}
+                    setValue={setFecha_ini}
+                    value={fecha_ini}
+                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
+                  />
+                </label>
+              </div>
+              <div className="lg:w-fit md:w-fit">
+                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-fit">
+                  Fecha Fin
+                  <input
+                    name={"fecha_fin"}
+                    tamañolabel={""}
+                    // className={"rounded block grow"}
+                    Titulo={"Fecha Final: "}
+                    type={"date"}
+                    errors={errors}
+                    maxLength={11}
+                    isDisabled={false}
+                    setValue={setFecha_fin}
+                    value={fecha_fin}
+                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
+                  />
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+            {/* <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
                 <div className="flex flex-col justify-start p-3">
                     <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
                         <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
@@ -257,7 +315,7 @@ function AltasBajasAlumnos() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </>
     );
 }
