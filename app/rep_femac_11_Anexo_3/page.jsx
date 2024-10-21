@@ -32,6 +32,8 @@ function CobranzaPorAlumno() {
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [FormaRepCobranzaporAlumno, setFormaReporteCobranzaporAlumno] = useState([]);
+  const [animateLoading, setAnimateLoading] = useState(false);
+
 
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
@@ -93,6 +95,8 @@ function CobranzaPorAlumno() {
   };
 
   const handleVerClick = () => {
+    setAnimateLoading(true);
+    cerrarModalVista();
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -230,10 +234,13 @@ function CobranzaPorAlumno() {
       80,
       reporte.tw_ren
     );
-    const pdfData = reporte.doc.output("datauristring");
-    setPdfData(pdfData);
-    setPdfPreview(true);
-    showModalVista(true);
+    setTimeout(() => {
+      const pdfData = reporte.doc.output("datauristring");
+      setPdfData(pdfData);
+      setPdfPreview(true);
+      showModalVista(true);
+      setAnimateLoading(false);
+    }, 500);
   };
 
   const showModalVista = (show) => {
@@ -241,7 +248,11 @@ function CobranzaPorAlumno() {
       ? document.getElementById("modalVPRepFemac11Anexo3").showModal()
       : document.getElementById("modalVPRepFemac11Anexo3").close();
   };
-
+  const cerrarModalVista = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVPRepFemac11Anexo3").close();
+  };
   const ImprimePDF = async () => {
     const configuracion = {
       Encabezado: {
@@ -334,7 +345,7 @@ function CobranzaPorAlumno() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} />
+                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading}/>
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Reporte Cobranza por Alumno

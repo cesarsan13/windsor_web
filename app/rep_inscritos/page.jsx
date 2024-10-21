@@ -29,6 +29,8 @@ function AltasBajasAlumnos() {
     const [pdfPreview, setPdfPreview] = useState(false);
     const [pdfData, setPdfData] = useState("");
     const [isLoading, setisLoading] = useState(false);
+  const [animateLoading, setAnimateLoading] = useState(false);
+
     const {
         formState: { errors },
     } = useForm({});
@@ -113,6 +115,8 @@ function AltasBajasAlumnos() {
 
     const handleVerClick = async () => {
         setisLoading(true);
+        setAnimateLoading(true);
+    cerrarModalVista();
         const { token } = session.user;
         const res = await getConsultasInscripcion(token);
         console.log('response', res);
@@ -129,11 +133,18 @@ function AltasBajasAlumnos() {
             fecha_ini: fecha_ini,
             fecha_fin: fecha_fin,
         };
-        const pdfData = await verImprimir(configuracion);
-        setPdfData(pdfData);
-        setPdfPreview(true);
-        setisLoading(false);
-        showModalVista(true);
+        setTimeout(async() => {
+            const pdfData = await verImprimir(configuracion);
+            setPdfData(pdfData);
+            setPdfPreview(true);
+            showModalVista(true);
+            setAnimateLoading(false);
+          }, 500);
+        // const pdfData = await verImprimir(configuracion);
+        // setPdfData(pdfData);
+        // setPdfPreview(true);
+        // setisLoading(false);
+        // showModalVista(true);
     };
 
     const ImprimePDF = async () => {
@@ -192,6 +203,12 @@ function AltasBajasAlumnos() {
             : document.getElementById("modalVPRepInsc").close();
     };
 
+    const cerrarModalVista = () => {
+        setPdfPreview(false);
+        setPdfData("");
+        document.getElementById("modalVPRepInsc").close();
+      };
+
     if (status === "loading") {
         return (
             <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -211,7 +228,7 @@ function AltasBajasAlumnos() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} />
+                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading}/>
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Relación de Alumnos Inscritos
