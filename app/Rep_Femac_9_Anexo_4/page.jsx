@@ -1,5 +1,5 @@
-"use client"
-import React from "react"
+"use client";
+import React from "react";
 import { useRouter } from "next/navigation";
 import Acciones from "./components/Acciones";
 import Inputs from "./components/Inputs";
@@ -16,7 +16,6 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import ModalVistaPreviaRepFemac9Anexo4 from "./components/modalVistaPreviaRepFemac9Anexo4";
 import { formatNumber } from "../utils/globalfn";
-
 
 function RelaciondeFacturas() {
   const router = useRouter();
@@ -36,14 +35,14 @@ function RelaciondeFacturas() {
     const fechaActual = new Date();
     return new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1)
       .toISOString()
-      .split('T')[0];
+      .split("T")[0];
   };
 
   const getUltimoDiaDelMes = () => {
     const fechaActual = new Date();
     return new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0)
       .toISOString()
-      .split('T')[0];
+      .split("T")[0];
   };
 
   useEffect(() => {
@@ -56,14 +55,30 @@ function RelaciondeFacturas() {
       return;
     }
     const fetchData = async () => {
-      const { token } = session.user
-      const data = await getRelaciondeFacturas(token, tomaFechas, tomaCanceladas, fecha_cobro_ini, fecha_cobro_fin, factura_ini, factura_fin);
+      const { token } = session.user;
+      const data = await getRelaciondeFacturas(
+        token,
+        tomaFechas,
+        tomaCanceladas,
+        fecha_cobro_ini,
+        fecha_cobro_fin,
+        factura_ini,
+        factura_fin
+      );
       setFormaRelaciondeFacturas(data);
       console.log(data);
-    }
-    fetchData()
-  }, [session, status, tomaFechas, tomaCanceladas, fecha_cobro_ini, fecha_cobro_fin, factura_ini, factura_fin]);
-
+    };
+    fetchData();
+  }, [
+    session,
+    status,
+    tomaFechas,
+    tomaCanceladas,
+    fecha_cobro_ini,
+    fecha_cobro_fin,
+    factura_ini,
+    factura_fin,
+  ]);
 
   const {
     formState: { errors },
@@ -74,7 +89,6 @@ function RelaciondeFacturas() {
   };
 
   const handleVerClick = () => {
-
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -91,12 +105,23 @@ function RelaciondeFacturas() {
         doc.imprimeEncabezadoPrincipalV();
         doc.nextRow(8);
         if (tomaFechas === true) {
-          if (fecha_cobro_fin == '') {
-            doc.ImpPosX(`Reporte de Factura del ${fecha_cobro_ini} `, 15, doc.tw_ren, 0, "L"),
+          if (fecha_cobro_fin == "") {
+            doc.ImpPosX(
+              `Reporte de Factura del ${fecha_cobro_ini} `,
+              15,
+              doc.tw_ren,
+              0,
+              "L"
+            ),
               doc.nextRow(5);
-          }
-          else {
-            doc.ImpPosX(`Reporte de Facturas del ${fecha_cobro_ini} al ${fecha_cobro_fin}`, 15, doc.tw_ren, 0, "L"),
+          } else {
+            doc.ImpPosX(
+              `Reporte de Facturas del ${fecha_cobro_ini} al ${fecha_cobro_fin}`,
+              15,
+              doc.tw_ren,
+              0,
+              "L"
+            ),
               doc.nextRow(5);
           }
         }
@@ -137,7 +162,6 @@ function RelaciondeFacturas() {
       const precio_unitario = imp.precio_unitario;
       const descuento = imp.descuento;
 
-
       let total_importe = 0;
       let sub_total = 0;
       const r_s_nombre = "FACTURA GLOBAL DEL DIA";
@@ -145,21 +169,19 @@ function RelaciondeFacturas() {
 
       /*Para hacer las operaciones*/
       total_importe = cantidad * precio_unitario;
-      total_importe = total_importe - (total_importe * (descuento / 100));
+      total_importe = total_importe - total_importe * (descuento / 100);
 
       if (iva > 0) {
         sub_total = total_importe * (iva / 100);
         sub_total += total_importe;
-
       } else if (iva < 0 || iva === 0) {
         sub_total = total_importe;
       }
 
-      if (razon_social === '' || razon_social === ' ') {
+      if (razon_social === "" || razon_social === " ") {
         razon_social_cambio = r_s_nombre;
       } else {
         razon_social_cambio = razon_social;
-
       }
       reporte.ImpPosX(noFac.toString(), 25, reporte.tw_ren, 0, "R");
       reporte.ImpPosX(recibo.toString(), 40, reporte.tw_ren, 0, "R");
@@ -175,16 +197,20 @@ function RelaciondeFacturas() {
         Enca1(reporte);
       }
       total_general = total_general + sub_total;
-
     });
     reporte.nextRow(4);
-    reporte.ImpPosX(`TOTAL IMPORTE: ${formatNumber(total_general)}` || '', 150, reporte.tw_ren, 0, "L");
+    reporte.ImpPosX(
+      `TOTAL IMPORTE: ${formatNumber(total_general)}` || "",
+      150,
+      reporte.tw_ren,
+      0,
+      "L"
+    );
 
     const pdfData = reporte.doc.output("datauristring");
     setPdfData(pdfData);
     setPdfPreview(true);
     showModalVista(true);
-
   };
 
   //hasta aqui
@@ -193,8 +219,7 @@ function RelaciondeFacturas() {
     show
       ? document.getElementById("modalVPRepFemac9Anexo4").showModal()
       : document.getElementById("modalVPRepFemac9Anexo4").close();
-  }
-
+  };
 
   const ImprimePDF = async () => {
     const configuracion = {
@@ -204,18 +229,23 @@ function RelaciondeFacturas() {
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
       body: FormaRepRelaciondeFacturas,
-    }
-    ImprimirPDF(configuracion, fecha_cobro_ini, fecha_cobro_fin, tomaFechas, tomaCanceladas)
+    };
+    ImprimirPDF(
+      configuracion,
+      fecha_cobro_ini,
+      fecha_cobro_fin,
+      tomaFechas,
+      tomaCanceladas
+    );
   };
 
   const ImprimeExcel = async () => {
     let detallefecha = "";
     let detallecanceladas = "";
     if (tomaFechas === true) {
-      if (fecha_cobro_fin == '') {
+      if (fecha_cobro_fin == "") {
         detallefecha = `Reporte de Factura del ${fecha_cobro_ini} `;
-      }
-      else {
+      } else {
         detallefecha = `Reporte de Facturas del ${fecha_cobro_ini} al ${fecha_cobro_fin}`;
       }
     }
@@ -243,12 +273,10 @@ function RelaciondeFacturas() {
         { header: "I.V.A", dataKey: "ivaI" },
         { header: "Total", dataKey: "totalI" },
       ],
-      nombre: "Reporte de relación de facturas"
-    }
-    ImprimirExcel(configuracion)
+      nombre: "Reporte de relación de facturas",
+    };
+    ImprimirExcel(configuracion);
   };
-
-
 
   if (status === "loading") {
     return (
@@ -261,9 +289,145 @@ function RelaciondeFacturas() {
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
-        Excel={ImprimeExcel} />
+        Excel={ImprimeExcel}
+      />
 
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="flex flex-col justify-start items-start bg-slate-100 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+        <div className="w-full py-3">
+          {/* Fila de la cabecera de la pagina */}
+          <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
+            <div className="flex flex-wrap items-start md:items-center mx-auto">
+              <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
+                <Acciones home={home} Ver={handleVerClick} />
+              </div>
+              <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
+                Relación de Facturas
+              </h1>
+            </div>
+          </div>
+        </div>
+        <div className="w-full py-3 flex flex-col gap-y-4">
+          {/* Fila del formulario de la pagina */}
+          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto space-y-4">
+            <div className="flex flex-row max-[499px]:gap-1 gap-4">
+              <div className="lg:w-fit md:w-fit">
+                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full">
+                  Fecha Ini.
+                  <input
+                    name={"fecha_cobro_ini"}
+                    tamañolabel={""}
+                    // className={"rounded block grow"}
+                    Titulo={"Fecha Inicial: "}
+                    type={"date"}
+                    errors={errors}
+                    maxLength={15}
+                    isDisabled={false}
+                    value={fecha_cobro_ini}
+                    setValue={setFecha_cobro_ini}
+                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
+                  />
+                </label>
+              </div>
+              <div className="lg:w-fit md:w-fit">
+                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-fit">
+                  Fecha Fin
+                  <input
+                    name={"fecha_cobro_fin"}
+                    tamañolabel={""}
+                    // className={"rounded block grow"}
+                    Titulo={"Fecha Final: "}
+                    type={"date"}
+                    errors={errors}
+                    maxLength={15}
+                    isDisabled={false}
+                    value={fecha_cobro_fin}
+                    setValue={setFecha_cobro_fin}
+                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div className="flex flex-row max-[499px]:gap-1 gap-4">
+              <div className="lg:w-fit md:w-fit">
+                <Inputs
+                  name={"factura_ini"}
+                  tamañolabel={""}
+                  className={"rounded grow w-full md:w-1/2"}
+                  Titulo={"Facturas: "}
+                  type={"text"}
+                  errors={errors}
+                  maxLength={15}
+                  dataType={"int"}
+                  isDisabled={false}
+                  setValue={setFacturaIni}
+                />
+              </div>
+              <div className="lg:w-fit md:w-fit">
+                <Inputs
+                  name={"factura_fin"}
+                  tamañolabel={""}
+                  className={"rounded grow w-full md:w-1/2"}
+                  Titulo={""}
+                  type={"text"}
+                  errors={errors}
+                  maxLength={15}
+                  dataType={"int"}
+                  isDisabled={false}
+                  setValue={setFacturaFin}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-row">
+            <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
+              <div className="flex flex-row max-[499px]:gap-1 gap-4">
+                <div className="lg:w-fit md:w-fit">
+                  <div className="tooltip " data-tip="Tomar Fechas">
+                    <label
+                      htmlFor="ch_tomaFechas"
+                      className="label cursor-pointer flex justify-start space-x-2"
+                    >
+                      <input
+                        id="ch_tomaFechas"
+                        type="checkbox"
+                        className="checkbox checkbox-md"
+                        defaultChecked={true}
+                        onClick={(evt) => setTomaFechas(evt.target.checked)}
+                      />
+                      <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden  text-neutral-600 dark:text-neutral-200"></span>
+                      <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
+                        Toma Fechas
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <div className="lg:w-fit md:w-fit">
+                  <div className="tooltip" data-tip="Tomar Facturas Canceladas">
+                    <label
+                      htmlFor="ch_tomaCanceladas"
+                      className="label cursor-pointer flex justify-start space-x-2"
+                    >
+                      <input
+                        id="ch_tomaCanceladas"
+                        type="checkbox"
+                        className="checkbox checkbox-md"
+                        defaultChecked={false}
+                        onClick={(evt) => setTomaCanceladas(evt.target.checked)}
+                      />
+                      <span className="fa-regular fa-file-lines block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
+                      <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
+                        Toma Facturas Canceladas
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
@@ -377,8 +541,7 @@ function RelaciondeFacturas() {
             </div>
           </div>
         </div>
-      </div>
-
+      </div> */}
     </>
   );
 }

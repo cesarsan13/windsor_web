@@ -147,30 +147,31 @@ function AltasBajasAlumnos() {
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
       />
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
-        <div className="flex flex-col justify-start p-3">
-          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
-            <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
-              <Acciones
-                home={home}
-                Ver={handleVerClick}
-              />
+      <div className="flex flex-col justify-start items-start bg-slate-100 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+        <div className="w-full py-3">
+          {/* Fila de la cabecera de la pagina */}
+          <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
+            <div className="flex flex-wrap items-start md:items-center mx-auto">
+              <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
+                <Acciones home={home} Ver={handleVerClick} />
+              </div>
+              <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
+                Relación de Recibos
+              </h1>
             </div>
-
-            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
-              Relación de Recibos
-            </h1>
           </div>
         </div>
-        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-          <div className="col-span-7">
-            <div className="flex flex-col h-[calc(80%)] overflow-y-auto">
-              <div className='flex flex-col md:flex-row gap-4 '>
-                <div className='w-11/12 md:w-4/12 lg:w-3/12'>
-                  <Inputs
+        <div className="w-full py-3 flex flex-col gap-y-4">
+          {/* Fila del formulario de la pagina */}
+          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto space-y-4">
+            <div className="flex flex-row max-[499px]:gap-1 gap-4">
+              <div className="lg:w-fit md:w-fit">
+                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full">
+                  Fecha Ini.
+                  <input
                     name={"fecha_ini"}
                     tamañolabel={""}
-                    className={"rounded  block grow"}
+                    // className={"rounded  block grow"}
                     Titulo={"Fecha Inicial: "}
                     type={"date"}
                     errors={errors}
@@ -178,14 +179,17 @@ function AltasBajasAlumnos() {
                     isDisabled={false}
                     value={fecha_ini}
                     setValue={setFecha_ini}
+                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
                   />
-                </div>
-                <div className='w-11/12 md:w-4/12 lg:w-3/12'>
-
-                  <Inputs
+                </label>
+              </div>
+              <div className="lg:w-fit md:w-fit">
+                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-fit">
+                  Fecha Fin
+                  <input
                     name={"fecha_fin"}
                     tamañolabel={""}
-                    className={"rounded block grow "}
+                    // className={"rounded block grow "}
                     Titulo={"Fecha Final: "}
                     type={"date"}
                     errors={errors}
@@ -193,29 +197,13 @@ function AltasBajasAlumnos() {
                     isDisabled={false}
                     value={fecha_fin}
                     setValue={setFecha_fin}
+                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
                   />
-                </div>
-              </div>
-              <div className="tooltip" data-tip="Tomar Fechas">
-                <label
-                  htmlFor="ch_tomaFechas"
-                  className="label cursor-pointer flex justify-start space-x-2"
-                >
-                  <input
-                    id="ch_tomaFechas"
-                    type="checkbox"
-                    className="checkbox checkbox-md"
-                    defaultChecked={true}
-                    onClick={(evt) => setTomaFechas(evt.target.checked)}
-                  />
-                  <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden  text-neutral-600 dark:text-neutral-200"></span>
-                  <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
-                    Toma Fechas
-                  </span>
                 </label>
               </div>
-
-              <div className="flex md:flex-row lg:flex-row md:space-x-1p-1">
+            </div>
+            <div className="flex flex-row max-[499px]:gap-1 gap-4">
+              <div className="lg:w-fit md:w-fit">
                 <Inputs
                   name={"recibo_ini"}
                   tamañolabel={""}
@@ -228,6 +216,8 @@ function AltasBajasAlumnos() {
                   isDisabled={false}
                   setValue={setRecibeIni}
                 />
+              </div>
+              <div className="lg:w-fit md:w-fit">
                 <Inputs
                   name={"recibo_fin"}
                   tamañolabel={""}
@@ -241,8 +231,9 @@ function AltasBajasAlumnos() {
                   setValue={setRecibeFin}
                 />
               </div>
-
-              <div className="flex md:flex-row lg:flex-row md:space-x-1 gap-3 p-1">
+            </div>
+            <div className="flex flex-row max-[499px]:gap-1 gap-4">
+              <div className="lg:w-fit md:w-fit">
                 <Inputs
                   name={"factura_ini"}
                   tamañolabel={""}
@@ -255,6 +246,9 @@ function AltasBajasAlumnos() {
                   isDisabled={false}
                   setValue={setFacturaIni}
                 />
+                
+              </div>
+              <div className="lg:w-fit md:w-fit">
                 <Inputs
                   name={"factura_fin"}
                   tamañolabel={""}
@@ -268,31 +262,61 @@ function AltasBajasAlumnos() {
                   setValue={setFacturaFin}
                 />
               </div>
-              <div className="p-1">
-                <BuscarCat
-                  table="alumnos"
-                  itemData={[]}
-                  fieldsToShow={["numero", "nombre_completo"]}
-                  nameInput={["numero", "nombre_completo"]}
-                  titulo={"Inicio: "}
-                  setItem={setAlumnoIni}
-                  token={session.user.token}
-                  modalId="modal_alumnos1"
-                  inputWidths={{ first: "100px", second: "300px" }}
-                />
+            </div>
+          </div>
+          <div className="flex flex-row">
+            <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
+              <div className="col-span-full md:col-span-full lg:col-span-full">
+                <div className="w-full">
+                  <BuscarCat
+                    table="alumnos"
+                    itemData={[]}
+                    fieldsToShow={["numero", "nombre_completo"]}
+                    nameInput={["numero", "nombre_completo"]}
+                    titulo={"Inicio: "}
+                    setItem={setAlumnoIni}
+                    token={session.user.token}
+                    modalId="modal_alumnos1"
+                    inputWidths={{ first: "100px", second: "300px" }}
+                    descClassName="md:mt-0 w-full"
+                  />
+                </div>
               </div>
-              <div className="p-1">
-                <BuscarCat
-                  table="alumnos"
-                  itemData={[]}
-                  fieldsToShow={["numero", "nombre_completo"]}
-                  nameInput={["numero", "nombre_completo"]}
-                  titulo={"Fin: "}
-                  setItem={setAlumnoFin}
-                  token={session.user.token}
-                  modalId="modal_alumnos2"
-                  inputWidths={{ first: "115px", second: "300px" }}
-                />
+              <div className="col-span-full md:col-span-full lg:col-span-full">
+                <div className="w-full">
+                  <BuscarCat
+                    table="alumnos"
+                    itemData={[]}
+                    fieldsToShow={["numero", "nombre_completo"]}
+                    nameInput={["numero", "nombre_completo"]}
+                    titulo={"Fin: "}
+                    setItem={setAlumnoFin}
+                    token={session.user.token}
+                    modalId="modal_alumnos2"
+                    inputWidths={{ first: "100px", second: "300px" }}
+                    descClassName="md:mt-0 w-full"
+                  />
+                </div>
+              </div>
+              <div className="flex flex-row max-[499px]:gap-1 gap-4">
+                <div className="lg:w-fit md:w-fit">
+                <div className="tooltip " data-tip="Tomar Fechas">
+                  <label htmlFor="ch_tomaFechas"
+                      className="label cursor-pointer flex justify-start space-x-2">
+                      <input
+                        id="ch_tomaFechas"
+                        type="checkbox"
+                        className="checkbox checkbox-md"
+                        defaultChecked={true}
+                        onClick={(evt) => setTomaFechas(evt.target.checked)}
+                      />
+                      <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden  text-neutral-600 dark:text-neutral-200"></span>
+                      <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
+                        Toma Fechas
+                      </span>
+                    </label>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
