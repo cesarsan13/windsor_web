@@ -231,6 +231,11 @@ function Menu({ vertical, toogle }) {
               </Link>
             </li>
             <li>
+              <Link href="/rep_femac_12_anexo_4" onClick={handleClick}>
+                Reporte Cobranza por Producto
+              </Link>
+            </li>
+            <li>
               <Link href="/rep_inscritos" onClick={toogle}>
                 Reporte Inscripción
               </Link>
