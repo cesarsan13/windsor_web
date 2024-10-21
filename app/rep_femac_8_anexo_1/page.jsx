@@ -300,6 +300,7 @@ function AltasBajasAlumnos() {
               </div>
               <div className="flex flex-row max-[499px]:gap-1 gap-4">
                 <div className="lg:w-fit md:w-fit">
+                <div className="tooltip " data-tip="Tomar Fechas">
                   <label htmlFor="ch_tomaFechas"
                       className="label cursor-pointer flex justify-start space-x-2">
                       <input
@@ -314,6 +315,7 @@ function AltasBajasAlumnos() {
                         Toma Fechas
                       </span>
                     </label>
+                  </div>
                 </div>
               </div>
             </div>
