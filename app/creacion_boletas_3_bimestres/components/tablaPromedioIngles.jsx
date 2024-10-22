@@ -4,10 +4,9 @@ import NoData from "@/app/components/nodata";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 import React from "react";
-function TablaPromedioEspañol({
+function TablaPromedioIngles({
     promediosEsFiltrados,
-    promediosEspañolAr2,
-    promediosEspañolAr3,
+    promediosInglesAr5,
     isLoading,
 }) {
     return !isLoading ? (
@@ -47,4 +46,4 @@ function TablaPromedioEspañol({
     );
 }
 
-export default TablaPromedioEspañol;
+export default TablaPromedioIngles;
