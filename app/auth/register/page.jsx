@@ -5,20 +5,26 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { showSwal } from "@/app/utils/alerts";
 import Inputs from "@/app/auth/register/component/Inputs";
+import {guardaRegistro} from "@/app/utils/api/register/register";
+
 function Register() {
   const router = useRouter();
+  const [error, setError] = useState(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const [error, setError] = useState(null);
+
+
   const onSubmit = handleSubmit(async (data) => {
+
     event.preventDefault();
+
+    console.log("data", data);
     const res = await guardaRegistro(data);
-    
-    // console.log(res.status);
+
     showSwal(res.alert_title, res.alert_text, res.alert_icon);
     if (!res.status) {
       setError(res.alert_text);
@@ -26,14 +32,8 @@ function Register() {
       router.push("./login");
     }
   });
-  const handleChangeConsultorio = (e) => {
-    e.preventDefault();
-    const id_consultorio = e.target.value;
-    const infofiltrada = medicos.filter((medico) => {
-      return medico.consultorio_id === id_consultorio;
-    });
-    setMedicosFiltrados(infofiltrada);
-  };
+
+
   return (
     <div className="w-full flex justify-center items-center bg-white">
       { }

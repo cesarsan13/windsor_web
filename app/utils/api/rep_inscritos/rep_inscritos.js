@@ -166,8 +166,10 @@ export const Imprimir = (configuracion) => {
 
 export const ImprimirExcel = (configuracion) => {
     const newExcel = new ReporteExcel(configuracion);
-    const { bodyAlumnos, bodyDetalles, bodyProductos, bodyHorarios, fecha_ini, fecha_fin, columns, nombre } = configuracion;
+    const { bodyAlumnos, bodyDetalles, bodyProductos, bodyHorarios, columns, nombre } = configuracion;
     const newBody = [];
+    const fecha_ini = format_Fecha_String(configuracion.fecha_ini)
+    const fecha_fin = format_Fecha_String(configuracion.fecha_fin)    
     let total_inscripcion = 0;
     let alumnos = 0;
     bodyAlumnos.forEach((alumno) => {
@@ -179,6 +181,7 @@ export const ImprimirExcel = (configuracion) => {
             detalle.fecha >= fecha_ini &&
             detalle.fecha <= fecha_fin
         );
+        // console.log("detalleEncontrado=>",detalleEncontrado);
         if (detalleEncontrado) {
             detalleEncontrado.forEach((detalle) => {
                 const productoEncontrado = bodyProductos.filter(producto =>

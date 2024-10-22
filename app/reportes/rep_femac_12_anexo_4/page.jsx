@@ -6,8 +6,8 @@ import {
   formatDate,
   formatDate_NewDate,
   format_Fecha_String,
-} from "@/app/utils/globalfn";
-import BuscarCat from "@/app/components/BuscarCat";
+} from "../utils/globalfn";
+import BuscarCat from "../components/BuscarCat";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Acciones from "@/app/reportes/rep_femac_12_Anexo_4/components/Acciones";
@@ -38,6 +38,7 @@ function RepFemac12Anexo() {
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [isLoading, setisLoading] = useState(false);
+  const [animateLoading, setAnimateLoading] = useState(false);
 
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
@@ -126,6 +127,8 @@ function RepFemac12Anexo() {
 
   const handleVerClick = async () => {
     setisLoading(true);
+    setAnimateLoading(true);
+    cerrarModalVista();
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -245,17 +248,25 @@ function RepFemac12Anexo() {
     Cambia_Articulo(reporte, tot_art);
     reporte.ImpPosX("TOTAL General", 98, reporte.tw_ren, 0, "L");
     reporte.ImpPosX(total_general.toString(), 138, reporte.tw_ren, 0, "R");
-    const pdfData = reporte.doc.output("datauristring");
-    setPdfData(pdfData);
-    setisLoading(false);
-    setPdfPreview(true);
-    showModalVista(true);
+    setTimeout(() => {
+      const pdfData = reporte.doc.output("datauristring");
+      setPdfData(pdfData);
+      setPdfPreview(true);
+      showModalVista(true);
+      setAnimateLoading(false);
+    }, 500);
   };
 
   const showModalVista = (show) => {
     show
       ? document.getElementById("modalVPRepFemac12Anexo4").showModal()
       : document.getElementById("modalVPRepFemac12Anexo4").close();
+  };
+
+  const cerrarModalVista = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVPRepFemac12Anexo4").close();
   };
 
   return (
@@ -267,97 +278,115 @@ function RepFemac12Anexo() {
         Excel={ImprimeExcel}
       />
 
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
-        <div className="flex flex-col justify-start p-3">
-          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
-            <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
-              <Acciones home={home} Ver={handleVerClick} />
+      <div className="flex flex-col justify-start items-start bg-slate-100 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+        <div className="w-full py-3">
+          {/* Fila de la cabecera de la pagina */}
+          <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
+            <div className="flex flex-wrap items-start md:items-center mx-auto">
+              <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
+                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading}/>
+              </div>
+              <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
+                Reporte de Cobranza por Productos
+              </h1>
             </div>
-            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
-              Reporte de Cobranza por Productos
-            </h1>
           </div>
         </div>
-        <div className="col-span-7">
-          <div className="flex flex-col h-[calc(100%)] overflow-y-auto">
-            <div className="flex flex-col md:flex-row gap-4 p-1">
-              <div className="w-11/12 md:w-4/12 lg:w-3/12">
-                <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3">
-                  Fecha Inicia
+        <div className="w-full py-3 flex flex-col gap-y-4">
+          {/* Fila del formulario de la pagina */}
+          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto space-y-4">
+            <div className="flex flex-row max-[499px]:gap-1 gap-4">
+              <div className="lg:w-fit md:w-fit">
+                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full">
+                  Fecha Ini.
                   <input
                     type="date"
                     value={fecha1}
                     onChange={(e) => setFecha1(e.target.value)}
-                    className="grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none"
+                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
                   />
                 </label>
               </div>
-              <div className="w-11/12 md:w-4/12 lg:w-3/12">
-                <label className="input input-bordered input-md text-black dark:text-white flex items-center gap-3">
+              <div className="lg:w-fit md:w-fit">
+                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-fit">
                   Fecha Fin
                   <input
                     type="date"
                     value={fecha2}
                     onChange={(e) => setFecha2(e.target.value)}
-                    className=" grow dark:text-neutral-200 join-item border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none"
+                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
                   />
                 </label>
               </div>
             </div>
-            <div className="p-2">
-              <BuscarCat
-                table={"productos"}
-                nameInput={["producto1", "producto_desc1"]}
-                fieldsToShow={["numero", "descripcion"]}
-                titulo={"Producto: "}
-                setItem={setProducto1}
-                token={session.user.token}
-                modalId={"modal_producto1"}
-                inputWidths={{ first: "100px", second: "300px" }}
-              />
-            </div>
-            <div className="p-2">
-              <BuscarCat
-                table={"productos"}
-                nameInput={["producto2", "producto_desc2"]}
-                fieldsToShow={["numero", "descripcion"]}
-                titulo={"Producto: "}
-                setItem={setProducto2}
-                token={session.user.token}
-                modalId={"modal_producto2"}
-                inputWidths={{ first: "100px", second: "300px" }}
-              />
-            </div>
-            <div className=" col-8 flex flex-col">
-              <label
-                className={` input-md text-black dark:text-white flex items-center gap-3`}
-              >
-                <span className="text-black dark:text-white">Ordenar por:</span>
-                <label
-                  className={` input-md text-black dark:text-white flex items-center gap-3`}
-                  onChange={(event) => handleCheckChange(event)}
-                >
-                  <span className="text-black dark:text-white">Nombre</span>
-                  <input
-                    type="radio"
-                    name="ordenar"
-                    value="nombre"
-                    className="radio"
+          </div>
+          <div className="flex flex-row">
+            <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
+              <div className="col-span-full md:col-span-full lg:col-span-full">
+                <div className="w-full">
+                  <BuscarCat
+                    table={"productos"}
+                    nameInput={["producto1", "producto_desc1"]}
+                    fieldsToShow={["numero", "descripcion"]}
+                    titulo={"Producto: "}
+                    setItem={setProducto1}
+                    token={session.user.token}
+                    modalId={"modal_producto1"}
+                    inputWidths={{ first: "100px", second: "300px" }}
+                    descClassName="md:mt-0 w-full"
                   />
-                </label>
-                <label
-                  className={` input-md text-black dark:text-white flex items-center gap-3`}
-                  onChange={(event) => handleCheckChange(event)}
-                >
-                  <span className="text-black dark:text-white">Número</span>
-                  <input
-                    type="radio"
-                    name="ordenar"
-                    value="id"
-                    className="radio"
+                </div>
+              </div>
+              <div className="col-span-full md:col-span-full lg:col-span-full">
+                <div className="w-full">
+                  <BuscarCat
+                    table={"productos"}
+                    nameInput={["producto2", "producto_desc2"]}
+                    fieldsToShow={["numero", "descripcion"]}
+                    titulo={"Producto: "}
+                    setItem={setProducto2}
+                    token={session.user.token}
+                    modalId={"modal_producto2"}
+                    inputWidths={{ first: "100px", second: "300px" }}
+                    descClassName="md:mt-0 w-full"
                   />
-                </label>
-              </label>
+                </div>
+              </div>
+              <div className="flex flex-row max-[499px]:gap-1 gap-4">
+                <div className="lg:w-fit md:w-fit">
+                  <label
+                    className={` input-md text-black dark:text-white flex items-center gap-3`}
+                  >
+                    <span className="text-black dark:text-white">
+                      Ordenar por:
+                    </span>
+                    <label
+                      className={` input-md text-black dark:text-white flex items-center gap-3`}
+                      onChange={(event) => handleCheckChange(event)}
+                    >
+                      <span className="text-black dark:text-white">Nombre</span>
+                      <input
+                        type="radio"
+                        name="ordenar"
+                        value="nombre"
+                        className="radio"
+                      />
+                    </label>
+                    <label
+                      className={` input-md text-black dark:text-white flex items-center gap-3`}
+                      onChange={(event) => handleCheckChange(event)}
+                    >
+                      <span className="text-black dark:text-white">Número</span>
+                      <input
+                        type="radio"
+                        name="ordenar"
+                        value="id"
+                        className="radio"
+                      />
+                    </label>
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
         </div>

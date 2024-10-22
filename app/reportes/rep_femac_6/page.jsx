@@ -26,6 +26,7 @@ function Rep_Femac_6() {
   const [fechaFin, setFechaFin] = useState("");
   const [dataCobranza, setDataCobranza] = useState([]);
   const [isLoading, setisLoading] = useState(false);
+  const [animateLoading, setAnimateLoading] = useState(false);
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const getPrimerDiaDelMes = () => {
@@ -68,10 +69,6 @@ function Rep_Femac_6() {
   }
   const home = () => {
     router.push("/");
-  };
-  const CerrarView = () => {
-    setPdfPreview(false);
-    setPdfData("");
   };
   const ImprimePDF = () => {
     const configuracion = {
@@ -116,6 +113,8 @@ function Rep_Femac_6() {
   };
   //   console.log(cajero);
   const handleVerClick = () => {
+    setAnimateLoading(true);
+    cerrarModalVista();
     if (cajero.numero === 0 || cajero.numero === undefined) {
       Swal.fire({
         title: "Opps",
@@ -123,6 +122,12 @@ function Rep_Femac_6() {
         icon: "error",
         confirmButtonText: "Ok",
       });
+      setTimeout(() => {
+        setPdfPreview(false);
+        setPdfData("");
+        setAnimateLoading(false);
+        document.getElementById("modalVRep6").close();
+      }, 500);
       return;
     }
     const configuracion = {
@@ -367,15 +372,23 @@ function Rep_Femac_6() {
       reporte.ImpPosX("Total Cajeros", 34, reporte.tw_ren, 0, "L");
       reporte.ImpPosX(formatNumber(total_cajero), 166, reporte.tw_ren, 0, "R");
     }
-    const pdfData = reporte.doc.output("datauristring");
-    setPdfData(pdfData);
-    setPdfPreview(true);
-    showModalVista(true);
+    setTimeout(() => {
+      const pdfData = reporte.doc.output("datauristring");
+      setPdfData(pdfData);
+      setPdfPreview(true);
+      showModalVista(true);
+      setAnimateLoading(false);
+    }, 500);
   };
   const showModalVista = (show) => {
     show
       ? document.getElementById("modalVRep6").showModal()
       : document.getElementById("modalVRep6").close();
+  };
+  const cerrarModalVista = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVRep6").close();
   };
   function roundNumber(value, decimals) {
     const factor = Math.pow(10, decimals);
@@ -396,7 +409,7 @@ function Rep_Femac_6() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} />
+                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading}/>
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Reporte Resumen de Cobranza

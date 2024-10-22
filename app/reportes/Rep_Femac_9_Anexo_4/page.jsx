@@ -14,8 +14,8 @@ import { useSession } from "next-auth/react";
 import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import ModalVistaPreviaRepFemac9Anexo4 from "@/app/reportes/rep_femac_9_anexo_4/components/modalVistaPreviaRepFemac9Anexo4";
-import { formatNumber } from "@/app/utils/globalfn";
+import ModalVistaPreviaRepFemac9Anexo4 from "./components/modalVistaPreviaRepFemac9Anexo4";
+import { formatNumber } from "../utils/globalfn";
 
 function RelaciondeFacturas() {
   const router = useRouter();
@@ -30,6 +30,9 @@ function RelaciondeFacturas() {
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [FormaRepRelaciondeFacturas, setFormaRelaciondeFacturas] = useState([]);
+
+  const [animateLoading, setAnimateLoading] = useState(false);
+
 
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
@@ -89,6 +92,8 @@ function RelaciondeFacturas() {
   };
 
   const handleVerClick = () => {
+    setAnimateLoading(true);
+    cerrarModalVista();
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -207,10 +212,13 @@ function RelaciondeFacturas() {
       "L"
     );
 
-    const pdfData = reporte.doc.output("datauristring");
-    setPdfData(pdfData);
-    setPdfPreview(true);
-    showModalVista(true);
+    setTimeout(() => {
+      const pdfData = reporte.doc.output("datauristring");
+      setPdfData(pdfData);
+      setPdfPreview(true);
+      showModalVista(true);
+      setAnimateLoading(false);
+    }, 500);
   };
 
   //hasta aqui
@@ -219,6 +227,12 @@ function RelaciondeFacturas() {
     show
       ? document.getElementById("modalVPRepFemac9Anexo4").showModal()
       : document.getElementById("modalVPRepFemac9Anexo4").close();
+  };
+
+  const cerrarModalVista = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVPRepFemac9Anexo4").close();
   };
 
   const ImprimePDF = async () => {
@@ -292,27 +306,31 @@ function RelaciondeFacturas() {
         Excel={ImprimeExcel}
       />
 
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
-        <div className="flex flex-col justify-start p-3">
-          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
-            <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
-              <Acciones home={home} Ver={handleVerClick} />
+      <div className="flex flex-col justify-start items-start bg-slate-100 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+        <div className="w-full py-3">
+          {/* Fila de la cabecera de la pagina */}
+          <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
+            <div className="flex flex-wrap items-start md:items-center mx-auto">
+              <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
+                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading}/>
+              </div>
+              <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
+                Relación de Facturas
+              </h1>
             </div>
-
-            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
-              Relación de Facturas
-            </h1>
           </div>
         </div>
-        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-          <div className="col-span-7">
-            <div className="flex flex-col h-[calc(80%)] overflow-y-auto">
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="w-11/12 md:w-4/12 lg:w-3/12">
-                  <Inputs
+        <div className="w-full py-3 flex flex-col gap-y-4">
+          {/* Fila del formulario de la pagina */}
+          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto space-y-4">
+            <div className="flex flex-row max-[499px]:gap-1 gap-4">
+              <div className="lg:w-fit md:w-fit">
+                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full">
+                  Fecha Ini.
+                  <input
                     name={"fecha_cobro_ini"}
                     tamañolabel={""}
-                    className={"rounded block grow"}
+                    // className={"rounded block grow"}
                     Titulo={"Fecha Inicial: "}
                     type={"date"}
                     errors={errors}
@@ -320,13 +338,17 @@ function RelaciondeFacturas() {
                     isDisabled={false}
                     value={fecha_cobro_ini}
                     setValue={setFecha_cobro_ini}
+                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
                   />
-                </div>
-                <div className="w-11/12 md:w-4/12 lg:w-3/12">
-                  <Inputs
+                </label>
+              </div>
+              <div className="lg:w-fit md:w-fit">
+                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-fit">
+                  Fecha Fin
+                  <input
                     name={"fecha_cobro_fin"}
                     tamañolabel={""}
-                    className={"rounded block grow"}
+                    // className={"rounded block grow"}
                     Titulo={"Fecha Final: "}
                     type={"date"}
                     errors={errors}
@@ -334,49 +356,14 @@ function RelaciondeFacturas() {
                     isDisabled={false}
                     value={fecha_cobro_fin}
                     setValue={setFecha_cobro_fin}
+                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
                   />
-                </div>
+                </label>
               </div>
-              <div>
-                <div className="tooltip" data-tip="Tomar Fechas">
-                  <label
-                    htmlFor="ch_tomaFechas"
-                    className="label cursor-pointer flex justify-start space-x-2"
-                  >
-                    <input
-                      id="ch_tomaFechas"
-                      type="checkbox"
-                      className="checkbox checkbox-md"
-                      defaultChecked={true}
-                      onClick={(evt) => setTomaFechas(evt.target.checked)}
-                    />
-                    <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
-                    <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
-                      Toma Fechas
-                    </span>
-                  </label>
-                </div>
-                <div className="tooltip" data-tip="Tomar Facturas Canceladas">
-                  <label
-                    htmlFor="ch_tomaCanceladas"
-                    className="label cursor-pointer flex justify-start space-x-2"
-                  >
-                    <input
-                      id="ch_tomaCanceladas"
-                      type="checkbox"
-                      className="checkbox checkbox-md"
-                      defaultChecked={false}
-                      onClick={(evt) => setTomaCanceladas(evt.target.checked)}
-                    />
-                    <span className="fa-regular fa-file-lines block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
-                    <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
-                      Toma Facturas Canceladas
-                    </span>
-                  </label>
-                </div>
-              </div>
+            </div>
 
-              <div className="flex md:flex-row lg:flex-row md:space-x-1 gap-3">
+            <div className="flex flex-row max-[499px]:gap-1 gap-4">
+              <div className="lg:w-fit md:w-fit">
                 <Inputs
                   name={"factura_ini"}
                   tamañolabel={""}
@@ -389,6 +376,8 @@ function RelaciondeFacturas() {
                   isDisabled={false}
                   setValue={setFacturaIni}
                 />
+              </div>
+              <div className="lg:w-fit md:w-fit">
                 <Inputs
                   name={"factura_fin"}
                   tamañolabel={""}
@@ -401,6 +390,52 @@ function RelaciondeFacturas() {
                   isDisabled={false}
                   setValue={setFacturaFin}
                 />
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-row">
+            <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
+              <div className="flex flex-row max-[499px]:gap-1 gap-4">
+                <div className="lg:w-fit md:w-fit">
+                  <div className="tooltip " data-tip="Tomar Fechas">
+                    <label
+                      htmlFor="ch_tomaFechas"
+                      className="label cursor-pointer flex justify-start space-x-2"
+                    >
+                      <input
+                        id="ch_tomaFechas"
+                        type="checkbox"
+                        className="checkbox checkbox-md"
+                        defaultChecked={true}
+                        onClick={(evt) => setTomaFechas(evt.target.checked)}
+                      />
+                      <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden  text-neutral-600 dark:text-neutral-200"></span>
+                      <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
+                        Toma Fechas
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <div className="lg:w-fit md:w-fit">
+                  <div className="tooltip" data-tip="Tomar Facturas Canceladas">
+                    <label
+                      htmlFor="ch_tomaCanceladas"
+                      className="label cursor-pointer flex justify-start space-x-2"
+                    >
+                      <input
+                        id="ch_tomaCanceladas"
+                        type="checkbox"
+                        className="checkbox checkbox-md"
+                        defaultChecked={false}
+                        onClick={(evt) => setTomaCanceladas(evt.target.checked)}
+                      />
+                      <span className="fa-regular fa-file-lines block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
+                      <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
+                        Toma Facturas Canceladas
+                      </span>
+                    </label>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

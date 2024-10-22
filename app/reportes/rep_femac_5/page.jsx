@@ -28,6 +28,8 @@ function AltasBajasAlumnos() {
   const [selectedOptionAB, setSelectedOptionAB] = useState("alta");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const [animateLoading, setAnimateLoading] = useState(false);
+
   const {
     formState: { errors },
   } = useForm({});
@@ -123,12 +125,20 @@ function AltasBajasAlumnos() {
   };
 
   const handleVerClick = async () => {
+    setAnimateLoading(true);
+    cerrarModalVista();
     if (fecha_ini === "" || fecha_fin === "") {
       showSwal(
         "Oppss!",
         "Para imprimir, debes seleccionar un rango de fechas",
         "error"
       );
+      setTimeout(() => {
+        setPdfPreview(false);
+        setPdfData("");
+        setAnimateLoading(false);
+        document.getElementById("modalVRep5").close();
+      }, 500);
     } else {
       const alumnosFiltrados = await formaImprime();
       const configuracion = {
@@ -183,11 +193,13 @@ function AltasBajasAlumnos() {
           Enca2(newPDF);
         }
       });
-      const pdfData = newPDF.doc.output("datauristring");
-
-      setPdfData(pdfData);
-      setPdfPreview(true);
-      showModalVista(true);
+      setTimeout(() => {
+        const pdfData = newPDF.doc.output("datauristring");
+        setPdfData(pdfData);
+        setPdfPreview(true);
+        showModalVista(true);
+        setAnimateLoading(false);
+      }, 500);
     }
   };
 
@@ -195,6 +207,11 @@ function AltasBajasAlumnos() {
     show
       ? document.getElementById("modalVRep5").showModal()
       : document.getElementById("modalVRep5").close();
+  };
+  const cerrarModalVista = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVRep5").close();
   };
   if (status === "loading") {
     return (
@@ -215,7 +232,7 @@ function AltasBajasAlumnos() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} />
+                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading}/>
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Altas y Bajas de Alumnos
