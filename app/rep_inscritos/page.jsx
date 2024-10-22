@@ -52,6 +52,8 @@ function AltasBajasAlumnos() {
   useEffect(() => {
     setFecha_ini(getPrimerDiaDelMes());
     setFecha_fin(getUltimoDiaDelMes());
+    // setFecha_ini(fecha_ini);
+    // setFecha_fin(fecha_fin);
   }, []);
 
   // const formaImprime = async () => {
@@ -119,7 +121,7 @@ function AltasBajasAlumnos() {
     cerrarModalVista();
     const { token } = session.user;
     const res = await getConsultasInscripcion(token);
-    console.log("response", res);
+    // console.log("response", res);
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -135,16 +137,12 @@ function AltasBajasAlumnos() {
     };
     setTimeout(async () => {
       const pdfData = await verImprimir(configuracion);
+    //   console.log("pdfData => ",pdfData);
       setPdfData(pdfData);
       setPdfPreview(true);
       showModalVista(true);
       setAnimateLoading(false);
     }, 500);
-    // const pdfData = await verImprimir(configuracion);
-    // setPdfData(pdfData);
-    // setPdfPreview(true);
-    // setisLoading(false);
-    // showModalVista(true);
   };
 
   const ImprimePDF = async () => {
@@ -258,6 +256,7 @@ function AltasBajasAlumnos() {
                     isDisabled={false}
                     setValue={setFecha_ini}
                     value={fecha_ini}
+                    onChange={(e) => setFecha_ini(e.target.value)}
                     className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
                   />
                 </label>
@@ -276,6 +275,7 @@ function AltasBajasAlumnos() {
                     isDisabled={false}
                     setValue={setFecha_fin}
                     value={fecha_fin}
+                    onChange={(e) => setFecha_fin(e.target.value)}
                     className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
                   />
                 </label>
