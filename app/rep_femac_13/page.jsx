@@ -28,6 +28,8 @@ function Rep_Femac_13() {
   const [Formahorario, setFormahorario] = useState([]);
   const [horario, setHorario] = useState({});
   const [sOrdenar, ssetordenar] = useState("nombre");
+  const [animateLoading, setAnimateLoading] = useState(false);
+
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -50,12 +52,20 @@ function Rep_Femac_13() {
   };
 
   const handleClickVer = () => {
+    setAnimateLoading(true);
+    cerrarModalVista();
     if (horario.numero === undefined) {
       showSwal(
         "Oppss!",
         "Para imprimir, debes seleccionar el horario",
         "error"
       );
+      setTimeout(() => {
+        setPdfPreview(false);
+        setPdfData("");
+        setAnimateLoading(false);
+        document.getElementById("modalVPRepFemac13").close();
+      }, 500);
     } else {
       const configuracion = {
         Encabezado: {
@@ -148,10 +158,13 @@ function Rep_Femac_13() {
         }
       });
 
-      const pdfData = reporte.doc.output("datauristring");
-      setPdfData(pdfData);
-      setPdfPreview(true);
-      showModalVista(true);
+      setTimeout(() => {
+        const pdfData = reporte.doc.output("datauristring");
+        setPdfData(pdfData);
+        setPdfPreview(true);
+        showModalVista(true);
+        setAnimateLoading(false);
+      }, 500);
     }
   };
 
@@ -160,7 +173,11 @@ function Rep_Femac_13() {
       ? document.getElementById("modalVPRepFemac13").showModal()
       : document.getElementById("modalVPRepFemac13").close();
   };
-
+  const cerrarModalVista = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVPRepFemac13").close();
+  };
   const ImprimePDF = () => {
     const configuracion = {
       Encabezado: {
@@ -301,7 +318,7 @@ function Rep_Femac_13() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleClickVer} />
+                <Acciones home={home} Ver={handleClickVer} isLoading={animateLoading}/>
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Reporte de Alumnos por Clase Semanal

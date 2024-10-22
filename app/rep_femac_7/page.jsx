@@ -25,6 +25,8 @@ function Repo_Femac_7() {
   const [grupoAlumno, setGrupoAlumno] = useState(false);
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const [animateLoading, setAnimateLoading] = useState(false);
+
   const home = () => {
     router.push("/");
   };
@@ -69,6 +71,8 @@ function Repo_Femac_7() {
     );
   };
   const handleVerClick = async () => {
+    setAnimateLoading(true);
+    cerrarModalVista();
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Nombre de la Aplicación",
@@ -217,16 +221,24 @@ function Repo_Femac_7() {
     });
     reporte.ImpPosX("Total General", 208, reporte.tw_ren);
     reporte.ImpPosX(total_General.toFixed(2).toString(), 248, reporte.tw_ren);
-    const pdfData = reporte.doc.output("datauristring");
-    setPdfData(pdfData);
-    setPdfPreview(true);
-    showModalVista(true);
+    setTimeout(() => {
+      const pdfData = reporte.doc.output("datauristring");
+      setPdfData(pdfData);
+      setPdfPreview(true);
+      showModalVista(true);
+      setAnimateLoading(false);
+    }, 500);
   };
 
   const showModalVista = (show) => {
     show
       ? document.getElementById("modalVPRepAdeudosPendientes").showModal()
       : document.getElementById("modalVPRepAdeudosPendientes").close();
+  };
+  const cerrarModalVista = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVPRepAdeudosPendientes").close();
   };
   return (
     <>
@@ -242,7 +254,7 @@ function Repo_Femac_7() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} />
+                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading}/>
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Reporte Adeudos Pendientes
