@@ -19,6 +19,7 @@ import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/formapago/formapago";
 import { ReportePDF } from "../utils/ReportesPDF";
 import { debounce } from "../utils/globalfn";
+import VistaPrevia from "@/app/components/VistaPrevia";
 function FormaPago() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -33,6 +34,7 @@ function FormaPago() {
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
+  const [animateLoading, setAnimateLoading] = useState(false);
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -231,6 +233,7 @@ function FormaPago() {
     ImprimirExcel(configuracion);
   };
   const handleVerClick = () => {
+    setAnimateLoading(true);
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -294,14 +297,18 @@ function FormaPago() {
         Enca1(reporte);
       }
     });
-    const pdfData = reporte.doc.output("datauristring");
-    setPdfData(pdfData);
-    setPdfPreview(true);
-    showModalVista(true);
+    setTimeout(() => {
+      const pdfData = reporte.doc.output("datauristring");
+      setPdfData(pdfData);
+      setPdfPreview(true);
+      showModalVista(true);
+      setAnimateLoading(false);
+    }, 500);
   };
   const CerrarView = () => {
     setPdfPreview(false);
     setPdfData("");
+    document.getElementById("modalVFormaPago").close();
   };
   if (status === "loading") {
     return (
@@ -319,11 +326,14 @@ function FormaPago() {
         setFormaPago={setFormaPago}
         formaPago={formaPago}
       />
-      <ModalVistaPreviaFormaPago
+      <VistaPrevia
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
+        id={"modalVFormaPago"}
+        titulo={"Vista Previa de Formas de Pago"}
+        CerrarView={CerrarView}
       />
 
       <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
@@ -335,6 +345,7 @@ function FormaPago() {
                 Alta={Alta}
                 home={home}
                 Ver={handleVerClick}
+                animateLoading={animateLoading}
               />
             </div>
 
