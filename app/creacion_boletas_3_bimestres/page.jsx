@@ -17,7 +17,7 @@ import {
     getAreasOtros,
     getAreas,
 } from "@/app/utils/api/boletas/boletas";
-import { setGlobalVariable, globalVariables, loadGlobalVariables, formatNumber } from "@/app/utils/globalfn";
+import { setGlobalVariable, globalVariables, loadGlobalVariables, formatNumberDecimalOne } from "@/app/utils/globalfn";
 import TablaPromedioIngles from "@/app/creacion_boletas_3_bimestres/components/tablaPromedioIngles";
 function CreacionBoletas3Bimestre() {
     const router = useRouter();
@@ -42,6 +42,8 @@ function CreacionBoletas3Bimestre() {
         formState: { errors },
     } = useForm();
     let bimestre = watch('bimestre');
+    const imprimePromedio = watch('imprime_promedio');
+    const calificacionLetra = watch('calificacion_letra');
 
     useEffect(() => {
         if (status === "loading" || !session) {
@@ -64,10 +66,10 @@ function CreacionBoletas3Bimestre() {
     //     desplegarPromedioLugar();
     // }, [promediosEspañol, promediosIngles]);
 
-    const desplegarPromedioLugar = (newPromedio, tipo) => {
+    const desplegarPromedioLugar = (newPromedio, tipo, newEspañolAr2, newEspañolmAr3, newInglesAr5) => {
         let newDataEspañol = [];
         let newDataIngles = [];
-        if (tipo == 'Español') {
+        if (tipo === 'Español') {
             newDataEspañol = [
                 { numero: "", descripcion: "LUGAR", bimestre1: "", bimestre2: "", bimestre3: "", promedio: "" },
                 { numero: "", descripcion: "PROMEDIO", bimestre1: "", bimestre2: "", bimestre3: "", promedio: "" }
@@ -80,15 +82,21 @@ function CreacionBoletas3Bimestre() {
         }
         if (newPromedio.length > 0) {
             for (let i = 1; i <= bimestre; i++) {
-                let promedio = calcularPromedioBimestres(newPromedio, i);
-                console.log(promedio);
+                let promedio = calcularBimestresColumna(newPromedio, i);
+                // console.log(promedio);
                 if (promedio < 5.0) { promedio = 5.0; }
                 let formato = promedio === 10 ? "N0" : "N1";
                 let formattedValue;
                 if (formato === "N0") {
                     formattedValue = truncarUno(promedio);
+                    if (calificacionLetra) {
+                        formattedValue = conversionALetra(formattedValue, tipo);
+                    }
                 } else {
                     formattedValue = truncarUno(promedio).toFixed(1);
+                    if (calificacionLetra) {
+                        formattedValue = conversionALetra(formattedValue, tipo);
+                    }
                 }
                 if (i === 1) {
                     if (tipo === 'Español') {
@@ -109,16 +117,115 @@ function CreacionBoletas3Bimestre() {
                         newDataIngles[1].bimestre3 = formattedValue;
                     }
                 }
+                if (imprimePromedio) {
+                    let prom;
+                    let promedio = 0.0;
+                    newPromedio = newPromedio.map((item) => {
+                        prom = 0;
+                        promedio = 0;
+                        for (let i = 1; i <= bimestre; i++) {
+                            const bimestreFiltrado = `bimestre${i}`
+                            prom += parseFloat(item[bimestreFiltrado])
+                        }
+                        promedio = (prom / parseInt(bimestre))
+                        promedio = truncarUno(promedio);
+                        // console.log(promedio);
+                        if (promedio < 5.0) { promedio = 5.0; }
+                        console.log('promedio convertido', promedio)
+                        if (calificacionLetra) { promedio = conversionALetra(promedio, tipo); }
+                        return { ...item, promedio: promedio };
+                    });
+                }
             }
+            if (calificacionLetra) {
+                newPromedio = newPromedio.map((item) => {
+                    for (let i = 1; i <= bimestre; i++) {
+                        const bimestreFiltrado = `bimestre${i}`;
+                        const calificacion = parseFloat(item[bimestreFiltrado]);
+                        if (!isNaN(calificacion)) {
+                            const calificacionLetra = conversionALetra(calificacion, tipo);
+                            item[bimestreFiltrado] = calificacionLetra;
+                        }
+                    }
+                    return item;
+                });
+                if (tipo === 'Español') {
+                    newEspañolAr2 = newEspañolAr2.map((item) => {
+                        for (let i = 1; i <= bimestre; i++) {
+                            const bimestreFiltrado = `bimestre${i}`;
+                            const calificacion = parseFloat(item[bimestreFiltrado]);
+                            if (!isNaN(calificacion)) {
+                                const calificacionLetra = conversionALetra(calificacion, tipo);
+                                item[bimestreFiltrado] = calificacionLetra;
+                            }
+                        }
+                        return item;
+                    });
+                    newEspañolmAr3 = newEspañolmAr3.map((item) => {
+                        for (let i = 1; i <= bimestre; i++) {
+                            const bimestreFiltrado = `bimestre${i}`;
+                            const calificacion = parseFloat(item[bimestreFiltrado]);
+                            if (!isNaN(calificacion)) {
+                                const calificacionLetra = conversionALetra(calificacion, tipo);
+                                item[bimestreFiltrado] = calificacionLetra;
+                            }
+                        }
+                        return item;
+                    });
+                } else {
+                    newInglesAr5 = newInglesAr5.map((item) => {
+                        for (let i = 1; i <= bimestre; i++) {
+                            const bimestreFiltrado = `bimestre${i}`;
+                            const calificacion = parseFloat(item[bimestreFiltrado]);
+                            if (!isNaN(calificacion)) {
+                                const calificacionLetra = conversionALetra(calificacion, tipo);
+                                item[bimestreFiltrado] = calificacionLetra;
+                            }
+                        }
+                        return item;
+                    });
+                }
+            }
+
             if (tipo === 'Español') {
+                setPromediosEspañol(newPromedio);
                 setPromediosEspañol(prev => [...prev, ...newDataEspañol]);
+                setPromediosEspañol(prev => [...prev, ...newEspañolAr2]);
+                setPromediosEspañol(prev => [...prev, ...newEspañolmAr3]);
             } else {
+                setPromediosIngles(newPromedio);
                 setPromediosIngles(prev => [...prev, ...newDataIngles]);
+                setPromediosIngles(prev => [...prev, ...newInglesAr5]);
             }
         }
     };
 
-    const calcularPromedioBimestres = (promedios, bim) => {
+    const conversionALetra = (calif, tipo) => {
+        let alfesp = "";
+        let alfing = "";
+        if (calif === 10) {
+            alfesp = "E";
+            alfing = "E";
+        } else if (calif < 10 && calif >= 9) {
+            alfesp = "MB";
+            alfing = "VG";
+        } else if (calif < 9 && calif >= 8) {
+            alfesp = "B";
+            alfing = "G";
+        } else if (calif < 8 && calif >= 7) {
+            alfesp = "A";
+            alfing = "R";
+        } else if (calif < 7 && calif >= 6) {
+            alfesp = "RA";
+            alfing = "RS";
+        } else {
+            alfesp = "RA";
+            alfing = "RS";
+        }
+        return tipo === "Español" ? alfesp : alfing;
+    };
+
+    const calcularBimestresColumna = (promedios, bim) => {
         if (promedios.length === 0) return 0;
         let suma = 0;
 
@@ -130,8 +237,23 @@ function CreacionBoletas3Bimestre() {
         });
 
         const promedio = suma / promedios.length;
-        return truncarUno(promedio);
+        return promedio;
     };
+
+    // const calcularBimestresFila = (promedios, bim) => {
+    //     if (promedios.length === 0) return 0;
+    //     let suma = 0;
+
+    //     promedios.forEach((item) => {
+    //         const bimestreKey = `bimestre${bim}`;
+    //         if (item[bimestreKey] && !isNaN(item[bimestreKey])) {
+    //             suma += parseFloat(item[bimestreKey]);
+    //         }
+    //     });
+
+    //     const promedio = suma / promedios.length;
+    //     return promedio;
+    // };
 
     const truncarUno = (num) => {
         return Math.trunc(num * 10) / 10;
@@ -141,6 +263,9 @@ function CreacionBoletas3Bimestre() {
         const { token } = session.user;
         let datosEspañol = [];
         let datosIngles = [];
+        let datosEspañolAr2 = [];
+        let datosEspañolAr3 = [];
+        let datosInglesAr5 = [];
 
         if (!grupo) {
             showSwal('Error', 'Debe seleccionar un grupo.', 'error');
@@ -188,7 +313,6 @@ function CreacionBoletas3Bimestre() {
                                 };
                             }
                             let calificacion;
-
                             if (val.area === 1 || val.area === 4) {
                                 const datosDG2 = await getActividadMateria(token, materiaKey);
                                 if (datosDG2[0].actividad === 'No') {
@@ -196,13 +320,13 @@ function CreacionBoletas3Bimestre() {
                                         ...data,
                                         bimestre: a
                                     }, materiaKey, val.descripcion);
-                                    calificacion = formatNumber(datosDG3.calificacion);
+                                    calificacion = formatNumberDecimalOne(datosDG3.calificacion);
                                 } else {
                                     const datosDG3 = await getAreas(token, {
                                         ...data,
                                         bimestre: a
                                     }, materiaKey);
-                                    calificacion = formatNumber(datosDG3.calificacion);
+                                    calificacion = formatNumberDecimalOne(datosDG3.calificacion);
                                 }
 
                                 materiasMap[materiaKey][`bimestre${a}`] = calificacion;
@@ -223,19 +347,19 @@ function CreacionBoletas3Bimestre() {
                                             [`bimestre${a}`]: calificacion
                                         });
                                     }
-                                    setPromediosEspañol(prev => {
-                                        const existingIndex = prev.findIndex(item => item.numero === materiaKey);
-                                        if (existingIndex >= 0) {
-                                            const updated = [...prev];
-                                            updated[existingIndex][`bimestre${a}`] = calificacion;
-                                            return updated;
-                                        } else {
-                                            return [
-                                                ...prev,
-                                                { numero: materiaKey, descripcion: val.descripcion, [`bimestre${a}`]: calificacion }
-                                            ];
-                                        }
-                                    });
+                                    // setPromediosEspañol(prev => {
+                                    //     const existingIndex = prev.findIndex(item => item.numero === materiaKey);
+                                    //     if (existingIndex >= 0) {
+                                    //         const updated = [...prev];
+                                    //         updated[existingIndex][`bimestre${a}`] = calificacion;
+                                    //         return updated;
+                                    //     } else {
+                                    //         return [
+                                    //             ...prev,
+                                    //             { numero: materiaKey, descripcion: val.descripcion, [`bimestre${a}`]: calificacion }
+                                    //         ];
+                                    //     }
+                                    // });
                                 } else if (val.area === 4) {
                                     datosIngles = datosIngles.map(item => {
                                         if (item.numero === materiaKey) {
@@ -253,46 +377,119 @@ function CreacionBoletas3Bimestre() {
                                             [`bimestre${a}`]: calificacion
                                         });
                                     }
-                                    setPromediosIngles(prev => {
-                                        const existingIndex = prev.findIndex(item => item.numero === materiaKey);
-                                        if (existingIndex >= 0) {
-                                            const updated = [...prev];
-                                            updated[existingIndex][`bimestre${a}`] = calificacion;
-                                            return updated;
-                                        } else {
-                                            return [
-                                                ...prev,
-                                                { numero: materiaKey, descripcion: val.descripcion, [`bimestre${a}`]: calificacion }
-                                            ];
-                                        }
-                                    });
+                                    // setPromediosIngles(prev => {
+                                    //     const existingIndex = prev.findIndex(item => item.numero === materiaKey);
+                                    //     if (existingIndex >= 0) {
+                                    //         const updated = [...prev];
+                                    //         updated[existingIndex][`bimestre${a}`] = calificacion;
+                                    //         return updated;
+                                    //     } else {
+                                    //         return [
+                                    //             ...prev,
+                                    //             { numero: materiaKey, descripcion: val.descripcion, [`bimestre${a}`]: calificacion }
+                                    //         ];
+                                    //     }
+                                    // });
                                 }
                             } else {
                                 const datosDG3 = await getAreasOtros(token, {
                                     ...data,
                                     bimestre: a
                                 }, materiaKey);
-                                calificacion = formatNumber(datosDG3.calificacion);
+                                calificacion = formatNumberDecimalOne(datosDG3.calificacion);
                                 materiasMap[materiaKey][`bimestre${a}`] = calificacion;
-
                                 if (val.area === 2) {
-                                    setPromediosEspañolAr2(prev => [
-                                        ...prev,
-                                        { numero: materiaKey, descripcion: val.descripcion, [`bimestre${a}`]: calificacion }
-                                    ]);
+                                    datosEspañolAr2 = datosEspañolAr2.map(item => {
+                                        if (item.numero === materiaKey) {
+                                            return {
+                                                ...item,
+                                                [`bimestre${a}`]: calificacion
+                                            };
+                                        }
+                                        return item;
+                                    });
+                                    if (!datosEspañolAr2.find(item => item.numero === materiaKey)) {
+                                        datosEspañolAr2.push({
+                                            numero: materiaKey,
+                                            descripcion: val.descripcion,
+                                            [`bimestre${a}`]: calificacion
+                                        });
+                                    }
+                                    // setPromediosEspañolAr2(prev => {
+                                    //     const existingIndex = prev.findIndex(item => item.numero === materiaKey);
+                                    //     if (existingIndex >= 0) {
+                                    //         const updated = [...prev];
+                                    //         updated[existingIndex][`bimestre${a}`] = calificacion;
+                                    //         return updated;
+                                    //     } else {
+                                    //         return [
+                                    //             ...prev,
+                                    //             { numero: materiaKey, descripcion: val.descripcion, [`bimestre${a}`]: calificacion }
+                                    //         ];
+                                    //     }
+                                    // });
                                 } else if (val.area === 3) {
-                                    setPromediosEspañolAr3(prev => [
-                                        ...prev,
-                                        { numero: materiaKey, descripcion: val.descripcion, [`bimestre${a}`]: calificacion }
-                                    ]);
+                                    datosEspañolAr3 = datosEspañolAr3.map(item => {
+                                        if (item.numero === materiaKey) {
+                                            return {
+                                                ...item,
+                                                [`bimestre${a}`]: calificacion
+                                            };
+                                        }
+                                        return item;
+                                    });
+                                    if (!datosEspañolAr3.find(item => item.numero === materiaKey)) {
+                                        datosEspañolAr3.push({
+                                            numero: materiaKey,
+                                            descripcion: val.descripcion,
+                                            [`bimestre${a}`]: calificacion
+                                        });
+                                    }
+                                    // setPromediosEspañolAr3(prev => {
+                                    //     const existingIndex = prev.findIndex(item => item.numero === materiaKey);
+                                    //     if (existingIndex >= 0) {
+                                    //         const updated = [...prev];
+                                    //         updated[existingIndex][`bimestre${a}`] = calificacion;
+                                    //         return updated;
+                                    //     } else {
+                                    //         return [
+                                    //             ...prev,
+                                    //             { numero: materiaKey, descripcion: val.descripcion, [`bimestre${a}`]: calificacion }
+                                    //         ];
+                                    //     }
+                                    // });
                                 } else if (val.area === 5) {
-                                    setPromediosInglesAr5(prev => [
-                                        ...prev,
-                                        { numero: materiaKey, descripcion: val.descripcion, [`bimestre${a}`]: calificacion }
-                                    ]);
+                                    datosInglesAr5 = datosInglesAr5.map(item => {
+                                        if (item.numero === materiaKey) {
+                                            return {
+                                                ...item,
+                                                [`bimestre${a}`]: calificacion
+                                            };
+                                        }
+                                        return item;
+                                    });
+                                    if (!datosInglesAr5.find(item => item.numero === materiaKey)) {
+                                        datosInglesAr5.push({
+                                            numero: materiaKey,
+                                            descripcion: val.descripcion,
+                                            [`bimestre${a}`]: calificacion
+                                        });
+                                    }
+                                    // setPromediosInglesAr5(prev => {
+                                    //     const existingIndex = prev.findIndex(item => item.numero === materiaKey);
+                                    //     if (existingIndex >= 0) {
+                                    //         const updated = [...prev];
+                                    //         updated[existingIndex][`bimestre${a}`] = calificacion;
+                                    //         return updated;
+                                    //     } else {
+                                    //         return [
+                                    //             ...prev,
+                                    //             { numero: materiaKey, descripcion: val.descripcion, [`bimestre${a}`]: calificacion }
+                                    //         ];
+                                    //     }
+                                    // });
                                 }
                             }
-
                         } catch (error) {
                             console.error(error);
                         }
@@ -301,10 +498,10 @@ function CreacionBoletas3Bimestre() {
                 }
             }
         }
-        console.log('DATA ESPAÑOL LET', datosEspañol);
-        console.log('DATA INGLES LET', datosIngles);
-        desplegarPromedioLugar(datosEspañol, 'Español');
-        desplegarPromedioLugar(datosIngles, 'Ingles');
+        // console.log('DATA ESPAÑOL LET', datosEspañol);
+        // console.log('DATA INGLES LET', datosIngles);
+        desplegarPromedioLugar(datosEspañol, 'Español', datosEspañolAr2, datosEspañolAr3, []);
+        desplegarPromedioLugar(datosIngles, 'Ingles', [], [], datosInglesAr5);
         setisLoadingFind(false);
     });
 
@@ -438,6 +635,7 @@ function CreacionBoletas3Bimestre() {
                                     message={"Debes aceptar los términos"}
                                     errors={errors}
                                     register={register}
+                                // setEvent={setImprimePromedio}
                                 />
                             </div>
                             <div className="w-[62%]">
@@ -449,6 +647,7 @@ function CreacionBoletas3Bimestre() {
                                     message={"Debes aceptar los Términos"}
                                     errors={errors}
                                     register={register}
+                                // setEvent={setCalificacionLetra}
                                 />
                             </div>
                             <div className="w-[59%]">
@@ -460,6 +659,7 @@ function CreacionBoletas3Bimestre() {
                                     message={"Debes aceptar los términos"}
                                     errors={errors}
                                     register={register}
+                                // setEvent={setCalificacionLetra}
                                 />
                             </div>
                             <div className="w-[59%]">
@@ -471,6 +671,7 @@ function CreacionBoletas3Bimestre() {
                                     message={"Debes aceptar los términos"}
                                     errors={errors}
                                     register={register}
+                                // setEvent={setCalificacionLetra}
                                 />
                             </div>
                         </div>
