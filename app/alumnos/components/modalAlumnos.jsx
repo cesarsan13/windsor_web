@@ -30,6 +30,8 @@ function ModalAlumnos({
   setGrado2,
   setcond1,
   setcond2,
+  files,
+  setFile
 }) {
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
@@ -45,6 +47,7 @@ function ModalAlumnos({
   const nameInputs4 = ["cond_2", "cond_2_nombre"];
   const webcamRef = useRef(null);
   const [isCameraOn, setIsCameraOn] = useState(false);
+  const inputfileref = useRef(null);
 
   const toggleCamera = () => {
     setIsCameraOn(!isCameraOn);
@@ -57,6 +60,25 @@ function ModalAlumnos({
       setcondicion(true);
     }
   };
+  
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFile(selectedFile);
+        setcondicion(true);
+        setCapturedImage(reader.result); // La imagen en formato Base64
+      };
+      reader.readAsDataURL(selectedFile); // Convierte el archivo a Base64
+    }
+  };
+
+const openFileSelector = () => {
+  if (inputfileref.current) {
+    inputfileref.current.click(); // Simula el clic en el input
+  }
+};
 
   useEffect(() => {
     if (accion === "Eliminar" || accion === "Ver") {
@@ -330,8 +352,8 @@ function ModalAlumnos({
                   />
 
                   <Inputs
-                    dataType={"string"}
-                    name={"telefono_1"}
+                    dataType={"int"}
+                    name={"telefono1"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
                     Titulo={"Tels: "}
@@ -347,8 +369,8 @@ function ModalAlumnos({
                   />
 
                   <Inputs
-                    dataType={"string"}
-                    name={"telefono_2"}
+                    dataType={"int"}
+                    name={"telefono2"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
                     Titulo={"Tel (opcional)"}
@@ -363,7 +385,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"celular"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -379,17 +401,17 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"codigo_barras"}
                     tamañolabel={""}
                     className={"rounded block grow"}
-                    Titulo={"Codigo barras: "}
+                    Titulo={"Matricula: "}
                     type={"text"}
                     requerido={false}
                     isNumero={false}
                     errors={errors}
                     register={register}
-                    message={"Codigo barras requerido"}
+                    message={"Matricula requerida"}
                     maxLenght={255}
                     isDisabled={isDisabled}
                     handleBlur={handleBlur}
@@ -574,8 +596,41 @@ function ModalAlumnos({
                     >
                       Capturar Foto
                     </button>
+                    <button
+                      type="button"
+                      onClick={openFileSelector}
+                      className="ml-4 btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white font-bold px-4 rounded"
+                    >
+                      Seleccionar Foto
+                    </button>
+                    
                   </div>
-                  {capturedImage && (
+
+                  <input
+                    type="file"
+                    name="imagen"
+                    onChange={handleFileChange}
+                    ref={inputfileref}
+                    style={{ display: "none" }}
+                    className="ml-4 btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white font-bold px-4 rounded"
+                  />
+
+                  {(capturedImage || files) && (
+                    <div className="bottom-0 left-0 w-full">
+                      <h2 className="text-center text-xl mb-2">
+                        {condicion ? "Imagen Seleccionada:" : "Foto Capturada:"}
+                      </h2>
+                      <Image
+                        src={condicion ? URL.createObjectURL(files) : capturedImage}
+                        alt="Imagen"
+                        width={80}
+                        height={80}
+                        className="w-full object-contain mx-auto my-4"
+                      />
+                    </div>
+                  )}
+
+                  {/*{capturedImage && (
                     <div className="bottom-0 left-0 w-full">
                       <h2 className="text-center text-xl mb-2">
                         Foto Capturada:
@@ -588,7 +643,8 @@ function ModalAlumnos({
                         className="w-full object-contain mx-auto my-4"
                       />
                     </div>
-                  )}
+                  )}*/}
+                 
                 </div>
               </div>
 
@@ -777,7 +833,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"tel_p_1"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -793,7 +849,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"tel_p_2"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -809,7 +865,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"cel_p_1"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -889,7 +945,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"tel_ase_1"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -905,7 +961,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"tel_ase_2"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -1091,7 +1147,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"tel_pad_1"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -1107,7 +1163,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"tel_pad_2"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -1123,7 +1179,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"cel_pad_1"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -1155,7 +1211,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"tel_mad_1"}
                     tamañolabel={""}
                     className={"rounded block grow text-right"}
@@ -1171,7 +1227,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"tel_mad_2"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -1187,7 +1243,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"cel_mad_1"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -1219,7 +1275,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"tel_avi_1"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -1235,7 +1291,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"tel_avi_2"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -1251,8 +1307,8 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
-                    name={"cel_avi_1"}
+                    dataType={"int"}
+                    name={"cel_avi"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
                     Titulo={"Celular del aviso: "}
