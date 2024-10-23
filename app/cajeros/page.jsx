@@ -17,7 +17,6 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/cajeros/cajeros";
 import "jspdf-autotable";
-import ModalVistaPreviaCajeros from "./components/modalVistaPreviaCajeros";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { ReportePDF } from "../utils/ReportesPDF";
 import { debounce } from "../utils/globalfn";

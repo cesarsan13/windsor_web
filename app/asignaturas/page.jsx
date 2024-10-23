@@ -6,7 +6,6 @@ import ModalAsignaturas from "@/app/asignaturas/components/modalAsignaturas";
 import TablaAsignaturas from "@/app/asignaturas/components/tablaAsignaturas";
 import Busqueda from "@/app/asignaturas/components/Busqueda";
 import Acciones from "@/app/asignaturas/components/Acciones";
-import ModalVistaPreviaAsignaturas from "./components/modalVistaPreviaAsignaturas";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { soloDecimales, soloEnteros, snToBool } from "@/app/utils/globalfn";
 import { useForm } from "react-hook-form";

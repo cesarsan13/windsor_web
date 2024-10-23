@@ -3,7 +3,6 @@ import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import ModalProfesores from "@/app/profesores/components/ModalProfesores";
-import ModalVistaPreviaProfesores from "@/app/profesores/components/modalVistaPreviaProfesores";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import TablaProfesores from "@/app/profesores/components/TablaProfesores";
 import Busqueda from "@/app/profesores/components/Busqueda";

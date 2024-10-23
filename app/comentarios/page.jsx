@@ -19,7 +19,6 @@ import { siguiente } from "@/app/utils/api/comentarios/comentarios";
 import "jspdf-autotable";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import ModalVistaPreviaComentarios from "@/app/comentarios/components/modalVistaPreviaComentarios";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { debounce } from "@/app/utils/globalfn";
 

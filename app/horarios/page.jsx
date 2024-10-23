@@ -17,7 +17,6 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { getUltimoHorario } from "@/app/utils/api/horarios/horarios";
 import { getProductos } from "../utils/api/productos/productos";
-import ModalVistaPreviaHorarios from "./components/modalVistaPreviaHorarios";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { ReportePDF } from "../utils/ReportesPDF";
 import { debounce } from "../utils/globalfn";

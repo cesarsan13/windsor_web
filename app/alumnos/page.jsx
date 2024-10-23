@@ -8,7 +8,6 @@ import Busqueda from "@/app/alumnos/components/Busqueda";
 import Acciones from "@/app/alumnos/components/Acciones";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { useForm } from "react-hook-form";
-import ModalVistaPreviaAlumnos from "./components/modalVistaPreviaAlumnos";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import {
   getAlumnos,

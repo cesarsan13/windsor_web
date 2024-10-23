@@ -6,7 +6,6 @@ import ModalProductos from "@/app/productos/components/modalProductos";
 import TablaProductos from "@/app/productos/components/tablaProductos";
 import Busqueda from "@/app/productos/components/Busqueda";
 import Acciones from "@/app/productos/components/Acciones";
-import ModalVistaPreviaProductos from "./components/modalVistaPreviaProductos";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { useForm } from "react-hook-form";
 import { debounce } from "@/app/utils/globalfn";
