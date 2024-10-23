@@ -27,7 +27,7 @@ function Acciones({ Buscar, Alta, home, Ver }) {
         <ImageTooltip key={idx} src={image.src} {...image} />
       ))}
     </div>
-  );
+  );  //
 }
 
 export default Acciones;
