@@ -11,6 +11,8 @@ import { getComentarios } from "@/app/utils/api/comentarios/comentarios";
 import { getGrupos } from "@/app/utils/api/grupos/grupos";
 import { getClasesBuscaCat } from "@/app/utils/api/clases/clases"
 import { loadGlobalVariables, globalVariables } from "@/app/utils/globalfn";
+import { getProfesores } from "../utils/api/profesores/profesores";
+import { getAsignaturas } from "../utils/api/asignaturas/asignaturas";
 
 function BuscarCat({
   table,
@@ -101,6 +103,14 @@ function BuscarCat({
           case "proveedores":
           default:
             fetchedData = [];
+            break;
+          case "profesores":
+            fetchedData = await getProfesores(token, "");
+            setTiutloInput(["numero", "nombre"]);
+            break;
+          case "materias":
+            fetchedData = await getAsignaturas(token, false);
+            setTiutloInput(["numero", "descripcion"]);
             break;
         }
         setData(fetchedData);
