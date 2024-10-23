@@ -51,12 +51,12 @@ function TablaClases({
                         : "text-right"
                     }
                   >
-                    {item.id_grupo}
+                    {item.grupo}
                   </th>
-                  <td className="w-[10%]">
-                    {item.id_materia}
+                  <td className="w-[10%]  text-right">
+                    {item.materia}
                   </td>
-                  <td className="w-[10%]">{item.profesor?.nombre}</td>
+                  <td className="w-[10%]  text-right">{item.profesor}</td>
                   <td className="w-[10%]">{item.lunes}</td>
                   <td className="w-[10%]">{item.martes}</td>
                   <td className="w-[10%]">{item.miercoles}</td>

@@ -313,6 +313,9 @@ function Menu({ vertical, toogle }) {
           <li>
             <Link href="/c_calificaciones" onClick={handleClick}>Calificaciones</Link>
           </li>
+          <li>
+            <Link href="/clases" onClick={handleClick}>Asignacion Por Asignatura</Link>
+          </li>
           {/* 
           <li>
             <Link href="" style={{ color: "red" }} onClick={handleClick}>Emisión de Facturas</Link>

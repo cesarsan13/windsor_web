@@ -16,11 +16,19 @@ function ModalClases({
   setClase,
   clase,
   setGrado,
+  setprof1,
+  setprof2,
 }) {
   const [error, setError] = useState(null);
+  //Horario
   const columnasBuscaCat = ["numero", "horario"];
-  const nameInputs = ["horario_1", "horario_1_nombre"];
-  const nameInputs2 = ["horario_2", "horario_2_nombre"];
+  const nameInputs = ["horario_1", "grupo_nombre"];
+  //Profesor
+  const columnasBuscaCat1 = ["numero", "nombre"];
+  const nameInputs3 = ["profesor", "profesor_nombre"];
+  //Materias
+  const columnasBuscaCat2 = ["numero", "descripcion"];
+  const nameInputs4 = ["materia", "materia_nombre"];
   const [titulo, setTitulo] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
   useEffect(() => {
@@ -40,6 +48,7 @@ function ModalClases({
         : `Ver Clase: ${currentID}`
     );
   }, [accion, currentID]);
+  
   return (
 <dialog id="my_modal_3" className="modal">
   <div className="modal-box max-w-5xl">
@@ -77,9 +86,24 @@ function ModalClases({
       
       <fieldset id="fs_formapago">
       <div className="flex flex-wrap -mx-3 mb-6">
+                    <BuscarCat
+                    table="materias"
+                    itemData={setprof2}
+                    fieldsToShow={columnasBuscaCat2}
+                    nameInput={nameInputs4}
+                    titulo="Materias: "
+                    setItem={setprof2}
+                    token={session.user.token}
+                    modalId="modal_materias"
+                    array={clase.materia}
+                    id={clase.materia}
+                    alignRight={true}
+                    inputWidths={{ first: "80px", second: "380px" }}
+                    accion={accion}
+                  />
                   <BuscarCat
                     table="horarios"
-                    itemData={clase}
+                    itemData={grupo}
                     fieldsToShow={columnasBuscaCat}
                     nameInput={nameInputs}
                     titulo={"Grado: "}
@@ -88,6 +112,20 @@ function ModalClases({
                     modalId="modal_horarios"
                     array={clase.horario_1}
                     id={clase.numero}
+                    alignRight={true}
+                    inputWidths={{ first: "80px", second: "380px" }}
+                    accion={accion}
+                  />
+                  <BuscarCat
+                    table="profesores"
+                    fieldsToShow={columnasBuscaCat1}
+                    nameInput={nameInputs3}
+                    setItem={setprof1}
+                    token={session.user.token}
+                    modalId="modal_profesores"
+                    array={clase.profesor}
+                    id={clase.profesor}
+                    titulo="Profesor: "
                     alignRight={true}
                     inputWidths={{ first: "80px", second: "380px" }}
                     accion={accion}
@@ -105,7 +143,6 @@ function ModalClases({
             isNumero={false}
             errors={errors}
             register={register}
-            message={"horario requerido"}
             maxLenght={15}
             isDisabled={isDisabled}
           />
@@ -120,7 +157,6 @@ function ModalClases({
             isNumero={false}
             errors={errors}
             register={register}
-            message={"horario requerido"}
             maxLenght={15}
             isDisabled={isDisabled}
           />
@@ -135,7 +171,6 @@ function ModalClases({
             isNumero={false}
             errors={errors}
             register={register}
-            message={"horario requerido"}
             maxLenght={15}
             isDisabled={isDisabled}
           />
@@ -150,7 +185,6 @@ function ModalClases({
             isNumero={false}
             errors={errors}
             register={register}
-            message={"horario requerido"}
             maxLenght={15}
             isDisabled={isDisabled}
           />
@@ -167,7 +201,6 @@ function ModalClases({
             isNumero={false}
             errors={errors}
             register={register}
-            message={"horario requerido"}
             maxLenght={15}
             isDisabled={isDisabled}
           />
@@ -182,7 +215,6 @@ function ModalClases({
             isNumero={false}
             errors={errors}
             register={register}
-            message={"horario requerido"}
             maxLenght={15}
             isDisabled={isDisabled}
           />
@@ -197,7 +229,6 @@ function ModalClases({
               isNumero={false}
               errors={errors}
               register={register}
-              message={"horario requerido"}
               maxLenght={15}
               isDisabled={isDisabled}
               />
