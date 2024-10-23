@@ -7,6 +7,7 @@ import TablaProductos from "@/app/productos/components/tablaProductos";
 import Busqueda from "@/app/productos/components/Busqueda";
 import Acciones from "@/app/productos/components/Acciones";
 import ModalVistaPreviaProductos from "./components/modalVistaPreviaProductos";
+import VistaPrevia from "@/app/components/VistaPrevia";
 import { useForm } from "react-hook-form";
 import { debounce } from "@/app/utils/globalfn";
 import {
@@ -464,7 +465,9 @@ function Productos() {
         setNum={setNum}
         productos={productos}
       />
-      <ModalVistaPreviaProductos
+      <VistaPrevia
+        id={"modalVProducto"}
+        titulo={"Vista Previa de Productos"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={imprimirPDF}

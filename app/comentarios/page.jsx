@@ -20,6 +20,7 @@ import "jspdf-autotable";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import ModalVistaPreviaComentarios from "@/app/comentarios/components/modalVistaPreviaComentarios";
+import VistaPrevia from "@/app/components/VistaPrevia";
 import { debounce } from "@/app/utils/globalfn";
 
 function Comentarios() {
@@ -202,11 +203,11 @@ function Comentarios() {
     }, 500);
   };
 
-  const showModalVista = (show) => {
-    show
-      ? document.getElementById("modalVPComentario").showModal()
-      : document.getElementById("modalVPComentario").close();
-  };
+    const showModalVista = (show) => {
+      show
+        ? document.getElementById("modalVPComentario").showModal()
+        : document.getElementById("modalVPComentario").close();
+    };
 
   const CerrarView = () => {
     setPdfPreview(false);
@@ -364,7 +365,9 @@ function Comentarios() {
         setFormaComentarios={setFormaComentarios}
         formaComentarios={formaComentarios}
       />
-      <ModalVistaPreviaComentarios
+      <VistaPrevia
+        id={"modalVPComentario"}
+        titulo={"Vista Previa de Comentarios"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}

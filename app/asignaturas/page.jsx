@@ -7,6 +7,7 @@ import TablaAsignaturas from "@/app/asignaturas/components/tablaAsignaturas";
 import Busqueda from "@/app/asignaturas/components/Busqueda";
 import Acciones from "@/app/asignaturas/components/Acciones";
 import ModalVistaPreviaAsignaturas from "./components/modalVistaPreviaAsignaturas";
+import VistaPrevia from "@/app/components/VistaPrevia";
 import { soloDecimales, soloEnteros, snToBool } from "@/app/utils/globalfn";
 import { useForm } from "react-hook-form";
 import {
@@ -418,11 +419,14 @@ function Asignaturas() {
         // setNum={setNum}
         getValues={getValues}
       />
-      <ModalVistaPreviaAsignaturas
+      <VistaPrevia
+        id={"modalVAsignatura"}
+        titulo={"Vista Previa de Asignaturas"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={imprimirPDF}
         Excel={imprimirEXCEL}
+        CerrarView={cerrarModalVista}
       />
       <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">

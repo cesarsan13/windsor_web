@@ -18,6 +18,7 @@ import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/cajeros/cajeros";
 import "jspdf-autotable";
 import ModalVistaPreviaCajeros from "./components/modalVistaPreviaCajeros";
+import VistaPrevia from "@/app/components/VistaPrevia";
 import { ReportePDF } from "../utils/ReportesPDF";
 import { debounce } from "../utils/globalfn";
 
@@ -33,6 +34,7 @@ function Cajeros() {
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
+  const [animateLoading, setAnimateLoading] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [busqueda, setBusqueda] = useState({
     tb_id: "",
@@ -260,6 +262,7 @@ function Cajeros() {
     ImprimirExcel(configuracion);
   };
   const handleVerClick = () => {
+    setAnimateLoading(true);
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -305,16 +308,28 @@ function Cajeros() {
         Enca1(reporte);
       }
     });
-    const pdfData = reporte.doc.output("datauristring");
-    setPdfData(pdfData);
-    setPdfPreview(true);
-    showModalVista(true);
+
+    setTimeout(() => {
+      const pdfData = reporte.doc.output("datauristring");
+      setPdfData(pdfData);
+      setPdfPreview(true);
+      showModalVista(true);
+      setAnimateLoading(false);
+    }, 500);
   };
+
   const showModalVista = (show) => {
     show
       ? document.getElementById("modalVPCajero").showModal()
       : document.getElementById("modalVPCajero").close();
   };
+
+  const CerrarView = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVPCajero").close();
+  };
+
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -331,11 +346,14 @@ function Cajeros() {
         setCajero={setCajero}
         cajero={cajero}
       />
-      <ModalVistaPreviaCajeros
+      <VistaPrevia
+        id={"modalVPCajero"}
+        titulo={"Vista Previa de Cajeros"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
       <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
@@ -346,6 +364,7 @@ function Cajeros() {
                 Alta={Alta}
                 home={home}
                 Ver={handleVerClick}
+                animateLoading={animateLoading}
               />
             </div>
 

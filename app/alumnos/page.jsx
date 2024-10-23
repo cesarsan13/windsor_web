@@ -9,6 +9,7 @@ import Acciones from "@/app/alumnos/components/Acciones";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { useForm } from "react-hook-form";
 import ModalVistaPreviaAlumnos from "./components/modalVistaPreviaAlumnos";
+import VistaPrevia from "@/app/components/VistaPrevia";
 import {
   getAlumnos,
   guardarAlumnos,
@@ -784,7 +785,9 @@ function Alumnos() {
         setcond1={setcond1}
         setcond2={setcond2}
       />
-      <ModalVistaPreviaAlumnos
+      <VistaPrevia
+        id="modalVPAlumno"
+        titulo="Vista Previa de Alumnos"
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={imprimePDF}

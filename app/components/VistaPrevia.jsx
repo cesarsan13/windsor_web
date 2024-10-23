@@ -1,13 +1,12 @@
-"use client";
-
-import Button from "@/app/components/button";
+import React, { useEffect, useState } from "react";
 import Tooltip from "@/app/components/tooltip";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
-import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 
-function ModalVistaPreviaAlumnos({
+function VistaPrevia({
+  id,
+  titulo,
   pdfPreview,
   pdfData,
   PDF,
@@ -15,7 +14,7 @@ function ModalVistaPreviaAlumnos({
   CerrarView,
 }) {
   return (
-    <dialog id="modalVPAlumno" className="modal">
+    <dialog id={id} className="modal">
       <div className="modal-box w-full max-w-4xl h-full">
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black"
@@ -24,7 +23,7 @@ function ModalVistaPreviaAlumnos({
           ✕
         </button>
         <h3 className="font-bold text-lg mb-5 dark:text-white text-black">
-          Vista Previa Alumnos
+          {titulo}
         </h3>
         <div className="flex flex-row space-x-4">
           <Tooltip Titulo={"Imprimir PDF"} posicion={"tooltip-top"}>
@@ -72,4 +71,4 @@ function ModalVistaPreviaAlumnos({
   );
 }
 
-export default ModalVistaPreviaAlumnos;
+export default VistaPrevia;
