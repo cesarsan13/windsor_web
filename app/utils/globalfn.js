@@ -186,6 +186,18 @@ export const formatNumber = (num) => {
   });
 };
 
+export const formatNumberDecimalOne = (num) => {
+  if (num === null || num === undefined) return ""; 
+  const numStr = typeof num === "string" ? num : num.toString();
+  const floatNum = parseFloat(numStr.replace(/,/g, "").replace(/[^\d.-]/g, ""));
+  if (isNaN(floatNum)) return ""; 
+  return floatNum.toLocaleString("en-US", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
+};
+
+
 export const Elimina_Comas = (data) => {
   const convertir = (value) => {
     let valueConvertido = value;
