@@ -16,6 +16,7 @@ import {
     getEvaluacionMateria,
     getAreasOtros,
     getAreas,
+    getDatosPorGrupo,
 } from "@/app/utils/api/boletas/boletas";
 import { setGlobalVariable, globalVariables, loadGlobalVariables, formatNumberDecimalOne } from "@/app/utils/globalfn";
 import TablaPromedioIngles from "@/app/creacion_boletas_3_bimestres/components/tablaPromedioIngles";
@@ -40,7 +41,11 @@ function CreacionBoletas3Bimestre() {
         handleSubmit,
         watch,
         formState: { errors },
-    } = useForm();
+    } = useForm({
+        defaultValues: {
+            bimestre: 1
+        },
+    });
     let bimestre = watch('bimestre');
     const imprimePromedio = watch('imprime_promedio');
     const calificacionLetra = watch('calificacion_letra');
@@ -61,6 +66,88 @@ function CreacionBoletas3Bimestre() {
         };
         fetchData();
     }, [session, status]);
+
+    useEffect(() => {
+        if (status === "loading" || !session) {
+            return;
+        }
+        const fetchData = async () => {
+            let x;
+            const datos = await getDatosPorGrupo(session.user.token, grupo.numero, grupo.horario);
+            console.log(datos);
+            if (!datos) { return; }
+            // const alumnos = datos.alumnos;
+            let alumnos = datos.alumnos.map(alumno => {
+                return {
+                    ...alumno,
+                    1: '',
+                    2: '',
+                    3: '',
+                    6: ''
+                };
+            });
+            const calificaciones = datos.calificaciones;
+            const actividades = datos.actividades;
+            const materias = datos.materias;
+            for (let b = 1; b <= 3; b++) {
+                alumnos.map((alumno, falum) => {
+                    let caliMateria = 0;
+                    materias.map((materia, fmateria) => {
+                        let sumatoria = 0;
+                        let evaluaciones = 0;
+
+                        if (materia.actividad === 'No') {
+                            evaluaciones = materia.evaluaciones;
+                            const filtroCalificaciones = calificaciones.filter(calificacion =>
+                                calificacion.bimestre === b &&
+                                calificacion.alumno === alumno.numero &&
+                                calificacion.actividad === 0 &&
+                                calificacion.materia === materia.materia &&
+                                calificacion.unidad <= evaluaciones
+                            );
+
+                            sumatoria = filtroCalificaciones.reduce((acc, calificacion) => acc + calificacion.calificacion, 0);
+                            const promedio = sumatoria / evaluaciones;
+                            caliMateria += parseFloat(formatNumberDecimalOne(promedio));
+                        } else if (materia.actividad === 'Si') {
+                            const tablas = actividades.filter(actividad => actividad.materia === materia.materia);
+                            if (tablas.length > 0) {
+                                for (let i = 0; i < tablas.length; i++) {
+                                    const filtroCalificaciones = calificaciones.filter(calificacion =>
+                                        calificacion.alumno === alumno.numero &&
+                                        calificacion.materia === materia.materia &&
+                                        calificacion.bimestre === b &&
+                                        calificacion.actividad === tablas[i].secuencia &&
+                                        calificacion.unidad <= tablas[i]["EB" + b]
+                                    );
+                                    const cpa = filtroCalificaciones.reduce((acc, calificacion) => acc + calificacion.calificacion, 0);
+                                    const ebValue = tablas[i]["EB" + b] || 1;
+                                    sumatoria += cpa / ebValue;
+                                }
+                                evaluaciones = tablas.length;
+                                const promedio = sumatoria / evaluaciones;
+                                caliMateria += parseFloat(formatNumberDecimalOne(promedio));
+                            }
+                        }
+                    });
+
+                    if (materias.length > 0) {
+                        alumnos[falum] = {
+                            ...alumnos[falum],
+                            [b]: formatNumberDecimalOne(caliMateria / materias.length)
+                        };
+                    } else {
+                        alumnos[falum] = {
+                            ...alumnos[falum],
+                            [b]: 0
+                        };
+                    }
+                });
+            }
+            console.log('españolllllllllll aaaaaaaaaaaaaaaaaaaaaaaaaa', alumnos);
+        };
+        fetchData();
+    }, [grupo.numero]);
 
     // useEffect(() => {
     //     desplegarPromedioLugar();

@@ -89,3 +89,21 @@ export const getAreasOtros = async (token, data, materia) => {
     const resJson = await res.json();
     return resJson.data;
 };
+
+export const getDatosPorGrupo = async (token, grupo, grupo_nombre) => {
+    let url = `${process.env.DOMAIN_API}api/proceso/datos-por-grupo`;
+    const res = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+            grupo: grupo,
+            grupo_nombre: grupo_nombre,
+        }),
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+    const resJson = await res.json();
+    return resJson.data;
+};
+
