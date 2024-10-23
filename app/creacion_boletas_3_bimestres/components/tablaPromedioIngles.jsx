@@ -1,6 +1,6 @@
 "use client";
 import Loading from "@/app/components/loading";
-import NoData from "@/app/components/nodata";
+import NoData from "@/app/components/NoData";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 import React from "react";

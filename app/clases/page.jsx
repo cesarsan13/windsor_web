@@ -12,7 +12,6 @@ import {
   Imprimir,
   ImprimirExcel,
 } from "@/app/utils/api/clases/clases";
-import ModalVistaPreviaClases from "./components/modalVistaPreviaClases";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import Busqueda from "@/app/clases/components/Busqueda";
 import ModalClases from "@/app/clases/components/modalClases";
