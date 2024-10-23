@@ -9,31 +9,64 @@ import iconos from '@/app/utils/iconos';
 
 function ModalVistaPreviaRepFemac11Anexo3({ pdfPreview, pdfData, PDF, Excel }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    useEffect(() => {        
+    let suma = 0;
+    useEffect(() => {
         const isEmptyDataPDF = Object.keys(pdfData || {}).length === 0 && (pdfData || {}).constructor === Object;
         setIsModalOpen(pdfPreview && !isEmptyDataPDF);
     }, [pdfPreview, pdfData]);    
     const [scale, setScale] = useState(1);
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth >= 768) {
-                setScale(SpecialZoomLevel.PageWidth);
-            } else {
-                setScale(1);
-            }
+            console.log("window.innerWidth => ",window.innerWidth )
+            const newScale = window.innerWidth >= 768 ? SpecialZoomLevel.PageWidth : 1;
+
+            setScale((prevScale) => {
+                console.log(`${prevScale} !== ${newScale}`);
+                if (prevScale !== newScale) {
+                    return newScale;
+                }
+                return prevScale;
+            });
         };
 
-        window.addEventListener('resize', handleResize);
+        const debounceResize = () => {
+            let timeout;
+            return () => {
+                clearTimeout(timeout);
+                timeout = setTimeout(handleResize, 100);
+            };
+        };
+
+        const debouncedHandleResize = debounceResize();
+        window.addEventListener('resize', debouncedHandleResize);
+
         handleResize();
+
         return () => {
-            window.removeEventListener('resize', handleResize);
+            window.removeEventListener('resize', debouncedHandleResize);
         };
     }, []);
 
+    // const [scale, setScale] = useState(1);
+    // useEffect(() => {
+    //     const handleResize = () => {
+    //         if (window.innerWidth >= 768) {
+    //             setScale(SpecialZoomLevel.PageWidth);
+    //         } else {
+    //             setScale(1);
+    //         }
+    //     };
+
+    //     window.addEventListener('resize', handleResize);
+    //     handleResize();
+    //     return () => {
+    //         window.removeEventListener('resize', handleResize);
+    //     };
+    // }, []);
+
     return (
         <dialog id='modalVPRepFemac11Anexo3' className='modal'>
-            <div className='modal-box w-full max-w-4xl h-full'>
+            <div className='modal-box w-full max-w-5xl h-full'>
                 <button className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black'
                     onClick={() => document.getElementById("modalVPRepFemac11Anexo3").close()}
                 >
@@ -68,6 +101,8 @@ function ModalVistaPreviaRepFemac11Anexo3({ pdfPreview, pdfData, PDF, Excel }) {
                             >
                                 <div className='' style={{ maxHeight: "calc(100vh - 4rem)" }}>
                                     <Viewer fileUrl={pdfData} defaultScale={scale}/>
+                                    {/* <Viewer fileUrl={pdfData} /> */}
+
                                 </div>
                             </Worker>
                         </div>
