@@ -15,14 +15,10 @@ function ModalVistaPreviaUsuarios({ pdfPreview, pdfData, PDF, Excel }) {
       Object.keys(pdfData || {}).length === 0 &&
       (pdfData || {}).constructor === Object;
     setIsModalOpen(pdfPreview && !isEmptyDataPDF);
-<<<<<<< HEAD:app/usuarios/components/modalVistaPreviaUsuarios.jsx
   }, [pdfPreview, pdfData]);
 
   // if (!isModalOpen) return; // No renderizar nada si el modal no debe abrirse
 
-=======
-  }, [pdfPreview, pdfData]);  //
->>>>>>> origin/devDaniel:app/clases/components/modalVistaPreviaClases.jsx
   return (
     <dialog id="modalVPUsuario" className="modal">
       <div className="modal-box w-full max-w-4xl h-full">
