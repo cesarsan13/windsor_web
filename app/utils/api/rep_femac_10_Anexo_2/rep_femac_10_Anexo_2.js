@@ -69,6 +69,9 @@ export const ImprimirPDF = (configuracion, fecha_ini, fecha_fin, tomaFechas) =>{
   const newPDF = new ReportePDF(configuracion, orientacion);
   const { body } = configuracion;
 
+  const F_fecha_ini = format_Fecha_String(fecha_ini)
+  const F_fecha_fin = format_Fecha_String(fecha_fin)
+
   let alumno_Ant = "";
   let total_importe = 0;
   let total_general = 0;
@@ -78,9 +81,24 @@ export const ImprimirPDF = (configuracion, fecha_ini, fecha_fin, tomaFechas) =>{
       doc.nextRow(8);
   }
 
-  Enca1(newPDF,fecha_ini, fecha_fin, tomaFechas);
+  Enca1(newPDF,F_fecha_ini, F_fecha_fin, tomaFechas);
       body.forEach((reporte2) => {
-          let tipoPago2 = " ";
+      let tipoPago2 = " ";
+      let nombre = " ";
+
+      let documento = "0";
+
+      if (reporte2.numero_doc === null || reporte2.numero_doc == "") {
+        documento = "0";
+      } else {
+        documento = reporte2.numero_doc;
+      }
+
+      if(reporte2.nombre === null){
+        nombre = " ";
+      }else{
+        nombre = reporte2.nombre;
+      }
           
       if(reporte2.desc_Tipo_Pago_2 === null)
       {
@@ -95,7 +113,7 @@ export const ImprimirPDF = (configuracion, fecha_ini, fecha_fin, tomaFechas) =>{
           total_importe = 0;
       }
 
-      if(reporte2.id_al !== alumno_Ant){
+      if(reporte2.id_al !== alumno_Ant  && reporte2.id_al != null){
           newPDF.ImpPosX(reporte2.id_al +"-"+ calculaDigitoBvba(reporte2.id_al.toString()), 15, newPDF.tw_ren, 0, "L");
           newPDF.ImpPosX(reporte2.nom_al.toString(), 30, newPDF.tw_ren, 0, "L");
           newPDF.ImpPosX(reporte2.horario_nom.toString(), 100, newPDF.tw_ren, 0, "L");
@@ -107,7 +125,7 @@ export const ImprimirPDF = (configuracion, fecha_ini, fecha_fin, tomaFechas) =>{
               Enca1(newPDF);
           }
       }
-      newPDF.ImpPosX(reporte2.numero_doc.toString(), 33, newPDF.tw_ren, 0, "R");
+      newPDF.ImpPosX(documento, 33, newPDF.tw_ren, 0, "R");
       newPDF.ImpPosX(reporte2.articulo.toString(), 49, newPDF.tw_ren, 0, "R");
       newPDF.ImpPosX(reporte2.descripcion.toString(), 53, newPDF.tw_ren, 0, "L");
       
@@ -115,10 +133,10 @@ export const ImprimirPDF = (configuracion, fecha_ini, fecha_fin, tomaFechas) =>{
       newPDF.ImpPosX(formatNumber(reporte2.importe), 176, newPDF.tw_ren, 0, "R");
       newPDF.ImpPosX(reporte2.recibo.toString(), 195, newPDF.tw_ren, 0, "R");
 
-      Enca1(newPDF,fecha_ini, fecha_fin, tomaFechas);
+      Enca1(newPDF,F_fecha_ini, F_fecha_fin, tomaFechas);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
       newPDF.pageBreak();
-      Enca1(newPDF,fecha_ini, fecha_fin, tomaFechas);
+      Enca1(newPDF,F_fecha_ini, F_fecha_fin, tomaFechas);
     }
       total_importe = total_importe + reporte2.importe;
       total_general = total_general + reporte2.importe;
@@ -129,7 +147,7 @@ export const ImprimirPDF = (configuracion, fecha_ini, fecha_fin, tomaFechas) =>{
   newPDF.ImpPosX(`TOTAL IMPORTE: ${formatNumber(total_general)}` || "",
       157, newPDF.tw_ren, 0, "R"
     );
-  newPDF.guardaReporte(`Reporte Estado de Cuenta del dia ${fecha_ini} al ${fecha_fin}`)
+  newPDF.guardaReporte(`Reporte Estado de Cuenta del dia ${F_fecha_ini} al ${F_fecha_fin}`)
 };
 
 export const ImprimirExcel = (configuracion) =>{
@@ -153,6 +171,13 @@ export const ImprimirExcel = (configuracion) =>{
     }
 
     let tipoPago2 = " ";
+    let documento = "0";
+
+    if (imp.numero_doc === null || imp.numero_doc == "") {
+      documento = "0";
+    } else {
+      documento = imp.numero_doc;
+    }
     if(imp.desc_Tipo_Pago_2 === null)
     {
         tipoPago2 = " ";
@@ -161,7 +186,7 @@ export const ImprimirExcel = (configuracion) =>{
         tipoPago2 = imp.desc_Tipo_Pago_2;
     }
 
-    if(imp.id_al !== alumno_Ant){
+    if(imp.id_al !== alumno_Ant  && imp.id_al != null){
       data1.push({
         numero_doc: imp.id_al+"-"+ calculaDigitoBvba(imp.id_al.toString()),
         articulo: imp.nom_al,
@@ -174,7 +199,7 @@ export const ImprimirExcel = (configuracion) =>{
     }
 
     data1.push({
-      numero_doc: imp.numero_doc,
+      numero_doc: documento,
       articulo: imp.articulo,
       descripcion: imp.descripcion,
       fecha: imp.fecha,

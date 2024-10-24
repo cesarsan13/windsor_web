@@ -105,6 +105,7 @@ function RelaciondeFacturas() {
 
     const reporte = new ReportePDF(configuracion);
     const { body } = configuracion;
+    console.log("FormaRepRelaciondeFacturas=>",body);
     const Enca1 = (doc) => {
       if (!doc.tiene_encabezado) {
         doc.imprimeEncabezadoPrincipalV();
@@ -183,7 +184,7 @@ function RelaciondeFacturas() {
         sub_total = total_importe;
       }
 
-      if (razon_social === "" || razon_social === " ") {
+      if (razon_social === "" || razon_social === " " || razon_social === null) {
         razon_social_cambio = r_s_nombre;
       } else {
         razon_social_cambio = razon_social;
@@ -338,6 +339,7 @@ function RelaciondeFacturas() {
                     isDisabled={false}
                     value={fecha_cobro_ini}
                     setValue={setFecha_cobro_ini}
+                    onChange={(e) => setFecha_cobro_ini(e.target.value)}
                     className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
                   />
                 </label>
@@ -356,6 +358,7 @@ function RelaciondeFacturas() {
                     isDisabled={false}
                     value={fecha_cobro_fin}
                     setValue={setFecha_cobro_fin}
+                    onChange={(e) => setFecha_cobro_fin(e.target.value)}
                     className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
                   />
                 </label>

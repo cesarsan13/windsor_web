@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import iconos from '@/app/utils/iconos';
 import "@react-pdf-viewer/core/lib/styles/index.css";
-function ModalVistaPreviaRep6({ pdfPreview, pdfData, PDF, Excel }) {
+function ModalVistaPreviaRepFemac8Anexo1({ pdfPreview, pdfData, PDF, Excel }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
@@ -61,4 +61,4 @@ function ModalVistaPreviaRep6({ pdfPreview, pdfData, PDF, Excel }) {
     );
 }
 
-export default ModalVistaPreviaRep6
+export default ModalVistaPreviaRepFemac8Anexo1
