@@ -35,7 +35,7 @@ function ModalComentarios({
         ? `Eliminar Comentario: ${currentID}`
         : `Ver Comentario: ${currentID}`
     );
-  }, [accion]);
+  }, [accion, currentID]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"

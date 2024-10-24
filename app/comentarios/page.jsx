@@ -27,9 +27,7 @@ function Comentarios() {
   const { data: session, status } = useSession();
   const [formasComentarios, setFormasComentarios] = useState([]);
   const [formaComentarios, setFormaComentarios] = useState({});
-  const [formaComentariosFiltrados, setFormaComentariosFiltrados] = useState(
-    []
-  );
+  const [formaComentariosFiltrados, setFormaComentariosFiltrados] = useState([]);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
@@ -80,6 +78,7 @@ function Comentarios() {
       generales: formaComentarios.generales,
     });
   }, [formaComentarios, reset]);
+
 
   const Buscar = useCallback(() => {
     const { tb_numero, tb_comentario1 } = busqueda;
@@ -412,6 +411,7 @@ function Comentarios() {
               setFormaComentarios={setFormaComentarios}
               setAccion={setAccion}
               setCurrentId={setCurrentId}
+              
             />
           </div>
         </div>
