@@ -254,6 +254,7 @@ function AltasBajasAlumnos() {
                 isDisabled={false}
                 value={fecha_ini}
                 setValue={setFecha_ini}
+                onChange={(e) => setFecha_ini(e.target.value)}
                 conteClassName="lg:w-fit md:w-fit"
                 labelClassName="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full"
                 inputClassName="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700"
@@ -268,6 +269,7 @@ function AltasBajasAlumnos() {
                 isDisabled={false}
                 value={fecha_fin}
                 setValue={setFecha_fin}
+                onChange={(e) => setFecha_fin(e.target.value)}
                 conteClassName="lg:w-fit md:w-fit"
                 labelClassName="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full"
                 inputClassName="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700"
