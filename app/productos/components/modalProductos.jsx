@@ -1,6 +1,6 @@
 import { soloEnteros, soloDecimales, pone_ceros } from "@/app/utils/globalfn";
 import React from "react";
-import { showSwal, confirmSwal } from "@/app/utils/alerts";
+import { showSwal} from "@/app/utils/alerts";
 import { useState, useEffect } from "react";
 import Inputs from "@/app/productos/components/Inputs";
 import Image from "next/image";
@@ -91,7 +91,7 @@ function ModalProductos({
   return (
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box">
-        <form onSubmit={onSubmit}>
+        <form action="" onSubmit={onSubmit}>
           <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
             <h3 className="font-bold text-lg">{titulo}</h3>
             <div className="flex space-x-2 items-center">
