@@ -51,7 +51,6 @@ function Productos() {
     const fetchData = async () => {
       setisLoading(true);
       const { token } = session.user;
-      console.log(token);
       const data = await getProductos(token, bajas);
       setProductos(data);
       setProductosFiltrados(data);
@@ -139,8 +138,6 @@ function Productos() {
   };
 
   const Alta = async (event) => {
-    // setCurrentId("");
-    // const { token } = session.user;
     reset({
       numero: "",
       descripcion: "",
@@ -153,12 +150,10 @@ function Productos() {
       cam_precio: false,
       ref: "",
     });
-    // let siguienteId = await getLastProduct(token);
-    // siguienteId = parseInt(siguienteId, 10) + 1;
+    setProducto({})
     setNum("");
     setCurrentId("");
     setDisableNum(false);
-    // setProducto({ numero: "" });
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);
@@ -249,8 +244,6 @@ function Productos() {
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
     } else {
-      // const alertText = res.alert_text ? formatValidationErrors(res.alert_text) : "Error desconocido";
-      // console.log(alertText);
       showModal(false);
       const confirmed = await confirmSwal(
         res.alert_title,

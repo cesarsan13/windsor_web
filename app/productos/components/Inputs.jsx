@@ -40,6 +40,7 @@ function Inputs({
               onBlur: handleBlur,
             })}
             disabled={isDisabled}
+            
           />
         </label>
         {errors[name] && (
@@ -70,13 +71,15 @@ function Inputs({
                 value: maxLenght,
                 message: `El campo ${name} no puede tener más de ${maxLenght} caracteres`,
               },
-              ...(requerido && { required: message }),
+              ...(requerido && { required: message }),  
             })}
+            
             {...(dataType === "int" ||
               (dataType === "float" && {
                 onBlur: (event) => handleBlur(event, dataType),
               }))}
             disabled={isDisabled}
+            
           />
         </label>
         {errors[name] && (
