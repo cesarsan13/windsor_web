@@ -46,6 +46,7 @@ function Alumnos() {
   const [pdfData, setPdfData] = useState("");
   const [fecha_hoy, setFechaHoy] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
+  const [files, setFile] = useState(null);
   const [busqueda, setBusqueda] = useState({
     tb_id: "",
     tb_desc: "",
@@ -122,8 +123,8 @@ function Alumnos() {
       fecha_inscripcion: formatFecha(alumno.fecha_inscripcion),
       fecha_baja: formatFecha(alumno.fecha_baja),
       sexo: alumno.sexo,
-      telefono_1: alumno.telefono1,
-      telefono_2: alumno.telefono2,
+      telefono1: alumno.telefono1,
+      telefono2: alumno.telefono2,
       celular: alumno.celular,
       codigo_barras: alumno.codigo_barras,
       direccion: alumno.direccion,
@@ -195,7 +196,7 @@ function Alumnos() {
       nom_avi: alumno.nom_avi,
       tel_avi_1: alumno.tel_avi_1,
       tel_avi_2: alumno.tel_avi_2,
-      cel_avi_1: alumno.cel_avi,
+      cel_avi: alumno.cel_avi,
       ciclo_escolar: alumno.ciclo_escolar,
       descuento: alumno.descuento,
       rfc_factura: alumno.rfc_factura,
@@ -216,8 +217,8 @@ function Alumnos() {
       fecha_inscripcion: formatFecha(alumno.fecha_inscripcion),
       fecha_baja: formatFecha(alumno.fecha_baja),
       sexo: alumno.sexo,
-      telefono_1: alumno.telefono1,
-      telefono_2: alumno.telefono2,
+      telefono1: alumno.telefono1,
+      telefono2: alumno.telefono2,
       celular: alumno.celular,
       codigo_barras: alumno.codigo_barras,
       direccion: alumno.direccion,
@@ -289,7 +290,7 @@ function Alumnos() {
       nom_avi: alumno.nom_avi,
       tel_avi_1: alumno.tel_avi_1,
       tel_avi_2: alumno.tel_avi_2,
-      cel_avi_1: alumno.cel_avi,
+      cel_avi: alumno.cel_avi,
       ciclo_escolar: alumno.ciclo_escolar,
       descuento: alumno.descuento,
       rfc_factura: alumno.rfc_factura,
@@ -327,8 +328,8 @@ function Alumnos() {
       fecha_inscripcion: formatFecha(fecha_hoy),
       fecha_baja: "",
       sexo: "",
-      telefono_1: "",
-      telefono_2: "",
+      telefono1: "",
+      telefono2: "",
       celular: "",
       codigo_barras: "",
       direccion: "",
@@ -400,7 +401,7 @@ function Alumnos() {
       nom_avi: "",
       tel_avi_1: "",
       tel_avi_2: "",
-      cel_avi_1: "",
+      cel_avi: "",
       ciclo_escolar: "",
       descuento: 0,
       rfc_factura: "",
@@ -458,8 +459,8 @@ function Alumnos() {
     );
     formData.append("fecha_baja", format_Fecha_String(data.fecha_baja) || "");
     formData.append("sexo", data.sexo || "");
-    formData.append("telefono1", data.telefono_1 || "");
-    formData.append("telefono2", data.telefono_2 || "");
+    formData.append("telefono1", data.telefono1 || "");
+    formData.append("telefono2", data.telefono2 || "");
     formData.append("celular", data.celular || "");
     formData.append("codigo_barras", data.codigo_barras || "");
     formData.append("direccion", data.direccion || "");
@@ -530,7 +531,7 @@ function Alumnos() {
     formData.append("nom_avi", data.nom_avi || "");
     formData.append("tel_avi_1", data.tel_avi_1 || "");
     formData.append("tel_avi_2", data.tel_avi_2 || "");
-    formData.append("cel_avi", data.cel_avi_1 || "");
+    formData.append("cel_avi", data.cel_avi || "");
     formData.append("ciclo_escolar", data.ciclo_escolar || "");
     formData.append("descuento", data.descuento || "");
     formData.append("rfc_factura", data.rfc_factura || "");
@@ -552,6 +553,7 @@ function Alumnos() {
       accion,
       data.numero
     );
+    console.log("data", capturedImage);
     if (res.status) {
       if (accion === "Alta") {
         data.numero = res.data;
@@ -783,6 +785,8 @@ function Alumnos() {
         setGrado2={setGrado2}
         setcond1={setcond1}
         setcond2={setcond2}
+        setFile={setFile}
+        files ={files}
       />
       <VistaPrevia
         id="modalVPAlumno"
