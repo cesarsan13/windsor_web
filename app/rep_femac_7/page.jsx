@@ -179,17 +179,17 @@ function Repo_Femac_7() {
         }
       }
       if (si_Imp === true) {
-        reporte.ImpPosX(alu_Act.toString(), 14, reporte.tw_ren);
+        reporte.ImpPosX(alu_Act.toString(), 26, reporte.tw_ren, 0, "R");
         const data = alumnos.find((alu) => alu.numero === alu_Act);
         nombre = data.nombre;
-        reporte.ImpPosX(nombre.toString(), 28, reporte.tw_ren);
-        reporte.ImpPosX(doc.producto.toString(), 108, reporte.tw_ren);
-        reporte.ImpPosX(doc.descripcion.toString(), 128, reporte.tw_ren);
-        reporte.ImpPosX(doc.fecha.toString(), 208, reporte.tw_ren);
+        reporte.ImpPosX(nombre.toString(), 28, reporte.tw_ren, 0, "L");
+        reporte.ImpPosX(doc.producto.toString(), 122, reporte.tw_ren, 0, "R");
+        reporte.ImpPosX(doc.descripcion.toString(), 128, reporte.tw_ren, 0, "L");
+        reporte.ImpPosX(doc.fecha.toString(), 208, reporte.tw_ren, 0, "L");
         saldo = doc.importe - doc.importe * (doc.descuento / 100);
         saldoTotal += saldo;
         total_General += saldo;
-        reporte.ImpPosX(saldo.toFixed(2).toString(), 228, reporte.tw_ren);
+        reporte.ImpPosX(saldo.toFixed(2).toString(), 243, reporte.tw_ren, 0, "R");
 
         const isLastRecordForAlumno =
           index === documentos.length - 1 ||
@@ -198,13 +198,15 @@ function Repo_Femac_7() {
         if (isLastRecordForAlumno) {
           reporte.ImpPosX(
             saldoTotal.toFixed(2).toString(),
-            248,
-            reporte.tw_ren
+            264,
+            reporte.tw_ren,
+            0, "R"
           );
           reporte.ImpPosX(
-            data.telefono_1?.toString() ?? "",
+            data.telefono1?.toString() ?? "",
             268,
-            reporte.tw_ren
+            reporte.tw_ren,
+            0, "L"
           );
           saldoTotal = 0;
           reporte.nextRow(5);
