@@ -329,7 +329,7 @@ function RepFemac12Anexo() {
                     table={"productos"}
                     nameInput={["producto1", "producto_desc1"]}
                     fieldsToShow={["numero", "descripcion"]}
-                    titulo={"Producto: "}
+                    titulo={"Producto Inicial: "}
                     setItem={setProducto1}
                     token={session.user.token}
                     modalId={"modal_producto1"}
@@ -344,7 +344,7 @@ function RepFemac12Anexo() {
                     table={"productos"}
                     nameInput={["producto2", "producto_desc2"]}
                     fieldsToShow={["numero", "descripcion"]}
-                    titulo={"Producto: "}
+                    titulo={"Producto Final: "}
                     setItem={setProducto2}
                     token={session.user.token}
                     modalId={"modal_producto2"}
