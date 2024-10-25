@@ -3,29 +3,31 @@ import React from "react";
 import Inputs from "@/app/pagos1/components/Inputs";
 import BuscarCat from "@/app/components/BuscarCat";
 
-function ModalNuevoRegistro({
-  session,
-  setProductos1,
-  setComentarios1,
-  setAlumnos1,
-  register,
-  errors,
-  accionB,
-  colorInput,
-  precio_base,
-  handleKeyDown,
-  handleBlur,
-}) {
-  const nameInputs = ["numero", "nombre_completo"];
-  const columnasBuscaCat = ["numero", "nombre_completo"];
-  const nameInputs2 = ["numero", "comentario_1"];
-  const columnasBuscaCat2 = ["numero", "comentario_1"];
-  const nameInputs3 = ["numero", "descripcion"];
-  const columnasBuscaCat3 = ["numero", "descripcion"];
+function ModalNuevoRegistro(
+  {
+    // session,
+    // setProductos1,
+    // setComentarios1,
+    // setAlumnos1,
+    // register,
+    // errors,
+    // accionB,
+    // colorInput,
+    // precio_base,
+    // handleKeyDown,
+    // handleBlur,
+  }
+) {
+  // const nameInputs = ["numero", "nombre_completo"];
+  // const columnasBuscaCat = ["numero", "nombre_completo"];
+  // const nameInputs2 = ["numero", "comentario_1"];
+  // const columnasBuscaCat2 = ["numero", "comentario_1"];
+  // const nameInputs3 = ["numero", "descripcion"];
+  // const columnasBuscaCat3 = ["numero", "descripcion"];
 
   return (
     <dialog id="modal_nuevo_registro" className="modal">
-      <div className="modal-box w-3/4 max-w-5xl h-auto">
+      <div className="modal-box w-3/4 max-w-3xl h-auto">
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
           onClick={() =>
@@ -34,8 +36,9 @@ function ModalNuevoRegistro({
         >
           ✕
         </button>
-        <h3 className="font-bold text-lg mb-5">Añadir Paguitos</h3>
-        <fieldset id="fs_pagoimprime">
+        <h3 className="font-bold text-lg mb-5">Añadir Nuevo Pago</h3>
+        Pinche perra madre
+        {/* <fieldset id="fs_pagoimprime">
           <div className="container flex flex-col space-y-5">
             <div className="flex flex-col ">
               <div className="w-full">
@@ -74,20 +77,20 @@ function ModalNuevoRegistro({
                   }}
                 />
               </div>
-            </div>
-            <div className="pb-4">
-              <Inputs
-                name={"comentarios"}
-                tamañolabel={""}
-                className={"rounded block grow"}
-                Titulo={"Comentarios: "}
-                requerido={false}
-                type={"text"}
-                register={register}
-                errors={errors}
-                maxLength={15}
-                isDisabled={false}
-              />
+              <div>
+                <Inputs
+                  name={"comentarios"}
+                  tamañolabel={""}
+                  className={"rounded block "}
+                  Titulo={"Comentario aksjdhakjsdAd: "}
+                  requerido={false}
+                  type={"text"}
+                  register={register}
+                  errors={errors}
+                  maxLength={15}
+                  isDisabled={false}
+                />
+              </div>
             </div>
             <div className="flex flex-col md:flex-row lg:flex-row ">
               <BuscarCat
@@ -145,7 +148,7 @@ function ModalNuevoRegistro({
               />
             </div>
           </div>
-        </fieldset>
+        </fieldset> */}
       </div>
     </dialog>
   );

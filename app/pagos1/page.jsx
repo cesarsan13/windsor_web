@@ -127,7 +127,7 @@ function Pagos_1() {
       setisLoading(false);
     };
     fetchData();
-  }, [session, status, validar, cargado]);
+  }, [session, status, validar, cargado, setValue]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -146,18 +146,6 @@ function Pagos_1() {
     show
       ? document.getElementById(id).showModal()
       : document.getElementById(id).close();
-  };
-
-  const showModal2 = (show) => {
-    show
-      ? document.getElementById("my_modal_4").showModal()
-      : document.getElementById("my_modal_4").close();
-  };
-
-  const showModal3 = (show) => {
-    show
-      ? document.getElementById("my_modal_5").showModal()
-      : document.getElementById("my_modal_5").close();
   };
 
   const home = () => {
@@ -367,9 +355,6 @@ function Pagos_1() {
   };
 
   const submitRecargo = async (data) => {
-    // if (dRecargo) {
-    //   return;
-    // }
     const recargo = formatNumber(data.recargo);
     const total = data.recargo * data.cantidad_producto;
     const totalFormat = formatNumber(total);
@@ -631,6 +616,7 @@ function Pagos_1() {
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-center justify-between w-full">
             <div className="flex items-center space-x-4">
+              hola perras por que el modal no se actualiza alavergaaaaaa
               <Acciones
                 ImprimePDF={btnPDF}
                 home={home}
