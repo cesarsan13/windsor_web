@@ -72,7 +72,7 @@ export const getAreas = async (token, data, materia) => {
 
 export const getAreasOtros = async (token, data, materia) => {
     // console.log('area otros', materia);
-    let url = `${process.env.DOMAIN_API}api/proceso/boleta-areas-otros`;
+    let url = `${process.env.DOMAIN_API}api/proceso/bleta-areas-otroso`;
     const res = await fetch(url, {
         method: "POST",
         body: JSON.stringify({
@@ -90,13 +90,14 @@ export const getAreasOtros = async (token, data, materia) => {
     return resJson.data;
 };
 
-export const getDatosPorGrupo = async (token, grupo, grupo_nombre) => {
+export const getDatosPorGrupo = async (token, grupo, grupo_nombre, ordenAlfabetico) => {
     let url = `${process.env.DOMAIN_API}api/proceso/datos-por-grupo`;
     const res = await fetch(url, {
         method: "POST",
         body: JSON.stringify({
             grupo: grupo,
             grupo_nombre: grupo_nombre,
+            orden_alfabetico: ordenAlfabetico
         }),
         headers: {
             Authorization: `Bearer ${token}`,

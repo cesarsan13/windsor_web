@@ -35,6 +35,8 @@ function CreacionBoletas3Bimestre() {
     const [promediosEspañolAr3, setPromediosEspañolAr3] = useState([]);
     const [promediosInglesAr5, setPromediosInglesAr5] = useState([]);
     const [promediosIngles, setPromediosIngles] = useState([]);
+    const [lugaresEspañol, setLugaresEspañol] = useState([]);
+    const [lugaresIngles, setLugaresIngles] = useState([]);
     // const [promediosEs, setPromediosEs] = useState([]);
     const {
         register,
@@ -49,6 +51,7 @@ function CreacionBoletas3Bimestre() {
     let bimestre = watch('bimestre');
     const imprimePromedio = watch('imprime_promedio');
     const calificacionLetra = watch('calificacion_letra');
+    const ordenAlfabetico = watch('orden_alfabetico');
 
     useEffect(() => {
         if (status === "loading" || !session) {
@@ -73,11 +76,11 @@ function CreacionBoletas3Bimestre() {
         }
         const fetchData = async () => {
             let x;
-            const datos = await getDatosPorGrupo(session.user.token, grupo.numero, grupo.horario);
-            console.log(datos);
-            if (!datos) { return; }
+            const datos = await getDatosPorGrupo(session.user.token, grupo.numero, grupo.horario, ordenAlfabetico);
+            // console.log(datos);
+            if (!datos.alumnos || !datos.materias_español || !datos.materias_ingles || !datos.calificaciones || !datos.actividades) { return; }
             // const alumnos = datos.alumnos;
-            let alumnos = datos.alumnos.map(alumno => {
+            let alumnos_es = datos.alumnos.map(alumno => {
                 return {
                     ...alumno,
                     1: '',
@@ -88,11 +91,12 @@ function CreacionBoletas3Bimestre() {
             });
             const calificaciones = datos.calificaciones;
             const actividades = datos.actividades;
-            const materias = datos.materias;
+            const materias_español = datos.materias_español;
+            const materias_ingles = datos.materias_ingles;
             for (let b = 1; b <= 3; b++) {
-                alumnos.map((alumno, falum) => {
+                alumnos_es.map((alumno, falum) => {
                     let caliMateria = 0;
-                    materias.map((materia, fmateria) => {
+                    materias_español.map((materia) => {
                         let sumatoria = 0;
                         let evaluaciones = 0;
 
@@ -106,7 +110,7 @@ function CreacionBoletas3Bimestre() {
                                 calificacion.unidad <= evaluaciones
                             );
 
-                            sumatoria = filtroCalificaciones.reduce((acc, calificacion) => acc + calificacion.calificacion, 0);
+                            sumatoria = parseFloat(filtroCalificaciones.reduce((acc, calificacion) => acc + calificacion.calificacion, 0));
                             const promedio = sumatoria / evaluaciones;
                             caliMateria += parseFloat(formatNumberDecimalOne(promedio));
                         } else if (materia.actividad === 'Si') {
@@ -120,52 +124,223 @@ function CreacionBoletas3Bimestre() {
                                         calificacion.actividad === tablas[i].secuencia &&
                                         calificacion.unidad <= tablas[i]["EB" + b]
                                     );
-                                    const cpa = filtroCalificaciones.reduce((acc, calificacion) => acc + calificacion.calificacion, 0);
+                                    const cpa = parseFloat(filtroCalificaciones.reduce((acc, calificacion) => acc + calificacion.calificacion, 0));
                                     const ebValue = tablas[i]["EB" + b] || 1;
                                     sumatoria += cpa / ebValue;
                                 }
                                 evaluaciones = tablas.length;
-                                const promedio = sumatoria / evaluaciones;
+                                const promedio = parseFloat(sumatoria / evaluaciones);
                                 caliMateria += parseFloat(formatNumberDecimalOne(promedio));
                             }
                         }
                     });
 
-                    if (materias.length > 0) {
-                        alumnos[falum] = {
-                            ...alumnos[falum],
-                            [b]: formatNumberDecimalOne(caliMateria / materias.length)
+                    if (materias_español.length > 0) {
+                        alumnos_es[falum] = {
+                            ...alumnos_es[falum],
+                            [b]: formatNumberDecimalOne(caliMateria / materias_español.length)
                         };
                     } else {
-                        alumnos[falum] = {
-                            ...alumnos[falum],
+                        alumnos_es[falum] = {
+                            ...alumnos_es[falum],
                             [b]: 0
                         };
                     }
                 });
             }
-            console.log('españolllllllllll aaaaaaaaaaaaaaaaaaaaaaaaaa', alumnos);
+            let prom;
+            let promedio = 0.0;
+            alumnos_es = alumnos_es.map((item) => {
+                prom = 0;
+                promedio = 0;
+                for (let i = 1; i <= 3; i++) {
+                    const bimestreFiltrado = `${i}`
+                    prom += parseFloat(item[bimestreFiltrado])
+                }
+                promedio = (prom / 3)
+                if (promedio < 5.0) { promedio = formatNumberDecimalOne(5); }
+                return { ...item, 6: promedio };
+            });
+
+            let alumnos_in = datos.alumnos.map(alumno => {
+                return {
+                    ...alumno,
+                    1: '',
+                    2: '',
+                    3: '',
+                    6: ''
+                };
+            });
+            for (let b = 1; b <= 3; b++) {
+                alumnos_in.map((alumno, falum) => {
+                    let caliMateria = 0;
+                    materias_ingles.map((materia) => {
+                        let sumatoria = 0;
+                        let evaluaciones = 0;
+
+                        if (materia.actividad === 'No') {
+                            evaluaciones = materia.evaluaciones;
+                            const filtroCalificaciones = calificaciones.filter(calificacion =>
+                                calificacion.bimestre === b &&
+                                calificacion.alumno === alumno.numero &&
+                                calificacion.actividad === 0 &&
+                                calificacion.materia === materia.materia &&
+                                calificacion.unidad <= evaluaciones
+                            );
+
+                            sumatoria = parseFloat(filtroCalificaciones.reduce((acc, calificacion) => acc + calificacion.calificacion, 0));
+                            const promedio = sumatoria / evaluaciones;
+                            caliMateria += parseFloat(formatNumberDecimalOne(promedio));
+                        } else if (materia.actividad === 'Si') {
+                            const tablas = actividades.filter(actividad => actividad.materia === materia.materia);
+                            if (tablas.length > 0) {
+                                for (let i = 0; i < tablas.length; i++) {
+                                    const filtroCalificaciones = calificaciones.filter(calificacion =>
+                                        calificacion.alumno === alumno.numero &&
+                                        calificacion.materia === materia.materia &&
+                                        calificacion.bimestre === b &&
+                                        calificacion.actividad === tablas[i].secuencia &&
+                                        calificacion.unidad <= tablas[i]["EB" + b]
+                                    );
+                                    const cpa = parseFloat(filtroCalificaciones.reduce((acc, calificacion) => acc + calificacion.calificacion, 0));
+                                    const ebValue = tablas[i]["EB" + b] || 1;
+                                    sumatoria += cpa / ebValue;
+                                }
+                                evaluaciones = tablas.length;
+                                const promedio = parseFloat(sumatoria / evaluaciones);
+                                caliMateria += parseFloat(formatNumberDecimalOne(promedio));
+                            }
+                        }
+                    });
+
+                    if (materias_ingles.length > 0) {
+                        alumnos_in[falum] = {
+                            ...alumnos_in[falum],
+                            [b]: formatNumberDecimalOne(caliMateria / materias_ingles.length)
+                        };
+                    } else {
+                        alumnos_in[falum] = {
+                            ...alumnos_in[falum],
+                            [b]: 0
+                        };
+                    }
+                });
+
+            }
+            prom;
+            promedio = 0.0;
+            alumnos_in = alumnos_in.map((item) => {
+                prom = 0;
+                promedio = 0;
+                for (let i = 1; i <= 3; i++) {
+                    const bimestreFiltrado = `${i}`
+                    prom += parseFloat(item[bimestreFiltrado])
+                }
+                promedio = (prom / 3)
+                if (promedio < 5.0) { promedio = formatNumberDecimalOne(5); }
+                return { ...item, 6: promedio };
+            });
+
+            // console.log('españolllllllllll aaaaaaaaaaaaaaaaaaaaaaaaaa', alumnos_es);
+            // setLugaresEspañol(alumnos_es);
+            calcularLugares(alumnos_es, 'Español')
+            // console.log('inglesssssssssss aaaaaaaaaaaaaaaaaaaaaaaaaa', alumnos_in);
+            calcularLugares(alumnos_in, 'Ingles')
+            // setLugaresIngles(alumnos_in);
         };
         fetchData();
     }, [grupo.numero]);
 
-    // useEffect(() => {
-    //     desplegarPromedioLugar();
-    // }, [promediosEspañol, promediosIngles]);
+    const calcularLugares = async (alumnos_prop, tipo) => {
+        if (!alumnos_prop) return [];
+        const mat_col = [1, 2, 3, 6];
+        let alumnos = alumnos_prop.map(alumno => ({
+            ...alumno,
+            lugar: ''
+        }));
+        mat_col.forEach(col => {
+            let lugar1 = 0;
+            let lugar2 = 0;
+            let lugar3 = 0;
+            for (let f = 0; f < alumnos.length; f++) {
+                const Calificacion = parseFloat(alumnos[f][col]);
+                if (Calificacion > lugar1 && Calificacion > 7) {
+                    lugar3 = lugar2;
+                    lugar2 = lugar1;
+                    lugar1 = Calificacion;
+                } else if (Calificacion > lugar2 && Calificacion < lugar1 && Calificacion > 7) {
+                    lugar3 = lugar2;
+                    lugar2 = Calificacion;
+                } else if (Calificacion > lugar3 && Calificacion < lugar2 && Calificacion > 7) {
+                    lugar3 = Calificacion;
+                }
+            }
+            for (let f = 0; f < alumnos.length; f++) {
+                const Calificacion = parseFloat(alumnos[f][col]);
+                if (Calificacion === lugar1 && lugar1 > 5.9) {
+                    alumnos[f].lugar = '1er';
+                } else if (Calificacion === lugar2 && lugar2 > 5.9) {
+                    alumnos[f].lugar = '2do';
+                } else if (Calificacion === lugar3 && lugar3 > 5.9) {
+                    alumnos[f].lugar = '3er';
+                } else {
+                    alumnos[f].lugar = '';
+                }
+            }
+        });
+
+        if (tipo === 'Español') {
+            setLugaresEspañol(alumnos);
+        } else {
+            setLugaresIngles(alumnos);
+        }
+        console.log(`${tipo}`, alumnos);
+    };
+
+
 
     const desplegarPromedioLugar = (newPromedio, tipo, newEspañolAr2, newEspañolmAr3, newInglesAr5) => {
-        let newDataEspañol = [];
-        let newDataIngles = [];
+        let newDataEspañol = [
+            { numero: "", descripcion: "LUGAR", bimestre1: "", bimestre2: "", bimestre3: "", promedio: "" },
+            { numero: "", descripcion: "PROMEDIO", bimestre1: "", bimestre2: "", bimestre3: "", promedio: "" }
+        ];
+        let newDataIngles = [
+            { numero: "", descripcion: "PLACE", bimestre1: "", bimestre2: "", bimestre3: "", promedio: "" },
+            { numero: "", descripcion: "AVERAGE", bimestre1: "", bimestre2: "", bimestre3: "", promedio: "" }
+        ];
         if (tipo === 'Español') {
-            newDataEspañol = [
-                { numero: "", descripcion: "LUGAR", bimestre1: "", bimestre2: "", bimestre3: "", promedio: "" },
-                { numero: "", descripcion: "PROMEDIO", bimestre1: "", bimestre2: "", bimestre3: "", promedio: "" }
-            ];
+            // console.log(lugaresEspañol);
+            lugaresEspañol.map(function (item) {
+                if (item.numero === alumno.numero) {
+                    newDataEspañol[0].bimestre1 = item.lugar;
+
+                    if (parseInt(bimestre) > 1) {
+                        newDataEspañol[0].bimestre2 = item.lugar;
+                    }
+                    if (parseInt(bimestre) > 2) {
+                        newDataEspañol[0].bimestre3 = item.lugar;
+                    }
+                    if (imprimePromedio) {
+                        newDataEspañol[0].promedio = item.lugar;
+                    }
+                }
+            });
         } else {
-            newDataIngles = [
-                { numero: "", descripcion: "PLACE", bimestre1: "", bimestre2: "", bimestre3: "", promedio: "" },
-                { numero: "", descripcion: "AVERAGE", bimestre1: "", bimestre2: "", bimestre3: "", promedio: "" }
-            ];
+            lugaresIngles.map(function (item) {
+                if (item.numero === alumno.numero) {
+                    newDataIngles[0].bimestre1 = item.lugar;
+
+                    if (bimestre === 2) {
+                        newDataIngles[0].bimestre2 = item.lugar;
+                    }
+                    if (bimestre === 3) {
+                        newDataIngles[0].bimestre3 = item.lugar;
+                    }
+                    if (imprimePromedio) {
+                        newDataIngles[0].promedio = item.lugar;
+                    }
+                }
+            });
         }
         if (newPromedio.length > 0) {
             for (let i = 1; i <= bimestre; i++) {
@@ -205,23 +380,15 @@ function CreacionBoletas3Bimestre() {
                     }
                 }
                 if (imprimePromedio) {
-                    let prom;
-                    let promedio = 0.0;
-                    newPromedio = newPromedio.map((item) => {
-                        prom = 0;
-                        promedio = 0;
-                        for (let i = 1; i <= bimestre; i++) {
-                            const bimestreFiltrado = `bimestre${i}`
-                            prom += parseFloat(item[bimestreFiltrado])
-                        }
-                        promedio = (prom / parseInt(bimestre))
-                        promedio = truncarUno(promedio);
-                        // console.log(promedio);
-                        if (promedio < 5.0) { promedio = 5.0; }
-                        console.log('promedio convertido', promedio)
-                        if (calificacionLetra) { promedio = conversionALetra(promedio, tipo); }
-                        return { ...item, promedio: promedio };
-                    });
+                    newPromedio = sacarPromedioArray(newPromedio, tipo);
+                    if (tipo === 'Español') {
+                        newEspañolAr2 = sacarPromedioArray(newEspañolAr2, tipo);
+                        newEspañolmAr3 = sacarPromedioArray(newEspañolmAr3, tipo);
+                        newDataEspañol = sacarPromedioArrayLugares(newDataEspañol, tipo);
+                    } else if (tipo === 'Ingles') {
+                        newInglesAr5 = sacarPromedioArray(newInglesAr5, tipo);
+                        newDataIngles = sacarPromedioArrayLugares(newDataIngles, tipo);
+                    }
                 }
             }
             if (calificacionLetra) {
@@ -286,6 +453,46 @@ function CreacionBoletas3Bimestre() {
             }
         }
     };
+
+    const sacarPromedioArray = (arregloPromedio, tipo) => {
+        let prom;
+        let promedio = 0.0;
+        arregloPromedio = arregloPromedio.map((item) => {
+            prom = 0;
+            promedio = 0;
+            for (let i = 1; i <= bimestre; i++) {
+                const bimestreFiltrado = `bimestre${i}`
+                prom += parseFloat(item[bimestreFiltrado])
+            }
+            promedio = (prom / parseInt(bimestre))
+            promedio = truncarUno(promedio);
+            if (promedio < 5.0) { promedio = 5.0; }
+            if (calificacionLetra) { promedio = conversionALetra(promedio, tipo); }
+            return { ...item, promedio: promedio };
+        });
+        return arregloPromedio;
+    }
+
+    const sacarPromedioArrayLugares = (arregloPromedio, tipo) => {
+        let prom = 0;
+        let promedio = 0.0;
+        arregloPromedio[1] = {
+            ...arregloPromedio[1],
+            promedio: (() => {
+                for (let i = 1; i <= bimestre; i++) {
+                    const bimestreFiltrado = `bimestre${i}`;
+                    prom += parseFloat(arregloPromedio[1][bimestreFiltrado]) || 0;
+                }
+                promedio = prom / parseInt(bimestre);
+                promedio = truncarUno(promedio);
+                if (promedio < 5.0) { promedio = 5.0; }
+                if (calificacionLetra) { promedio = conversionALetra(promedio, tipo); }
+                return promedio;
+            })()
+        };
+        return arregloPromedio;
+    };
+
 
     const conversionALetra = (calif, tipo) => {
         let alfesp = "";
@@ -354,19 +561,22 @@ function CreacionBoletas3Bimestre() {
         let datosEspañolAr3 = [];
         let datosInglesAr5 = [];
 
-        if (!grupo) {
+        if (!grupo.numero) {
             showSwal('Error', 'Debe seleccionar un grupo.', 'error');
             return;
         }
-        if (!alumno) {
+        if (!alumno.numero) {
             showSwal('Error', 'Debe seleccionar un alumno.', 'error');
             return;
         }
         if (data.bimestre > 3) {
             data.bimestre = 3;
         }
+        if (data.bimestre <= 0) {
+            showSwal('Error', 'El trimestre debe de ser entre 1 y 3.', 'error');
+            return;
+        }
 
-        // Reiniciar los promedios antes de buscar
         setPromediosEspañol([]);
         setPromediosIngles([]);
         setPromediosEspañolAr2([]);
@@ -374,20 +584,39 @@ function CreacionBoletas3Bimestre() {
         setPromediosInglesAr5([]);
         setisLoadingFind(true);
 
-        const datosDG1 = await getBoletas3(token, grupo.numero);
         data.alumno = alumno.numero;
         data.nombre_alumno = alumno.nombre;
         data.grupo = grupo.numero;
         data.grupo_nombre = grupo.horario;
 
-        if (datosDG1.length > 0) {
-            const rango = 5;
-            const materiasMap = {};
+        const datos = await getBoletas3(token, grupo.numero);
 
+        const clases = datos.clases ?? [];
+        const materias = datos.materias ?? [];
+        const calificaciones = datos.calificaciones ?? [];
+        const actividades = datos.actividades ?? [];
+
+        if (!clases.length || !materias.length || !calificaciones.length || !actividades.length) {
+            setisLoadingFind(false);
+            showSwal('Error', 'No se encontraron datos para calcular las calificaciones.', 'error');
+            return;
+        }
+
+
+        // console.log(clases);
+        // console.log(materias);
+        // console.log(calificaciones);
+        // console.log(actividades);
+
+        if (clases.length > 0) {
+            const materiasMap = {};
             for (let a = 1; a <= data.bimestre; a++) {
-                for (let i = 0; i < datosDG1.length; i += rango) {
-                    const batch = datosDG1.slice(i, i + rango);
-                    const promises = batch.map(async (val) => {
+                for (let i = 0; i < clases.length; i++) {
+                    // const batch = dat.slice(i, i + rango);
+                    // const promises = batch.map(async (val) => {
+                    clases.map(function (val) {
+                        let calificacion_table = 0;
+                        // });
                         try {
                             const materiaKey = val.numero;
                             if (!materiasMap[materiaKey]) {
@@ -399,30 +628,74 @@ function CreacionBoletas3Bimestre() {
                                     bimestre3: 0
                                 };
                             }
-                            let calificacion;
                             if (val.area === 1 || val.area === 4) {
-                                const datosDG2 = await getActividadMateria(token, materiaKey);
-                                if (datosDG2[0].actividad === 'No') {
-                                    const datosDG3 = await getEvaluacionMateria(token, {
-                                        ...data,
-                                        bimestre: a
-                                    }, materiaKey, val.descripcion);
-                                    calificacion = formatNumberDecimalOne(datosDG3.calificacion);
-                                } else {
-                                    const datosDG3 = await getAreas(token, {
-                                        ...data,
-                                        bimestre: a
-                                    }, materiaKey);
-                                    calificacion = formatNumberDecimalOne(datosDG3.calificacion);
-                                }
+                                const filtroMateria = materias.filter(materia =>
+                                    materia.numero === materiaKey
+                                );
+                                if (filtroMateria[0].actividad === 'No') {
+                                    evaluacion = materias.filter(materia => materia.numero === filtroMateria.numero);
+                                    const datosDG3 = calificaciones.filter(calificacion =>
+                                        calificacion.bimestre === a &&
+                                        calificacion.alumno === data.alumno &&
+                                        calificacion.actividad === 0 &&
+                                        calificacion.materia === materiaKey &&
+                                        calificacion.unidad <= evaluacion
+                                    )
+                                    let sumaCalificaciones = datosDG3.reduce((total, calificacion) => {
+                                        return total + parseFloat(calificacion.calificacion);
+                                    }, 0);
+                                    if (!sumaCalificaciones) {
+                                        calificacion_table = formatNumberDecimalOne(sumaCalificaciones);
+                                    } else {
+                                        calificacion_table = formatNumberDecimalOne(0);
+                                    }
+                                } else if (filtroMateria[0].actividad === 'Si') {
+                                    const calificacion = calificaciones.filter(calificacion =>
+                                        calificacion.grupo === data.grupo_nombre
+                                    );
+                                    const actividad = actividades
+                                        .filter(actividad => actividad.materia === materiaKey)
+                                        .sort((a, b) => a.secuencia - b.secuencia);
+                                    let sumatoria = 0;
+                                    let evaluaciones = 0;
+                                    actividad.forEach(act => {
+                                        const EB = `EB${a}`
+                                        const filtroActividad = calificacion.filter(calificacion =>
+                                            calificacion.alumno === data.alumno &&
+                                            calificacion.materia === materiaKey &&
+                                            calificacion.bimestre === a &&
+                                            calificacion.actividad === act.secuencia &&
+                                            calificacion.unidad <= act[EB]
+                                        );
+                                        const cpa = filtroActividad.reduce((total, calificacion) => {
+                                            return total + parseFloat(calificacion.calificacion);
+                                        }, 0);
+                                        if (cpa > 0) {
+                                            const rauw = act[EB];
+                                            sumatoria += parseFloat(cpa / rauw);
+                                            evaluaciones += 1;
+                                        }
+                                    });
+                                    if (sumatoria === 0 || evaluaciones === 0) {
+                                        calificacion_table = formatNumberDecimalOne(0);
+                                    } else {
+                                        let calificacion_total = parseFloat(sumatoria / evaluaciones)
+                                        if (calificacion_total < 5.0) {
+                                            calificacion_table = formatNumberDecimalOne(0);
+                                        } else {
+                                            calificacion_table = formatNumberDecimalOne(calificacion_total);
+                                        }
+                                    }
+                                };
+                                //-------------------------------PA ARRIBA YA ESTA JALANDO AAAAH 😭😭😭-----------------------------------------------
 
-                                materiasMap[materiaKey][`bimestre${a}`] = calificacion;
+                                materiasMap[materiaKey][`bimestre${a}`] = calificacion_table;
                                 if (val.area === 1) {
                                     datosEspañol = datosEspañol.map(item => {
                                         if (item.numero === materiaKey) {
                                             return {
                                                 ...item,
-                                                [`bimestre${a}`]: calificacion
+                                                [`bimestre${a}`]: calificacion_table
                                             };
                                         }
                                         return item;
@@ -431,28 +704,16 @@ function CreacionBoletas3Bimestre() {
                                         datosEspañol.push({
                                             numero: materiaKey,
                                             descripcion: val.descripcion,
-                                            [`bimestre${a}`]: calificacion
+                                            [`bimestre${a}`]: calificacion_table
                                         });
                                     }
-                                    // setPromediosEspañol(prev => {
-                                    //     const existingIndex = prev.findIndex(item => item.numero === materiaKey);
-                                    //     if (existingIndex >= 0) {
-                                    //         const updated = [...prev];
-                                    //         updated[existingIndex][`bimestre${a}`] = calificacion;
-                                    //         return updated;
-                                    //     } else {
-                                    //         return [
-                                    //             ...prev,
-                                    //             { numero: materiaKey, descripcion: val.descripcion, [`bimestre${a}`]: calificacion }
-                                    //         ];
-                                    //     }
-                                    // });
+                                    // console.log(datosEspañol);
                                 } else if (val.area === 4) {
                                     datosIngles = datosIngles.map(item => {
                                         if (item.numero === materiaKey) {
                                             return {
                                                 ...item,
-                                                [`bimestre${a}`]: calificacion
+                                                [`bimestre${a}`]: calificacion_table
                                             };
                                         }
                                         return item;
@@ -461,36 +722,39 @@ function CreacionBoletas3Bimestre() {
                                         datosIngles.push({
                                             numero: materiaKey,
                                             descripcion: val.descripcion,
-                                            [`bimestre${a}`]: calificacion
+                                            [`bimestre${a}`]: calificacion_table
                                         });
                                     }
-                                    // setPromediosIngles(prev => {
-                                    //     const existingIndex = prev.findIndex(item => item.numero === materiaKey);
-                                    //     if (existingIndex >= 0) {
-                                    //         const updated = [...prev];
-                                    //         updated[existingIndex][`bimestre${a}`] = calificacion;
-                                    //         return updated;
-                                    //     } else {
-                                    //         return [
-                                    //             ...prev,
-                                    //             { numero: materiaKey, descripcion: val.descripcion, [`bimestre${a}`]: calificacion }
-                                    //         ];
-                                    //     }
-                                    // });
+                                    // console.log(datosIngles);
                                 }
                             } else {
-                                const datosDG3 = await getAreasOtros(token, {
-                                    ...data,
-                                    bimestre: a
-                                }, materiaKey);
-                                calificacion = formatNumberDecimalOne(datosDG3.calificacion);
-                                materiasMap[materiaKey][`bimestre${a}`] = calificacion;
+                                // const datosDG3 = await getAreasOtros(token, {
+                                //     ...data,
+                                //     bimestre: a
+                                // }, materiaKey);
+                                let filtroCalificacion = []
+                                filtroCalificacion = calificaciones.filter(calificacion =>
+                                    calificacion.grupo === data.grupo_nombre &&
+                                    calificacion.alumno === data.alumno &&
+                                    calificacion.materia === materiaKey &&
+                                    calificacion.bimestre <= a
+                                );
+                                // const cali = filtroCalificacion.reduce((total, calificacion) => {
+                                //     return total + parseFloat(calificacion.calificacion);
+                                // }, 0);
+                                let cali = filtroCalificacion[0].calificacion
+                                if (!cali) {
+                                    calificacion_table = formatNumberDecimalOne(0);
+                                } else {
+                                    calificacion_table = formatNumberDecimalOne(cali);
+                                }
+                                materiasMap[materiaKey][`bimestre${a}`] = calificacion_table;
                                 if (val.area === 2) {
                                     datosEspañolAr2 = datosEspañolAr2.map(item => {
                                         if (item.numero === materiaKey) {
                                             return {
                                                 ...item,
-                                                [`bimestre${a}`]: calificacion
+                                                [`bimestre${a}`]: calificacion_table
                                             };
                                         }
                                         return item;
@@ -499,28 +763,15 @@ function CreacionBoletas3Bimestre() {
                                         datosEspañolAr2.push({
                                             numero: materiaKey,
                                             descripcion: val.descripcion,
-                                            [`bimestre${a}`]: calificacion
+                                            [`bimestre${a}`]: calificacion_table
                                         });
                                     }
-                                    // setPromediosEspañolAr2(prev => {
-                                    //     const existingIndex = prev.findIndex(item => item.numero === materiaKey);
-                                    //     if (existingIndex >= 0) {
-                                    //         const updated = [...prev];
-                                    //         updated[existingIndex][`bimestre${a}`] = calificacion;
-                                    //         return updated;
-                                    //     } else {
-                                    //         return [
-                                    //             ...prev,
-                                    //             { numero: materiaKey, descripcion: val.descripcion, [`bimestre${a}`]: calificacion }
-                                    //         ];
-                                    //     }
-                                    // });
                                 } else if (val.area === 3) {
                                     datosEspañolAr3 = datosEspañolAr3.map(item => {
                                         if (item.numero === materiaKey) {
                                             return {
                                                 ...item,
-                                                [`bimestre${a}`]: calificacion
+                                                [`bimestre${a}`]: calificacion_table
                                             };
                                         }
                                         return item;
@@ -529,28 +780,15 @@ function CreacionBoletas3Bimestre() {
                                         datosEspañolAr3.push({
                                             numero: materiaKey,
                                             descripcion: val.descripcion,
-                                            [`bimestre${a}`]: calificacion
+                                            [`bimestre${a}`]: calificacion_table
                                         });
                                     }
-                                    // setPromediosEspañolAr3(prev => {
-                                    //     const existingIndex = prev.findIndex(item => item.numero === materiaKey);
-                                    //     if (existingIndex >= 0) {
-                                    //         const updated = [...prev];
-                                    //         updated[existingIndex][`bimestre${a}`] = calificacion;
-                                    //         return updated;
-                                    //     } else {
-                                    //         return [
-                                    //             ...prev,
-                                    //             { numero: materiaKey, descripcion: val.descripcion, [`bimestre${a}`]: calificacion }
-                                    //         ];
-                                    //     }
-                                    // });
                                 } else if (val.area === 5) {
                                     datosInglesAr5 = datosInglesAr5.map(item => {
                                         if (item.numero === materiaKey) {
                                             return {
                                                 ...item,
-                                                [`bimestre${a}`]: calificacion
+                                                [`bimestre${a}`]: calificacion_table
                                             };
                                         }
                                         return item;
@@ -559,36 +797,22 @@ function CreacionBoletas3Bimestre() {
                                         datosInglesAr5.push({
                                             numero: materiaKey,
                                             descripcion: val.descripcion,
-                                            [`bimestre${a}`]: calificacion
+                                            [`bimestre${a}`]: calificacion_table
                                         });
                                     }
-                                    // setPromediosInglesAr5(prev => {
-                                    //     const existingIndex = prev.findIndex(item => item.numero === materiaKey);
-                                    //     if (existingIndex >= 0) {
-                                    //         const updated = [...prev];
-                                    //         updated[existingIndex][`bimestre${a}`] = calificacion;
-                                    //         return updated;
-                                    //     } else {
-                                    //         return [
-                                    //             ...prev,
-                                    //             { numero: materiaKey, descripcion: val.descripcion, [`bimestre${a}`]: calificacion }
-                                    //         ];
-                                    //     }
-                                    // });
                                 }
                             }
                         } catch (error) {
                             console.error(error);
                         }
                     });
-                    await Promise.all(promises);
                 }
             }
+            // console.log('DATA ESPAÑOL LET', datosEspañol);
+            // console.log('DATA INGLES LET', datosIngles);
+            desplegarPromedioLugar(datosEspañol, 'Español', datosEspañolAr2, datosEspañolAr3, []);
+            desplegarPromedioLugar(datosIngles, 'Ingles', [], [], datosInglesAr5);
         }
-        // console.log('DATA ESPAÑOL LET', datosEspañol);
-        // console.log('DATA INGLES LET', datosIngles);
-        desplegarPromedioLugar(datosEspañol, 'Español', datosEspañolAr2, datosEspañolAr3, []);
-        desplegarPromedioLugar(datosIngles, 'Ingles', [], [], datosInglesAr5);
         setisLoadingFind(false);
     });
 
