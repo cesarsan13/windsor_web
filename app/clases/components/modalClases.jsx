@@ -86,8 +86,8 @@ function ModalClases({
       </div>
       
       <fieldset id="fs_formapago">
-      <div className="flex flex-wrap -mx-3 mb-6">
-                    <BuscarCat
+      <div className="flex flex-col gap-3 mb-6">
+      <BuscarCat
                     table="materias"
                     itemData={setprof2}
                     fieldsToShow={columnasBuscaCat2}
@@ -132,8 +132,8 @@ function ModalClases({
                     accion={accion}
                   />
                 </div>
-      <div className="container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-3 mb-6">
-      <Inputs
+                <div className="container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6 items-start">
+                <Inputs
             dataType={"string"}
             name={"lunes"}
             tamañolabel={""}
@@ -190,7 +190,7 @@ function ModalClases({
             isDisabled={isDisabled}
           />
             </div>
-            <div className="container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-3 justify-center">
+            <div className="container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <Inputs
             dataType={"string"}
             name={"viernes"}
