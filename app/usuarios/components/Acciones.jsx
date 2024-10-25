@@ -29,5 +29,5 @@ function Acciones({ Buscar, Alta, home, Ver }) {
     </div>
   );  
 }
-
+//lkjklhjlkjlkjl
 export default Acciones;
