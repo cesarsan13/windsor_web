@@ -34,7 +34,7 @@ function ModalNuevoRegistro({
         >
           ✕
         </button>
-        <h3 className="font-bold text-lg mb-5">Añadir Pago</h3>
+        <h3 className="font-bold text-lg mb-5">Añadir Paguitos</h3>
         <fieldset id="fs_pagoimprime">
           <div className="container flex flex-col space-y-5">
             <div className="flex flex-col ">
