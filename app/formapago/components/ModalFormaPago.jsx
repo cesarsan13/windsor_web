@@ -142,7 +142,7 @@ function ModalFormaPago({
                 className={"w-4/6"}
                 Titulo={"Aplicacion:"}
                 type={"text"}
-                requerido={true}
+                requerido={false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -158,7 +158,7 @@ function ModalFormaPago({
                 className={"w-4/6"}
                 Titulo={"Cuenta Banco:"}
                 type={"text"}
-                requerido={true}
+                requerido={false}
                 isNumero={false}
                 errors={errors}
                 register={register}

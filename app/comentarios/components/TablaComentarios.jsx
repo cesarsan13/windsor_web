@@ -13,7 +13,6 @@ function TablaComentarios({
   setCurrentId,
 }) {
   const tableAction = (evt, formaComentarios, accion) => {
-    console.log("cambio id", formaComentarios.numero, formaComentarios);
     setFormaComentarios(formaComentarios);
     setAccion(accion);
     setCurrentId(formaComentarios.numero);

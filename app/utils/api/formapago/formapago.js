@@ -47,8 +47,8 @@ export const guardaFormaPAgo = async (token, data, accion) => {
       numero: data.numero,
       descripcion: data.descripcion,
       comision: Number(Elimina_Comas(data.comision)),
-      aplicacion: data.aplicacion,
-      cue_banco: data.cue_banco,
+      aplicacion: data.aplicacion || '',
+      cue_banco: data.cue_banco || '',
       baja: data.baja,
     }),
     headers: new Headers({
