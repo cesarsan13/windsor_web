@@ -616,7 +616,6 @@ function Pagos_1() {
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-center justify-between w-full">
             <div className="flex items-center space-x-4">
-              hola perras por que el modal no se actualiza alavergaaaaaa
               <Acciones
                 ImprimePDF={btnPDF}
                 home={home}

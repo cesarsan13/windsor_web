@@ -19,11 +19,12 @@ function Inputs({
   valueInput,
   dataType,
 }) {
-  if (tipoInput === 'onChange') {
+  if (tipoInput === "onChange") {
     return (
       <div className="flex flex-col">
         <label
-          className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
+          className={`input input-bordered input-sm md:input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}
+        >
           {Titulo}
           <input
             {...(maxLenght !== 0 && { maxLength: maxLenght })}
@@ -32,7 +33,7 @@ function Inputs({
             type={type}
             className={`text-black dark:text-white ${className}`}
             disabled={isDisabled}
-          // onChange={(event) => setValue(event.target.value)}
+            // onChange={(event) => setValue(event.target.value)}
           />
         </label>
         {errors[name] && (
@@ -42,11 +43,12 @@ function Inputs({
         )}
       </div>
     );
-  } else if (tipoInput === 'valueDisabled') {
+  } else if (tipoInput === "valueDisabled") {
     return (
       <div className="flex flex-col">
         <label
-          className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
+          className={`input input-bordered input-sm md:input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}
+        >
           {Titulo}
           <input
             {...(maxLenght !== 0 && { maxLength: maxLenght })}
@@ -68,11 +70,12 @@ function Inputs({
         )}
       </div>
     );
-  } else if (tipoInput === 'enterEvent') {
+  } else if (tipoInput === "enterEvent") {
     return (
       <div className="flex flex-col">
         <label
-          className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
+          className={`input input-bordered input-sm md:input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}
+        >
           {Titulo}
           <input
             {...(maxLenght !== 0 && { maxLength: maxLenght })}
@@ -95,14 +98,14 @@ function Inputs({
         )}
       </div>
     );
-  } else if (tipoInput === 'disabledInput') {
+  } else if (tipoInput === "disabledInput") {
     return (
       <input
         {...(maxLenght !== 0 && { maxLength: maxLenght })}
         name={name}
         id={name}
         type={type}
-        className={`input input-bordered bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md flex items-center gap-3 ${className}`}
+        className={`input input-bordered bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-sm md:input-md flex items-center gap-3 ${className}`}
         disabled={isDisabled}
         value={valueInput}
         {...register(name, {
@@ -110,11 +113,11 @@ function Inputs({
         })}
       />
     );
-  } else if (tipoInput === 'numberDouble') {
+  } else if (tipoInput === "numberDouble") {
     return (
       <div className="w-full md:w-1/2 px-0.5 py-2 mb-6 md:mb-0">
         <label
-          className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
+          className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
         >
           {Titulo}
           <input
@@ -147,7 +150,8 @@ function Inputs({
     return (
       <div className="flex flex-col">
         <label
-          className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
+          className={`input input-bordered input-sm md:input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}
+        >
           {Titulo}
           <input
             {...(maxLenght !== 0 && { maxLength: maxLenght })}
@@ -176,7 +180,5 @@ function Inputs({
     );
   }
 }
-
-
 
 export default Inputs;
