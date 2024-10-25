@@ -357,6 +357,7 @@ function Clases() {
         setprof2={setprof2}
       />
       <VistaPrevia
+      
         id="modalVPClase"
         titulo={"Vista PRevia de Clases"}
         pdfPreview={pdfPreview}
