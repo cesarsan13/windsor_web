@@ -17,6 +17,7 @@ function Inputs({
   register,
   arreglos,
   options,
+  defaultValue,
   // setEvent,
 }) {
   if (type === 'select') {
@@ -67,7 +68,7 @@ function Inputs({
             ...(requerido && { required: message }),
           })}
           disabled={isDisabled}
-          // onClick={(evt) => setEvent(evt.target.value)}
+        // onClick={(evt) => setEvent(evt.target.value)}
         />
         <label htmlFor={name} className={`text-black dark:text-white ${isDisabled ? 'line-through' : ''}`}>
           {Titulo}

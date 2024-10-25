@@ -4,10 +4,10 @@ import Button from "@/app/components/button";
 import { TbLoader3 } from "react-icons/tb";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
-function Acciones({ home, Alta, Buscar, Ver, isLoadingFind }) {
+function Acciones({ home, Alta, Buscar, Ver, isLoadingFind, isLoadingPDF }) {
   const images = [
     { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home, isLoading: false },
-    { src: iconos.vistaPrevia, alt: 'Vista previa', tooltipTitle: 'Vista previa', onClick: Ver, isLoading: false },
+    { src: iconos.vistaPrevia, alt: 'Vista previa', tooltipTitle: 'Vista previa', onClick: Ver, isLoading: isLoadingPDF },
     { src: iconos.buscar, alt: "Buscar", tooltipTitle: "Buscar", onClick: Buscar, isLoading: isLoadingFind },
   ];
 
