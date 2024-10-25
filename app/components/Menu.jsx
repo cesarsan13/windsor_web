@@ -250,11 +250,11 @@ function Menu({ vertical, toogle }) {
         >
           <summary>Procesos</summary>
           <ul>
-            <li>
+            {/* <li>
               <Link href="/clases" onClick={toogle}>
                 Asignacion de Asingnatura
               </Link>
-            </li>
+            </li> */}
             <li>
               <Link href="/cambio_ciclo_escolar" onClick={toogle}>
                 Cambio de Ciclo Escolar
@@ -278,6 +278,11 @@ function Menu({ vertical, toogle }) {
             <li>
               <Link href="/c_calificaciones" onClick={toogle}>
                 Calificaciones
+              </Link>
+            </li>
+            <li>
+              <Link href="/act_cobranza" onClick={toogle}>
+                Actualiza Cobranza
               </Link>
             </li>
           </ul>
@@ -426,11 +431,11 @@ function Menu({ vertical, toogle }) {
           tabIndex={0}
           className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
         >
-          <li>
+          {/* <li>
             <Link href="/clases" onClick={handleClick}>
               Asinacion de Asignatura
             </Link>
-          </li>
+          </li> */}
           <li>
             <Link href="/adicion_productos_cartera" onClick={handleClick}>
               Adición de Productos a Cartera
@@ -447,7 +452,14 @@ function Menu({ vertical, toogle }) {
             </Link>
           </li>
           <li>
-            <Link href="/clases" onClick={handleClick}>Asignacion Por Asignatura</Link>
+            <Link href="/clases" onClick={handleClick}>
+              Asignacion Por Asignatura
+            </Link>
+          </li>
+          <li>
+            <Link href="/act_cobranza" onClick={toogle}>
+              Actualiza Cobranza
+            </Link>
           </li>
           {/* 
           <li>
@@ -561,7 +573,8 @@ function Menu({ vertical, toogle }) {
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none">
+          className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none"
+        >
           Utilerias
         </div>
         <ul
@@ -569,9 +582,11 @@ function Menu({ vertical, toogle }) {
           className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
         >
           <li>
-            <Link href="/usuarios" onClick={handleClick}>Usuarios</Link>
+            <Link href="/usuarios" onClick={handleClick}>
+              Usuarios
+            </Link>
           </li>
-         {/* <li>
+          {/* <li>
             <Link href="" style={{ color: "red" }} onClick={handleClick}>Acceso a Usuarios</Link>
           </li>
           <li>

@@ -3,18 +3,59 @@ import Tooltip from "@/app/components/tooltip";
 import Button from "@/app/components/button";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
-function Acciones({ Documento, Recargos, Parciales, ImprimePDF, ImprimeExcel, home, Ver, CerrarView }) {
+function Acciones({
+  Documento,
+  Recargos,
+  Parciales,
+  ImprimePDF,
+  ImprimeExcel,
+  home,
+  Ver,
+  Alta,
+  CerrarView,
+}) {
   const images = [
-    { src: iconos.documento, alt: 'Documento', tooltipTitle: 'Documento', onClick: Documento },
-    { src: iconos.recargo, alt: 'Recargos', tooltipTitle: 'Recargos', onClick: Recargos },
-    { src: iconos.actualizar_formato, alt: 'Parciales', tooltipTitle: 'Parciales', onClick: Parciales },
-    { src: iconos.vistaPrevia, alt: 'Imprimir', tooltipTitle: 'Imprimir', onClick: ImprimePDF },
-    { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home },
+    {
+      src: iconos.alta,
+      alt: "Añadir Pago",
+      tooltipTitle: "Nuevo Pago",
+      onClick: Alta,
+    },
+    {
+      src: iconos.documento,
+      alt: "Documento",
+      tooltipTitle: "Documento",
+      onClick: Documento,
+    },
+    {
+      src: iconos.recargo,
+      alt: "Recargos",
+      tooltipTitle: "Recargos",
+      onClick: Recargos,
+    },
+    {
+      src: iconos.actualizar_formato,
+      alt: "Parciales",
+      tooltipTitle: "Parciales",
+      onClick: Parciales,
+    },
+    {
+      src: iconos.vistaPrevia,
+      alt: "Imprimir",
+      tooltipTitle: "Imprimir",
+      onClick: ImprimePDF,
+    },
+    { src: iconos.salir, alt: "Salir", tooltipTitle: "Salir", onClick: home },
   ];
   const ImageTooltip = ({ src, tooltipTitle, onClick }) => {
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
-        <Image src={src} alt={tooltipTitle} onClick={onClick} className="w-5 h-5 md:w-6 md:h-6" />
+        <Image
+          src={src}
+          alt={tooltipTitle}
+          onClick={onClick}
+          className="w-5 h-5 md:w-6 md:h-6"
+        />
       </Tooltip>
     );
   };
@@ -43,7 +84,5 @@ function Acciones({ Documento, Recargos, Parciales, ImprimePDF, ImprimeExcel, ho
     </div>
   );
 }
-
-
 
 export default Acciones;

@@ -3,6 +3,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import ModalCajeroPago from "@/app/pagos1/components/modalCajeroPago";
 import ModalDocTabla from "@/app/pagos1/components/modalDocTabla";
+import ModalNuevoRegistro from "@/app/pagos1/components/modalNuevoRegistro";
 import Acciones from "@/app/pagos1/components/Acciones";
 import { useForm } from "react-hook-form";
 import {
@@ -15,7 +16,12 @@ import {
 } from "@/app/utils/api/pagos1/pagos1";
 import { getFormasPago } from "@/app/utils/api/formapago/formapago";
 import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
-import { Elimina_Comas, formatNumber, pone_ceros, format_Fecha_String } from "@/app/utils/globalfn";
+import {
+  Elimina_Comas,
+  formatNumber,
+  pone_ceros,
+  format_Fecha_String,
+} from "@/app/utils/globalfn";
 import Button from "@/app/components/button";
 import Tooltip from "@/app/components/tooltip";
 import { useState, useEffect } from "react";
@@ -38,12 +44,7 @@ function Pagos_1() {
   const [alumnos1, setAlumnos1] = useState({});
   const [comentarios1, setComentarios1] = useState({});
   const [productos1, setProductos1] = useState({});
-  const nameInputs = ["numero", "nombre_completo"];
-  const columnasBuscaCat = ["numero", "nombre_completo"];
-  const nameInputs2 = ["numero", "comentario_1"];
-  const columnasBuscaCat2 = ["numero", "comentario_1"];
-  const nameInputs3 = ["numero", "descripcion"];
-  const columnasBuscaCat3 = ["numero", "descripcion"];
+
   const [pagos, setPagos] = useState([]);
   const [pago, setPago] = useState({});
   let [pagosFiltrados, setPagosFiltrados] = useState([]);
@@ -103,9 +104,9 @@ function Pagos_1() {
     const fetchData = async () => {
       setisLoading(true);
       if (!validar) {
-        showModal(true);
+        showModal("my_modal_3", true);
       } else {
-        showModal(false);
+        showModal("my_modal_3", false);
       }
       const today = new Date();
       const yyyy = today.getFullYear();
@@ -141,10 +142,10 @@ function Pagos_1() {
     fetchData();
   }, [productos1]);
 
-  const showModal = (show) => {
+  const showModal = (id, show) => {
     show
-      ? document.getElementById("my_modal_3").showModal()
-      : document.getElementById("my_modal_3").close();
+      ? document.getElementById(id).showModal()
+      : document.getElementById(id).close();
   };
 
   const showModal2 = (show) => {
@@ -207,7 +208,7 @@ function Pagos_1() {
         }
       }
       setdDocFiltrados((prevPagos) => [...prevPagos, newData]);
-      showModal3(true);
+      showModal("my_modal_5", true);
     } else {
       showSwal("Oppss!", "No hay documentos para cobro", "error");
     }
@@ -248,7 +249,9 @@ function Pagos_1() {
     }
     setMuestraParciales(!muestraParciales);
   };
-
+  const Alta = async () => {
+    showModal("modal_nuevo_registro", true);
+  };
   const btnParciales = (event) => {
     event.preventDefault();
     handleSubmit(submitParicales)();
@@ -428,7 +431,7 @@ function Pagos_1() {
       fecha: fecha || "",
     };
     setformaPagoPage(newData);
-    showModal2(true);
+    showModal("my_modal_4", true);
   };
 
   const BuscaArticulo = async (numero) => {
@@ -516,13 +519,13 @@ function Pagos_1() {
     if (evt.target.value === "") return;
     datatype === "int"
       ? setPago((pago) => ({
-        ...pago,
-        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-      }))
+          ...pago,
+          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+        }))
       : setPago((pago) => ({
-        ...pago,
-        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-      }));
+          ...pago,
+          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+        }));
   };
 
   const handleKeyDown = (event) => {
@@ -562,17 +565,17 @@ function Pagos_1() {
     };
     const numeroExiste = pagos.some((pago) => pago.numero === nuevoPago.numero);
     if (numeroExiste) {
-      document.getElementById("my_modal_5").close()
+      document.getElementById("my_modal_5").close();
       showSwal("Oppss!", "Numero de articulo existente en recibo", "error");
       return;
-    };
+    }
     const nuevoPagoArray = Array.isArray(nuevoPago) ? nuevoPago : [nuevoPago];
 
     muestraTotal(nuevoPago);
     setPagos((prevPagos) => [...prevPagos, ...nuevoPagoArray]);
     setPagosFiltrados((prevPagos) => [...prevPagos, ...nuevoPagoArray]);
-    document.getElementById("my_modal_5").close()
-  }
+    document.getElementById("my_modal_5").close();
+  };
 
   if (status === "loading") {
     return (
@@ -582,6 +585,19 @@ function Pagos_1() {
   return (
     <>
       <div className="h-[83vh] max-h-[83vh] container w-full bg-slate-100 rounded-3xl shadow-xl px-3 dark:bg-slate-700 overflow-y-auto">
+        <ModalNuevoRegistro
+          session={session}
+          setAlumnos1={setAlumnos1}
+          setComentarios1={setComentarios1}
+          setProductos1={setProductos1}
+          register={register}
+          errors={errors}
+          accionB={accionB}
+          colorInput={colorInput}
+          precio_base={precio_base}
+          handleKeyDown={handleKeyDown}
+          handleBlur={handleBlur}
+        />
         <ModalCajeroPago
           session={session}
           validarClaveCajero={validarClaveCajero}
@@ -594,7 +610,7 @@ function Pagos_1() {
         />
         <ModalPagoImprime
           session={session}
-          showModal={showModal2}
+          showModal={showModal} //modal4
           home={home}
           formaPagoPage={formaPagoPage}
           pagosFiltrados={pagosFiltrados}
@@ -606,7 +622,7 @@ function Pagos_1() {
         />
         <ModalDocTabla
           session={session}
-          showModal={showModal3}
+          showModal={showModal} //modal5
           docFiltrados={docFiltrados}
           isLoading={isLoading}
           tableSelect={tableSelect}
@@ -621,6 +637,7 @@ function Pagos_1() {
                 Documento={Documento}
                 Recargos={Recargos}
                 Parciales={Parciales}
+                Alta={Alta}
               />
               <h1 className="text-4xl font-xthin text-black dark:text-white">
                 Pagos
@@ -631,7 +648,6 @@ function Pagos_1() {
             </h1>
           </div>
         </div>
-
 
         {/* <div className="flex justify-start p-3">
           <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
@@ -667,103 +683,7 @@ function Pagos_1() {
                 errors={errors}
                 maxLength={15}
                 isDisabled={false}
-              // setValue={setFecha}
-              />
-            </div>
-
-            <div className="flex flex-col md:flex-row lg:flex-row ">
-              <div className="w-full">
-                <BuscarCat
-                  table="alumnos"
-                  itemData={[]}
-                  fieldsToShow={columnasBuscaCat}
-                  nameInput={nameInputs}
-                  titulo={"Alumnos: "}
-                  setItem={setAlumnos1}
-                  token={session.user.token}
-                  modalId="modal_alumnos1"
-                  alignRight={"text-right"}
-                  inputWidths={{ contdef: "180px", first: "70px", second: "150px" }}
-                />
-              </div>
-              <div className="w-full">
-                <BuscarCat
-                  table="comentarios"
-                  itemData={[]}
-                  fieldsToShow={columnasBuscaCat2}
-                  nameInput={nameInputs2}
-                  titulo={"Comentario: "}
-                  setItem={setComentarios1}
-                  token={session.user.token}
-                  modalId="modal_comentarios1"
-                  alignRight={"text-right"}
-                  inputWidths={{ contdef: "180px", first: "70px", second: "150px" }}
-                />
-              </div>
-            </div>
-            <div className="pb-4">
-              <Inputs
-                name={"comentarios"}
-                tamañolabel={""}
-                className={"rounded block grow"}
-                Titulo={"Comentarios: "}
-                requerido={false}
-                type={"text"}
-                register={register}
-                errors={errors}
-                maxLength={15}
-                isDisabled={false}
-              />
-            </div>
-            <div className="flex flex-col md:flex-row lg:flex-row ">
-              <BuscarCat
-                table="productos"
-                itemData={[]}
-                fieldsToShow={columnasBuscaCat3}
-                nameInput={nameInputs3}
-                titulo={"Articulos: "}
-                setItem={setProductos1}
-                token={session.user.token}
-                modalId="modal_articulos1"
-                accion={accionB}
-                alignRight={"text-right"}
-                inputWidths={{ contdef: "180px", first: "70px", second: "150px" }}
-              />
-              <Inputs
-                tipoInput={"enterEvent"}
-                dataType={"int"}
-                name={"cantidad_producto"}
-                tamañolabel={"w-[calc(55%)]"}
-                className={`${colorInput} text-right w-[calc(55%)]`}
-                Titulo={"Cantidad: "}
-                type={"text"}
-                requerido={false}
-                errors={errors}
-                register={register}
-                message={"numero requerido"}
-                isDisabled={false}
-                eventInput={handleKeyDown}
-                handleBlur={handleBlur}
-                maxLength={8}
-              />
-            </div>
-            <div className="pb-3">
-              <Inputs
-                tipoInput={"numberDouble"}
-                dataType={"double"}
-                name={"precio_base"}
-                tamañolabel={"w-[calc(32%)]"}
-                className={`w-[calc(32%)] text-right ${colorInput}`}
-                Titulo={"Precio Base: "}
-                type={"text"}
-                requerido={false}
-                errors={errors}
-                register={register}
-                message={"numero requerido"}
-                isDisabled={false}
-                valueInput={precio_base}
-                eventInput={handleBlur}
-                maxLength={8}
+                // setValue={setFecha}
               />
             </div>
 

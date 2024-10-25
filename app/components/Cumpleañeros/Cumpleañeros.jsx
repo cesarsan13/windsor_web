@@ -21,22 +21,18 @@ function Cumpleañeros({ cumpleañeros, mesActual }) {
               onChange={() => setCumpleView(!cumpleView)}
             />
             <div className="swap-off h-5 w-5 fill-current">
-              <Image src={iconos.tarjetas}></Image>
+              <Image src={iconos.tarjetas} alt={"Tarjetas"}></Image>
             </div>
             <div className="swap-on h-5 w-5 fill-current">
-              <Image src={iconos.lista}></Image>
+              <Image src={iconos.lista} alt={"Listas"}></Image>
             </div>
           </label>
         </div>
       </div>
       {cumpleView ? (
-        <CardsView
-          cumpleañeros={cumpleañeros}
-        ></CardsView>
+        <CardsView cumpleañeros={cumpleañeros}></CardsView>
       ) : (
-        <ListView
-          cumpleañeros={cumpleañeros}
-        ></ListView>
+        <ListView cumpleañeros={cumpleañeros}></ListView>
       )}
     </div>
   );

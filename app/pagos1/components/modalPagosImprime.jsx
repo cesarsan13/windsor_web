@@ -6,8 +6,8 @@ import BuscarCat from "@/app/components/BuscarCat";
 import { useForm } from "react-hook-form";
 import { showSwalAndWait } from "@/app/utils/alerts";
 import { format_Fecha_String } from "@/app/utils/globalfn";
-import Image from 'next/image';
-import iconos from '@/app/utils/iconos';
+import Image from "next/image";
+import iconos from "@/app/utils/iconos";
 import {
   guardarDetallePedido,
   guardaEcabYCobrD,
@@ -75,9 +75,9 @@ function ModalPagoImprime({
       let newData;
       let res;
       if (formaPagoPage.recibo <= 0) {
-        showModal(false);
+        showModal("my_modal_4", false);
         await showSwalAndWait("", "El recibo debe ser mayor a 0", "info");
-        showModal(true);
+        showModal("my_modal_4", true);
         return;
       }
       let totalFormat = Elimina_Comas(formaPagoPage.pago);
@@ -86,23 +86,23 @@ function ModalPagoImprime({
       const totalPago = imp_pago + imp_pago2;
 
       if (totalFormat !== totalPago) {
-        showModal(false);
+        showModal("my_modal_4", false);
         await showSwalAndWait(
           "",
           "Diferencia entre el total recibido contra el pago",
           "info"
         );
-        showModal(true);
+        showModal("my_modal_4", true);
         return;
       }
       if (data.pago_2 > 0 && data.referencia_2 === "") {
-        showModal(false);
+        showModal("my_modal_4", false);
         await showSwalAndWait(
           "",
           "Es necesario seleccionar segundo pago",
           "info"
         );
-        showModal(true);
+        showModal("my_modal_4", true);
         return;
       }
       setisLoading(true);
@@ -156,7 +156,7 @@ function ModalPagoImprime({
       };
       Imprimir(configuracion);
       setisLoading(false);
-      showModal(false);
+      showModal("my_modal_4", false);
     } catch (e) {
       console.log(e.message);
       setisLoading(false);
@@ -167,7 +167,9 @@ function ModalPagoImprime({
   const formaImprime = (dataSubmit) => {
     let body = [];
     for (const item of pagosFiltrados) {
-      const formaPagoFind = alumnos.find((forma) => forma.numero === item.alumno);
+      const formaPagoFind = alumnos.find(
+        (forma) => forma.numero === item.alumno
+      );
       const data = {
         alumno_id: formaPagoFind.numero || "",
         alumno_nombre_completo: formaPagoFind.nombre_completo || "",
@@ -202,13 +204,13 @@ function ModalPagoImprime({
     if (evt.target.value === "") return;
     datatype === "int"
       ? setPago((alumno) => ({
-        ...alumno,
-        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-      }))
+          ...alumno,
+          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+        }))
       : setPago((alumno) => ({
-        ...alumno,
-        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-      }));
+          ...alumno,
+          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+        }));
   };
 
   return (
@@ -218,10 +220,7 @@ function ModalPagoImprime({
           <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
             <h3 className="font-bold text-lg">Imprime.</h3>
             <div className="flex space-x-2 items-center">
-              <div
-                className={`tooltip tooltip-bottom`}
-                data-tip="Guardar"
-              >
+              <div className={`tooltip tooltip-bottom`} data-tip="Guardar">
                 <button
                   type="submit"
                   id="btn_imprimir"
@@ -232,7 +231,11 @@ function ModalPagoImprime({
                   {isLoading ? (
                     <FaSpinner className="animate-spin mx-2" />
                   ) : (
-                    <Image src={iconos.imprimir} alt="Imprimir" className="w-5 h-5 md:w-6 md:h-6" />
+                    <Image
+                      src={iconos.imprimir}
+                      alt="Imprimir"
+                      className="w-5 h-5 md:w-6 md:h-6"
+                    />
                   )}
                   {isLoading ? " Cargando..." : " Imprimir"}
                 </button>
@@ -264,7 +267,11 @@ function ModalPagoImprime({
                       modalId="modal_formpago"
                       id={formaPagoPage.forma_pago_id}
                       alignRight={"text-right"}
-                      inputWidths={{ contdef: "180px", first: "70px", second: "150px" }}
+                      inputWidths={{
+                        contdef: "180px",
+                        first: "70px",
+                        second: "150px",
+                      }}
                     />
                   </label>
                   <label className=" items-center space-x-2 dark:text-white text-black">
@@ -321,7 +328,11 @@ function ModalPagoImprime({
                       token={session.user.token}
                       modalId="modal_formpago2"
                       alignRight={"text-right"}
-                      inputWidths={{ contdef: "180px", first: "70px", second: "150px" }}
+                      inputWidths={{
+                        contdef: "180px",
+                        first: "70px",
+                        second: "150px",
+                      }}
                     />
                   </label>
                   <label className="items-center space-x-2 dark:text-white text-black">

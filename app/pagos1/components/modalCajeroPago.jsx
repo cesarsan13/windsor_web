@@ -47,23 +47,23 @@ function ModalCajeroPago({
     if (Object.keys(cajero).length > 0) {
       res = await validarClaveCajero(token, data);
       if (res.status) {
-        showModal(false);
+        showModal("my_modal_3", false);
         await showSwalAndWait(res.alert_title, res.alert_text, res.alert_icon);
         setValidar(true);
       } else {
-        showModal(false);
+        showModal("my_modal_3", false);
         await showSwalAndWait(res.alert_title, res.alert_text, res.alert_icon);
-        showModal(true);
+        showModal("my_modal_3", true);
         setValidar(false);
       }
     } else {
-      showModal(false);
+      showModal("my_modal_3", false);
       await showSwalAndWait(
         "Oppss!",
         "Para validar la clave, debe estar seleccionado un cajero",
         "error"
       );
-      showModal(true);
+      showModal("my_modal_3", true);
       setValidar(false);
     }
   });
@@ -71,7 +71,7 @@ function ModalCajeroPago({
   const backCloseAndHome = () => {
     document.getElementById("my_modal_3").close();
     home();
-  }
+  };
 
   return (
     <dialog id="my_modal_3" className="modal">
@@ -80,16 +80,17 @@ function ModalCajeroPago({
           <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
             <h3 className="font-bold text-lg">Ingresa Clave del Cajero</h3>
             <div className="flex space-x-2 items-center">
-              <div
-                className={`tooltip tooltip-bottom`}
-                data-tip="Validar"
-              >
+              <div className={`tooltip tooltip-bottom`} data-tip="Validar">
                 <button
                   type="submit"
                   id="btn_guardar"
                   className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
                 >
-                  <Image src={iconos.guardar} alt="Validar" className="w-5 h-5 md:w-6 md:h-6 mr-1" />
+                  <Image
+                    src={iconos.guardar}
+                    alt="Validar"
+                    className="w-5 h-5 md:w-6 md:h-6 mr-1"
+                  />
                   <span className="hidden sm:inline">Validar</span>
                 </button>
               </div>
@@ -113,7 +114,11 @@ function ModalCajeroPago({
                 token={session.user.token}
                 modalId="modal_cajeros"
                 alignRight={"text-right"}
-                inputWidths={{ contdef: "180px", first: "70px", second: "150px" }}
+                inputWidths={{
+                  contdef: "180px",
+                  first: "70px",
+                  second: "150px",
+                }}
               />
             </div>
             <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row lg:flex-row mt-4">
@@ -138,6 +143,5 @@ function ModalCajeroPago({
       </div>
     </dialog>
   );
-
 }
 export default ModalCajeroPago;
