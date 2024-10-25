@@ -250,11 +250,11 @@ function Menu({ vertical, toogle }) {
         >
           <summary>Procesos</summary>
           <ul>
-            {/* <li>
+            <li>
               <Link href="/clases" onClick={toogle}>
                 Asignacion de Asingnatura
               </Link>
-            </li> */}
+            </li>
             <li>
               <Link href="/cambio_ciclo_escolar" onClick={toogle}>
                 Cambio de Ciclo Escolar
@@ -431,11 +431,11 @@ function Menu({ vertical, toogle }) {
           tabIndex={0}
           className="dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow"
         >
-          {/* <li>
+          <li>
             <Link href="/clases" onClick={handleClick}>
               Asinacion de Asignatura
             </Link>
-          </li> */}
+          </li>
           <li>
             <Link href="/adicion_productos_cartera" onClick={handleClick}>
               Adición de Productos a Cartera
