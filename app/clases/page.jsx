@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useCallback } from "react";
 import Acciones from "@/app/clases/components/Acciones";
 import TablaClases from "@/app/clases/components/tablaClases";
 import { useRouter } from "next/navigation";
@@ -17,6 +17,8 @@ import Busqueda from "@/app/clases/components/Busqueda";
 import ModalClases from "@/app/clases/components/modalClases";
 import { ReportePDF } from "../utils/ReportesPDF";
 import { showSwal } from "../utils/alerts";
+import { debounce } from "../utils/globalfn";
+
 
 function Clases() {
   const router = useRouter();
@@ -30,7 +32,7 @@ function Clases() {
   const [grado, setGrado] = useState({});
   const [prof1, setprof1] = useState({});
   const [prof2, setprof2] = useState({});
-
+  const [animateLoading, setAnimateLoading] = useState(false);
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState({
     grupo: "",
@@ -58,9 +60,40 @@ function Clases() {
     fetchData();
   }, [session, status, bajas]);
 
+  const Buscar = useCallback(() => {
+    const { tb_grupo, tb_materia, tb_profesor } = busqueda;
+    if (tb_grupo === "" && tb_materia === "" && tb_profesor === "") {
+      setClasesFiltrados(clases);
+      return;
+    }
+    const infoFiltrada = clases.filter((clase) => {
+      const coincideGrupo = tb_grupo
+        ? clase["grupo"].toString().includes(tb_grupo)
+        : true;
+      const coincideMateria = tb_materia
+        ? clase["materia"].toString().includes(tb_materia)
+        : true;
+      const coincideProfesor = tb_profesor
+        ? clase["profesor"]
+            .toString()
+            .toLowerCase()
+            .includes(tb_profesor.toLowerCase())
+        : true;
+      return  (
+        coincideGrupo && coincideMateria && coincideProfesor
+      );
+    });
+    setClasesFiltrados(infoFiltrada);
+  }, [busqueda, clases]);
+
   useEffect(() => {
-    Buscar();
-  }, [busqueda]);
+    const debouncedBuscar = debounce(Buscar, 300);
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar);
+    };
+  }, [busqueda, Buscar]);
+
   const {
     register,
     handleSubmit,
@@ -95,29 +128,7 @@ function Clases() {
     });
   }, [clase, reset]);
 
-  const Buscar = () => {
-    const { tb_grupo, tb_materia, tb_profesor } = busqueda;
-    if (tb_grupo === "" && tb_materia === "" && tb_profesor === "") {
-      setClasesFiltrados(clases);
-      return;
-    }
-    const infoFiltrada = clases.filter((clase) => {
-      const coincideGrupo = tb_grupo
-        ? clase["grupo"].toString().includes(tb_grupo)
-        : true;
-      const coincideMateria = tb_materia
-        ? clase["materia"].toString().includes(tb_materia)
-        : true;
-      const coincideProfesor = tb_profesor
-        ? clase["profesor"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_profesor.toLowerCase())
-        : true;
-      return coincideGrupo && coincideMateria && coincideProfesor;
-    });
-    setClasesFiltrados(infoFiltrada);
-  };
+ 
 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
@@ -281,6 +292,7 @@ function Clases() {
     ImprimirExcel(configuracion);
   };
   const handleVerClick = () => {
+    setAnimateLoading(true);
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -330,10 +342,14 @@ function Clases() {
         Enca1(reporte);
       }
     });
-    const pdfData = reporte.doc.output("datauristring");
-    setPdfData(pdfData);
-    setPdfPreview(true);
-    showModalVista(true);
+
+    setTimeout(() => {
+      const pdfData = reporte.doc.output("datauristring");
+      setPdfData(pdfData);
+      setPdfPreview(true);
+      showModalVista(true);
+      setAnimateLoading(false);
+    }, 500)
   };
 
   const showModalVista = (show) => {
@@ -341,6 +357,13 @@ function Clases() {
       ? document.getElementById("modalVPClase").showModal()
       : document.getElementById("modalVPClase").close();
   };
+
+  const CerrarView = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVPClase").close();
+  };
+
   return (
     <>
       <ModalClases
@@ -364,6 +387,7 @@ function Clases() {
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
       <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
@@ -374,6 +398,7 @@ function Clases() {
                 Alta={Alta}
                 home={home}
                 Ver={handleVerClick}
+                animateLoading={animateLoading}
               />
             </div>
 
