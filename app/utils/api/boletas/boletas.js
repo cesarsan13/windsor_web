@@ -1,3 +1,5 @@
+import { ReportePDF } from "@/app/utils/ReportesPDF";
+
 export const getBoletas3 = async (token, grupo) => {
     let url = `${process.env.DOMAIN_API}api/proceso/boleta-get`;
     const res = await fetch(url, {
@@ -106,5 +108,72 @@ export const getDatosPorGrupo = async (token, grupo, grupo_nombre, ordenAlfabeti
     });
     const resJson = await res.json();
     return resJson.data;
+};
+
+const Enca1 = (doc, ciclo_fechas, boleta_kinder) => {
+    if (!doc.tiene_encabezado) {
+        doc.imprimeEncabezadoPrincipalV();
+        doc.nextRow(12);
+        doc.nextRow(4);
+        doc.ImpPosX("AV.SANTA ANA N° 368 COL. SAN FRANCISCO CULCHUACÁN C.P. 04420", 100, doc.tw_ren, 0, "L");
+        doc.nextRow(4);
+        doc.ImpPosX("ACUERDO N° 09980051 DEL  13 AGOSTO DE 1998", 115, doc.tw_ren, 0, "L");
+        doc.nextRow(4);
+        doc.ImpPosX("CLAVE 51-2636-510-32-PX-014", 130, doc.tw_ren, 0, "L");
+        doc.nextRow(4);
+        doc.ImpPosX("CCT 09PPR1204U", 140, doc.tw_ren, 0, "L");
+        doc.nextRow(4);
+        if (boleta_kinder) {
+            doc.ImpPosX("JARDIN DE NIÑOS", 140, doc.tw_ren, 0, "L");
+            doc.nextRow(4);
+        }
+        doc.ImpPosX(`${ciclo_fechas || ""}`, 147, doc.tw_ren, 0, "L");
+        doc.nextRow(4);
+        doc.ImpPosX("El acercamiento al colegio será una forma para asegurar el éxito del alumno", 100, doc.tw_ren, 0, "L");
+        doc.nextRow(4);
+        doc.printLineH();
+        doc.tiene_encabezado = true;
+    } else {
+        doc.nextRow(6);
+        doc.tiene_encabezado = true;
+    }
+};
+
+export const ImprimirPDF = (configuracion) => {
+    const newPDF = new ReportePDF(configuracion, "Landscape");
+    const {
+        body,
+        alumno,
+        grupo,
+        asignacion,
+        header,
+        ciclo_fechas,
+        boleta_kinder } = configuracion;
+    Enca1(newPDF, ciclo_fechas, boleta_kinder);
+
+    newPDF.nextRow(10);
+    newPDF.ImpPosX(`ALUMNO: ${alumno || ""}`, 15, newPDF.tw_ren, 0, "L");
+    newPDF.nextRow(4);
+    newPDF.ImpPosX(`GRUPO: ${grupo || ""}`, 15, newPDF.tw_ren, 0, "L");
+    newPDF.nextRow(4);
+    if (asignacion === 'asig_español') {
+        newPDF.ImpPosX(`ESPAÑOL`, 150, newPDF.tw_ren, 0, "L");
+    } else { newPDF.ImpPosX(`INGLES`, 150, newPDF.tw_ren, 0, "L"); }
+    newPDF.nextRow(4);
+    const data = body.map((boleta) => [
+        // { content: boleta.numero?.toString() ?? "", styles: { halign: 'right' } },
+        boleta.descripcion.toString(),
+        { content: boleta.bimestre1.toString(), styles: { halign: 'right' } },
+        { content: boleta.bimestre2?.toString() ?? "", styles: { halign: 'right' } },
+        { content: boleta.bimestre3?.toString() ?? "", styles: { halign: 'right' } },
+        { content: boleta.promedio?.toString() ?? "", styles: { halign: 'right' } },
+    ]);
+    newPDF.generateTable(header, data);
+    newPDF.nextRow(50);
+    // newPDF.ImpPosX("--------------------------------", 200, newPDF.tw_ren, 0, "L");]
+    newPDF.printLineZ()
+    newPDF.nextRow(6);
+    newPDF.ImpPosX("NOMBRE Y FIRMA DEL PADRE O TUTOR", 200, newPDF.tw_ren, 0, "L");
+    newPDF.guardaReporte("Boletas 3 por trimestre")
 };
 

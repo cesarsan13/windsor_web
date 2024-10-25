@@ -17,6 +17,7 @@ function Inputs({
   register,
   arreglos,
   options,
+  defaultValue,
   // setEvent,
 }) {
   if (type === 'select') {

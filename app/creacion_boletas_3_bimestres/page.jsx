@@ -17,8 +17,11 @@ import {
     getAreasOtros,
     getAreas,
     getDatosPorGrupo,
+    ImprimirPDF
 } from "@/app/utils/api/boletas/boletas";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { setGlobalVariable, globalVariables, loadGlobalVariables, formatNumberDecimalOne } from "@/app/utils/globalfn";
+import ModalVistaPreviaBoleta3 from "@/app/creacion_boletas_3_bimestres/components/modalVistaPreviaBoletas3";
 import TablaPromedioIngles from "@/app/creacion_boletas_3_bimestres/components/tablaPromedioIngles";
 function CreacionBoletas3Bimestre() {
     const router = useRouter();
@@ -37,7 +40,10 @@ function CreacionBoletas3Bimestre() {
     const [promediosIngles, setPromediosIngles] = useState([]);
     const [lugaresEspañol, setLugaresEspañol] = useState([]);
     const [lugaresIngles, setLugaresIngles] = useState([]);
+    const [animateLoading, setAnimateLoading] = useState(false);
     // const [promediosEs, setPromediosEs] = useState([]);
+    // console.log(promediosEspañol);
+    // console.log(promediosIngles);
     const {
         register,
         handleSubmit,
@@ -50,8 +56,11 @@ function CreacionBoletas3Bimestre() {
     });
     let bimestre = watch('bimestre');
     const imprimePromedio = watch('imprime_promedio');
+    const ciclo_fechas = watch('ciclo');
     const calificacionLetra = watch('calificacion_letra');
     const ordenAlfabetico = watch('orden_alfabetico');
+    const asignacion = watch('opcion');
+    const boleta_kinder = watch('boleta_kinder');
 
     useEffect(() => {
         if (status === "loading" || !session) {
@@ -818,7 +827,143 @@ function CreacionBoletas3Bimestre() {
 
     const home = () => { router.push("/"); };
 
-    const handleVerClick = () => { }
+    const handleVerClick = async () => {
+        setAnimateLoading(true);
+        cerrarModalVista();
+        if (alumno.numero === undefined || grupo.numero === undefined) {
+            showSwal(
+                "Oppss!",
+                "Para imprimir, mínimo debe estar seleccionado un Alumno o un Grupo",
+                "error"
+            );
+            setTimeout(() => {
+                setPdfPreview(false);
+                setPdfData("");
+                setAnimateLoading(false);
+                document.getElementById("modalVPBoletas3").close();
+            }, 500);
+        } else {
+            let configuracion = {
+                Encabezado: {
+                    Nombre_Aplicacion: "Sistema de Control Escolar",
+                    Nombre_Reporte: "Boletas por Trimestre",
+                    Nombre_Usuario: `Usuario: ${session.user.name}`,
+                },
+            };
+            let header = [];
+            if (asignacion === 'asig_español') {
+                configuracion = { ...configuracion, body: promediosEspañol };
+                header = ['ASIGNATURAS', '1ER TRIMESTRE', '2DO TRIMESTRE', '3ER TRIMESTRE', 'PROMEDIO FINAL'];
+            } else {
+                configuracion = { ...configuracion, body: promediosIngles };
+                header = ['SUBJECTS', '1ST TRIMESTER', '2ND TRIMESTER', '3RD TRIMESTER', 'FINAL AVERAGE'];
+            }
+            const newPDF = new ReportePDF(configuracion, "Landscape");
+            const { body } = configuracion;
+            const Enca1 = (doc) => {
+                if (!doc.tiene_encabezado) {
+                    doc.imprimeEncabezadoPrincipalV();
+                    doc.nextRow(12);
+                    doc.nextRow(4);
+                    doc.ImpPosX("AV.SANTA ANA N° 368 COL. SAN FRANCISCO CULCHUACÁN C.P. 04420", 100, doc.tw_ren, 0, "L");
+                    doc.nextRow(4);
+                    doc.ImpPosX("ACUERDO N° 09980051 DEL  13 AGOSTO DE 1998", 115, doc.tw_ren, 0, "L");
+                    doc.nextRow(4);
+                    doc.ImpPosX("CLAVE 51-2636-510-32-PX-014", 130, doc.tw_ren, 0, "L");
+                    doc.nextRow(4);
+                    doc.ImpPosX("CCT 09PPR1204U", 140, doc.tw_ren, 0, "L");
+                    doc.nextRow(4);
+                    if (boleta_kinder) {
+                        doc.ImpPosX("JARDIN DE NIÑOS", 140, doc.tw_ren, 0, "L");
+                        doc.nextRow(4);
+                    }
+                    doc.ImpPosX(`${ciclo_fechas || ""}`, 147, doc.tw_ren, 0, "L");
+                    doc.nextRow(4);
+                    doc.ImpPosX("El acercamiento al colegio será una forma para asegurar el éxito del alumno", 100, newPDF.tw_ren, 0, "L");
+                    doc.nextRow(4);
+                    doc.printLineH();
+                    doc.tiene_encabezado = true;
+                } else {
+                    doc.nextRow(6);
+                    doc.tiene_encabezado = true;
+                }
+            };
+            Enca1(newPDF);
+            newPDF.nextRow(10);
+            newPDF.ImpPosX(`ALUMNO: ${alumno.nombre || ""}`, 15, newPDF.tw_ren, 0, "L");
+            newPDF.nextRow(4);
+            newPDF.ImpPosX(`GRUPO: ${grupo.horario || ""}`, 15, newPDF.tw_ren, 0, "L");
+            newPDF.nextRow(4);
+            if (asignacion === 'asig_español') {
+                newPDF.ImpPosX(`ESPAÑOL`, 150, newPDF.tw_ren, 0, "L");
+            } else { newPDF.ImpPosX(`INGLES`, 150, newPDF.tw_ren, 0, "L"); }
+            newPDF.nextRow(4);
+            const data = body.map((boleta) => [
+                // { content: boleta.numero?.toString() ?? "", styles: { halign: 'right' } },
+                boleta.descripcion.toString(),
+                { content: boleta.bimestre1.toString(), styles: { halign: 'right' } },
+                { content: boleta.bimestre2?.toString() ?? "", styles: { halign: 'right' } },
+                { content: boleta.bimestre3?.toString() ?? "", styles: { halign: 'right' } },
+                { content: boleta.promedio?.toString() ?? "", styles: { halign: 'right' } },
+            ]);
+            newPDF.generateTable(header, data);
+            newPDF.nextRow(50);
+            // newPDF.ImpPosX("--------------------------------", 200, newPDF.tw_ren, 0, "L");]
+            newPDF.printLineZ()
+            newPDF.nextRow(6);
+            newPDF.ImpPosX("NOMBRE Y FIRMA DEL PADRE O TUTOR", 200, newPDF.tw_ren, 0, "L");
+            setTimeout(() => {
+                const pdfData = newPDF.doc.output("datauristring");
+                setPdfData(pdfData);
+                setPdfPreview(true);
+                showModalVista(true);
+                setAnimateLoading(false);
+            }, 500);
+        }
+    };
+
+    const showModalVista = (show) => {
+        show
+            ? document.getElementById("modalVPBoletas3").showModal()
+            : document.getElementById("modalVPBoletas3").close();
+    };
+
+    const cerrarModalVista = () => {
+        setPdfPreview(false);
+        setPdfData("");
+        document.getElementById("modalVPBoletas3").close();
+    };
+
+    const ImprimePDF = async () => {
+        let configuracion = {
+            Encabezado: {
+                Nombre_Aplicacion: "Sistema de Control Escolar",
+                Nombre_Reporte: "Reporte Relación General de Alumnos",
+                Nombre_Usuario: `Usuario: ${session.user.name}`,
+            },
+        };
+        let header = [];
+        if (asignacion === 'asig_español') {
+            header = ['ASIGNATURAS', '1ER TRIMESTRE', '2DO TRIMESTRE', '3ER TRIMESTRE', 'PROMEDIO FINAL'];
+            configuracion = {
+                ...configuracion,
+                body: promediosEspañol,
+                header: header,
+                ciclo_fechas: ciclo_fechas,
+                boleta_kinder: boleta_kinder,
+            };
+        } else {
+            header = ['SUBJECTS', '1ST TRIMESTER', '2ND TRIMESTER', '3RD TRIMESTER', 'FINAL AVERAGE'];
+            configuracion = {
+                ...configuracion,
+                body: promediosIngles,
+                header: header,
+                ciclo_fechas: ciclo_fechas,
+                boleta_kinder: boleta_kinder,
+            };
+        }
+        ImprimirPDF(configuracion);
+    };
 
     if (status === "loading") {
         return (
@@ -828,12 +973,12 @@ function CreacionBoletas3Bimestre() {
     return (
         <>
             <div className="h-[83vh] max-h-[83vh] container w-full bg-slate-100 rounded-3xl shadow-xl px-3 dark:bg-slate-700 overflow-y-auto">
-                {/* <ModalVistaPreviaCalis
-                pdfPreview={pdfPreview}
-                pdfData={pdfData}
-                PDF={ImprimePDF}
-                Excel={ImprimeExcel}
-            /> */}
+                <ModalVistaPreviaBoleta3
+                    pdfPreview={pdfPreview}
+                    pdfData={pdfData}
+                    PDF={ImprimePDF}
+                // Excel={ImprimeExcel}
+                />
 
                 <div className="flex flex-col justify-start p-3">
                     <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
@@ -843,6 +988,7 @@ function CreacionBoletas3Bimestre() {
                                 Buscar={Buscar}
                                 Ver={handleVerClick}
                                 isLoadingFind={isLoadingFind}
+                                isLoadingPDF={animateLoading}
                             />
                         </div>
                         <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-auto">
@@ -927,7 +1073,7 @@ function CreacionBoletas3Bimestre() {
                                     Titulo={"Selecciona tu opción"}
                                     name={"opcion"}
                                     type={"radio"}
-                                    requerido={false}
+                                    requerido={true}
                                     message={"Debes seleccionar una opción"}
                                     errors={errors}
                                     register={register}

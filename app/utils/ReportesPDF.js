@@ -22,6 +22,24 @@ export class ReportePDF {
     this.doc = new jsPDF(orientacion);
   }
 
+  generateTable(headers, data) {
+    this.doc.autoTable({
+      head: [headers],
+      body: data,
+      startY: this.tw_ren + 10,
+      theme: "plain",
+      styles: { fontSize: 10, lineWidth: 0.5, lineColor: [211, 211, 211] },
+      margin: { top: 10 },
+      didDrawPage: (data) => {
+        if (!this.tiene_encabezado) {
+          this.imprimeEncabezadoPrincipalV();
+          this.tiene_encabezado = true;
+        }
+      },
+    });
+    this.tw_ren = this.doc.lastAutoTable.finalY;
+  }
+
   //Imprime un texto, recibe como parametro el texto, la cordenada x y la cordenada y
   ImpPosX(texto, x, y, maxLength = 0, aln = "L") {
     var textoC = texto.substring(0, maxLength);
@@ -72,6 +90,9 @@ export class ReportePDF {
   }
   printLineH() {
     this.doc.line(14, this.tw_ren, 286, this.tw_ren);
+  }
+  printLineZ() {
+    this.doc.line(185, this.tw_ren, 286, this.tw_ren);
   }
 
   printLineF() {
