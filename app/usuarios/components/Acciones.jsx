@@ -20,7 +20,7 @@ function Acciones({ Buscar, Alta, home, Ver }) {
       </Tooltip>
     );
   };
-//
+
   return (
     <div className="grid grid-flow-col gap-5 justify-around w-full">
       {images.map((image,idx) => (
