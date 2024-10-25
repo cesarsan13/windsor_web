@@ -16,7 +16,7 @@ function Inputs({
   defaultValue,
   isDisabled,
   handleBlur,
-  //
+  
 }) {
   return (
     <div className="flex flex-col">

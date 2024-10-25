@@ -1,6 +1,6 @@
 "use client";
 import Loading from "@/app/components/loading";
-import NoData from "@/app/components/noData";
+import NoData from "@/app/components/NoData";
 import React from "react";
 import iconos from "@/app/utils/iconos";
 import Image from "next/image";
@@ -42,8 +42,8 @@ function TablaClases({
               </tr>
             </thead>
             <tbody>
-              {clasesFiltrados.map((item) => (
-                <tr key={item.id_grupo} className="hover:cursor-pointer">
+              {clasesFiltrados.map((item,idx) => (
+                <tr key={idx} className="hover:cursor-pointer">
                   <th
                     className={
                       typeof item.comision === "number"

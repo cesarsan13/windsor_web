@@ -13,7 +13,7 @@ function ModalVistaPreviaClases({ pdfPreview, pdfData, PDF, Excel }) {
       Object.keys(pdfData || {}).length === 0 &&
       (pdfData || {}).constructor === Object;
     setIsModalOpen(pdfPreview && !isEmptyDataPDF);
-  }, [pdfPreview, pdfData]);  //
+  }, [pdfPreview, pdfData]);  
   return (
     <dialog id="modalVPClase" className="modal">
       <div className="modal-box w-full max-w-4xl h-full">

@@ -127,7 +127,6 @@ function Clases() {
 
   const Alta = async (event) => {
     setCurrentId("");
-    const { token } = session.user;
     reset({
       grupo: "",
       materia: "",
@@ -186,7 +185,7 @@ function Clases() {
       }
        //showModal(true);
     }
-    res = await guardaClase(session.user.token, data, accion);
+    res = await guardaClase(session.user.token, data.grupo, accion);
     if (res.status) {
       if (accion === "Alta") {
         const nuevaClase = { currentID, ...data };
@@ -383,6 +382,7 @@ function Clases() {
               busqueda={busqueda}
             />
             <TablaClases
+            session={session}
                isLoading={isLoading}
                clasesFiltrados={clasesFiltrados}
                showModal={showModal}

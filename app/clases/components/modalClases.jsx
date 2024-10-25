@@ -1,6 +1,6 @@
 import { soloEnteros, soloDecimales, pone_ceros } from "@/app/utils/globalfn";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect} from "react";
 import Inputs from "@/app/cajeros/components/Inputs";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
@@ -31,6 +31,7 @@ function ModalClases({
   const nameInputs4 = ["materia", "materia_nombre"];
   const [titulo, setTitulo] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
+  console.log(session);
   useEffect(() => {
     if (accion === "Eliminar" || accion === "Ver") {
       setIsDisabled(true);
@@ -93,7 +94,7 @@ function ModalClases({
                     nameInput={nameInputs4}
                     titulo="Materias: "
                     setItem={setprof2}
-                    token={session.user.token}
+                    token={session?.user?.token}
                     modalId="modal_materias"
                     array={clase.materia}
                     id={clase.materia}
@@ -103,12 +104,12 @@ function ModalClases({
                   />
                   <BuscarCat
                     table="horarios"
-                    itemData={grupo}
+                    itemData={clase}
                     fieldsToShow={columnasBuscaCat}
                     nameInput={nameInputs}
                     titulo={"Grado: "}
                     setItem={setGrado}
-                    token={session.user.token}
+                    token={session?.user?.token}
                     modalId="modal_horarios"
                     array={clase.horario_1}
                     id={clase.numero}
@@ -121,7 +122,7 @@ function ModalClases({
                     fieldsToShow={columnasBuscaCat1}
                     nameInput={nameInputs3}
                     setItem={setprof1}
-                    token={session.user.token}
+                    token={session?.user?.token}
                     modalId="modal_profesores"
                     array={clase.profesor}
                     id={clase.profesor}
