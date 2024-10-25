@@ -219,7 +219,7 @@ function BuscarCat({
         <>
           <div className="flex items-center">
             <label
-              className={`input input-bordered  input-sm md:input-md join-item text-black dark:text-white input-md flex items-center mr-2 md:mr-0`}
+              className={`input input-bordered  input-sm md:input-md join-item text-black dark:text-white input-md flex items-center  md:mr-0`}
             >
               {/* {titulo} */}
               <input
@@ -243,7 +243,7 @@ function BuscarCat({
             </label>
             <button
               type="button"
-              className="bg-transparent join-item hover:bg-transparent border-none shadow-none dark:text-white text-black btn rounded-r-lg max-[499px]:pb-4 max-[768px]:pb-4 max-[499px]:pt-0 max-[499px]:pl-0 max-[499px]:pr-0"
+              className="bg-transparent join-item hover:bg-transparent border-none shadow-none dark:text-white text-black btn rounded-r-lg  max-[499px]:pl-0 max-[499px]:pr-0 mx-2 md:mx-0"
               onClick={Buscar}
             >
               <i className="fa-solid fa-magnifying-glass"></i>
