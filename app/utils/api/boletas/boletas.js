@@ -148,7 +148,8 @@ export const ImprimirPDF = (configuracion) => {
         asignacion,
         header,
         ciclo_fechas,
-        boleta_kinder } = configuracion;
+        boleta_kinder,
+    } = configuracion;
     Enca1(newPDF, ciclo_fechas, boleta_kinder);
 
     newPDF.nextRow(10);
@@ -160,6 +161,7 @@ export const ImprimirPDF = (configuracion) => {
         newPDF.ImpPosX(`ESPAÑOL`, 150, newPDF.tw_ren, 0, "L");
     } else { newPDF.ImpPosX(`INGLES`, 150, newPDF.tw_ren, 0, "L"); }
     newPDF.nextRow(4);
+    console.log(body);
     const data = body.map((boleta) => [
         // { content: boleta.numero?.toString() ?? "", styles: { halign: 'right' } },
         boleta.descripcion.toString(),
@@ -174,6 +176,10 @@ export const ImprimirPDF = (configuracion) => {
     newPDF.printLineZ()
     newPDF.nextRow(6);
     newPDF.ImpPosX("NOMBRE Y FIRMA DEL PADRE O TUTOR", 200, newPDF.tw_ren, 0, "L");
-    newPDF.guardaReporte("Boletas 3 por trimestre")
+    if (asignacion === 'asig_español') {
+        newPDF.guardaReporte(`Boleta3_Español_${alumno || ""}`)
+    } else {
+        newPDF.guardaReporte(`Boleta3_Ingles_${alumno || ""}`)
+    }
 };
 
