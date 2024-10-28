@@ -23,11 +23,13 @@ import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { setGlobalVariable, globalVariables, loadGlobalVariables, formatNumberDecimalOne } from "@/app/utils/globalfn";
 import ModalVistaPreviaBoleta3 from "@/app/creacion_boletas_3_bimestres/components/modalVistaPreviaBoletas3";
 import TablaPromedioIngles from "@/app/creacion_boletas_3_bimestres/components/tablaPromedioIngles";
+import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
 function CreacionBoletas3Bimestre() {
     const router = useRouter();
     const { data: session, status } = useSession();
     const [isLoading, setisLoading] = useState(false);
     const [isLoadingFind, setisLoadingFind] = useState(false);
+    const [isLoadingImprime, setisLoadingImprime] = useState(false);
     const [pdfPreview, setPdfPreview] = useState(false);
     const [pdfData, setPdfData] = useState("");
     const [grupo, setGrupo] = useState({});
@@ -41,13 +43,11 @@ function CreacionBoletas3Bimestre() {
     const [lugaresEspañol, setLugaresEspañol] = useState([]);
     const [lugaresIngles, setLugaresIngles] = useState([]);
     const [animateLoading, setAnimateLoading] = useState(false);
-    // const [promediosEs, setPromediosEs] = useState([]);
-    // console.log(promediosEspañol);
-    // console.log(promediosIngles);
     const {
         register,
         handleSubmit,
         watch,
+        setValue,
         formState: { errors },
     } = useForm({
         defaultValues: {
@@ -86,9 +86,7 @@ function CreacionBoletas3Bimestre() {
         const fetchData = async () => {
             let x;
             const datos = await getDatosPorGrupo(session.user.token, grupo.numero, grupo.horario, ordenAlfabetico);
-            // console.log(datos);
             if (!datos.alumnos || !datos.materias_español || !datos.materias_ingles || !datos.calificaciones || !datos.actividades) { return; }
-            // const alumnos = datos.alumnos;
             let alumnos_es = datos.alumnos.map(alumno => {
                 return {
                     ...alumno,
@@ -250,12 +248,8 @@ function CreacionBoletas3Bimestre() {
                 return { ...item, 6: promedio };
             });
 
-            // console.log('españolllllllllll aaaaaaaaaaaaaaaaaaaaaaaaaa', alumnos_es);
-            // setLugaresEspañol(alumnos_es);
             calcularLugares(alumnos_es, 'Español')
-            // console.log('inglesssssssssss aaaaaaaaaaaaaaaaaaaaaaaaaa', alumnos_in);
             calcularLugares(alumnos_in, 'Ingles')
-            // setLugaresIngles(alumnos_in);
         };
         fetchData();
     }, [grupo.numero]);
@@ -303,12 +297,9 @@ function CreacionBoletas3Bimestre() {
         } else {
             setLugaresIngles(alumnos);
         }
-        console.log(`${tipo}`, alumnos);
     };
 
-
-
-    const desplegarPromedioLugar = (newPromedio, tipo, newEspañolAr2, newEspañolmAr3, newInglesAr5) => {
+    const desplegarPromedioLugar = (newPromedio, tipo, newEspañolAr2, newEspañolmAr3, newInglesAr5, imprime, lugar) => {
         let newDataEspañol = [
             { numero: "", descripcion: "LUGAR", bimestre1: "", bimestre2: "", bimestre3: "", promedio: "" },
             { numero: "", descripcion: "PROMEDIO", bimestre1: "", bimestre2: "", bimestre3: "", promedio: "" }
@@ -318,43 +309,65 @@ function CreacionBoletas3Bimestre() {
             { numero: "", descripcion: "AVERAGE", bimestre1: "", bimestre2: "", bimestre3: "", promedio: "" }
         ];
         if (tipo === 'Español') {
-            // console.log(lugaresEspañol);
-            lugaresEspañol.map(function (item) {
-                if (item.numero === alumno.numero) {
-                    newDataEspañol[0].bimestre1 = item.lugar;
-
-                    if (parseInt(bimestre) > 1) {
-                        newDataEspañol[0].bimestre2 = item.lugar;
+            if (!imprime) {
+                lugaresEspañol.map(function (item) {
+                    if (item.numero === alumno.numero) {
+                        newDataEspañol[0].bimestre1 = item.lugar;
+                        if (parseInt(bimestre) > 1) {
+                            newDataEspañol[0].bimestre2 = item.lugar;
+                        }
+                        if (parseInt(bimestre) > 2) {
+                            newDataEspañol[0].bimestre3 = item.lugar;
+                        }
+                        if (imprimePromedio) {
+                            newDataEspañol[0].promedio = item.lugar;
+                        }
                     }
-                    if (parseInt(bimestre) > 2) {
-                        newDataEspañol[0].bimestre3 = item.lugar;
-                    }
-                    if (imprimePromedio) {
-                        newDataEspañol[0].promedio = item.lugar;
-                    }
+                });
+            } else {
+                newDataEspañol[0].bimestre1 = lugar;
+                if (parseInt(bimestre) > 1) {
+                    newDataEspañol[0].bimestre2 = lugar;
                 }
-            });
+                if (parseInt(bimestre) > 2) {
+                    newDataEspañol[0].bimestre3 = lugar;
+                }
+                if (imprimePromedio) {
+                    newDataEspañol[0].promedio = lugar;
+                }
+            }
         } else {
-            lugaresIngles.map(function (item) {
-                if (item.numero === alumno.numero) {
-                    newDataIngles[0].bimestre1 = item.lugar;
-
-                    if (bimestre === 2) {
-                        newDataIngles[0].bimestre2 = item.lugar;
+            if (!imprime) {
+                lugaresIngles.map(function (item) {
+                    if (item.numero === alumno.numero) {
+                        newDataIngles[0].bimestre1 = item.lugar;
+                        if (bimestre === 2) {
+                            newDataIngles[0].bimestre2 = item.lugar;
+                        }
+                        if (bimestre === 3) {
+                            newDataIngles[0].bimestre3 = item.lugar;
+                        }
+                        if (imprimePromedio) {
+                            newDataIngles[0].promedio = item.lugar;
+                        }
                     }
-                    if (bimestre === 3) {
-                        newDataIngles[0].bimestre3 = item.lugar;
-                    }
-                    if (imprimePromedio) {
-                        newDataIngles[0].promedio = item.lugar;
-                    }
+                });
+            } else {
+                newDataIngles[0].bimestre1 = lugar;
+                if (bimestre === 2) {
+                    newDataIngles[0].bimestre2 = lugar;
                 }
-            });
+                if (bimestre === 3) {
+                    newDataIngles[0].bimestre3 = lugar;
+                }
+                if (imprimePromedio) {
+                    newDataIngles[0].promedio = lugar;
+                }
+            }
         }
         if (newPromedio.length > 0) {
             for (let i = 1; i <= bimestre; i++) {
                 let promedio = calcularBimestresColumna(newPromedio, i);
-                // console.log(promedio);
                 if (promedio < 5.0) { promedio = 5.0; }
                 let formato = promedio === 10 ? "N0" : "N1";
                 let formattedValue;
@@ -451,14 +464,19 @@ function CreacionBoletas3Bimestre() {
             }
 
             if (tipo === 'Español') {
-                setPromediosEspañol(newPromedio);
-                setPromediosEspañol(prev => [...prev, ...newDataEspañol]);
-                setPromediosEspañol(prev => [...prev, ...newEspañolAr2]);
-                setPromediosEspañol(prev => [...prev, ...newEspañolmAr3]);
+                if (!imprime) {
+                    setPromediosEspañol([...newPromedio, ...newDataEspañol, ...newEspañolAr2, ...newEspañolmAr3]);
+                } else {
+                    newPromedio.push(...newDataEspañol, ...newEspañolAr2, ...newEspañolmAr3);
+                    return newPromedio
+                }
             } else {
-                setPromediosIngles(newPromedio);
-                setPromediosIngles(prev => [...prev, ...newDataIngles]);
-                setPromediosIngles(prev => [...prev, ...newInglesAr5]);
+                if (!imprime) {
+                    setPromediosIngles([...newPromedio, ...newDataIngles, ...newInglesAr5]);
+                } else {
+                    newPromedio.push(...newDataIngles, ...newInglesAr5);
+                    return newPromedio
+                }
             }
         }
     };
@@ -502,7 +520,6 @@ function CreacionBoletas3Bimestre() {
         return arregloPromedio;
     };
 
-
     const conversionALetra = (calif, tipo) => {
         let alfesp = "";
         let alfing = "";
@@ -542,21 +559,6 @@ function CreacionBoletas3Bimestre() {
         const promedio = suma / promedios.length;
         return promedio;
     };
-
-    // const calcularBimestresFila = (promedios, bim) => {
-    //     if (promedios.length === 0) return 0;
-    //     let suma = 0;
-
-    //     promedios.forEach((item) => {
-    //         const bimestreKey = `bimestre${bim}`;
-    //         if (item[bimestreKey] && !isNaN(item[bimestreKey])) {
-    //             suma += parseFloat(item[bimestreKey]);
-    //         }
-    //     });
-
-    //     const promedio = suma / promedios.length;
-    //     return promedio;
-    // };
 
     const truncarUno = (num) => {
         return Math.trunc(num * 10) / 10;
@@ -610,12 +612,426 @@ function CreacionBoletas3Bimestre() {
             showSwal('Error', 'No se encontraron datos para calcular las calificaciones.', 'error');
             return;
         }
+        if (clases.length > 0) {
+            const materiasMap = {};
+            for (let a = 1; a <= data.bimestre; a++) {
+                for (let i = 0; i < clases.length; i++) {
+                    clases.map(function (val) {
+                        let calificacion_table = 0;
+                        // });
+                        try {
+                            const materiaKey = val.numero;
+                            if (!materiasMap[materiaKey]) {
+                                materiasMap[materiaKey] = {
+                                    numero: materiaKey,
+                                    descripcion: val.descripcion,
+                                    bimestre1: 0,
+                                    bimestre2: 0,
+                                    bimestre3: 0
+                                };
+                            }
+                            if (val.area === 1 || val.area === 4) {
+                                const filtroMateria = materias.filter(materia =>
+                                    materia.numero === materiaKey
+                                );
+                                if (filtroMateria[0].actividad === 'No') {
+                                    evaluacion = materias.filter(materia => materia.numero === filtroMateria.numero);
+                                    const datosDG3 = calificaciones.filter(calificacion =>
+                                        calificacion.bimestre === a &&
+                                        calificacion.alumno === data.alumno &&
+                                        calificacion.actividad === 0 &&
+                                        calificacion.materia === materiaKey &&
+                                        calificacion.unidad <= evaluacion
+                                    )
+                                    let sumaCalificaciones = datosDG3.reduce((total, calificacion) => {
+                                        return total + parseFloat(calificacion.calificacion);
+                                    }, 0);
+                                    if (!sumaCalificaciones) {
+                                        calificacion_table = formatNumberDecimalOne(sumaCalificaciones);
+                                    } else {
+                                        calificacion_table = formatNumberDecimalOne(0);
+                                    }
+                                } else if (filtroMateria[0].actividad === 'Si') {
+                                    const calificacion = calificaciones.filter(calificacion =>
+                                        calificacion.grupo === data.grupo_nombre
+                                    );
+                                    const actividad = actividades
+                                        .filter(actividad => actividad.materia === materiaKey)
+                                        .sort((a, b) => a.secuencia - b.secuencia);
+                                    let sumatoria = 0;
+                                    let evaluaciones = 0;
+                                    actividad.forEach(act => {
+                                        const EB = `EB${a}`
+                                        const filtroActividad = calificacion.filter(calificacion =>
+                                            calificacion.alumno === data.alumno &&
+                                            calificacion.materia === materiaKey &&
+                                            calificacion.bimestre === a &&
+                                            calificacion.actividad === act.secuencia &&
+                                            calificacion.unidad <= act[EB]
+                                        );
+                                        const cpa = filtroActividad.reduce((total, calificacion) => {
+                                            return total + parseFloat(calificacion.calificacion);
+                                        }, 0);
+                                        if (cpa > 0) {
+                                            const rauw = act[EB];
+                                            sumatoria += parseFloat(cpa / rauw);
+                                            evaluaciones += 1;
+                                        }
+                                    });
+                                    if (sumatoria === 0 || evaluaciones === 0) {
+                                        calificacion_table = formatNumberDecimalOne(0);
+                                    } else {
+                                        let calificacion_total = parseFloat(sumatoria / evaluaciones)
+                                        if (calificacion_total < 5.0) {
+                                            calificacion_table = formatNumberDecimalOne(0);
+                                        } else {
+                                            calificacion_table = formatNumberDecimalOne(calificacion_total);
+                                        }
+                                    }
+                                };
+                                materiasMap[materiaKey][`bimestre${a}`] = calificacion_table;
+                                if (val.area === 1) {
+                                    datosEspañol = datosEspañol.map(item => {
+                                        if (item.numero === materiaKey) {
+                                            return {
+                                                ...item,
+                                                [`bimestre${a}`]: calificacion_table
+                                            };
+                                        }
+                                        return item;
+                                    });
+                                    if (!datosEspañol.find(item => item.numero === materiaKey)) {
+                                        datosEspañol.push({
+                                            numero: materiaKey,
+                                            descripcion: val.descripcion,
+                                            [`bimestre${a}`]: calificacion_table
+                                        });
+                                    }
+                                } else if (val.area === 4) {
+                                    datosIngles = datosIngles.map(item => {
+                                        if (item.numero === materiaKey) {
+                                            return {
+                                                ...item,
+                                                [`bimestre${a}`]: calificacion_table
+                                            };
+                                        }
+                                        return item;
+                                    });
+                                    if (!datosIngles.find(item => item.numero === materiaKey)) {
+                                        datosIngles.push({
+                                            numero: materiaKey,
+                                            descripcion: val.descripcion,
+                                            [`bimestre${a}`]: calificacion_table
+                                        });
+                                    }
+                                }
+                            } else {
+                                let filtroCalificacion = []
+                                filtroCalificacion = calificaciones.filter(calificacion =>
+                                    calificacion.grupo === data.grupo_nombre &&
+                                    calificacion.alumno === data.alumno &&
+                                    calificacion.materia === materiaKey &&
+                                    calificacion.bimestre <= a
+                                );
+                                let cali = filtroCalificacion[0].calificacion
+                                if (!cali) {
+                                    calificacion_table = formatNumberDecimalOne(0);
+                                } else {
+                                    calificacion_table = formatNumberDecimalOne(cali);
+                                }
+                                materiasMap[materiaKey][`bimestre${a}`] = calificacion_table;
+                                if (val.area === 2) {
+                                    datosEspañolAr2 = datosEspañolAr2.map(item => {
+                                        if (item.numero === materiaKey) {
+                                            return {
+                                                ...item,
+                                                [`bimestre${a}`]: calificacion_table
+                                            };
+                                        }
+                                        return item;
+                                    });
+                                    if (!datosEspañolAr2.find(item => item.numero === materiaKey)) {
+                                        datosEspañolAr2.push({
+                                            numero: materiaKey,
+                                            descripcion: val.descripcion,
+                                            [`bimestre${a}`]: calificacion_table
+                                        });
+                                    }
+                                } else if (val.area === 3) {
+                                    datosEspañolAr3 = datosEspañolAr3.map(item => {
+                                        if (item.numero === materiaKey) {
+                                            return {
+                                                ...item,
+                                                [`bimestre${a}`]: calificacion_table
+                                            };
+                                        }
+                                        return item;
+                                    });
+                                    if (!datosEspañolAr3.find(item => item.numero === materiaKey)) {
+                                        datosEspañolAr3.push({
+                                            numero: materiaKey,
+                                            descripcion: val.descripcion,
+                                            [`bimestre${a}`]: calificacion_table
+                                        });
+                                    }
+                                } else if (val.area === 5) {
+                                    datosInglesAr5 = datosInglesAr5.map(item => {
+                                        if (item.numero === materiaKey) {
+                                            return {
+                                                ...item,
+                                                [`bimestre${a}`]: calificacion_table
+                                            };
+                                        }
+                                        return item;
+                                    });
+                                    if (!datosInglesAr5.find(item => item.numero === materiaKey)) {
+                                        datosInglesAr5.push({
+                                            numero: materiaKey,
+                                            descripcion: val.descripcion,
+                                            [`bimestre${a}`]: calificacion_table
+                                        });
+                                    }
+                                }
+                            }
+                        } catch (error) { }
+                    });
+                }
+            }
+            if (asignacion === 'asig_español') {
+                desplegarPromedioLugar(datosEspañol, 'Español', datosEspañolAr2, datosEspañolAr3, [], false, '');
+            } else {
+                desplegarPromedioLugar(datosIngles, 'Ingles', [], [], datosInglesAr5, false, '');
+            }
+        }
+        setisLoadingFind(false);
+    });
+
+    const home = () => { router.push("/"); };
+
+    const handleVerClick = async () => {
+        setAnimateLoading(true);
+        cerrarModalVista();
+        if (alumno.numero === undefined || grupo.numero === undefined) {
+            showSwal(
+                "Oppss!",
+                "Para imprimir, mínimo debe estar seleccionado un Alumno o un Grupo",
+                "error"
+            );
+            setTimeout(() => {
+                setPdfPreview(false);
+                setPdfData("");
+                setAnimateLoading(false);
+                document.getElementById("modalVPBoletas3").close();
+            }, 500);
+        } else {
+            let configuracion = {
+                Encabezado: {
+                    Nombre_Aplicacion: "Sistema de Control Escolar",
+                    Nombre_Reporte: "Boletas por Trimestre",
+                    Nombre_Usuario: `Usuario: ${session.user.name}`,
+                },
+            };
+            let header = [];
+            if (asignacion === 'asig_español') {
+                configuracion = { ...configuracion, body: promediosEspañol };
+                header = ['ASIGNATURAS', '1ER TRIMESTRE', '2DO TRIMESTRE', '3ER TRIMESTRE', 'PROMEDIO FINAL'];
+            } else {
+                configuracion = { ...configuracion, body: promediosIngles };
+                header = ['SUBJECTS', '1ST TRIMESTER', '2ND TRIMESTER', '3RD TRIMESTER', 'FINAL AVERAGE'];
+            }
+            const newPDF = new ReportePDF(configuracion, "Landscape");
+            const { body } = configuracion;
+            const Enca1 = (doc) => {
+                if (!doc.tiene_encabezado) {
+                    doc.imprimeEncabezadoPrincipalV();
+                    doc.nextRow(12);
+                    doc.nextRow(4);
+                    doc.ImpPosX("AV.SANTA ANA N° 368 COL. SAN FRANCISCO CULCHUACÁN C.P. 04420", 100, doc.tw_ren, 0, "L");
+                    doc.nextRow(4);
+                    doc.ImpPosX("ACUERDO N° 09980051 DEL  13 AGOSTO DE 1998", 115, doc.tw_ren, 0, "L");
+                    doc.nextRow(4);
+                    doc.ImpPosX("CLAVE 51-2636-510-32-PX-014", 130, doc.tw_ren, 0, "L");
+                    doc.nextRow(4);
+                    doc.ImpPosX("CCT 09PPR1204U", 140, doc.tw_ren, 0, "L");
+                    doc.nextRow(4);
+                    if (boleta_kinder) {
+                        doc.ImpPosX("JARDIN DE NIÑOS", 140, doc.tw_ren, 0, "L");
+                        doc.nextRow(4);
+                    }
+                    doc.ImpPosX(`${ciclo_fechas || ""}`, 147, doc.tw_ren, 0, "L");
+                    doc.nextRow(4);
+                    doc.ImpPosX("El acercamiento al colegio será una forma para asegurar el éxito del alumno", 100, newPDF.tw_ren, 0, "L");
+                    doc.nextRow(4);
+                    doc.printLineH();
+                    doc.tiene_encabezado = true;
+                } else {
+                    doc.nextRow(6);
+                    doc.tiene_encabezado = true;
+                }
+            };
+            Enca1(newPDF);
+            newPDF.nextRow(10);
+            newPDF.ImpPosX(`ALUMNO: ${alumno.nombre || ""}`, 15, newPDF.tw_ren, 0, "L");
+            newPDF.nextRow(4);
+            newPDF.ImpPosX(`GRUPO: ${grupo.horario || ""}`, 15, newPDF.tw_ren, 0, "L");
+            newPDF.nextRow(4);
+            if (asignacion === 'asig_español') {
+                newPDF.ImpPosX(`ESPAÑOL`, 150, newPDF.tw_ren, 0, "L");
+            } else { newPDF.ImpPosX(`INGLES`, 150, newPDF.tw_ren, 0, "L"); }
+            newPDF.nextRow(4);
+            const data = body.map((boleta) => [
+                boleta.descripcion.toString(),
+                { content: boleta.bimestre1.toString(), styles: { halign: 'right' } },
+                { content: boleta.bimestre2?.toString() ?? "", styles: { halign: 'right' } },
+                { content: boleta.bimestre3?.toString() ?? "", styles: { halign: 'right' } },
+                { content: boleta.promedio?.toString() ?? "", styles: { halign: 'right' } },
+            ]);
+            newPDF.generateTable(header, data);
+            newPDF.nextRow(50);
+            newPDF.printLineZ()
+            newPDF.nextRow(6);
+            newPDF.ImpPosX("NOMBRE Y FIRMA DEL PADRE O TUTOR", 200, newPDF.tw_ren, 0, "L");
+            setTimeout(() => {
+                const pdfData = newPDF.doc.output("datauristring");
+                setPdfData(pdfData);
+                setPdfPreview(true);
+                showModalVista(true);
+                setAnimateLoading(false);
+            }, 500);
+        }
+    };
+
+    const showModalVista = (show) => {
+        show
+            ? document.getElementById("modalVPBoletas3").showModal()
+            : document.getElementById("modalVPBoletas3").close();
+    };
+
+    const cerrarModalVista = () => {
+        setPdfPreview(false);
+        setPdfData("");
+        document.getElementById("modalVPBoletas3").close();
+    };
+
+    const ImprimePDF = async () => {
+        let configuracion = {
+            Encabezado: {
+                Nombre_Aplicacion: "Sistema de Control Escolar",
+                Nombre_Reporte: "Reporte Relación General de Alumnos",
+                Nombre_Usuario: `Usuario: ${session.user.name}`,
+            },
+        };
+        let header = [];
+        if (asignacion === 'asig_español') {
+            header = ['ASIGNATURAS', '1ER TRIMESTRE', '2DO TRIMESTRE', '3ER TRIMESTRE', 'PROMEDIO FINAL'];
+            configuracion = {
+                ...configuracion,
+                body: promediosEspañol,
+                alumno: alumno.nombre,
+                grupo: grupo.horario,
+                asignacion: asignacion,
+                header: header,
+                ciclo_fechas: ciclo_fechas,
+                boleta_kinder: boleta_kinder,
+            };
+        } else {
+            header = ['SUBJECTS', '1ST TRIMESTER', '2ND TRIMESTER', '3RD TRIMESTER', 'FINAL AVERAGE'];
+            configuracion = {
+                ...configuracion,
+                body: promediosIngles,
+                alumno: alumno.nombre,
+                grupo: grupo.horario,
+                asignacion: asignacion,
+                header: header,
+                ciclo_fechas: ciclo_fechas,
+                boleta_kinder: boleta_kinder,
+            };
+        }
+        ImprimirPDF(configuracion);
+    };
+
+    const BoletasGrupoImprimir = handleSubmit(async (data) => {
+        const confirmed = await confirmSwal(
+            "¿Desea Continuar?",
+            "Esto iniciará la impresión y descarga de todas las boletas de los alumnos.",
+            "warning",
+            "Aceptar",
+            "Cancelar"
+        );
+        if (!confirmed) {
+            return;
+        }
+        setisLoadingImprime(true);
+        const alumnos = await getAlumnos(session.user.token, false);
+        const arrayEspañol = lugaresEspañol;
+        const arrayIngles = lugaresIngles;
+        if (asignacion === 'asig_español') {
+            for (const item of arrayEspañol) {
+                const estudiante = alumnos.filter(al => al.numero === item.numero);
+                await BuscarImprimirGrupos(item.numero, estudiante[0]?.nombre ?? "", data, 'Español', item.lugar);
+            }
+        } else {
+            for (const item of arrayIngles) {
+                const estudiante = alumnos.filter(al => al.numero === item.numero);
+                await BuscarImprimirGrupos(item.numero, estudiante[0]?.nombre ?? "", data, 'Ingles', item.lugar);
+            }
+        }
+        setisLoadingImprime(false);
+    });
 
 
-        // console.log(clases);
-        // console.log(materias);
-        // console.log(calificaciones);
-        // console.log(actividades);
+    const BuscarImprimirGrupos = async (numero, nombre, data, tipo, lugar) => {
+        const { token } = session.user;
+        let datosEspañol = [];
+        let datosIngles = [];
+        let datosEspañolAr2 = [];
+        let datosEspañolAr3 = [];
+        let datosInglesAr5 = [];
+
+        if (!grupo.numero) {
+            showSwal('Error', 'Debe seleccionar un grupo.', 'error');
+            setisLoadingImprime(false);
+            return;
+        }
+        if (!numero) {
+            showSwal('Error', 'Debe seleccionar un alumno.', 'error');
+            setisLoadingImprime(false);
+            return;
+        }
+        if (data.bimestre > 3) {
+            data.bimestre = 3;
+            setValue('bimestre', data.bimestre);
+        }
+        if (data.bimestre <= 0) {
+            showSwal('Error', 'El trimestre debe de ser entre 1 y 3.', 'error');
+            setisLoadingImprime(false);
+            return;
+        }
+
+        setPromediosEspañol([]);
+        setPromediosIngles([]);
+        setPromediosEspañolAr2([]);
+        setPromediosEspañolAr3([]);
+        setPromediosInglesAr5([]);
+        setisLoadingImprime(true);
+
+        data.alumno = numero;
+        data.nombre_alumno = nombre;
+        data.grupo = grupo.numero;
+        data.grupo_nombre = grupo.horario;
+
+        const datos = await getBoletas3(token, grupo.numero);
+
+        const clases = datos.clases ?? [];
+        const materias = datos.materias ?? [];
+        const calificaciones = datos.calificaciones ?? [];
+        const actividades = datos.actividades ?? [];
+
+        if (!clases.length || !materias.length || !calificaciones.length || !actividades.length) {
+            setisLoadingImprime(false);
+            showSwal('Error', 'No se encontraron datos para calcular las calificaciones.', 'error');
+            return;
+        }
 
         if (clases.length > 0) {
             const materiasMap = {};
@@ -696,8 +1112,6 @@ function CreacionBoletas3Bimestre() {
                                         }
                                     }
                                 };
-                                //-------------------------------PA ARRIBA YA ESTA JALANDO AAAAH 😭😭😭-----------------------------------------------
-
                                 materiasMap[materiaKey][`bimestre${a}`] = calificacion_table;
                                 if (val.area === 1) {
                                     datosEspañol = datosEspañol.map(item => {
@@ -716,7 +1130,6 @@ function CreacionBoletas3Bimestre() {
                                             [`bimestre${a}`]: calificacion_table
                                         });
                                     }
-                                    // console.log(datosEspañol);
                                 } else if (val.area === 4) {
                                     datosIngles = datosIngles.map(item => {
                                         if (item.numero === materiaKey) {
@@ -734,13 +1147,8 @@ function CreacionBoletas3Bimestre() {
                                             [`bimestre${a}`]: calificacion_table
                                         });
                                     }
-                                    // console.log(datosIngles);
                                 }
                             } else {
-                                // const datosDG3 = await getAreasOtros(token, {
-                                //     ...data,
-                                //     bimestre: a
-                                // }, materiaKey);
                                 let filtroCalificacion = []
                                 filtroCalificacion = calificaciones.filter(calificacion =>
                                     calificacion.grupo === data.grupo_nombre &&
@@ -748,9 +1156,6 @@ function CreacionBoletas3Bimestre() {
                                     calificacion.materia === materiaKey &&
                                     calificacion.bimestre <= a
                                 );
-                                // const cali = filtroCalificacion.reduce((total, calificacion) => {
-                                //     return total + parseFloat(calificacion.calificacion);
-                                // }, 0);
                                 let cali = filtroCalificacion[0].calificacion
                                 if (!cali) {
                                     calificacion_table = formatNumberDecimalOne(0);
@@ -811,159 +1216,52 @@ function CreacionBoletas3Bimestre() {
                                     }
                                 }
                             }
-                        } catch (error) {
-                            console.error(error);
-                        }
+                        } catch (error) { }
                     });
                 }
             }
-            // console.log('DATA ESPAÑOL LET', datosEspañol);
-            // console.log('DATA INGLES LET', datosIngles);
-            desplegarPromedioLugar(datosEspañol, 'Español', datosEspañolAr2, datosEspañolAr3, []);
-            desplegarPromedioLugar(datosIngles, 'Ingles', [], [], datosInglesAr5);
-        }
-        setisLoadingFind(false);
-    });
-
-    const home = () => { router.push("/"); };
-
-    const handleVerClick = async () => {
-        setAnimateLoading(true);
-        cerrarModalVista();
-        if (alumno.numero === undefined || grupo.numero === undefined) {
-            showSwal(
-                "Oppss!",
-                "Para imprimir, mínimo debe estar seleccionado un Alumno o un Grupo",
-                "error"
-            );
-            setTimeout(() => {
-                setPdfPreview(false);
-                setPdfData("");
-                setAnimateLoading(false);
-                document.getElementById("modalVPBoletas3").close();
-            }, 500);
-        } else {
+            if (tipo === 'Español') {
+                datosEspañol = desplegarPromedioLugar(datosEspañol, 'Español', datosEspañolAr2, datosEspañolAr3, [], true, lugar);
+            } else {
+                datosIngles = desplegarPromedioLugar(datosIngles, 'Ingles', [], [], datosInglesAr5, true, lugar);
+            }
             let configuracion = {
                 Encabezado: {
                     Nombre_Aplicacion: "Sistema de Control Escolar",
-                    Nombre_Reporte: "Boletas por Trimestre",
+                    Nombre_Reporte: "Reporte Relación General de Alumnos",
                     Nombre_Usuario: `Usuario: ${session.user.name}`,
                 },
             };
             let header = [];
-            if (asignacion === 'asig_español') {
-                configuracion = { ...configuracion, body: promediosEspañol };
+            if (tipo === 'Español') {
                 header = ['ASIGNATURAS', '1ER TRIMESTRE', '2DO TRIMESTRE', '3ER TRIMESTRE', 'PROMEDIO FINAL'];
+                configuracion = {
+                    ...configuracion,
+                    body: datosEspañol,
+                    alumno: data.nombre_alumno,
+                    grupo: data.grupo_nombre,
+                    asignacion: 'asig_español',
+                    header: header,
+                    ciclo_fechas: ciclo_fechas,
+                    boleta_kinder: boleta_kinder,
+                };
             } else {
-                configuracion = { ...configuracion, body: promediosIngles };
                 header = ['SUBJECTS', '1ST TRIMESTER', '2ND TRIMESTER', '3RD TRIMESTER', 'FINAL AVERAGE'];
+                configuracion = {
+                    ...configuracion,
+                    body: datosIngles,
+                    alumno: data.nombre_alumno,
+                    grupo: data.grupo_nombre,
+                    asignacion: 'asig_ingles',
+                    header: header,
+                    ciclo_fechas: ciclo_fechas,
+                    boleta_kinder: boleta_kinder,
+                };
             }
-            const newPDF = new ReportePDF(configuracion, "Landscape");
-            const { body } = configuracion;
-            const Enca1 = (doc) => {
-                if (!doc.tiene_encabezado) {
-                    doc.imprimeEncabezadoPrincipalV();
-                    doc.nextRow(12);
-                    doc.nextRow(4);
-                    doc.ImpPosX("AV.SANTA ANA N° 368 COL. SAN FRANCISCO CULCHUACÁN C.P. 04420", 100, doc.tw_ren, 0, "L");
-                    doc.nextRow(4);
-                    doc.ImpPosX("ACUERDO N° 09980051 DEL  13 AGOSTO DE 1998", 115, doc.tw_ren, 0, "L");
-                    doc.nextRow(4);
-                    doc.ImpPosX("CLAVE 51-2636-510-32-PX-014", 130, doc.tw_ren, 0, "L");
-                    doc.nextRow(4);
-                    doc.ImpPosX("CCT 09PPR1204U", 140, doc.tw_ren, 0, "L");
-                    doc.nextRow(4);
-                    if (boleta_kinder) {
-                        doc.ImpPosX("JARDIN DE NIÑOS", 140, doc.tw_ren, 0, "L");
-                        doc.nextRow(4);
-                    }
-                    doc.ImpPosX(`${ciclo_fechas || ""}`, 147, doc.tw_ren, 0, "L");
-                    doc.nextRow(4);
-                    doc.ImpPosX("El acercamiento al colegio será una forma para asegurar el éxito del alumno", 100, newPDF.tw_ren, 0, "L");
-                    doc.nextRow(4);
-                    doc.printLineH();
-                    doc.tiene_encabezado = true;
-                } else {
-                    doc.nextRow(6);
-                    doc.tiene_encabezado = true;
-                }
-            };
-            Enca1(newPDF);
-            newPDF.nextRow(10);
-            newPDF.ImpPosX(`ALUMNO: ${alumno.nombre || ""}`, 15, newPDF.tw_ren, 0, "L");
-            newPDF.nextRow(4);
-            newPDF.ImpPosX(`GRUPO: ${grupo.horario || ""}`, 15, newPDF.tw_ren, 0, "L");
-            newPDF.nextRow(4);
-            if (asignacion === 'asig_español') {
-                newPDF.ImpPosX(`ESPAÑOL`, 150, newPDF.tw_ren, 0, "L");
-            } else { newPDF.ImpPosX(`INGLES`, 150, newPDF.tw_ren, 0, "L"); }
-            newPDF.nextRow(4);
-            const data = body.map((boleta) => [
-                // { content: boleta.numero?.toString() ?? "", styles: { halign: 'right' } },
-                boleta.descripcion.toString(),
-                { content: boleta.bimestre1.toString(), styles: { halign: 'right' } },
-                { content: boleta.bimestre2?.toString() ?? "", styles: { halign: 'right' } },
-                { content: boleta.bimestre3?.toString() ?? "", styles: { halign: 'right' } },
-                { content: boleta.promedio?.toString() ?? "", styles: { halign: 'right' } },
-            ]);
-            newPDF.generateTable(header, data);
-            newPDF.nextRow(50);
-            // newPDF.ImpPosX("--------------------------------", 200, newPDF.tw_ren, 0, "L");]
-            newPDF.printLineZ()
-            newPDF.nextRow(6);
-            newPDF.ImpPosX("NOMBRE Y FIRMA DEL PADRE O TUTOR", 200, newPDF.tw_ren, 0, "L");
-            setTimeout(() => {
-                const pdfData = newPDF.doc.output("datauristring");
-                setPdfData(pdfData);
-                setPdfPreview(true);
-                showModalVista(true);
-                setAnimateLoading(false);
-            }, 500);
+            ImprimirPDF(configuracion);
         }
-    };
-
-    const showModalVista = (show) => {
-        show
-            ? document.getElementById("modalVPBoletas3").showModal()
-            : document.getElementById("modalVPBoletas3").close();
-    };
-
-    const cerrarModalVista = () => {
-        setPdfPreview(false);
-        setPdfData("");
-        document.getElementById("modalVPBoletas3").close();
-    };
-
-    const ImprimePDF = async () => {
-        let configuracion = {
-            Encabezado: {
-                Nombre_Aplicacion: "Sistema de Control Escolar",
-                Nombre_Reporte: "Reporte Relación General de Alumnos",
-                Nombre_Usuario: `Usuario: ${session.user.name}`,
-            },
-        };
-        let header = [];
-        if (asignacion === 'asig_español') {
-            header = ['ASIGNATURAS', '1ER TRIMESTRE', '2DO TRIMESTRE', '3ER TRIMESTRE', 'PROMEDIO FINAL'];
-            configuracion = {
-                ...configuracion,
-                body: promediosEspañol,
-                header: header,
-                ciclo_fechas: ciclo_fechas,
-                boleta_kinder: boleta_kinder,
-            };
-        } else {
-            header = ['SUBJECTS', '1ST TRIMESTER', '2ND TRIMESTER', '3RD TRIMESTER', 'FINAL AVERAGE'];
-            configuracion = {
-                ...configuracion,
-                body: promediosIngles,
-                header: header,
-                ciclo_fechas: ciclo_fechas,
-                boleta_kinder: boleta_kinder,
-            };
-        }
-        ImprimirPDF(configuracion);
-    };
+        setisLoadingImprime(false);
+    }
 
     if (status === "loading") {
         return (
@@ -977,7 +1275,6 @@ function CreacionBoletas3Bimestre() {
                     pdfPreview={pdfPreview}
                     pdfData={pdfData}
                     PDF={ImprimePDF}
-                // Excel={ImprimeExcel}
                 />
 
                 <div className="flex flex-col justify-start p-3">
@@ -987,8 +1284,10 @@ function CreacionBoletas3Bimestre() {
                                 home={home}
                                 Buscar={Buscar}
                                 Ver={handleVerClick}
+                                BoletasGrupo={BoletasGrupoImprimir}
                                 isLoadingFind={isLoadingFind}
                                 isLoadingPDF={animateLoading}
+                                isLoadingImprime={isLoadingImprime}
                             />
                         </div>
                         <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-auto">
@@ -1037,7 +1336,7 @@ function CreacionBoletas3Bimestre() {
                                     table="alumnogrupo"
                                     itemData={[]}
                                     fieldsToShow={["numero", "nombre"]}
-                                    nameInput={["Numero", "nombre"]}
+                                    nameInput={["TB_Numero", "TB_Nombre"]}
                                     titulo={"Alumnos: "}
                                     setItem={setAlumno}
                                     token={session.user.token}
@@ -1092,7 +1391,6 @@ function CreacionBoletas3Bimestre() {
                                     message={"Debes aceptar los términos"}
                                     errors={errors}
                                     register={register}
-                                // setEvent={setImprimePromedio}
                                 />
                             </div>
                             <div className="w-[62%]">
@@ -1104,7 +1402,6 @@ function CreacionBoletas3Bimestre() {
                                     message={"Debes aceptar los Términos"}
                                     errors={errors}
                                     register={register}
-                                // setEvent={setCalificacionLetra}
                                 />
                             </div>
                             <div className="w-[59%]">
@@ -1116,7 +1413,6 @@ function CreacionBoletas3Bimestre() {
                                     message={"Debes aceptar los términos"}
                                     errors={errors}
                                     register={register}
-                                // setEvent={setCalificacionLetra}
                                 />
                             </div>
                             <div className="w-[59%]">
@@ -1128,7 +1424,6 @@ function CreacionBoletas3Bimestre() {
                                     message={"Debes aceptar los términos"}
                                     errors={errors}
                                     register={register}
-                                // setEvent={setCalificacionLetra}
                                 />
                             </div>
                         </div>
