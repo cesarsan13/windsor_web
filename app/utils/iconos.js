@@ -17,6 +17,11 @@ const iconos = {
   calendario: require("@/public/Iconos/Btn_Periodo_Negro.png"),
   lista: require("@/public/Iconos/lista.png"),
   tarjetas: require("@/public/Iconos/tarjetas.png"),
+
+  //Imagenes de Fondo
+  fondoLogin: require("@/public/Iconos/Login_Ventio.JPG"),
+  fondoHome: require("@/public/Iconos/Home_Ventio.JPG"),
+
 };
 
 export default iconos;
