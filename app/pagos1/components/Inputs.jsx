@@ -18,6 +18,7 @@ function Inputs({
   eventInput,
   valueInput,
   dataType,
+  onClick,
 }) {
   if (tipoInput === "onChange") {
     return (
@@ -86,6 +87,8 @@ function Inputs({
             disabled={isDisabled}
             // onKeyDown={soloEnteros}
             onKeyDown={(evt) => eventInput(evt)}
+            onBlurCapture={(event) => handleBlur(event, type)}
+            onClick={onClick}
             {...register(name, {
               ...(requerido && { required: message }),
             })}
@@ -115,7 +118,7 @@ function Inputs({
     );
   } else if (tipoInput === "numberDouble") {
     return (
-      <div className="w-full md:w-1/2 px-0.5 py-2 mb-6 md:mb-0">
+      <div className="w-full md:w-1/2 ">
         <label
           className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
         >

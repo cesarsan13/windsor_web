@@ -125,8 +125,8 @@ function ModalCajeroPago({
               <Inputs
                 dataType={"string"}
                 name={"clave_cajero"}
-                tamañolabel={""}
-                className={"rounded block grow"}
+                tamañolabel={"w-80 md:w-80"}
+                className={"rounded block grow "}
                 Titulo={"Clave Cajero: "}
                 type={"password"}
                 requerido={true}

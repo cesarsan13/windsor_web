@@ -92,11 +92,6 @@ function Pagos_1() {
       // R_Articulo: '',
     },
   });
-
-  // useEffect(() => {
-  //   console.log(selectedTable);
-  // }, [selectedTable])
-
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
@@ -463,12 +458,12 @@ function Pagos_1() {
   const handleEnterKey = async (data) => {
     let productoInvalido = productos1.numero;
     if (!productoInvalido) {
-      showSwal("Oppss!", "Producto invalido", "error");
+      showSwal("Oppss!", "Producto invalido", "error", "modal_nuevo_registro");
       return;
     }
     let alumnoInvalido = alumnos1.numero;
     if (!alumnoInvalido) {
-      showSwal("Oppss!", "Alumno invalido", "error");
+      showSwal("Oppss!", "Alumno invalido", "error", "modal_nuevo_registro");
       return;
     }
     const precio = Elimina_Comas(precio_base);
@@ -487,7 +482,12 @@ function Pagos_1() {
     };
     const numeroExiste = pagos.some((pago) => pago.numero === nuevoPago.numero);
     if (numeroExiste) {
-      showSwal("Oppss!", "Numero de articulo existente en recibo ", "error");
+      showSwal(
+        "Oppss!",
+        "Numero de articulo existente en recibo ",
+        "error",
+        "modal_nuevo_registro"
+      );
       return;
     }
     const nuevoPagoArray = Array.isArray(nuevoPago) ? nuevoPago : [nuevoPago];
@@ -498,21 +498,18 @@ function Pagos_1() {
     setValue("cantidad_producto", "1");
     setPrecioBase("");
     setAccionB("Alta");
+    document.getElementById("numero").focus();
   };
 
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
-    datatype === "int"
-      ? setPago((pago) => ({
-          ...pago,
-          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-        }))
-      : setPago((pago) => ({
-          ...pago,
-          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-        }));
-  };
 
+    setPago((pago) => ({
+      ...pago,
+      [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+    }));
+    setValue(evt.target.name, pone_ceros(evt.target.value, 2, true));
+  };
   const handleKeyDown = (event) => {
     const key = event.key;
     if (key === "Enter") {
@@ -561,6 +558,10 @@ function Pagos_1() {
     setPagosFiltrados((prevPagos) => [...prevPagos, ...nuevoPagoArray]);
     document.getElementById("my_modal_5").close();
   };
+  const handleInputClick = (evt) => {
+    evt.preventDefault();
+    evt.target.select();
+  };
 
   if (status === "loading") {
     return (
@@ -582,6 +583,8 @@ function Pagos_1() {
           precio_base={precio_base}
           handleKeyDown={handleKeyDown}
           handleBlur={handleBlur}
+          handleInputClick={handleInputClick}
+          handleEnterKey={handleEnterKey}
         />
         <ModalCajeroPago
           session={session}
