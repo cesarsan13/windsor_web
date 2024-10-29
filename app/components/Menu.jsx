@@ -280,6 +280,11 @@ function Menu({ vertical, toogle }) {
                 Calificaciones
               </Link>
             </li>
+            <li>
+              <Link href="/concentradoCalificaciones" onClick={toogle}>
+                Concentrado de Calificaciones
+              </Link>
+            </li>
           </ul>
         </details>
       </li>
@@ -444,6 +449,11 @@ function Menu({ vertical, toogle }) {
           <li>
             <Link href="/c_calificaciones" onClick={handleClick}>
               Calificaciones
+            </Link>
+          </li>
+          <li>
+            <Link href="/concentradoCalificaciones" onClick={handleClick}>
+              Concentrado de Calificaciones
             </Link>
           </li>
           <li>
