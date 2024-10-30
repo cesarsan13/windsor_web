@@ -25,13 +25,13 @@ function TablaCalificaciones({
                     <tbody>
                         {Calificaciones.map((item)=>(
                             <tr key={item.numero} className="hover:cursor-pointer">
-                                <td>{item.descripcion}</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>{item.materia}</td>
+                                <td>{item.EB1}</td>
+                                <td>{item.EB2}</td>
+                                <td>{item.EB3}</td>
+                                <td>{item.EB4}</td>
+                                <td>{item.EB5}</td>
+                                <td>{item.promedio}</td>
                             </tr>
                         ))}
                     </tbody>
