@@ -66,15 +66,15 @@ function Alumnos() {
         : true;
       const coincideDescripcion = tb_desc
         ? alumno["nombre"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_desc.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_desc.toLowerCase())
         : true;
       const coincideGrado = tb_grado
         ? (alumno["horario_1_nombre"] || "")
-            .toString()
-            .toLowerCase()
-            .includes(tb_grado.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_grado.toLowerCase())
         : true;
       return coincideId && coincideDescripcion && coincideGrado;
     });
@@ -442,9 +442,8 @@ function Alumnos() {
         return;
       }
     }
-    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${
-      data.a_nombre || ""
-    }`.trim();
+    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${data.a_nombre || ""
+      }`.trim();
     data.nombre = nombreCompleto;
     const formData = new FormData();
     formData.append("numero", data.numero || "");
@@ -786,7 +785,7 @@ function Alumnos() {
         setcond1={setcond1}
         setcond2={setcond2}
         setFile={setFile}
-        files ={files}
+        files={files}
       />
       <VistaPrevia
         id="modalVPAlumno"
