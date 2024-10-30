@@ -60,7 +60,7 @@ function ModalAlumnos({
       setcondicion(true);
     }
   };
-  
+
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
@@ -74,11 +74,11 @@ function ModalAlumnos({
     }
   };
 
-const openFileSelector = () => {
-  if (inputfileref.current) {
-    inputfileref.current.click(); // Simula el clic en el input
-  }
-};
+  const openFileSelector = () => {
+    if (inputfileref.current) {
+      inputfileref.current.click(); // Simula el clic en el input
+    }
+  };
 
   useEffect(() => {
     if (accion === "Eliminar" || accion === "Ver") {
@@ -91,10 +91,10 @@ const openFileSelector = () => {
       accion === "Alta"
         ? `Nuevo Alumno`
         : accion === "Editar"
-        ? `Editar Alumno: ${currentID}`
-        : accion === "Eliminar"
-        ? `Eliminar Alumno: ${currentID}`
-        : `Ver Alumno: ${currentID}`
+          ? `Editar Alumno: ${currentID}`
+          : accion === "Eliminar"
+            ? `Eliminar Alumno: ${currentID}`
+            : `Ver Alumno: ${currentID}`
     );
     // const alj = JSON.stringify(alumno);
     // console.log(alumno);
@@ -103,13 +103,13 @@ const openFileSelector = () => {
     if (evt.target.value === "") return;
     datatype === "int"
       ? setAlumno((alumno) => ({
-          ...alumno,
-          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-        }))
+        ...alumno,
+        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+      }))
       : setAlumno((alumno) => ({
-          ...alumno,
-          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-        }));
+        ...alumno,
+        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+      }));
   };
   const handleTabs = (num) => {
     setActiveTab(num);
@@ -124,11 +124,10 @@ const openFileSelector = () => {
             <h3 className="font-bold text-lg">{titulo}</h3>
             <div className="flex space-x-2 items-center">
               <div
-                className={`tooltip tooltip-bottom ${
-                  accion === "Ver"
+                className={`tooltip tooltip-bottom ${accion === "Ver"
                     ? "hover:cursor-not-allowed hidden"
                     : "hover:cursor-pointer"
-                }`}
+                  }`}
                 data-tip="Guardar"
               >
                 <button
@@ -168,9 +167,8 @@ const openFileSelector = () => {
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
-                  activeTab === 1 ? "tab-active " : ""
-                }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 1 ? "tab-active " : ""
+                  }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6 px-3">
                   <Inputs
@@ -445,9 +443,8 @@ const openFileSelector = () => {
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
-                  activeTab === 2 ? "tab-active " : ""
-                }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 2 ? "tab-active " : ""
+                  }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <Inputs
@@ -563,9 +560,8 @@ const openFileSelector = () => {
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
-                  activeTab === 3 ? "tab-active " : ""
-                }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 3 ? "tab-active " : ""
+                  }`}
               >
                 <div>
                   {isCameraOn && (
@@ -603,7 +599,7 @@ const openFileSelector = () => {
                     >
                       Seleccionar Foto
                     </button>
-                    
+
                   </div>
 
                   <input
@@ -644,7 +640,7 @@ const openFileSelector = () => {
                       />
                     </div>
                   )}*/}
-                 
+
                 </div>
               </div>
 
@@ -659,9 +655,8 @@ const openFileSelector = () => {
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
-                  activeTab === 4 ? "tab-active " : ""
-                }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 4 ? "tab-active " : ""
+                  }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <BuscarCat
@@ -693,9 +688,8 @@ const openFileSelector = () => {
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
-                  activeTab === 5 ? "tab-active " : ""
-                }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 5 ? "tab-active " : ""
+                  }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <Inputs
@@ -811,9 +805,8 @@ const openFileSelector = () => {
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
-                  activeTab === 6 ? "tab-active " : ""
-                }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 6 ? "tab-active " : ""
+                  }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <Inputs
@@ -990,9 +983,8 @@ const openFileSelector = () => {
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
-                  activeTab === 7 ? "tab-active " : ""
-                }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 7 ? "tab-active " : ""
+                  }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <Inputs
@@ -1125,9 +1117,8 @@ const openFileSelector = () => {
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
-                  activeTab === 8 ? "tab-active " : ""
-                }`}
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${activeTab === 8 ? "tab-active " : ""
+                  }`}
               >
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <Inputs
