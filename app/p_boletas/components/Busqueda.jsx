@@ -1,15 +1,35 @@
 import BuscarCat from '@/app/components/BuscarCat'
+import Tooltip from '@/app/components/tooltip';
 import { soloDecimales, soloEnteros } from '@/app/utils/globalfn'
+import iconos from '@/app/utils/iconos';
+import Image from 'next/image';
 import React from 'react'
 
 function Busqueda({
     setItem1,
     item1,
     setItem2,
-    item2,
     session,
-    handleBusquedaChange
+    handleBusquedaChange,
+    setCheckPromedio,
+    setCheckCaliLetra,
+    setCheckBoletaKinder,
+    promedio,    
+    selectedOption,
+    setSelectedOption,
+    setCicloFechas,
+    cicloFechas,
 }) {
+    const handleCheckChange = (event) => {
+        if(event.target.value>5){
+            setSelectedOption(5);
+        } else{
+            setSelectedOption(event.target.value);
+        }
+    };
+    const handleCheckChangeCiclo = (event) => {
+        setCicloFechas(event.target.value)
+    }
     const ciclos = []
     for (let Tw_Ciclo = 2050; Tw_Ciclo >= 1970; Tw_Ciclo--) {
         ciclos.push(`${Tw_Ciclo} - ${Tw_Ciclo + 1}`);
@@ -26,7 +46,7 @@ function Busqueda({
                         id="bimestre"
                         className='text-black dark:text-white border-b-2 border-slate-300 w-full md:w-2/6 dark:border-slate-700 input-xs md:input-sm'
                         onKeyDown={soloEnteros}
-                        onChange={(event)=> handleBusquedaChange(event)}
+                        onChange={(event) => handleBusquedaChange(event)}
                         maxLength={1}
                     />
                 </label>
@@ -38,7 +58,9 @@ function Busqueda({
                             <input
                                 type="radio"
                                 name="ordenar"
-                                value="espanol"
+                                value="español"
+                                onChange={handleCheckChange}
+                                checked={selectedOption === "español"}
                                 className="radio checked:bg-blue-500"
                             />
                         </label>
@@ -49,6 +71,8 @@ function Busqueda({
                                 type="radio"
                                 name="ordenar"
                                 value="ingles"
+                                onChange={handleCheckChange}
+                                checked={selectedOption === "ingles"}
                                 className="radio checked:bg-blue-500"
                             />
                         </label>
@@ -59,6 +83,8 @@ function Busqueda({
                                 type="radio"
                                 name="ordenar"
                                 value="ambos"
+                                onChange={handleCheckChange}
+                                checked={selectedOption === "ambos"}
                                 className="radio checked:bg-blue-500"
                             />
                         </label>
@@ -71,6 +97,7 @@ function Busqueda({
                                 id="ch_promedio"
                                 type="checkbox"
                                 className="checkbox checkbox-md"
+                                onClick={(evt) => setCheckPromedio(evt.target.checked)}
                             />
                             <span className="label-text font-bold text-neutral-600 dark:text-neutral-200">
                                 Imprime promedio
@@ -82,6 +109,7 @@ function Busqueda({
                                 id="ch_letra"
                                 type="checkbox"
                                 className="checkbox checkbox-md"
+                                onClick={(evt) => setCheckCaliLetra(evt.target.checked)}
                             />
                             <span className="label-text font-bold text-neutral-600 dark:text-neutral-200">
                                 Calificación en letra
@@ -97,7 +125,7 @@ function Busqueda({
                     itemData={[]}
                     fieldsToShow={["numero", "horario"]}
                     nameInput={["numero", "horario"]}
-                    titulo={"Asignatura: "}
+                    titulo={"Grupo: "}
                     setItem={setItem1}
                     token={session.user.token}
                     modalId="modal_horario1"
@@ -122,6 +150,8 @@ function Busqueda({
                     <select
                         name="ciclo"
                         id="ciclo"
+                        onChange={handleCheckChangeCiclo}
+                        value={cicloFechas}
                         className='text-black dark:text-white bg-transparent p-1.5 grow bg-[#ffffff]'
                         defaultValue={`${currentYear} - ${currentYear + 1}`}
                     >
@@ -136,13 +166,25 @@ function Busqueda({
                     Prom. Gral
                     <input
                         type="text"
-                        name="bimestre"
-                        id="bimestre"
+                        name="promedio"
+                        id="promedio"
                         className='text-black dark:text-white border-b-2 border-slate-300 w-full dark:border-slate-700 input-xs md:input-sm'
                         onKeyDown={soloDecimales}
+                        value={promedio}
                         maxLength={10}
                         readOnly={true}
                     />
+                </label>
+                <label className="flex items-center gap-2">
+                    <input
+                        id="ch_letra"
+                        type="checkbox"
+                        className="checkbox checkbox-md"
+                        onClick={(evt) => setCheckBoletaKinder(evt.target.checked)}
+                    />
+                    <span className="label-text font-bold text-neutral-600 dark:text-neutral-200">
+                        BOLETA KINDER
+                    </span>
                 </label>
             </div>
         </div>
