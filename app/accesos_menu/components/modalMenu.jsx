@@ -94,21 +94,21 @@ function ModalMenu({
                 message={"numero requerido"}
                 isDisabled={true}
               />
-                <Inputs
-                  dataType={"string"}
-                  name={"descripcion"}
-                  tamañolabel={""}
-                  className={"grow"}
-                  Titulo={"Descripción: "}
-                  type={"text"}
-                  requerido={true}
-                  isNumero={false}
-                  errors={errors}
-                  register={register}
-                  message={"Descripcion requerido"}
-                  maxLenght={100}
-                  isDisabled={isDisabled}
-                />
+              <Inputs
+                dataType={"string"}
+                name={"descripcion"}
+                tamañolabel={""}
+                className={"grow"}
+                Titulo={"Descripción: "}
+                type={"text"}
+                requerido={true}
+                isNumero={false}
+                errors={errors}
+                register={register}
+                message={"Descripcion requerido"}
+                maxLenght={100}
+                isDisabled={isDisabled}
+              />
               <Inputs
                 dataType={"string"}
                 name={"ruta"}
