@@ -19,9 +19,8 @@ const iconos = {
   tarjetas: require("@/public/Iconos/tarjetas.png"),
 
   //Imagenes de Fondo
-  fondoLogin: require("@/public/Iconos/Login_Ventio.JPG"),
-  fondoHome: require("@/public/Iconos/Home_Ventio.JPG"),
-
+  fondoLogin: require("@/public/Iconos/Login_Ventio.jpg"),
+  fondoHome: require("@/public/Iconos/Home_Ventio.jpg"),
 };
 
 export default iconos;
