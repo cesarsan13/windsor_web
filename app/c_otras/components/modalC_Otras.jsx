@@ -147,7 +147,7 @@ function ModalC_Otras({
                   errors={errors}
                   register={register}
                   message={"Asignatura requerida"}
-                  maxLenght={100}
+                  maxLenght={100} 
                   isDisabled={!isDisabled}
                   handleBlur={handleBlur}
                 />

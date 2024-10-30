@@ -118,7 +118,7 @@ function Inputs({
               maxLength: {
                 value: maxLenght,
                 message: `El campo ${name} no puede tener más de ${maxLenght} caracteres`,
-              },
+              }, 
               ...(requerido && { required: message }),
             })}
             {...(dataType === "int" ||

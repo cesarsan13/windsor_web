@@ -61,7 +61,7 @@ function BuscarCat({
         let fetchedData = [];
         setisLoading(true);
         switch (table) {
-          case "asignaturascasootro":
+          case "asignaturascasootro": 
             fetchedData = await getAsignaturasCasoOtro(token, false);
             setTiutloInput(["numero", "Descripción"]);
             break;
