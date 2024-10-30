@@ -6,8 +6,6 @@ import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 function ModalNuevoRegistro({
   session,
-  setAlumnos1,
-  setComentarios1,
   setProductos1,
   register,
   errors,
@@ -18,12 +16,9 @@ function ModalNuevoRegistro({
   handleBlur,
   handleInputClick,
   handleEnterKey,
+  handleModalClick,
 }) {
-  const nameInputs = ["numero", "nombre_completo"];
-  const columnasBuscaCat = ["numero", "nombre_completo"];
-  const nameInputs2 = ["numero", "comentario_1"];
-  const columnasBuscaCat2 = ["numero", "comentario_1"];
-  const nameInputs3 = ["numero", "descripcion"];
+  const nameInputs3 = ["numero_producto", "descripcion"];
   const columnasBuscaCat3 = ["numero", "descripcion"];
   return (
     <dialog id="modal_nuevo_registro" className="modal">
@@ -33,7 +28,7 @@ function ModalNuevoRegistro({
           <div className="flex space-x-2 items-center">
             <div data-tip="Guardar">
               <button
-                onClick={handleEnterKey}
+                onClick={(evt) => handleModalClick(evt)}
                 id="btn_guardar"
                 className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm "
               >
@@ -68,56 +63,6 @@ function ModalNuevoRegistro({
         <fieldset id="fs_pagoimprime">
           <div className="container flex flex-col ">
             <div className="grid grid-flow-row gap-3">
-              <div className="w-full">
-                <BuscarCat
-                  table="alumnos"
-                  itemData={[]}
-                  fieldsToShow={columnasBuscaCat}
-                  nameInput={nameInputs}
-                  titulo={"Alumnos: "}
-                  setItem={setAlumnos1}
-                  token={session.user.token}
-                  modalId="modal_alumnos1"
-                  alignRight={"text-right"}
-                  inputWidths={{
-                    contdef: "180px",
-                    first: "70px",
-                    second: "170px",
-                  }}
-                />
-              </div>
-              <div className="w-full">
-                <BuscarCat
-                  table="comentarios"
-                  itemData={[]}
-                  fieldsToShow={columnasBuscaCat2}
-                  nameInput={nameInputs2}
-                  titulo={"Comentario: "}
-                  setItem={setComentarios1}
-                  token={session.user.token}
-                  modalId="modal_comentarios1"
-                  alignRight={"text-right"}
-                  inputWidths={{
-                    contdef: "180px",
-                    first: "70px",
-                    second: "170px",
-                  }}
-                />
-              </div>
-              <div className="w-full ">
-                <Inputs
-                  name={"comentarios"}
-                  tamañolabel={""}
-                  className={"rounded "}
-                  Titulo={"Comentario: "}
-                  requerido={false}
-                  type={"text"}
-                  register={register}
-                  errors={errors}
-                  maxLength={15}
-                  isDisabled={false}
-                />
-              </div>
               <div className="w-full">
                 <BuscarCat
                   table="productos"

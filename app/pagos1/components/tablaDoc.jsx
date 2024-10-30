@@ -44,15 +44,6 @@ function TablaDoc({ docFiltrados, isLoading, tableSelect }) {
               </tr>
             ))}
           </tbody>
-          <tfoot>
-            <tr>
-              <td>Documento</td>
-              <td>Paquete</td>
-              <td>Fecha</td>
-              <td>Saldo</td>
-              <td>Desc</td>
-            </tr>
-          </tfoot>
         </table>
       ) : (
         <NoData />

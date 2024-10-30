@@ -22,7 +22,7 @@ function TablaPagos1({
     setAccion(accion);
     if (accion === "Seleccionar") {
       setSelectedTable(pago);
-      setSelectedRow(pago.numero);
+      setSelectedRow(pago.numero_producto);
     }
     if (accion === "Eliminar") {
       deleteRow(pago);
@@ -56,7 +56,7 @@ function TablaPagos1({
             <tbody>
               {pagosFiltrados.map((item) => (
                 <tr
-                  key={item.numero}
+                  key={item.numero_producto}
                   className={`hover:cursor-pointer ${
                     selectedRow === item.numero
                       ? "dark:bg-[#334155] bg-[#f1f5f9]"
@@ -65,8 +65,8 @@ function TablaPagos1({
                   // className={`hover:cursor-pointer ${selectedRow === item.numero ? 'selected-row' : ''}`}
                   // onClick={() => setSelectedRow(item.numero)}
                 >
-                  <th className="text-right">{item.numero}</th>
-                  <td className="hidden">{item.numero}</td>
+                  <th className="text-right">{item.numero_producto}</th>
+                  <td className="hidden">{item.numero_producto}</td>
                   <td className="text-left">{item.descripcion}</td>
                   <td className="text-right">{item.documento}</td>
                   <td className="text-right">{item.cantidad_producto}</td>

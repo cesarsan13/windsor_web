@@ -1,4 +1,5 @@
 "use client";
+import BuscarCat from "@/app/components/BuscarCat";
 import React from "react";
 import { useRouter } from "next/navigation";
 import ModalCajeroPago from "@/app/pagos1/components/modalCajeroPago";
@@ -28,12 +29,9 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import "jspdf-autotable";
 import Inputs from "@/app/pagos1/components/Inputs";
-// import { Worker, Viewer } from "@react-pdf-viewer/core";
-import BuscarCat from "@/app/components/BuscarCat";
 import TablaPagos1 from "@/app/pagos1/components/tablaPagos1";
-import TablaDoc from "@/app/pagos1/components/tablaDoc";
 import ModalPagoImprime from "@/app/pagos1/components/modalPagosImprime";
-import { showSwal, showSwalAndWait } from "@/app/utils/alerts";
+import { showSwal } from "@/app/utils/alerts";
 import Swal from "sweetalert2";
 function Pagos_1() {
   const router = useRouter();
@@ -51,9 +49,6 @@ function Pagos_1() {
   const [validar, setValidar] = useState(false);
   const [accion, setAccion] = useState("");
   const [isLoading, setisLoading] = useState(false);
-  // const [TB_Busqueda, setTB_Busqueda] = useState("");
-  // const [pdfPreview, setPdfPreview] = useState(false);
-  // const [pdfData, setPdfData] = useState("");
   const [precio_base, setPrecioBase] = useState("");
   const [colorInput, setColorInput] = useState("");
   const [h1Total, setH1Total] = useState("0.00");
@@ -65,6 +60,13 @@ function Pagos_1() {
   const [docFiltrados, setdDocFiltrados] = useState([]);
   const [alumnos, setAlumnos] = useState([]);
   const [accionB, setAccionB] = useState("");
+  const [bloqueaEncabezado, setBloqueaEncabezado] = useState(false);
+
+  const nameInputs = ["numero", "nombre_completo"];
+  const columnasBuscaCat = ["numero", "nombre_completo"];
+  const nameInputs2 = ["numero", "comentario_1"];
+  const columnasBuscaCat2 = ["numero", "comentario_1"];
+
   const {
     register,
     handleSubmit,
@@ -73,7 +75,7 @@ function Pagos_1() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      numero: 0,
+      numero_producto: 0,
       alumno: 0,
       descripcion: "",
       fecha: "",
@@ -88,8 +90,6 @@ function Pagos_1() {
       recargo: 0,
       monto_parcial: 0,
       clave_acceso: "",
-      // D_Recargo: '',
-      // R_Articulo: '',
     },
   });
   useEffect(() => {
@@ -123,7 +123,6 @@ function Pagos_1() {
     };
     fetchData();
   }, [session, status, validar, cargado, setValue]);
-
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
@@ -136,6 +135,16 @@ function Pagos_1() {
     };
     fetchData();
   }, [productos1]);
+
+  useEffect(() => {
+    if (accionB === "Alta") {
+      setAccionB("");
+    }
+  }, [accionB]);
+
+  useEffect(() => {
+    setBloqueaEncabezado(pagosFiltrados.length > 0);
+  }, [pagosFiltrados]);
 
   const showModal = (id, show) => {
     show
@@ -232,7 +241,7 @@ function Pagos_1() {
     }
     setMuestraParciales(!muestraParciales);
   };
-  const Alta = async () => {
+  const Alta = () => {
     showModal("modal_nuevo_registro", true);
   };
   const btnParciales = (event) => {
@@ -250,7 +259,7 @@ function Pagos_1() {
     let res2;
     let fecha = data.fecha;
     const { token } = session.user;
-    let validar = selectedTable.numero;
+    let validar = selectedTable.numero_producto;
 
     if (!validar) {
       showSwal("Error!", "No hay ningun articulo seleccionado ", "error");
@@ -314,7 +323,7 @@ function Pagos_1() {
         Doc_Ant = Arma_Doc;
         const newData = {
           alumno: selectedTable.alumno || 0,
-          producto: selectedTable.numero || 0,
+          producto: selectedTable.numero_producto || 0,
           numero_doc: Doc_Ant || 0,
           fecha: data.fecha || "",
           descuento: 0,
@@ -364,7 +373,9 @@ function Pagos_1() {
       documento: "",
       descuento: 0,
     };
-    const numeroExiste = pagos.some((pago) => pago.numero === nuevoPago.numero);
+    const numeroExiste = pagos.some(
+      (pago) => pago.numero_producto === nuevoPago.numero_producto
+    );
     if (numeroExiste) {
       showSwal("Oppss!", "Numero de articulo existente en recibo' ", "error");
       setMuestraRecargos(false);
@@ -432,9 +443,13 @@ function Pagos_1() {
   };
 
   const EliminarCampo = (data) => {
-    const index = pagos.findIndex((p) => p.numero === data.numero);
+    const index = pagos.findIndex(
+      (p) => p.numero_producto === data.numero_producto
+    );
     if (index !== -1) {
-      const pFiltrados = pagos.filter((p) => p.numero !== data.numero);
+      const pFiltrados = pagos.filter(
+        (p) => p.numero_producto !== data.numero_producto
+      );
       const fTotal = Elimina_Comas(h1Total);
       const dTotal = Elimina_Comas(data.total);
       let restaTotal = fTotal - dTotal;
@@ -447,13 +462,6 @@ function Pagos_1() {
       setPagosFiltrados(pFiltrados);
     }
   };
-
-  useEffect(() => {
-    if (accionB === "Alta") {
-      setAccionB("");
-      // setProductos1({});
-    }
-  }, [accionB]);
 
   const handleEnterKey = async (data) => {
     let productoInvalido = productos1.numero;
@@ -474,13 +482,15 @@ function Pagos_1() {
       neto: precio_base || 0,
       total: totalFormat || 0,
       alumno: alumnos1.numero || 0,
-      numero: productos1.numero || 0,
+      numero_producto: productos1.numero || 0,
       descripcion: productos1.descripcion || "",
       cantidad_producto: data.cantidad_producto || 0,
       documento: "",
       descuento: 0,
     };
-    const numeroExiste = pagos.some((pago) => pago.numero === nuevoPago.numero);
+    const numeroExiste = pagos.some(
+      (pago) => pago.numero_producto === nuevoPago.numero_producto
+    );
     if (numeroExiste) {
       showSwal(
         "Oppss!",
@@ -498,7 +508,7 @@ function Pagos_1() {
     setValue("cantidad_producto", "1");
     setPrecioBase("");
     setAccionB("Alta");
-    document.getElementById("numero").focus();
+    document.getElementById("numero_producto").focus();
   };
 
   const handleBlur = (evt, datatype) => {
@@ -509,6 +519,10 @@ function Pagos_1() {
       [evt.target.name]: pone_ceros(evt.target.value, 2, true),
     }));
     setValue(evt.target.name, pone_ceros(evt.target.value, 2, true));
+  };
+  const handleModalClick = (event) => {
+    event.preventDefault();
+    handleSubmit(handleEnterKey)();
   };
   const handleKeyDown = (event) => {
     const key = event.key;
@@ -535,7 +549,7 @@ function Pagos_1() {
   const tableSelect = (evt, item) => {
     console.log(item);
     const nuevoPago = {
-      numero: item.numero,
+      numero_producto: item.paquete,
       descripcion: item.nombre_producto,
       documento: "",
       cantidad_producto: 1,
@@ -545,7 +559,9 @@ function Pagos_1() {
       total: item.saldo,
       alumno: item.alumno,
     };
-    const numeroExiste = pagos.some((pago) => pago.numero === nuevoPago.numero);
+    const numeroExiste = pagos.some(
+      (pago) => pago.numero_producto === nuevoPago.numero_producto
+    );
     if (numeroExiste) {
       document.getElementById("my_modal_5").close();
       showSwal("Oppss!", "Numero de articulo existente en recibo", "error");
@@ -570,54 +586,52 @@ function Pagos_1() {
   }
   return (
     <>
-      <div className="h-[83vh] max-h-[83vh] container w-full bg-slate-100 rounded-3xl shadow-xl px-3 dark:bg-slate-700 overflow-y-auto">
-        <ModalNuevoRegistro
-          session={session}
-          setAlumnos1={setAlumnos1}
-          setComentarios1={setComentarios1}
-          setProductos1={setProductos1}
-          register={register}
-          errors={errors}
-          accionB={accionB}
-          colorInput={colorInput}
-          precio_base={precio_base}
-          handleKeyDown={handleKeyDown}
-          handleBlur={handleBlur}
-          handleInputClick={handleInputClick}
-          handleEnterKey={handleEnterKey}
-        />
-        <ModalCajeroPago
-          session={session}
-          validarClaveCajero={validarClaveCajero}
-          showModal={showModal}
-          setValidar={setValidar}
-          home={home}
-          setCajero={setCajero}
-          cajero={cajero}
-          isLoading={isLoading}
-        />
-        <ModalPagoImprime
-          session={session}
-          showModal={showModal} //modal4
-          home={home}
-          formaPagoPage={formaPagoPage}
-          pagosFiltrados={pagosFiltrados}
-          alumnos1={alumnos1}
-          productos1={productos1}
-          comentarios1={comentarios1}
-          cajero={cajero}
-          alumnos={alumnos}
-        />
-        <ModalDocTabla
-          session={session}
-          showModal={showModal} //modal5
-          docFiltrados={docFiltrados}
-          isLoading={isLoading}
-          tableSelect={tableSelect}
-        />
-
+      <ModalNuevoRegistro
+        session={session}
+        setProductos1={setProductos1}
+        register={register}
+        errors={errors}
+        accionB={accionB}
+        colorInput={colorInput}
+        precio_base={precio_base}
+        handleKeyDown={handleKeyDown}
+        handleBlur={handleBlur}
+        handleInputClick={handleInputClick}
+        handleEnterKey={handleEnterKey}
+        handleModalClick={handleModalClick}
+      />
+      <ModalCajeroPago
+        session={session}
+        validarClaveCajero={validarClaveCajero}
+        showModal={showModal}
+        setValidar={setValidar}
+        home={home}
+        setCajero={setCajero}
+        cajero={cajero}
+        isLoading={isLoading}
+      />
+      <ModalPagoImprime
+        session={session}
+        showModal={showModal} //modal4
+        home={home}
+        formaPagoPage={formaPagoPage}
+        pagosFiltrados={pagosFiltrados}
+        alumnos1={alumnos1}
+        productos1={productos1}
+        comentarios1={comentarios1}
+        cajero={cajero}
+        alumnos={alumnos}
+      />
+      <ModalDocTabla
+        session={session}
+        showModal={showModal} //modal5
+        docFiltrados={docFiltrados}
+        isLoading={isLoading}
+        tableSelect={tableSelect}
+      />
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
-          <div className="flex flex-wrap md:flex-nowrap items-center justify-between w-full">
+          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="flex items-center space-x-4">
               <Acciones
                 ImprimePDF={btnPDF}
@@ -637,27 +651,8 @@ function Pagos_1() {
           </div>
         </div>
 
-        {/* <div className="flex justify-start p-3">
-          <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
-            Pagos.
-          </h1>
-          <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12 ml-auto">
-            {h1Total}
-          </h1>
-        </div> */}
-
-        <div className="grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
-          {/* <div className="col-span-1 flex flex-col">
-            <Acciones
-              ImprimePDF={btnPDF}
-              home={home}
-              Documento={Documento}
-              Recargos={Recargos}
-              Parciales={Parciales}
-            />
-          </div> */}
-
-          <div className="col-span-7">
+        <div className="flex flex-col items-center h-full">
+          <div className="w-full max-w-4xl">
             <div className="flex flex-col md:flex-row lg:flex-row pb-4">
               <Inputs
                 tipoInput={""}
@@ -671,8 +666,61 @@ function Pagos_1() {
                 errors={errors}
                 maxLength={15}
                 isDisabled={false}
-                // setValue={setFecha}
               />
+            </div>
+            <div className="grid grid-flow-row gap-3 ">
+              <div className="w-full">
+                <BuscarCat
+                  deshabilitado={bloqueaEncabezado}
+                  table="alumnos"
+                  itemData={[]}
+                  fieldsToShow={columnasBuscaCat}
+                  nameInput={nameInputs}
+                  titulo={"Alumnos: "}
+                  setItem={setAlumnos1}
+                  token={session.user.token}
+                  modalId="modal_alumnos1"
+                  alignRight={"text-right"}
+                  inputWidths={{
+                    contdef: "180px",
+                    first: "70px",
+                    second: "170px",
+                  }}
+                />
+              </div>
+              <div className="w-full">
+                <BuscarCat
+                  deshabilitado={bloqueaEncabezado}
+                  table="comentarios"
+                  itemData={[]}
+                  fieldsToShow={columnasBuscaCat2}
+                  nameInput={nameInputs2}
+                  titulo={"Comentario: "}
+                  setItem={setComentarios1}
+                  token={session.user.token}
+                  modalId="modal_comentarios1"
+                  alignRight={"text-right"}
+                  inputWidths={{
+                    contdef: "180px",
+                    first: "70px",
+                    second: "170px",
+                  }}
+                />
+              </div>
+              <div className="w-full ">
+                <Inputs
+                  name={"comentarios"}
+                  tamañolabel={""}
+                  className={"rounded "}
+                  Titulo={"Comentario: "}
+                  requerido={false}
+                  type={"text"}
+                  register={register}
+                  errors={errors}
+                  maxLength={15}
+                  isDisabled={bloqueaEncabezado}
+                />
+              </div>
             </div>
 
             {muestraRecargos && (

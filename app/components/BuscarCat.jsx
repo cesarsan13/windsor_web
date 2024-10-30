@@ -18,6 +18,7 @@ import { getProfesores } from "../utils/api/profesores/profesores";
 import { getAsignaturas } from "../utils/api/asignaturas/asignaturas";
 
 function BuscarCat({
+  deshabilitado = false,
   table,
   nameInput,
   fieldsToShow,
@@ -224,6 +225,7 @@ function BuscarCat({
               >
                 {/* {titulo} */}
                 <input
+                  disabled={deshabilitado}
                   id={nameInput[0]}
                   name={nameInput[0]}
                   type="text"
@@ -246,6 +248,7 @@ function BuscarCat({
             <div>
               {" "}
               <button
+                disabled={deshabilitado}
                 type="button"
                 className="bg-transparent join-item hover:bg-transparent border-none shadow-none dark:text-white text-black btn rounded-r-lg  max-[499px]:pl-0 max-[499px]:pr-0 mx-2 md:mx-0"
                 onClick={Buscar}
@@ -256,6 +259,7 @@ function BuscarCat({
             <div>
               {" "}
               <input
+                disabled={deshabilitado}
                 id={nameInput[1]}
                 name={nameInput[1]}
                 type="text"
