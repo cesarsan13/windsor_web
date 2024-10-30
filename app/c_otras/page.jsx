@@ -208,8 +208,8 @@ const handleSetBAsignatura = (item) => {
     console.log("Datos profe => ", res);
     const data = res.data;
     console.log("Contra profe => ", contraseña);
-    let contrasegura = data.contraseña.toLowerCase() || "";
-    if (contraseña.toLowerCase() === contrasegura) {
+    let contrasegura = data.contraseña || "";
+    if (contraseña.toLowerCase() === contrasegura.toLowerCase()) {
       validar = true;
     } else {
       validar = false;
