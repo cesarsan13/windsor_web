@@ -1,4 +1,4 @@
-import { soloDecimales, soloEnteros,snToBool } from "@/app/utils/globalfn";
+import { soloDecimales, soloEnteros, snToBool } from "@/app/utils/globalfn";
 import React from "react";
 
 function Inputs({
@@ -20,22 +20,24 @@ function Inputs({
 }) {
   if (type === "select") {
     return (
-      <div className="">
+      <div className="w-full md:w-1/2 px-0.5 py-2 mb-2 md:mb-0">
         <label
-        // className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel}  text-black dark:text-white`}
-
-          className={`input input-bordered  input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
+          htmlFor={name}
+          className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
         >
           {Titulo}
           <select
             name={name}
+            className={`text-black dark:text-white bg-transparent ${className}`}
             id={name}
-            className={`text-black dark:text-white bg-transparent dark: ${className}`}
             {...register(name, {
               ...(requerido && { required: message }),
             })}
             disabled={isDisabled}
           >
+            <option value="" className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]">
+              Seleccione una opción
+            </option>
             {arreglos.map((arreglo) => (
               <option
                 className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]"
@@ -45,17 +47,10 @@ function Inputs({
                 {arreglo.descripcion}
               </option>
             ))}
-            {/* <option value={"Activo"}>Activo</option>
-            <option value={"Enfermo"}>Enfermo</option>
-            <option value={"Permiso"}>Permiso</option>
-            <option value={"Cartera"}>Cartera</option>
-            <option value={"Baja"}>Baja</option> */}
           </select>
         </label>
-        {errors[name] && (
-          <span className="text-red-500 text-sm mt-2">
-            {errors[name].message}
-          </span>
+        {errors[name] && requerido && (
+          <span className="text-red-500 text-sm">{errors[name].message}</span>
         )}
       </div>
     );
@@ -64,7 +59,7 @@ function Inputs({
     return (
       <div className="flex flex-col">
         <label
-        className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel}  text-black dark:text-white`}
+          className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel}  text-black dark:text-white`}
         >
           {Titulo}
           <input
@@ -94,9 +89,9 @@ function Inputs({
       </div>
     );
   }
-  else if(type === 'checkbox'){
+  else if (type === 'checkbox') {
     return (
-    <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full">
         <label
           className={`input input-bordered  md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
         >
@@ -130,7 +125,7 @@ function Inputs({
         )}
       </div>
     );
-  } 
+  }
   else {
     return (
       <div className="flex flex-col w-full">
