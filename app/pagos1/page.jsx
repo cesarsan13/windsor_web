@@ -4,7 +4,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import ModalCajeroPago from "@/app/pagos1/components/modalCajeroPago";
 import ModalDocTabla from "@/app/pagos1/components/modalDocTabla";
-import ModalNuevoRegistro from "@/app/pagos1/components/modalNuevoRegistro";
+import ModalNuevoRegistro from "@/app/pagos1/components/ModalNuevoRegistro";
 import Acciones from "@/app/pagos1/components/Acciones";
 import { useForm } from "react-hook-form";
 import {
