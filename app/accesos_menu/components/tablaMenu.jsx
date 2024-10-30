@@ -47,7 +47,7 @@ function TablaMenu({
                       onClick={(evt) => tableAction(evt, item, `Ver`)}
                     >
                       <Image src={iconos.ver} alt="Ver" />
-                    </div>
+                    </div> 
                   </th>
                   <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                     <div
