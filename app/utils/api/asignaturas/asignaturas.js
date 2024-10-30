@@ -16,6 +16,19 @@ export const getAsignaturas = async (token, baja) => {
     return resJson.data;
   };
 
+  export const getAsignaturasCasoOtro = async (token, baja) => {
+    let url = "";
+    url = `${process.env.DOMAIN_API}api/subject/caso-otro`;
+    const res = await fetch(url, {
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    });
+    const resJson = await res.json();
+    return resJson.data;
+  };
+
   export const filtroAsignaturas = async (token, tipo, valor) => {
     if (!tipo) {
       tipo = "nothing";

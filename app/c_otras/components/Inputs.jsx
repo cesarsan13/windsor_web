@@ -85,9 +85,10 @@ function Inputs({
                 message: `El campo ${name} no puede tener más de ${maxLenght} caracteres`,
               },
               ...(requerido && { required: message }),
-              onBlur: handleBlur,
+              // onBlur: handleBlur,
             })}
             disabled={isDisabled}
+            onBlurCapture={(event) => handleBlur(event, type)}
           />
         </label>
         {errors[name] && (
@@ -164,6 +165,7 @@ function Inputs({
               }))}
             disabled={isDisabled}
             onChange={(event) => setValue(event.target.value)}
+            // onBlurCapture={(event) => handleBlur(event, type)}
           />
         </label>
         {errors[name] && (
