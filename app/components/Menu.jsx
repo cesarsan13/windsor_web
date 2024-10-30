@@ -280,6 +280,11 @@ function Menu({ vertical, toogle }) {
                 Calificaciones
               </Link>
             </li>
+            <li>
+              <Link href="/c_otras" onClick={toogle}>
+                Asistencias y Trabajos Omitidos
+              </Link>
+            </li>
           </ul>
         </details>
       </li>
@@ -446,6 +451,11 @@ function Menu({ vertical, toogle }) {
               Calificaciones
             </Link>
           </li>
+          <li>
+              <Link href="/c_otras" onClick={toogle}>
+                Asistencias y Trabajos Omitidos
+              </Link>
+            </li>
           {/* 
           <li>
             <Link href="" style={{ color: "red" }} onClick={handleClick}>Emisión de Facturas</Link>
@@ -461,7 +471,7 @@ function Menu({ vertical, toogle }) {
             <Link href="" style={{ color: "red" }} onClick={handleClick}>Actualiza Cobranza</Link>
           </li> */}
           <li>
-            <Link href="cambio_ciclo_escolar" onClick={handleClick}>
+            <Link href="/cambio_ciclo_escolar" onClick={handleClick}>
               Cambio de Ciclo Escolar
             </Link>
           </li>

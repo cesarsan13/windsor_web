@@ -6,6 +6,7 @@ import { getProductos } from "@/app/utils/api/productos/productos";
 import { getHorarios, getHorariosXAlumno } from "@/app/utils/api/horarios/horarios";
 import { getCajeros } from "@/app/utils/api/cajeros/cajeros";
 import { getFormasPago } from "@/app/utils/api/formapago/formapago";
+import { getAsignaturas } from "@/app/utils/api/asignaturas/asignaturas";
 import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
 import { getComentarios } from "@/app/utils/api/comentarios/comentarios";
 import { getGrupos } from "@/app/utils/api/grupos/grupos";
@@ -55,6 +56,10 @@ function BuscarCat({
         let fetchedData = [];
         setisLoading(true);
         switch (table) {
+          case "asignaturas":
+            fetchedData = await getAsignaturas(token, false);
+            setTiutloInput(["numero", "Descripción"]);
+            break;
           case "alumnos":
             fetchedData = await getAlumnos(token, false);
             setTiutloInput(["numero", "Nombre"]);
