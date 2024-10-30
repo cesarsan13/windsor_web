@@ -208,7 +208,8 @@ const handleSetBAsignatura = (item) => {
     console.log("Datos profe => ", res);
     const data = res.data;
     console.log("Contra profe => ", contraseña);
-    if (contraseña.toLowerCase() === data.contraseña.toLowerCase()) {
+    let contrasegura = data.contraseña.toLowerCase() || "";
+    if (contraseña.toLowerCase() === contrasegura) {
       validar = true;
     } else {
       validar = false;
@@ -535,7 +536,7 @@ const handleSetBAsignatura = (item) => {
               />
 
               <BuscarCat
-                table="asignaturascasootro"
+                table="asignaturascasootro" 
                 itemData={[]}
                 fieldsToShow={["numero", "descripcion"]}
                 nameInput={["numero", "descripcion"]}
