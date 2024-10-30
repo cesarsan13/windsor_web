@@ -242,7 +242,16 @@ function Pagos_1() {
     setMuestraParciales(!muestraParciales);
   };
   const Alta = () => {
+    if (Object.keys(alumnos1).length === 0) {
+      showSwal(
+        "¡Advertencia!",
+        "Seleccione un alumno para generar pagos",
+        "warning"
+      );
+      return;
+    }
     showModal("modal_nuevo_registro", true);
+    document.getElementById("numero_producto").focus();
   };
   const btnParciales = (event) => {
     event.preventDefault();
@@ -551,11 +560,11 @@ function Pagos_1() {
     const nuevoPago = {
       numero_producto: item.paquete,
       descripcion: item.nombre_producto,
-      documento: "",
+      documento: item.numero,
       cantidad_producto: 1,
-      precio_base: item.paquete,
+      precio_base: item.saldo,
       descuento: item.descuento,
-      neto: item.paquete,
+      neto: item.saldo,
       total: item.saldo,
       alumno: item.alumno,
     };
@@ -690,7 +699,6 @@ function Pagos_1() {
               </div>
               <div className="w-full">
                 <BuscarCat
-                  deshabilitado={bloqueaEncabezado}
                   table="comentarios"
                   itemData={[]}
                   fieldsToShow={columnasBuscaCat2}
@@ -718,7 +726,6 @@ function Pagos_1() {
                   register={register}
                   errors={errors}
                   maxLength={15}
-                  isDisabled={bloqueaEncabezado}
                 />
               </div>
             </div>

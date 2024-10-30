@@ -16,7 +16,6 @@ import { getGrupos } from "@/app/utils/api/grupos/grupos";
 import { getClasesBuscaCat } from "@/app/utils/api/clases/clases";
 import { loadGlobalVariables, globalVariables } from "@/app/utils/globalfn";
 import { getProfesores } from "../utils/api/profesores/profesores";
-import { getAsignaturas } from "../utils/api/asignaturas/asignaturas";
 
 function BuscarCat({
   deshabilitado = false,
