@@ -17,7 +17,7 @@ function Menu({ vertical, toogle }) {
       const { token } = session.user;
       const fetchedMenus = await getMenus(token, false);
       setMenus(fetchedMenus);
-
+ 
       const initialOpenState = fetchedMenus.reduce((acc, menu) => {
         acc[menu.menu] = false;
         return acc;

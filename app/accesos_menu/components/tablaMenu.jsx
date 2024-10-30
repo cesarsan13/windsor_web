@@ -42,7 +42,7 @@ function TablaMenu({
                   <td className="w-[20%]">{item.menu}</td>
                   <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                     <div
-                      className="kbd text-xl pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
+                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
                       data-tip={`Ver`}
                       onClick={(evt) => tableAction(evt, item, `Ver`)}
                     >
@@ -51,7 +51,7 @@ function TablaMenu({
                   </th>
                   <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                     <div
-                      className="kbd text-xl pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
+                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
                       data-tip={`Editar`}
                       onClick={(evt) => tableAction(evt, item, `Editar`)}
                     >
@@ -60,7 +60,7 @@ function TablaMenu({
                   </th>
                   <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                     <div
-                      className="kbd text-xl pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
+                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
                       data-tip={`Eliminar`}
                       onClick={(evt) => tableAction(evt, item, "Eliminar")}
                     >
