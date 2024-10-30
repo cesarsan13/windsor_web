@@ -17,7 +17,7 @@ function Menu({ vertical, toogle }) {
       const { token } = session.user;
       const fetchedMenus = await getMenus(token, false);
       setMenus(fetchedMenus);
- 
+
       const initialOpenState = fetchedMenus.reduce((acc, menu) => {
         acc[menu.menu] = false;
         return acc;
@@ -29,10 +29,14 @@ function Menu({ vertical, toogle }) {
   }, [session, status]);
 
   const toggleMenu = (menu) => {
-    setIsOpen((prev) => ({
-      ...prev,
-      [menu]: !prev[menu],
-    }));
+    setIsOpen((prev) => {
+      const newState = { ...prev };
+      Object.keys(newState).forEach((key) => {
+        newState[key] = false;
+      });
+      newState[menu] = !prev[menu];
+      return newState;
+    });
   };
 
   const closeMenus = () => {
@@ -77,12 +81,22 @@ function Menu({ vertical, toogle }) {
   const renderMenuItems = (category) => {
     return (groupedMenus[category] || []).map((menuItem) => (
       <li key={menuItem.ruta}>
-        <Link href={menuItem.ruta} onClick={toogle}>
+        <Link
+          href={menuItem.ruta}
+          onClick={() => {
+            closeMenus();
+            console.log(isMobile);
+            if (isMobile) {
+              toogle();
+            }
+          }}
+        >
           {menuItem.descripcion}
         </Link>
       </li>
     ));
   };
+
 
   return vertical ? (
     <ul ref={menuRef} className="menu menu-md dropdown-content bg-base-100 rounded-box text-black dark:text-white mt-3 w-52 p-2 shadow z-50">
