@@ -65,6 +65,7 @@ function ModalC_Otras({
     }
   };
 
+
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
@@ -163,115 +164,11 @@ function ModalC_Otras({
                   errors={errors}
                   register={register}
                   maxLenght={6}
-                  message={"Numero requerido"}
-                  isDisabled={isDisabled}
-                  handleBlur={handleBlurOut}
-                />
-              </div>
-              {/* <div className="flex flex-col w-full">
-                <Inputs
-                  dataType={"string"}
-                  name={"caso_evaluar"}
-                  tamañolabel={""}
-                  className={"fyo8m-select p-1.5 grow bg-[#ffffff] "}
-                  Titulo={"Caso a Evaluar: "}
-                  type={"select"}
-                  requerido={true}
-                  isNumero={false}
-                  errors={errors}
-                  register={register}
-                  message={"Caso a Evaluar requerido"}
-                  maxLenght={15}
+                  message={"calificacion requerida"}
                   isDisabled={isDisabled}
                   handleBlur={handleBlur}
-                  arreglos={[
-                    { id: "CALIFICACIÓN", descripcion: "CALIFICACIÓN" },
-                    { id: "OTRO", descripcion: "OTRO" },
-                  ]}
                 />
-              </div> */}
-              {/* <div className="flex flex-row w-full gap-x-5">
-                <div className="flex flex-col w-3/6 gap-x-5">
-                  <Inputs
-                    dataType={"int"}
-                    name={"area"}
-                    tamañolabel={"w-full"}
-                    className={"w-3/6 text-right"}
-                    Titulo={"Area: "}
-                    type={"select"}
-                    requerido={true}
-                    isNumero={false}
-                    errors={errors}
-                    register={register}
-                    message={"Area requerida"}
-                    maxLenght={15}
-                    isDisabled={isDisabled}
-                    handleBlur={handleBlur}
-                    arreglos={[
-                      { id: 1, descripcion: 1 },
-                      { id: 2, descripcion: 2 },
-                      { id: 3, descripcion: 3 },
-                      { id: 4, descripcion: 4 },
-                    ]}
-                  />
-                </div>
-                <div className="flex flex-col w-3/6 gap-x-5">
-                  <Inputs
-                    dataType={"int"}
-                    name={"orden"}
-                    tamañolabel={"w-full"}
-                    className={"w-3/6 text-right "}
-                    Titulo={"Orden: "}
-                    type={"inputNum"}
-                    requerido={false}
-                    errors={errors}
-                    register={register}
-                    maxLenght={6}
-                    message={"Orden requerido"}
-                    isDisabled={isDisabled}
-                    handleBlur={handleBlurOut}
-                  />
-                </div>
-                
-              </div> */}
-
-              {/* <div className="flex flex-row w-full gap-x-5 gap-y-5 max-[420px]:flex-wrap">
-                <div className="flex flex-col w-3/6">
-                    <Inputs
-                      dataType={"int"}
-                      name={"evaluaciones"}
-                      tamañolabel={"w-full"}
-                      className={"w-3/6 text-right"}
-                      Titulo={"Evaluaciones: "}
-                      type={"inputNum"}
-                      requerido={false}
-                      errors={errors}
-                      register={register}
-                      maxLenght={6}
-                      message={"Evaluaciones requerida"}
-                      isDisabled={isDisabled}
-                      handleBlur={handleBlurOut}
-                    />
-                </div>
-                <div className="flex flex-col max-[420px]:w-full w-3/6">
-                  <Inputs
-                    dataType={"boolean"}
-                    name={"actividad"}
-                    tamañolabel={"max-[420px]:w-full"}
-                    className={"max-[420px]:w-full w-2/6 "}
-                    Titulo={"Evaluación por Actividades."}
-                    type={"checkbox"}
-                    requerido={false}
-                    errors={errors}
-                    register={register}
-                    message={"Evaluación por Actividades requerida"}
-                    maxLenght={5}
-                    isDisabled={isDisabled}
-                    handleBlur={handleBlur}
-                    getValues={getValues}
-                  />
-                </div>
-              </div> */}
+              </div>
             </div>
           </fieldset>
         </form>

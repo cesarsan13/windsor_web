@@ -50,7 +50,7 @@ function C_Otras() {
   const [contraProfe, setContraProfe] = useState("");
   const [bimestre, setBimestre] = useState("1");
   const [asignatura, setAsignatura] = useState([]);
-  const [b_asignatura, setB_Asignatura] = useState([]);
+  const [b_asignatura, setB_Asignatura] = useState({});
   const [c_OtrasFiltrados, setC_OtrasFiltrados] = useState([]);
   const [calificaciones, setCalificaciones] = useState([]);
   const [isDisabled, setIsDisabled] = useState(false);
@@ -96,7 +96,13 @@ useEffect(() => {
       descripcion: c_Otra.descripcion
   });
 }, [c_Otra, reset]);
-
+useEffect(() => {
+  console.log("Cambio en b_asignatura:", b_asignatura);
+}, [b_asignatura]);
+const handleSetBAsignatura = (item) => {
+  setB_Asignatura(item);
+  console.log("Item asignado en el padre:", item);
+};
  const Buscar = useCallback(async (data) => {
   console.log("Data del form => ",data);
     console.log("1");
@@ -177,7 +183,7 @@ useEffect(() => {
       setisLoading2(false);
       return;
     }
-  },[calificaciones]);
+  },[calificaciones,grupo,session,b_asignatura,contraProfe]);
   const tableAction = (acc, id) => {
     const calificacion = calificaciones.find(
       (calificacion) => calificacion.numero === id
@@ -193,89 +199,7 @@ useEffect(() => {
       showModal(true);
     }
   };
-  // useEffect(() => {
-  //   if (status === "loading" || !session) {
-  //     return;
-  //   }
-  //   const fetchData = async () => {
-  //     let res = null,
-  //       res2 = null,
-  //       res3 = null;
-  //     // let vg_area = '', vg_actividad = '', vg_caso_evaluar = '';
-  //     const { token } = session.user;
-  //     res = await getMateriaBuscar(token, b_asignatura.numero);
-  //     if (res.data) {
-  //       res.data.forEach((element) => {
-  //         setGlobalVariable("vg_area", element.area);
-  //         setGlobalVariable("vg_actividad", element.actividad);
-  //         setGlobalVariable("vg_caso_evaluar", element.caso_evaluar);
-  //       });
-  //     }
-  //     loadGlobalVariables();
-  //     //Creo que no tengo que usarlo
-  //     // if (globalVariables.vg_actividad === "No") {
-  //     //   setIsDisabled2(false);
-  //     // } else {
-  //     //   setIsDisabled2(true);
-  //     // }
 
-  //     // if (globalVariables.vg_area === 1 || globalVariables.vg_area == 4) {
-  //     //   setIsDisabled3(true);
-  //     // } else {
-  //     //   setIsDisabled3(false);
-  //     // }
-
-  //     // if (vg_actividad === 'Si') {
-  //     res2 = await getActividadSecuencia(token, b_asignatura.numero);
-  //     if (res2.status) {
-  //       setIsDisabled2(true);
-  //       setActividades(res2.data);
-  //     }
-  //     // else {
-  //     //     showSwal('Error', 'No hay actividades para esta materia', 'error');
-  //     // }
-  //     // } else {
-  //     res3 = await getMateriaEvaluacion(token, b_asignatura.numero);
-  //     if (res3.status) {
-  //       const Cb_Evaluacion = [];
-  //       const evaluaciones = res3.data[0].evaluaciones;
-  //       let numeroValuaciones = 0;
-  //       for (let i = 1; i <= evaluaciones; i++) {
-  //         Cb_Evaluacion.push({ id: i, descripcion: i });
-  //         numeroValuaciones += 1;
-  //       }
-  //       setIsDisabled3(true);
-  //       setEvaluacion(Cb_Evaluacion);
-  //     }
-  //     // else {
-  //     //     showSwal('Error', 'No hay evaluación para esta materia', 'error');
-  //     // }
-  //     // }
-  //   };
-  //   fetchData();
-  // }, [b_asignatura.numero]);
-
-  // useEffect(() => {
-  //   if (status === "loading" || !session) {
-  //     return;
-  //   }
-  //   const fetchData = async () => {
-  //     const { token } = session.user;
-  //     let datos = await getClasesBuscaCat(token, grupo.numero);
-  //     if (datos.length > 0) {
-  //       setAsignatura(datos);
-  //       setIsDisabled(true);
-  //     } else {
-  //       setAsignatura([]);
-  //       setEvaluacion([]);
-  //       setActividades([]);
-  //     }
-  //   };
-  //   fetchData();
-  // }, [grupo]);
-  // const handleInputChange = (event) => {
-  //   setContraProfe(event.target.value);
-  // };
   const validar = async (grupo, materia, contraseña) => {
     const { token } = session.user;
     let validar;
@@ -303,32 +227,6 @@ useEffect(() => {
     setPdfData("");
     document.getElementById("modalVC_Otras").close();
   };
-
-  // const Guardar = handleSubmit(async (data) => {
-  //   const { token } = session.user;
-  //   if (!data) {
-  //     return;
-  //   }
-  //   if (c_Otras.length <= 0) {
-  //     return;
-  //   }
-  //   setIsDisabledSave(true);
-  //   data.grupo = grupo.horario;
-  //   data.materia = b_asignatura.numero;
-  //   const promises = c_Otras.map(async (calificacion) => {
-  //     try {
-  //       return await guardarProcesoCalificaciones(token, calificacion, data);
-  //     } catch (error) {}
-  //   });
-  //   const results = await Promise.all(promises);
-  //   showSwal(
-  //     "ÉXITO",
-  //     "Las c_Otras se han registrado correctamente.",
-  //     "success"
-  //   );
-  //   setIsDisabledSave(false);
-  // });
-
   const formatNumber = (num) => {
     if (!num) return "";
     const numStr = typeof num === "string" ? num : num.toString();
@@ -342,83 +240,6 @@ useEffect(() => {
     });
   };
 
-  // const Buscar = handleSubmit(async (data) => {
-  //   const { token } = session.user;
-  //   if (!grupo) {
-  //     showSwal("Error", "Debe seleccionar un grupo", "error");
-  //     return;
-  //   }
-  //   if (!b_asignatura.numero) {
-  //     showSwal("Error", "Debe seleccionar una materia", "error");
-  //     return;
-  //   }
-  //   setisLoading2(true);
-  //   const validacion = await validar(
-  //     grupo.numero,
-  //     b_asignatura.numero,
-  //     data.contraseña_profesor || ""
-  //   );
-  //   if (!validacion) {
-  //     setisLoading2(false);
-  //     return;
-  //   }
-
-  //   data.grupo = grupo.numero;
-  //   data.grupo_nombre = grupo.horario;
-  //   data.materia = b_asignatura.numero;
-  //   data.cb_actividad = isDisabled2;
-
-  //   console.log("Data send to getProcesoCalificacionesAlumnos => ",data);
-  //   let res1 = await getProcesoCalificacionesAlumnos(token, data);
-  //   // console.log(res1);
-  //   if (res1.status) {
-  //     let datos = res1.data;
-  //     let newData = [];
-  //     const batchSize = 5;
-  //     for (let i = 0; i < datos.length; i += batchSize) {
-  //       const batch = datos.slice(i, i + batchSize);
-  //       const promises = batch.map(async (val) => {
-  //         data.numero = val.numero;
-  //         data.nombre = val.nombre;
-  //         try {
-  //           // let res2 = await getProcesoCalificaciones(token, data);
-  //           console.log("Data send to getProcesoCalificaciones => ",data);
-  //           let res2 = await getProcesoTareasTrabajosPendientes(token, data);
-  //           if (res2.status) {
-  //             const datosos = res2.data;
-  //             // console.log(datosos)
-  //             newData.push({
-  //               numero: datosos[0].numero,
-  //               nombre: datosos[0].nombre,
-  //               calificacion: datosos[0].calificacion,
-  //               unidad: datosos[0].unidad,
-  //             });
-  //           }
-  //         } catch (error) {
-  //           // console.error(`Error inesperado al procesar ${val.numero}:`, error);
-  //         }
-  //       });
-  //       await Promise.all(promises);
-  //     }
-
-  //     // newData = newData.json();
-  //     // console.log(newData);
-  //     if (newData) {
-  //       console.log("newData => ",newData)
-  //       setCalificaciones(newData);
-  //       setC_OtrasFiltradosFiltrados(newData);
-  //     } else {
-  //       showSwal("Error", "No se pudieron obtener las c_Otras", "error");
-  //       // setCalificaciones([]);
-  //       // setCalificacionesFiltrados([]);
-  //     }
-  //     setisLoading2(false);
-  //   } else {
-  //     showSwal(res1.alert_title, res1.alert_text, res1.alert_icon);
-  //     setisLoading2(false);
-  //     return;
-  //   }
-  // });
 
   const home = () => {
     router.push("/");
@@ -541,14 +362,6 @@ useEffect(() => {
     res = await guardarC_Otras(session.user.token, data1, data2);
 
     if (res.status) {
-      // if (accion === "Alta") {
-      //   data.numero = res.data;
-      //   const nuevasC_otras = { currentID, ...data };
-      //   setC_Otras([...C_Otras, nuevasC_otras]);
-      //   if (!bajas) {
-      //     setC_OtrasFiltrados([...c_OtrasFiltrados, nuevasC_otras]);
-      //   }
-      // }
       if (accion === "Eliminar" || accion === "Editar") {
         console.log("Fue Editar o eliminar y la accion es ", accion);
         // const index = c_Otras.findIndex((p) => p.numero === data.numero);
@@ -564,13 +377,6 @@ useEffect(() => {
             setC_OtrasFiltrados(cFiltrados);
           } else {
             console.log("Fue Editar ");
-            // if (bajas) {
-            //   const cFiltrados = c_Otras.filter(
-            //     (p) => p.numero !== data.numero
-            //   );
-            //   setC_Otras(cFiltrados);
-            //   setC_OtrasFiltrados(cFiltrados);
-            // } else {
               const cActualizadas = calificaciones.map((p) =>
                 p.numero === currentID ? { ...p, ...data } : p
               );
@@ -578,7 +384,6 @@ useEffect(() => {
               setCalificaciones(cActualizadas);
               setC_Otras(cActualizadas);
               setC_OtrasFiltrados(cActualizadas);
-            // }
           }
         }
       }
@@ -650,7 +455,7 @@ useEffect(() => {
         currentID={currentID}
         errors={errors}
         register={register}
-        setC_Otra={setC_Otra}
+        setC_otra={setC_Otra}
         c_Otra={c_Otra}
         formatNumber={formatNumber}
         setValue={setValue}
@@ -730,12 +535,13 @@ useEffect(() => {
               />
 
               <BuscarCat
-                table="asignaturas"
+                table="asignaturascasootro"
                 itemData={[]}
                 fieldsToShow={["numero", "descripcion"]}
                 nameInput={["numero", "descripcion"]}
                 titulo={"Asignatura: "}
-                setItem={setB_Asignatura}
+                // setItem={setB_Asignatura}
+                setItem={handleSetBAsignatura}
                 token={session.user.token}
                 modalId="modal_asignaturas1"
                 alignRight={"text-right"}
@@ -772,7 +578,7 @@ useEffect(() => {
                     c_Otras={c_Otras}
                     setC_Otras={setC_Otras}
                     setC_OtrasFiltrados={setC_OtrasFiltrados}
-                    setC_Otra={setC_Otra}
+                    // setC_Otra={setC_Otra}
                     setAccion={setAccion}
                     setCurrentId={setCurrentId}
                     tableAction={tableAction}
