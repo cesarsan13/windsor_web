@@ -163,7 +163,7 @@ function Adicion_Productos_Cartera() {
                                     dataType={"int"}
                                     name={"periodo"}
                                     tamañolabel={""}
-                                    className={"w-2/5"}
+                                    className={"w-2/5 text-right"}
                                     Titulo={"Periodo: "}
                                     type={"text"}
                                     requerido={true}
