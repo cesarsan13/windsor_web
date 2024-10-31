@@ -12,6 +12,7 @@ function ConfigReporte({
   const { data: session, status } = useSession();
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [textoAnterior, setTextoAnterior] = useState("");
+  const [arreglo,setArreglo]=useState({})
   const changeSelectedLabel = (name) => {
     if (textoAnterior !== "" && textoAnterior !== name) {
       const labelAnterior = document.getElementById(textoAnterior);
@@ -23,6 +24,13 @@ function ConfigReporte({
       );
     }
   };
+  useEffect(()=>{
+    const arreglo = labels
+    .filter((l) => l.visible === 1)
+    .map((label) => (
+      { id: label.numero_dato-1, descripcion: `Texto_${label.numero_dato}` }))
+      setArreglo(arreglo)
+  },[labels])
   return (
     <div className=" w-11/12 max-w-5xl">
       <button
@@ -58,6 +66,7 @@ function ConfigReporte({
                 setTextoAnterior={setTextoAnterior}
                 changeSelectedLabel={changeSelectedLabel}
                 textoAnterior={textoAnterior}
+                arreglo={arreglo}
               ></PropertyPage>
             </div>
           )}
