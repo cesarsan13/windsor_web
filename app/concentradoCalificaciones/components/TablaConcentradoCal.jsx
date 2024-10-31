@@ -69,8 +69,9 @@ function TablaConcentradoCal({
         let evaluaciones = 0;
 
         // Verificar si se evalúa por actividades
-        const materia = materiasReg.find(m => m.numero === materianumero);
-        if (!materia || materia.actividad === "No") {
+        //const materia = materiasReg.find(m => m.numero === materianumero);
+        console.log("materiaaas", materia);
+        if (!materia.actividad === "No") {
             console.log("entra al no");
             // Calificación sin actividades
             const filtro = calificacionesTodosAlumnos.filter(cal => 
