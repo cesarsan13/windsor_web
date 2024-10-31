@@ -17,6 +17,7 @@ const iconos = {
   calendario: require("@/public/Iconos/Btn_Periodo_Negro.png"),
   lista: require("@/public/Iconos/lista.png"),
   tarjetas: require("@/public/Iconos/tarjetas.png"),
+  procesa: require("@/public/Iconos/Btn_Procesa_Negro.png"),
 
   //Imagenes de Fondo
   fondoLogin: require("@/public/Iconos/Login_Ventio.JPG"),
