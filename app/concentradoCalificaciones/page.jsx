@@ -14,7 +14,7 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import "jspdf-autotable";
 
 
-function concentradoCalificaciones() {
+function ConcentradoCalificaciones() {
     const router = useRouter();
     const { data: session, status } = useSession();
     const [grupo, setGrupo] = useState({"numero": 0});
@@ -43,9 +43,6 @@ function concentradoCalificaciones() {
         if (status === "loading" || !session) {
             return;
           }           
-
-          
-
 
         const fetchData1 = async () => {  
             const {token} = session.user;
@@ -174,4 +171,4 @@ function concentradoCalificaciones() {
         </div>
     );
 }
-export default ConcentradoCalificaciones;
+export default  ConcentradoCalificaciones;
