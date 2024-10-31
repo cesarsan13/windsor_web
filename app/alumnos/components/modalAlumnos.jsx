@@ -125,8 +125,8 @@ function ModalAlumnos({
             <div className="flex space-x-2 items-center">
               <div
                 className={`tooltip tooltip-bottom ${accion === "Ver"
-                    ? "hover:cursor-not-allowed hidden"
-                    : "hover:cursor-pointer"
+                  ? "hover:cursor-not-allowed hidden"
+                  : "hover:cursor-pointer"
                   }`}
                 data-tip="Guardar"
               >

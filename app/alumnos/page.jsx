@@ -53,6 +53,8 @@ function Alumnos() {
     tb_grado: "",
   });
 
+  console.log(grado);
+
   //Memorizar la funcion
   const Buscar = useCallback(() => {
     const { tb_id, tb_desc, tb_grado } = busqueda;
@@ -204,6 +206,7 @@ function Alumnos() {
       escuela: alumno.escuela,
       grupo: alumno.grupo,
       referencia: alumno.referencia,
+      horario_1_nombre: alumno.horario_1_nombre,
     },
   });
   useEffect(() => {
@@ -298,6 +301,7 @@ function Alumnos() {
       escuela: alumno.escuela,
       grupo: alumno.grupo,
       referencia: alumno.referencia,
+      horario_1_nombre: alumno.horario_1_nombre,
     });
   }, [alumno, reset]);
 
@@ -351,7 +355,7 @@ function Alumnos() {
       cancha_2: 0,
       cancha_3: 0,
       cancha_4: 0,
-      horario_1: "0",
+      horario_1: 0,
       horario_2: 0,
       horario_3: 0,
       horario_4: 0,
@@ -409,6 +413,7 @@ function Alumnos() {
       escuela: "",
       grupo: "",
       referencia: 0,
+      horario_1_nombre: "",
       baja: "",
     });
     setcond1({});
@@ -480,8 +485,8 @@ function Alumnos() {
     formData.append("cancha_2", data.cancha_2 || "");
     formData.append("cancha_3", data.cancha_3 || "");
     formData.append("cancha_4", data.cancha_4 || "");
-    formData.append("horario_1", data.horario_1 || "");
-    formData.append("horario_2", data.horario_2 || "");
+    formData.append("horario_1", grado.numero || "");
+    formData.append("horario_2", grado2.numero || "");
     formData.append("horario_3", data.horario_3 || "");
     formData.append("horario_4", data.horario_4 || "");
     formData.append("horario_5", data.horario_5 || "");
@@ -536,7 +541,7 @@ function Alumnos() {
     formData.append("rfc_factura", data.rfc_factura || "");
     formData.append("estatus", data.estatus || "");
     formData.append("escuela", data.escuela || "");
-    formData.append("grupo", grado.horario || "");
+    formData.append("grupo", grado.numero || "");
     if (condicion === true) {
       const blob = dataURLtoBlob(capturedImage);
       formData.append(
