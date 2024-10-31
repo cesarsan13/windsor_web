@@ -109,10 +109,10 @@ function Adicion_Productos_Cartera() {
     }
     return (
         <>
-            <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
-                <div className="flex flex-col justify-start p-3">
-                    <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
-                        <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0 pr-4">
+            <div className='container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden'>
+                <div className='flex flex-col justify-start p-3'>
+                    <div className='flex flex-wrap md:flex-nowrap items-start md:items-center'>
+                        <div className='order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0'>
                             <Acciones
                                 isLoadingRef={isLoading}
                                 isLoadingProc={isLoading2}
@@ -122,61 +122,57 @@ function Adicion_Productos_Cartera() {
                             />
                         </div>
 
-                        <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-auto">
+                        <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
                             Proceso de Adición a Cobranza.
                         </h1>
                     </div>
                 </div>
-                <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-                    <div className="col-span-7">
-                        <div className="flex flex-col h-[calc(100%)] space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div className="md:col-span-1">
-                                    <BuscarCat
-                                        table="productos_cond"
-                                        itemData={[]}
-                                        fieldsToShow={["numero", "descripcion"]}
-                                        nameInput={["numero", "descripcion"]}
-                                        titulo={"Articulos: "}
-                                        setItem={setArticulos}
-                                        token={session.user.token}
-                                        modalId="modal_articulos1"
-                                        alignRight={"text-right"}
-                                        inputWidths={{ contdef: "180px", first: "70px", second: "150px" }}
-                                    />
-                                </div>
-                                <div className="md:col-span-1 pl-5">
-                                    <Inputs
-                                        dataType={"string"}
-                                        name={"fecha"}
-                                        tamañolabel={"w-full"}
-                                        className={"w-full"}
-                                        Titulo={"Fecha: "}
-                                        type={"date"}
-                                        requerido={true}
-                                        errors={errors}
-                                        register={register}
-                                        message={"Fecha Requerido"}
-                                        isDisabled={false}
-                                        maxLenght={7}
-                                    />
-                                </div>
-                                <div className="md:col-span-1">
-                                    <Inputs
-                                        dataType={"int"}
-                                        name={"periodo"}
-                                        tamañolabel={"w-full"}
-                                        className={"w-full"}
-                                        Titulo={"Periodo: "}
-                                        type={"text"}
-                                        requerido={true}
-                                        errors={errors}
-                                        register={register}
-                                        message={"Periodo Requerido"}
-                                        isDisabled={false}
-                                        maxLenght={7}
-                                    />
-                                </div>
+                <div className="flex flex-col items-center h-full">
+                    <div className="w-full max-w-4xl">
+                        <BuscarCat
+                            table="productos_cond"
+                            itemData={[]}
+                            fieldsToShow={["numero", "descripcion"]}
+                            nameInput={["numero", "descripcion"]}
+                            titulo={"Articulos: "}
+                            setItem={setArticulos}
+                            token={session.user.token}
+                            modalId="modal_articulos1"
+                            alignRight={"text-right"}
+                            inputWidths={{ contdef: "150px", first: "70px", second: "120px" }}
+                        />
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center mt-4">
+                            <div className="md:col-span-1">
+                                <Inputs
+                                    dataType={"string"}
+                                    name={"fecha"}
+                                    tamañolabel={"w-full"}
+                                    className={"w-4/5"}
+                                    Titulo={"Fecha: "}
+                                    type={"date"}
+                                    requerido={true}
+                                    errors={errors}
+                                    register={register}
+                                    message={"Fecha Requerido"}
+                                    isDisabled={false}
+                                    maxLenght={7}
+                                />
+                            </div>
+                            <div className="md:col-span-1">
+                                <Inputs
+                                    dataType={"int"}
+                                    name={"periodo"}
+                                    tamañolabel={""}
+                                    className={"w-2/5"}
+                                    Titulo={"Periodo: "}
+                                    type={"text"}
+                                    requerido={true}
+                                    errors={errors}
+                                    register={register}
+                                    message={"Periodo Requerido"}
+                                    isDisabled={false}
+                                    maxLenght={7}
+                                />
                             </div>
                         </div>
                     </div>
@@ -184,6 +180,8 @@ function Adicion_Productos_Cartera() {
             </div>
         </>
     );
+
+
 }
 
 export default Adicion_Productos_Cartera;
