@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import {getMateriasPorGrupo, getInfoActividadesXGrupo, getActividadesXHorarioXAlumnoXMateriaXBimestre} from "@/app/utils/api/concentradoCalificaciones/concentradoCalificaciones";
+import {getMateriasPorGrupo, getInfoActividadesXGrupo, getActividadesReg, getMateriasReg, getAlumno, getActividadesXHorarioXAlumnoXMateriaXBimestre} from "@/app/utils/api/concentradoCalificaciones/concentradoCalificaciones";
 import Inputs from "@/app/concentradoCalificaciones/components/Inputs";
 import Acciones from "@/app/concentradoCalificaciones/components/Acciones";
 import BuscarCat from "@/app/components/BuscarCat";
@@ -17,13 +17,14 @@ import "jspdf-autotable";
 function concentradoCalificaciones() {
     const router = useRouter();
     const { data: session, status } = useSession();
-    const [grupo, setGrupo] = useState({});
+    const [grupo, setGrupo] = useState({"numero": 0});
     const [isLoading, setisLoading] = useState(false);
-    const [isLoading2, setisLoading2] = useState(false);
     const [isDisabledSave, setIsDisabledSave] = useState(true);
     const [materiasEncabezado, setMateriasEncabezado] = useState({});
     const [calificacionesTodosAlumnos, setCalificacionesTodosAlumnos] = useState({});
-    const [calificacionesDesgloseAlumno, setCalificacionesDesgloseAlumno] = useState({});
+    const [materiasReg, setMateriasReg] = useState({});
+    const [actividadesReg, setActividadesReg] = useState({});
+    const [alumnoReg, setAlumnoReg] = useState({});
     let bimestre = 0;
     let idAlumno = 0;
     let idMateria = 0;
@@ -36,29 +37,63 @@ function concentradoCalificaciones() {
 
     bimestre = watch('bimestre');
 
+    console.log("grupo", grupo.numero);
+
     useEffect(() => {
         if (status === "loading" || !session) {
             return;
           }           
-        const fetchData = async () => {  
+
+          
+
+
+        const fetchData1 = async () => {  
             const {token} = session.user;
 
-            const [materiasEncabezado, matAlumnos] = //detalleCalAlumno
+            const [ materias, actividades] =
+              await Promise.all([
+                getMateriasReg(token),
+                getActividadesReg(token),
+            ]);
+                setMateriasReg(materias);
+                setActividadesReg(actividades);
+            };
+            
+        fetchData1();
+        //console.log(materiasEncabezado, calificacionesTodosAlumnos);
+    }, [session, status, bimestre, grupo]);
+
+
+    useEffect(() => {
+        if (status === "loading" || !session) {
+            return;
+          } 
+          
+          
+        const fetchData2 = async () => {  
+            const {token} = session.user;
+
+            const [materiasEncabezado, matAlumnos, alumno] = //detalleCalAlumno
               await Promise.all([
                 getMateriasPorGrupo(token, grupo.numero),
                 getInfoActividadesXGrupo(token, grupo.numero, bimestre),
+                getAlumno(token, grupo.numero)
                 //getActividadesXHorarioXAlumnoXMateriaXBimestre(token, grupo.numero, idAlumno, idMateria, bimestre)
             ]);
+                console.log("a", alumno);
                 setMateriasEncabezado(materiasEncabezado);
                 setCalificacionesTodosAlumnos(matAlumnos);
+                setAlumnoReg(alumno);
                 //setCalificacionesDesgloseAlumno(detalleCalAlumno);
+                
             };
             
-        fetchData();
-        console.log(materiasEncabezado, calificacionesTodosAlumnos);
+        fetchData2();
+        //console.log(materiasEncabezado, calificacionesTodosAlumnos);
     }, [session, status, bimestre, grupo]);
 
-    const Guardar = handleSubmit(async (data) => {});
+    
+    //const Buscar = handleSubmit(async (data) => {});
 
     const handleVerClick = () => {};
 
@@ -77,12 +112,8 @@ function concentradoCalificaciones() {
                 <div className="flex flex-wrap md:flex-nowrap items-start md:items-center"> 
                     <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
                         <Acciones
-                            Alta={Guardar}
                             home={home}
-                            Buscar={Buscar}
                             Ver={handleVerClick}
-                            isLoading={isLoading2}
-                            isDisabledSave={isDisabledSave}
                         />
                     </div>
                     <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
@@ -132,7 +163,11 @@ function concentradoCalificaciones() {
                         
                     </div> 
                     <TablaConcentradoCal
-                          materiasEncabezado = {materiasEncabezado}  
+                          materiasEncabezado = {materiasEncabezado}
+                          calificacionesTodosAlumnos={calificacionesTodosAlumnos}
+                          materiasReg = {materiasReg}
+                          actividadesReg = {actividadesReg}
+                          alumnoReg = {alumnoReg}
                     />
                 </div>
             </div>
