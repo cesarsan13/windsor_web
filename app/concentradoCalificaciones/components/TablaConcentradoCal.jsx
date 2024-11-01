@@ -14,6 +14,12 @@ function TablaConcentradoCal({
     alumnoReg,
     bimestre
 }){
+    let indexIngles = 0;
+    let indexEspañol = 0;
+
+    function aDec(value) {
+        return isNaN(value) ? 0 : Number(value);
+    }
 
     function RegresaCalificacionRedondeo(twxCalifica, txwRedondea0) {
         // Inicializar la variable de retorno
@@ -64,28 +70,32 @@ function TablaConcentradoCal({
     }
 
     const calcularCalificaciones = (alumnonumero, materianumero) => {
-        console.log("alumno", alumnonumero);
         let sumatoria = 0;
         let evaluaciones = 0;
 
         // Verificar si se evalúa por actividades
-        //const materia = materiasReg.find(m => m.numero === materianumero);
+        if (materiasEncabezado.length > 0){
+            console.log("dentro de materiase", materiasEncabezado);
+        const materia = materiasReg.find(m => m.numero === materianumero);
         console.log("materiaaas", materia);
-        if (!materia.actividad === "No") {
+        if (materia.actividad === "No") {
             console.log("entra al no");
             // Calificación sin actividades
             const filtro = calificacionesTodosAlumnos.filter(cal => 
                 cal.numero === alumnonumero && cal.materia === materianumero && cal.bimestre === bimestre
             );
             console.log("filtro no", filtro);
-            sumatoria = filtro.reduce((acc, cal) => acc + cal.calificacion, 0);
-            evaluaciones = filtro.length;
+            sumatoria = calificacionesTodosAlumnos.reduce((acc, alumno) => acc + aDec(alumno.calificacion), 0);
+            evaluaciones = materia ? filtro.length : 0;
         } else {
             // Calificación con actividades
             console.log("entra al si");
             const actividades = actividadesReg.filter(act => act.materia === materianumero);
             console.log("actividades si", actividades);
-            if (actividades.length > 0) {
+            if (actividades.length === 0) {
+                evaluaciones = 0
+                sumatoria = 0
+            } else {
                 actividades.forEach(actividad => {
                     console.log("actividades", actividad);
                     const filtroActividad = calificacionesTodosAlumnos.filter(cal => 
@@ -95,22 +105,43 @@ function TablaConcentradoCal({
                         cal.actividad === actividad.secuencia && 
                         cal.unidad <= actividad[`EB${bimestre}`]
                     );
-                    console.log("filtro act", filtroActividad);
-
-                    if (filtroActividad.length > 0) {
-                        console.log("filtro actividad mayor a 0", filtroActividad);
+                
                         const califSum = filtroActividad.reduce((acc, cal) => acc + cal.calificacion, 0);
                         sumatoria += RegresaCalificacionRedondeo(califSum / filtroActividad.length, "N");
-                        evaluaciones++;
-                        console.log("sumatoria dentro de if", sumatoria);
-                    }
+                        evaluaciones++; 
                 });
             }
         }
-        
         // Si no hay evaluaciones válidas, devuelve vacío en lugar de cero
-        //return evaluaciones === 0 ? "" : (sumatoria / evaluaciones).toFixed(1);
-        return (sumatoria / evaluaciones).toFixed(1);
+        return evaluaciones === 0 ? 0 : (sumatoria / evaluaciones).toFixed(1);
+        //return (sumatoria / evaluaciones).toFixed(1);
+    } 
+    {/*else {
+        let suma = 0
+        let mn = 0
+        let promedio = 0
+
+        if (materianumero === "0") {
+            for (let ce = indexEspañol; ce < indexEspañol; ce++) {
+                suma += fila.calificaciones[ce];
+                nm += 1;
+            }
+            fila.promedioEspanol = TruncarUno(suma / nm);
+        }
+
+        // Calcular el promedio para la columna "Inglés"
+        if (materianumero === "00") {
+            suma = 0;
+            nm = 0;
+            for (let ci = indexIngles; ci < indexIngles; ci++) {
+                suma += fila.calificaciones[ci];
+                nm += 1;
+            }
+            fila.promedioIngles = TruncarUno(suma / nm);
+        }
+
+        return fila;
+    }   */}
     };
    
     return  (
@@ -120,16 +151,27 @@ function TablaConcentradoCal({
                     <tr>
                         <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
                         <td className="w-[80%]">Alumno</td>
-
-                        {materiasEncabezado.length > 0 ? (
+                        {console.log("aaaaaaaaaa", materiasEncabezado.length)}
+                        {materiasEncabezado.length === undefined ? (
+                            <td className="w-[45%]">Sin datos</td> 
+                        ) :(
                             materiasEncabezado.map((item, index) => {
+
                                 const esUltimoDeArea = 
-                                    (item.area === 1 || item.area === 4) &&
-                                    (index === materiasEncabezado.length - 1 || materiasEncabezado[index + 1].area !== item.area);
-                            
+                                (item.area === 1 || item.area === 4) &&
+                                (index === materiasEncabezado.length - 1 || materiasEncabezado[index + 1].area !== item.area);
+
+                                
+                                if (esUltimoDeArea) {
+                                    if (item.area === 1) {
+                                        indexEspañol = index + 1; // +1 porque el índice del promedio se agrega después de la última columna del área
+                                    } else if (item.area === 4) {
+                                        indexIngles = index + 1;
+                                    }
+                                }
                                 return (
                                     <React.Fragment key={index}>
-                                        <th id={item.numero} className="w-[20%]">
+                                        <th id={index} className="w-[20%]">
                                             {item.descripcion}
                                         </th>
                                         {esUltimoDeArea && (
@@ -140,8 +182,6 @@ function TablaConcentradoCal({
                                     </React.Fragment>
                                 );
                             })
-                        ) : (
-                            <td className="w-[45%]">Sin datos</td>
                         )}
 
                         <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Editar</th>
