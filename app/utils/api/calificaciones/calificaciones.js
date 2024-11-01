@@ -747,3 +747,37 @@ export const Imprimir = (configuracion) => {
     newPDF.guardaReporte(`Boleta5_Ambos_${alumno || ""}`);
   }
 };
+
+export const ImprimirPDF = (configuracion) => {
+  const orientacion = "Landscape";
+  const newPDF = new ReportePDF(configuracion, orientacion);
+  const { body } = configuracion;
+  Enca1(newPDF);
+  body.forEach((calificacion) => {
+    newPDF.ImpPosX(calificacion.numero.toString(), 25, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(calificacion.nombre.toString(), 30, newPDF.tw_ren, 35, "L");
+    newPDF.ImpPosX(calificacion.unidad.toString(), 150, newPDF.tw_ren, 35, "R");
+    newPDF.ImpPosX(
+      calificacion.calificacion.toString(),
+      183,
+      newPDF.tw_ren,
+      35,
+      "R"
+    );
+    Enca1(newPDF);
+    if (newPDF.tw_ren >= newPDF.tw_endRenH) {
+      newPDF.pageBreakH();
+      Enca1(newPDF);
+    }
+  });
+  newPDF.guardaReporte("Calificaciones");
+};
+export const ImprimirExcel = (configuracion) => {
+  const newExcel = new ReporteExcel(configuracion);
+  const { columns } = configuracion;
+  const { body } = configuracion;
+  const { nombre } = configuracion;
+  newExcel.setColumnas(columns);
+  newExcel.addData(body);
+  newExcel.guardaReporte(nombre);
+};
