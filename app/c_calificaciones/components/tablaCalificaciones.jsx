@@ -16,29 +16,9 @@ function TablaCalificaciones({
     setCalificaciones,
     setCalificacionesFiltrados,
 }) {
-    console.log('arreglo de filtrados', calificacionesFiltrados);
+    // console.log('arreglo de filtrados', calificacionesFiltrados);
     const [editMode, setEditMode] = useState(null);
     const [editedCalificaciones, setEditedCalificaciones] = useState({});
-
-    const handleEditChange = (numero, value) => {
-        let newValue = parseFloat(value);
-        loadGlobalVariables();
-        if (globalVariables.vg_caso_evaluar === 'CALIFICACIÓN') {
-            if (newValue > 10) {
-                showSwal("WARNING!", "El máximo valor permitido es 10", "info");
-                newValue = 0;
-            }
-        } else {
-            if (newValue > 40) {
-                showSwal("WARNING!", "El máximo valor permitido es 40", "info");
-                newValue = 0;
-            }
-        }
-        setEditedCalificaciones((prev) => ({
-            ...prev,
-            [numero]: newValue,
-        }));
-    };
 
     const tableAction = (evt, calificacion, accion) => {
         setCalificacion(calificacion);
@@ -53,10 +33,40 @@ function TablaCalificaciones({
 
     const saveCalificacion = (numero) => {
         loadGlobalVariables();
+        let newValue = parseFloat(editedCalificaciones[numero]);
+        if (globalVariables.vg_caso_evaluar === 'CALIFICACIÓN') {
+            if (newValue > 10) {
+                showSwal("WARNING!", "El máximo valor permitido es 10", "info");
+                newValue = 0;
+                setEditedCalificaciones((prev) => ({
+                    ...prev,
+                    [numero]: newValue,
+                }));
+                return
+            } else if (newValue < 0) {
+                showSwal("WARNING!", "El valor debe ser mayor o igual a 0", "info");
+                newValue = 0;
+                setEditedCalificaciones((prev) => ({
+                    ...prev,
+                    [numero]: newValue,
+                }));
+                return
+            }
+        } else {
+            if (newValue > 40) {
+                showSwal("WARNING!", "El máximo valor permitido es 40", "info");
+                newValue = 0;
+                setEditedCalificaciones((prev) => ({
+                    ...prev,
+                    [numero]: newValue,
+                }));
+                return;
+            }
+        }
         const index = calificaciones.findIndex((fp) => fp.numero === numero);
         if (index !== -1) {
             const fpFiltrados = calificaciones.map((fp) =>
-                fp.numero === numero ? { ...fp, calificacion: formatNumber(editedCalificaciones[numero]) } : fp
+                fp.numero === numero ? { ...fp, calificacion: formatNumber(newValue) } : fp
             );
             setCalificaciones(fpFiltrados);
             setCalificacionesFiltrados(fpFiltrados);
@@ -84,14 +94,26 @@ function TablaCalificaciones({
                                 <td className="w-[25%]">
                                     {editMode === item.numero ? (
                                         <input
-                                            type="number"
-                                            value={editedCalificaciones[item.numero] || item.calificacion || ""}
-                                            onChange={(e) => handleEditChange(item.numero, e.target.value)}
+                                            type="text"
+                                            min="0"
+                                            maxLength={4}
+                                            value={editedCalificaciones[item.numero] || ""}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                if (value === "" || /^\d*\.?\d*$/.test(value)) {
+                                                    setEditedCalificaciones((prev) => ({
+                                                        ...prev,
+                                                        [item.numero]: value
+                                                    }));
+                                                }
+                                            }}
+                                            onKeyDown={soloDecimales}
                                             className="input input-bordered w-full"
                                         />
                                     ) : (
                                         item.calificacion || "N/A"
                                     )}
+
                                 </td>
                                 <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                                     {editMode === item.numero ? (
