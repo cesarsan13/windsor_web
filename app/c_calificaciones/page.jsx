@@ -123,7 +123,13 @@ function C_Calificaciones() {
             if (datos.length > 0) {
                 setAsignatura(datos);
                 setIsDisabled(true);
-            } else { setAsignatura([]); setEvaluacion([]); setActividades([]); };
+            } else {
+                showSwal('¡Atención!', 'El grupo seleccionado no tiene asignaturas disponibles. Por favor, elige otro grupo.', 'error');
+                setIsDisabled(false);
+                setAsignatura([]);
+                setEvaluacion([]);
+                setActividades([]);
+            };
         }
         fetchData();
     }, [grupo]);
@@ -133,9 +139,9 @@ function C_Calificaciones() {
         let validar;
         let res = await getContraseñaProfe(token, grupo, materia);
         const data = res.data;
-        if (!data) {
-            showSwal('Error', 'No se encontró al profesor. Verifica la contraseña, grupo, o asignatura e intenta nuevamente.', 'error');
-            return;
+        if (!data.contraseña) {
+            showSwal('Error', 'Grupo no asignado a profesor.', 'error');
+            return false;
         }
         if (contraseña.toLowerCase() === data.contraseña.toLowerCase()) {
             validar = true;
@@ -188,7 +194,7 @@ function C_Calificaciones() {
         data.grupo = grupo.numero;
         data.grupo_nombre = grupo.horario;
         data.materia = materia;
-        if (evaluacion.length <= 0) {
+        if (evaluacion.length <= 0 || actividades.length <= 0) {
             data.cb_actividad = false;
         } else {
             data.cb_actividad = isDisabled2;
@@ -413,7 +419,7 @@ function C_Calificaciones() {
                                 />
                             )}
 
-                            {isDisabled2 && (
+                            {isDisabled2 && actividades.length > 0 && (
                                 <Inputs
                                     dataType={"int"}
                                     name={"actividad"}
