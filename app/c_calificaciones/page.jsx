@@ -119,6 +119,9 @@ function C_Calificaciones() {
         }
         const fetchData = async () => {
             const { token } = session.user;
+            if (!grupo.numero) {
+                return;
+            }
             let datos = await getClasesBuscaCat(token, grupo.numero);
             if (datos.length > 0) {
                 setAsignatura(datos);
@@ -132,7 +135,7 @@ function C_Calificaciones() {
             };
         }
         fetchData();
-    }, [grupo]);
+    }, [grupo.numero]);
 
     const validar = async (grupo, materia, contraseña) => {
         const { token } = session.user;
