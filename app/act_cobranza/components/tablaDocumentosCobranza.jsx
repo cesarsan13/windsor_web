@@ -17,10 +17,10 @@ function TablaDocumentosCobranza({
   setCurrentId,
   productos
 }) {
-  const tableAction = (evt, documento, accion) => {    
-    const producto = productos.find(producto=>producto.numero===documento.producto)    
-    if(producto){
-      showSwal("INFO","No puedes acceder al registro porque el producto está dado de baja.",'info')
+  const tableAction = (evt, documento, accion) => {
+    const producto = productos.find(producto => producto.numero === documento.producto)
+    if (producto) {
+      showSwal("INFO", "No puedes acceder al registro porque el producto está dado de baja.", 'info')
       return
     }
     setDocumento(documento);
@@ -38,9 +38,9 @@ function TablaDocumentosCobranza({
               <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Editar</th>
               <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Eliminar</th>
               <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Producto</td>
-              <td className="w-[40%] pt-[.10rem] pb-[.10rem]">Descripcion</td>
-              <td className="w-[40%] pt-[.10rem] pb-[.10rem]">Documento</td>
-              <td className="w-[40%] pt-[.10rem] pb-[.10rem]">Fecha</td>
+              <td className="w-[60%] pt-[.10rem] pb-[.10rem]">Descripción</td>
+              <td className="w-[10%] pt-[.10rem] pb-[.10rem]">Documento</td>
+              <td className="w-[60%] pt-[.10rem] pb-[.10rem]">Fecha</td>
               <td className="w-[40%] pt-[.10rem] pb-[.10rem]">Importe</td>
               <td className="w-[40%] pt-[.10rem] pb-[.10rem]">Desc</td>
               <td className="w-[40%] pt-[.10rem] pb-[.10rem]">F. Pago</td>
@@ -89,10 +89,10 @@ function TablaDocumentosCobranza({
                 <td>{item.descripcion}</td>
                 <td>{item.numero_doc}</td>
                 <td>{item.fecha}</td>
-                <td className="text-right">{formatNumber(item.importe,2)}</td>
-                <td className="text-right">{formatNumber(item.descuento,2)}</td>
+                <td className="text-right">{formatNumber(item.importe, 2)}</td>
+                <td className="text-right">{formatNumber(item.descuento, 2)}</td>
                 <td>{item.fecha_cobro}</td>
-                <td className="text-right">{formatNumber(item.importe_pago,2)}</td>
+                <td className="text-right">{formatNumber(item.importe_pago, 2)}</td>
               </tr>
             ))}
           </tbody>
