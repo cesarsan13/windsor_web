@@ -26,6 +26,10 @@ function TablaCalificaciones({
         setCurrentId(calificacion.numero);
         if (accion === "Editar") {
             setEditMode(calificacion.numero);
+            setEditedCalificaciones((prev) => ({
+                ...prev,
+                [calificacion.numero]: calificacion.calificacion,
+            }));
         } else {
             setEditMode(null);
         }
@@ -107,11 +111,10 @@ function TablaCalificaciones({
                                                     }));
                                                 }
                                             }}
-                                            onKeyDown={soloDecimales}
                                             className="input input-bordered w-full"
                                         />
                                     ) : (
-                                        item.calificacion || "N/A"
+                                        item.calificacion || 0.00
                                     )}
 
                                 </td>
