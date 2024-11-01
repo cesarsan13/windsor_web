@@ -16,9 +16,8 @@ import VistaPrevia from "@/app/components/VistaPrevia";
 import Busqueda from "@/app/clases/components/Busqueda";
 import ModalClases from "@/app/clases/components/modalClases";
 import { ReportePDF } from "../utils/ReportesPDF";
-import { showSwal } from "../utils/alerts";
+import { showSwal, confirmSwal } from "../utils/alerts";
 import { debounce } from "../utils/globalfn";
-
 
 function Clases() {
   const router = useRouter();
@@ -30,6 +29,7 @@ function Clases() {
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
   const [grado, setGrado] = useState({});
+  const [grado2, setGrado2] = useState({});
   const [prof1, setprof1] = useState({});
   const [prof2, setprof2] = useState({});
   const [animateLoading, setAnimateLoading] = useState(false);
@@ -163,8 +163,8 @@ function Clases() {
     event.preventDefault;
 
     // const dataj = JSON.stringify(data);
-    data.id = currentID;
-    data.grupo = grado.numero;
+   // data.id = currentID;
+    data.grupo = grado.grupo;
     data.materia = prof1.numero;
     data.profesor = prof2.numero;
 
@@ -223,12 +223,12 @@ function Clases() {
             setClasesFiltrados(cFiltrados);
           } else {
             if (bajas) {
-              const cFiltrados = clases.filter((c) => c.numero !== data.numero);
+              const cFiltrados = clases.filter((c) => c.grupo !== data.grupo && c.materia !== data.materia);
               setClases(cFiltrados);
               setClasesFiltrados(cFiltrados);
             } else {
               const cActualizadas = clases.map((c) =>
-                c.numero === currentID ? { ...c, ...data } : c
+                c.grupo && c.materia === currentID ? { ...c, ...data } : c
               );
               setClases(cActualizadas);
               setClasesFiltrados(cActualizadas);
@@ -376,11 +376,11 @@ function Clases() {
         setClase={setClase}
         clase={clase}
         setGrado={setGrado}
+        setGrado2={setGrado2}
         setprof1={setprof1}
         setprof2={setprof2}
       />
       <VistaPrevia
-      
         id="modalVPClase"
         titulo={"Vista PRevia de Clases"}
         pdfPreview={pdfPreview}

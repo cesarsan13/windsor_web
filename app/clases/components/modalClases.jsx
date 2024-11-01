@@ -22,7 +22,7 @@ function ModalClases({
   const [error, setError] = useState(null);
   //Horario
   const columnasBuscaCat = ["numero", "horario"];
-  const nameInputs = ["horario_1", "grupo_nombre"];
+  const nameInputs = ["horario_1", "horario_1_nombre"];
   //Profesor
   const columnasBuscaCat1 = ["numero", "nombre"];
   const nameInputs3 = ["profesor", "profesor_nombre"];
@@ -41,14 +41,14 @@ function ModalClases({
     }
     setTitulo(
       accion === "Alta"
-        ? `Nueva Clase: ${currentID}`
+        ? `Nueva Clase`
         : accion === "Editar"
-        ? `Editar Clase: ${currentID}`
+        ? `Editar Clase`
         : accion === "Eliminar"
-        ? `Eliminar Clase: ${currentID}`
-        : `Ver Clase: ${currentID}`
+        ? `Eliminar Clase`
+        : `Ver Clase`
     );
-  }, [accion, currentID]);
+  }, [accion]);
   
   return (
 <dialog id="my_modal_3" className="modal">
@@ -87,6 +87,21 @@ function ModalClases({
       
       <fieldset id="fs_formapago">
       <div className="flex flex-col gap-3 mb-6">
+        <BuscarCat
+          table="horarios"
+          itemData={clase}
+          fieldsToShow={columnasBuscaCat}
+          nameInput={nameInputs}
+          titulo={"Grado: "}
+          setItem={setGrado}
+          token={session?.user?.token}
+          modalId="modal_horarios"
+          array={clase.horario_1}
+          id={clase.numero}
+          alignRight={true}
+          inputWidths={{ first: "80px", second: "380px" }}
+          accion={accion}
+        />
       <BuscarCat
                     table="materias"
                     itemData={setprof2}
@@ -98,21 +113,6 @@ function ModalClases({
                     modalId="modal_materias"
                     array={clase.materia}
                     id={clase.materia}
-                    alignRight={true}
-                    inputWidths={{ first: "80px", second: "380px" }}
-                    accion={accion}
-                  />
-                  <BuscarCat
-                    table="horarios"
-                    itemData={clase}
-                    fieldsToShow={columnasBuscaCat}
-                    nameInput={nameInputs}
-                    titulo={"Grado: "}
-                    setItem={setGrado}
-                    token={session?.user?.token}
-                    modalId="modal_horarios"
-                    array={clase.horario_1}
-                    id={clase.numero}
                     alignRight={true}
                     inputWidths={{ first: "80px", second: "380px" }}
                     accion={accion}
