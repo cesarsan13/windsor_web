@@ -1,44 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 
-export const getProcesoCalificaciones = async (token, data) => {
-    let url = `${process.env.DOMAIN_API}api/proceso/calificaciones-get`
-    const res = await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify({
-            numero: data.numero,
-            nombre: data.nombre,
-            grupo: data.grupo_nombre,
-            materia: data.materia,
-            bimestre: data.bimestre,
-            cb_actividad: data.cb_actividad,
-            actividad: data.actividad,
-            unidad: data.evaluacion,
-        }),
-        headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-        },
-    });
-    const resJson = await res.json();
-    return resJson;
-};
-
-export const getProcesoCalificacionesAlumnos = async (token, data) => {
-    let url = `${process.env.DOMAIN_API}api/proceso/calificaciones-alumnos`
-    const res = await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify({
-            grupo: data.grupo,
-        }),
-        headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-        },
-    });
-    const resJson = await res.json();
-    return resJson;
-};
 
 export const getProcesoTareasTrabajosPendientes = async (token, data) => {
     let url = `${process.env.DOMAIN_API}api/proceso/tareastrabajos-get`
@@ -82,27 +44,6 @@ export const guardarC_Otras = async (token, data, data2) => {
     return resJson;
 }
 
-export const guardarProcesoCalificaciones = async (token, data, data2) => {
-    let url = `${process.env.DOMAIN_API}api/proceso/guardar-calificaciones`
-    const res = await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify({
-            alumno: data.numero,
-            calificacion: data.calificacion || "0.00",
-            materia: data2.materia,
-            grupo: data2.grupo,
-            bimestre: data2.bimestre,
-            actividad: data2.actividad,
-            unidad: data2.evaluacion,
-        }),
-        headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-        },
-    });
-    const resJson = await res.json();
-    return resJson;
-}
 
 const Enca1 = (doc) => {
     if (!doc.tiene_encabezado) {

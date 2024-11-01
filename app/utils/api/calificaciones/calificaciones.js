@@ -1,13 +1,15 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
- 
+
 export const getProcesoCalificaciones = async (token, data) => {
   let url = `${process.env.DOMAIN_API}api/proceso/calificaciones-get`;
   const res = await fetch(url, {
     method: "POST",
     body: JSON.stringify({
-      alumno: data.alumno,
-      grupo: data.grupo,
+      numero: data.numero,
+      nombre: data.nombre,
+      grupo: data.grupo_nombre,
+      materia: data.materia,
       bimestre: data.bimestre,
       cb_actividad: data.cb_actividad,
       actividad: data.actividad,
@@ -21,6 +23,45 @@ export const getProcesoCalificaciones = async (token, data) => {
   const resJson = await res.json();
   return resJson;
 };
+
+export const getProcesoCalificacionesAlumnos = async (token, data) => {
+  let url = `${process.env.DOMAIN_API}api/proceso/calificaciones-alumnos`;
+  const res = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify({
+      grupo: data.grupo,
+    }),
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+  const resJson = await res.json();
+  return resJson;
+};
+
+export const guardarProcesoCalificaciones = async (token, data, data2) => {
+  let url = `${process.env.DOMAIN_API}api/proceso/guardar-calificaciones`;
+  const res = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify({
+      alumno: data.numero,
+      calificacion: data.calificacion || "0.00",
+      materia: data2.materia,
+      grupo: data2.grupo,
+      bimestre: data2.bimestre,
+      actividad: data2.actividad,
+      unidad: data2.evaluacion,
+    }),
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+  const resJson = await res.json();
+  return resJson;
+};
+
 export const getCalificacionesAlumnos = async (token, grupo) => {
   let url = `${process.env.DOMAIN_API}api/calificaciones/alumnosArea1`;
   const res = await fetch(url, {
@@ -214,7 +255,7 @@ export const getLugaresArea1 = (
   }
   return alumnos;
 };
-const Enca1 = (doc,checkBoletaKinder,cicloFechas) => {
+const Enca1 = (doc, checkBoletaKinder, cicloFechas) => {
   if (!doc.tiene_encabezado) {
     doc.imprimeEncabezadoPrincipalV();
     doc.nextRow(12);
@@ -262,8 +303,17 @@ const Enca1 = (doc,checkBoletaKinder,cicloFechas) => {
 };
 export const Imprimir = (configuracion) => {
   const newPDF = new ReportePDF(configuracion);
-  const { body, header, header2, cicloFechas, alumno, grupo,checkBoletaK,selectedOption } = configuracion;
-  Enca1(newPDF,checkBoletaK,cicloFechas);
+  const {
+    body,
+    header,
+    header2,
+    cicloFechas,
+    alumno,
+    grupo,
+    checkBoletaK,
+    selectedOption,
+  } = configuracion;
+  Enca1(newPDF, checkBoletaK, cicloFechas);
   newPDF.nextRow(10);
   newPDF.ImpPosX(`ALUMNO ${alumno || ""}`, 15, newPDF.tw_ren, 0, "L");
   newPDF.nextRow(4);
@@ -688,18 +738,12 @@ export const Imprimir = (configuracion) => {
   newPDF.nextRow(50);
   newPDF.printLine(50, 160);
   newPDF.nextRow(6);
-  newPDF.ImpPosX(
-    "NOMBRE Y FIRMA DEL PADRE O TUTOR",
-    70,
-    newPDF.tw_ren,
-    0,
-    "L"
-  );
-  if(selectedOption==="español"){
-    newPDF.guardaReporte(`Boleta5_Español_${alumno||""}`);
-  }else if(selectedOption==="ingles"){
-    newPDF.guardaReporte(`Boleta5_Ingles_${alumno||""}`);
-  }else{
-    newPDF.guardaReporte(`Boleta5_Ambos_${alumno||""}`);
-  }  
+  newPDF.ImpPosX("NOMBRE Y FIRMA DEL PADRE O TUTOR", 70, newPDF.tw_ren, 0, "L");
+  if (selectedOption === "español") {
+    newPDF.guardaReporte(`Boleta5_Español_${alumno || ""}`);
+  } else if (selectedOption === "ingles") {
+    newPDF.guardaReporte(`Boleta5_Ingles_${alumno || ""}`);
+  } else {
+    newPDF.guardaReporte(`Boleta5_Ambos_${alumno || ""}`);
+  }
 };
