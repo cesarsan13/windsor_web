@@ -10,9 +10,10 @@ import { getDocumentosAlumno, guardarActCobranza } from '../utils/api/act_cobran
 import { confirmSwal, showSwal, showSwalAndWait } from '../utils/alerts';
 import ModalActCobranza from './components/ModalActCobranza';
 import { useForm } from 'react-hook-form';
-import { formatFecha } from '../utils/globalfn';
+import { Elimina_Comas, formatFecha, formatNumber, poneCeros } from '../utils/globalfn';
 import { useRouter } from 'next/navigation';
 import Busqueda from './components/Busqueda';
+import { getProductos } from '../utils/api/productos/productos';
 
 
 function Act_Cobranza() {
@@ -23,6 +24,7 @@ function Act_Cobranza() {
     const [alumnos, setAlumnos] = useState([])
     const [alumnosFiltrados, setAlumnosFiltrados] = useState([])
     const [alumno, setAlumno] = useState({})
+    const [productos,setProductos]=useState([])
     const [accion, setAccion] = useState("")
     const [documentos, setDocumentos] = useState([])
     const [documento, setDocumento] = useState({})
@@ -41,6 +43,8 @@ function Act_Cobranza() {
             setisLoading(true)
             const { token } = session.user
             const data = await getAlumnos(token, false)
+            const dataProducto =await getProductos(token,true)
+            setProductos(dataProducto)
             setAlumnos(data)
             setAlumnosFiltrados(data)
             setisLoading(false)
@@ -68,15 +72,15 @@ function Act_Cobranza() {
             producto: documento.producto,
             numero_doc: documento.numero_doc,
             fecha: formatFecha(documento.fecha),
-            importe: documento.importe,
-            descuento: documento.descuento,
+            importe: formatNumber(documento.importe,2),
+            descuento: formatNumber(documento.descuento,2),
         })
     }, [documento, reset])
     const documentosAlumno = async (id) => {
         setisLoadingDocumentos(true)
         const { token } = session.user
-        const data = await getDocumentosAlumno(token, id)
-        setDocumentos(data)
+        const data = await getDocumentosAlumno(token, id)        
+        setDocumentos(data)    
         setisLoadingDocumentos(false)
     }
     const Alta = async (event) => {
@@ -105,9 +109,12 @@ function Act_Cobranza() {
     }
     const onSubmitModal = handleSubmit(async (data) => {
         event.preventDefault();
-        if (accion === "Alta") data.producto = producto.numero;
+        if (accion === "Alta") { 
+            data.producto = producto.numero
+            data.descripcion = producto.descripcion
+        };
         data.alumno = currentID;
-        setCurrentIdDocumento(data.documento);        
+        setCurrentIdDocumento(data.documento);
         if (accion === "Eliminar") {
             showModal(false);
             const confirmed = await confirmSwal(
@@ -121,8 +128,12 @@ function Act_Cobranza() {
                 showModal(true);
                 return;
             }
-        }
+        }        
+        data.importe=Elimina_Comas(data.importe)
+        data.descuento=Elimina_Comas(data.descuento)
         const res = await guardarActCobranza(session.user.token, accion, data);
+        data.importe=formatNumber(data.importe,2)
+        data.descuento=formatNumber(data.descuento,2)
         if (res.status) {
             if (accion === "Alta") {
                 const nuevaActividad = { currentIDDocumento, ...data };
@@ -131,7 +142,7 @@ function Act_Cobranza() {
 
             if (accion === "Eliminar" || accion === "Editar") {
                 const index = documentos.findIndex((fp) =>
-                    fp.numero_doc === data.numero_doc &&                    
+                    fp.numero_doc === data.numero_doc &&
                     fp.producto === data.producto &&
                     fp.fecha === data.fecha
                 );
@@ -145,9 +156,9 @@ function Act_Cobranza() {
                         setDocumentos(actDocFiltrados);
                     } else {
                         const actDocActualizadas = documentos.map((fp) =>
-                            fp.numero_doc === data.numero_doc &&                            
-                            fp.producto === data.producto &&
-                            fp.fecha === data.fecha
+                            fp.numero_doc === data.numero_doc &&
+                                fp.producto === data.producto &&
+                                fp.fecha === data.fecha
                                 ? { ...fp, ...data }
                                 : fp
                         );
@@ -196,6 +207,18 @@ function Act_Cobranza() {
         })
         setAlumnosFiltrados(infoFiltrada)
     }
+    const handleBlur= (evt,datatype)=>{
+        if (evt.target.value === "") return;
+        setDocumento((documento)=>({
+            ...documento,
+            [evt.target.name]:formatNumber(evt.target.value, 2)
+        }))
+        setValue(evt.target.name,formatNumber(evt.target.value, 2))
+    }
+    const handleInputClick = (evt) => {
+        evt.preventDefault();
+        evt.target.select();
+      };
     return (
         <>
             <ModalActCobranza
@@ -206,8 +229,10 @@ function Act_Cobranza() {
                 register={register}
                 onSubmit={onSubmitModal}
                 setProducto={setProducto}
+                handleBlur={handleBlur}
+                handleInputClick={handleInputClick}                
             ></ModalActCobranza>
-            <div className='container h-[83vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden'>
+            <div className='container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden'>
                 <div className='flex flex-col justify-start p-3'>
                     <div className='flex flex-wrap md:flex-nowrap items-start md:items-center'>
                         <div className='order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0 pr-4'>
@@ -222,16 +247,14 @@ function Act_Cobranza() {
                         </h1>
                     </div>
                 </div>
-                <div className='flex flex-col items-center h-full'>
-                    <div className='w-full max-w-4xl'>
+                <div className='flex flex-col items-center w-full'>
+                    <div className='w-full max-w-4xl max-h-[60vh] overflow-y-scroll'>
                         <Busqueda
                             busqueda={busqueda}
                             Buscar={Buscar}
                             handleBusquedaChange={handleBusquedaChange}
                             limpiarBusqueda={limpiarBusqueda}
                         />
-                    </div>
-                    <div className='w-full max-w-4xl flex flex-row gap-2'>
                         <TablaActCobranzaAlumnos
                             alumnosFiltrados={alumnosFiltrados}
                             isLoading={isLoading}
@@ -247,6 +270,7 @@ function Act_Cobranza() {
                             setCurrentId={setCurrentIdDocumento}
                             setDocumento={setDocumento}
                             showModal={showModal}
+                            productos={productos}
                         ></TablaDocumentosCobranza>
                     </div>
                 </div>
