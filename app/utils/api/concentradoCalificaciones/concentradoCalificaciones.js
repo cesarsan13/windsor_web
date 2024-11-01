@@ -1,6 +1,7 @@
 
-export const getMateriasPorGrupo = async (token, $idHorario) => {
-    let url = `${process.env.DOMAIN_API}api/concentradoCalificaciones/materiasGrupo/` + $idHorario;
+export const getMateriasPorGrupo = async (token, idHorario) => {
+    if(idHorario > 0){
+    let url = `${process.env.DOMAIN_API}api/concentradoCalificaciones/materiasGrupo/${idHorario}`;
     const res = await fetch(url, {
         method: "get",
         headers:{
@@ -10,10 +11,12 @@ export const getMateriasPorGrupo = async (token, $idHorario) => {
     });
     const resJson = await res.json();
     return resJson.data;
+    }
 };
 
 
 export const getInfoActividadesXGrupo = async (token, idHorario, idBimestre) => {
+    if(idHorario > 0 && idBimestre > 0){
     let url = `${process.env.DOMAIN_API}api/concentradoCalificaciones/detallesGrupoGeneral/${idHorario}/${idBimestre}`;
     const res = await fetch(url, {
         method: "get",
@@ -24,9 +27,11 @@ export const getInfoActividadesXGrupo = async (token, idHorario, idBimestre) => 
     });
     const resJson = await res.json();
     return resJson.data;
+    }
 };
 
 export const getActividadesXHorarioXAlumnoXMateriaXBimestre = async (token, idHorario, idAlumno, idMateria, idBimestre) => {
+    if(idHorario > 0 && idBimestre > 0 && idAlumno > 0 && idMateria >0){
     let url = `${process.env.DOMAIN_API}api/concentradoCalificaciones/detalles/${idHorario}/${idAlumno}/${idMateria}/${idBimestre}`;
     const res = await fetch(url, {
         method: "get",
@@ -37,10 +42,12 @@ export const getActividadesXHorarioXAlumnoXMateriaXBimestre = async (token, idHo
     });
     const resJson = await res.json();
     return resJson.data;
+    }
 };
 
-export const getMateriasReg = async (token) => {
-    let url = `${process.env.DOMAIN_API}api/concentradoCalificaciones/MateriasReg`;
+export const getMateriasReg = async (token, idHorario) => {
+    if(idHorario > 0){
+    let url = `${process.env.DOMAIN_API}api/concentradoCalificaciones/MateriasReg/${idHorario}`;
     const res = await fetch(url, {
         method: "get",
         headers:{
@@ -50,6 +57,7 @@ export const getMateriasReg = async (token) => {
     });
     const resJson = await res.json();
     return resJson.data;
+}
 };
 
 export const getActividadesReg = async (token) => {
@@ -66,6 +74,7 @@ export const getActividadesReg = async (token) => {
 };
 
 export const getAlumno = async (token, idHorario) => {
+    if(idHorario > 0){
     let url = `${process.env.DOMAIN_API}api/concentradoCalificaciones/Alumno/${idHorario}`;
     const res = await fetch(url, {
         method: "get",
@@ -76,4 +85,5 @@ export const getAlumno = async (token, idHorario) => {
     });
     const resJson = await res.json();
     return resJson.data;
+    }
 };

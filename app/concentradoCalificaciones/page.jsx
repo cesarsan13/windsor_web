@@ -25,7 +25,6 @@ function ConcentradoCalificaciones() {
     const [materiasReg, setMateriasReg] = useState({});
     const [actividadesReg, setActividadesReg] = useState({});
     const [alumnoReg, setAlumnoReg] = useState({});
-    let bimestre = 0;
     let idAlumno = 0;
     let idMateria = 0;
     const {
@@ -35,62 +34,24 @@ function ConcentradoCalificaciones() {
         formState: { errors },
     } = useForm();
 
-    bimestre = watch('bimestre');
-
-    console.log("grupo", grupo.numero);
-
-    useEffect(() => {
-        if (status === "loading" || !session) {
-            return;
-          }           
-
-        const fetchData1 = async () => {  
-            const {token} = session.user;
-
-            const [ materias, actividades] =
-              await Promise.all([
-                getMateriasReg(token),
-                getActividadesReg(token),
-            ]);
-                setMateriasReg(materias);
-                setActividadesReg(actividades);
-            };
-            
-        fetchData1();
-        //console.log(materiasEncabezado, calificacionesTodosAlumnos);
-    }, [session, status, bimestre, grupo]);
-
-
-    useEffect(() => {
-        if (status === "loading" || !session) {
-            return;
-          } 
-          
-          
-        const fetchData2 = async () => {  
-            const {token} = session.user;
-
-            const [materiasEncabezado, matAlumnos, alumno] = //detalleCalAlumno
-              await Promise.all([
-                getMateriasPorGrupo(token, grupo.numero),
-                getInfoActividadesXGrupo(token, grupo.numero, bimestre),
-                getAlumno(token, grupo.numero)
-                //getActividadesXHorarioXAlumnoXMateriaXBimestre(token, grupo.numero, idAlumno, idMateria, bimestre)
-            ]);
-                console.log("a", alumno);
-                setMateriasEncabezado(materiasEncabezado);
-                setCalificacionesTodosAlumnos(matAlumnos);
-                setAlumnoReg(alumno);
-                //setCalificacionesDesgloseAlumno(detalleCalAlumno);
-                
-            };
-            
-        fetchData2();
-        //console.log(materiasEncabezado, calificacionesTodosAlumnos);
-    }, [session, status, bimestre, grupo]);
-
-    
-    //const Buscar = handleSubmit(async (data) => {});
+    const Buscar = handleSubmit(async (data) => {
+        const {token} = session.user;
+        const [materiasEncabezado, matAlumnos, alumno, materias, actividades] = //detalleCalAlumno
+          await Promise.all([
+            getMateriasPorGrupo(token, grupo.numero),
+            getInfoActividadesXGrupo(token, grupo.numero, data.bimestre),
+            getAlumno(token, grupo.numero),
+            getMateriasReg(token, grupo.numero),
+            getActividadesReg(token),
+            //getActividadesXHorarioXAlumnoXMateriaXBimestre(token, grupo.numero, idAlumno, idMateria, bimestre)
+        ]);
+            setMateriasEncabezado(materiasEncabezado);
+            setCalificacionesTodosAlumnos(matAlumnos);
+            setAlumnoReg(alumno);
+            setMateriasReg(materias);
+            setActividadesReg(actividades);
+            //setCalificacionesDesgloseAlumno(detalleCalAlumno);
+    });
 
   const handleVerClick = () => {};
 
@@ -110,7 +71,10 @@ function ConcentradoCalificaciones() {
                     <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
                         <Acciones
                             home={home}
+                            Buscar={Buscar}
                             Ver={handleVerClick}
+                            isLoading={isLoading}
+                            
                         />
                     </div>
                     <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
