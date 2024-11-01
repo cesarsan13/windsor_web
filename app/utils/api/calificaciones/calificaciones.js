@@ -1,6 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-
+ 
 export const getProcesoCalificaciones = async (token, data) => {
     let url = `${process.env.DOMAIN_API}api/proceso/calificaciones-get`
     const res = await fetch(url, {
