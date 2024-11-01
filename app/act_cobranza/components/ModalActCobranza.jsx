@@ -11,12 +11,14 @@ function ModalActCobranza({
     documento,
     errors,
     register,
-    setProducto
+    setProducto,
+    handleBlur,
+    handleInputClick
 }) {
     const [error, setError] = useState(null);
     const [titulo, setTitulo] = useState("");
-    const [isDisabled, setIsDisabled] = useState(true);    
-    console.log("documento",documento)
+    const [isDisabled, setIsDisabled] = useState(true);
+    console.log("documento", documento)
     useEffect(() => {
         if (accion === "Eliminar" || accion === "ver") {
             setIsDisabled(true)
@@ -33,7 +35,8 @@ function ModalActCobranza({
                         ? `Eliminar Cobranza`
                         : `Ver Cobranza`
         );
-    }, [accion])    
+    }, [accion])
+    
     return (
         <dialog className='modal' id='my_modal_3'>
             <div className='modal-box'>
@@ -71,9 +74,9 @@ function ModalActCobranza({
                     </div>
                     <fieldset id='fs_actcobranza'>
                         <div className='container flex flex-col space-y-5'>
-                                <BuscarCat
-                                nameInput={["producto","nombre_producto"]}
-                                fieldsToShow={["numero","descripcion"]}
+                            <BuscarCat
+                                nameInput={["producto", "nombre_producto"]}
+                                fieldsToShow={["numero", "descripcion"]}
                                 titulo={"Productos"}
                                 table={"productos"}
                                 modalId={"modal_actcobranza"}
@@ -81,8 +84,10 @@ function ModalActCobranza({
                                 token={session.user.token}
                                 array={documento.producto}
                                 accion={accion}
-                                ></BuscarCat>
-                                <Inputs
+                                alignRight={true}
+                                deshabilitado={accion === "Editar" ||accion === "Eliminar"}
+                            ></BuscarCat>
+                            <Inputs
                                 dataType={"int"}
                                 name={"numero_doc"}
                                 tamañolabel={"w-3/6"}
@@ -92,9 +97,9 @@ function ModalActCobranza({
                                 errors={errors}
                                 register={register}
                                 message={"documento Requerido"}
-                                isDisabled={isDisabled || accion==="Editar"}
-                                />
-                                <Inputs
+                                isDisabled={isDisabled || accion === "Editar"}
+                            />
+                            <Inputs
                                 dataType={"string"}
                                 name={"fecha"}
                                 tamañolabel={"w-3/6"}
@@ -105,10 +110,10 @@ function ModalActCobranza({
                                 errors={errors}
                                 register={register}
                                 message={"Fecha Requerido"}
-                                isDisabled={isDisabled || accion==="Editar"}
-                                />
-                                <Inputs
-                                dataType={"int"}
+                                isDisabled={isDisabled || accion === "Editar"}
+                            />
+                            <Inputs
+                                dataType={"float"}
                                 name={"importe"}
                                 tamañolabel={"w-3/6"}
                                 className={"w-3/6 text-right"}
@@ -118,9 +123,12 @@ function ModalActCobranza({
                                 register={register}
                                 message={"importe Requerido"}
                                 isDisabled={isDisabled}
-                                />
-                                <Inputs
-                                dataType={"int"}
+                                handleBlur={handleBlur}
+                                requerido={true}
+                                onClick={handleInputClick}
+                            />
+                            <Inputs
+                                dataType={"float"}
                                 name={"descuento"}
                                 tamañolabel={"w-3/6"}
                                 className={"w-3/6 text-right"}
@@ -130,7 +138,10 @@ function ModalActCobranza({
                                 register={register}
                                 message={"descuento Requerido"}
                                 isDisabled={isDisabled}
-                                />                                 
+                                handleBlur={handleBlur}
+                                requerido={false}
+                                onClick={handleInputClick}
+                            />
                         </div>
                     </fieldset>
                 </form>

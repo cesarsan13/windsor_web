@@ -15,6 +15,7 @@ function Inputs({
     maxLenght,
     isDisabled,
     handleBlur,
+    onClick
 }) {
     return (
         <div className='flex flex-col'>
@@ -25,6 +26,7 @@ function Inputs({
                     name={name}
                     id={name}
                     type={type}
+                    onClick={onClick}
                     className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 input-xs md:input-sm ${className}`}
                     {...(dataType === "int" && { onKeyDown: soloEnteros })}
                     {...(dataType === "float" && { onKeyDown: soloDecimales })}

@@ -1,5 +1,8 @@
 import Loading from "@/app/components/loading";
 import NoData from "@/app/components/NoData";
+import { showSwal } from "@/app/utils/alerts";
+import { getProductos } from "@/app/utils/api/productos/productos";
+import { formatNumber } from "@/app/utils/globalfn";
 import iconos from "@/app/utils/iconos";
 import Image from "next/image";
 import React from "react";
@@ -12,15 +15,21 @@ function TablaDocumentosCobranza({
   setDocumento,
   setAccion,
   setCurrentId,
+  productos
 }) {
-  const tableAction = (evt, documento, accion) => {
+  const tableAction = (evt, documento, accion) => {    
+    const producto = productos.find(producto=>producto.numero===documento.producto)    
+    if(producto){
+      showSwal("INFO","No puedes acceder al registro porque el producto está dado de baja.",'info')
+      return
+    }
     setDocumento(documento);
     setAccion(accion);
     setCurrentId(documento.numero_doc);
     showModal(true);
   };
   return !isLoading ? (
-    <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white  w-full lg:w-full">
+    <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(35vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white  w-full lg:w-full">
       {documentos.length > 0 ? (
         <table className="table table-xs table-zebra w-full">
           <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
@@ -80,10 +89,10 @@ function TablaDocumentosCobranza({
                 <td>{item.descripcion}</td>
                 <td>{item.numero_doc}</td>
                 <td>{item.fecha}</td>
-                <td className="text-right">{item.importe}</td>
-                <td className="text-right">{item.descuento}</td>
+                <td className="text-right">{formatNumber(item.importe,2)}</td>
+                <td className="text-right">{formatNumber(item.descuento,2)}</td>
                 <td>{item.fecha_cobro}</td>
-                <td className="text-right">{item.importe_pago}</td>
+                <td className="text-right">{formatNumber(item.importe_pago,2)}</td>
               </tr>
             ))}
           </tbody>
