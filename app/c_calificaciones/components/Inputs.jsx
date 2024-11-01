@@ -62,7 +62,7 @@ function Inputs({
         >
           {Titulo}
           <select
-            name={name}x
+            name={name}
             className={`text-black dark:text-white bg-transparent dark: ${className}`}
             id={name}
             {...register(name, {
