@@ -21,8 +21,8 @@ import { getActividadSecuencia } from "@/app/utils/api/actividades/actividades";
 import { getContraseñaProfe } from "@/app/utils/api/profesores/profesores";
 import {
   getProcesoCalificaciones,
-  getProcesoCalificacionesAlumnos,
   guardarProcesoCalificaciones,
+  getProcesoCalificacionesAlumnos,
   ImprimirPDF,
   ImprimirExcel,
   getProcesoTareasTrabajosPendientes,
