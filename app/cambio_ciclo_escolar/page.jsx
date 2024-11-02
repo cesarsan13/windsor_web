@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import Acciones from "@/app/cambio_numero_alumno/components/Acciones";
+import Acciones from "@/app/cambio_ciclo_escolar/components/Acciones";
 import { useSession } from "next-auth/react";
 import BuscarCat from "../components/BuscarCat";
-import Inputs from "@/app/cambio_numero_alumno/components/Inputs";
-import { cambiarCicloEscolar } from "@/app/utils/api/cambio_ciclo_escolar/cambio_ciclo_escolar";
+import Inputs from "@/app/cambio_ciclo_escolar/components/Inputs";
+import { cambiarCicloEscolar,getCicloEscolar } from "@/app/utils/api/cambio_ciclo_escolar/cambio_ciclo_escolar";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
 
 function Cambio_Ciclo_Escolar() {
@@ -14,17 +14,36 @@ function Cambio_Ciclo_Escolar() {
     const { data: session, status } = useSession();
     const date = new Date();
     const year = date.getFullYear();
+    const [cicloEscolar,setCicloEscolar]= useState("")
 
+    useEffect(() => {
+        if (status === "loading" || !session) {
+            return;
+        }
+        const fetchData = async () => {
+            const { token } = session.user;
+            const data= await getCicloEscolar(token)
+            setCicloEscolar(data.ciclo_escolar)
+            console.log(data)
+        }
+        fetchData()
+    }, [session, status])
+    console.log("ciclo escolar:",cicloEscolar)
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors },
     } = useForm({
         defaultValues: {
-            nuevo_ciclo: 0,
+            nuevo_ciclo: cicloEscolar,
         },
     });
-
+    useEffect(()=>{
+        reset({
+            nuevo_ciclo:cicloEscolar
+        })
+    },[cicloEscolar,reset])
     const onSubmit = handleSubmit(async (data) => {
         const { token } = session.user;
         const confirmed = await confirmSwal(
@@ -60,27 +79,27 @@ function Cambio_Ciclo_Escolar() {
             <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
                 <div className="flex flex-col justify-start p-3">
                     <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
-                        <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0 pr-4">
+                        <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
                             <Acciones
                                 Alta={onSubmit}
                                 home={home}
                             />
                         </div>
 
-                        <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-auto">
+                        <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
                             Cambio de Ciclo Escolar.
                         </h1>
                     </div>
                 </div>
-                <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-                    <div className="col-span-7">
+                <div className="flex flex-col items-center h-full">
+                    <div className="max-w-4xl w-full">
                         <form onSubmit={onSubmit}>
-                            <div className="flex flex-col h-[calc(100%)] space-y-4">
+                            <div className="w-full max-w-4xl">
                                 <Inputs
                                     dataType={"int"}
                                     name={"nuevo_ciclo"}
-                                    tamañolabel={"w-[25%]"}
-                                    className={"w-[50%] text-right"}
+                                    tamañolabel={"md:w-1/3 md:-ml-20"}
+                                    className={"text-right"}
                                     Titulo={"Nevo Ciclo: "}
                                     type={"text"}
                                     requerido={true}
