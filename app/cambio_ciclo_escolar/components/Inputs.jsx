@@ -20,7 +20,7 @@ function Inputs({
     <div className="flex flex-col">
       <label
         htmlFor={name}
-        className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}>
+        className={`input input-bordered input-md flex items-center gap-2 ${tamañolabel} text-black dark:text-white`}>
         {Titulo}
         <input
           {...(maxLenght !== 0 && { maxLength: maxLenght })}
