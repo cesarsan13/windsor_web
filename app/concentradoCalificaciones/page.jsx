@@ -25,8 +25,11 @@ function ConcentradoCalificaciones() {
     const [materiasReg, setMateriasReg] = useState({});
     const [actividadesReg, setActividadesReg] = useState({});
     const [alumnoReg, setAlumnoReg] = useState({});
+    const [bimestre, setBimestre] = useState(0);
     let idAlumno = 0;
     let idMateria = 0;
+    
+    
     const {
         register,
         handleSubmit,
@@ -34,23 +37,34 @@ function ConcentradoCalificaciones() {
         formState: { errors },
     } = useForm();
 
+   
+    
     const Buscar = handleSubmit(async (data) => {
+        if (grupo.numero === 0 && data.bimestre === '0'){
+            showSwal('Error', 'Debes de seleccionar el grupo y el bimestre', 'error');
+        }
+        else {
         const {token} = session.user;
+        const b = data.bimestre;
+        console.log("bbb", b);
+        setBimestre(Number(b));
         const [materiasEncabezado, matAlumnos, alumno, materias, actividades] = //detalleCalAlumno
           await Promise.all([
             getMateriasPorGrupo(token, grupo.numero),
-            getInfoActividadesXGrupo(token, grupo.numero, data.bimestre),
+            getInfoActividadesXGrupo(token, grupo.numero, b),
             getAlumno(token, grupo.numero),
             getMateriasReg(token, grupo.numero),
             getActividadesReg(token),
             //getActividadesXHorarioXAlumnoXMateriaXBimestre(token, grupo.numero, idAlumno, idMateria, bimestre)
         ]);
+        console.log("alumno", alumno);
             setMateriasEncabezado(materiasEncabezado);
             setCalificacionesTodosAlumnos(matAlumnos);
             setAlumnoReg(alumno);
             setMateriasReg(materias);
             setActividadesReg(actividades);
             //setCalificacionesDesgloseAlumno(detalleCalAlumno);
+        };
     });
 
     const handleVerClick = () => {};
@@ -73,8 +87,7 @@ function ConcentradoCalificaciones() {
                             home={home}
                             Buscar={Buscar}
                             Ver={handleVerClick}
-                            isLoading={isLoading}
-                            
+                            isLoading={isLoading}  
                         />
                     </div>
                     <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
@@ -129,6 +142,7 @@ function ConcentradoCalificaciones() {
                           materiasReg = {materiasReg}
                           actividadesReg = {actividadesReg}
                           alumnoReg = {alumnoReg}
+                          bimestre={bimestre}
                     />
                 </div>
             </div>

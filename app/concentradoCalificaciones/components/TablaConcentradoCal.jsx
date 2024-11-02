@@ -82,10 +82,15 @@ function TablaConcentradoCal({
             console.log("entra al no");
             // Calificación sin actividades
             const filtro = calificacionesTodosAlumnos.filter(cal => 
-                cal.numero === alumnonumero && cal.materia === materianumero && cal.bimestre === bimestre
+                cal.numero === alumnonumero && 
+                cal.materia === materianumero && 
+                cal.actividad === 0 && 
+                cal.bimestre === bimestre
             );
             console.log("filtro no", filtro);
-            sumatoria = calificacionesTodosAlumnos.reduce((acc, alumno) => acc + aDec(alumno.calificacion), 0);
+            //sumatoria = calificacionesTodosAlumnos.reduce((acc, alumno) => acc + aDec(alumno.calificacion), 0);
+            //sumatoria = aDec(Number( filtro[0].calificacion ));
+            sumatoria = aDec(Number(filtro[0]?.calificacion || 0));
             evaluaciones = materia ? filtro.length : 0;
         } else {
             // Calificación con actividades
@@ -103,18 +108,16 @@ function TablaConcentradoCal({
                         cal.materia === materianumero && 
                         cal.bimestre === bimestre && 
                         cal.actividad === actividad.secuencia && 
-                        cal.unidad <= actividad[`EB${bimestre}`]
+                        cal.unidad <= actividades[`EB${bimestre}`]
                     );
-                
-                        const califSum = filtroActividad.reduce((acc, cal) => acc + cal.calificacion, 0);
-                        sumatoria += RegresaCalificacionRedondeo(califSum / filtroActividad.length, "N");
-                        evaluaciones++; 
+                    console.log("filact", filtroActividad);
+                    const califSum = filtroActividad.reduce((acc, cal) => acc + cal.calificacion, 0);
+                    sumatoria += RegresaCalificacionRedondeo(califSum / filtroActividad.length, "N");
+                    evaluaciones++; 
                 });
             }
         }
-        // Si no hay evaluaciones válidas, devuelve vacío en lugar de cero
         return evaluaciones === 0 ? 0 : (sumatoria / evaluaciones).toFixed(1);
-        //return (sumatoria / evaluaciones).toFixed(1);
     } 
     {/*else {
         let suma = 0
@@ -151,7 +154,6 @@ function TablaConcentradoCal({
                     <tr>
                         <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
                         <td className="w-[80%]">Alumno</td>
-                        {console.log("aaaaaaaaaa", materiasEncabezado.length)}
                         {materiasEncabezado.length === undefined ? (
                             <td className="w-[45%]">Sin datos</td> 
                         ) :(
@@ -160,7 +162,6 @@ function TablaConcentradoCal({
                                 const esUltimoDeArea = 
                                 (item.area === 1 || item.area === 4) &&
                                 (index === materiasEncabezado.length - 1 || materiasEncabezado[index + 1].area !== item.area);
-
                                 
                                 if (esUltimoDeArea) {
                                     if (item.area === 1) {
@@ -197,6 +198,7 @@ function TablaConcentradoCal({
                             <tr key={alumno.numero}>
                                 <td>{alumno.numero}</td>
                                 <td>{alumno.nombre}</td>
+                                
                                 {materiasReg.map(materia => (
                                     <td key={materia.numero}>
                                         {
@@ -205,6 +207,7 @@ function TablaConcentradoCal({
                                         }
                                     </td>
                                 ))}
+                                
                             </tr>
                         ))
                     )}
