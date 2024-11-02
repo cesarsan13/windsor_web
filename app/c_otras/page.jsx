@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import Acciones from "@/app/c_otras/components/Acciones";
 import { useSession } from "next-auth/react";
-import ModalC_Otras from "@/app/c_Otras/components/modalC_Otras";
+import ModalC_Otras from "@/app/c_otras/components/modalC_Otras";
 import BuscarCat from "@/app/components/BuscarCat";
 import Inputs from "@/app/c_otras/components/Inputs";
 import TablaCalificaciones from "@/app/c_otras/components/tablaC_Otras";
@@ -26,7 +26,7 @@ import {
   ImprimirPDF,
   ImprimirExcel,
   getProcesoTareasTrabajosPendientes,
-  guardarC_Otras
+  guardarC_Otras,
 } from "@/app/utils/api/c_otras/c_otras";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import ModalVistaPreviaC_Otras from "@/app/c_otras/components/modalVistaPreviaC_Otras";
@@ -83,114 +83,117 @@ function C_Otras() {
       calificacion: c_Otra.calificacion,
       nombre: c_Otra.nombre,
       unidad: c_Otra.unidad,
-      descripcion: c_Otra.descripcion
+      descripcion: c_Otra.descripcion,
     },
-});
-useEffect(() => {
-  reset({
-    numero: c_Otra.numero,
+  });
+  useEffect(() => {
+    reset({
+      numero: c_Otra.numero,
       materia: c_Otra.materia,
       calificacion: c_Otra.calificacion,
       nombre: c_Otra.nombre,
       unidad: c_Otra.unidad,
-      descripcion: c_Otra.descripcion
-  });
-}, [c_Otra, reset]);
-useEffect(() => {
-  console.log("Cambio en b_asignatura:", b_asignatura);
-}, [b_asignatura]);
-const handleSetBAsignatura = (item) => {
-  setB_Asignatura(item);
-  console.log("Item asignado en el padre:", item);
-};
- const Buscar = useCallback(async (data) => {
-  console.log("Data del form => ",data);
-    console.log("1");
-    const { token } = session.user;
-    if (!grupo) {
-      showSwal("Error", "Debe seleccionar un grupo", "error");
-      return;
-    }
-    console.log("b_asignatura => ",b_asignatura)
-    if (!b_asignatura.numero) {
-      showSwal("Error", "Debe seleccionar una materia", "error");
-      return;
-    }
-    const validacion = await validar(
-      grupo.numero,
-      b_asignatura.numero,
-      contraProfe || ""
-    );
-    if (!validacion) {
-      setisLoading2(false);
-      return;
-    }
-    console.log("2");
-    data.grupo = grupo.numero;
-    data.grupo_nombre = grupo.horario;
-    data.materia = b_asignatura.numero;
-    // data.cb_actividad = isDisabled2;
-    let res1 = await getProcesoCalificacionesAlumnos(token, data);
+      descripcion: c_Otra.descripcion,
+    });
+  }, [c_Otra, reset]);
+  useEffect(() => {
+    console.log("Cambio en b_asignatura:", b_asignatura);
+  }, [b_asignatura]);
+  const handleSetBAsignatura = (item) => {
+    setB_Asignatura(item);
+    console.log("Item asignado en el padre:", item);
+  };
+  const Buscar = useCallback(
+    async (data) => {
+      console.log("Data del form => ", data);
+      console.log("1");
+      const { token } = session.user;
+      if (!grupo) {
+        showSwal("Error", "Debe seleccionar un grupo", "error");
+        return;
+      }
+      console.log("b_asignatura => ", b_asignatura);
+      if (!b_asignatura.numero) {
+        showSwal("Error", "Debe seleccionar una materia", "error");
+        return;
+      }
+      const validacion = await validar(
+        grupo.numero,
+        b_asignatura.numero,
+        contraProfe || ""
+      );
+      if (!validacion) {
+        setisLoading2(false);
+        return;
+      }
+      console.log("2");
+      data.grupo = grupo.numero;
+      data.grupo_nombre = grupo.horario;
+      data.materia = b_asignatura.numero;
+      // data.cb_actividad = isDisabled2;
+      let res1 = await getProcesoCalificacionesAlumnos(token, data);
       if (res1.status) {
-      let datos = res1.data;
-      // console.log("Datos => ",datos);
-      let newData = [];
-      const batchSize = 5;
-      for (let i = 0; i < datos.length; i += batchSize) {
-        const batch = datos.slice(i, i + batchSize);
-        const promises = batch.map(async (val) => {
-          data.numero = val.numero;
-          data.nombre = val.nombre;
-          data.bimestre = bimestre;
-          try {
-            // let res2 = await getProcesoCalificaciones(token, data);
-            // console.log("Data send to getProcesoTareasTrabajosPendientes => ",data);
-            let res2 = await getProcesoTareasTrabajosPendientes(token, data);
-            // console.log("res2 => ", res2);
-            if (res2.status) {
-              // console.log("Datosos => ",res2.data);
-              const datosos = res2.data;
-              // console.log(datosos)
-              newData.push({
-                numero: datosos[0].numero,
-                nombre: datosos[0].nombre,
-                calificacion: datosos[0].calificacion,
-                unidad: datosos[0].unidad,
-                materia: datosos[0].materia,
-                descripcion: b_asignatura.descripcion
-              });
+        let datos = res1.data;
+        // console.log("Datos => ",datos);
+        let newData = [];
+        const batchSize = 5;
+        for (let i = 0; i < datos.length; i += batchSize) {
+          const batch = datos.slice(i, i + batchSize);
+          const promises = batch.map(async (val) => {
+            data.numero = val.numero;
+            data.nombre = val.nombre;
+            data.bimestre = bimestre;
+            try {
+              // let res2 = await getProcesoCalificaciones(token, data);
+              // console.log("Data send to getProcesoTareasTrabajosPendientes => ",data);
+              let res2 = await getProcesoTareasTrabajosPendientes(token, data);
+              // console.log("res2 => ", res2);
+              if (res2.status) {
+                // console.log("Datosos => ",res2.data);
+                const datosos = res2.data;
+                // console.log(datosos)
+                newData.push({
+                  numero: datosos[0].numero,
+                  nombre: datosos[0].nombre,
+                  calificacion: datosos[0].calificacion,
+                  unidad: datosos[0].unidad,
+                  materia: datosos[0].materia,
+                  descripcion: b_asignatura.descripcion,
+                });
+              }
+            } catch (error) {
+              // console.error(`Error inesperado al procesar ${val.numero}:`, error);
             }
-          } catch (error) {
-            // console.error(`Error inesperado al procesar ${val.numero}:`, error);
-          }
-        });
-        await Promise.all(promises);
-      }
-           // newData = newData.json();
-      // console.log(newData);
-      if (newData) {
-        console.log("newData => ",newData)
-        setCalificaciones(newData);
-        setC_OtrasFiltrados(newData);
+          });
+          await Promise.all(promises);
+        }
+        // newData = newData.json();
+        // console.log(newData);
+        if (newData) {
+          console.log("newData => ", newData);
+          setCalificaciones(newData);
+          setC_OtrasFiltrados(newData);
+        } else {
+          showSwal("Error", "No se pudieron obtener las c_Otras", "error");
+          // setCalificaciones([]);
+          // setCalificacionesFiltrados([]);
+        }
+        setisLoading2(false);
       } else {
-        showSwal("Error", "No se pudieron obtener las c_Otras", "error");
-        // setCalificaciones([]);
-        // setCalificacionesFiltrados([]);
+        showSwal(res1.alert_title, res1.alert_text, res1.alert_icon);
+        setisLoading2(false);
+        return;
       }
-      setisLoading2(false);
-    } else {
-      showSwal(res1.alert_title, res1.alert_text, res1.alert_icon);
-      setisLoading2(false);
-      return;
-    }
-  },[calificaciones,grupo,session,b_asignatura,contraProfe]);
+    },
+    [calificaciones, grupo, session, b_asignatura, contraProfe]
+  );
   const tableAction = (acc, id) => {
     const calificacion = calificaciones.find(
       (calificacion) => calificacion.numero === id
     );
     if (calificacion) {
       // calificacion.actividad = snToBool(asignatura.actividad);
-      console.log("Editar => ",calificacion)
+      console.log("Editar => ", calificacion);
       setC_Otra(calificacion);
       setAccion(acc);
       setDisableNum(true);
@@ -203,7 +206,7 @@ const handleSetBAsignatura = (item) => {
   const validar = async (grupo, materia, contraseña) => {
     const { token } = session.user;
     let validar;
-    console.log("data a enviar getContraseñaProfe => ",grupo,materia);
+    console.log("data a enviar getContraseñaProfe => ", grupo, materia);
     let res = await getContraseñaProfe(token, grupo, materia);
     console.log("Datos profe => ", res);
     const data = res.data;
@@ -240,7 +243,6 @@ const handleSetBAsignatura = (item) => {
       maximumFractionDigits: 2,
     });
   };
-
 
   const home = () => {
     router.push("/");
@@ -352,14 +354,14 @@ const handleSetBAsignatura = (item) => {
     data.numero = num || currentID;
     // data = await Elimina_Comas(data);
     let data1 = {
-      numero:data.numero,
-      calificacion:data.calificacion
-    }
+      numero: data.numero,
+      calificacion: data.calificacion,
+    };
     let data2 = {
-      materia:data.materia,
-      grupo:grupo.horario,
-      bimestre:bimestre
-    }
+      materia: data.materia,
+      grupo: grupo.horario,
+      bimestre: bimestre,
+    };
     res = await guardarC_Otras(session.user.token, data1, data2);
 
     if (res.status) {
@@ -367,9 +369,9 @@ const handleSetBAsignatura = (item) => {
         console.log("Fue Editar o eliminar y la accion es ", accion);
         // const index = c_Otras.findIndex((p) => p.numero === data.numero);
         const index = calificaciones.findIndex((p) => p.numero === data.numero);
-        console.log("Index es igual a ",index)
+        console.log("Index es igual a ", index);
         if (index !== -1) {
-          console.log("Entro al index")
+          console.log("Entro al index");
           if (accion === "Eliminar") {
             const cFiltrados = calificaciones.filter(
               (p) => p.numero !== data.numero
@@ -378,13 +380,13 @@ const handleSetBAsignatura = (item) => {
             setC_OtrasFiltrados(cFiltrados);
           } else {
             console.log("Fue Editar ");
-              const cActualizadas = calificaciones.map((p) =>
-                p.numero === currentID ? { ...p, ...data } : p
-              );
-              console.log("Se actulizo los datos de la tabla => ", cActualizadas);
-              setCalificaciones(cActualizadas);
-              setC_Otras(cActualizadas);
-              setC_OtrasFiltrados(cActualizadas);
+            const cActualizadas = calificaciones.map((p) =>
+              p.numero === currentID ? { ...p, ...data } : p
+            );
+            console.log("Se actulizo los datos de la tabla => ", cActualizadas);
+            setCalificaciones(cActualizadas);
+            setC_Otras(cActualizadas);
+            setC_OtrasFiltrados(cActualizadas);
           }
         }
       }
@@ -450,7 +452,7 @@ const handleSetBAsignatura = (item) => {
   }
   return (
     <>
-    <ModalC_Otras
+      <ModalC_Otras
         accion={accion}
         onSubmit={onSubmitModal}
         currentID={currentID}
@@ -536,7 +538,7 @@ const handleSetBAsignatura = (item) => {
               />
 
               <BuscarCat
-                table="asignaturascasootro" 
+                table="asignaturascasootro"
                 itemData={[]}
                 fieldsToShow={["numero", "descripcion"]}
                 nameInput={["numero", "descripcion"]}
