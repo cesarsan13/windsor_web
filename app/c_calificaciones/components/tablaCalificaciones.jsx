@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Loading from "@/app/components/loading";
 import NoData from "@/app/components/NoData";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 import { formatNumber, globalVariables, loadGlobalVariables, soloDecimales } from "@/app/utils/globalfn";
-import { showSwal } from "@/app/utils/alerts";
+import { showSwalAndWait } from "@/app/utils/alerts";
 
 function TablaCalificaciones({
     calificacionesFiltrados,
@@ -16,9 +16,9 @@ function TablaCalificaciones({
     setCalificaciones,
     setCalificacionesFiltrados,
 }) {
-    // console.log('arreglo de filtrados', calificacionesFiltrados);
     const [editMode, setEditMode] = useState(null);
     const [editedCalificaciones, setEditedCalificaciones] = useState({});
+    const inputRefs = useRef({});
 
     const tableAction = (evt, calificacion, accion) => {
         setCalificacion(calificacion);
@@ -35,30 +35,36 @@ function TablaCalificaciones({
         }
     };
 
-    const saveCalificacion = (numero) => {
+    useEffect(() => {
+        if (editMode !== null && inputRefs.current[editMode]) {
+            inputRefs.current[editMode].focus();
+        }
+    }, [editMode]);
+
+    const saveCalificacion = async (numero) => {
         loadGlobalVariables();
         let newValue = parseFloat(editedCalificaciones[numero]);
         if (globalVariables.vg_caso_evaluar === 'CALIFICACIÓN') {
             if (newValue > 10) {
-                showSwal("WARNING!", "El máximo valor permitido es 10", "info");
+                await showSwalAndWait("WARNING!", "El máximo valor permitido es 10", "info");
                 newValue = 0;
                 setEditedCalificaciones((prev) => ({
                     ...prev,
                     [numero]: newValue,
                 }));
-                return
+                return;
             } else if (newValue < 0) {
-                showSwal("WARNING!", "El valor debe ser mayor o igual a 0", "info");
+                await showSwalAndWait("WARNING!", "El valor debe ser mayor o igual a 0", "info");
                 newValue = 0;
                 setEditedCalificaciones((prev) => ({
                     ...prev,
                     [numero]: newValue,
                 }));
-                return
+                return;
             }
         } else {
             if (newValue > 40) {
-                showSwal("WARNING!", "El máximo valor permitido es 40", "info");
+                await showSwalAndWait("WARNING!", "El máximo valor permitido es 40", "info");
                 newValue = 0;
                 setEditedCalificaciones((prev) => ({
                     ...prev,
@@ -98,11 +104,13 @@ function TablaCalificaciones({
                                 <td className="w-[40%] text-right">
                                     {editMode === item.numero ? (
                                         <input
+                                            ref={(el) => (inputRefs.current[item.numero] = el)}
                                             type="text"
                                             min="0"
                                             maxLength={4}
                                             value={editedCalificaciones[item.numero] || ""}
                                             onFocus={(e) => e.target.select()}
+                                            onKeyDown={(e) => e.key === "Enter" && saveCalificacion(item.numero)}
                                             onChange={(e) => {
                                                 const value = e.target.value;
                                                 if (value === "" || /^\d*\.?\d*$/.test(value)) {
