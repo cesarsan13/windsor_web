@@ -1,4 +1,4 @@
-import { soloDecimales, soloEnteros,snToBool } from "@/app/utils/globalfn";
+import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
 import React from "react";
 
 function Inputs({
@@ -8,38 +8,35 @@ function Inputs({
   requerido,
   dataType,
   className,
-  register,
   message,
   errors,
   tamañolabel,
   maxLenght,
   isDisabled,
   handleBlur,
+  register,
   arreglos,
-  setValue,
-  value,
-  getValues,
 }) {
-  if (type === "select") {
+  if (type === 'select') {
     return (
-      <div className="">
+      <div className="w-full md:w-1/2 px-0.5 py-2 mb-2 md:mb-0">
         <label
-        // className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel}  text-black dark:text-white`}
-
+          htmlFor={name}
           className={`input input-bordered  input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
         >
           {Titulo}
           <select
             name={name}
-            id={name}
             className={`text-black dark:text-white bg-transparent dark: ${className}`}
+            id={name}
             {...register(name, {
               ...(requerido && { required: message }),
             })}
             disabled={isDisabled}
-            onChange={(event) => setValue(event.target.value)}
-            value={value||1} onClick={(e) => setValue(e.target.value)}
           >
+            <option value="" className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]">
+              Seleccione una opción
+            </option>
             {arreglos.map((arreglo) => (
               <option
                 className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]"
@@ -49,114 +46,67 @@ function Inputs({
                 {arreglo.descripcion}
               </option>
             ))}
-            {/* <option value={"Activo"}>Activo</option>
-            <option value={"Enfermo"}>Enfermo</option>
-            <option value={"Permiso"}>Permiso</option>
-            <option value={"Cartera"}>Cartera</option>
-            <option value={"Baja"}>Baja</option> */}
           </select>
         </label>
-        {errors[name] && (
-          <span className="text-red-500 text-sm mt-2">
-            {errors[name].message}
-          </span>
+        {errors[name] && requerido && (
+          <span className="text-red-500 text-sm">{errors[name].message}</span>
         )}
       </div>
     );
-  }
-  else if (type === 'inputNum') {
+  } else if (type === 'selectHorario') {
     return (
-      <div className="flex flex-col">
+      <div className="w-full md:w-1/2 px-0.5 py-2 mb-2 md:mb-0">
         <label
-        className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel}  text-black dark:text-white`}
+          htmlFor={name}
+          className={`input input-bordered  input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
         >
           {Titulo}
-          <input
-            {...(maxLenght !== 0 && { maxLength: maxLenght })}
+          <select
             name={name}
+            className={`text-black dark:text-white bg-transparent dark: ${className}`}
             id={name}
-            type={"text"}
-            className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 input-xs md:input-sm  ${className}`}
-            {...(dataType === "int" && { onKeyDown: soloEnteros })}
-            {...(dataType === "float" && { onKeyDown: soloDecimales })}
             {...register(name, {
-              maxLength: {
-                value: maxLenght,
-                message: `El campo ${name} no puede tener más de ${maxLenght} caracteres`,
-              },
-              ...(requerido && { required: message }),
-              // onBlur: handleBlur,
-            })}
-            disabled={isDisabled}
-            onBlurCapture={(event) => handleBlur(event, type)}
-          />
-        </label>
-        {errors[name] && (
-          <span className="text-red-500 text-sm mt-2">
-            {errors[name].message}
-          </span>
-        )}
-      </div>
-    );
-  }
-  else if(type === 'checkbox'){
-    return (
-    <div className="flex flex-col w-full">
-        <label
-          className={`input input-bordered  md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
-        >
-          {Titulo}
-          <input
-            // defaultValue={defaultValue}
-            {...(maxLenght !== 0 && { maxLength: maxLenght })}
-            name={name}
-            id={name}
-            type={"checkbox"}
-            className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 input-xs md:input-sm  ${className}`}
-            // checked={snToBool(getValues(name))}
-            {...register(name, {
-              maxLength: {
-                value: maxLenght,
-                message: `El campo ${name} no puede tener más de ${maxLenght} caracteres`,
-              }, 
               ...(requerido && { required: message }),
             })}
-            {...(dataType === "int" ||
-              (dataType === "float" && {
-                onBlur: (event) => handleBlur(event, dataType),
-              }))}
             disabled={isDisabled}
-          />
+          >
+            <option value="" className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]">
+              Seleccione una opción
+            </option>
+            {arreglos.map((arreglo) => (
+              <option
+                className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]"
+                key={arreglo.materia}
+                value={arreglo.materia}
+              >
+                {arreglo.descripcion}
+              </option>
+            ))}
+          </select>
         </label>
-        {errors[name] && (
-          <span className="text-red-500 text-sm mt-2">
-            {errors[name].message}
-          </span>
+        {errors[name] && requerido && (
+          <span className="text-red-500 text-sm">{errors[name].message}</span>
         )}
       </div>
     );
-  } 
-  else {
+  } else {
     return (
-      <div className="flex flex-col w-full">
+      <div className="w-full md:w-1/2 px-0.5 py-2 mb-2 md:mb-0">
         <label
-          className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
+          htmlFor={name}
+          className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
         >
           {Titulo}
           <input
-            // defaultValue={defaultValue}
             {...(maxLenght !== 0 && { maxLength: maxLenght })}
             name={name}
             id={name}
             type={type}
-            className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 input-xs md:input-sm  ${className}`}
+            className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none w-auto ${className}`}
+            onFocus={(e) => e.target.select()}
             {...(dataType === "int" && { onKeyDown: soloEnteros })}
             {...(dataType === "float" && { onKeyDown: soloDecimales })}
             {...register(name, {
-              maxLength: {
-                value: maxLenght,
-                message: `El campo ${name} no puede tener más de ${maxLenght} caracteres`,
-              },
               ...(requerido && { required: message }),
             })}
             {...(dataType === "int" ||
@@ -164,14 +114,10 @@ function Inputs({
                 onBlur: (event) => handleBlur(event, dataType),
               }))}
             disabled={isDisabled}
-            onChange={(event) => setValue(event.target.value)}
-            // onBlurCapture={(event) => handleBlur(event, type)}
           />
         </label>
         {errors[name] && (
-          <span className="text-red-500 text-sm mt-2">
-            {errors[name].message}
-          </span>
+          <span className="text-red-500 text-sm mt-2">{errors[name].message}</span>
         )}
       </div>
     );

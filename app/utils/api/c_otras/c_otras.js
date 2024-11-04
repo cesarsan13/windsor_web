@@ -92,8 +92,6 @@ export const guardarC_Otras = async (token, data, data2) => {
       materia: data2.materia,
       grupo: data2.grupo,
       bimestre: data2.bimestre,
-      // actividad: data2.actividad,
-      // unidad: data2.evaluacion,
     }),
     headers: {
       Authorization: `Bearer ${token}`,
@@ -110,7 +108,6 @@ const Enca1 = (doc) => {
     doc.nextRow(12);
     doc.ImpPosX("Numero", 15, doc.tw_ren);
     doc.ImpPosX("Alumno", 30, doc.tw_ren);
-    // doc.ImpPosX("Unidad", 140, doc.tw_ren);
     doc.ImpPosX("Calificación", 140, doc.tw_ren);
     doc.nextRow(4);
     doc.printLineH();
@@ -127,17 +124,10 @@ export const ImprimirPDF = (configuracion) => {
   const newPDF = new ReportePDF(configuracion, orientacion);
   const { body } = configuracion;
   Enca1(newPDF);
-  body.forEach((calificacion) => {
-    newPDF.ImpPosX(calificacion.numero.toString(), 25, newPDF.tw_ren, 0, "R");
-    newPDF.ImpPosX(calificacion.nombre.toString(), 30, newPDF.tw_ren, 35, "L");
-    // newPDF.ImpPosX(calificacion.unidad.toString(), 150, newPDF.tw_ren, 35, "R");
-    newPDF.ImpPosX(
-      calificacion.calificacion.toString(),
-      150,
-      newPDF.tw_ren,
-      35,
-      "R"
-    );
+  body.forEach((otra) => {
+    newPDF.ImpPosX(otra.numero.toString(), 25, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(otra.nombre.toString(), 30, newPDF.tw_ren, 35, "L");
+    newPDF.ImpPosX(otra.calificacion.toString(), 153, newPDF.tw_ren, 35, "R");
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRenH) {
       newPDF.pageBreakH();

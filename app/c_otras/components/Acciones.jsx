@@ -1,24 +1,25 @@
-import React from "react";
+import React from 'react'
 import Tooltip from "@/app/components/tooltip";
 import Button from "@/app/components/button";
+import { TbLoader3 } from "react-icons/tb";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
-import { TbLoader3 } from "react-icons/tb"; // Icono de carga
-
-
-function Acciones({ Buscar, Alta, home, Ver, isLoading }) { 
+function Acciones({ home, Alta, Buscar, isLoading, isDisabledSave, Ver }) {
+  const isAnyLoading = isLoading || isDisabledSave;
   const images = [
-    { src: iconos.buscar, alt: 'Buscar', tooltipTitle: 'Buscar', onClick: Buscar },
+    { src: iconos.buscar, alt: "Buscar", tooltipTitle: "Buscar", onClick: Buscar, isLoading: isLoading },
+    { src: iconos.guardar, alt: "Guardar", tooltipTitle: "Guardar", onClick: Alta, isLoading: isDisabledSave },
     { src: iconos.vistaPrevia, alt: 'Vista previa', tooltipTitle: 'Vista previa', onClick: Ver },
-    { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home },
+    { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home, isLoading: false },
   ];
 
-  const ImageTooltip = ({ src, tooltipTitle, onClick, isLoading }) => {
+  const ImageTooltip = ({ src, tooltipTitle, onClick, isLoading, disabled }) => {
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
           className="w-6 h-5 bg-transparent hover:bg-transparent border-none shadow-none text-black dark:text-white rounded-lg"
           onClick={onClick}
+          disabled={disabled}
         >
           {isLoading ? (
             <TbLoader3 className="animate-spin text-2xl" />
@@ -32,11 +33,18 @@ function Acciones({ Buscar, Alta, home, Ver, isLoading }) {
 
   return (
     <div className="grid grid-flow-col gap-5 justify-around w-full">
-      {images.map((image,idx) => (
-        <ImageTooltip key={idx} src={image.src} {...image} isLoading={idx === 2 && isLoading} />
+      {images.map((image, idx) => (
+        <ImageTooltip
+          key={idx}
+          src={image.src}
+          tooltipTitle={image.tooltipTitle}
+          onClick={image.onClick}
+          isLoading={image.isLoading}
+          disabled={isAnyLoading}
+        />
       ))}
     </div>
   );
 }
 
-export default Acciones;
+export default Acciones
