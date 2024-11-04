@@ -22,7 +22,7 @@ function ModalClases({
   const [error, setError] = useState(null);
   //Horario
   const columnasBuscaCat = ["numero", "horario"];
-  const nameInputs = ["horario_1", "horario_1_nombre"];
+  const nameInputs = ["numero", "numero_1_nombre"];
   //Profesor
   const columnasBuscaCat1 = ["numero", "nombre"];
   const nameInputs3 = ["profesor", "profesor_nombre"];
@@ -85,7 +85,7 @@ function ModalClases({
         </div>
       </div>
       
-      <fieldset id="fs_formapago">
+      <fieldset id="fs_clase">
       <div className="flex flex-col gap-3 mb-6">
         <BuscarCat
           table="horarios"
@@ -96,7 +96,7 @@ function ModalClases({
           setItem={setGrado}
           token={session?.user?.token}
           modalId="modal_horarios"
-          array={clase.horario_1}
+          array={clase.numero}
           id={clase.numero}
           alignRight={true}
           inputWidths={{ first: "80px", second: "380px" }}
