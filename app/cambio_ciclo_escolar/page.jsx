@@ -100,7 +100,7 @@ function Cambio_Ciclo_Escolar() {
                                     name={"nuevo_ciclo"}
                                     tamañolabel={"md:w-1/3 md:-ml-20"}
                                     className={"text-right"}
-                                    Titulo={"Nevo Ciclo: "}
+                                    Titulo={"Nuevo Ciclo: "}
                                     type={"text"}
                                     requerido={true}
                                     errors={errors}
