@@ -164,25 +164,30 @@ function Clases() {
 
     // const dataj = JSON.stringify(data);
    // data.id = currentID;
-    data.grupo = grado.grupo;
+    data.grupo = grado.numero;
+    //data.horario_1_nombre = grado.horario;
     data.materia = prof1.numero;
     data.profesor = prof2.numero;
 
-    const claseExistente = clases.find(
-      (clase) =>
-        clase.grupo === data.grupo &&
+    if (!currentID) {
+      const claseExistente = clases.find(
+        (clase) =>
+          clase.grupo === data.grupo &&
         clase.materia === data.materia &&
-        clase.profesor === data.profesor
-    );
-
-    if (claseExistente) {
-      showSwal(
-        "Error",
-        "Esta combinación de grupo, materia y profesor ya está registrada.",
-        "error",
-        "my_modal_3"
+        clase.profesor === data.profesor &&
+        clase.id !== currentID
+        
       );
-      return;
+      
+      if (claseExistente) {
+        showSwal(
+          "Error",
+          "Esta combinación de grupo, materia y profesor ya está registrada.",
+          "error",
+          "my_modal_3"
+        );
+        return;
+      }
     }
 
     let res = null;
@@ -201,7 +206,7 @@ function Clases() {
       }
       //showModal(true);
     }
-    res = await guardaClase(session.user.token, data.grupo, accion);
+    res = await guardaClase(session.user.token, data, accion);
     if (res.status) {
       if (accion === "Alta") {
         const nuevaClase = { currentID, ...data };
