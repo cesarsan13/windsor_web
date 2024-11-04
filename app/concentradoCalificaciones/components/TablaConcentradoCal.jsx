@@ -12,10 +12,25 @@ function TablaConcentradoCal({
     materiasReg,
     actividadesReg,
     alumnoReg,
-    bimestre
+    bimestre,
+    showModal,
+    setAccion,
+    setAlumnoData
 }){
+    const [editMode, setEditMode] = useState(null);
     let indexIngles = 0;
     let indexEspañol = 0;
+    let contadorEspanol = 0;
+    let contadorIngles = 0;
+    let datosEspanol = 0;
+    let datosIngles = 0;
+
+
+    const tableAction = async (evt, alumno, accion) => {
+        showModal(true);
+        setAccion(accion);
+        setAlumnoData(alumno);
+    };
 
     function aDec(value) {
         return isNaN(value) ? 0 : Number(value);
@@ -51,100 +66,69 @@ function TablaConcentradoCal({
             }
             resultado = twxCalifica;
         } else {
-            // Nuevo redondeo (versión 2013)
             const txwMult = twxCalifica * 10;
             const txwStrin = txwMult.toString();
             const posPunto = txwStrin.indexOf(".");
             let txwEnt;
-    
             if (posPunto > -1) {
                 txwEnt = parseInt(txwStrin.substring(0, posPunto), 10);
             } else {
                 txwEnt = parseInt(txwStrin, 10);
             }
-    
             resultado = txwEnt / 10;
         }
-    
         return resultado;
     }
 
     const calcularCalificaciones = (alumnonumero, materianumero) => {
         let sumatoria = 0;
         let evaluaciones = 0;
+        let a = 0;
+        let aa = 0;
 
-        // Verificar si se evalúa por actividades
         if (materiasEncabezado.length > 0){
-            console.log("dentro de materiase", materiasEncabezado);
-        const materia = materiasReg.find(m => m.numero === materianumero);
-        console.log("materiaaas", materia);
-        if (materia.actividad === "No") {
-            console.log("entra al no");
-            // Calificación sin actividades
-            const filtro = calificacionesTodosAlumnos.filter(cal => 
-                cal.numero === alumnonumero && 
-                cal.materia === materianumero && 
-                cal.actividad === 0 && 
-                cal.bimestre === bimestre
-            );
-            console.log("filtro no", filtro);
-            //sumatoria = calificacionesTodosAlumnos.reduce((acc, alumno) => acc + aDec(alumno.calificacion), 0);
-            //sumatoria = aDec(Number( filtro[0].calificacion ));
-            sumatoria = aDec(Number(filtro[0]?.calificacion || 0));
-            evaluaciones = materia ? filtro.length : 0;
-        } else {
-            // Calificación con actividades
-            console.log("entra al si");
-            const actividades = actividadesReg.filter(act => act.materia === materianumero);
-            console.log("actividades si", actividades);
-            if (actividades.length === 0) {
-                evaluaciones = 0
-                sumatoria = 0
+            const materia = materiasReg.find(m => m.numero === materianumero);
+            if (materia.actividad === "No") {
+                const filtro = calificacionesTodosAlumnos.filter(cal => 
+                    cal.numero === alumnonumero && 
+                    cal.materia === materianumero && 
+                    cal.actividad === 0 && 
+                    cal.bimestre === bimestre
+                );
+                sumatoria = aDec(Number(filtro[0]?.calificacion || 0));
+                evaluaciones = materia ? filtro.length : 0;
             } else {
-                actividades.forEach(actividad => {
-                    console.log("actividades", actividad);
-                    const filtroActividad = calificacionesTodosAlumnos.filter(cal => 
-                        cal.numero === alumnonumero && 
-                        cal.materia === materianumero && 
-                        cal.bimestre === bimestre && 
-                        cal.actividad === actividad.secuencia && 
-                        cal.unidad <= actividades[`EB${bimestre}`]
-                    );
-                    console.log("filact", filtroActividad);
-                    const califSum = filtroActividad.reduce((acc, cal) => acc + cal.calificacion, 0);
-                    sumatoria += RegresaCalificacionRedondeo(califSum / filtroActividad.length, "N");
-                    evaluaciones++; 
-                });
+                const actividades = actividadesReg.filter(act => act.materia === materianumero);
+                if (actividades.length === 0) {
+                    evaluaciones = 0
+                    sumatoria = 0
+                } else {
+                    actividades.forEach(actividad => {
+                        const filtroActividad = calificacionesTodosAlumnos.filter(cal => 
+                            cal.numero === alumnonumero && 
+                            cal.materia === materianumero && 
+                            cal.bimestre === bimestre && 
+                            cal.actividad === actividad.secuencia && 
+                            cal.unidad <= actividad[`EB${bimestre}`]
+                        );
+                        const califSum = filtroActividad.reduce((acc, cal) => acc + Number(cal.calificacion), 0);
+                        sumatoria += RegresaCalificacionRedondeo(califSum / filtroActividad.length, "N");
+                        evaluaciones++; 
+                    });
+                }
             }
-        }
-        return evaluaciones === 0 ? 0 : (sumatoria / evaluaciones).toFixed(1);
-    } 
-    {/*else {
-        let suma = 0
-        let mn = 0
-        let promedio = 0
-
-        if (materianumero === "0") {
-            for (let ce = indexEspañol; ce < indexEspañol; ce++) {
-                suma += fila.calificaciones[ce];
-                nm += 1;
+            const calMat = (sumatoria / evaluaciones).toFixed(1);
+            if (materia.area === 1) {
+                a += calMat;
+                datosEspanol += Number(calMat);
+                contadorEspanol++; 
+            } else if (materia.area === 4) {
+                aa += calMat;
+                datosIngles += Number(calMat);  
+                contadorIngles++;
             }
-            fila.promedioEspanol = TruncarUno(suma / nm);
+            return evaluaciones === 0 ? 0 : calMat;
         }
-
-        // Calcular el promedio para la columna "Inglés"
-        if (materianumero === "00") {
-            suma = 0;
-            nm = 0;
-            for (let ci = indexIngles; ci < indexIngles; ci++) {
-                suma += fila.calificaciones[ci];
-                nm += 1;
-            }
-            fila.promedioIngles = TruncarUno(suma / nm);
-        }
-
-        return fila;
-    }   */}
     };
    
     return  (
@@ -158,7 +142,6 @@ function TablaConcentradoCal({
                             <td className="w-[45%]">Sin datos</td> 
                         ) :(
                             materiasEncabezado.map((item, index) => {
-
                                 const esUltimoDeArea = 
                                 (item.area === 1 || item.area === 4) &&
                                 (index === materiasEncabezado.length - 1 || materiasEncabezado[index + 1].area !== item.area);
@@ -176,7 +159,9 @@ function TablaConcentradoCal({
                                             {item.descripcion}
                                         </th>
                                         {esUltimoDeArea && (
-                                            <th className="w-[20%] text-left font-semibold">
+                                            <th 
+                                                className="w-[20%] text-left font-semibold"
+                                            >
                                                 {`Promedio ${item.area === 1 ? "Español" : "Inglés"}`}
                                             </th>
                                         )}
@@ -185,7 +170,7 @@ function TablaConcentradoCal({
                             })
                         )}
 
-                        <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Editar</th>
+                        <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Ver</th>
                     </tr>
                 </thead>
                 <tbody>  
@@ -199,14 +184,36 @@ function TablaConcentradoCal({
                                 <td>{alumno.numero}</td>
                                 <td>{alumno.nombre}</td>
                                 
-                                {materiasReg.map(materia => (
+                                {/*{materiasReg.map(materia => (
+                                    
                                     <td key={materia.numero}>
                                         {
                                         calcularCalificaciones(alumno.numero, materia.numero)
-                                        
                                         }
                                     </td>
-                                ))}
+                                ))}*/}
+
+                                {materiasReg.map((materia, idx) => (
+                                <React.Fragment key={materia.numero}>
+                                    {idx === indexEspañol && (
+                                        <td className="text-left font-semibold">{(datosEspanol/contadorEspanol).toFixed(1)}</td>
+                                    )}
+                                    {idx === indexIngles && (
+                                        <td className="text-left font-semibold">{(datosIngles/contadorIngles).toFixed(1)}</td>
+                                    )}
+                                    <td>{calcularCalificaciones(alumno.numero, materia.numero)}</td>
+                                </React.Fragment>
+                                ))} 
+
+                                 <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
+                                  <div
+                                    className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
+                                    data-tip={`Editar`}
+                                    onClick={(evt) => tableAction(evt, alumno, `Editar`)}
+                                  >
+                                    <Image src={iconos.editar} alt="Editar" />
+                                  </div>
+                                </th>
                                 
                             </tr>
                         ))
