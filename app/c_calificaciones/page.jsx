@@ -455,9 +455,9 @@ function C_Calificaciones() {
                                     isDisabled={false}
                                     maxLenght={5}
                                     arreglos={evaluacion}
-                                />
+                                /> 
                             )}
-
+ 
                             <Inputs
                                 dataType={"string"}
                                 name={"contraseña_profesor"}
