@@ -85,23 +85,24 @@ function TablaCalificaciones({
                     <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
                         <tr>
                             <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
-                            <td className="w-[45%]">Alumno</td>
-                            <td className="w-[25%] hidden sm:table-cell">Calificación</td>
+                            <td className="w-[40%]">Alumno</td>
+                            <td className="w-[10%] text-right hidden sm:table-cell">Calificación</td>
                             <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Editar</th>
                         </tr>
                     </thead>
                     <tbody>
                         {calificacionesFiltrados.map((item, index) => (
                             <tr key={`${item.numero}-${index}`} className="hover:cursor-pointer">
-                                <th className="w-[5%]">{item.numero}</th>
-                                <td className="w-[45%]"> {item.nombre} </td>
-                                <td className="w-[25%]">
+                                <th className="w-[5%] text-right">{item.numero}</th>
+                                <td className="w-[40%]"> {item.nombre} </td>
+                                <td className="w-[40%] text-right">
                                     {editMode === item.numero ? (
                                         <input
                                             type="text"
                                             min="0"
                                             maxLength={4}
                                             value={editedCalificaciones[item.numero] || ""}
+                                            onFocus={(e) => e.target.select()}
                                             onChange={(e) => {
                                                 const value = e.target.value;
                                                 if (value === "" || /^\d*\.?\d*$/.test(value)) {
@@ -111,13 +112,13 @@ function TablaCalificaciones({
                                                     }));
                                                 }
                                             }}
-                                            className="input input-bordered w-full"
+                                            className="input input-bordered w-[6rem] text-right"
                                         />
                                     ) : (
-                                        item.calificacion || 0.00
+                                        <span>{item.calificacion || 0.00}</span>
                                     )}
-
                                 </td>
+
                                 <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                                     {editMode === item.numero ? (
                                         <>

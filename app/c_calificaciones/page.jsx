@@ -373,7 +373,7 @@ function C_Calificaciones() {
                                 dataType={"int"}
                                 name={"bimestre"}
                                 tamañolabel={""}
-                                className={"fyo8m-select p-1.5 grow bg-[#ffffff] "}
+                                className={"fyo8m-select p-1.5 grow bg-[#ffffff] text-right"}
                                 Titulo={"Bimestre: "}
                                 type={"select"}
                                 requerido={true}
@@ -445,7 +445,7 @@ function C_Calificaciones() {
                                     dataType={"int"}
                                     name={"evaluacion"}
                                     tamañolabel={""}
-                                    className={"fyo8m-select p-1.5 grow bg-[#ffffff]"}
+                                    className={"fyo8m-select p-1.5 grow bg-[#ffffff] text-right"}
                                     Titulo={"No. Evaluación: "}
                                     type={"select"}
                                     requerido={true}
