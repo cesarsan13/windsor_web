@@ -58,7 +58,7 @@ function TablaPagos1({
                 <tr
                   key={item.numero_producto}
                   className={`hover:cursor-pointer ${
-                    selectedRow === item.numero
+                    selectedRow === item.numero_producto
                       ? "dark:bg-[#334155] bg-[#f1f5f9]"
                       : ""
                   }`}
