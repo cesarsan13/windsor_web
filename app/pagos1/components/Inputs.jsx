@@ -19,6 +19,7 @@ function Inputs({
   valueInput,
   dataType,
   onClick,
+  message,
 }) {
   if (tipoInput === "onChange") {
     return (
@@ -34,7 +35,7 @@ function Inputs({
             type={type}
             className={`text-black dark:text-white ${className}`}
             disabled={isDisabled}
-            // onChange={(event) => setValue(event.target.value)}
+          // onChange={(event) => setValue(event.target.value)}
           />
         </label>
         {errors[name] && (

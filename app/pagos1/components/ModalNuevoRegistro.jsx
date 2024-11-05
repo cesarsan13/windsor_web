@@ -93,7 +93,7 @@ function ModalNuevoRegistro({
                     className={`${colorInput} text-right w-[calc(85%)]`}
                     Titulo={"Cantidad: "}
                     type={"text"}
-                    requerido={false}
+                    requerido={true}
                     errors={errors}
                     register={register}
                     message={"numero requerido"}
@@ -111,7 +111,7 @@ function ModalNuevoRegistro({
                     className={`w-[calc(65%)] text-right ${colorInput}`}
                     Titulo={"P. Base: "}
                     type={"text"}
-                    requerido={false}
+                    requerido={true}
                     errors={errors}
                     register={register}
                     message={"numero requerido"}
