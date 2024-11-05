@@ -701,6 +701,7 @@ function CreacionBoletas3Bimestre() {
     }
     if (data.bimestre > 3) {
       data.bimestre = 3;
+      setValue("bimestre", data.bimestre);
     }
     if (data.bimestre <= 0) {
       showSwal("Error", "El trimestre debe de ser entre 1 y 3.", "error");
@@ -944,7 +945,7 @@ function CreacionBoletas3Bimestre() {
                   }
                 }
               }
-            } catch (error) {}
+            } catch (error) { }
           });
         }
       }
@@ -1499,7 +1500,7 @@ function CreacionBoletas3Bimestre() {
                   }
                 }
               }
-            } catch (error) {}
+            } catch (error) { }
           });
         }
       }
@@ -1581,16 +1582,16 @@ function CreacionBoletas3Bimestre() {
   }
   return (
     <>
-      <div className="h-[83vh] max-h-[83vh] container w-full bg-slate-100 rounded-3xl shadow-xl px-3 dark:bg-slate-700 overflow-y-auto">
-        <ModalVistaPreviaBoleta3
-          pdfPreview={pdfPreview}
-          pdfData={pdfData}
-          PDF={ImprimePDF}
-        />
+      <ModalVistaPreviaBoleta3
+        pdfPreview={pdfPreview}
+        pdfData={pdfData}
+        PDF={ImprimePDF}
+      />
 
-        <div className="flex flex-col justify-start p-3">
-          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
-            <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0 pr-4">
+      <div className='container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y'>
+        <div className='flex flex-col justify-start p-3'>
+          <div className='flex flex-wrap md:flex-nowrap items-start md:items-center'>
+            <div className='order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0'>
               <Acciones
                 home={home}
                 Buscar={Buscar}
@@ -1601,31 +1602,29 @@ function CreacionBoletas3Bimestre() {
                 isLoadingImprime={isLoadingImprime}
               />
             </div>
-            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-auto">
+            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Creación de Boletas.
             </h1>
           </div>
         </div>
 
-        <div className="grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
-          <div className="col-span-7">
-            <div className="flex flex-col md:flex-row lg:flex-row pb-4">
-              <div className="w-full">
-                <Inputs
-                  dataType={"int"}
-                  name={"bimestre"}
-                  tamañolabel={"w-1/2"}
-                  className={"w-1/3 text-right"}
-                  Titulo={"Bimestre: "}
-                  type={"text"}
-                  requerido={true}
-                  errors={errors}
-                  register={register}
-                  message={"Bimestre Requerido"}
-                  isDisabled={false}
-                  maxLenght={3}
-                />
-              </div>
+        <div className='flex flex-col items-center h-full'>
+          <div className='w-full max-w-4xl'>
+            <div className="w-full">
+              <Inputs
+                dataType={"int"}
+                name={"bimestre"}
+                tamañolabel={"w-1/2"}
+                className={"w-2/3 text-right"}
+                Titulo={"Bimestre: "}
+                type={"text"}
+                requerido={true}
+                errors={errors}
+                register={register}
+                message={"Bimestre Requerido"}
+                isDisabled={false}
+                maxLenght={3}
+              />
             </div>
             <div className="flex flex-col md:flex-row lg:flex-row ">
               <div className="w-auto">
@@ -1671,7 +1670,7 @@ function CreacionBoletas3Bimestre() {
                 <Inputs
                   dataType={"int"}
                   name={"ciclo"}
-                  tamañolabel={"w-1/2"}
+                  tamañolabel={"w-2/3"}
                   className={"fyo8m-select p-1.5 grow bg-[#ffffff] "}
                   Titulo={"Ciclo: "}
                   type={"select"}
@@ -1686,9 +1685,9 @@ function CreacionBoletas3Bimestre() {
               </div>
             </div>
             <div className="flex flex-col md:flex-row lg:flex-row ">
-              <div className="w-[54%]">
+              <div className="w-[59%]">
                 <Inputs
-                  Titulo={"Selecciona tu opción"}
+                  // Titulo={"Selecciona tu opción"}
                   name={"opcion"}
                   type={"radio"}
                   requerido={true}
