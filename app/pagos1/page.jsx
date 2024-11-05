@@ -31,7 +31,9 @@ import "jspdf-autotable";
 import Inputs from "@/app/pagos1/components/Inputs";
 import TablaPagos1 from "@/app/pagos1/components/tablaPagos1";
 import ModalPagoImprime from "@/app/pagos1/components/modalPagosImprime";
-import { showSwal } from "@/app/utils/alerts";
+import ModalRecargos from "@/app/pagos1/components/modalRecargos";
+import ModalParciales from "@/app/pagos1/components/modalParciales";
+import { showSwal, showSwalAndWait } from "@/app/utils/alerts";
 import Swal from "sweetalert2";
 function Pagos_1() {
   const router = useRouter();
@@ -92,6 +94,49 @@ function Pagos_1() {
       clave_acceso: "",
     },
   });
+
+  useEffect(() => {
+    if (muestraRecargos) {
+      reset({
+        numero_producto: 0,
+        alumno: 0,
+        descripcion: "",
+        fecha: "",
+        comentarios: "",
+        precio_base: 0,
+        cantidad_producto: 1,
+        documento: "",
+        precio: 0,
+        neto: 0,
+        total: 0,
+        descuento: 0,
+        recargo: 0,
+        monto_parcial: 0,
+        clave_acceso: "",
+      });
+    }
+    if (muestraParciales) {
+      reset({
+        numero_producto: 0,
+        alumno: 0,
+        descripcion: "",
+        fecha: "",
+        comentarios: "",
+        precio_base: 0,
+        cantidad_producto: 1,
+        documento: "",
+        precio: 0,
+        neto: 0,
+        total: 0,
+        descuento: 0,
+        recargo: 0,
+        monto_parcial: 0,
+        clave_acceso: "",
+      });
+    }
+  }, [muestraRecargos, muestraParciales]);
+
+
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
@@ -109,7 +154,6 @@ function Pagos_1() {
       const dd = String(today.getDate()).padStart(2, "0");
       const formattedToday = `${yyyy}-${mm}-${dd}`;
       setValue("fecha", formattedToday);
-      // document.getElementById("fecha").value = formattedToday;
       if (cargado === false) {
         const [dataF, dataA] = await Promise.all([
           getFormasPago(session.user.token, false),
@@ -207,11 +251,13 @@ function Pagos_1() {
   };
 
   const Recargos = async () => {
+    setMuestraRecargos(true);
     let recargo = 0;
     let prod = productos1.numero;
     let alumnoInvalido = alumnos1.numero;
     if (!alumnoInvalido) {
       showSwal("Oppss!", "Alumno invalido", "error");
+      setMuestraRecargos(false);
       return;
     }
     const [arFind, ar9999] = await Promise.all([
@@ -223,24 +269,32 @@ function Pagos_1() {
       recargo = formatNumber(arFind.por_recargo);
     } else {
       recargo = formatNumber(0);
-    }
+    };
     if (desPr) {
       setDrecargo(desPr);
-      setMuestraRecargos(true);
+      setMuestraRecargos(false);
+      showModal("modal_recargos", true);
+      document.getElementById("recargo").focus();
     } else {
       setDrecargo("");
       setMuestraRecargos(false);
-    }
+      showModal("modal_recargos", false);
+    };
   };
 
   const Parciales = async () => {
+    setMuestraParciales(true);
     let alumnoInvalido = alumnos1.numero;
     if (!alumnoInvalido) {
       showSwal("Oppss!", "Alumno invalido", "error");
+      setMuestraParciales(false);
       return;
     }
-    setMuestraParciales(!muestraParciales);
+    showModal("modal_parciales", true);
+    document.getElementById("monto_parcial").focus();
+    setMuestraParciales(false);
   };
+
   const Alta = () => {
     if (Object.keys(alumnos1).length === 0) {
       showSwal(
@@ -253,6 +307,7 @@ function Pagos_1() {
     showModal("modal_nuevo_registro", true);
     document.getElementById("numero_producto").focus();
   };
+
   const btnParciales = (event) => {
     event.preventDefault();
     handleSubmit(submitParicales)();
@@ -271,35 +326,45 @@ function Pagos_1() {
     let validar = selectedTable.numero_producto;
 
     if (!validar) {
-      showSwal("Error!", "No hay ningun articulo seleccionado ", "error");
+      showModal("modal_parciales", false);
+      await showSwalAndWait("¡Error!", "No hay ningún artículo seleccionado. Asegúrate de haberlo elegido en la tabla.", "error");
+      showModal("modal_parciales", true);
       return;
     }
     Monto_Pago = Elimina_Comas(data.monto_parcial);
     if (Monto_Pago === 0) {
-      showSwal("Error!", "Monto del pago parcial en cero' ", "error");
+      showModal("modal_parciales", false);
+      await showSwalAndWait("Error!", "Monto del pago parcial en cero' ", "error");
+      showModal("modal_parciales", true);
       return;
     }
     const dat = await buscaPropietario(token, 1);
     const clave = dat.clave_seguridad;
     if (data.clave_acceso.toLowerCase() !== clave.toLowerCase()) {
-      showSwal("Error!", "Clave de autorización invalida' ", "error");
+      showModal("modal_parciales", false);
+      await showSwalAndWait("Error!", "Clave de autorización invalida' ", "error");
+      showModal("modal_parciales", true);
       return;
     }
     Monto_Actual = Elimina_Comas(h1Total);
     if (Monto_Pago > Monto_Actual) {
-      showSwal("", "El monto del pago parcial es mayor al pago total", "info");
+      showModal("modal_parciales", false);
+      await showSwalAndWait("", "El monto del pago parcial es mayor al pago total", "info");
+      showModal("modal_parciales", true);
       return;
     }
     A_Pagar = Monto_Actual - Monto_Pago;
     if (A_Pagar > Monto_Actual) {
-      showSwal(
+      showModal("modal_parciales", false);
+      await showSwalAndWait(
         "",
         "El se debe de aplicar a la partida indicada pero la cantidad restante. Es mayor al valor de la partida",
         "info"
       );
+      showModal("modal_parciales", true);
       return;
     }
-
+    showModal("modal_parciales", false);
     Swal.fire({
       title: "Es correcta la cantidad a cobrar en pago parcial?",
       text: "Una vez que se autoriza será generado el documento a cobranza. Esta completamente seguro que la operación es correcta",
@@ -345,7 +410,7 @@ function Pagos_1() {
             showSwal(res2.alert_title, res2.alert_text, res2.alert_icon);
             setValue("monto_parcial", "");
             setValue("clave_acceso", "");
-            setMuestraParciales(false);
+            showModal("modal_parciales", false);
           } else {
             showSwal(res2.alert_title, res2.alert_text, res2.alert_icon);
           }
@@ -355,9 +420,11 @@ function Pagos_1() {
             "El documento a generar ya existe no se realiza el proceso",
             "info"
           );
+          showModal("modal_parciales", false);
           return;
         }
       } else {
+        showModal("modal_parciales", true);
         return;
       }
     });
@@ -387,7 +454,7 @@ function Pagos_1() {
     );
     if (numeroExiste) {
       showSwal("Oppss!", "Numero de articulo existente en recibo' ", "error");
-      setMuestraRecargos(false);
+      showModal("modal_recargos", false);
       return;
     }
     const nuevoPagoArray = Array.isArray(nuevoPago) ? nuevoPago : [nuevoPago];
@@ -395,7 +462,7 @@ function Pagos_1() {
     muestraTotal(nuevoPago);
     setPagos((prevPagos) => [...prevPagos, ...nuevoPagoArray]);
     setPagosFiltrados((prevPagos) => [...prevPagos, ...nuevoPagoArray]);
-    setMuestraRecargos(false);
+    showModal("modal_recargos", false);
   };
 
   const btnPDF = (event) => {
@@ -556,7 +623,7 @@ function Pagos_1() {
   };
 
   const tableSelect = (evt, item) => {
-    console.log(item);
+    // console.log(item);
     const nuevoPago = {
       numero_producto: item.paquete,
       descripcion: item.nombre_producto,
@@ -609,6 +676,22 @@ function Pagos_1() {
         handleEnterKey={handleEnterKey}
         handleModalClick={handleModalClick}
       />
+      <ModalRecargos
+        register={register}
+        errors={errors}
+        handleModalClick={handleModalClick}
+        dRecargo={dRecargo}
+        btnRecargo={btnRecargo}
+      />
+      <ModalParciales
+        session={session}
+        register={register}
+        errors={errors}
+        handleModalClick={handleModalClick}
+        setProductos1={setProductos1}
+        accionB={accionB}
+        btnParciales={btnParciales}
+      />
       <ModalCajeroPago
         session={session}
         validarClaveCajero={validarClaveCajero}
@@ -649,6 +732,8 @@ function Pagos_1() {
                 Recargos={Recargos}
                 Parciales={Parciales}
                 Alta={Alta}
+                muestraRecargos={muestraRecargos}
+                muestraParciales={muestraParciales}
               />
               <h1 className="text-4xl font-xthin text-black dark:text-white">
                 Pagos
@@ -729,109 +814,6 @@ function Pagos_1() {
                 />
               </div>
             </div>
-
-            {muestraRecargos && (
-              <div className="flex flex-col md:flex-row lg:flex-row lg:space-x-2 ">
-                <div className="w-full lg:w-auto pb-2 lg:pb-0 mt-0 mb-0">
-                  <Inputs
-                    tipoInput={"disabledInput"}
-                    name={"R_Articulo"}
-                    tamañolabel={""}
-                    className={""}
-                    Titulo={"Articulo: "}
-                    type={"text"}
-                    requerido={false}
-                    register={register}
-                    errors={errors}
-                    maxLength={10}
-                    isDisabled={true}
-                    valueInput={"9999"}
-                  />
-                </div>
-                <div className="w-full lg:w-auto pb-2 lg:pb-0 mt-0 mb-0">
-                  <Inputs
-                    tipoInput={"disabledInput"}
-                    name={"D_Recargo"}
-                    tamañolabel={""}
-                    className={""}
-                    Titulo={"Articulo: "}
-                    type={"text"}
-                    requerido={false}
-                    register={register}
-                    errors={errors}
-                    maxLength={10}
-                    isDisabled={true}
-                    valueInput={dRecargo}
-                  />
-                </div>
-                <div className="w-full lg:w-auto pb-2 lg:pb-0 mt-0 mb-0 flex">
-                  <Inputs
-                    tipoInput={""}
-                    dataType={"double"}
-                    name={"recargo"}
-                    tamañolabel={""}
-                    className={"rounded-l block grow text-right"}
-                    Titulo={" "}
-                    type={"text"}
-                    requerido={false}
-                    register={register}
-                    errors={errors}
-                    maxLength={8}
-                    isDisabled={false}
-                  />
-                  <Tooltip Titulo={"Adiciona"} posicion={"tooltip-top"}>
-                    <Button
-                      icono={"fa-solid fa-circle-plus"}
-                      onClick={btnRecargo}
-                      className="rounded-r"
-                    ></Button>
-                  </Tooltip>
-                </div>
-              </div>
-            )}
-
-            {muestraParciales && (
-              <div className="flex flex-col md:flex-row lg:flex-row lg:space-x-2">
-                <div className="w-full lg:w-auto pb-2 lg:pb-0 mt-0 mb-0">
-                  <Inputs
-                    tipoInput={""}
-                    dataType={"double"}
-                    name={"monto_parcial"}
-                    tamañolabel={""}
-                    className={"rounded block grow text-right"}
-                    Titulo={"Monto Parcial: "}
-                    type={"text"}
-                    requerido={false}
-                    register={register}
-                    errors={errors}
-                    maxLength={8}
-                    isDisabled={false}
-                  />
-                </div>
-                <div className="w-full lg:w-auto pb-2 lg:pb-0 mt-0 mb-0 flex">
-                  <Inputs
-                    tipoInput={""}
-                    dataType={"string"}
-                    name={"clave_acceso"}
-                    tamañolabel={""}
-                    className={"rounded block grow text-right"}
-                    Titulo={"Acceso: "}
-                    type={"password"}
-                    requerido={false}
-                    register={register}
-                    errors={errors}
-                    maxLength={15}
-                    isDisabled={false}
-                  />
-                  <Tooltip Titulo={"Actualiza"} posicion={"tooltip-top"}>
-                    <Button
-                      icono={"fa-solid fa-circle-plus"}
-                      onClick={btnParciales}
-                    ></Button>
-                  </Tooltip>
-                </div>
-              </div>
-            )}
             <div className="pb-5">
               <TablaPagos1
                 isLoading={isLoading}

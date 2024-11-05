@@ -1,6 +1,6 @@
 import React from "react";
 import Tooltip from "@/app/components/tooltip";
-import Button from "@/app/components/button";
+import { TbLoader3 } from "react-icons/tb";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 function Acciones({
@@ -8,78 +8,80 @@ function Acciones({
   Recargos,
   Parciales,
   ImprimePDF,
-  ImprimeExcel,
   home,
-  Ver,
   Alta,
-  CerrarView,
+  muestraRecargos,
+  muestraParciales,
 }) {
+  const isAnyLoading = muestraRecargos || muestraParciales;
   const images = [
     {
       src: iconos.alta,
       alt: "Añadir Pago",
       tooltipTitle: "Nuevo Pago",
       onClick: Alta,
+      isLoading: false,
     },
     {
       src: iconos.documento,
       alt: "Documento",
       tooltipTitle: "Documento",
       onClick: Documento,
+      isLoading: false,
     },
     {
       src: iconos.recargo,
       alt: "Recargos",
       tooltipTitle: "Recargos",
       onClick: Recargos,
+      isLoading: muestraRecargos,
     },
     {
       src: iconos.actualizar_formato,
       alt: "Parciales",
       tooltipTitle: "Parciales",
       onClick: Parciales,
+      isLoading: muestraParciales,
     },
     {
       src: iconos.vistaPrevia,
       alt: "Imprimir",
       tooltipTitle: "Imprimir",
       onClick: ImprimePDF,
+      isLoading: false
     },
     { src: iconos.salir, alt: "Salir", tooltipTitle: "Salir", onClick: home },
   ];
-  const ImageTooltip = ({ src, tooltipTitle, onClick }) => {
+
+  const ImageTooltip = ({ src, tooltipTitle, onClick, isLoading, disabled }) => {
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
-        <Image
-          src={src}
-          alt={tooltipTitle}
+        <button
+          className="w-6 h-5 bg-transparent hover:bg-transparent border-none shadow-none text-black dark:text-white rounded-lg"
           onClick={onClick}
-          className="w-5 h-5 md:w-6 md:h-6"
-        />
+          disabled={disabled}
+        >
+          {isLoading ? (
+            <TbLoader3 className="animate-spin text-2xl" />
+          ) : (
+            <Image src={src} alt={tooltipTitle} className="w-5 h-5 md:w-6 md:h-6" />
+          )}
+        </button>
       </Tooltip>
     );
   };
+
   return (
-    // <div className="join join-vertical ">
-    //   <Tooltip Titulo={"Documento"} posicion={"tooltip-top"}>
-    //     <Button icono={"fa-solid fa-file"} onClick={Documento}></Button>
-    //   </Tooltip>
-    //   <Tooltip Titulo={"Recargos"} posicion={"tooltip-top"}>
-    //     <Button icono={"fa-solid fa-coins"} onClick={Recargos}></Button>
-    //   </Tooltip>
-    //   <Tooltip Titulo={"Parciales"} posicion={"tooltip-top"}>
-    //     <Button icono={"fa-solid fa-heart-crack"} onClick={Parciales}></Button>
-    //   </Tooltip>
-    //   <Tooltip Titulo={"Imprimir"} posicion={"tooltip-top"}>
-    //     <Button icono={"fas fa-file-pdf"} onClick={ImprimePDF}></Button>
-    //   </Tooltip>
-    //   <Tooltip Titulo={"Inicio"} posicion={"tooltip-top"}>
-    //     <Button icono={"fas fa-home"} onClick={home}></Button>
-    //   </Tooltip>
-    // </div>
     <div className="grid grid-flow-col gap-5 justify-around w-full">
       {images.map((image, idx) => (
-        <ImageTooltip key={idx} src={image.src} {...image} />
+        <ImageTooltip
+          key={idx}
+          src={image.src}
+          tooltipTitle={image.tooltipTitle}
+          onClick={image.onClick}
+          isLoading={image.isLoading}
+          disabled={isAnyLoading}
+        />
       ))}
     </div>
   );
