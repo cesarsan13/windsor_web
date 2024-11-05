@@ -128,7 +128,7 @@ function Profesores() {
   }, [busqueda, profesores]);
 
   useEffect(() => {
-    const debouncedBuscar = debounce(Buscar, 300);
+    const debouncedBuscar = debounce(Buscar, 500);
     debouncedBuscar();
     return () => {
       clearTimeout(debouncedBuscar);
