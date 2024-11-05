@@ -6,6 +6,7 @@ import iconos from "@/app/utils/iconos";
 import { formatNumber, globalVariables, loadGlobalVariables, soloDecimales } from "@/app/utils/globalfn";
 import { showSwal } from "@/app/utils/alerts";
 
+
 function TablaConcentradoCal({
     materiasEncabezado,
     calificacionesTodosAlumnos,
@@ -80,6 +81,7 @@ function TablaConcentradoCal({
         return resultado;
     }
 
+
     const calcularCalificaciones = (alumnonumero, materianumero) => {
         let sumatoria = 0;
         let evaluaciones = 0;
@@ -134,7 +136,7 @@ function TablaConcentradoCal({
     return  (
         <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-full">
             <table className="table table-xs table-zebra w-full">
-                <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
+            <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
                     <tr>
                         <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
                         <td className="w-[80%]">Alumno</td>
@@ -181,8 +183,8 @@ function TablaConcentradoCal({
                     ) : (
                         alumnoReg.map(alumno => (
                             <tr key={alumno.numero}>
-                                <td>{alumno.numero}</td>
-                                <td>{alumno.nombre}</td>
+                                <td className="text-right">{alumno.numero}</td>
+                                <td className="text-left">{alumno.nombre}</td>
                                 
                                 {/*{materiasReg.map(materia => (
                                     
@@ -196,12 +198,12 @@ function TablaConcentradoCal({
                                 {materiasReg.map((materia, idx) => (
                                 <React.Fragment key={materia.numero}>
                                     {idx === indexEspañol && (
-                                        <td className="text-left font-semibold">{(datosEspanol/contadorEspanol).toFixed(1)}</td>
+                                        <td className="text-right font-semibold">{(datosEspanol/contadorEspanol).toFixed(1)}</td>
                                     )}
                                     {idx === indexIngles && (
-                                        <td className="text-left font-semibold">{(datosIngles/contadorIngles).toFixed(1)}</td>
+                                        <td className="text-right font-semibold">{(datosIngles/contadorIngles).toFixed(1)}</td>
                                     )}
-                                    <td>{calcularCalificaciones(alumno.numero, materia.numero)}</td>
+                                    <td className="text-right">{calcularCalificaciones(alumno.numero, materia.numero)}</td>
                                 </React.Fragment>
                                 ))} 
 

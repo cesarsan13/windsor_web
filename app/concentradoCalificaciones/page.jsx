@@ -5,7 +5,14 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import {getMateriasPorGrupo, getInfoActividadesXGrupo, getActividadesReg, getMateriasReg, getAlumno, getActividadesXHorarioXAlumnoXMateriaXBimestre} from "@/app/utils/api/concentradoCalificaciones/concentradoCalificaciones";
+import {
+    getMateriasPorGrupo, 
+    getInfoActividadesXGrupo, 
+    getActividadesReg, 
+    getMateriasReg, 
+    getAlumno, 
+    getActividadesXHorarioXAlumnoXMateriaXBimestre
+} from "@/app/utils/api/concentradoCalificaciones/concentradoCalificaciones";
 import Inputs from "@/app/concentradoCalificaciones/components/Inputs";
 import Modal_Detalles_Actividades from "./components/modalDetallesActividades";
 import Acciones from "@/app/concentradoCalificaciones/components/Acciones";
@@ -31,7 +38,6 @@ function ConcentradoCalificaciones() {
     const [alumnoData, setAlumnoData] = useState({});
     let idAlumno = 0;
     let idMateria = 0;
-    
     
     const {
         register,
@@ -83,10 +89,13 @@ function ConcentradoCalificaciones() {
             <div className="container skeleton w-full max-w-screen-xl shadow-xl rounded-xl"></div>
         );
     }
+
     return(
         <>
            <Modal_Detalles_Actividades
-                alumnoData = {alumnoData} 
+                alumnoData = {alumnoData}
+                materiasReg = {materiasReg}
+                grupo = {grupo.numero}
             />
 
             <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
@@ -106,7 +115,7 @@ function ConcentradoCalificaciones() {
                     </div> 
                 </div>
                 <div className="flex flex-col items-center h-full">
-                    <div className="w-full max-w-4xl">
+                    <div className="w-full max-w-6xl">
                         {/*<div className="flex flex-row justify-center space-x-4 w-[calc(100%)]">*/}
                         <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 w-full">
 
