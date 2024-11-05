@@ -22,6 +22,7 @@ const iconos = {
   //Imagenes de Fondo
   fondoLogin: require("@/public/Iconos/Login_Ventio.JPG"),
   fondoHome: require("@/public/Iconos/Home_Ventio.jpg"),
+  fondoLoginMovil: require("@/public/Iconos/login_movil.JPG"),
 };
 
 export default iconos;
