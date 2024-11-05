@@ -63,6 +63,7 @@ function Pagos_1() {
   const [alumnos, setAlumnos] = useState([]);
   const [accionB, setAccionB] = useState("");
   const [bloqueaEncabezado, setBloqueaEncabezado] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
 
   const nameInputs = ["numero", "nombre_completo"];
   const columnasBuscaCat = ["numero", "nombre_completo"];
@@ -96,46 +97,17 @@ function Pagos_1() {
   });
 
   useEffect(() => {
-    if (muestraRecargos) {
-      reset({
-        numero_producto: 0,
-        alumno: 0,
-        descripcion: "",
-        fecha: "",
-        comentarios: "",
-        precio_base: 0,
-        cantidad_producto: 1,
-        documento: "",
-        precio: 0,
-        neto: 0,
-        total: 0,
-        descuento: 0,
-        recargo: 0,
-        monto_parcial: 0,
-        clave_acceso: "",
-      });
-    }
-    if (muestraParciales) {
-      reset({
-        numero_producto: 0,
-        alumno: 0,
-        descripcion: "",
-        fecha: "",
-        comentarios: "",
-        precio_base: 0,
-        cantidad_producto: 1,
-        documento: "",
-        precio: 0,
-        neto: 0,
-        total: 0,
-        descuento: 0,
-        recargo: 0,
-        monto_parcial: 0,
-        clave_acceso: "",
-      });
-    }
-  }, [muestraRecargos, muestraParciales]);
+    reset({
+      recargo: 0,
+    });
+  }, [muestraRecargos]);
 
+  useEffect(() => {
+    reset({
+      monto_parcial: 0,
+      clave_acceso: "",
+    });
+  }, [muestraParciales]);
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -290,6 +262,12 @@ function Pagos_1() {
       setMuestraParciales(false);
       return;
     }
+    let validar = selectedTable.numero_producto;
+    if (!validar) {
+      await showSwalAndWait("¡Error!", "No hay ningún artículo seleccionado. Asegúrate de haberlo elegido en la tabla.", "error");
+      setMuestraParciales(false);
+      return;
+    }
     showModal("modal_parciales", true);
     document.getElementById("monto_parcial").focus();
     setMuestraParciales(false);
@@ -323,14 +301,7 @@ function Pagos_1() {
     let res2;
     let fecha = data.fecha;
     const { token } = session.user;
-    let validar = selectedTable.numero_producto;
 
-    if (!validar) {
-      showModal("modal_parciales", false);
-      await showSwalAndWait("¡Error!", "No hay ningún artículo seleccionado. Asegúrate de haberlo elegido en la tabla.", "error");
-      showModal("modal_parciales", true);
-      return;
-    }
     Monto_Pago = Elimina_Comas(data.monto_parcial);
     if (Monto_Pago === 0) {
       showModal("modal_parciales", false);
@@ -411,15 +382,21 @@ function Pagos_1() {
             setValue("monto_parcial", "");
             setValue("clave_acceso", "");
             showModal("modal_parciales", false);
+            setSelectedRow(null);
+            setSelectedTable({});
           } else {
             showSwal(res2.alert_title, res2.alert_text, res2.alert_icon);
+            setSelectedRow(null);
+            setSelectedTable({});
           }
         } else {
           showSwal(
             "",
-            "El documento a generar ya existe no se realiza el proceso",
+            "El documento a generar ya existe, no se realiza el proceso.",
             "info"
           );
+          setSelectedRow(null);
+          setSelectedTable({});
           showModal("modal_parciales", false);
           return;
         }
@@ -443,7 +420,7 @@ function Pagos_1() {
       neto: recargo || 0,
       total: totalFormat || 0,
       alumno: alumnos1.numero || 0,
-      numero: 9999,
+      numero_producto: 9999,
       descripcion: dRecargo || "",
       cantidad_producto: data.cantidad_producto || 0,
       documento: "",
@@ -822,6 +799,8 @@ function Pagos_1() {
                 setAccion={setAccion}
                 setSelectedTable={setSelectedTable}
                 deleteRow={EliminarCampo}
+                selectedRow={selectedRow}
+                setSelectedRow={setSelectedRow}
               />
             </div>
           </div>
