@@ -41,15 +41,25 @@ function Inputs({
             <option value={0} className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]">
               Seleccione una opción
             </option>
-            {arreglos.map((arreglo) => (
+            
+            { arreglos.length > 0 ? (
+              arreglos.map((arreglo) => (
+                <option
+                  className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]"
+                  key={arreglo.id}
+                  value={arreglo.id}
+                >
+                  {arreglo.descripcion}
+                </option>
+              ))
+            ) : (
               <option
                 className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]"
-                key={arreglo.id}
-                value={arreglo.id}
               >
-                {arreglo.descripcion}
+                No hay materias
               </option>
-            ))}
+            )
+            }
           </select>
         </label>
         {errors[name] && requerido && (
