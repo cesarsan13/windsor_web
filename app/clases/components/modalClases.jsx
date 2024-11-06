@@ -22,7 +22,7 @@ function ModalClases({
   const [error, setError] = useState(null);
   //Horario
   const columnasBuscaCat = ["numero", "horario"];
-  const nameInputs = ["numero", "numero_1_nombre"];
+  const nameInputs = ["horario_1", "numero_1_nombre"];
   //Profesor
   const columnasBuscaCat1 = ["numero", "nombre"];
   const nameInputs3 = ["profesor", "profesor_nombre"];
@@ -96,11 +96,12 @@ function ModalClases({
           setItem={setGrado}
           token={session?.user?.token}
           modalId="modal_horarios"
-          array={clase.numero}
+          array={clase.horario_1}
           id={clase.numero}
           alignRight={true}
           inputWidths={{ first: "80px", second: "380px" }}
           accion={accion}
+          
         />
       <BuscarCat
                     table="materias"
