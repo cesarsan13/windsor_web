@@ -16,31 +16,15 @@ function ModalCajeroPago({
   home,
   cajero,
   setCajero,
-  isLoading,
+  registerCaj,
+  handleSubmitCaj,
+  errorsCaj,
+  accionB,
 }) {
-  const [error, setError] = useState(null);
   const columnasBuscaCat = ["numero", "nombre"];
   const nameInputs = ["numero", "nombre"];
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({});
 
-  // const handleBlur = (evt, datatype) => {
-  //   if (evt.target.value === "") return;
-  //   datatype === "int"
-  //     ? setCajero((cajero) => ({
-  //       ...cajero,
-  //       [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-  //     }))
-  //     : setCajero((cajero) => ({
-  //       ...cajero,
-  //       [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-  //     }));
-  // };
-
-  const onSubmitModal = handleSubmit(async (data) => {
+  const onSubmitModal = handleSubmitCaj(async (data) => {
     data.cajero = cajero.numero;
     const { token } = session.user;
     let res;
@@ -112,6 +96,7 @@ function ModalCajeroPago({
                 titulo={"Cajeros: "}
                 setItem={setCajero}
                 token={session.user.token}
+                accion={accionB}
                 modalId="modal_cajeros"
                 alignRight={"text-right"}
                 inputWidths={{
@@ -131,8 +116,8 @@ function ModalCajeroPago({
                 type={"password"}
                 requerido={true}
                 isNumero={false}
-                errors={errors}
-                register={register}
+                errors={errorsCaj}
+                register={registerCaj}
                 message={"Clave requerida"}
                 maxLength={50}
                 isDisabled={false}

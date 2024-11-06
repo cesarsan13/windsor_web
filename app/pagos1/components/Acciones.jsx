@@ -12,8 +12,9 @@ function Acciones({
   Alta,
   muestraRecargos,
   muestraParciales,
+  muestraImpresion,
 }) {
-  const isAnyLoading = muestraRecargos || muestraParciales;
+  const isAnyLoading = muestraRecargos || muestraParciales || muestraImpresion;
   const images = [
     {
       src: iconos.alta,
@@ -48,7 +49,7 @@ function Acciones({
       alt: "Imprimir",
       tooltipTitle: "Imprimir",
       onClick: ImprimePDF,
-      isLoading: false
+      isLoading: muestraImpresion
     },
     { src: iconos.salir, alt: "Salir", tooltipTitle: "Salir", onClick: home },
   ];
