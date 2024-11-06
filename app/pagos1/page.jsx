@@ -44,7 +44,6 @@ function Pagos_1() {
   const [alumnos1, setAlumnos1] = useState({});
   const [comentarios1, setComentarios1] = useState({});
   const [productos1, setProductos1] = useState({});
-
   const [pagos, setPagos] = useState([]);
   const [pago, setPago] = useState({});
   let [pagosFiltrados, setPagosFiltrados] = useState([]);
@@ -56,15 +55,16 @@ function Pagos_1() {
   const [h1Total, setH1Total] = useState("0.00");
   const [muestraRecargos, setMuestraRecargos] = useState(false);
   const [muestraParciales, setMuestraParciales] = useState(false);
+  const [muestraImpresion, setMuestraImpresion] = useState(false);
   const [dRecargo, setDrecargo] = useState("");
   const [selectedTable, setSelectedTable] = useState({});
   const [cargado, setCargado] = useState(false);
   const [docFiltrados, setdDocFiltrados] = useState([]);
   const [alumnos, setAlumnos] = useState([]);
   const [accionB, setAccionB] = useState("");
+  const [accionC, setAccionC] = useState("");
   const [bloqueaEncabezado, setBloqueaEncabezado] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
-
   const nameInputs = ["numero", "nombre_completo"];
   const columnasBuscaCat = ["numero", "nombre_completo"];
   const nameInputs2 = ["numero", "comentario_1"];
@@ -84,7 +84,7 @@ function Pagos_1() {
       fecha: "",
       comentarios: "",
       precio_base: 0,
-      cantidad_producto: 1,
+      cantidad_producto: "1",
       documento: "",
       precio: 0,
       neto: 0,
@@ -95,6 +95,46 @@ function Pagos_1() {
       clave_acceso: "",
     },
   });
+
+  const {
+    register: registerImpr,
+    reset: resetImpr,
+    handleSubmit: handleSumbitImpr,
+    formState: { errors: errorsImpr },
+  } = useForm({
+    defaultValues: {
+      pago: formaPagoPage.pago,
+      pago_2: "0.00",
+      referencia: "",
+      referencia_2: "",
+      num_copias: 1,
+      recibo_imprimir: formaPagoPage.recibo,
+    },
+  });
+
+  const {
+    register: registerCaj,
+    handleSubmit: handleSubmitCaj,
+    reset: resetCaj,
+    formState: { errors: errorsCaj },
+  } = useForm({
+    defaultValues: {
+      clave_cajero: "",
+    },
+  });
+
+  useEffect(() => {
+    // setValueImpr("pago", formaPagoPage.pago);
+    // setValueImpr("recibo_imprimir", formaPagoPage.recibo);
+    resetImpr({
+      pago: formaPagoPage.pago,
+      pago_2: "0.00",
+      referencia: "",
+      quien_paga: "",
+      recibo_imprimir: formaPagoPage.recibo,
+    });
+  }, [formaPagoPage]);
+
 
   useEffect(() => {
     reset({
@@ -139,6 +179,7 @@ function Pagos_1() {
     };
     fetchData();
   }, [session, status, validar, cargado, setValue]);
+
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
@@ -153,12 +194,6 @@ function Pagos_1() {
   }, [productos1]);
 
   useEffect(() => {
-    if (accionB === "Alta") {
-      setAccionB("");
-    }
-  }, [accionB]);
-
-  useEffect(() => {
     setBloqueaEncabezado(pagosFiltrados.length > 0);
   }, [pagosFiltrados]);
 
@@ -167,6 +202,70 @@ function Pagos_1() {
       ? document.getElementById(id).showModal()
       : document.getElementById(id).close();
   };
+
+  const reiniciarPage = () => {
+    setFormaPago([]);
+    setformaPagoPage({});
+    setPagos([]);
+    setPagosFiltrados([]);
+    setCajero({});
+    setAlumnos([]);
+    setAlumnos1({});
+    setH1Total("0.00");
+    setSelectedTable({});
+    setComentarios1({});
+    setProductos1({});
+    setColorInput("");
+    setPrecioBase("");
+    setDrecargo("");
+    setdDocFiltrados([]);
+    setValidar(false);
+    setCargado(false);
+    setSelectedRow(null);
+    reset({
+      numero_producto: 0,
+      alumno: 0,
+      descripcion: "",
+      fecha: "",
+      comentarios: "",
+      precio_base: 0,
+      cantidad_producto: 1,
+      documento: "",
+      precio: 0,
+      neto: 0,
+      total: 0,
+      descuento: 0,
+      recargo: 0,
+      monto_parcial: 0,
+      clave_acceso: "",
+      monto_parcial: 0,
+      clave_acceso: "",
+      recargo: 0,
+    });
+    resetImpr({
+      pago: formaPagoPage.pago,
+      pago_2: "0.00",
+      referencia: "",
+      quien_paga: "",
+      recibo_imprimir: formaPagoPage.recibo,
+    });
+    resetCaj({
+      clave_cajero: "",
+    });
+    setAccionC("Alta");
+  };
+
+  useEffect(() => {
+    if (accionB === "Alta") {
+      setAccionB("");
+    }
+  }, [accionB]);
+
+  useEffect(() => {
+    if (accionC === "Alta") {
+      setAccionC("");
+    }
+  }, [accionC]);
 
   const home = () => {
     router.push("/");
@@ -448,6 +547,7 @@ function Pagos_1() {
   };
 
   const ImprimePDF = async (data) => {
+    setMuestraImpresion(true);
     let fecha = data.fecha;
     if (!fecha) {
       const today = new Date();
@@ -459,10 +559,12 @@ function Pagos_1() {
     let alumnoInvalido = alumnos1.numero;
     if (!alumnoInvalido) {
       showSwal("Oppss!", "Alumno invalido", "error");
+      setMuestraImpresion(false);
       return;
     }
     if (h1Total <= 0) {
       showSwal("Oppss!", "El monto total debe ser mayor a 0", "error");
+      setMuestraImpresion(false);
       return;
     }
     let dataP = await buscaPropietario(session.user.token, 1);
@@ -475,6 +577,7 @@ function Pagos_1() {
       fecha: fecha || "",
     };
     setformaPagoPage(newData);
+    setMuestraImpresion(false);
     showModal("my_modal_4", true);
   };
 
@@ -666,7 +769,7 @@ function Pagos_1() {
         errors={errors}
         handleModalClick={handleModalClick}
         setProductos1={setProductos1}
-        accionB={accionB}
+        accionB={accionC}
         btnParciales={btnParciales}
       />
       <ModalCajeroPago
@@ -678,6 +781,10 @@ function Pagos_1() {
         setCajero={setCajero}
         cajero={cajero}
         isLoading={isLoading}
+        registerCaj={registerCaj}
+        errorsCaj={errorsCaj}
+        handleSubmitCaj={handleSubmitCaj}
+        accionB={accionC}
       />
       <ModalPagoImprime
         session={session}
@@ -690,6 +797,11 @@ function Pagos_1() {
         comentarios1={comentarios1}
         cajero={cajero}
         alumnos={alumnos}
+        reiniciarPage={reiniciarPage}
+        errorsImpr={errorsImpr}
+        registerImpr={registerImpr}
+        handleSumbitImpr={handleSumbitImpr}
+        accionB={accionC}
       />
       <ModalDocTabla
         session={session}
@@ -711,6 +823,7 @@ function Pagos_1() {
                 Alta={Alta}
                 muestraRecargos={muestraRecargos}
                 muestraParciales={muestraParciales}
+                muestraImpresion={muestraImpresion}
               />
               <h1 className="text-4xl font-xthin text-black dark:text-white">
                 Pagos
@@ -749,6 +862,7 @@ function Pagos_1() {
                   nameInput={nameInputs}
                   titulo={"Alumnos: "}
                   setItem={setAlumnos1}
+                  accion={accionC}
                   token={session.user.token}
                   modalId="modal_alumnos1"
                   alignRight={"text-right"}
@@ -767,6 +881,7 @@ function Pagos_1() {
                   nameInput={nameInputs2}
                   titulo={"Comentario: "}
                   setItem={setComentarios1}
+                  accion={accionC}
                   token={session.user.token}
                   modalId="modal_comentarios1"
                   alignRight={"text-right"}

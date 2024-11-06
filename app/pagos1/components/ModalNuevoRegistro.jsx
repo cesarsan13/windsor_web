@@ -111,7 +111,7 @@ function ModalNuevoRegistro({
                     className={`w-[calc(65%)] text-right ${colorInput}`}
                     Titulo={"P. Base: "}
                     type={"text"}
-                    requerido={true}
+                    requerido={false}
                     errors={errors}
                     register={register}
                     message={"numero requerido"}
