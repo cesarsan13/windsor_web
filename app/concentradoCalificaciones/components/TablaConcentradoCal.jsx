@@ -26,7 +26,6 @@ function TablaConcentradoCal({
     let datosEspanol = 0;
     let datosIngles = 0;
 
-
     const tableAction = async (evt, alumno, accion) => {
         showModal(true);
         setAccion(accion);
@@ -37,6 +36,7 @@ function TablaConcentradoCal({
         return isNaN(value) ? 0 : Number(value);
     }
 
+    console.log(materiasReg);
     function RegresaCalificacionRedondeo(twxCalifica, txwRedondea0) {
         // Inicializar la variable de retorno
         let resultado = 0;
@@ -136,7 +136,7 @@ function TablaConcentradoCal({
     return  (
         <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-full">
             <table className="table table-xs table-zebra w-full">
-            <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
+                <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
                     <tr>
                         <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
                         <td className="w-[80%]">Alumno</td>

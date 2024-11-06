@@ -11,7 +11,6 @@ import {
     getActividadesReg, 
     getMateriasReg, 
     getAlumno, 
-    getActividadesXHorarioXAlumnoXMateriaXBimestre
 } from "@/app/utils/api/concentradoCalificaciones/concentradoCalificaciones";
 import Inputs from "@/app/concentradoCalificaciones/components/Inputs";
 import Modal_Detalles_Actividades from "./components/modalDetallesActividades";
@@ -60,21 +59,19 @@ function ConcentradoCalificaciones() {
         const {token} = session.user;
         const b = data.bimestre;
         setBimestre(Number(b));
-        const [materiasEncabezado, matAlumnos, alumno, materias, actividades] = //detalleCalAlumno
+        const [materiasEncabezado, matAlumnos, alumno, materias, actividades] = 
           await Promise.all([
             getMateriasPorGrupo(token, grupo.numero),
             getInfoActividadesXGrupo(token, grupo.numero, b),
             getAlumno(token, grupo.numero),
             getMateriasReg(token, grupo.numero),
             getActividadesReg(token),
-            //getActividadesXHorarioXAlumnoXMateriaXBimestre(token, grupo.numero, idAlumno, idMateria, bimestre)
         ]);
             setMateriasEncabezado(materiasEncabezado);
             setCalificacionesTodosAlumnos(matAlumnos);
             setAlumnoReg(alumno);
             setMateriasReg(materias);
             setActividadesReg(actividades);
-            //setCalificacionesDesgloseAlumno(detalleCalAlumno);
         };
     });
 
@@ -96,6 +93,7 @@ function ConcentradoCalificaciones() {
                 alumnoData = {alumnoData}
                 materiasReg = {materiasReg}
                 grupo = {grupo.numero}
+                bimestre = {bimestre}
             />
 
             <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
@@ -115,7 +113,7 @@ function ConcentradoCalificaciones() {
                     </div> 
                 </div>
                 <div className="flex flex-col items-center h-full">
-                    <div className="w-full max-w-6xl">
+                    <div className="w-full max-w-4xl">
                         {/*<div className="flex flex-row justify-center space-x-4 w-[calc(100%)]">*/}
                         <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 w-full">
 
