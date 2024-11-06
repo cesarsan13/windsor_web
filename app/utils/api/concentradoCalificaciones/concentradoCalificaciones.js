@@ -87,3 +87,18 @@ export const getAlumno = async (token, idHorario) => {
     return resJson.data;
     }
 };
+
+export const getActividadesDetalles = async (token, idMateria) => {
+    if(idMateria > 0){
+    let url = `${process.env.DOMAIN_API}api/concentradoCalificaciones/actividadesMateria/${idMateria}`;
+    const res = await fetch(url, {
+        method: "get",
+        headers:{
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': "application/json",
+        },
+    });
+    const resJson = await res.json();
+    return resJson.data;
+    }
+};
