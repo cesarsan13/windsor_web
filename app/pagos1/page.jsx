@@ -56,6 +56,7 @@ function Pagos_1() {
   const [muestraRecargos, setMuestraRecargos] = useState(false);
   const [muestraParciales, setMuestraParciales] = useState(false);
   const [muestraImpresion, setMuestraImpresion] = useState(false);
+  const [muestraDocumento, setMuestraDocumento] = useState(false);
   const [dRecargo, setDrecargo] = useState("");
   const [selectedTable, setSelectedTable] = useState({});
   const [cargado, setCargado] = useState(false);
@@ -75,6 +76,7 @@ function Pagos_1() {
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -95,6 +97,7 @@ function Pagos_1() {
       clave_acceso: "",
     },
   });
+  const cantidad_producto = watch("cantidad_producto");
 
   const {
     register: registerImpr,
@@ -137,6 +140,12 @@ function Pagos_1() {
 
 
   useEffect(() => {
+    if (cantidad_producto === "") {
+      setValue("cantidad_producto", formatNumber(1));
+    }
+  }, [cantidad_producto]);
+
+  useEffect(() => {
     reset({
       recargo: 0,
     });
@@ -157,6 +166,7 @@ function Pagos_1() {
       setisLoading(true);
       if (!validar) {
         showModal("my_modal_3", true);
+        setValue("cantidad_producto", formatNumber(1));
       } else {
         showModal("my_modal_3", false);
       }
@@ -280,8 +290,10 @@ function Pagos_1() {
     const { token } = session.user;
     let newData = {};
     let alumnoInvalido = alumnos1.numero;
+    setMuestraDocumento(true);
     if (!alumnoInvalido) {
       showSwal("Oppss!", "Alumno invalido", "error");
+      setMuestraDocumento(false);
       return;
     }
     const dataR = await buscaDocumentosCobranza(token, alumnos1.numero);
@@ -315,8 +327,10 @@ function Pagos_1() {
         }
       }
       setdDocFiltrados((prevPagos) => [...prevPagos, newData]);
+      setMuestraDocumento(false);
       showModal("my_modal_5", true);
     } else {
+      setMuestraDocumento(false);
       showSwal("Oppss!", "No hay documentos para cobro", "error");
     }
   };
@@ -824,6 +838,7 @@ function Pagos_1() {
                 muestraRecargos={muestraRecargos}
                 muestraParciales={muestraParciales}
                 muestraImpresion={muestraImpresion}
+                muestraDocumento={muestraDocumento}
               />
               <h1 className="text-4xl font-xthin text-black dark:text-white">
                 Pagos

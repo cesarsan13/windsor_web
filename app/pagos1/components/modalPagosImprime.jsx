@@ -76,27 +76,29 @@ function ModalPagoImprime({
       }
       setisLoading(true);
       const fecha_page = format_Fecha_String(formaPagoPage.fecha);
-      for (const pago of pagosFiltrados) {
-        const pagoUnitF = Elimina_Comas(pago.precio_base);
-        newData = {
-          recibo: data.recibo_imprimir || 0,
-          alumno: pago.alumno || 0,
-          fecha: fecha_page || "",
-          articulo: pago.numero || 0,
-          cantidad: pago.cantidad_producto || 0,
-          precio_unitario: pagoUnitF || 0,
-          descuento: pago.descuento || 0,
-          documento: pago.documento || 0,
-          total_general: totalFormat || 0,
-        };
-        res = await guardarDetallePedido(token, newData);
-      }
+      await Promise.all(
+        pagosFiltrados.map(async (pago) => {
+          const pagoUnitF = Elimina_Comas(pago.precio_base);
+          const newData = {
+            recibo: data.recibo_imprimir || 0,
+            alumno: pago.alumno || 0,
+            fecha: fecha_page || "",
+            articulo: parseInt(pago.numero_producto) || 0,
+            cantidad: pago.cantidad_producto || 0,
+            precio_unitario: pagoUnitF || 0,
+            descuento: pago.descuento || 0,
+            documento: pago.documento || 0,
+            total_general: totalFormat || 0,
+          };
+          return await guardarDetallePedido(token, newData);
+        })
+      );
 
       const postNewData = {
         recibo: data.recibo_imprimir || 0,
         alumno: alumnos1.numero || 0,
         fecha: fecha_page || "",
-        articulo: productos1.numero || 0,
+        articulo: parseInt(productos1.numero) || 0,
         cajero: cajero.numero || 0,
         total_neto: totalFormat || 0,
         n_banco: formpago.numero || 0,
