@@ -13,8 +13,9 @@ function Acciones({
   muestraRecargos,
   muestraParciales,
   muestraImpresion,
+  muestraDocumento,
 }) {
-  const isAnyLoading = muestraRecargos || muestraParciales || muestraImpresion;
+  const isAnyLoading = muestraRecargos || muestraParciales || muestraImpresion || muestraDocumento;
   const images = [
     {
       src: iconos.alta,
@@ -28,7 +29,7 @@ function Acciones({
       alt: "Documento",
       tooltipTitle: "Documento",
       onClick: Documento,
-      isLoading: false,
+      isLoading: muestraDocumento,
     },
     {
       src: iconos.recargo,
