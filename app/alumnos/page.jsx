@@ -28,7 +28,7 @@ function Alumnos() {
   const { data: session, status } = useSession();
   const [alumnos, setAlumnos] = useState([]);
   const [alumno, setAlumno] = useState({});
-  const [alumnosFiltrados, setAlumnosFiltrados] = useState([]);
+  const [alumnosFiltrados, setAlumnosFiltrados] = useState(null);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
@@ -52,9 +52,6 @@ function Alumnos() {
     tb_desc: "",
     tb_grado: "",
   });
-
-  console.log(grado);
-
   //Memorizar la funcion
   const Buscar = useCallback(() => {
     const { tb_id, tb_desc, tb_grado } = busqueda;
@@ -68,15 +65,15 @@ function Alumnos() {
         : true;
       const coincideDescripcion = tb_desc
         ? alumno["nombre"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_desc.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
         : true;
       const coincideGrado = tb_grado
         ? (alumno["horario_1_nombre"] || "")
-          .toString()
-          .toLowerCase()
-          .includes(tb_grado.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_grado.toLowerCase())
         : true;
       return coincideId && coincideDescripcion && coincideGrado;
     });
@@ -447,8 +444,9 @@ function Alumnos() {
         return;
       }
     }
-    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${data.a_nombre || ""
-      }`.trim();
+    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${
+      data.a_nombre || ""
+    }`.trim();
     data.nombre = nombreCompleto;
     const formData = new FormData();
     formData.append("numero", data.numero || "");
@@ -801,7 +799,7 @@ function Alumnos() {
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
       />
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
@@ -829,18 +827,20 @@ function Alumnos() {
               handleBusquedaChange={handleBusquedaChange}
               busqueda={busqueda}
             />
-            <TablaAlumnos
-              session={session}
-              isLoading={isLoading}
-              alumnosFiltrados={alumnosFiltrados}
-              showModal={showModal}
-              setAlumno={setAlumno}
-              setAccion={setAccion}
-              setCurrentId={setCurrentId}
-              formatNumber={formatNumber}
-              setCapturedImage={setCapturedImage}
-              setcondicion={setcondicion}
-            />
+            {session && (
+              <TablaAlumnos
+                session={session}
+                isLoading={isLoading}
+                alumnosFiltrados={alumnosFiltrados}
+                showModal={showModal}
+                setAlumno={setAlumno}
+                setAccion={setAccion}
+                setCurrentId={setCurrentId}
+                formatNumber={formatNumber}
+                setCapturedImage={setCapturedImage}
+                setcondicion={setcondicion}
+              />
+            )}
           </div>
         </div>
       </div>

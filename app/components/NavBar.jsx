@@ -49,11 +49,11 @@ function NavBar() {
     await signOut({ redirect: true, callbackUrl: "/control_escolar" });
   };
   return (
-    <div className="navbar sticky top-0 h-full max-h-7 bg-slate-200 dark:bg-slate-700 lg:z-50 z-[5]">
+    <div className="navbar sticky top-0 h-full max-h-7 bg-base-200 dark:bg-slate-700 lg:z-50 z-[5]">
       <div className="navbar-start">
         <div className="drawer">
           <input
-            type="checkbox" 
+            type="checkbox"
             id="my-drawer"
             className="drawer-toggle"
             checked={isDrawerOpen}
