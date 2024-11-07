@@ -91,9 +91,6 @@ function Alumnos() {
   }, [busqueda, Buscar]);
 
   useEffect(() => {
-    if (status === "loading" || !session) {
-      return;
-    }
     const fetchData = async () => {
       setisLoading(true);
       const { token } = session.user;
@@ -105,6 +102,9 @@ function Alumnos() {
       const fechaFormateada = fecha_hoy.toISOString().split("T")[0];
       setFechaHoy(fechaFormateada);
     };
+    if (status === "loading" || !session) {
+      return;
+    }
     fetchData();
   }, [session, status, bajas]);
 
