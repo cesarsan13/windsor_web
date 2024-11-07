@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "@/app/utils/alerts";
+import { showSwal, confirmSwal, showSwalAndWait } from "@/app/utils/alerts";
 import ModalProfesores from "@/app/profesores/components/ModalProfesores";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import TablaProfesores from "@/app/profesores/components/TablaProfesores";
@@ -31,6 +31,7 @@ function Profesores() {
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
   const [isLoading, setisLoading] = useState(false);
+  const [isLoadingButton, setisLoadingButton] = useState(false);
   const [currentID, setCurrentId] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
@@ -82,7 +83,7 @@ function Profesores() {
       contraseña: "",
     },
   });
-
+ 
   useEffect(() => {
     reset({
       numero: profesor.numero,
@@ -118,9 +119,9 @@ function Profesores() {
         : true;
       const coincideNombre = tb_nombre
         ? profesor["nombre"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_nombre.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_nombre.toLowerCase())
         : true;
       return coincideID && coincideNombre;
     });
@@ -342,7 +343,7 @@ function Profesores() {
 
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault();
-    setisLoading(true);
+    setisLoadingButton(true);
     data.numero = currentID;
     let res = null;
     if (accion === "Eliminar") {
@@ -359,6 +360,7 @@ function Profesores() {
         return;
       }
     }
+    data.nombre_completo = `${data.nombre} ${data.ap_paterno} ${data.ap_materno}`
     res = await guardaProfesor(session.user.token, data, accion);
     if (res.status) {
       if (accion === "Alta") {
@@ -394,12 +396,14 @@ function Profesores() {
           }
         }
       }
-      showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
-    } else {
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
+    } else {
+      showModal(false);
+      await showSwalAndWait(res.alert_title, res.alert_text, res.alert_icon);
+      showModal(true);
     }
-    setisLoading(false);
+    setisLoadingButton(false);
   });
 
   const showModal = (show) => {
@@ -434,7 +438,7 @@ function Profesores() {
         register={register}
         setProfesor={setProfesor}
         profesor={profesor}
-        isLoading={isLoading}
+        isLoadingButton={isLoadingButton}
       />
       <VistaPrevia
         pdfPreview={pdfPreview}
