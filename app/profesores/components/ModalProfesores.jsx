@@ -13,7 +13,7 @@ function ModalProfesores({
   register,
   errors,
   setProfesor,
-  isLoading,
+  isLoadingButton,
 }) {
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
@@ -72,14 +72,14 @@ function ModalProfesores({
                   id="btn_guardar"
                   className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
                   onClick={onsubmit}
-                  disabled={isLoading}
+                  disabled={isLoadingButton}
                 >
-                  {isLoading ? (
+                  {isLoadingButton ? (
                     <FaSpinner className="animate-spin mx-2" />
                   ) : (
-                    <Image src={iconos.guardar} alt="guardar" className="w-5 h-5 md:w-6 md:h-6" />
+                    <Image src={iconos.guardar} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6" />
                   )}
-                  {isLoading ? " Cargando..." : " guardar"}
+                  {isLoadingButton ? " Cargando..." : " Guardar"}
                 </button>
               </div>
               <button
@@ -236,7 +236,7 @@ function ModalProfesores({
                 className={"rounded block grow"}
                 Titulo={"CP: "}
                 type={"text"}
-                requerido={true}
+                requerido={false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -252,7 +252,7 @@ function ModalProfesores({
                 className={"rounded block grow"}
                 Titulo={"Pais: "}
                 type={"text"}
-                requerido={true}
+                requerido={false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -265,15 +265,15 @@ function ModalProfesores({
                 dataType={"string"}
                 name={"rfc"}
                 tamañolabel={""}
-                className={"rounded block grow"}
+                className={"rounded block grow uppercase"}
                 Titulo={"RFC: "}
                 type={"text"}
-                requerido={true}
+                requerido={false}
                 isNumero={false}
                 errors={errors}
                 register={register}
                 message={"RFC requerido"}
-                maxLenght={20}
+                maxLenght={13}
                 isDisabled={isDisabled}
               />
 
@@ -284,7 +284,7 @@ function ModalProfesores({
                 className={"rounded block grow"}
                 Titulo={"Telefono 1: "}
                 type={"text"}
-                requerido={true}
+                requerido={false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -300,7 +300,7 @@ function ModalProfesores({
                 className={"rounded block grow"}
                 Titulo={"Telefono 2: "}
                 type={"text"}
-                requerido={true}
+                requerido={false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -316,7 +316,7 @@ function ModalProfesores({
                 className={"rounded block grow"}
                 Titulo={"Fax: "}
                 type={"text"}
-                requerido={true}
+                requerido={false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -332,7 +332,7 @@ function ModalProfesores({
                 className={"rounded block grow"}
                 Titulo={"Celular: "}
                 type={"text"}
-                requerido={true}
+                requerido={false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -348,7 +348,7 @@ function ModalProfesores({
                 className={"rounded block grow"}
                 Titulo={"Email: "}
                 type={"email"}
-                requerido={true}
+                requerido={false}
                 isNumero={false}
                 errors={errors}
                 register={register}
