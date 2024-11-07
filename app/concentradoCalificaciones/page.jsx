@@ -19,6 +19,7 @@ import BuscarCat from "@/app/components/BuscarCat";
 import TablaConcentradoCal from "@/app/concentradoCalificaciones/components/TablaConcentradoCal";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "jspdf-autotable";
+import ModalVistaPreviaConcentradoCal from "./components/ModalVistaPreviaConcentradoCal";
 
 
 function ConcentradoCalificaciones() {
@@ -26,7 +27,7 @@ function ConcentradoCalificaciones() {
     const { data: session, status } = useSession();
     const [grupo, setGrupo] = useState({"numero": 0});
     const [isLoading, setisLoading] = useState(false);
-    const [isDisabledSave, setIsDisabledSave] = useState(true);
+    //const [isDisabledSave, setIsDisabledSave] = useState(true);
     const [materiasEncabezado, setMateriasEncabezado] = useState({});
     const [calificacionesTodosAlumnos, setCalificacionesTodosAlumnos] = useState({});
     const [materiasReg, setMateriasReg] = useState({});
@@ -35,13 +36,17 @@ function ConcentradoCalificaciones() {
     const [bimestre, setBimestre] = useState(0);
     const [accion, setAccion] = useState("");
     const [alumnoData, setAlumnoData] = useState({});
-    let idAlumno = 0;
-    let idMateria = 0;
-    
+    const [animateLoading, setAnimateLoading] = useState(false);
+    const [pdfPreview, setPdfPreview] = useState(false);
+    const [pdfData, setPdfData] = useState("");
+    //const [dataEncabezado, setDataEncabezado] = useState([]);
+    const [ dataCaliAlumnosBody, setDataCaliAlumnosBody] = useState([]);
+
+    const dataEncabezado = [];
+
     const {
         register,
         handleSubmit,
-        watch,
         formState: { errors },
     } = useForm();
 
@@ -50,32 +55,121 @@ function ConcentradoCalificaciones() {
           ? document.getElementById("DetallesActividades").showModal()
           : document.getElementById("DetallesActividades").close();
       };
-    
+
     const Buscar = handleSubmit(async (data) => {
+        
         if (grupo.numero === 0 && data.bimestre === '0'){
             showSwal('Error', 'Debes de seleccionar el grupo y el bimestre', 'error');
         }
         else {
         const {token} = session.user;
-        const b = data.bimestre;
+        let b = data.bimestre;
         setBimestre(Number(b));
-        const [materiasEncabezado, matAlumnos, alumno, materias, actividades] = 
-          await Promise.all([
-            getMateriasPorGrupo(token, grupo.numero),
-            getInfoActividadesXGrupo(token, grupo.numero, b),
-            getAlumno(token, grupo.numero),
-            getMateriasReg(token, grupo.numero),
-            getActividadesReg(token),
-        ]);
-            setMateriasEncabezado(materiasEncabezado);
-            setCalificacionesTodosAlumnos(matAlumnos);
-            setAlumnoReg(alumno);
-            setMateriasReg(materias);
-            setActividadesReg(actividades);
+        try{
+            const [materiasEncabezado, matAlumnos, alumno, materias, actividades] = 
+              await Promise.all([
+                getMateriasPorGrupo(token, grupo.numero),
+                getInfoActividadesXGrupo(token, grupo.numero, b),
+                getAlumno(token, grupo.numero),
+                getMateriasReg(token, grupo.numero),
+                getActividadesReg(token),
+            ]);
+                setMateriasEncabezado(materiasEncabezado);
+                setCalificacionesTodosAlumnos(matAlumnos);
+                setAlumnoReg(alumno);
+                setMateriasReg(materias);
+                setActividadesReg(actividades);
+        } catch (error) { }
         };
     });
 
-    const handleVerClick = () => {};
+    const handleVerClick = () => {
+        setAnimateLoading(true);
+        cerrarModalVista();
+        console.log(grupo.numero, bimestre);
+        console.log("body", dataCaliAlumnosBody);
+        if (grupo.numero === 0 && bimestre === 0){
+            showSwal('Error', 'Debes de seleccionar el grupo y el bimestre', 'error');
+            setTimeout(() => {
+              setPdfPreview(false);
+              setPdfData("");
+              setAnimateLoading(false);
+              document.getElementById("modalVConCal").close();
+            }, 500);
+        }
+        else {
+            console.log(dataEncabezado);
+            let posicionX = 45; 
+            const incrementoX = 25;
+
+            const configuracion = {
+              Encabezado: {
+                Nombre_Aplicacion: "Sistema de Control Escolar",
+                Nombre_Reporte: "Reporte Altas Bajas de Alumnos por Periodo",
+                Nombre_Usuario: `Usuario: ${session.user.name}`,
+              },
+            };
+            const Enca1 = (doc) => {
+                if (!doc.tiene_encabezado) {
+                  doc.imprimeEncabezadoPrincipalH();
+                  doc.nextRow(12);
+                  doc.ImpPosX('Num.', 14, doc.tw_ren);
+                  doc.ImpPosX('Alumno', 28, doc.tw_ren);
+                  //datosEncabezado.forEach((desc) => {
+                  //  doc.ImpPosX(desc.descripcion.toString(), 45, doc.tw_ren);
+                  //});
+                  dataEncabezado.forEach((desc) => {
+                      doc.ImpPosX(desc.descripcion, posicionX, doc.tw_ren);
+                      posicionX += incrementoX;
+                  });
+                  doc.nextRow(4);
+                  doc.printLineH();
+                  doc.nextRow(4);
+                  doc.tiene_encabezado = true;
+                } else {
+                  doc.nextRow(6);
+                  doc.tiene_encabezado = true;
+                }
+              };
+              const reporte = new ReportePDF(configuracion, "Landscape");
+              Enca1(reporte);
+            
+            setTimeout(() => {
+              const pdfData = reporte.doc.output("datauristring");
+              setPdfData(pdfData);
+              setPdfPreview(true);
+              showModalVista(true);
+              setAnimateLoading(false);
+            }, 500);
+        }
+
+    };
+
+    const ImprimePDF = async () => {
+        const configuracion = {
+            Encabezado: {
+                Nombre_Aplicacion: "Sistema de Control Escolar",
+                Nombre_Reporte: "Reporte de Concentrado de Calificaciones",
+                Nombre_Usuario: `Usuario: ${session.user.name}`,
+            },
+            body: "",
+        };
+        Imprimir(configuracion)
+    };
+
+    const ImprimeExcel = async () => {};
+
+    const showModalVista = (show) => {
+    show
+      ? document.getElementById("modalVConCal").showModal()
+      : document.getElementById("modalVConCal").close();
+    };
+    const cerrarModalVista = () => {
+      setPdfPreview(false);
+      setPdfData("");
+      document.getElementById("modalVConCal").close();
+    };
+    
 
     const home = () => {
         router.push("/");
@@ -94,6 +188,12 @@ function ConcentradoCalificaciones() {
                 materiasReg = {materiasReg}
                 grupo = {grupo.numero}
                 bimestre = {bimestre}
+            />
+            <ModalVistaPreviaConcentradoCal
+                pdfPreview={pdfPreview}
+                pdfData={pdfData}
+                PDF={ImprimePDF}
+                Excel={ImprimeExcel}
             />
 
             <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
@@ -162,6 +262,9 @@ function ConcentradoCalificaciones() {
                             showModal={showModal}
                             setAccion={setAccion}
                             setAlumnoData = {setAlumnoData}
+                            setDataEncabezado = {dataEncabezado}
+                            setDataCaliAlumnosBody = {setDataCaliAlumnosBody}
+
                         />
                     </div>
                 </div>

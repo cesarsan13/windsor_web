@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Loading from "@/app/components/loading";
 import NoData from "@/app/components/NoData";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
-import { formatNumber, globalVariables, loadGlobalVariables, soloDecimales } from "@/app/utils/globalfn";
-import { showSwal } from "@/app/utils/alerts";
+import { RegresaCalificacionRedondeo, aDec } from "@/app/utils/globalfn";
 
 
 function TablaConcentradoCal({
@@ -16,9 +15,10 @@ function TablaConcentradoCal({
     bimestre,
     showModal,
     setAccion,
-    setAlumnoData
+    setAlumnoData,
+    setDataEncabezado,
+    setDataCaliAlumnosBody
 }){
-    const [editMode, setEditMode] = useState(null);
     let indexIngles = 0;
     let indexEspañol = 0;
     let contadorEspanol = 0;
@@ -26,61 +26,24 @@ function TablaConcentradoCal({
     let datosEspanol = 0;
     let datosIngles = 0;
 
+    const datosEncabezado = [];
+    const datosCaliAlumnosBody = [];
+
+    
+
+    useEffect(() => {
+      const fetchData = async () => {
+          setDataEncabezado = datosEncabezado;
+          setDataCaliAlumnosBody = datosCaliAlumnosBody;
+      };
+      fetchData();
+    }, [datosEncabezado, datosCaliAlumnosBody]);
+
     const tableAction = async (evt, alumno, accion) => {
         showModal(true);
         setAccion(accion);
         setAlumnoData(alumno);
     };
-
-    function aDec(value) {
-        return isNaN(value) ? 0 : Number(value);
-    }
-
-    console.log(materiasReg);
-    function RegresaCalificacionRedondeo(twxCalifica, txwRedondea0) {
-        // Inicializar la variable de retorno
-        let resultado = 0;
-    
-        // Redondear a 2 decimales
-        twxCalifica = Math.round(twxCalifica * 100) / 100;
-    
-        if (txwRedondea0 === "S") {
-            // Condicionales de redondeo exacto
-            if (twxCalifica > 9.49) {
-                twxCalifica = 10;
-            } else if (twxCalifica > 8.99 && twxCalifica < 9.5) {
-                twxCalifica = 9;
-            } else if (twxCalifica > 8.49 && twxCalifica < 9) {
-                twxCalifica = 9;
-            } else if (twxCalifica > 7.99 && twxCalifica < 8.5) {
-                twxCalifica = 8;
-            } else if (twxCalifica > 7.49 && twxCalifica < 8) {
-                twxCalifica = 8;
-            } else if (twxCalifica > 6.99 && twxCalifica < 7.5) {
-                twxCalifica = 7;
-            } else if (twxCalifica > 6.49 && twxCalifica < 7) {
-                twxCalifica = 7;
-            } else if (twxCalifica > 5.99 && twxCalifica < 6.5) {
-                twxCalifica = 6;
-            } else if (twxCalifica < 6) {
-                twxCalifica = 5;
-            }
-            resultado = twxCalifica;
-        } else {
-            const txwMult = twxCalifica * 10;
-            const txwStrin = txwMult.toString();
-            const posPunto = txwStrin.indexOf(".");
-            let txwEnt;
-            if (posPunto > -1) {
-                txwEnt = parseInt(txwStrin.substring(0, posPunto), 10);
-            } else {
-                txwEnt = parseInt(txwStrin, 10);
-            }
-            resultado = txwEnt / 10;
-        }
-        return resultado;
-    }
-
 
     const calcularCalificaciones = (alumnonumero, materianumero) => {
         let sumatoria = 0;
@@ -155,6 +118,23 @@ function TablaConcentradoCal({
                                         indexIngles = index + 1;
                                     }
                                 }
+                                //Aqui va a guardar los datos que se generan para la impresion del documento pdf
+                                
+                                datosEncabezado.push({
+                                    descripcion: item.descripcion,
+                                    esUltimoDeArea: esUltimoDeArea,
+                                    promedio: esUltimoDeArea ? `Promedio ${item.area === 1 ? "Español" : "Inglés"}` : null,
+                                    index: index
+                                });
+
+                                if (esUltimoDeArea) {
+                                    datosEncabezado.push({
+                                        descripcion: `Promedio ${item.area === 1 ? "Español" : "Inglés"}`,
+                                        esPromedio: true, // Esto indica que es un promedio
+                                        area: item.area
+                                    });
+                                }
+
                                 return (
                                     <React.Fragment key={index}>
                                         <th id={index} className="w-[20%]">
@@ -169,6 +149,7 @@ function TablaConcentradoCal({
                                         )}
                                     </React.Fragment>
                                 );
+                                
                             })
                         )}
 
@@ -186,16 +167,18 @@ function TablaConcentradoCal({
                                 <td className="text-right">{alumno.numero}</td>
                                 <td className="text-left">{alumno.nombre}</td>
                                 
-                                {/*{materiasReg.map(materia => (
-                                    
-                                    <td key={materia.numero}>
-                                        {
-                                        calcularCalificaciones(alumno.numero, materia.numero)
-                                        }
-                                    </td>
-                                ))}*/}
+                                {materiasReg.map((materia, idx) => {
+                                    //Aqui va a guardar los datos que se generan para la impresion del documento pdf
+                                    if (idx === indexEspañol ){
+                                        datosCaliAlumnosBody.push((datosEspanol/contadorEspanol).toFixed(1))
+                                    }
+                                    if (idx === indexIngles){
+                                        datosCaliAlumnosBody.push((datosIngles/contadorIngles).toFixed(1))
+                                    }
+                                    datosCaliAlumnosBody.push(calcularCalificaciones(alumno.numero, materia.numero))
 
-                                {materiasReg.map((materia, idx) => (
+
+                                return(
                                 <React.Fragment key={materia.numero}>
                                     {idx === indexEspañol && (
                                         <td className="text-right font-semibold">{(datosEspanol/contadorEspanol).toFixed(1)}</td>
@@ -205,7 +188,8 @@ function TablaConcentradoCal({
                                     )}
                                     <td className="text-right">{calcularCalificaciones(alumno.numero, materia.numero)}</td>
                                 </React.Fragment>
-                                ))} 
+                                );
+                                })} 
 
                                  <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                                   <div

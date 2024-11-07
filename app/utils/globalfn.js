@@ -292,3 +292,53 @@ export const loadGlobalVariables = () => {
     }
   });
 };
+
+//Es de Concentrado Calificaciones
+export const RegresaCalificacionRedondeo = (twxCalifica, txwRedondea0) => {
+  // Inicializar la variable de retorno
+  let resultado = 0;
+
+  // Redondear a 2 decimales
+  twxCalifica = Math.round(twxCalifica * 100) / 100;
+
+  if (txwRedondea0 === "S") {
+      // Condicionales de redondeo exacto
+      if (twxCalifica > 9.49) {
+          twxCalifica = 10;
+      } else if (twxCalifica > 8.99 && twxCalifica < 9.5) {
+          twxCalifica = 9;
+      } else if (twxCalifica > 8.49 && twxCalifica < 9) {
+          twxCalifica = 9;
+      } else if (twxCalifica > 7.99 && twxCalifica < 8.5) {
+          twxCalifica = 8;
+      } else if (twxCalifica > 7.49 && twxCalifica < 8) {
+          twxCalifica = 8;
+      } else if (twxCalifica > 6.99 && twxCalifica < 7.5) {
+          twxCalifica = 7;
+      } else if (twxCalifica > 6.49 && twxCalifica < 7) {
+          twxCalifica = 7;
+      } else if (twxCalifica > 5.99 && twxCalifica < 6.5) {
+          twxCalifica = 6;
+      } else if (twxCalifica < 6) {
+          twxCalifica = 5;
+      }
+      resultado = twxCalifica;
+  } else {
+      const txwMult = twxCalifica * 10;
+      const txwStrin = txwMult.toString();
+      const posPunto = txwStrin.indexOf(".");
+      let txwEnt;
+      if (posPunto > -1) {
+          txwEnt = parseInt(txwStrin.substring(0, posPunto), 10);
+      } else {
+          txwEnt = parseInt(txwStrin, 10);
+      }
+      resultado = txwEnt / 10;
+  }
+  return resultado;
+}
+
+
+export const aDec = (value) => {
+  return isNaN(value) ? 0 : Number(value);
+}
