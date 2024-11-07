@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalAlumnos from "@/app/alumnos/components/modalAlumnos";
@@ -49,46 +49,51 @@ function Alumnos() {
   const [fecha_hoy, setFechaHoy] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
   const [files, setFile] = useState(null);
+  const alumnosRef = useRef(alumnos);
   const [busqueda, setBusqueda] = useState({
     tb_id: "",
     tb_desc: "",
     tb_grado: "",
   });
-  //Memorizar la funcion
-  // const Buscar = useCallback(() => {
-  //   const { tb_id, tb_desc, tb_grado } = busqueda;
-  //   if (tb_id === "" && tb_desc === "" && tb_grado === "") {
-  //     setAlumnosFiltrados(alumnos);
-  //     return;
-  //   }
-  //   const infoFiltrada = alumnos.filter((alumno) => {
-  //     const coincideId = tb_id
-  //       ? alumno["numero"].toString().includes(tb_id)
-  //       : true;
-  //     const coincideDescripcion = tb_desc
-  //       ? alumno["nombre"]
-  //           .toString()
-  //           .toLowerCase()
-  //           .includes(tb_desc.toLowerCase())
-  //       : true;
-  //     const coincideGrado = tb_grado
-  //       ? (alumno["horario_1_nombre"] || "")
-  //           .toString()
-  //           .toLowerCase()
-  //           .includes(tb_grado.toLowerCase())
-  //       : true;
-  //     return coincideId && coincideDescripcion && coincideGrado;
-  //   });
-  //   setAlumnosFiltrados(infoFiltrada);
-  // }, [busqueda, alumnos]);
+  useEffect(() => {
+    alumnosRef.current = alumnos; // Actualiza el ref cuando alumnos cambia
+  }, [alumnos]);
+  //  Memorizar la funcion
+  const Buscar = useCallback(() => {
+    const { tb_id, tb_desc, tb_grado } = busqueda;
+    if (tb_id === "" && tb_desc === "" && tb_grado === "") {
+      setAlumnosFiltrados(alumnosRef.current);
+      return;
+    }
+    const infoFiltrada = alumnosRef.current.filter((alumno) => {
+      const coincideId = tb_id
+        ? alumno["numero"].toString().includes(tb_id)
+        : true;
+      const coincideDescripcion = tb_desc
+        ? alumno["nombre"]
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
+        : true;
+      const coincideGrado = tb_grado
+        ? (alumno["horario_1_nombre"] || "")
+            .toString()
+            .toLowerCase()
+            .includes(tb_grado.toLowerCase())
+        : true;
+      return coincideId && coincideDescripcion && coincideGrado;
+    });
+    setAlumnosFiltrados(infoFiltrada);
+  }, [busqueda]);
 
-  // useEffect(() => {
-  //   const debouncedBuscar = debounce(Buscar, 500);
-  //   debouncedBuscar();
-  //   return () => {
-  //     clearTimeout(debouncedBuscar);
-  //   };
-  // }, [busqueda, Buscar]);
+  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
+
+  useEffect(() => {
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar);
+    };
+  }, [busqueda, debouncedBuscar]);
 
   useEffect(() => {
     const fetchData = async () => {
