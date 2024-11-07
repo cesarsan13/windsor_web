@@ -3,7 +3,9 @@ import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalAlumnos from "@/app/alumnos/components/modalAlumnos";
-import TablaAlumnos from "@/app/alumnos/components/tablaAlumnos";
+const TablaAlumnos = React.lazy(() =>
+  import("@/app/alumnos/components/tablaAlumnos")
+);
 import Busqueda from "@/app/alumnos/components/Busqueda";
 import Acciones from "@/app/alumnos/components/Acciones";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
