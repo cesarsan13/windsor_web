@@ -827,20 +827,23 @@ function Alumnos() {
               handleBusquedaChange={handleBusquedaChange}
               busqueda={busqueda}
             />
-            {session && (
-              <TablaAlumnos
-                session={session}
-                isLoading={isLoading}
-                alumnosFiltrados={alumnosFiltrados}
-                showModal={showModal}
-                setAlumno={setAlumno}
-                setAccion={setAccion}
-                setCurrentId={setCurrentId}
-                formatNumber={formatNumber}
-                setCapturedImage={setCapturedImage}
-                setcondicion={setcondicion}
-              />
-            )}
+            {status === "loading" ||
+              (!session ? (
+                <></>
+              ) : (
+                <TablaAlumnos
+                  session={session}
+                  isLoading={isLoading}
+                  alumnosFiltrados={alumnosFiltrados}
+                  showModal={showModal}
+                  setAlumno={setAlumno}
+                  setAccion={setAccion}
+                  setCurrentId={setCurrentId}
+                  formatNumber={formatNumber}
+                  setCapturedImage={setCapturedImage}
+                  setcondicion={setcondicion}
+                />
+              ))}
           </div>
         </div>
       </div>
