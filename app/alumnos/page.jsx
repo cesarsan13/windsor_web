@@ -55,40 +55,40 @@ function Alumnos() {
     tb_grado: "",
   });
   //Memorizar la funcion
-  const Buscar = useCallback(() => {
-    const { tb_id, tb_desc, tb_grado } = busqueda;
-    if (tb_id === "" && tb_desc === "" && tb_grado === "") {
-      setAlumnosFiltrados(alumnos);
-      return;
-    }
-    const infoFiltrada = alumnos.filter((alumno) => {
-      const coincideId = tb_id
-        ? alumno["numero"].toString().includes(tb_id)
-        : true;
-      const coincideDescripcion = tb_desc
-        ? alumno["nombre"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_desc.toLowerCase())
-        : true;
-      const coincideGrado = tb_grado
-        ? (alumno["horario_1_nombre"] || "")
-            .toString()
-            .toLowerCase()
-            .includes(tb_grado.toLowerCase())
-        : true;
-      return coincideId && coincideDescripcion && coincideGrado;
-    });
-    setAlumnosFiltrados(infoFiltrada);
-  }, [busqueda, alumnos]);
+  // const Buscar = useCallback(() => {
+  //   const { tb_id, tb_desc, tb_grado } = busqueda;
+  //   if (tb_id === "" && tb_desc === "" && tb_grado === "") {
+  //     setAlumnosFiltrados(alumnos);
+  //     return;
+  //   }
+  //   const infoFiltrada = alumnos.filter((alumno) => {
+  //     const coincideId = tb_id
+  //       ? alumno["numero"].toString().includes(tb_id)
+  //       : true;
+  //     const coincideDescripcion = tb_desc
+  //       ? alumno["nombre"]
+  //           .toString()
+  //           .toLowerCase()
+  //           .includes(tb_desc.toLowerCase())
+  //       : true;
+  //     const coincideGrado = tb_grado
+  //       ? (alumno["horario_1_nombre"] || "")
+  //           .toString()
+  //           .toLowerCase()
+  //           .includes(tb_grado.toLowerCase())
+  //       : true;
+  //     return coincideId && coincideDescripcion && coincideGrado;
+  //   });
+  //   setAlumnosFiltrados(infoFiltrada);
+  // }, [busqueda, alumnos]);
 
-  useEffect(() => {
-    const debouncedBuscar = debounce(Buscar, 500);
-    debouncedBuscar();
-    return () => {
-      clearTimeout(debouncedBuscar);
-    };
-  }, [busqueda, Buscar]);
+  // useEffect(() => {
+  //   const debouncedBuscar = debounce(Buscar, 500);
+  //   debouncedBuscar();
+  //   return () => {
+  //     clearTimeout(debouncedBuscar);
+  //   };
+  // }, [busqueda, Buscar]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -806,7 +806,7 @@ function Alumnos() {
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
               <Acciones
-                Buscar={Buscar}
+                // Buscar={Buscar}
                 Alta={Alta}
                 home={home}
                 PDF={imprimePDF}
@@ -825,7 +825,7 @@ function Alumnos() {
             <Busqueda
               setBajas={setBajas}
               limpiarBusqueda={limpiarBusqueda}
-              Buscar={Buscar}
+              // Buscar={Buscar}
               handleBusquedaChange={handleBusquedaChange}
               busqueda={busqueda}
             />
