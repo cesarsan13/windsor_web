@@ -99,7 +99,7 @@ function TablaAlumnos({
           </tbody>
         </table>
       ) : alumnosFiltrados != null &&
-        !session &&
+        session &&
         alumnosFiltrados.length === 0 ? (
         <NoData></NoData>
       ) : (
