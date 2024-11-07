@@ -15,7 +15,6 @@ import {
     getActividadesDetalles
 } from "@/app/utils/api/concentradoCalificaciones/concentradoCalificaciones";
 
-
 function Modal_Detalles_Actividades({
     alumnoData,
     materiasReg,
@@ -30,18 +29,18 @@ function Modal_Detalles_Actividades({
     const {
         register,
         handleSubmit,
-        watch,
         formState: { errors },
     } = useForm();
 
     const Buscar = handleSubmit(async (data) => {
         M = Number(data.Materias);
-        const { token } = session.user;
+        try{
+            const { token } = session.user;
             const res = await getActividadesXHorarioXAlumnoXMateriaXBimestre(token, grupo, alumnoData.numero, M, bimestre);
             const acres = await getActividadesDetalles(token, M);
-        console.log(res);
-        setActividades(res);
-        setMatAct(acres);
+            setActividades(res);
+            setMatAct(acres);
+        } catch (error) { }
     });
     
     return(
@@ -101,7 +100,6 @@ function Modal_Detalles_Actividades({
                                 />
                             </div>
                         </div>
-                        
                     </fieldset>
                 </form>
             </div>
