@@ -165,7 +165,7 @@ function Clases() {
     // const dataj = JSON.stringify(data);
    // data.id = currentID;
     data.grupo = grado.numero;
-    data.horario_1_nombre = grado.horario;
+    //data.horario_1_nombre = grado.horario;
     data.materia = prof1.numero;
     data.profesor = prof2.numero;
 
