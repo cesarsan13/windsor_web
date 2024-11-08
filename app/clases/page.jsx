@@ -16,8 +16,9 @@ import VistaPrevia from "@/app/components/VistaPrevia";
 import Busqueda from "@/app/clases/components/Busqueda";
 import ModalClases from "@/app/clases/components/modalClases";
 import { ReportePDF } from "../utils/ReportesPDF";
-import { showSwal, confirmSwal } from "../utils/alerts";
+import { showSwal, confirmSwal, showSwalAndWait } from "../utils/alerts";
 import { debounce } from "../utils/globalfn";
+import "@react-pdf-viewer/core/lib/styles/index.css";
 
 function Clases() {
   const router = useRouter();
@@ -30,9 +31,10 @@ function Clases() {
   const [accion, setAccion] = useState("");
   const [grado, setGrado] = useState({});
   const [grado2, setGrado2] = useState({});
-  const [prof1, setprof1] = useState({});
-  const [prof2, setprof2] = useState({});
+  const [materia, setMateria] = useState({});
+  const [profesor, setProfesor] = useState({});
   const [animateLoading, setAnimateLoading] = useState(false);
+  const [isLoadingButton, setisLoadingButton] = useState(false);
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState({
     grupo: "",
@@ -68,23 +70,19 @@ function Clases() {
     }
     const infoFiltrada = clases.filter((clase) => {
       const coincideGrupo = tb_grupo
-        ? clase["grupo"].toString().includes(tb_grupo)
+        ? clase["grupo_descripcion"]?.toString().includes(tb_grupo)
         : true;
       const coincideMateria = tb_materia
-        ? clase["materia"].toString().includes(tb_materia)
+        ? clase["materia_descripcion"]?.toString().includes(tb_materia)
         : true;
       const coincideProfesor = tb_profesor
-        ? clase["profesor"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_profesor.toLowerCase())
+        ? clase["profesor_nombre"]?.toString().toLowerCase().includes(tb_profesor.toLowerCase())
         : true;
-      return  (
-        coincideGrupo && coincideMateria && coincideProfesor
-      );
+      return coincideGrupo && coincideMateria && coincideProfesor;
     });
     setClasesFiltrados(infoFiltrada);
   }, [busqueda, clases]);
+
 
   useEffect(() => {
     const debouncedBuscar = debounce(Buscar, 300);
@@ -128,7 +126,7 @@ function Clases() {
     });
   }, [clase, reset]);
 
- 
+
 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
@@ -152,33 +150,22 @@ function Clases() {
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);
-    setprof1({});
-    setprof2({});
+    setMateria({});
+    setProfesor({});
     setGrado({});
-
     document.getElementById("lunes").focus();
   };
 
   const onSubmitModal = handleSubmit(async (data) => {
-    event.preventDefault;
-
-    // const dataj = JSON.stringify(data);
-   // data.id = currentID;
-    data.grupo = grado.numero;
-    data.horario_1_nombre = grado.horario;
-    data.materia = prof1.numero;
-    data.profesor = prof2.numero;
-
+    event.preventDefault();
     if (!currentID) {
       const claseExistente = clases.find(
         (clase) =>
           clase.grupo === data.grupo &&
-        clase.materia === data.materia &&
-        clase.profesor === data.profesor &&
-        clase.id !== currentID
-        
+          clase.materia === data.materia &&
+          clase.profesor === data.profesor &&
+          clase.id !== currentID
       );
-      
       if (claseExistente) {
         showSwal(
           "Error",
@@ -189,7 +176,7 @@ function Clases() {
         return;
       }
     }
-
+    setisLoadingButton(true);
     let res = null;
     if (accion === "Eliminar") {
       showModal(false);
@@ -204,8 +191,13 @@ function Clases() {
         showModal(true);
         return;
       }
-      //showModal(true);
     }
+    data.grupo = grado.numero ?? clase.grupo;
+    data.grupo_descripcion = grado.horario ?? clase.grupo_descripcion;
+    data.materia = materia.numero ?? clase.materia;
+    data.materia_descripcion = materia.descripcion ?? clase.materia_descripcion;
+    data.profesor = profesor.numero ?? clase.profesor;
+    data.profesor_nombre = profesor.nombre_completo ?? clase.profesor_nombre;
     res = await guardaClase(session.user.token, data, accion);
     if (res.status) {
       if (accion === "Alta") {
@@ -214,26 +206,27 @@ function Clases() {
         if (!bajas) {
           setClasesFiltrados([...clasesFiltrados, nuevaClase]);
         }
-      }
-      if (accion === "Eliminar" || accion === "Editar") {
+      } else if (accion === "Eliminar" || accion === "Editar") {
         const index = clases.findIndex(
           (c) => c.grupo === data.grupo && c.materia === data.materia
         );
         if (index !== -1) {
           if (accion === "Eliminar") {
             const cFiltrados = clases.filter(
-              (c) => c.grupo !== data.grupo && c.materia !== data.materia
+              (c) => c.grupo !== data.grupo || c.materia !== data.materia
             );
             setClases(cFiltrados);
             setClasesFiltrados(cFiltrados);
           } else {
             if (bajas) {
-              const cFiltrados = clases.filter((c) => c.grupo !== data.grupo && c.materia !== data.materia);
+              const cFiltrados = clases.filter(
+                (c) => c.grupo !== data.grupo || c.materia !== data.materia
+              );
               setClases(cFiltrados);
               setClasesFiltrados(cFiltrados);
             } else {
               const cActualizadas = clases.map((c) =>
-                c.grupo && c.materia === currentID ? { ...c, ...data } : c
+                c.grupo === data.grupo && c.materia === data.materia ? { ...c, ...data } : c
               );
               setClases(cActualizadas);
               setClasesFiltrados(cActualizadas);
@@ -241,10 +234,17 @@ function Clases() {
           }
         }
       }
-      showSwal(res.alert_title, res.alert_text, res.alert_icon);
+      setisLoadingButton(false);
       showModal(false);
+      await showSwalAndWait(res.alert_title, res.alert_text, res.alert_icon);
+    } else {
+      setisLoadingButton(false);
+      showModal(false);
+      await showSwalAndWait(res.alert_title, res.alert_text, res.alert_icon);
+      showModal(true);
     }
   });
+
   const showModal = (show) => {
     show
       ? document.getElementById("my_modal_3").showModal()
@@ -281,9 +281,9 @@ function Clases() {
       },
       body: clasesFiltrados,
       columns: [
-        { header: "Grupo", dataKey: "grupo" },
-        { header: "Asignatura", dataKey: "materia" },
-        { header: "Profesor", dataKey: "profesor" },
+        { header: "Grupo", dataKey: "grupo_descripcion" },
+        { header: "Asignatura", dataKey: "materia_descripcion" },
+        { header: "Profesor", dataKey: "profesor_nombre" },
         { header: "Lunes", dataKey: "lunes" },
         { header: "Martes", dataKey: "martes" },
         { header: "Miercoles", dataKey: "miercoles" },
@@ -307,20 +307,20 @@ function Clases() {
     };
     const Enca1 = (doc) => {
       if (!doc.tiene_encabezado) {
-        doc.imprimeEncabezadoPrincipalV();
+        doc.imprimeEncabezadoPrincipalH();
         doc.nextRow(12);
-        doc.ImpPosX("Grupo", 14, doc.tw_ren, 0, "L");
-        doc.ImpPosX("Asignatura", 28, doc.tw_ren, 0, "L");
-        doc.ImpPosX("Profesor", 55, doc.tw_ren, 0, "L");
-        doc.ImpPosX("Lunes", 80, doc.tw_ren, 0, "L");
-        doc.ImpPosX("Martes", 95, doc.tw_ren, 0, "L");
-        doc.ImpPosX("Miercoles", 110, doc.tw_ren, 0, "L");
-        doc.ImpPosX("Jueves", 130, doc.tw_ren, 0, "L");
-        doc.ImpPosX("Viernes", 150, doc.tw_ren, 0, "L");
-        doc.ImpPosX("Sabado", 170, doc.tw_ren, 0, "L");
-        doc.ImpPosX("Domingo", 190, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Grupo", 14, doc.tw_ren, 12, "L");
+        doc.ImpPosX("Asignatura", 50, doc.tw_ren, 20, "L");
+        doc.ImpPosX("Profesor", 95, doc.tw_ren, 35, "L");
+        doc.ImpPosX("Lunes", 180, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Martes", 195, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Miercoles", 210, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Jueves", 230, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Viernes", 245, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Sabado", 260, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Domingo", 275, doc.tw_ren, 0, "L");
         doc.nextRow(4);
-        doc.printLineV();
+        doc.printLineH();
         doc.nextRow(4);
         doc.tiene_encabezado = true;
       } else {
@@ -328,26 +328,26 @@ function Clases() {
         doc.tiene_encabezado = true;
       }
     };
-    const reporte = new ReportePDF(configuracion);
+    const orientacion = "Landscape";
+    const reporte = new ReportePDF(configuracion, orientacion);
     Enca1(reporte);
     clasesFiltrados.forEach((clase) => {
-      reporte.ImpPosX(clase.grupo.toString(), 24, reporte.tw_ren, 0, "R");
-      reporte.ImpPosX(clase.materia.toString(), 28, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.profesor.toString(), 55, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.lunes.toString(), 80, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.martes.toString(), 95, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.miercoles.toString(), 110, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.jueves.toString(), 130, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.viernes.toString(), 150, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.sabado.toString(), 170, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.domingo.toString(), 190, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(clase.grupo_descripcion?.toString() ?? "", 14, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(clase.materia_descripcion?.toString() ?? "", 50, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(clase.profesor_nombre?.toString() ?? "", 95, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(clase.lunes?.toString() ?? "", 180, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(clase.martes?.toString() ?? "", 195, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(clase.miercoles?.toString() ?? "", 210, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(clase.jueves?.toString() ?? "", 230, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(clase.viernes?.toString() ?? "", 245, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(clase.sabado?.toString() ?? "", 260, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(clase.domingo?.toString() ?? "", 275, reporte.tw_ren, 0, "L");
       Enca1(reporte);
-      if (reporte.tw_ren >= reporte.tw_endRen) {
-        reporte.pageBreak();
+      if (reporte.tw_ren >= reporte.tw_endRenH) {
+        reporte.pageBreakH();
         Enca1(reporte);
       }
     });
-
     setTimeout(() => {
       const pdfData = reporte.doc.output("datauristring");
       setPdfData(pdfData);
@@ -369,6 +369,11 @@ function Clases() {
     document.getElementById("modalVPClase").close();
   };
 
+  if (status === "loading") {
+    return (
+      <div className="container skeleton w-full max-w-screen-xl shadow-xl rounded-xl"></div>
+    );
+  };
   return (
     <>
       <ModalClases
@@ -382,8 +387,9 @@ function Clases() {
         clase={clase}
         setGrado={setGrado}
         setGrado2={setGrado2}
-        setprof1={setprof1}
-        setprof2={setprof2}
+        setProfesor={setProfesor}
+        setMateria={setMateria}
+        isLoadingButton={isLoadingButton}
       />
       <VistaPrevia
         id="modalVPClase"
