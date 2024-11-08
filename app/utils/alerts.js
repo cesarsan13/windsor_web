@@ -4,7 +4,7 @@ export const showSwalAndWait = (title, text, icon) => {
   return new Promise((resolve) => {
     Swal.fire({
       title: title,
-      text: text,
+      html: text,
       icon: icon,
       timer: 2000,
       showConfirmButton: false,
