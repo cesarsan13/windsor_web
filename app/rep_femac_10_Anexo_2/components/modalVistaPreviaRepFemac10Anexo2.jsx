@@ -33,7 +33,7 @@ function ModalVistaPreviaRepFemac10Anexo2({ pdfPreview, pdfData, PDF, Excel }) {
 
     return (
         <dialog id='modalVPRepFemac10Anexo2' className='modal'>
-            <div className='modal-box w-full max-w-4xl h-full'>
+            <div className='modal-box w-full max-w-5xl h-full'>
                 <button className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black'
                     onClick={() => document.getElementById("modalVPRepFemac10Anexo2").close()}
                 >

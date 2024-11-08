@@ -69,6 +69,8 @@ const Enca1 = (doc,fecha_cobro_ini, fecha_cobro_fin, tomaFechas, tomaCanceladas)
 export const ImprimirPDF = (configuracion, fecha_cobro_ini, fecha_cobro_fin, tomaFechas, tomaCanceladas) => {
     const newPDF = new ReportePDF(configuracion, "Portrait");
     const { body } = configuracion;
+    const F_fecha_cobro_ini = format_Fecha_String(fecha_cobro_ini)
+    const F_fecha_cobro_fin = format_Fecha_String(fecha_cobro_fin)
     Enca1(newPDF, fecha_cobro_ini, fecha_cobro_fin, tomaFechas, tomaCanceladas);
     let total_general = 0;
 
@@ -99,7 +101,7 @@ export const ImprimirPDF = (configuracion, fecha_cobro_ini, fecha_cobro_fin, tom
           sub_total = total_importe;
         }
 
-        if(razon_social === '' || razon_social === ' '){
+        if(razon_social === '' || razon_social === ' '  || razon_social === null){
           razon_social_cambio = r_s_nombre;
         } else {
           razon_social_cambio = razon_social;
@@ -116,7 +118,7 @@ export const ImprimirPDF = (configuracion, fecha_cobro_ini, fecha_cobro_fin, tom
         Enca1(newPDF);
         if (newPDF.tw_ren >= newPDF.tw_endRen) {
           newPDF.pageBreak();
-          Enca1(newPDF, fecha_cobro_ini, fecha_cobro_fin, tomaFechas, tomaCanceladas);
+          Enca1(newPDF, F_fecha_cobro_ini, F_fecha_cobro_fin, tomaFechas, tomaCanceladas);
         }
         total_general = total_general + sub_total;
 
@@ -134,7 +136,7 @@ export const ImprimirExcel = (configuracion) => {
     let total_general = 0;
 
     body.forEach((rec) => {
-        const noFac = rec.numero_factura;
+        let noFac = rec.numero_factura;
         const recibo = rec.recibo;
         const fecha = rec.fecha;
         const razon_social = rec.razon_social;
@@ -144,6 +146,9 @@ export const ImprimirExcel = (configuracion) => {
         const precio_unitario = rec.precio_unitario;
         const descuento = rec.descuento;
 
+        if(noFac == "" || noFac == null || noFac == " "){
+          noFac = "0";
+        }
         let total_importe = 0; 
         let sub_total = 0;
         const r_s_nombre = "FACTURA GLOBAL DEL DIA";

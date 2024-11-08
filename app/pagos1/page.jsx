@@ -1,8 +1,10 @@
 "use client";
+import BuscarCat from "@/app/components/BuscarCat";
 import React from "react";
 import { useRouter } from "next/navigation";
 import ModalCajeroPago from "@/app/pagos1/components/modalCajeroPago";
 import ModalDocTabla from "@/app/pagos1/components/modalDocTabla";
+import ModalNuevoRegistro from "@/app/pagos1/components/ModalNuevoRegistro";
 import Acciones from "@/app/pagos1/components/Acciones";
 import { useForm } from "react-hook-form";
 import {
@@ -15,18 +17,22 @@ import {
 } from "@/app/utils/api/pagos1/pagos1";
 import { getFormasPago } from "@/app/utils/api/formapago/formapago";
 import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
-import { Elimina_Comas, formatNumber, pone_ceros, format_Fecha_String } from "@/app/utils/globalfn";
+import {
+  Elimina_Comas,
+  formatNumber,
+  pone_ceros,
+  format_Fecha_String,
+} from "@/app/utils/globalfn";
 import Button from "@/app/components/button";
 import Tooltip from "@/app/components/tooltip";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import "jspdf-autotable";
 import Inputs from "@/app/pagos1/components/Inputs";
-// import { Worker, Viewer } from "@react-pdf-viewer/core";
-import BuscarCat from "@/app/components/BuscarCat";
 import TablaPagos1 from "@/app/pagos1/components/tablaPagos1";
-import TablaDoc from "@/app/pagos1/components/tablaDoc";
 import ModalPagoImprime from "@/app/pagos1/components/modalPagosImprime";
+import ModalRecargos from "@/app/pagos1/components/modalRecargos";
+import ModalParciales from "@/app/pagos1/components/modalParciales";
 import { showSwal, showSwalAndWait } from "@/app/utils/alerts";
 import Swal from "sweetalert2";
 function Pagos_1() {
@@ -38,47 +44,49 @@ function Pagos_1() {
   const [alumnos1, setAlumnos1] = useState({});
   const [comentarios1, setComentarios1] = useState({});
   const [productos1, setProductos1] = useState({});
-  const nameInputs = ["numero", "nombre_completo"];
-  const columnasBuscaCat = ["numero", "nombre_completo"];
-  const nameInputs2 = ["numero", "comentario_1"];
-  const columnasBuscaCat2 = ["numero", "comentario_1"];
-  const nameInputs3 = ["numero", "descripcion"];
-  const columnasBuscaCat3 = ["numero", "descripcion"];
   const [pagos, setPagos] = useState([]);
   const [pago, setPago] = useState({});
   let [pagosFiltrados, setPagosFiltrados] = useState([]);
   const [validar, setValidar] = useState(false);
   const [accion, setAccion] = useState("");
   const [isLoading, setisLoading] = useState(false);
-  // const [TB_Busqueda, setTB_Busqueda] = useState("");
-  // const [pdfPreview, setPdfPreview] = useState(false);
-  // const [pdfData, setPdfData] = useState("");
   const [precio_base, setPrecioBase] = useState("");
   const [colorInput, setColorInput] = useState("");
   const [h1Total, setH1Total] = useState("0.00");
   const [muestraRecargos, setMuestraRecargos] = useState(false);
   const [muestraParciales, setMuestraParciales] = useState(false);
+  const [muestraImpresion, setMuestraImpresion] = useState(false);
+  const [muestraDocumento, setMuestraDocumento] = useState(false);
   const [dRecargo, setDrecargo] = useState("");
   const [selectedTable, setSelectedTable] = useState({});
   const [cargado, setCargado] = useState(false);
   const [docFiltrados, setdDocFiltrados] = useState([]);
   const [alumnos, setAlumnos] = useState([]);
   const [accionB, setAccionB] = useState("");
+  const [accionC, setAccionC] = useState("");
+  const [bloqueaEncabezado, setBloqueaEncabezado] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const nameInputs = ["numero", "nombre_completo"];
+  const columnasBuscaCat = ["numero", "nombre_completo"];
+  const nameInputs2 = ["numero", "comentario_1"];
+  const columnasBuscaCat2 = ["numero", "comentario_1"];
+
   const {
     register,
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      numero: 0,
+      numero_producto: 0,
       alumno: 0,
       descripcion: "",
       fecha: "",
       comentarios: "",
       precio_base: 0,
-      cantidad_producto: 1,
+      cantidad_producto: "1",
       documento: "",
       precio: 0,
       neto: 0,
@@ -87,14 +95,68 @@ function Pagos_1() {
       recargo: 0,
       monto_parcial: 0,
       clave_acceso: "",
-      // D_Recargo: '',
-      // R_Articulo: '',
+    },
+  });
+  const cantidad_producto = watch("cantidad_producto");
+
+  const {
+    register: registerImpr,
+    reset: resetImpr,
+    handleSubmit: handleSumbitImpr,
+    formState: { errors: errorsImpr },
+  } = useForm({
+    defaultValues: {
+      pago: formaPagoPage.pago,
+      pago_2: "0.00",
+      referencia: "",
+      referencia_2: "",
+      num_copias: 1,
+      recibo_imprimir: formaPagoPage.recibo,
     },
   });
 
-  // useEffect(() => {
-  //   console.log(selectedTable);
-  // }, [selectedTable])
+  const {
+    register: registerCaj,
+    handleSubmit: handleSubmitCaj,
+    reset: resetCaj,
+    formState: { errors: errorsCaj },
+  } = useForm({
+    defaultValues: {
+      clave_cajero: "",
+    },
+  });
+
+  useEffect(() => {
+    // setValueImpr("pago", formaPagoPage.pago);
+    // setValueImpr("recibo_imprimir", formaPagoPage.recibo);
+    resetImpr({
+      pago: formaPagoPage.pago,
+      pago_2: "0.00",
+      referencia: "",
+      quien_paga: "",
+      recibo_imprimir: formaPagoPage.recibo,
+    });
+  }, [formaPagoPage]);
+
+
+  useEffect(() => {
+    if (cantidad_producto === "") {
+      setValue("cantidad_producto", formatNumber(1));
+    }
+  }, [cantidad_producto]);
+
+  useEffect(() => {
+    reset({
+      recargo: 0,
+    });
+  }, [muestraRecargos]);
+
+  useEffect(() => {
+    reset({
+      monto_parcial: 0,
+      clave_acceso: "",
+    });
+  }, [muestraParciales]);
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -103,9 +165,10 @@ function Pagos_1() {
     const fetchData = async () => {
       setisLoading(true);
       if (!validar) {
-        showModal(true);
+        showModal("my_modal_3", true);
+        setValue("cantidad_producto", formatNumber(1));
       } else {
-        showModal(false);
+        showModal("my_modal_3", false);
       }
       const today = new Date();
       const yyyy = today.getFullYear();
@@ -113,7 +176,6 @@ function Pagos_1() {
       const dd = String(today.getDate()).padStart(2, "0");
       const formattedToday = `${yyyy}-${mm}-${dd}`;
       setValue("fecha", formattedToday);
-      // document.getElementById("fecha").value = formattedToday;
       if (cargado === false) {
         const [dataF, dataA] = await Promise.all([
           getFormasPago(session.user.token, false),
@@ -126,7 +188,7 @@ function Pagos_1() {
       setisLoading(false);
     };
     fetchData();
-  }, [session, status, validar, cargado]);
+  }, [session, status, validar, cargado, setValue]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -141,23 +203,79 @@ function Pagos_1() {
     fetchData();
   }, [productos1]);
 
-  const showModal = (show) => {
+  useEffect(() => {
+    setBloqueaEncabezado(pagosFiltrados.length > 0);
+  }, [pagosFiltrados]);
+
+  const showModal = (id, show) => {
     show
-      ? document.getElementById("my_modal_3").showModal()
-      : document.getElementById("my_modal_3").close();
+      ? document.getElementById(id).showModal()
+      : document.getElementById(id).close();
   };
 
-  const showModal2 = (show) => {
-    show
-      ? document.getElementById("my_modal_4").showModal()
-      : document.getElementById("my_modal_4").close();
+  const reiniciarPage = () => {
+    setFormaPago([]);
+    setformaPagoPage({});
+    setPagos([]);
+    setPagosFiltrados([]);
+    setCajero({});
+    setAlumnos([]);
+    setAlumnos1({});
+    setH1Total("0.00");
+    setSelectedTable({});
+    setComentarios1({});
+    setProductos1({});
+    setColorInput("");
+    setPrecioBase("");
+    setDrecargo("");
+    setdDocFiltrados([]);
+    setValidar(false);
+    setCargado(false);
+    setSelectedRow(null);
+    reset({
+      numero_producto: 0,
+      alumno: 0,
+      descripcion: "",
+      fecha: "",
+      comentarios: "",
+      precio_base: 0,
+      cantidad_producto: 1,
+      documento: "",
+      precio: 0,
+      neto: 0,
+      total: 0,
+      descuento: 0,
+      recargo: 0,
+      monto_parcial: 0,
+      clave_acceso: "",
+      monto_parcial: 0,
+      clave_acceso: "",
+      recargo: 0,
+    });
+    resetImpr({
+      pago: formaPagoPage.pago,
+      pago_2: "0.00",
+      referencia: "",
+      quien_paga: "",
+      recibo_imprimir: formaPagoPage.recibo,
+    });
+    resetCaj({
+      clave_cajero: "",
+    });
+    setAccionC("Alta");
   };
 
-  const showModal3 = (show) => {
-    show
-      ? document.getElementById("my_modal_5").showModal()
-      : document.getElementById("my_modal_5").close();
-  };
+  useEffect(() => {
+    if (accionB === "Alta") {
+      setAccionB("");
+    }
+  }, [accionB]);
+
+  useEffect(() => {
+    if (accionC === "Alta") {
+      setAccionC("");
+    }
+  }, [accionC]);
 
   const home = () => {
     router.push("/");
@@ -172,8 +290,10 @@ function Pagos_1() {
     const { token } = session.user;
     let newData = {};
     let alumnoInvalido = alumnos1.numero;
+    setMuestraDocumento(true);
     if (!alumnoInvalido) {
       showSwal("Oppss!", "Alumno invalido", "error");
+      setMuestraDocumento(false);
       return;
     }
     const dataR = await buscaDocumentosCobranza(token, alumnos1.numero);
@@ -207,18 +327,22 @@ function Pagos_1() {
         }
       }
       setdDocFiltrados((prevPagos) => [...prevPagos, newData]);
-      showModal3(true);
+      setMuestraDocumento(false);
+      showModal("my_modal_5", true);
     } else {
+      setMuestraDocumento(false);
       showSwal("Oppss!", "No hay documentos para cobro", "error");
     }
   };
 
   const Recargos = async () => {
+    setMuestraRecargos(true);
     let recargo = 0;
     let prod = productos1.numero;
     let alumnoInvalido = alumnos1.numero;
     if (!alumnoInvalido) {
       showSwal("Oppss!", "Alumno invalido", "error");
+      setMuestraRecargos(false);
       return;
     }
     const [arFind, ar9999] = await Promise.all([
@@ -230,23 +354,49 @@ function Pagos_1() {
       recargo = formatNumber(arFind.por_recargo);
     } else {
       recargo = formatNumber(0);
-    }
+    };
     if (desPr) {
       setDrecargo(desPr);
-      setMuestraRecargos(true);
+      setMuestraRecargos(false);
+      showModal("modal_recargos", true);
+      document.getElementById("recargo").focus();
     } else {
       setDrecargo("");
       setMuestraRecargos(false);
-    }
+      showModal("modal_recargos", false);
+    };
   };
 
   const Parciales = async () => {
+    setMuestraParciales(true);
     let alumnoInvalido = alumnos1.numero;
     if (!alumnoInvalido) {
       showSwal("Oppss!", "Alumno invalido", "error");
+      setMuestraParciales(false);
       return;
     }
-    setMuestraParciales(!muestraParciales);
+    let validar = selectedTable.numero_producto;
+    if (!validar) {
+      await showSwalAndWait("¡Error!", "No hay ningún artículo seleccionado. Asegúrate de haberlo elegido en la tabla.", "error");
+      setMuestraParciales(false);
+      return;
+    }
+    showModal("modal_parciales", true);
+    document.getElementById("monto_parcial").focus();
+    setMuestraParciales(false);
+  };
+
+  const Alta = () => {
+    if (Object.keys(alumnos1).length === 0) {
+      showSwal(
+        "¡Advertencia!",
+        "Seleccione un alumno para generar pagos",
+        "warning"
+      );
+      return;
+    }
+    showModal("modal_nuevo_registro", true);
+    document.getElementById("numero_producto").focus();
   };
 
   const btnParciales = (event) => {
@@ -264,38 +414,41 @@ function Pagos_1() {
     let res2;
     let fecha = data.fecha;
     const { token } = session.user;
-    let validar = selectedTable.numero;
 
-    if (!validar) {
-      showSwal("Error!", "No hay ningun articulo seleccionado ", "error");
-      return;
-    }
     Monto_Pago = Elimina_Comas(data.monto_parcial);
     if (Monto_Pago === 0) {
-      showSwal("Error!", "Monto del pago parcial en cero' ", "error");
+      showModal("modal_parciales", false);
+      await showSwalAndWait("Error!", "Monto del pago parcial en cero' ", "error");
+      showModal("modal_parciales", true);
       return;
     }
     const dat = await buscaPropietario(token, 1);
     const clave = dat.clave_seguridad;
     if (data.clave_acceso.toLowerCase() !== clave.toLowerCase()) {
-      showSwal("Error!", "Clave de autorización invalida' ", "error");
+      showModal("modal_parciales", false);
+      await showSwalAndWait("Error!", "Clave de autorización invalida' ", "error");
+      showModal("modal_parciales", true);
       return;
     }
     Monto_Actual = Elimina_Comas(h1Total);
     if (Monto_Pago > Monto_Actual) {
-      showSwal("", "El monto del pago parcial es mayor al pago total", "info");
+      showModal("modal_parciales", false);
+      await showSwalAndWait("", "El monto del pago parcial es mayor al pago total", "info");
+      showModal("modal_parciales", true);
       return;
     }
     A_Pagar = Monto_Actual - Monto_Pago;
     if (A_Pagar > Monto_Actual) {
-      showSwal(
+      showModal("modal_parciales", false);
+      await showSwalAndWait(
         "",
         "El se debe de aplicar a la partida indicada pero la cantidad restante. Es mayor al valor de la partida",
         "info"
       );
+      showModal("modal_parciales", true);
       return;
     }
-
+    showModal("modal_parciales", false);
     Swal.fire({
       title: "Es correcta la cantidad a cobrar en pago parcial?",
       text: "Una vez que se autoriza será generado el documento a cobranza. Esta completamente seguro que la operación es correcta",
@@ -328,7 +481,7 @@ function Pagos_1() {
         Doc_Ant = Arma_Doc;
         const newData = {
           alumno: selectedTable.alumno || 0,
-          producto: selectedTable.numero || 0,
+          producto: selectedTable.numero_producto || 0,
           numero_doc: Doc_Ant || 0,
           fecha: data.fecha || "",
           descuento: 0,
@@ -341,19 +494,27 @@ function Pagos_1() {
             showSwal(res2.alert_title, res2.alert_text, res2.alert_icon);
             setValue("monto_parcial", "");
             setValue("clave_acceso", "");
-            setMuestraParciales(false);
+            showModal("modal_parciales", false);
+            setSelectedRow(null);
+            setSelectedTable({});
           } else {
             showSwal(res2.alert_title, res2.alert_text, res2.alert_icon);
+            setSelectedRow(null);
+            setSelectedTable({});
           }
         } else {
           showSwal(
             "",
-            "El documento a generar ya existe no se realiza el proceso",
+            "El documento a generar ya existe, no se realiza el proceso.",
             "info"
           );
+          setSelectedRow(null);
+          setSelectedTable({});
+          showModal("modal_parciales", false);
           return;
         }
       } else {
+        showModal("modal_parciales", true);
         return;
       }
     });
@@ -364,9 +525,6 @@ function Pagos_1() {
   };
 
   const submitRecargo = async (data) => {
-    // if (dRecargo) {
-    //   return;
-    // }
     const recargo = formatNumber(data.recargo);
     const total = data.recargo * data.cantidad_producto;
     const totalFormat = formatNumber(total);
@@ -375,16 +533,18 @@ function Pagos_1() {
       neto: recargo || 0,
       total: totalFormat || 0,
       alumno: alumnos1.numero || 0,
-      numero: 9999,
+      numero_producto: 9999,
       descripcion: dRecargo || "",
       cantidad_producto: data.cantidad_producto || 0,
       documento: "",
       descuento: 0,
     };
-    const numeroExiste = pagos.some((pago) => pago.numero === nuevoPago.numero);
+    const numeroExiste = pagos.some(
+      (pago) => pago.numero_producto === nuevoPago.numero_producto
+    );
     if (numeroExiste) {
       showSwal("Oppss!", "Numero de articulo existente en recibo' ", "error");
-      setMuestraRecargos(false);
+      showModal("modal_recargos", false);
       return;
     }
     const nuevoPagoArray = Array.isArray(nuevoPago) ? nuevoPago : [nuevoPago];
@@ -392,7 +552,7 @@ function Pagos_1() {
     muestraTotal(nuevoPago);
     setPagos((prevPagos) => [...prevPagos, ...nuevoPagoArray]);
     setPagosFiltrados((prevPagos) => [...prevPagos, ...nuevoPagoArray]);
-    setMuestraRecargos(false);
+    showModal("modal_recargos", false);
   };
 
   const btnPDF = (event) => {
@@ -401,6 +561,7 @@ function Pagos_1() {
   };
 
   const ImprimePDF = async (data) => {
+    setMuestraImpresion(true);
     let fecha = data.fecha;
     if (!fecha) {
       const today = new Date();
@@ -412,10 +573,12 @@ function Pagos_1() {
     let alumnoInvalido = alumnos1.numero;
     if (!alumnoInvalido) {
       showSwal("Oppss!", "Alumno invalido", "error");
+      setMuestraImpresion(false);
       return;
     }
     if (h1Total <= 0) {
       showSwal("Oppss!", "El monto total debe ser mayor a 0", "error");
+      setMuestraImpresion(false);
       return;
     }
     let dataP = await buscaPropietario(session.user.token, 1);
@@ -428,7 +591,8 @@ function Pagos_1() {
       fecha: fecha || "",
     };
     setformaPagoPage(newData);
-    showModal2(true);
+    setMuestraImpresion(false);
+    showModal("my_modal_4", true);
   };
 
   const BuscaArticulo = async (numero) => {
@@ -449,9 +613,13 @@ function Pagos_1() {
   };
 
   const EliminarCampo = (data) => {
-    const index = pagos.findIndex((p) => p.numero === data.numero);
+    const index = pagos.findIndex(
+      (p) => p.numero_producto === data.numero_producto
+    );
     if (index !== -1) {
-      const pFiltrados = pagos.filter((p) => p.numero !== data.numero);
+      const pFiltrados = pagos.filter(
+        (p) => p.numero_producto !== data.numero_producto
+      );
       const fTotal = Elimina_Comas(h1Total);
       const dTotal = Elimina_Comas(data.total);
       let restaTotal = fTotal - dTotal;
@@ -465,22 +633,15 @@ function Pagos_1() {
     }
   };
 
-  useEffect(() => {
-    if (accionB === "Alta") {
-      setAccionB("");
-      // setProductos1({});
-    }
-  }, [accionB]);
-
   const handleEnterKey = async (data) => {
     let productoInvalido = productos1.numero;
     if (!productoInvalido) {
-      showSwal("Oppss!", "Producto invalido", "error");
+      showSwal("Oppss!", "Producto invalido", "error", "modal_nuevo_registro");
       return;
     }
     let alumnoInvalido = alumnos1.numero;
     if (!alumnoInvalido) {
-      showSwal("Oppss!", "Alumno invalido", "error");
+      showSwal("Oppss!", "Alumno invalido", "error", "modal_nuevo_registro");
       return;
     }
     const precio = Elimina_Comas(precio_base);
@@ -491,15 +652,22 @@ function Pagos_1() {
       neto: precio_base || 0,
       total: totalFormat || 0,
       alumno: alumnos1.numero || 0,
-      numero: productos1.numero || 0,
+      numero_producto: productos1.numero || 0,
       descripcion: productos1.descripcion || "",
       cantidad_producto: data.cantidad_producto || 0,
       documento: "",
       descuento: 0,
     };
-    const numeroExiste = pagos.some((pago) => pago.numero === nuevoPago.numero);
+    const numeroExiste = pagos.some(
+      (pago) => pago.numero_producto === nuevoPago.numero_producto
+    );
     if (numeroExiste) {
-      showSwal("Oppss!", "Numero de articulo existente en recibo ", "error");
+      showSwal(
+        "Oppss!",
+        "Numero de articulo existente en recibo ",
+        "error",
+        "modal_nuevo_registro"
+      );
       return;
     }
     const nuevoPagoArray = Array.isArray(nuevoPago) ? nuevoPago : [nuevoPago];
@@ -510,21 +678,22 @@ function Pagos_1() {
     setValue("cantidad_producto", "1");
     setPrecioBase("");
     setAccionB("Alta");
+    document.getElementById("numero_producto").focus();
   };
 
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
-    datatype === "int"
-      ? setPago((pago) => ({
-        ...pago,
-        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-      }))
-      : setPago((pago) => ({
-        ...pago,
-        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-      }));
-  };
 
+    setPago((pago) => ({
+      ...pago,
+      [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+    }));
+    setValue(evt.target.name, pone_ceros(evt.target.value, 2, true));
+  };
+  const handleModalClick = (event) => {
+    event.preventDefault();
+    handleSubmit(handleEnterKey)();
+  };
   const handleKeyDown = (event) => {
     const key = event.key;
     if (key === "Enter") {
@@ -548,31 +717,37 @@ function Pagos_1() {
   };
 
   const tableSelect = (evt, item) => {
-    console.log(item);
+    // console.log(item);
     const nuevoPago = {
-      numero: item.numero,
+      numero_producto: item.paquete,
       descripcion: item.nombre_producto,
-      documento: "",
+      documento: item.numero,
       cantidad_producto: 1,
-      precio_base: item.paquete,
+      precio_base: item.saldo,
       descuento: item.descuento,
-      neto: item.paquete,
+      neto: item.saldo,
       total: item.saldo,
       alumno: item.alumno,
     };
-    const numeroExiste = pagos.some((pago) => pago.numero === nuevoPago.numero);
+    const numeroExiste = pagos.some(
+      (pago) => pago.numero_producto === nuevoPago.numero_producto
+    );
     if (numeroExiste) {
-      document.getElementById("my_modal_5").close()
+      document.getElementById("my_modal_5").close();
       showSwal("Oppss!", "Numero de articulo existente en recibo", "error");
       return;
-    };
+    }
     const nuevoPagoArray = Array.isArray(nuevoPago) ? nuevoPago : [nuevoPago];
 
     muestraTotal(nuevoPago);
     setPagos((prevPagos) => [...prevPagos, ...nuevoPagoArray]);
     setPagosFiltrados((prevPagos) => [...prevPagos, ...nuevoPagoArray]);
-    document.getElementById("my_modal_5").close()
-  }
+    document.getElementById("my_modal_5").close();
+  };
+  const handleInputClick = (evt) => {
+    evt.preventDefault();
+    evt.target.select();
+  };
 
   if (status === "loading") {
     return (
@@ -581,39 +756,77 @@ function Pagos_1() {
   }
   return (
     <>
-      <div className="h-[83vh] max-h-[83vh] container w-full bg-slate-100 rounded-3xl shadow-xl px-3 dark:bg-slate-700 overflow-y-auto">
-        <ModalCajeroPago
-          session={session}
-          validarClaveCajero={validarClaveCajero}
-          showModal={showModal}
-          setValidar={setValidar}
-          home={home}
-          setCajero={setCajero}
-          cajero={cajero}
-          isLoading={isLoading}
-        />
-        <ModalPagoImprime
-          session={session}
-          showModal={showModal2}
-          home={home}
-          formaPagoPage={formaPagoPage}
-          pagosFiltrados={pagosFiltrados}
-          alumnos1={alumnos1}
-          productos1={productos1}
-          comentarios1={comentarios1}
-          cajero={cajero}
-          alumnos={alumnos}
-        />
-        <ModalDocTabla
-          session={session}
-          showModal={showModal3}
-          docFiltrados={docFiltrados}
-          isLoading={isLoading}
-          tableSelect={tableSelect}
-        />
-
+      <ModalNuevoRegistro
+        session={session}
+        setProductos1={setProductos1}
+        register={register}
+        errors={errors}
+        accionB={accionB}
+        colorInput={colorInput}
+        precio_base={precio_base}
+        handleKeyDown={handleKeyDown}
+        handleBlur={handleBlur}
+        handleInputClick={handleInputClick}
+        handleEnterKey={handleEnterKey}
+        handleModalClick={handleModalClick}
+      />
+      <ModalRecargos
+        register={register}
+        errors={errors}
+        handleModalClick={handleModalClick}
+        dRecargo={dRecargo}
+        btnRecargo={btnRecargo}
+      />
+      <ModalParciales
+        session={session}
+        register={register}
+        errors={errors}
+        handleModalClick={handleModalClick}
+        setProductos1={setProductos1}
+        accionB={accionC}
+        btnParciales={btnParciales}
+      />
+      <ModalCajeroPago
+        session={session}
+        validarClaveCajero={validarClaveCajero}
+        showModal={showModal}
+        setValidar={setValidar}
+        home={home}
+        setCajero={setCajero}
+        cajero={cajero}
+        isLoading={isLoading}
+        registerCaj={registerCaj}
+        errorsCaj={errorsCaj}
+        handleSubmitCaj={handleSubmitCaj}
+        accionB={accionC}
+      />
+      <ModalPagoImprime
+        session={session}
+        showModal={showModal} //modal4
+        home={home}
+        formaPagoPage={formaPagoPage}
+        pagosFiltrados={pagosFiltrados}
+        alumnos1={alumnos1}
+        productos1={productos1}
+        comentarios1={comentarios1}
+        cajero={cajero}
+        alumnos={alumnos}
+        reiniciarPage={reiniciarPage}
+        errorsImpr={errorsImpr}
+        registerImpr={registerImpr}
+        handleSumbitImpr={handleSumbitImpr}
+        accionB={accionC}
+      />
+      <ModalDocTabla
+        session={session}
+        showModal={showModal} //modal5
+        docFiltrados={docFiltrados}
+        isLoading={isLoading}
+        tableSelect={tableSelect}
+      />
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
-          <div className="flex flex-wrap md:flex-nowrap items-center justify-between w-full">
+          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="flex items-center space-x-4">
               <Acciones
                 ImprimePDF={btnPDF}
@@ -621,6 +834,11 @@ function Pagos_1() {
                 Documento={Documento}
                 Recargos={Recargos}
                 Parciales={Parciales}
+                Alta={Alta}
+                muestraRecargos={muestraRecargos}
+                muestraParciales={muestraParciales}
+                muestraImpresion={muestraImpresion}
+                muestraDocumento={muestraDocumento}
               />
               <h1 className="text-4xl font-xthin text-black dark:text-white">
                 Pagos
@@ -632,28 +850,8 @@ function Pagos_1() {
           </div>
         </div>
 
-
-        {/* <div className="flex justify-start p-3">
-          <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
-            Pagos.
-          </h1>
-          <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12 ml-auto">
-            {h1Total}
-          </h1>
-        </div> */}
-
-        <div className="grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
-          {/* <div className="col-span-1 flex flex-col">
-            <Acciones
-              ImprimePDF={btnPDF}
-              home={home}
-              Documento={Documento}
-              Recargos={Recargos}
-              Parciales={Parciales}
-            />
-          </div> */}
-
-          <div className="col-span-7">
+        <div className="flex flex-col items-center h-full">
+          <div className="w-full max-w-4xl">
             <div className="flex flex-col md:flex-row lg:flex-row pb-4">
               <Inputs
                 tipoInput={""}
@@ -667,23 +865,27 @@ function Pagos_1() {
                 errors={errors}
                 maxLength={15}
                 isDisabled={false}
-              // setValue={setFecha}
               />
             </div>
-
-            <div className="flex flex-col md:flex-row lg:flex-row ">
+            <div className="grid grid-flow-row gap-3 ">
               <div className="w-full">
                 <BuscarCat
+                  deshabilitado={bloqueaEncabezado}
                   table="alumnos"
                   itemData={[]}
                   fieldsToShow={columnasBuscaCat}
                   nameInput={nameInputs}
                   titulo={"Alumnos: "}
                   setItem={setAlumnos1}
+                  accion={accionC}
                   token={session.user.token}
                   modalId="modal_alumnos1"
                   alignRight={"text-right"}
-                  inputWidths={{ contdef: "180px", first: "70px", second: "150px" }}
+                  inputWidths={{
+                    contdef: "180px",
+                    first: "70px",
+                    second: "170px",
+                  }}
                 />
               </div>
               <div className="w-full">
@@ -694,181 +896,31 @@ function Pagos_1() {
                   nameInput={nameInputs2}
                   titulo={"Comentario: "}
                   setItem={setComentarios1}
+                  accion={accionC}
                   token={session.user.token}
                   modalId="modal_comentarios1"
                   alignRight={"text-right"}
-                  inputWidths={{ contdef: "180px", first: "70px", second: "150px" }}
+                  inputWidths={{
+                    contdef: "180px",
+                    first: "70px",
+                    second: "170px",
+                  }}
+                />
+              </div>
+              <div className="w-full ">
+                <Inputs
+                  name={"comentarios"}
+                  tamañolabel={""}
+                  className={"rounded "}
+                  Titulo={"Comentario: "}
+                  requerido={false}
+                  type={"text"}
+                  register={register}
+                  errors={errors}
+                  maxLength={15}
                 />
               </div>
             </div>
-            <div className="pb-4">
-              <Inputs
-                name={"comentarios"}
-                tamañolabel={""}
-                className={"rounded block grow"}
-                Titulo={"Comentarios: "}
-                requerido={false}
-                type={"text"}
-                register={register}
-                errors={errors}
-                maxLength={15}
-                isDisabled={false}
-              />
-            </div>
-            <div className="flex flex-col md:flex-row lg:flex-row ">
-              <BuscarCat
-                table="productos"
-                itemData={[]}
-                fieldsToShow={columnasBuscaCat3}
-                nameInput={nameInputs3}
-                titulo={"Articulos: "}
-                setItem={setProductos1}
-                token={session.user.token}
-                modalId="modal_articulos1"
-                accion={accionB}
-                alignRight={"text-right"}
-                inputWidths={{ contdef: "180px", first: "70px", second: "150px" }}
-              />
-              <Inputs
-                tipoInput={"enterEvent"}
-                dataType={"int"}
-                name={"cantidad_producto"}
-                tamañolabel={"w-[calc(55%)]"}
-                className={`${colorInput} text-right w-[calc(55%)]`}
-                Titulo={"Cantidad: "}
-                type={"text"}
-                requerido={false}
-                errors={errors}
-                register={register}
-                message={"numero requerido"}
-                isDisabled={false}
-                eventInput={handleKeyDown}
-                handleBlur={handleBlur}
-                maxLength={8}
-              />
-            </div>
-            <div className="pb-3">
-              <Inputs
-                tipoInput={"numberDouble"}
-                dataType={"double"}
-                name={"precio_base"}
-                tamañolabel={"w-[calc(32%)]"}
-                className={`w-[calc(32%)] text-right ${colorInput}`}
-                Titulo={"Precio Base: "}
-                type={"text"}
-                requerido={false}
-                errors={errors}
-                register={register}
-                message={"numero requerido"}
-                isDisabled={false}
-                valueInput={precio_base}
-                eventInput={handleBlur}
-                maxLength={8}
-              />
-            </div>
-
-            {muestraRecargos && (
-              <div className="flex flex-col md:flex-row lg:flex-row lg:space-x-2 ">
-                <div className="w-full lg:w-auto pb-2 lg:pb-0 mt-0 mb-0">
-                  <Inputs
-                    tipoInput={"disabledInput"}
-                    name={"R_Articulo"}
-                    tamañolabel={""}
-                    className={""}
-                    Titulo={"Articulo: "}
-                    type={"text"}
-                    requerido={false}
-                    register={register}
-                    errors={errors}
-                    maxLength={10}
-                    isDisabled={true}
-                    valueInput={"9999"}
-                  />
-                </div>
-                <div className="w-full lg:w-auto pb-2 lg:pb-0 mt-0 mb-0">
-                  <Inputs
-                    tipoInput={"disabledInput"}
-                    name={"D_Recargo"}
-                    tamañolabel={""}
-                    className={""}
-                    Titulo={"Articulo: "}
-                    type={"text"}
-                    requerido={false}
-                    register={register}
-                    errors={errors}
-                    maxLength={10}
-                    isDisabled={true}
-                    valueInput={dRecargo}
-                  />
-                </div>
-                <div className="w-full lg:w-auto pb-2 lg:pb-0 mt-0 mb-0 flex">
-                  <Inputs
-                    tipoInput={""}
-                    dataType={"double"}
-                    name={"recargo"}
-                    tamañolabel={""}
-                    className={"rounded-l block grow text-right"}
-                    Titulo={" "}
-                    type={"text"}
-                    requerido={false}
-                    register={register}
-                    errors={errors}
-                    maxLength={8}
-                    isDisabled={false}
-                  />
-                  <Tooltip Titulo={"Adiciona"} posicion={"tooltip-top"}>
-                    <Button
-                      icono={"fa-solid fa-circle-plus"}
-                      onClick={btnRecargo}
-                      className="rounded-r"
-                    ></Button>
-                  </Tooltip>
-                </div>
-              </div>
-            )}
-
-            {muestraParciales && (
-              <div className="flex flex-col md:flex-row lg:flex-row lg:space-x-2">
-                <div className="w-full lg:w-auto pb-2 lg:pb-0 mt-0 mb-0">
-                  <Inputs
-                    tipoInput={""}
-                    dataType={"double"}
-                    name={"monto_parcial"}
-                    tamañolabel={""}
-                    className={"rounded block grow text-right"}
-                    Titulo={"Monto Parcial: "}
-                    type={"text"}
-                    requerido={false}
-                    register={register}
-                    errors={errors}
-                    maxLength={8}
-                    isDisabled={false}
-                  />
-                </div>
-                <div className="w-full lg:w-auto pb-2 lg:pb-0 mt-0 mb-0 flex">
-                  <Inputs
-                    tipoInput={""}
-                    dataType={"string"}
-                    name={"clave_acceso"}
-                    tamañolabel={""}
-                    className={"rounded block grow text-right"}
-                    Titulo={"Acceso: "}
-                    type={"password"}
-                    requerido={false}
-                    register={register}
-                    errors={errors}
-                    maxLength={15}
-                    isDisabled={false}
-                  />
-                  <Tooltip Titulo={"Actualiza"} posicion={"tooltip-top"}>
-                    <Button
-                      icono={"fa-solid fa-circle-plus"}
-                      onClick={btnParciales}
-                    ></Button>
-                  </Tooltip>
-                </div>
-              </div>
-            )}
             <div className="pb-5">
               <TablaPagos1
                 isLoading={isLoading}
@@ -877,6 +929,8 @@ function Pagos_1() {
                 setAccion={setAccion}
                 setSelectedTable={setSelectedTable}
                 deleteRow={EliminarCampo}
+                selectedRow={selectedRow}
+                setSelectedRow={setSelectedRow}
               />
             </div>
           </div>

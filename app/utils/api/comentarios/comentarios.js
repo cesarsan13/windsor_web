@@ -122,7 +122,7 @@ export const ImprimirPDF = (configuracion) => {
       Enca1(newPDF);
     }
   });
-  newPDF.guardaReporte("Comentarios");
+  newPDF.guardaReporte("Catalogo_Comentarios");
 };
 export const ImprimirExcel = (configuracion) => {
   const newExcel = new ReporteExcel(configuracion);

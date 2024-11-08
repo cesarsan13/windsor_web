@@ -20,6 +20,7 @@ const CumpleañerosView = React.lazy(() =>
 const SliderControl = React.lazy(() =>
   import("@/app/components/SliderControl")
 );
+import iconos from "./utils/iconos";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -82,6 +83,13 @@ export default function Home() {
   }
   return (
     <main className="flex flex-col items-center justify-between h-[80vh] w-full max-w-screen-xl">
+      <Image
+        src={iconos.fondoHome}
+        alt="Background"
+        layout="fill"
+        objectPosition="center"
+        className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none" // Agregado pointer-events-none
+      />
       <div className="carousel w-full ">
         <div id="slide1" className="carousel-item relative w-full">
           <div className="container">

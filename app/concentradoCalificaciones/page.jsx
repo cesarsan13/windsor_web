@@ -206,9 +206,9 @@ function ConcentradoCalificaciones() {
       document.getElementById("modalVConCal").close();
     };
 
-    const home = () => {
-        router.push("/");
-    };
+  const home = () => {
+    router.push("/");
+  };
 
     if (status === "loading") {
         return (

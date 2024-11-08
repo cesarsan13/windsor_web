@@ -13,6 +13,7 @@ import {
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import BuscarCat from "@/app/components/BuscarCat";
+import { showSwal } from "@/app/utils/alerts";
 import "jspdf-autotable";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
@@ -97,59 +98,72 @@ function CobranzaPorAlumno() {
   const handleVerClick = () => {
     setAnimateLoading(true);
     cerrarModalVista();
-    const configuracion = {
-      Encabezado: {
-        Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: "Reporte Cobranza por Alumno(s)",
-        Nombre_Usuario: `Usuario: ${session.user.name}`,
-      },
-      body: FormaRepCobranzaporAlumno,
-    };
-
-    const reporte = new ReportePDF(configuracion);
-    const { body } = configuracion;
-    const Enca1 = (doc) => {
-      if (!doc.tiene_encabezado) {
-        doc.imprimeEncabezadoPrincipalV();
-        doc.nextRow(8);
-        if (tomaFechas === true) {
-          if (fecha_fin == "") {
+    if (cajero_ini.numero === undefined) {
+      showSwal(
+        "Oppss!",
+        "Para imprimir, mínimo debe estar seleccionado un Cajero de 'Inicio'",
+        "error"
+      );
+      setTimeout(() => {
+        setPdfPreview(false);
+        setPdfData("");
+        setAnimateLoading(false);
+        document.getElementById("modalVPRepFemac11Anexo3").close();
+      }, 500);
+    }else{
+      const configuracion = {
+        Encabezado: {
+          Nombre_Aplicacion: "Sistema de Control Escolar",
+          Nombre_Reporte: "Reporte Cobranza por Alumno(s)",
+          Nombre_Usuario: `Usuario: ${session.user.name}`,
+        },
+        body: FormaRepCobranzaporAlumno,
+      };
+  
+      const reporte = new ReportePDF(configuracion);
+      const { body } = configuracion;
+      const Enca1 = (doc) => {
+        if (!doc.tiene_encabezado) {
+          doc.imprimeEncabezadoPrincipalV();
+          doc.nextRow(8);
+          if (tomaFechas === true) {
+            if (fecha_fin == "") {
+              doc.ImpPosX(
+                `Reporte de cobranza del ${fecha_ini} `,
+                15,
+                doc.tw_ren
+              ),
+                doc.nextRow(5);
+            } else {
+              doc.ImpPosX(
+                `Reporte de cobranza del ${fecha_ini} al ${fecha_fin}`,
+                15,
+                doc.tw_ren
+              ),
+                doc.nextRow(5);
+            }
+          }
+  
+          if (cajero_fin.numero === undefined) {
             doc.ImpPosX(
-              `Reporte de cobranza del ${fecha_ini} `,
+              `Cajero seleccionado: ${cajero_ini.numero} `,
               15,
               doc.tw_ren
             ),
-              doc.nextRow(5);
+              doc.nextRow(10);
           } else {
             doc.ImpPosX(
-              `Reporte de cobranza del ${fecha_ini} al ${fecha_fin}`,
+              `Cajeros seleccionado de ${cajero_ini.numero} al ${cajero_fin.numero}`,
               15,
               doc.tw_ren
             ),
-              doc.nextRow(5);
+              doc.nextRow(10);
           }
-        }
-
-        if (cajero_fin.numero === undefined) {
-          doc.ImpPosX(
-            `Cajero seleccionado: ${cajero_ini.numero} `,
-            15,
-            doc.tw_ren
-          ),
-            doc.nextRow(10);
-        } else {
-          doc.ImpPosX(
-            `Cajeros seleccionado de ${cajero_ini.numero} al ${cajero_fin.numero}`,
-            15,
-            doc.tw_ren
-          ),
-            doc.nextRow(10);
-        }
-
-        doc.ImpPosX("No.", 15, doc.tw_ren),
+  
+          doc.ImpPosX("No.", 15, doc.tw_ren),
           doc.ImpPosX("Nombre", 50, doc.tw_ren),
           doc.nextRow(5);
-        doc.ImpPosX("Producto", 15, doc.tw_ren),
+          doc.ImpPosX("Producto", 15, doc.tw_ren),
           doc.ImpPosX("Descripcion", 30, doc.tw_ren),
           doc.ImpPosX("Documento", 70, doc.tw_ren),
           doc.ImpPosX("Fecha P", 90, doc.tw_ren),
@@ -159,88 +173,106 @@ function CobranzaPorAlumno() {
           doc.ImpPosX("Pago 2", 163, doc.tw_ren),
           doc.ImpPosX("Cajero", 183, doc.tw_ren),
           doc.nextRow(4);
-        doc.printLineV();
-        doc.nextRow(4);
-        doc.tiene_encabezado = true;
-      } else {
-        doc.nextRow(6);
-        doc.tiene_encabezado = true;
-      }
-    };
-    let alumno_Ant = "";
-    let total_importe = 0;
-    let total_general = 0;
-
-    const Cambia_Alumno = (doc, total_importe) => {
-      doc.ImpPosX(`TOTAL: ${total_importe.toString()}` || "", 97, doc.tw_ren);
-      doc.nextRow(8);
-    };
-
-    Enca1(reporte);
-    body.forEach((reporte2) => {
-      let tipoPago2 = " ";
-
-      if (reporte2.desc_Tipo_Pago_2 === null) {
-        tipoPago2 = " ";
-      } else {
-        tipoPago2 = reporte2.desc_Tipo_Pago_2;
-      }
-
-      if (reporte2.id_al !== alumno_Ant && alumno_Ant !== "") {
-        Cambia_Alumno(reporte, total_importe);
-        total_importe = 0;
-      }
-
-      if (reporte2.id_al !== alumno_Ant) {
+          doc.printLineV();
+          doc.nextRow(4);
+          doc.tiene_encabezado = true;
+        } else {
+          doc.nextRow(6);
+          doc.tiene_encabezado = true;
+        }
+      };
+      let alumno_Ant = "";
+      let total_importe = 0;
+      let total_general = 0;
+  
+      const Cambia_Alumno = (doc, total_importe) => {
+        doc.ImpPosX(`TOTAL: ${total_importe.toString()}` || "", 97, doc.tw_ren);
+        doc.nextRow(8);
+      };
+  
+      Enca1(reporte);
+      console.log("Body=>",body);
+      body.forEach((reporte2) => {
+        let tipoPago2 = " ";
+        let nombre = " ";
+  
+        if(reporte2.nombre === null){
+          nombre = " ";
+        }else{
+          nombre = reporte2.nombre;
+        }
+        if (reporte2.desc_Tipo_Pago_2 === null) {
+          tipoPago2 = " ";
+        } else {
+          tipoPago2 = reporte2.desc_Tipo_Pago_2;
+        }
+  
+        if (reporte2.id_al !== alumno_Ant && alumno_Ant !== "") {
+          Cambia_Alumno(reporte, total_importe);
+          total_importe = 0;
+        }
+  
+        if (reporte2.id_al !== alumno_Ant && reporte2.id_al != null) {
+          reporte.ImpPosX(
+            reporte2.id_al + "-" + calculaDigitoBvba(reporte2.id_al.toString()),
+            15,
+            reporte.tw_ren,
+            0,
+            "R"
+          );
+          reporte.ImpPosX(reporte2.nom_al.toString(), 50, reporte.tw_ren);
+          Enca1(reporte);
+          if (reporte.tw_ren >= reporte.tw_endRen) {
+            reporte.pageBreak();
+            Enca1(reporte);
+          }
+        }
+        reporte.setFontSize(8)
+        reporte.ImpPosX(reporte2.articulo.toString(), 15, reporte.tw_ren, 0 , "L");
+        reporte.ImpPosX(reporte2.descripcion.toString(), 30, reporte.tw_ren,0,"L");
+        // reporte.ImpPosX(reporte2.numero_doc.toString(), 70, reporte.tw_ren,"R");
+        reporte.ImpPosX(reporte2.numero_doc.toString(), 87, reporte.tw_ren, 0 , "R");
+        reporte.ImpPosX(reporte2.fecha.toString(), 90, reporte.tw_ren,0,"L");
+        reporte.ImpPosX(reporte2.importe.toString(), 122, reporte.tw_ren, 0 , "R");
+        reporte.ImpPosX(reporte2.recibo.toString(), 140, reporte.tw_ren, 0 , "R");
         reporte.ImpPosX(
-          reporte2.id_al + "-" + calculaDigitoBvba(reporte2.id_al.toString()),
-          15,
-          reporte.tw_ren
+          reporte2.desc_Tipo_Pago_1.toString(),
+          143,
+          reporte.tw_ren,
+          0,
+          "L"
         );
-        reporte.ImpPosX(reporte2.nom_al.toString(), 50, reporte.tw_ren);
+        reporte.ImpPosX(tipoPago2.toString(), 163, reporte.tw_ren,0,"L");
+        // reporte.ImpPosX(reporte2.nombre.toString(), 183, reporte.tw_ren);
+        reporte.ImpPosX(nombre.toString(), 183, reporte.tw_ren,0,"L");
+  
         Enca1(reporte);
         if (reporte.tw_ren >= reporte.tw_endRen) {
           reporte.pageBreak();
           Enca1(reporte);
         }
-      }
-      reporte.ImpPosX(reporte2.articulo.toString(), 15, reporte.tw_ren);
-      reporte.ImpPosX(reporte2.descripcion.toString(), 30, reporte.tw_ren);
-      reporte.ImpPosX(reporte2.numero_doc.toString(), 70, reporte.tw_ren);
-      reporte.ImpPosX(reporte2.fecha.toString(), 90, reporte.tw_ren);
-      reporte.ImpPosX(reporte2.importe.toString(), 110, reporte.tw_ren);
-      reporte.ImpPosX(reporte2.recibo.toString(), 130, reporte.tw_ren);
+        total_importe = total_importe + reporte2.importe;
+        total_general = total_general + reporte2.importe;
+        alumno_Ant = reporte2.id_al;
+      });
+      Cambia_Alumno(reporte, total_importe);
+  
       reporte.ImpPosX(
-        reporte2.desc_Tipo_Pago_1.toString(),
-        143,
+        `TOTAL IMPORTE: ${total_general.toString()}` || "",
+        80,
         reporte.tw_ren
       );
-      reporte.ImpPosX(tipoPago2.toString(), 163, reporte.tw_ren);
-      reporte.ImpPosX(reporte2.nombre.toString(), 183, reporte.tw_ren);
+      console.log("setTimeout")
+      setTimeout(() => {
+        const pdfData = reporte.doc.output("datauristring");
+        setPdfData(pdfData);
+        setPdfPreview(true);
+        showModalVista(true);
+        setAnimateLoading(false);
+      }, 500);
 
-      Enca1(reporte);
-      if (reporte.tw_ren >= reporte.tw_endRen) {
-        reporte.pageBreak();
-        Enca1(reporte);
-      }
-      total_importe = total_importe + reporte2.importe;
-      total_general = total_general + reporte2.importe;
-      alumno_Ant = reporte2.id_al;
-    });
-    Cambia_Alumno(reporte, total_importe);
-
-    reporte.ImpPosX(
-      `TOTAL IMPORTE: ${total_general.toString()}` || "",
-      80,
-      reporte.tw_ren
-    );
-    setTimeout(() => {
-      const pdfData = reporte.doc.output("datauristring");
-      setPdfData(pdfData);
-      setPdfPreview(true);
-      showModalVista(true);
-      setAnimateLoading(false);
-    }, 500);
+    }
+    
   };
 
   const showModalVista = (show) => {
@@ -370,6 +402,7 @@ function CobranzaPorAlumno() {
                     isDisabled={false}
                     value={fecha_ini}
                     setValue={setFecha_ini}
+                    onChange={(e) => setFecha_ini(e.target.value)}
                     className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
                   />
                 </label>
@@ -387,6 +420,7 @@ function CobranzaPorAlumno() {
                     isDisabled={false}
                     value={fecha_fin}
                     setValue={setFecha_fin}
+                    onChange={(e) => setFecha_fin(e.target.value)}
                     className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
                   />
                 </label>

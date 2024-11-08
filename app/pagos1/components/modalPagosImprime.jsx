@@ -6,8 +6,8 @@ import BuscarCat from "@/app/components/BuscarCat";
 import { useForm } from "react-hook-form";
 import { showSwalAndWait } from "@/app/utils/alerts";
 import { format_Fecha_String } from "@/app/utils/globalfn";
-import Image from 'next/image';
-import iconos from '@/app/utils/iconos';
+import Image from "next/image";
+import iconos from "@/app/utils/iconos";
 import {
   guardarDetallePedido,
   guardaEcabYCobrD,
@@ -24,6 +24,11 @@ function ModalPagoImprime({
   comentarios1,
   cajero,
   alumnos,
+  reiniciarPage,
+  registerImpr,
+  handleSumbitImpr,
+  errorsImpr,
+  accionB,
 }) {
   const [error, setError] = useState(null);
   const columnasBuscaCat = ["numero", "descripcion"];
@@ -31,103 +36,69 @@ function ModalPagoImprime({
   const [Handlepago, setPago] = useState([]);
   const [formpago, setFormPago] = useState({});
   const [formpago2, setFormPago2] = useState({});
-  const [cargado, setCargado] = useState(false);
   const [isLoading, setisLoading] = useState(false);
 
-  const {
-    register,
-    reset,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      pago: formaPagoPage.pago,
-      pago_2: "0.00",
-      referencia: "",
-      referencia_2: "",
-      num_copias: 1,
-      recibo_imprimir: formaPagoPage.recibo,
-    },
-  });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (cargado === false) {
-        const { token } = session.user;
-      }
-    };
-    fetchData();
-  }, [session, reset]);
-
-  useEffect(() => {
-    reset({
-      pago: formaPagoPage.pago,
-      pago_2: "0.00",
-      referencia: "",
-      referencia_2: "",
-      num_copias: 1,
-      recibo_imprimir: formaPagoPage.recibo,
-    });
-  }, [showModal, reset]);
-  const onSubmitModal = handleSubmit(async (data) => {
+  const onSubmitModal = handleSumbitImpr(async (data) => {
     try {
       const { token } = session.user;
       let newData;
       let res;
       if (formaPagoPage.recibo <= 0) {
-        showModal(false);
+        showModal("my_modal_4", false);
         await showSwalAndWait("", "El recibo debe ser mayor a 0", "info");
-        showModal(true);
+        showModal("my_modal_4", true);
         return;
       }
       let totalFormat = Elimina_Comas(formaPagoPage.pago);
       let imp_pago = Elimina_Comas(data.pago);
       let imp_pago2 = Elimina_Comas(data.pago_2);
-      const totalPago = imp_pago + imp_pago2;
+      const totalPago = parseFloat(imp_pago + imp_pago2);
 
       if (totalFormat !== totalPago) {
-        showModal(false);
+        showModal("my_modal_4", false);
         await showSwalAndWait(
           "",
           "Diferencia entre el total recibido contra el pago",
           "info"
         );
-        showModal(true);
+        showModal("my_modal_4", true);
         return;
       }
       if (data.pago_2 > 0 && data.referencia_2 === "") {
-        showModal(false);
+        showModal("my_modal_4", false);
         await showSwalAndWait(
           "",
           "Es necesario seleccionar segundo pago",
           "info"
         );
-        showModal(true);
+        showModal("my_modal_4", true);
         return;
       }
       setisLoading(true);
       const fecha_page = format_Fecha_String(formaPagoPage.fecha);
-      for (const pago of pagosFiltrados) {
-        const pagoUnitF = Elimina_Comas(pago.precio_base);
-        newData = {
-          recibo: data.recibo_imprimir || 0,
-          alumno: pago.alumno || 0,
-          fecha: fecha_page || "",
-          articulo: pago.numero || 0,
-          cantidad: pago.cantidad_producto || 0,
-          precio_unitario: pagoUnitF || 0,
-          descuento: pago.descuento || 0,
-          documento: pago.documento || 0,
-          total_general: totalFormat || 0,
-        };
-        res = await guardarDetallePedido(token, newData);
-      }
+      await Promise.all(
+        pagosFiltrados.map(async (pago) => {
+          const pagoUnitF = Elimina_Comas(pago.precio_base);
+          const newData = {
+            recibo: data.recibo_imprimir || 0,
+            alumno: pago.alumno || 0,
+            fecha: fecha_page || "",
+            articulo: parseInt(pago.numero_producto) || 0,
+            cantidad: pago.cantidad_producto || 0,
+            precio_unitario: pagoUnitF || 0,
+            descuento: pago.descuento || 0,
+            documento: pago.documento || 0,
+            total_general: totalFormat || 0,
+          };
+          return await guardarDetallePedido(token, newData);
+        })
+      );
 
       const postNewData = {
         recibo: data.recibo_imprimir || 0,
         alumno: alumnos1.numero || 0,
         fecha: fecha_page || "",
-        articulo: productos1.numero || 0,
+        articulo: parseInt(productos1.numero) || 0,
         cajero: cajero.numero || 0,
         total_neto: totalFormat || 0,
         n_banco: formpago.numero || 0,
@@ -152,22 +123,23 @@ function ModalPagoImprime({
         },
         body: pagoFiltrado,
         encaBody: encaPago,
-        // encaBody: Old_Standard_TT,
       };
       Imprimir(configuracion);
       setisLoading(false);
-      showModal(false);
+      reiniciarPage();
+      showModal("my_modal_4", false);
     } catch (e) {
       console.log(e.message);
       setisLoading(false);
     }
-    // } else { }
   });
 
   const formaImprime = (dataSubmit) => {
     let body = [];
     for (const item of pagosFiltrados) {
-      const formaPagoFind = alumnos.find((forma) => forma.numero === item.alumno);
+      const formaPagoFind = alumnos.find(
+        (forma) => forma.numero === item.alumno
+      );
       const data = {
         alumno_id: formaPagoFind.numero || "",
         alumno_nombre_completo: formaPagoFind.nombre_completo || "",
@@ -218,21 +190,22 @@ function ModalPagoImprime({
           <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
             <h3 className="font-bold text-lg">Imprime.</h3>
             <div className="flex space-x-2 items-center">
-              <div
-                className={`tooltip tooltip-bottom`}
-                data-tip="Guardar"
-              >
+              <div className={`tooltip tooltip-bottom`} data-tip="Guardar">
                 <button
                   type="submit"
                   id="btn_imprimir"
                   className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
-                  onClick={handleSubmit}
+                  onClick={handleSumbitImpr}
                   disabled={isLoading}
                 >
                   {isLoading ? (
                     <FaSpinner className="animate-spin mx-2" />
                   ) : (
-                    <Image src={iconos.imprimir} alt="Imprimir" className="w-5 h-5 md:w-6 md:h-6" />
+                    <Image
+                      src={iconos.imprimir}
+                      alt="Imprimir"
+                      className="w-5 h-5 md:w-6 md:h-6"
+                    />
                   )}
                   {isLoading ? " Cargando..." : " Imprimir"}
                 </button>
@@ -264,7 +237,12 @@ function ModalPagoImprime({
                       modalId="modal_formpago"
                       id={formaPagoPage.forma_pago_id}
                       alignRight={"text-right"}
-                      inputWidths={{ contdef: "180px", first: "70px", second: "150px" }}
+                      inputWidths={{
+                        contdef: "180px",
+                        first: "70px",
+                        second: "150px",
+                      }}
+                      accion={accionB}
                     />
                   </label>
                   <label className=" items-center space-x-2 dark:text-white text-black">
@@ -277,8 +255,8 @@ function ModalPagoImprime({
                       Titulo={"Pago: "}
                       type={"text"}
                       requerido={false}
-                      errors={errors}
-                      register={register}
+                      errors={errorsImpr}
+                      register={registerImpr}
                       message={"Pago requerido"}
                       isDisabled={false}
                       handleBlur={handleBlur}
@@ -295,73 +273,17 @@ function ModalPagoImprime({
                       Titulo={"Referencia: "}
                       type={"text"}
                       requerido={false}
-                      errors={errors}
-                      register={register}
+                      errors={errorsImpr}
+                      register={registerImpr}
                       message={"Referencia requerido"}
                       isDisabled={false}
-                      handleBlur={handleBlur}
+                      // handleBlur={handleBlur}
                       maxLength={8}
                     />
                   </label>
                 </div>
               </div>
               {/*  */}
-              <div className="w-auto p-4 border dark:border-gray-300 border-black rounded-lg">
-                <h2 className="text-lg font-bold mb-4 dark:text-white text-black">
-                  Pago Parcial
-                </h2>
-                <div className="flex flex-col space-y-2">
-                  <label className="items-center space-x-2 dark:text-white text-black">
-                    <BuscarCat
-                      table="formaPago"
-                      fieldsToShow={columnasBuscaCat}
-                      nameInput={nameInputs}
-                      titulo={" "}
-                      setItem={setFormPago2}
-                      token={session.user.token}
-                      modalId="modal_formpago2"
-                      alignRight={"text-right"}
-                      inputWidths={{ contdef: "180px", first: "70px", second: "150px" }}
-                    />
-                  </label>
-                  <label className="items-center space-x-2 dark:text-white text-black">
-                    <Inputs
-                      tipoInput={""}
-                      dataType={"float"}
-                      name={"pago_2"}
-                      tamañolabel={""}
-                      className={`grow text-right`}
-                      Titulo={"Pago: "}
-                      type={"text"}
-                      requerido={false}
-                      errors={errors}
-                      register={register}
-                      message={"Pago requerido"}
-                      isDisabled={false}
-                      handleBlur={handleBlur}
-                      maxLength={8}
-                    />
-                  </label>
-                  <label className="items-center space-x-2 dark:text-white text-black">
-                    <Inputs
-                      tipoInput={""}
-                      dataType={"string"}
-                      name={"referencia_2"}
-                      tamañolabel={""}
-                      className={`grow`}
-                      Titulo={"Referencia: "}
-                      type={"text"}
-                      requerido={false}
-                      errors={errors}
-                      register={register}
-                      message={"Referencia requerido"}
-                      isDisabled={false}
-                      handleBlur={handleBlur}
-                      maxLength={50}
-                    />
-                  </label>
-                </div>
-              </div>
               <Inputs
                 tipoInput={""}
                 dataType={"string"}
@@ -371,8 +293,8 @@ function ModalPagoImprime({
                 Titulo={"Paga: "}
                 type={"text"}
                 requerido={false}
-                errors={errors}
-                register={register}
+                errors={errorsImpr}
+                register={registerImpr}
                 message={"Paga requerido"}
                 isDisabled={false}
                 handleBlur={handleBlur}
@@ -387,14 +309,14 @@ function ModalPagoImprime({
                 Titulo={"Recibo Imprimir: "}
                 type={"text"}
                 requerido={false}
-                errors={errors}
-                register={register}
+                errors={errorsImpr}
+                register={registerImpr}
                 message={"Paga requerido"}
                 isDisabled={false}
                 handleBlur={handleBlur}
                 maxLength={10}
               />
-              <Inputs
+              {/* <Inputs
                 tipoInput={""}
                 dataType={"int"}
                 name={"num_copias "}
@@ -404,12 +326,12 @@ function ModalPagoImprime({
                 type={"text"}
                 requerido={false}
                 errors={errors}
-                register={register}
+                register={registerImpr}
                 message={"num_copias requerido"}
                 isDisabled={false}
                 handleBlur={handleBlur}
                 maxLength={5}
-              />
+              /> */}
             </div>
           </fieldset>
         </form>

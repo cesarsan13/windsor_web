@@ -16,7 +16,7 @@ import BuscarCat from "@/app/components/BuscarCat";
 import "jspdf-autotable";
 import ModalVistaPreviaRepFemac8Anexo1 from "./components/ModalVistaPreviaRepFemac8Anexo1";
 
-function AltasBajasAlumnos() {
+function RelacionDeRecivos() {
   const router = useRouter();
   const { data: session, status } = useSession();
   let [fecha_ini, setFecha_ini] = useState("");
@@ -80,7 +80,7 @@ function AltasBajasAlumnos() {
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: "Reporte Altas y Bajas Alumnos",
+        Nombre_Reporte: "Reporte Relación de Recibos",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
       body: alumnosFiltrados,
@@ -93,7 +93,7 @@ function AltasBajasAlumnos() {
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: "Reporte Altas y Bajas Alumnos",
+        Nombre_Reporte: "Reporte Relación de Recibos",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
       body: alumnosFiltrados,
@@ -121,7 +121,7 @@ function AltasBajasAlumnos() {
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: "Reporte Altas y Bajas Alumnos",
+        Nombre_Reporte: "Reporte Relación de Recibos",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
       body: alumnosFiltrados,
@@ -196,6 +196,7 @@ function AltasBajasAlumnos() {
                     isDisabled={false}
                     value={fecha_ini}
                     setValue={setFecha_ini}
+                    onChange={(e) => setFecha_ini(e.target.value)}
                     className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
                   />
                 </label>
@@ -214,6 +215,7 @@ function AltasBajasAlumnos() {
                     isDisabled={false}
                     value={fecha_fin}
                     setValue={setFecha_fin}
+                    onChange={(e) => setFecha_fin(e.target.value)}
                     className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
                   />
                 </label>
@@ -290,7 +292,7 @@ function AltasBajasAlumnos() {
                     itemData={[]}
                     fieldsToShow={["numero", "nombre_completo"]}
                     nameInput={["numero", "nombre_completo"]}
-                    titulo={"Inicio: "}
+                    titulo={"Alumno Inicio: "}
                     setItem={setAlumnoIni}
                     token={session.user.token}
                     modalId="modal_alumnos1"
@@ -306,7 +308,7 @@ function AltasBajasAlumnos() {
                     itemData={[]}
                     fieldsToShow={["numero", "nombre_completo"]}
                     nameInput={["numero", "nombre_completo"]}
-                    titulo={"Fin: "}
+                    titulo={"Alumno Fin: "}
                     setItem={setAlumnoFin}
                     token={session.user.token}
                     modalId="modal_alumnos2"
@@ -343,4 +345,4 @@ function AltasBajasAlumnos() {
   );
 }
 
-export default AltasBajasAlumnos;
+export default RelacionDeRecivos;

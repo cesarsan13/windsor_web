@@ -123,7 +123,7 @@ function ModalComentarios({
                 className={"rounded block grow"}
                 Titulo={"Comentario 1: "}
                 type={"text"}
-                requerido={true}
+                requerido={false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -139,7 +139,7 @@ function ModalComentarios({
                 className={"rounded block grow"}
                 Titulo={"Comentario 2: "}
                 type={"text"}
-                requerido={true}
+                requerido={false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -155,7 +155,7 @@ function ModalComentarios({
                 className={"rounded block grow"}
                 Titulo={"Comentario 3: "}
                 type={"text"}
-                requerido={true}
+                requerido={false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -170,7 +170,7 @@ function ModalComentarios({
                 className={"select p-1.5 grow "}
                 Titulo={"Generales:"}
                 type={"select"}
-                requerido={true}
+                requerido={false}
                 errors={errors}
                 maxLenght={1}
                 register={register}

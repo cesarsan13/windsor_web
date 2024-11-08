@@ -110,7 +110,7 @@ function Horarios() {
   }, [busqueda, horarios]);
 
   useEffect(() => {
-    const debouncedBuscar = debounce(Buscar, 300);
+    const debouncedBuscar = debounce(Buscar, 500);
     debouncedBuscar();
     return () => {
       clearTimeout(debouncedBuscar);
@@ -203,14 +203,16 @@ function Horarios() {
           }
         }
       }
-      showSwal(res.alert_title, res.alert_text, res.alert_icon);
+      showSwal(res.alert_title, res.message, res.alert_icon);
       showModal(false);
+    } else {
+      showSwal(res.alert_title, res.alert_text, "error", "my_modal_horario");
     }
   });
   const showModal = (show) => {
     show
-      ? document.getElementById("my_modal_3").showModal()
-      : document.getElementById("my_modal_3").close();
+      ? document.getElementById("my_modal_horario").showModal()
+      : document.getElementById("my_modal_horario").close();
   };
   const home = () => {
     router.push("/");

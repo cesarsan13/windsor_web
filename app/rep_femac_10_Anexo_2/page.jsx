@@ -162,7 +162,13 @@ function EstadodeCuenta() {
     Enca1(reporte);
     body.forEach((reporte2) => {
       let tipoPago2 = " ";
+      let documento = "0";
 
+      if (reporte2.numero_doc === null || reporte2.numero_doc == "") {
+        documento = "0";
+      } else {
+        documento = reporte2.numero_doc;
+      }
       if (reporte2.desc_Tipo_Pago_2 === null) {
         tipoPago2 = " ";
       } else {
@@ -174,7 +180,7 @@ function EstadodeCuenta() {
         total_importe = 0;
       }
 
-      if (reporte2.id_al !== alumno_Ant) {
+      if (reporte2.id_al !== alumno_Ant && reporte2.id_al != null) {
         reporte.ImpPosX(reporte2.id_al + "-" + calculaDigitoBvba(reporte2.id_al.toString()), 15, reporte.tw_ren, 0, "L");
         reporte.ImpPosX(reporte2.nom_al.toString(), 30, reporte.tw_ren, 0, "L");
         reporte.ImpPosX(reporte2.horario_nom.toString(), 100, reporte.tw_ren, 0, "L");
@@ -186,7 +192,7 @@ function EstadodeCuenta() {
           Enca1(reporte);
         }
       }
-      reporte.ImpPosX(reporte2.numero_doc.toString(), 33, reporte.tw_ren, 0, "R");
+      reporte.ImpPosX(documento, 33, reporte.tw_ren, 0, "R");
       reporte.ImpPosX(reporte2.articulo.toString(), 49, reporte.tw_ren, 0, "R");
       reporte.ImpPosX(reporte2.descripcion.toString(), 53, reporte.tw_ren, 0, "L");
       
@@ -337,6 +343,7 @@ function EstadodeCuenta() {
                     isDisabled={false}
                     value={fecha_ini}
                     setValue={setFecha_ini}
+                    onChange={(e) => setFecha_ini(e.target.value)}
                     className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
                   />
                 </label>
@@ -355,6 +362,7 @@ function EstadodeCuenta() {
                     isDisabled={false}
                     value={fecha_fin}
                     setValue={setFecha_fin}
+                    onChange={(e) => setFecha_fin(e.target.value)}
                     className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
                   />
                 </label>

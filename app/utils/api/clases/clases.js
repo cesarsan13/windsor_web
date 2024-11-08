@@ -44,7 +44,7 @@ export const getClases = async (token, baja) => {
       } else {
         data.baja = "";
       }
-      url_api = `${process.env.DOMAIN_API}api/clase/updateClase/`;
+      url_api = `${process.env.DOMAIN_API}api/clase/updateClases/`;
     }
   
     const res = await fetch(`${url_api}`, {

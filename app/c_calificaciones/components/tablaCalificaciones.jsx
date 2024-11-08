@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Loading from "@/app/components/loading";
 import NoData from "@/app/components/NoData";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 import { formatNumber, globalVariables, loadGlobalVariables, soloDecimales } from "@/app/utils/globalfn";
-import { showSwal } from "@/app/utils/alerts";
+import { showSwalAndWait } from "@/app/utils/alerts";
 
 function TablaCalificaciones({
     calificacionesFiltrados,
@@ -16,29 +16,9 @@ function TablaCalificaciones({
     setCalificaciones,
     setCalificacionesFiltrados,
 }) {
-    console.log('arreglo de filtrados', calificacionesFiltrados);
     const [editMode, setEditMode] = useState(null);
     const [editedCalificaciones, setEditedCalificaciones] = useState({});
-
-    const handleEditChange = (numero, value) => {
-        let newValue = parseFloat(value);
-        loadGlobalVariables();
-        if (globalVariables.vg_caso_evaluar === 'CALIFICACIÓN') {
-            if (newValue > 10) {
-                showSwal("WARNING!", "El máximo valor permitido es 10", "info");
-                newValue = 0;
-            }
-        } else {
-            if (newValue > 40) {
-                showSwal("WARNING!", "El máximo valor permitido es 40", "info");
-                newValue = 0;
-            }
-        }
-        setEditedCalificaciones((prev) => ({
-            ...prev,
-            [numero]: newValue,
-        }));
-    };
+    const inputRefs = useRef({});
 
     const tableAction = (evt, calificacion, accion) => {
         setCalificacion(calificacion);
@@ -46,17 +26,57 @@ function TablaCalificaciones({
         setCurrentId(calificacion.numero);
         if (accion === "Editar") {
             setEditMode(calificacion.numero);
+            setEditedCalificaciones((prev) => ({
+                ...prev,
+                [calificacion.numero]: calificacion.calificacion,
+            }));
         } else {
             setEditMode(null);
         }
     };
 
-    const saveCalificacion = (numero) => {
+    useEffect(() => {
+        if (editMode !== null && inputRefs.current[editMode]) {
+            inputRefs.current[editMode].focus();
+        }
+    }, [editMode]);
+
+    const saveCalificacion = async (numero) => {
         loadGlobalVariables();
+        let newValue = parseFloat(editedCalificaciones[numero]);
+        if (globalVariables.vg_caso_evaluar === 'CALIFICACIÓN') {
+            if (newValue > 10) {
+                await showSwalAndWait("WARNING!", "El máximo valor permitido es 10", "info");
+                newValue = 0;
+                setEditedCalificaciones((prev) => ({
+                    ...prev,
+                    [numero]: newValue,
+                }));
+                return;
+            } else if (newValue < 0) {
+                await showSwalAndWait("WARNING!", "El valor debe ser mayor o igual a 0", "info");
+                newValue = 0;
+                setEditedCalificaciones((prev) => ({
+                    ...prev,
+                    [numero]: newValue,
+                }));
+                return;
+            }
+        } else {
+            if (newValue > 40) {
+                await showSwalAndWait("WARNING!", "El máximo valor permitido es 40", "info");
+                newValue = 0;
+                setEditedCalificaciones((prev) => ({
+                    ...prev,
+                    [numero]: newValue,
+                }));
+                return;
+            }
+        }
         const index = calificaciones.findIndex((fp) => fp.numero === numero);
         if (index !== -1) {
             const fpFiltrados = calificaciones.map((fp) =>
-                fp.numero === numero ? { ...fp, calificacion: formatNumber(editedCalificaciones[numero]) } : fp
+                fp.numero === numero ? { ...fp, calificacion: formatNumber(newValue) } : fp
             );
             setCalificaciones(fpFiltrados);
             setCalificacionesFiltrados(fpFiltrados);
@@ -71,28 +91,42 @@ function TablaCalificaciones({
                     <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
                         <tr>
                             <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
-                            <td className="w-[45%]">Alumno</td>
-                            <td className="w-[25%] hidden sm:table-cell">Calificación</td>
+                            <td className="w-[40%]">Alumno</td>
+                            <td className="w-[10%] text-right hidden sm:table-cell">Calificación</td>
                             <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Editar</th>
                         </tr>
                     </thead>
                     <tbody>
                         {calificacionesFiltrados.map((item, index) => (
                             <tr key={`${item.numero}-${index}`} className="hover:cursor-pointer">
-                                <th className="w-[5%]">{item.numero}</th>
-                                <td className="w-[45%]"> {item.nombre} </td>
-                                <td className="w-[25%]">
+                                <th className="w-[5%] text-right">{item.numero}</th>
+                                <td className="w-[40%]"> {item.nombre} </td>
+                                <td className="w-[40%] text-right">
                                     {editMode === item.numero ? (
                                         <input
-                                            type="number"
-                                            value={editedCalificaciones[item.numero] || item.calificacion || ""}
-                                            onChange={(e) => handleEditChange(item.numero, e.target.value)}
-                                            className="input input-bordered w-full"
+                                            ref={(el) => (inputRefs.current[item.numero] = el)}
+                                            type="text"
+                                            min="0"
+                                            maxLength={4}
+                                            value={editedCalificaciones[item.numero] || ""}
+                                            onFocus={(e) => e.target.select()}
+                                            onKeyDown={(e) => e.key === "Enter" && saveCalificacion(item.numero)}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                if (value === "" || /^\d*\.?\d*$/.test(value)) {
+                                                    setEditedCalificaciones((prev) => ({
+                                                        ...prev,
+                                                        [item.numero]: value
+                                                    }));
+                                                }
+                                            }}
+                                            className="input input-bordered w-[6rem] text-right"
                                         />
                                     ) : (
-                                        item.calificacion || "N/A"
+                                        <span>{item.calificacion || 0.00}</span>
                                     )}
                                 </td>
+
                                 <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                                     {editMode === item.numero ? (
                                         <>

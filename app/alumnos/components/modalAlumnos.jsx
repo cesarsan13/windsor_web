@@ -31,7 +31,7 @@ function ModalAlumnos({
   setcond1,
   setcond2,
   files,
-  setFile
+  setFile,
 }) {
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
@@ -60,7 +60,7 @@ function ModalAlumnos({
       setcondicion(true);
     }
   };
-  
+
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
@@ -74,11 +74,11 @@ function ModalAlumnos({
     }
   };
 
-const openFileSelector = () => {
-  if (inputfileref.current) {
-    inputfileref.current.click(); // Simula el clic en el input
-  }
-};
+  const openFileSelector = () => {
+    if (inputfileref.current) {
+      inputfileref.current.click(); // Simula el clic en el input
+    }
+  };
 
   useEffect(() => {
     if (accion === "Eliminar" || accion === "Ver") {
@@ -116,11 +116,44 @@ const openFileSelector = () => {
   };
   // console.log(JSON.stringify(alumno));
 
+  const checkErrorsAndSubmit = (event) => {
+    onSubmit(event); // Intnta enviar el formulario
+    if (Object.keys(errors).length > 0) {
+      const primerError = Object.keys(errors)[0];
+      switch (primerError) {
+        case "a_materno": // campo en el tab 'Alumno'
+        case "a_paterno":
+        case "a_nombre":
+        case "estatus":
+        case "fecha_nac":
+        case "sexo":
+        case "escuela":
+        case "telefono1":
+        case "celular":
+          setActiveTab(1);
+          break;
+        case "direccion": // campo en el tab 'Generales'
+        case "colonia":
+        case "ciudad":
+        case "estado":
+        case "cp":
+        case "email":
+          setActiveTab(2);
+          break;
+        default:
+          break;
+      }
+    }
+  };
+
   return (
-    <dialog id="my_modal_3" className="modal">
-      <div className="modal-box w-full max-w-3xl h-full">
-        <form onSubmit={onSubmit} encType="multipart/form-data">
-          <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
+    <dialog id="my_modal_3" className="modal ">
+      <div className="modal-box w-full max-w-3xl h-full bg-base-200">
+        <form
+          onSubmit={(evt) => checkErrorsAndSubmit(evt)}
+          encType="multipart/form-data"
+        >
+          <div className="sticky -top-6 flex justify-between items-center bg-base-200  w-full h-10 z-10 mb-5">
             <h3 className="font-bold text-lg">{titulo}</h3>
             <div className="flex space-x-2 items-center">
               <div
@@ -603,7 +636,6 @@ const openFileSelector = () => {
                     >
                       Seleccionar Foto
                     </button>
-                    
                   </div>
 
                   <input
@@ -621,7 +653,9 @@ const openFileSelector = () => {
                         {condicion ? "Imagen Seleccionada:" : "Foto Capturada:"}
                       </h2>
                       <Image
-                        src={condicion ? URL.createObjectURL(files) : capturedImage}
+                        src={
+                          condicion ? URL.createObjectURL(files) : capturedImage
+                        }
                         alt="Imagen"
                         width={80}
                         height={80}
@@ -644,7 +678,6 @@ const openFileSelector = () => {
                       />
                     </div>
                   )}*/}
-                 
                 </div>
               </div>
 

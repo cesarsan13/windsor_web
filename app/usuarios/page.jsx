@@ -1,27 +1,33 @@
 "use client";
-import React from "react";
+import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal, showSwalTarget } from "@/app/utils/alerts";
 import ModalUsuarios from "./components/ModalUsuario";
 import Busqueda from "./components/Busqueda";
 import Acciones from "./components/Acciones";
 import { useForm } from "react-hook-form";
-import { getUsuarios, ImprimirPDF, ImprimirExcel, guardaUsuario} from "../utils/api/usuarios/usuarios";
+import {
+  getUsuarios,
+  ImprimirPDF,
+  ImprimirExcel,
+  guardaUsuario,
+} from "../utils/api/usuarios/usuarios";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/comentarios/comentarios";
 import "jspdf-autotable";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import ModalVistaPreviaUsuarios from "./components/modalVistaPreviaUsuarios";
 import TablaUsuarios from "./components/TablaUsuarios";
-
+import { debounce } from "../utils/globalfn";
+import VistaPrevia from "../components/VistaPrevia";
 function Usuarios() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [usuarios, setUsuarios] = useState([]);
   const [usuario, setUsuario] = useState({});
   const [usuariosFiltrados, setUsuariosFiltrados] = useState([]);
+  const [animateLoading, setAnimateLoading] = useState(false);
 
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
@@ -49,38 +55,7 @@ function Usuarios() {
     fetchData();
   }, [session, status, bajas]);
 
-  useEffect(() => {
-    Buscar();
-  }, [busqueda]);
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-    watch,
-  } = useForm({
-    defaultValues: {
-        id:usuario.id,
-        nombre:usuario.nombre,
-        name:usuario.name,
-        email:usuario.email,
-        password:usuario.password,
-        match_password:usuario.match_password
-    },
-  });
-  useEffect(() => {
-    reset({
-        id:usuario.id,
-        nombre:usuario.nombre,
-        name:usuario.name,
-        email:usuario.email,
-        password:usuario.password,
-        match_password:usuario.match_password
-    });
-  }, [usuario, reset]);
-
-  const Buscar = () => {
+  const Buscar = useCallback(() => {
     const { tb_id, tb_name } = busqueda;
 
     if (tb_id === "" && tb_name === "") {
@@ -100,13 +75,50 @@ function Usuarios() {
       return coincideID && coincideusuario;
     });
     setUsuariosFiltrados(infoFiltrada);
-  };
+  }, [busqueda, usuarios]);
+
+  useEffect(() => {
+    const debouncedBuscar = debounce(Buscar, 500);
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar);
+    };
+  }, [busqueda, Buscar]);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+    watch,
+  } = useForm({
+    defaultValues: {
+      id: usuario.id,
+      nombre: usuario.nombre,
+      name: usuario.name,
+      email: usuario.email,
+      password: usuario.password,
+      match_password: usuario.match_password,
+    },
+  });
+  useEffect(() => {
+    reset({
+      id: usuario.id,
+      nombre: usuario.nombre,
+      name: usuario.name,
+      email: usuario.email,
+      password: usuario.password,
+      match_password: usuario.match_password,
+    });
+  }, [usuario, reset]);
+
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
     setBusqueda({ tb_id: "", tb_name: "" });
   };
 
   const handleVerClick = () => {
+    setAnimateLoading(true);
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -140,56 +152,36 @@ function Usuarios() {
 
     Enca1(reporte);
     body.forEach((usuarios) => {
-      reporte.ImpPosX(
-        usuarios.id.toString(),
-        20,
-        reporte.tw_ren,
-        0,
-        "R"
-      );
-      reporte.ImpPosX(
-        usuarios.name.toString(),
-        30,
-        reporte.tw_ren,
-        35,
-        "L"
-      );
-      reporte.ImpPosX(
-        usuarios.nombre.toString(),
-        70,
-        reporte.tw_ren,
-        35,
-        "L"
-      );
-      reporte.ImpPosX(
-        usuarios.email.toString(),
-        150,
-        reporte.tw_ren,
-        35,
-        "L"
-      );
+      reporte.ImpPosX(usuarios.id.toString(), 20, reporte.tw_ren, 0, "R");
+      reporte.ImpPosX(usuarios.name.toString(), 30, reporte.tw_ren, 35, "L");
+      reporte.ImpPosX(usuarios.nombre.toString(), 70, reporte.tw_ren, 35, "L");
+      reporte.ImpPosX(usuarios.email.toString(), 150, reporte.tw_ren, 35, "L");
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRen) {
         reporte.pageBreak();
         Enca1(reporte);
       }
     });
-    const pdfData = reporte.doc.output("datauristring");
-    setPdfData(pdfData);
-    setPdfPreview(true);
-    showModalVista(true);
+
+    setTimeout(() => {
+      const pdfData = reporte.doc.output("datauristring");
+      setPdfData(pdfData);
+      setPdfPreview(true);
+      showModalVista(true);
+      setAnimateLoading(false);
+    }, 500);
   };
 
   const showModalVista = (show) => {
     show
       ? document.getElementById("modalVPUsuario").showModal()
       : document.getElementById("modalVPUsuario").close();
-  
-    };
+  };
 
   const CerrarView = () => {
     setPdfPreview(false);
     setPdfData("");
+    document.getElementById("modalVPUsuario").close();
   };
 
   const Alta = async (event) => {
@@ -201,7 +193,7 @@ function Usuarios() {
       nombre: "",
       email: "",
       password: "",
-      match_password:""
+      match_password: "",
     });
 
     setUsuario({ id: "" });
@@ -231,108 +223,101 @@ function Usuarios() {
         Nombre_Reporte: "Reporte de Usuarios",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
-      
+
       body: usuariosFiltrados,
       columns: [
         { header: "Id", dataKey: "id" },
         { header: "Usuario", dataKey: "name" },
         { header: "Nombre", dataKey: "nombre" },
-        { header: "Email", dataKey: "email" }
+        { header: "Email", dataKey: "email" },
       ],
       nombre: "Usuarios",
     };
     ImprimirExcel(configuracion);
   };
 
-  
-
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
 
     const password1 = watch("password", "");
     const password2 = watch("match_password", "");
-    
-    if (password1 !== password2) {
-      showSwal("Error de Validación", "Las contraseñas no coinciden", "error", "modal_usuarios");
-      return;
-    } else{
 
-    if (
-      (accion === "Alta" || accion === "Editar") &&
-      (password1 === "" || password2 === "")
-    ) {
+    if (password1 !== password2) {
       showSwal(
         "Error de Validación",
-        "Por favor capture las contraseñas",
+        "Las contraseñas no coinciden",
         "error",
         "modal_usuarios"
       );
       return;
-    }
-
-    let res = null;
-
-    if (accion === "Eliminar") {
-      const confirmed = await confirmSwal(
-        "¿Desea Continuar?",
-        "Se eliminara al usuario seleccionado",
-        "warning",
-        "Aceptar",
-        "Cancelar",
-        "modal_usuarios"
-      );
-      if (!confirmed) {
+    } else {
+      if (
+        (accion === "Alta" || accion === "Editar") &&
+        (password1 === "" || password2 === "")
+      ) {
+        showSwal(
+          "Error de Validación",
+          "Por favor capture las contraseñas",
+          "error",
+          "modal_usuarios"
+        );
         return;
       }
-    }
 
-    data.numero_prop = 1;
+      let res = null;
 
-    res = await guardaUsuario(session.user.token, data, accion);
-    if (res.status) {
-      if (accion === "Alta") {
-        data.id = res.data;
-        setCurrentId(data.id);
-        const nuevoUsuarios = { currentID, ...data };
-        setUsuarios([...usuarios, nuevoUsuarios]);
-        if (!bajas) {
-          setUsuariosFiltrados([
-            ...usuariosFiltrados,
-            nuevoUsuarios,
-          ]);
+      if (accion === "Eliminar") {
+        const confirmed = await confirmSwal(
+          "¿Desea Continuar?",
+          "Se eliminara al usuario seleccionado",
+          "warning",
+          "Aceptar",
+          "Cancelar",
+          "modal_usuarios"
+        );
+        if (!confirmed) {
+          return;
         }
       }
-      if (accion === "Eliminar" || accion === "Editar") {
-        const index = usuarios.findIndex(
-          (fp) => fp.id === data.id
-        );
-        if (index !== -1) {
-          if (accion === "Eliminar") {
-            const fpFiltrados = usuarios.filter(
-              (fp) => fp.id !== data.id
-            );
-                setUsuarios(fpFiltrados);
-                setUsuariosFiltrados(fpFiltrados);
-          } else {
-            if (bajas) {
-              const fpFiltrados = usuarios.filter(
-                (fp) => fp.id !== data.id
-              );
-                setUsuarios(fpFiltrados);
-                setUsuariosFiltrados(fpFiltrados);
+
+      data.numero_prop = 1;
+
+      res = await guardaUsuario(session.user.token, data, accion);
+      if (res.status) {
+        if (accion === "Alta") {
+          data.id = res.data;
+          setCurrentId(data.id);
+          const nuevoUsuarios = { currentID, ...data };
+          setUsuarios([...usuarios, nuevoUsuarios]);
+          if (!bajas) {
+            setUsuariosFiltrados([...usuariosFiltrados, nuevoUsuarios]);
+          }
+        }
+        if (accion === "Eliminar" || accion === "Editar") {
+          const index = usuarios.findIndex((fp) => fp.id === data.id);
+          if (index !== -1) {
+            if (accion === "Eliminar") {
+              const fpFiltrados = usuarios.filter((fp) => fp.id !== data.id);
+              setUsuarios(fpFiltrados);
+              setUsuariosFiltrados(fpFiltrados);
             } else {
-              const fpActualizadas = usuarios.map((fp) =>
-                fp.id === currentID ? { ...fp, ...data } : fp
-              );
+              if (bajas) {
+                const fpFiltrados = usuarios.filter((fp) => fp.id !== data.id);
+                setUsuarios(fpFiltrados);
+                setUsuariosFiltrados(fpFiltrados);
+              } else {
+                const fpActualizadas = usuarios.map((fp) =>
+                  fp.id === currentID ? { ...fp, ...data } : fp
+                );
                 setUsuarios(fpActualizadas);
                 setUsuariosFiltrados(fpActualizadas);
+              }
             }
           }
         }
+        showSwal(res.alert_title, res.alert_text, res.alert_icon);
+        showModal(false);
       }
-      showSwal(res.alert_title, res.alert_text, res.alert_icon);
-      showModal(false);
-    }
     }
   });
 
@@ -341,6 +326,7 @@ function Usuarios() {
       ? document.getElementById("modal_usuarios").showModal()
       : document.getElementById("modal_usuarios").close();
   };
+
   const home = () => {
     router.push("/");
   };
@@ -369,11 +355,14 @@ function Usuarios() {
         Usuario={usuario}
         watch={watch}
       />
-      <ModalVistaPreviaUsuarios
+      <VistaPrevia
+        id="modalVPUsuario"
+        titulo={"Vista Previa de Usuarios"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
 
       <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
@@ -385,6 +374,7 @@ function Usuarios() {
                 Alta={Alta}
                 home={home}
                 Ver={handleVerClick}
+                animateLoading={animateLoading}
               ></Acciones>
             </div>
 

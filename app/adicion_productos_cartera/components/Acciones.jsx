@@ -1,23 +1,25 @@
 import React, { useState } from 'react';
 import Tooltip from "@/app/components/tooltip";
-import Button from "@/app/components/button";
 import { TbLoader3 } from "react-icons/tb"; // Icono de carga
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 
 function Acciones({ home, BRef, Bproceso, isLoadingRef, isLoadingProc }) {
+  const isAnyLoading = isLoadingRef || isLoadingProc;
+
   const images = [
-    { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home, isLoading: false },
     { src: iconos.guardar, alt: "Act. Ref.", tooltipTitle: "Act. Ref.", onClick: BRef, isLoading: isLoadingRef },
-    { src: iconos.guardar, alt: "Proceso", tooltipTitle: "Proceso", onClick: Bproceso, isLoading: isLoadingProc },
+    { src: iconos.procesa, alt: "Proceso", tooltipTitle: "Proceso", onClick: Bproceso, isLoading: isLoadingProc },
+    { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home, isLoading: false },
   ];
 
-  const ImageTooltip = ({ src, tooltipTitle, onClick, isLoading }) => {
+  const ImageTooltip = ({ src, tooltipTitle, onClick, isLoading, disabled }) => {
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
           className="w-6 h-5 bg-transparent hover:bg-transparent border-none shadow-none text-black dark:text-white rounded-lg"
           onClick={onClick}
+          disabled={disabled}
         >
           {isLoading ? (
             <TbLoader3 className="animate-spin text-2xl" />
@@ -38,6 +40,7 @@ function Acciones({ home, BRef, Bproceso, isLoadingRef, isLoadingProc }) {
           tooltipTitle={image.tooltipTitle}
           onClick={image.onClick}
           isLoading={image.isLoading}
+          disabled={isAnyLoading}
         />
       ))}
     </div>

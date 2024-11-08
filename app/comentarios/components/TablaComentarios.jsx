@@ -89,9 +89,12 @@ function TablaComentarios({
           </tbody>
           <tfoot />
         </table>
-      ) : (
-        <NoData />
-      )}
+      ) : formaComentariosFiltrados != null &&
+      formaComentariosFiltrados.length === 0 ? (
+      <NoData></NoData>
+    ) : (
+      <Loading></Loading>
+    )}
     </div>
   ) : (
     <Loading></Loading>
