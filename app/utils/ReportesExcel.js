@@ -94,7 +94,12 @@
 //   }
 // }
 import * as ExcelJS from "exceljs";
-import { formatDate, formatTime, formatFecha, format_Fecha_String } from "./globalfn";
+import {
+  formatDate,
+  formatTime,
+  formatFecha,
+  format_Fecha_String,
+} from "./globalfn";
 
 export class ReporteExcel {
   constructor(configuracion) {
@@ -118,10 +123,10 @@ export class ReporteExcel {
     const timeStr = formatTime(date);
 
     this.worksheetData.push(
-      ["",Encabezado.Nombre_Aplicacion, "", "", "", `Fecha: ${dateStr}`],
-      ["",Encabezado.Nombre_Reporte, "", "", "", `Hora: ${timeStr}`],
-      ["",`Usuario: ${Encabezado.Nombre_Usuario}`, "", "", "", "Hoja: 1"],
-      ["",Encabezado.Clase, "", Encabezado.Profesor, "", Encabezado.FechaE],
+      ["", Encabezado.Nombre_Aplicacion, "", "", "", `Fecha: ${dateStr}`],
+      ["", Encabezado.Nombre_Reporte, "", "", "", `Hora: ${timeStr}`],
+      ["", `Usuario: ${Encabezado.Nombre_Usuario}`, "", "", "", "Hoja: 1"],
+      ["", Encabezado.Clase, "", Encabezado.Profesor, "", Encabezado.FechaE],
       []
     );
   }
@@ -157,7 +162,10 @@ export class ReporteExcel {
     this.worksheetData.forEach((row) => {
       row.forEach((cell, index) => {
         const cellLength = cell ? cell.toString().length : 0;
-        maxColumnWidths[index] = Math.max(maxColumnWidths[index] || 0, cellLength);
+        maxColumnWidths[index] = Math.max(
+          maxColumnWidths[index] || 0,
+          cellLength
+        );
       });
     });
     return maxColumnWidths.map((width) => ({ width }));
@@ -171,7 +179,6 @@ export class ReporteExcel {
     const columnWidths = this.calculaAnchos();
     worksheet.columns = columnWidths;
 
-
     if (ImagenL) {
       const response = await fetch(ImagenL);
       const imageData = await response.blob();
@@ -182,11 +189,11 @@ export class ReporteExcel {
           const buffer = new Uint8Array(reader.result);
           const imageId = workbook.addImage({
             buffer,
-            extension: ImagenL.split('.').pop(),
+            extension: ImagenL.split(".").pop(),
           });
           worksheet.addImage(imageId, {
             tl: { col: 0, row: 0 },
-            ext: { width: 210, height: 80 },
+            ext: { width: 210, height: 120 },
           });
           resolve();
         };
@@ -202,7 +209,9 @@ export class ReporteExcel {
 
     // Generar el archivo Excel y ofrecerlo para descarga
     const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
     const url = URL.createObjectURL(blob);
 
     const anchor = document.createElement("a");
@@ -224,5 +233,3 @@ export class ReporteExcel {
     this.addData(emptyRow);
   }
 }
-
-
