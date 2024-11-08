@@ -98,6 +98,12 @@ export class ReportePDF {
   printLineF() {
     this.doc.line(5, this.tw_ren, 295, this.tw_ren);
   }
+  printLineZ() {
+    this.doc.line(185, this.tw_ren, 286, this.tw_ren);
+  }
+  printLine(x1,x2){
+    this.doc.line(x1, this.tw_ren, x2, this.tw_ren);
+  }
   //añade una nueva pagina al documento
   addPage() {
     this.doc.addPage();
@@ -224,6 +230,57 @@ export class ReportePDF {
     }
   }
 
+  //Para la impresion Horizontal para concentrado calificaciones
+  imprimeEncabezadoPrincipalHConcentradoCal() {
+    const { Encabezado } = this.configuracion;
+
+    //la imagen tiene que ser en png para que la imprima
+    const ImagenL = "resources/Logo_Interaccion.png";
+    if (!this.tiene_encabezado) {
+      this.doc.addImage(ImagenL, "PNG", 10, 10, 26, 25);
+      this.setFontSize(14);
+      this.setTw_Ren(16);
+      this.ImpPosX(Encabezado.Nombre_Aplicacion, 35, this.tw_ren);
+      this.setFontSize(10);
+      this.nextRow(6);
+      this.ImpPosX(Encabezado.Nombre_Reporte, 35, this.tw_ren);
+      this.nextRow(6);
+      this.setFontSize(10);
+      this.ImpPosX(Encabezado.Nombre_Usuario, 35, this.tw_ren);
+      this.nextRow(6);
+      this.setFontSize(10);
+      this.ImpPosX(Encabezado.Datos_Grupo, 35, this.tw_ren);
+      const date = new Date();
+      const dateStr = formatDate(date);
+      const timeStr = formatTime(date);
+      this.setTw_Ren(16);
+      this.ImpPosX(`Fecha: ${dateStr}`, 250, this.tw_ren);
+      this.nextRow(6);
+      this.ImpPosX(`Hora: ${timeStr}`, 250, this.tw_ren);
+      this.nextRow(6);
+      this.ImpPosX(`Hoja: ${this.getNumberPages()}`, 250, this.tw_ren);
+    }
+  }
+
+  generateTable(headers, data) {
+    this.doc.autoTable({
+      head: [headers], // Encabezados de las columnas
+      body: data, // Datos de la tabla
+      startY: this.tw_ren + 10, // Posición Y donde empieza la tabla
+      theme: "plain", // Tema de la tabla
+      // headStyles: { fillColor: [255, 255, 255],textColor: [0, 0, 0]  }, // Estilos para la cabecera
+      styles: { fontSize: 10,lineWidth:0.5,lineColor:[211, 211, 211] }, // Estilos generales
+      margin: { top: 10 },
+      didDrawPage: (data) => {
+        // Callback para agregar encabezado en cada página
+        if (!this.tiene_encabezado) {
+          this.imprimeEncabezadoPrincipalV(); // Cambia a H si es horizontal
+          this.tiene_encabezado = true;
+        }
+      },
+    });
+    this.tw_ren = this.doc.lastAutoTable.finalY; // Actualiza tw_ren con la posición final de la tabla
+  }
   //Guarda el reporte (rrecibe como parametro el nombre del reporte)
   guardaReporte(Nombre) {
     this.doc.save(`${Nombre}.pdf`);

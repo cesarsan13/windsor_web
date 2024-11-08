@@ -22,7 +22,7 @@ export const showSwal = (titulo, mensaje, icono, target = "") => {
     position: "center",
     icon: icono,
     title: titulo,
-    text: mensaje,
+    html: mensaje,
     showConfirmButton: true,
     timer: 2500,
   };
@@ -40,7 +40,6 @@ export const confirmSwal = async (
   cancelButtonText,
   target
 ) => {
-
   return new Promise((resolve, reject) => {
     Swal.fire({
       title: titulo,
@@ -51,7 +50,7 @@ export const confirmSwal = async (
       cancelButtonColor: "#d33",
       confirmButtonText: confirmButtonText,
       cancelButtonText: cancelButtonText,
-      ...(target && { target: document.getElementById(target) })
+      ...(target && { target: document.getElementById(target) }),
     }).then((result) => {
       if (result.isConfirmed) {
         resolve(true); // Resolvemos la promesa con true si se confirma

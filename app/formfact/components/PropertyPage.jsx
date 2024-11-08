@@ -14,7 +14,8 @@ function PropertyPage({
   session,
   setTextoAnterior,
   changeSelectedLabel,
-}) {
+  arreglo
+}) {      
   const {
     register,
     reset,
@@ -170,10 +171,9 @@ function PropertyPage({
   };
 
   const handleLabelChange = (evt) => {
-    const index = evt.target.selectedOptions[0].attributes["data-key"].value;
-    setSelectedIndex(index);
-  };
-
+    // const index = evt.target.selectedOptions[0].attributes["data-key"].value;
+    setSelectedIndex(evt.target.value);
+  };  
   return (
     <div className="flex flex-col card bg-slate-100 dark:bg-slate-800 rounded-lg ">
       <div className=" bg-slate-400 w-full p-2 rounded-lg rounde flex flex-row">
@@ -191,6 +191,8 @@ function PropertyPage({
           message={""}
           isDisabled={false}
           data={labels}
+          arreglos={arreglo}
+          idlabel={selectedIndex}
           handleChange={handleLabelChange}
         />
       </div>
@@ -244,7 +246,7 @@ function PropertyPage({
                 tamañolabel={"w-full input-xs"}
                 className={"w-full text-left input-xs"}
                 Titulo={"Fuente: "}
-                type={"select"}
+                type={"text"}
                 requerido={true}
                 errors={errors}
                 register={register}
@@ -351,7 +353,7 @@ function PropertyPage({
                 tamañolabel={"w-full input-xs"}
                 className={"w-full text-left input-xs"}
                 Titulo={"Campo: "}
-                type={"select"}
+                type={"text"}
                 requerido={true}
                 errors={errors}
                 register={register}
@@ -366,7 +368,7 @@ function PropertyPage({
                 tamañolabel={"w-full input-xs"}
                 className={"w-full text-left input-xs"}
                 Titulo={"Formato: "}
-                type={"select"}
+                type={"text"}
                 requerido={true}
                 errors={errors}
                 register={register}
@@ -381,7 +383,7 @@ function PropertyPage({
                 tamañolabel={"w-full input-xs"}
                 className={"w-full text-left input-xs"}
                 Titulo={"Area: "}
-                type={"select"}
+                type={"text"}
                 requerido={true}
                 errors={errors}
                 register={register}

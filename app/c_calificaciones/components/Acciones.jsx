@@ -6,10 +6,10 @@ import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 function Acciones({ home, Alta, Buscar, isLoading, isDisabledSave, Ver }) {
   const images = [
-    { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home, isLoading: false },
-    { src: iconos.vistaPrevia, alt: 'Vista previa', tooltipTitle: 'Vista previa', onClick: Ver },
     { src: iconos.buscar, alt: "Buscar", tooltipTitle: "Buscar", onClick: Buscar, isLoading: isLoading },
     { src: iconos.guardar, alt: "Guardar", tooltipTitle: "Guardar", onClick: Alta, isLoading: isDisabledSave },
+    { src: iconos.vistaPrevia, alt: 'Vista previa', tooltipTitle: 'Vista previa', onClick: Ver },
+    { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home, isLoading: false },
   ];
 
   const ImageTooltip = ({ src, tooltipTitle, onClick, isLoading }) => {

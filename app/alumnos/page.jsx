@@ -1,9 +1,11 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalAlumnos from "@/app/alumnos/components/modalAlumnos";
-import TablaAlumnos from "@/app/alumnos/components/tablaAlumnos";
+const TablaAlumnos = React.lazy(() =>
+  import("@/app/alumnos/components/tablaAlumnos")
+);
 import Busqueda from "@/app/alumnos/components/Busqueda";
 import Acciones from "@/app/alumnos/components/Acciones";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
@@ -28,7 +30,7 @@ function Alumnos() {
   const { data: session, status } = useSession();
   const [alumnos, setAlumnos] = useState([]);
   const [alumno, setAlumno] = useState({});
-  const [alumnosFiltrados, setAlumnosFiltrados] = useState([]);
+  const [alumnosFiltrados, setAlumnosFiltrados] = useState(null);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
@@ -47,20 +49,23 @@ function Alumnos() {
   const [fecha_hoy, setFechaHoy] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
   const [files, setFile] = useState(null);
+  const alumnosRef = useRef(alumnos);
   const [busqueda, setBusqueda] = useState({
     tb_id: "",
     tb_desc: "",
     tb_grado: "",
   });
-
-  //Memorizar la funcion
+  useEffect(() => {
+    alumnosRef.current = alumnos; // Actualiza el ref cuando alumnos cambia
+  }, [alumnos]);
+  //  Memorizar la funcion
   const Buscar = useCallback(() => {
     const { tb_id, tb_desc, tb_grado } = busqueda;
     if (tb_id === "" && tb_desc === "" && tb_grado === "") {
-      setAlumnosFiltrados(alumnos);
+      setAlumnosFiltrados(alumnosRef.current);
       return;
     }
-    const infoFiltrada = alumnos.filter((alumno) => {
+    const infoFiltrada = alumnosRef.current.filter((alumno) => {
       const coincideId = tb_id
         ? alumno["numero"].toString().includes(tb_id)
         : true;
@@ -79,20 +84,18 @@ function Alumnos() {
       return coincideId && coincideDescripcion && coincideGrado;
     });
     setAlumnosFiltrados(infoFiltrada);
-  }, [busqueda, alumnos]);
+  }, [busqueda]);
+
+  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
   useEffect(() => {
-    const debouncedBuscar = debounce(Buscar, 300);
     debouncedBuscar();
     return () => {
       clearTimeout(debouncedBuscar);
     };
-  }, [busqueda, Buscar]);
+  }, [busqueda, debouncedBuscar]);
 
   useEffect(() => {
-    if (status === "loading" || !session) {
-      return;
-    }
     const fetchData = async () => {
       setisLoading(true);
       const { token } = session.user;
@@ -104,6 +107,9 @@ function Alumnos() {
       const fechaFormateada = fecha_hoy.toISOString().split("T")[0];
       setFechaHoy(fechaFormateada);
     };
+    if (status === "loading" || !session) {
+      return;
+    }
     fetchData();
   }, [session, status, bajas]);
 
@@ -204,6 +210,7 @@ function Alumnos() {
       escuela: alumno.escuela,
       grupo: alumno.grupo,
       referencia: alumno.referencia,
+      horario_1_nombre: alumno.horario_1_nombre,
     },
   });
   useEffect(() => {
@@ -298,6 +305,7 @@ function Alumnos() {
       escuela: alumno.escuela,
       grupo: alumno.grupo,
       referencia: alumno.referencia,
+      horario_1_nombre: alumno.horario_1_nombre,
     });
   }, [alumno, reset]);
 
@@ -351,7 +359,7 @@ function Alumnos() {
       cancha_2: 0,
       cancha_3: 0,
       cancha_4: 0,
-      horario_1: "0",
+      horario_1: 0,
       horario_2: 0,
       horario_3: 0,
       horario_4: 0,
@@ -409,6 +417,7 @@ function Alumnos() {
       escuela: "",
       grupo: "",
       referencia: 0,
+      horario_1_nombre: "",
       baja: "",
     });
     setcond1({});
@@ -425,6 +434,9 @@ function Alumnos() {
     document.getElementById("a_paterno").focus();
   };
   const onSubmitModal = handleSubmit(async (data) => {
+    if (Object.keys(errors).length > 0) {
+      alert("hay errores xd");
+    }
     event.preventDefault;
     accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
     let res = null;
@@ -481,8 +493,8 @@ function Alumnos() {
     formData.append("cancha_2", data.cancha_2 || "");
     formData.append("cancha_3", data.cancha_3 || "");
     formData.append("cancha_4", data.cancha_4 || "");
-    formData.append("horario_1", data.horario_1 || "");
-    formData.append("horario_2", data.horario_2 || "");
+    formData.append("horario_1", grado.numero || "");
+    formData.append("horario_2", grado2.numero || "");
     formData.append("horario_3", data.horario_3 || "");
     formData.append("horario_4", data.horario_4 || "");
     formData.append("horario_5", data.horario_5 || "");
@@ -537,7 +549,7 @@ function Alumnos() {
     formData.append("rfc_factura", data.rfc_factura || "");
     formData.append("estatus", data.estatus || "");
     formData.append("escuela", data.escuela || "");
-    formData.append("grupo", grado.horario || "");
+    formData.append("grupo", grado.numero || "");
     if (condicion === true) {
       const blob = dataURLtoBlob(capturedImage);
       formData.append(
@@ -786,7 +798,7 @@ function Alumnos() {
         setcond1={setcond1}
         setcond2={setcond2}
         setFile={setFile}
-        files ={files}
+        files={files}
       />
       <VistaPrevia
         id="modalVPAlumno"
@@ -797,12 +809,12 @@ function Alumnos() {
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
       />
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
               <Acciones
-                Buscar={Buscar}
+                // Buscar={Buscar}
                 Alta={Alta}
                 home={home}
                 PDF={imprimePDF}
@@ -821,22 +833,27 @@ function Alumnos() {
             <Busqueda
               setBajas={setBajas}
               limpiarBusqueda={limpiarBusqueda}
-              Buscar={Buscar}
+              // Buscar={Buscar}
               handleBusquedaChange={handleBusquedaChange}
               busqueda={busqueda}
             />
-            <TablaAlumnos
-              session={session}
-              isLoading={isLoading}
-              alumnosFiltrados={alumnosFiltrados}
-              showModal={showModal}
-              setAlumno={setAlumno}
-              setAccion={setAccion}
-              setCurrentId={setCurrentId}
-              formatNumber={formatNumber}
-              setCapturedImage={setCapturedImage}
-              setcondicion={setcondicion}
-            />
+            {status === "loading" ||
+              (!session ? (
+                <></>
+              ) : (
+                <TablaAlumnos
+                  session={session}
+                  isLoading={isLoading}
+                  alumnosFiltrados={alumnosFiltrados}
+                  showModal={showModal}
+                  setAlumno={setAlumno}
+                  setAccion={setAccion}
+                  setCurrentId={setCurrentId}
+                  formatNumber={formatNumber}
+                  setCapturedImage={setCapturedImage}
+                  setcondicion={setcondicion}
+                />
+              ))}
           </div>
         </div>
       </div>

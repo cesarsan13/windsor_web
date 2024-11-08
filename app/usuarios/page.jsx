@@ -6,7 +6,12 @@ import ModalUsuarios from "./components/ModalUsuario";
 import Busqueda from "./components/Busqueda";
 import Acciones from "./components/Acciones";
 import { useForm } from "react-hook-form";
-import { getUsuarios, ImprimirPDF, ImprimirExcel, guardaUsuario} from "../utils/api/usuarios/usuarios";
+import {
+  getUsuarios,
+  ImprimirPDF,
+  ImprimirExcel,
+  guardaUsuario,
+} from "../utils/api/usuarios/usuarios";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/comentarios/comentarios";
@@ -73,7 +78,7 @@ function Usuarios() {
   }, [busqueda, usuarios]);
 
   useEffect(() => {
-    const debouncedBuscar = debounce(Buscar, 300);
+    const debouncedBuscar = debounce(Buscar, 500);
     debouncedBuscar();
     return () => {
       clearTimeout(debouncedBuscar);
@@ -88,26 +93,25 @@ function Usuarios() {
     watch,
   } = useForm({
     defaultValues: {
-        id:usuario.id,
-        nombre:usuario.nombre,
-        name:usuario.name,
-        email:usuario.email,
-        password:usuario.password,
-        match_password:usuario.match_password
+      id: usuario.id,
+      nombre: usuario.nombre,
+      name: usuario.name,
+      email: usuario.email,
+      password: usuario.password,
+      match_password: usuario.match_password,
     },
   });
   useEffect(() => {
     reset({
-        id:usuario.id,
-        nombre:usuario.nombre,
-        name:usuario.name,
-        email:usuario.email,
-        password:usuario.password,
-        match_password:usuario.match_password
+      id: usuario.id,
+      nombre: usuario.nombre,
+      name: usuario.name,
+      email: usuario.email,
+      password: usuario.password,
+      match_password: usuario.match_password,
     });
   }, [usuario, reset]);
 
- 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
     setBusqueda({ tb_id: "", tb_name: "" });
@@ -148,34 +152,10 @@ function Usuarios() {
 
     Enca1(reporte);
     body.forEach((usuarios) => {
-      reporte.ImpPosX(
-        usuarios.id.toString(),
-        20,
-        reporte.tw_ren,
-        0,
-        "R"
-      );
-      reporte.ImpPosX(
-        usuarios.name.toString(),
-        30,
-        reporte.tw_ren,
-        35,
-        "L"
-      );
-      reporte.ImpPosX(
-        usuarios.nombre.toString(),
-        70,
-        reporte.tw_ren,
-        35,
-        "L"
-      );
-      reporte.ImpPosX(
-        usuarios.email.toString(),
-        150,
-        reporte.tw_ren,
-        35,
-        "L"
-      );
+      reporte.ImpPosX(usuarios.id.toString(), 20, reporte.tw_ren, 0, "R");
+      reporte.ImpPosX(usuarios.name.toString(), 30, reporte.tw_ren, 35, "L");
+      reporte.ImpPosX(usuarios.nombre.toString(), 70, reporte.tw_ren, 35, "L");
+      reporte.ImpPosX(usuarios.email.toString(), 150, reporte.tw_ren, 35, "L");
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRen) {
         reporte.pageBreak();
@@ -189,21 +169,19 @@ function Usuarios() {
       setPdfPreview(true);
       showModalVista(true);
       setAnimateLoading(false);
-    }, 500)
+    }, 500);
   };
 
   const showModalVista = (show) => {
     show
       ? document.getElementById("modalVPUsuario").showModal()
       : document.getElementById("modalVPUsuario").close();
-  
-    };
+  };
 
   const CerrarView = () => {
     setPdfPreview(false);
     setPdfData("");
     document.getElementById("modalVPUsuario").close();
-
   };
 
   const Alta = async (event) => {
@@ -215,7 +193,7 @@ function Usuarios() {
       nombre: "",
       email: "",
       password: "",
-      match_password:""
+      match_password: "",
     });
 
     setUsuario({ id: "" });
@@ -245,108 +223,101 @@ function Usuarios() {
         Nombre_Reporte: "Reporte de Usuarios",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
-      
+
       body: usuariosFiltrados,
       columns: [
         { header: "Id", dataKey: "id" },
         { header: "Usuario", dataKey: "name" },
         { header: "Nombre", dataKey: "nombre" },
-        { header: "Email", dataKey: "email" }
+        { header: "Email", dataKey: "email" },
       ],
       nombre: "Usuarios",
     };
     ImprimirExcel(configuracion);
   };
 
-  
-
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
 
     const password1 = watch("password", "");
     const password2 = watch("match_password", "");
-    
-    if (password1 !== password2) {
-      showSwal("Error de Validación", "Las contraseñas no coinciden", "error", "modal_usuarios");
-      return;
-    } else{
 
-    if (
-      (accion === "Alta" || accion === "Editar") &&
-      (password1 === "" || password2 === "")
-    ) {
+    if (password1 !== password2) {
       showSwal(
         "Error de Validación",
-        "Por favor capture las contraseñas",
+        "Las contraseñas no coinciden",
         "error",
         "modal_usuarios"
       );
       return;
-    }
-
-    let res = null;
-
-    if (accion === "Eliminar") {
-      const confirmed = await confirmSwal(
-        "¿Desea Continuar?",
-        "Se eliminara al usuario seleccionado",
-        "warning",
-        "Aceptar",
-        "Cancelar",
-        "modal_usuarios"
-      );
-      if (!confirmed) {
+    } else {
+      if (
+        (accion === "Alta" || accion === "Editar") &&
+        (password1 === "" || password2 === "")
+      ) {
+        showSwal(
+          "Error de Validación",
+          "Por favor capture las contraseñas",
+          "error",
+          "modal_usuarios"
+        );
         return;
       }
-    }
 
-    data.numero_prop = 1;
+      let res = null;
 
-    res = await guardaUsuario(session.user.token, data, accion);
-    if (res.status) {
-      if (accion === "Alta") {
-        data.id = res.data;
-        setCurrentId(data.id);
-        const nuevoUsuarios = { currentID, ...data };
-        setUsuarios([...usuarios, nuevoUsuarios]);
-        if (!bajas) {
-          setUsuariosFiltrados([
-            ...usuariosFiltrados,
-            nuevoUsuarios,
-          ]);
+      if (accion === "Eliminar") {
+        const confirmed = await confirmSwal(
+          "¿Desea Continuar?",
+          "Se eliminara al usuario seleccionado",
+          "warning",
+          "Aceptar",
+          "Cancelar",
+          "modal_usuarios"
+        );
+        if (!confirmed) {
+          return;
         }
       }
-      if (accion === "Eliminar" || accion === "Editar") {
-        const index = usuarios.findIndex(
-          (fp) => fp.id === data.id
-        );
-        if (index !== -1) {
-          if (accion === "Eliminar") {
-            const fpFiltrados = usuarios.filter(
-              (fp) => fp.id !== data.id
-            );
-                setUsuarios(fpFiltrados);
-                setUsuariosFiltrados(fpFiltrados);
-          } else {
-            if (bajas) {
-              const fpFiltrados = usuarios.filter(
-                (fp) => fp.id !== data.id
-              );
-                setUsuarios(fpFiltrados);
-                setUsuariosFiltrados(fpFiltrados);
+
+      data.numero_prop = 1;
+
+      res = await guardaUsuario(session.user.token, data, accion);
+      if (res.status) {
+        if (accion === "Alta") {
+          data.id = res.data;
+          setCurrentId(data.id);
+          const nuevoUsuarios = { currentID, ...data };
+          setUsuarios([...usuarios, nuevoUsuarios]);
+          if (!bajas) {
+            setUsuariosFiltrados([...usuariosFiltrados, nuevoUsuarios]);
+          }
+        }
+        if (accion === "Eliminar" || accion === "Editar") {
+          const index = usuarios.findIndex((fp) => fp.id === data.id);
+          if (index !== -1) {
+            if (accion === "Eliminar") {
+              const fpFiltrados = usuarios.filter((fp) => fp.id !== data.id);
+              setUsuarios(fpFiltrados);
+              setUsuariosFiltrados(fpFiltrados);
             } else {
-              const fpActualizadas = usuarios.map((fp) =>
-                fp.id === currentID ? { ...fp, ...data } : fp
-              );
+              if (bajas) {
+                const fpFiltrados = usuarios.filter((fp) => fp.id !== data.id);
+                setUsuarios(fpFiltrados);
+                setUsuariosFiltrados(fpFiltrados);
+              } else {
+                const fpActualizadas = usuarios.map((fp) =>
+                  fp.id === currentID ? { ...fp, ...data } : fp
+                );
                 setUsuarios(fpActualizadas);
                 setUsuariosFiltrados(fpActualizadas);
+              }
             }
           }
         }
+        showSwal(res.alert_title, res.alert_text, res.alert_icon);
+        showModal(false);
       }
-      showSwal(res.alert_title, res.alert_text, res.alert_icon);
-      showModal(false);
-    }
     }
   });
 
@@ -356,7 +327,6 @@ function Usuarios() {
       : document.getElementById("modal_usuarios").close();
   };
 
-  
   const home = () => {
     router.push("/");
   };
@@ -386,8 +356,8 @@ function Usuarios() {
         watch={watch}
       />
       <VistaPrevia
-      id="modalVPUsuario"
-      titulo={"Vista Previa de Usuarios"}
+        id="modalVPUsuario"
+        titulo={"Vista Previa de Usuarios"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}

@@ -32,6 +32,7 @@ function Cancelacion_Recibo() {
     const Proceso = handleSubmit(async (data) => {
         const { token } = session.user;
         setisLoading(true);
+        data.recibo = parseInt(data.recibo);
         if (data.recibo === 0) {
             showSwal(
                 "Error: Cancelación de Recibo",
@@ -42,7 +43,7 @@ function Cancelacion_Recibo() {
             return;
         }
         const year = data.fecha.substring(0, 4);
-        const mes = parseInt(data.fecha.substring(5, 7));
+        const mes = data.fecha.substring(5, 7).padStart(2, '0');
         const dia = data.fecha.substring(8, 10);
         const formatdate = `${year}/${mes}/${dia}`;
         data.fecha = formatdate;
@@ -66,31 +67,30 @@ function Cancelacion_Recibo() {
     }
     return (
         <>
-            <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
-                <div className="flex flex-col justify-start p-3">
-                    <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
-                        <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0 pr-4">
+            <div className='container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden'>
+                <div className='flex flex-col justify-start p-3'>
+                    <div className='flex flex-wrap md:flex-nowrap items-start md:items-center'>
+                        <div className='order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0'>
                             <Acciones
-                                isLoadingRef={isLoading}
+                                isLoading={isLoading}
                                 Bproceso={Proceso}
                                 home={home}
                             />
                         </div>
 
-                        <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-auto">
+                        <h1 className="pl-5 order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-auto">
                             Cancelación de Recibo.
                         </h1>
                     </div>
                 </div>
-                <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-                    <div className="col-span-7">
-                        {/* <form onSubmit={onSubmit}> */}
-                        <div className="flex flex-col h-[calc(100%)] space-y-4">
+                <div className='flex flex-col items-center h-full'>
+                    <div className='w-full max-w-4xl pt-2'>
+                        <div className="flex flex-col items-start pb-5">
                             <Inputs
                                 dataType={"int"}
                                 name={"recibo"}
-                                tamañolabel={"w-[22%]"}
-                                className={"w-[50%] text-right"}
+                                tamañolabel={"w-full"}
+                                className={"w-[80%] px-2 py-2 text-right"}
                                 Titulo={"Recibo: "}
                                 type={"text"}
                                 requerido={true}
@@ -100,11 +100,13 @@ function Cancelacion_Recibo() {
                                 isDisabled={false}
                                 maxLenght={7}
                             />
+                        </div>
+                        <div className="flex flex-col items-start">
                             <Inputs
                                 dataType={"string"}
                                 name={"fecha"}
-                                tamañolabel={"w-[22%]"}
-                                className={"w-auto text-left"}
+                                tamañolabel={"w-full"}
+                                className={"w-[80%] px-2 py-2 text-left"}
                                 Titulo={"Fecha: "}
                                 type={"date"}
                                 requerido={true}
@@ -115,12 +117,13 @@ function Cancelacion_Recibo() {
                                 maxLenght={7}
                             />
                         </div>
-                        {/* </form> */}
                     </div>
                 </div>
             </div>
         </>
     );
+
+
 }
 
 export default Cancelacion_Recibo;

@@ -6,7 +6,7 @@ import iconos from "@/app/utils/iconos";
 function Acciones({ home, Alta }) {
   const images = [
     { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home },
-    { src: iconos.guardar, alt: "Guardar", tooltipTitle: "Cambiar Ciclo", onClick: Alta },
+    { src: iconos.procesa, alt: "Guardar", tooltipTitle: "Cambiar Ciclo", onClick: Alta },
   ];
 
   const ImageTooltip = ({ src, tooltipTitle, onClick }) => {

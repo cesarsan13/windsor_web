@@ -75,10 +75,10 @@ function ModalHorario({
     setDia(selectedOptions.map((option) => option.value).join("/"));
   };
   return (
-    <dialog id="my_modal_3" className="modal">
+    <dialog id="my_modal_horario" className="modal">
       <div className="modal-box">
         <form onSubmit={onSubmit}>
-        <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
+          <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
             <h3 className="font-bold text-lg">{titulo}</h3>
             <div className="flex space-x-2 items-center">
               <div
@@ -106,7 +106,7 @@ function ModalHorario({
                 className="btn btn-sm btn-circle btn-ghost"
                 onClick={(event) => {
                   event.preventDefault();
-                  document.getElementById("my_modal_3").close();
+                  document.getElementById("my_modal_horario").close();
                 }}
               >
                 ✕
@@ -125,7 +125,7 @@ function ModalHorario({
                 requerido={true}
                 errors={errors}
                 register={register}
-                message={"numeroRequerido"}
+                message={"Numero Requerido"}
                 isDisabled={true}
               />
               <Inputs
@@ -139,7 +139,7 @@ function ModalHorario({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"cancha requerid"}
+                message={"Cancha Requerida"}
                 maxLenght={50}
                 isDisabled={isDisabled}
               />
@@ -174,7 +174,7 @@ function ModalHorario({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"horario requerido"}
+                message={"Horario Requerido"}
                 maxLenght={50}
                 isDisabled={isDisabled}
               />
@@ -189,7 +189,7 @@ function ModalHorario({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"Max Niños requerido"}
+                message={"Max Niños Requerido"}
                 maxLenght={50}
                 isDisabled={isDisabled}
               />
@@ -221,7 +221,7 @@ function ModalHorario({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"Edad Ini requerido"}
+                message={"Edad Inicial Requerida"}
                 maxLenght={50}
                 isDisabled={isDisabled}
               />
@@ -236,24 +236,24 @@ function ModalHorario({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"Edad Fin requerido"}
+                message={"Edad Final Requerida"}
                 maxLenght={50}
                 isDisabled={isDisabled}
               />
               <Inputs
-              dataType={"string"}
-              name={"salon"}
-              tamañolabel={"w-3/6"}
-              className={"w-5/6"}
-              Titulo={"Salón: "}
-              type={"text"}
-              requerido={true}
-              isNumero={false}
-              errors={errors}
-              register={register}
-              message={"salon requerido"}
-              maxLenght={10}
-              isDisabled={isDisabled}
+                dataType={"string"}
+                name={"salon"}
+                tamañolabel={"w-3/6"}
+                className={"w-5/6"}
+                Titulo={"Salón: "}
+                type={"text"}
+                requerido={true}
+                isNumero={false}
+                errors={errors}
+                register={register}
+                message={"Salón Requerido"}
+                maxLenght={10}
+                isDisabled={isDisabled}
               />
             </div>
           </fieldset>

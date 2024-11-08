@@ -119,25 +119,38 @@ function C_Calificaciones() {
         }
         const fetchData = async () => {
             const { token } = session.user;
+            if (!grupo.numero) {
+                return;
+            }
             let datos = await getClasesBuscaCat(token, grupo.numero);
             if (datos.length > 0) {
                 setAsignatura(datos);
                 setIsDisabled(true);
-            } else { setAsignatura([]); setEvaluacion([]); setActividades([]); };
+            } else {
+                showSwal('¡Atención!', 'El grupo seleccionado no tiene asignaturas disponibles. Por favor, elige otro grupo.', 'error');
+                setIsDisabled(false);
+                setAsignatura([]);
+                setEvaluacion([]);
+                setActividades([]);
+            };
         }
         fetchData();
-    }, [grupo]);
+    }, [grupo.numero]);
 
     const validar = async (grupo, materia, contraseña) => {
         const { token } = session.user;
         let validar;
         let res = await getContraseñaProfe(token, grupo, materia);
         const data = res.data;
+        if (!data.contraseña) {
+            showSwal('Error', 'Grupo no asignado a profesor.', 'error');
+            return false;
+        }
         if (contraseña.toLowerCase() === data.contraseña.toLowerCase()) {
             validar = true;
         } else {
             validar = false;
-            showSwal('Error', 'Grupo no asignado a Profesor', 'error');
+            showSwal('Error', 'Grupo no asignado a profesor.', 'error');
         }
         return validar;
     }
@@ -149,6 +162,10 @@ function C_Calificaciones() {
         }
         if (calificaciones.length <= 0) {
             return
+        }
+        if (actividades.length <= 0 || evaluacion.length <= 0) {
+            showSwal('ERROR', 'Para guardar, se necesita la actividad y la evaluación.', 'error');
+            return;
         }
         setIsDisabledSave(true);
         data.grupo = grupo.horario;
@@ -170,7 +187,7 @@ function C_Calificaciones() {
             return;
         }
         if (!materia) {
-            showSwal('Error', 'Debe seleccionar una materia', 'error');
+            showSwal('Error', 'Debe seleccionar una asignatura', 'error');
             return;
         }
         setisLoading2(true);
@@ -180,11 +197,12 @@ function C_Calificaciones() {
         data.grupo = grupo.numero;
         data.grupo_nombre = grupo.horario;
         data.materia = materia;
-        data.cb_actividad = isDisabled2;
-
-        // console.log(data);
+        if (evaluacion.length <= 0 || actividades.length <= 0) {
+            data.cb_actividad = false;
+        } else {
+            data.cb_actividad = isDisabled2;
+        }
         let res1 = await getProcesoCalificacionesAlumnos(token, data);
-        // console.log(res1);
         if (res1.status) {
             let datos = res1.data;
             let newData = [];
@@ -198,7 +216,6 @@ function C_Calificaciones() {
                         let res2 = await getProcesoCalificaciones(token, data);
                         if (res2.status) {
                             const datosos = res2.data
-                            // console.log(datosos)
                             newData.push({
                                 numero: datosos[0].numero,
                                 nombre: datosos[0].nombre,
@@ -207,14 +224,10 @@ function C_Calificaciones() {
                             });
                         }
                     } catch (error) {
-                        // console.error(`Error inesperado al procesar ${val.numero}:`, error);
                     }
                 });
                 await Promise.all(promises);
             }
-
-            // newData = newData.json();
-            // console.log(newData);
             if (newData) {
                 setCalificaciones(newData);
                 setCalificacionesFiltrados(newData);
@@ -335,10 +348,10 @@ function C_Calificaciones() {
                 PDF={ImprimePDF}
                 Excel={ImprimeExcel}
             />
-            <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
-                <div className="flex flex-col justify-start p-3">
-                    <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
-                        <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0 pr-4">
+            <div className='container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y'>
+                <div className='flex flex-col justify-start p-3'>
+                    <div className='flex flex-wrap md:flex-nowrap items-start md:items-center'>
+                        <div className='order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0'>
                             <Acciones
                                 Alta={Guardar}
                                 home={home}
@@ -348,19 +361,19 @@ function C_Calificaciones() {
                                 isDisabledSave={isDisabledSave}
                             />
                         </div>
-                        <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-auto">
+                        <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
                             Actualización del Cátalogo de Calificaciones.
                         </h1>
                     </div>
                 </div>
-                <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-                    <div className="col-span-7">
+                <div className='flex flex-col items-center h-full'>
+                    <div className='w-full max-w-4xl'>
                         <div className="flex flex-col h-[calc(100%)] space-y-4">
                             <Inputs
                                 dataType={"int"}
                                 name={"bimestre"}
                                 tamañolabel={""}
-                                className={"fyo8m-select p-1.5 grow bg-[#ffffff] "}
+                                className={"fyo8m-select p-1.5 grow bg-[#ffffff] text-right"}
                                 Titulo={"Bimestre: "}
                                 type={"select"}
                                 requerido={true}
@@ -409,7 +422,7 @@ function C_Calificaciones() {
                                 />
                             )}
 
-                            {isDisabled2 && (
+                            {isDisabled2 && actividades.length > 0 && (
                                 <Inputs
                                     dataType={"int"}
                                     name={"actividad"}
@@ -427,12 +440,12 @@ function C_Calificaciones() {
                                 />
                             )}
 
-                            {isDisabled3 && (
+                            {isDisabled3 && evaluacion.length > 0 && (
                                 <Inputs
                                     dataType={"int"}
                                     name={"evaluacion"}
                                     tamañolabel={""}
-                                    className={"fyo8m-select p-1.5 grow bg-[#ffffff] "}
+                                    className={"fyo8m-select p-1.5 grow bg-[#ffffff] text-right"}
                                     Titulo={"No. Evaluación: "}
                                     type={"select"}
                                     requerido={true}
@@ -442,9 +455,9 @@ function C_Calificaciones() {
                                     isDisabled={false}
                                     maxLenght={5}
                                     arreglos={evaluacion}
-                                />
+                                /> 
                             )}
-
+ 
                             <Inputs
                                 dataType={"string"}
                                 name={"contraseña_profesor"}
@@ -460,7 +473,7 @@ function C_Calificaciones() {
                                 maxLenght={255}
                             />
 
-                            <Inputs
+                            {/* <Inputs
                                 dataType={"string"}
                                 name={"promedio_grupo"}
                                 tamañolabel={"w-full md:w-1/2"}
@@ -473,7 +486,7 @@ function C_Calificaciones() {
                                 message={"Prom. del Grupo Requerido"}
                                 isDisabled={true}
                                 maxLenght={255}
-                            />
+                            /> */}
 
 
                             <div className="flex flex-col items-center h-full">

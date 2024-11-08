@@ -48,14 +48,19 @@ function LoginPage() {
         src={iconos.fondoLogin}
         alt="Background"
         layout="fill"
-        objectFit="contain"
         objectPosition="center"
-        className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none" // Agregado pointer-events-none
-        />
-
+        className="pointer-events-non hidden md:block bg-cover bg-center h-full w-full" // Agregado pointer-events-none
+      />
+      <Image
+        src={iconos.fondoLoginMovil}
+        alt="Background"
+        layout="fill"
+        objectPosition="center"
+        className="absolute  pointer-events-none block md:hidden bg-cover bg-center h-full w-full" // Agregado para moviles
+      />
       <form
-      className="relative z-10 w-5/6 md:w-1/4 rounded-xl border shadow-xl p-6 bg-slate-200 bg-opacity-80"
-      onSubmit={onSubmit}
+        className="relative z-10 w-5/6 md:w-1/4 rounded-xl border shadow-xl p-6 bg-slate-200 bg-opacity-80"
+        onSubmit={onSubmit}
       >
         {error && (
           <p className="bg-red-500 text-white text-xs p-3 rounded-md text-center">
@@ -65,7 +70,7 @@ function LoginPage() {
         <h1 className="text-slate-900 text-2xl block mb-6 mt-4 text-center">
           Iniciar Sesión
         </h1>
-        
+
         <label className="text-slate-500 mb-2 block" htmlFor="username">
           Correo Electrónico
         </label>
@@ -100,11 +105,11 @@ function LoginPage() {
             ¿Olvidaste tu contraseña?
           </Link>
         </p>
-        
+
         <button className="w-full bg-blue-700 text-white p-3 rounded-lg hover:bg-blue-900 mt-4">
           Iniciar Sesión
         </button>
-        
+
         <div className="border-t border-gray-400 mt-4">
           <p className="text-slate-500 mt-2 mb-2 text-center">
             ¿No tienes una cuenta?

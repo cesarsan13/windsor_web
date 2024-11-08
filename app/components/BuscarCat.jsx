@@ -9,15 +9,16 @@ import {
 } from "@/app/utils/api/horarios/horarios";
 import { getCajeros } from "@/app/utils/api/cajeros/cajeros";
 import { getFormasPago } from "@/app/utils/api/formapago/formapago";
+import { getAsignaturas,getAsignaturasCasoOtro } from "@/app/utils/api/asignaturas/asignaturas";
 import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
 import { getComentarios } from "@/app/utils/api/comentarios/comentarios";
 import { getGrupos } from "@/app/utils/api/grupos/grupos";
 import { getClasesBuscaCat } from "@/app/utils/api/clases/clases";
 import { loadGlobalVariables, globalVariables } from "@/app/utils/globalfn";
 import { getProfesores } from "../utils/api/profesores/profesores";
-import { getAsignaturas } from "../utils/api/asignaturas/asignaturas";
 
 function BuscarCat({
+  deshabilitado = false,
   table,
   nameInput,
   fieldsToShow,
@@ -31,7 +32,7 @@ function BuscarCat({
   idBusqueda,
   inputWidths = { contdef: "180px", first: "100px", second: "150px" },
   accion,
-  descClassName = "flex  lg:w-52 md:w-56 sm:w-60 w-full ",
+  descClassName = "flex  md:w-56 sm:w-60 w-full ",
   contClassName = "flex flex-row ",
 }) {
   const [data, setData] = useState([]);
@@ -60,6 +61,14 @@ function BuscarCat({
         let fetchedData = [];
         setisLoading(true);
         switch (table) {
+          case "asignaturascasootro": 
+            fetchedData = await getAsignaturasCasoOtro(token, false);
+            setTiutloInput(["numero", "Descripción"]);
+            break;
+          case "asignaturas":
+            fetchedData = await getAsignaturas(token, false);
+            setTiutloInput(["numero", "Descripción"]);
+            break;
           case "alumnos":
             fetchedData = await getAlumnos(token, false);
             setTiutloInput(["numero", "Nombre"]);
@@ -218,45 +227,56 @@ function BuscarCat({
       ) : (
         <>
           <div className="flex items-center">
-            <label
-              className={`input input-bordered  input-sm md:input-md join-item text-black dark:text-white input-md flex items-center  md:mr-0`}
-            >
-              {/* {titulo} */}
+            <div>
+              <label
+                className={`input input-bordered  input-sm md:input-md join-item text-black dark:text-white input-md flex items-center  md:mr-0`}
+              >
+                {/* {titulo} */}
+                <input
+                  disabled={deshabilitado}
+                  id={nameInput[0]}
+                  name={nameInput[0]}
+                  type="text"
+                  placeholder={titulo}
+                  {...register(nameInput[0])}
+                  onKeyDown={(evt) => handleKeyDown(evt)}
+                  onBlur={onBlur}
+                  onKeyPress={(e) => {
+                    if (!/[0-9]/.test(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
+                  className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${
+                    alignRight ? "text-right" : ""
+                  } `}
+                  style={{ width: inputWidths.first }}
+                />
+              </label>
+            </div>
+            <div>
+              {" "}
+              <button
+                disabled={deshabilitado}
+                type="button"
+                className="bg-transparent join-item hover:bg-transparent border-none shadow-none dark:text-white text-black btn rounded-r-lg  max-[499px]:pl-0 max-[499px]:pr-0 mx-2 md:mx-0"
+                onClick={Buscar}
+              >
+                <i className="fa-solid fa-magnifying-glass"></i>
+              </button>
+            </div>
+            <div>
+              {" "}
               <input
-                id={nameInput[0]}
-                name={nameInput[0]}
+                disabled={deshabilitado}
+                id={nameInput[1]}
+                name={nameInput[1]}
                 type="text"
-                placeholder={titulo}
-                {...register(nameInput[0])}
-                onKeyDown={(evt) => handleKeyDown(evt)}
-                onBlur={onBlur}
-                onKeyPress={(e) => {
-                  if (!/[0-9]/.test(e.key)) {
-                    e.preventDefault();
-                  }
-                }}
-                className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${
-                  alignRight ? "text-right" : ""
-                } `}
-                style={{ width: inputWidths.first }}
+                readOnly={true}
+                {...register(nameInput[1])}
+                className={`${descClassName} input input-bordered  input-sm md:input-md join-item rounded-r-md bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md w-full `}
+                style={{ maxWidth: "380px" }}
               />
-            </label>
-            <button
-              type="button"
-              className="bg-transparent join-item hover:bg-transparent border-none shadow-none dark:text-white text-black btn rounded-r-lg  max-[499px]:pl-0 max-[499px]:pr-0 mx-2 md:mx-0"
-              onClick={Buscar}
-            >
-              <i className="fa-solid fa-magnifying-glass"></i>
-            </button>
-            <input
-              id={nameInput[1]}
-              name={nameInput[1]}
-              type="text"
-              readOnly={true}
-              {...register(nameInput[1])}
-              className={`${descClassName} input input-bordered  input-sm md:input-md join-item rounded-r-md bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md w-full `}
-              style={{ maxWidth: "380px" }}
-            />
+            </div>
           </div>
         </>
       )}

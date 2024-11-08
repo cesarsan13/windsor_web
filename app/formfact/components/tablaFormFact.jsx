@@ -19,7 +19,7 @@ function TablaFormFact({
     setFormFact(formFact);
     setAccion(accion);
     setCurrentId(formFact.numero_forma);
-    if (evt.target.attributes.name.value !== "btn_actualiza_formato") {
+    if (accion !== "ActualizaFormato") {
       showModal(true);
     } else {
       fetchFacturasFormato(formFact.numero_forma);
@@ -52,8 +52,7 @@ function TablaFormFact({
                   <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                     <div
                       className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
-                      data-tip={`Ver`}
-                      name="btn_ver"
+                      data-tip={`Ver`}                      
                       onClick={(evt) => tableAction(evt, item, `Ver`)}
                     >
                       <Image src={iconos.ver} alt="Ver" />
@@ -62,8 +61,7 @@ function TablaFormFact({
                   <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                     <div
                       className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
-                      data-tip={`Editar`}
-                      name="btn_editar"
+                      data-tip={`Editar`}                      
                       onClick={(evt) => tableAction(evt, item, `Editar`)}
                     >
                       <Image src={iconos.editar} alt="Editar" />
@@ -72,8 +70,7 @@ function TablaFormFact({
                   <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                     <div
                       className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
-                      data-tip={`Eliminar ${item.numero_forma}`}
-                      name="btn_elimina"
+                      data-tip={`Eliminar ${item.numero_forma}`}                    
                       onClick={(evt) => tableAction(evt, item, "Eliminar")}
                     >
                       <Image src={iconos.eliminar} alt="Eliminar" />
@@ -82,8 +79,7 @@ function TablaFormFact({
                   <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                     <div
                       className="hidden sm:hidden md:block lg:block kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
-                      data-tip={`Actualizar Formato`}
-                      name="btn_actualiza_formato"
+                      data-tip={`Actualizar Formato`}                      
                       onClick={(evt) =>
                         tableAction(evt, item, "ActualizaFormato")
                       }

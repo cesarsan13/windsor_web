@@ -5,8 +5,8 @@ import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 function Acciones({ home, Alta }) {
   const images = [
+    { src: iconos.procesa, alt: "Guardar", tooltipTitle: "Cambiar Número", onClick: Alta },
     { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home },
-    { src: iconos.guardar, alt: "Guardar", tooltipTitle: "Cambiar Ciclo", onClick: Alta },
   ];
 
   const ImageTooltip = ({ src, tooltipTitle, onClick }) => {
