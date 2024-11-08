@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalComentarios from "./components/ModalComentarios";
@@ -36,10 +36,14 @@ function Comentarios() {
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
+  const comentariosRef = useRef(formasComentarios);
   const [busqueda, setBusqueda] = useState({
     tb_numero: "",
     tb_comentario1: "",
   });
+  useEffect(() => {
+    comentariosRef.current = formasComentarios; // Actualiza el ref cuando alumnos cambia
+  }, [formasComentarios]);
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
@@ -84,10 +88,10 @@ function Comentarios() {
     const { tb_numero, tb_comentario1 } = busqueda;
 
     if (tb_numero === "" && tb_comentario1 === "") {
-      setFormaComentariosFiltrados(formasComentarios);
+      setFormaComentariosFiltrados(comentariosRef.current);
       return;
     }
-    const infoFiltrada = formasComentarios.filter((formaComentarios) => {
+    const infoFiltrada = comentariosRef.current.filter((formaComentarios) => {
       const coincideID = tb_numero
         ? formaComentarios["numero"].toString().includes(tb_numero)
         : true;
@@ -102,6 +106,15 @@ function Comentarios() {
     setFormaComentariosFiltrados(infoFiltrada);
   }, [busqueda, formasComentarios]);
 
+  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
+
+  useEffect(() => {
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar);
+    };
+  }, [busqueda, debouncedBuscar]);
+
   useEffect(() => {
     const debouncedBuscar = debounce(Buscar, 500);
     debouncedBuscar();
@@ -109,6 +122,28 @@ function Comentarios() {
       clearTimeout(debouncedBuscar);
     };
   }, [busqueda, Buscar]);
+
+  useEffect(() => {
+    console.log("Errors => ",errors);
+    let strError = "";
+    console.log("Numero de propiedades => ",Object.keys(errors).length);
+    console.log("Propiedades:", Object.getOwnPropertyNames(errors));
+    console.log("Enumerables:", Object.keys(errors));
+    if(Object.keys(errors).length > 0){
+      Object.keys(errors).forEach((propiedad) => {
+        console.log(`Propiedad: ${propiedad}, Valor: ${errors[propiedad]}`);
+        if(errors[propiedad].message != "" && errors[propiedad].message != null){
+          strError += errors[propiedad]+".\n";
+        }
+      });
+      console.log("strError => ", strError);
+      showSwal(
+        "Oppss!",
+        strError,
+        "error"
+      );
+    }
+  }, [errors]);
 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault();
@@ -259,7 +294,7 @@ function Comentarios() {
         { header: "Generales", dataKey: "generales" },
       ],
 
-      nombre: "Comentarios",
+      nombre: "Catalogo_Comentarios",
     };
     ImprimirExcel(configuracion);
   };
@@ -373,7 +408,7 @@ function Comentarios() {
         CerrarView={CerrarView}
       />
 
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
@@ -404,15 +439,21 @@ function Comentarios() {
               handleBusquedaChange={handleBusquedaChange}
               busqueda={busqueda}
             />
-            <TablaComentarios
-              isLoading={isLoading}
-              formaComentariosFiltrados={formaComentariosFiltrados}
-              showModal={showModal}
-              setFormaComentarios={setFormaComentarios}
-              setAccion={setAccion}
-              setCurrentId={setCurrentId}
-              
-            />
+            {status === "loading" ||
+              (!session ? (
+                <></>
+              ) : (
+                <TablaComentarios
+                  isLoading={isLoading}
+                  formaComentariosFiltrados={formaComentariosFiltrados}
+                  showModal={showModal}
+                  setFormaComentarios={setFormaComentarios}
+                  setAccion={setAccion}
+                  setCurrentId={setCurrentId}
+                  
+                />
+              ))}
+            
           </div>
         </div>
       </div>

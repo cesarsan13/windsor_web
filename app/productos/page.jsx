@@ -463,7 +463,7 @@ function Productos() {
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={imprimirPDF}
-        Excel={ImprimirExcel}
+        Excel={imprimirEXCEL}
         CerrarView={CerrarView}
       />
       <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
