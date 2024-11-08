@@ -39,10 +39,10 @@ function ConcentradoCalificaciones() {
     const [animateLoading, setAnimateLoading] = useState(false);
     const [pdfPreview, setPdfPreview] = useState(false);
     const [pdfData, setPdfData] = useState("");
-    //const [dataEncabezado, setDataEncabezado] = useState([]);
-    const [ dataCaliAlumnosBody, setDataCaliAlumnosBody] = useState([]);
+    const [alumnosCalificaciones, setalumnosCalificaciones] = useState([]);
 
-    const dataEncabezado = [];
+    let dataCaliAlumnosBody = [];
+    let dataEncabezado = [];
 
     const {
         register,
@@ -83,11 +83,34 @@ function ConcentradoCalificaciones() {
         };
     });
 
+    const eliminarArreglosDuplicados = (arr) => {
+        const arreglosUnicos = [];
+        const conjuntosUnicos = new Set();
+    
+        arr.forEach(subArray => {
+            // Convertir cada subarreglo a una cadena única para poder compararlos
+            const cadena = JSON.stringify(subArray);
+            
+            // Si no está en el conjunto, agregarlo
+            if (!conjuntosUnicos.has(cadena)) {
+                conjuntosUnicos.add(cadena); // Marcar como encontrado
+                arreglosUnicos.push(subArray); // Agregar al arreglo de únicos
+            }
+        });
+        
+        return arreglosUnicos;
+    };
+
     const handleVerClick = () => {
+        const resultadoEnc = dataEncabezado.filter((item, pos, arr) => 
+            arr.findIndex(i => i.descripcion === item.descripcion) === pos
+        );
+
+        const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBody);
+
+        console.log("res", resultadoBody);
         setAnimateLoading(true);
         cerrarModalVista();
-        console.log(grupo.numero, bimestre);
-        console.log("body", dataCaliAlumnosBody);
         if (grupo.numero === 0 && bimestre === 0){
             showSwal('Error', 'Debes de seleccionar el grupo y el bimestre', 'error');
             setTimeout(() => {
@@ -98,28 +121,30 @@ function ConcentradoCalificaciones() {
             }, 500);
         }
         else {
-            console.log(dataEncabezado);
-            let posicionX = 45; 
-            const incrementoX = 25;
-
+            let posicionX = 38; 
+            const incrementoX = 9;
+        
             const configuracion = {
               Encabezado: {
                 Nombre_Aplicacion: "Sistema de Control Escolar",
-                Nombre_Reporte: "Reporte Altas Bajas de Alumnos por Periodo",
+                Nombre_Reporte: "Reporte de Concentrado de Calificaciones",
                 Nombre_Usuario: `Usuario: ${session.user.name}`,
+                Datos_Grupo:  `Grupo: ${grupo.horario}     Bimestre: ${bimestre}`,
               },
+              body: resultadoBody
             };
+
+            const reporte = new ReportePDF(configuracion, "Landscape");
+            const {body} = configuracion;
+
             const Enca1 = (doc) => {
                 if (!doc.tiene_encabezado) {
-                  doc.imprimeEncabezadoPrincipalH();
+                  doc.imprimeEncabezadoPrincipalHConcentradoCal();
                   doc.nextRow(12);
-                  doc.ImpPosX('Num.', 14, doc.tw_ren);
-                  doc.ImpPosX('Alumno', 28, doc.tw_ren);
-                  //datosEncabezado.forEach((desc) => {
-                  //  doc.ImpPosX(desc.descripcion.toString(), 45, doc.tw_ren);
-                  //});
-                  dataEncabezado.forEach((desc) => {
-                      doc.ImpPosX(desc.descripcion, posicionX, doc.tw_ren);
+                  //doc.ImpPosX('Num.', 14, doc.tw_ren);
+                  doc.ImpPosX('Alumno', 14, doc.tw_ren);
+                  resultadoEnc.forEach((desc) => {
+                      doc.ImpPosX(desc.descripcion, posicionX, doc.tw_ren, 3);
                       posicionX += incrementoX;
                   });
                   doc.nextRow(4);
@@ -131,8 +156,19 @@ function ConcentradoCalificaciones() {
                   doc.tiene_encabezado = true;
                 }
               };
-              const reporte = new ReportePDF(configuracion, "Landscape");
+            Enca1(reporte);
+            body.forEach((arreglo2, index) => {
+                let posicionBody = 14;
+              arreglo2.forEach((valor, idx) => {
+                  reporte.ImpPosX(valor, posicionBody, reporte.tw_ren, 4);
+                  posicionBody+= incrementoX;
+              })
               Enca1(reporte);
+              if (reporte.tw_ren >= reporte.tw_endRenH) {
+                  reporte.pageBreakH();
+                  Enca1(reporte);
+              }
+            })
             
             setTimeout(() => {
               const pdfData = reporte.doc.output("datauristring");
@@ -169,7 +205,6 @@ function ConcentradoCalificaciones() {
       setPdfData("");
       document.getElementById("modalVConCal").close();
     };
-    
 
     const home = () => {
         router.push("/");
@@ -214,9 +249,7 @@ function ConcentradoCalificaciones() {
                 </div>
                 <div className="flex flex-col items-center h-full">
                     <div className="w-full max-w-4xl">
-                        {/*<div className="flex flex-row justify-center space-x-4 w-[calc(100%)]">*/}
                         <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 w-full">
-
                             <BuscarCat
                                 table="horarios"
                                 itemData={[]}
@@ -262,9 +295,9 @@ function ConcentradoCalificaciones() {
                             showModal={showModal}
                             setAccion={setAccion}
                             setAlumnoData = {setAlumnoData}
-                            setDataEncabezado = {dataEncabezado}
-                            setDataCaliAlumnosBody = {setDataCaliAlumnosBody}
-
+                            dataEncabezado = {dataEncabezado}
+                            dataCaliAlumnosBody = {dataCaliAlumnosBody}
+                            setalumnosCalificaciones = { setalumnosCalificaciones}
                         />
                     </div>
                 </div>

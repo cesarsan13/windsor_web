@@ -203,6 +203,38 @@ export class ReportePDF {
     }
   }
 
+  //Para la impresion Horizontal para concentrado calificaciones
+  imprimeEncabezadoPrincipalHConcentradoCal() {
+    const { Encabezado } = this.configuracion;
+
+    //la imagen tiene que ser en png para que la imprima
+    const ImagenL = "resources/Logo_Interaccion.png";
+    if (!this.tiene_encabezado) {
+      this.doc.addImage(ImagenL, "PNG", 10, 10, 26, 25);
+      this.setFontSize(14);
+      this.setTw_Ren(16);
+      this.ImpPosX(Encabezado.Nombre_Aplicacion, 35, this.tw_ren);
+      this.setFontSize(10);
+      this.nextRow(6);
+      this.ImpPosX(Encabezado.Nombre_Reporte, 35, this.tw_ren);
+      this.nextRow(6);
+      this.setFontSize(10);
+      this.ImpPosX(Encabezado.Nombre_Usuario, 35, this.tw_ren);
+      this.nextRow(6);
+      this.setFontSize(10);
+      this.ImpPosX(Encabezado.Datos_Grupo, 35, this.tw_ren);
+      const date = new Date();
+      const dateStr = formatDate(date);
+      const timeStr = formatTime(date);
+      this.setTw_Ren(16);
+      this.ImpPosX(`Fecha: ${dateStr}`, 250, this.tw_ren);
+      this.nextRow(6);
+      this.ImpPosX(`Hora: ${timeStr}`, 250, this.tw_ren);
+      this.nextRow(6);
+      this.ImpPosX(`Hoja: ${this.getNumberPages()}`, 250, this.tw_ren);
+    }
+  }
+
   //Guarda el reporte (rrecibe como parametro el nombre del reporte)
   guardaReporte(Nombre) {
     this.doc.save(`${Nombre}.pdf`);
