@@ -123,27 +123,27 @@ function Comentarios() {
     };
   }, [busqueda, Buscar]);
 
-  useEffect(() => {
-    console.log("Errors => ",errors);
-    let strError = "";
-    console.log("Numero de propiedades => ",Object.keys(errors).length);
-    console.log("Propiedades:", Object.getOwnPropertyNames(errors));
-    console.log("Enumerables:", Object.keys(errors));
-    if(Object.keys(errors).length > 0){
-      Object.keys(errors).forEach((propiedad) => {
-        console.log(`Propiedad: ${propiedad}, Valor: ${errors[propiedad]}`);
-        if(errors[propiedad].message != "" && errors[propiedad].message != null){
-          strError += errors[propiedad]+".\n";
-        }
-      });
-      console.log("strError => ", strError);
-      showSwal(
-        "Oppss!",
-        strError,
-        "error"
-      );
-    }
-  }, [errors]);
+  // useEffect(() => {
+  //   console.log("Errors => ",errors);
+  //   let strError = "";
+  //   console.log("Numero de propiedades => ",Object.keys(errors).length);
+  //   console.log("Propiedades:", Object.getOwnPropertyNames(errors));
+  //   console.log("Enumerables:", Object.keys(errors));
+  //   if(Object.keys(errors).length > 0){
+  //     Object.keys(errors).forEach((propiedad) => {
+  //       console.log(`Propiedad: ${propiedad}, Valor: ${errors[propiedad]}`);
+  //       if(errors[propiedad].message != "" && errors[propiedad].message != null){
+  //         strError += errors[propiedad]+".\n";
+  //       }
+  //     });
+  //     console.log("strError => ", strError);
+  //     showSwal(
+  //       "Oppss!",
+  //       strError,
+  //       "error"
+  //     );
+  //   }
+  // }, [errors]);
 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault();
@@ -320,6 +320,7 @@ function Comentarios() {
       }
     }
     res = await guardaComentarios(session.user.token, data, accion);
+    console.log("Res => ",res);
     if (res.status) {
       if (accion === "Alta") {
         data.numero = res.data;
@@ -361,6 +362,9 @@ function Comentarios() {
           }
         }
       }
+      showSwal(res.alert_title, res.alert_text, res.alert_icon);
+      showModal(false);
+    }else{
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
     }
