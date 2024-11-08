@@ -27,7 +27,7 @@ function Comentarios() {
   const { data: session, status } = useSession();
   const [formasComentarios, setFormasComentarios] = useState([]);
   const [formaComentarios, setFormaComentarios] = useState({});
-  const [formaComentariosFiltrados, setFormaComentariosFiltrados] = useState([]);
+  const [formaComentariosFiltrados, setFormaComentariosFiltrados] = useState(null);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
@@ -44,46 +44,6 @@ function Comentarios() {
   useEffect(() => {
     comentariosRef.current = formasComentarios; // Actualiza el ref cuando alumnos cambia
   }, [formasComentarios]);
-  useEffect(() => {
-    if (status === "loading" || !session) {
-      return;
-    }
-    const fetchData = async () => {
-      setisLoading(true);
-      const { token } = session.user;
-      const data = await getComentarios(token, bajas);
-      setFormasComentarios(data);
-      setFormaComentariosFiltrados(data);
-      setisLoading(false);
-    };
-    fetchData();
-  }, [session, status, bajas]);
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      numero: formaComentarios.numero,
-      comentario_1: formaComentarios.comentario_1,
-      comentario_2: formaComentarios.comentario_2,
-      comentario_3: formaComentarios.comentario_3,
-      generales: formaComentarios.generales,
-    },
-  });
-  useEffect(() => {
-    reset({
-      numero: formaComentarios.numero,
-      comentario_1: formaComentarios.comentario_1,
-      comentario_2: formaComentarios.comentario_2,
-      comentario_3: formaComentarios.comentario_3,
-      generales: formaComentarios.generales,
-    });
-  }, [formaComentarios, reset]);
-
-
   const Buscar = useCallback(() => {
     const { tb_numero, tb_comentario1 } = busqueda;
 
@@ -123,27 +83,49 @@ function Comentarios() {
     };
   }, [busqueda, Buscar]);
 
-  // useEffect(() => {
-  //   console.log("Errors => ",errors);
-  //   let strError = "";
-  //   console.log("Numero de propiedades => ",Object.keys(errors).length);
-  //   console.log("Propiedades:", Object.getOwnPropertyNames(errors));
-  //   console.log("Enumerables:", Object.keys(errors));
-  //   if(Object.keys(errors).length > 0){
-  //     Object.keys(errors).forEach((propiedad) => {
-  //       console.log(`Propiedad: ${propiedad}, Valor: ${errors[propiedad]}`);
-  //       if(errors[propiedad].message != "" && errors[propiedad].message != null){
-  //         strError += errors[propiedad]+".\n";
-  //       }
-  //     });
-  //     console.log("strError => ", strError);
-  //     showSwal(
-  //       "Oppss!",
-  //       strError,
-  //       "error"
-  //     );
-  //   }
-  // }, [errors]);
+  useEffect(() => {
+    
+    const fetchData = async () => {
+      setisLoading(true);
+      const { token } = session.user;
+      const data = await getComentarios(token, bajas);
+      setFormasComentarios(data);
+      setFormaComentariosFiltrados(data);
+      setisLoading(false);
+    };
+    if (status === "loading" || !session) {
+      return;
+    }
+    fetchData();
+  }, [session, status, bajas]);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      numero: formaComentarios.numero,
+      comentario_1: formaComentarios.comentario_1,
+      comentario_2: formaComentarios.comentario_2,
+      comentario_3: formaComentarios.comentario_3,
+      generales: formaComentarios.generales,
+    },
+  });
+  useEffect(() => {
+    reset({
+      numero: formaComentarios.numero,
+      comentario_1: formaComentarios.comentario_1,
+      comentario_2: formaComentarios.comentario_2,
+      comentario_3: formaComentarios.comentario_3,
+      generales: formaComentarios.generales,
+    });
+  }, [formaComentarios, reset]);
+
+
+  
+
 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault();
@@ -294,7 +276,7 @@ function Comentarios() {
         { header: "Generales", dataKey: "generales" },
       ],
 
-      nombre: "Catalogo_Comentarios",
+      nombre: "Comentarios_",
     };
     ImprimirExcel(configuracion);
   };
@@ -365,8 +347,7 @@ function Comentarios() {
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
     }else{
-      showSwal(res.alert_title, res.alert_text, res.alert_icon);
-      showModal(false);
+      showSwal(res.alert_title, res.alert_text, res.alert_icon,"my_modal_3");
     }
   });
 
@@ -449,6 +430,7 @@ function Comentarios() {
               ) : (
                 <TablaComentarios
                   isLoading={isLoading}
+                  session={session}
                   formaComentariosFiltrados={formaComentariosFiltrados}
                   showModal={showModal}
                   setFormaComentarios={setFormaComentarios}
