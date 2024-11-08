@@ -1,20 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import Loading from "@/app/components/loading";
-import NoData from "@/app/components/NoData";
-import Image from "next/image";
-import iconos from "@/app/utils/iconos";
-import { formatNumber, globalVariables, loadGlobalVariables, soloDecimales } from "@/app/utils/globalfn";
-import { showSwal } from "@/app/utils/alerts";
-import BuscarCat from "@/app/components/BuscarCat";
 import Inputs from "@/app/concentradoCalificaciones/components/InputMateria";
+import Inputs from "@/app/concentradoCalificaciones/components/AccionesDetalle";
 import { useForm } from "react-hook-form";
 import DetallesMaterias from "./TablaDetalles";
 import {
     getActividadesXHorarioXAlumnoXMateriaXBimestre,
     getActividadesDetalles
 } from "@/app/utils/api/concentradoCalificaciones/concentradoCalificaciones";
-import ModalVistaPreviaDetalleCal from "./components/ModalVistaPreviaDetalleCal";
 
 function Modal_Detalles_Actividades({
     alumnoData,
@@ -68,30 +61,32 @@ function Modal_Detalles_Actividades({
                     </div>
                     <fieldset>
                         <div className="flex flex-row justify-center items-center h-full">
-                                <Inputs
-                                    dataType={"int"}
-                                    name={"Materias"}
-                                    tamañolabel={""}
-                                    className={"fyo8m-select p-1 grow bg-[#ffffff] "}
-                                    Titulo={"Materia: "}
-                                    type={"select"}
-                                    requerido={true}
-                                    errors={errors}
-                                    register={register}
-                                    message={"Materia Requerido"}
-                                    isDisabled={false}
-                                    maxLenght={5}
-                                    arreglos={materiasReg}
-                                />
-                                <div>
-                                <button
-                                  type="button"
-                                  className="bg-transparent join-item hover:bg-transparent border-none shadow-none dark:text-white text-black btn rounded-r-lg max-[499px]:pb-4 max-[768px]:pb-4 max-[499px]:pt-0 max-[499px]:pl-0 max-[499px]:pr-0"
-                                  onClick={Buscar}
-                                >
-                                  <i className="fa-solid fa-magnifying-glass"></i>
-                                </button>
-                                </div>
+                            
+                            <Inputs
+                                dataType={"int"}
+                                name={"Materias"}
+                                tamañolabel={""}
+                                className={"fyo8m-select p-1 grow bg-[#ffffff] "}
+                                Titulo={"Materia: "}
+                                type={"select"}
+                                requerido={true}
+                                errors={errors}
+                                register={register}
+                                message={"Materia Requerido"}
+                                isDisabled={false}
+                                maxLenght={5}
+                                arreglos={materiasReg}
+                            />
+                            
+                            {/*<button
+                              type="button"
+                              className="bg-transparent join-item hover:bg-transparent border-none shadow-none dark:text-white text-black btn rounded-r-lg max-[499px]:pb-4 max-[768px]:pb-4 max-[499px]:pt-0 max-[499px]:pl-0 max-[499px]:pr-0"
+                              onClick={Buscar}
+                            >
+                              <i className="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                            </div> */}
+                                
                         </div>
                         <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 w-full mt-10">
                             <div className="w-4/5">
@@ -103,6 +98,7 @@ function Modal_Detalles_Actividades({
                                  materiaD = {M}
                                  bimestre = {bimestre}
                                  dataEncabezadoDetalles = {dataEncabezadoDetalles}
+                                 dataCaliAlumnosBodyDetalles={dataCaliAlumnosBodyDetalles}
                                 />
                             </div>
                         </div>
