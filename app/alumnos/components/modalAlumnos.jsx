@@ -147,6 +147,8 @@ function ModalAlumnos({
             case "email":
               setActiveTab(2);
               break;
+            case "rfc_factura":
+              setActiveTab(7);
             default:
               break;
           }
