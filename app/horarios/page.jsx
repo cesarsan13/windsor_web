@@ -26,7 +26,7 @@ function Horarios() {
   const { data: session, status } = useSession();
   const [horarios, setHorarios] = useState(null);
   const [horario, setHorario] = useState({});
-  const [horariosFiltrados, setHorariosFiltrados] = useState([]);
+  const [horariosFiltrados, setHorariosFiltrados] = useState(null);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");

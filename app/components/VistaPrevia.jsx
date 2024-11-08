@@ -3,6 +3,7 @@ import Tooltip from "@/app/components/tooltip";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
+import "@react-pdf-viewer/core/lib/styles/index.css";
 
 function VistaPrevia({
   id,
