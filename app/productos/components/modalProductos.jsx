@@ -90,10 +90,10 @@ function ModalProductos({
   };
   return (
     <dialog id="my_modal_3" className="modal">
-      <div className="modal-box">
+      <div className="modal-box bg-base-200">
         <form action="" onSubmit={onSubmit}>
-          <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
-            <h3 className="font-bold text-lg">{titulo}</h3>
+          <div className="sticky -top-6 flex justify-between items-center bg-base-200 w-full h-10 z-10 mb-5">
+            <h3 className="font-bold text-lg text-black dark:text-white">{titulo}</h3>
             <div className="flex space-x-2 items-center">
               <div
                 className={`tooltip tooltip-bottom ${
@@ -118,7 +118,7 @@ function ModalProductos({
               </div>
               <button
                 type="button"
-                className="btn btn-sm btn-circle btn-ghost"
+                className="btn btn-sm btn-circle btn-ghost text-black dark:text-white"
                 onClick={() => document.getElementById("my_modal_3").close()}
               >
                 ✕

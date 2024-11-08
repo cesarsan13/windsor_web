@@ -1,5 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
+import { formatDate, formatFecha, formatTime } from "../../globalfn";
 
 export const getProductos = async (token, baja) => {
   let url = "";
@@ -135,7 +136,11 @@ export const Imprimir = (configuracion) => {
       Enca1(newPDF);
     }
   });
-  newPDF.guardaReporte("Productos");
+  const date = new Date()
+  const dateStr = formatDate(date)
+  const timeStr = formatTime(date)
+  console.log("dateStr:",dateStr," timeStr:",timeStr)
+  newPDF.guardaReporte(`Productos_${dateStr.replaceAll("/","")}_${timeStr.replaceAll(":","")}`);
 };
 
 export const ImprimirExcel = (configuracion) => {
@@ -146,5 +151,8 @@ export const ImprimirExcel = (configuracion) => {
   newExcel.setColumnas(columns);
   newExcel.setCondition("cam_precio", (value) => value === 1);
   newExcel.addData(body);
-  newExcel.guardaReporte(nombre);
+  const date = new Date()
+  const dateStr = formatDate(date)
+  const timeStr = formatTime(date)  
+  newExcel.guardaReporte(`${nombre}_${dateStr.replaceAll("/","")}_${timeStr.replaceAll(":","")}`);
 };
