@@ -52,9 +52,9 @@ function ModalFormaPago({
   };
   return (
     <dialog id="my_modal_3" className="modal">
-      <div className="modal-box">
+      <div className="modal-box bg-base-200">
         <form onSubmit={onSubmit}>
-          <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
+          <div className="sticky -top-6 flex justify-between items-center bg-base-200 dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
             <h3 className="font-bold text-lg">{titulo}</h3>
             <div className="flex space-x-2 items-center">
               <div
@@ -96,7 +96,7 @@ function ModalFormaPago({
                 className={"w-3/6 text-right"}
                 Titulo={"Numero: "}
                 type={"text"}
-                requerido={true}
+                requerido={false}
                 errors={errors}
                 register={register}
                 message={"id Requerido"}
@@ -110,7 +110,7 @@ function ModalFormaPago({
                 className={"w-4/6"}
                 Titulo={"Descripcion: "}
                 type={"text"}
-                requerido={true}
+                requerido={false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -127,7 +127,7 @@ function ModalFormaPago({
                 className={"w-4/6 text-right"}
                 Titulo={"Comision:"}
                 type={"text"}
-                requerido={true}
+                requerido={false}
                 errors={errors}
                 register={register}
                 message={"comision requerid"}

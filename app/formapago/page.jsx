@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalFormaPago from "@/app/formapago/components/ModalFormaPago";
@@ -24,7 +24,7 @@ function FormaPago() {
   const { data: session, status } = useSession();
   const [formasPago, setFormasPago] = useState([]);
   const [formaPago, setFormaPago] = useState({});
-  const [formaPagosFiltrados, setFormaPagosFiltrados] = useState([]);
+  const [formaPagosFiltrados, setFormaPagosFiltrados] = useState(null);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
@@ -34,11 +34,49 @@ function FormaPago() {
   const [pdfData, setPdfData] = useState("");
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
   const [animateLoading, setAnimateLoading] = useState(false);
+  const formasPagoRef = useRef(formasPago);
+
 
   useEffect(() => {
-    if (status === "loading" || !session) {
+    formasPagoRef.current = formasPago; // Actualiza el ref cuando alumnos cambia
+  }, [formasPago]);
+
+  const Buscar = useCallback(() => {
+    const { tb_id, tb_desc } = busqueda;
+    if (tb_id === "" && tb_desc === "") {
+      setFormaPagosFiltrados(formasPagoRef.current);
       return;
     }
+    const infoFiltrada = formasPagoRef.current.filter((formapago) => {
+      const coincideId = tb_id
+        ? formapago["numero"].toString().includes(tb_id)
+        : true;
+      const coincideDescripcion = tb_desc
+        ? formapago.descripcion.toLowerCase().includes(tb_desc.toLowerCase())
+        : true;
+      return coincideId && coincideDescripcion;
+    });
+    setFormaPagosFiltrados(infoFiltrada);
+  }, [busqueda, formasPago]);
+
+  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
+
+  // useEffect(() => {
+  //   const debouncedBuscar = debounce(Buscar, 500);
+  //   debouncedBuscar();
+  //   return () => {
+  //     clearTimeout(debouncedBuscar);
+  //   };
+  // }, [busqueda, Buscar]);
+
+  useEffect(() => {
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar);
+    };
+  }, [busqueda, debouncedBuscar]);
+
+  useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
       const { token } = session.user;
@@ -47,6 +85,9 @@ function FormaPago() {
       setFormaPagosFiltrados(data);
       setisLoading(false);
     };
+    if (status === "loading" || !session) {
+      return;
+    }
     fetchData();
   }, [session, status, bajas]);
 
@@ -73,31 +114,7 @@ function FormaPago() {
       cue_banco: formaPago.cue_banco,
     });
   }, [formaPago, reset]);
-  const Buscar = useCallback(() => {
-    const { tb_id, tb_desc } = busqueda;
-    if (tb_id === "" && tb_desc === "") {
-      setFormaPagosFiltrados(formasPago);
-      return;
-    }
-    const infoFiltrada = formasPago.filter((formapago) => {
-      const coincideId = tb_id
-        ? formapago["numero"].toString().includes(tb_id)
-        : true;
-      const coincideDescripcion = tb_desc
-        ? formapago.descripcion.toLowerCase().includes(tb_desc.toLowerCase())
-        : true;
-      return coincideId && coincideDescripcion;
-    });
-    setFormaPagosFiltrados(infoFiltrada);
-  }, [busqueda, formasPago]);
-
-  useEffect(() => {
-    const debouncedBuscar = debounce(Buscar, 500);
-    debouncedBuscar();
-    return () => {
-      clearTimeout(debouncedBuscar);
-    };
-  }, [busqueda, Buscar]);
+  
   const limpiarBusqueda = (evt) => {
     evt.preventDefault();
     setBusqueda({ tb_id: "", tb_desc: "" });
@@ -180,6 +197,8 @@ function FormaPago() {
       }
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
+    }else{
+      showSwal(res.alert_title, res.alert_text, res.alert_icon,"my_modal_3");
     }
   });
   const showModal = (show) => {
@@ -227,7 +246,7 @@ function FormaPago() {
         { header: "Aplicacion", dataKey: "aplicacion" },
         { header: "Cue. Banco", dataKey: "cue_banco" },
       ],
-      nombre: "Forma Pagos",
+      nombre: "FormaPagos_",
     };
     ImprimirExcel(configuracion);
   };
@@ -335,7 +354,7 @@ function FormaPago() {
         CerrarView={CerrarView}
       />
 
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
@@ -363,14 +382,20 @@ function FormaPago() {
               handleBusquedaChange={handleBusquedaChange}
               busqueda={busqueda}
             />
-            <TablaFormaPago
-              isLoading={isLoading}
-              formaPagosFiltrados={formaPagosFiltrados}
-              showModal={showModal}
-              setFormaPago={setFormaPago}
-              setAccion={setAccion}
-              setCurrentId={setCurrentId}
-            />
+             {status === "loading" ||
+              (!session ? (
+                <></>
+              ) : (
+              <TablaFormaPago
+                session={session}
+                isLoading={isLoading}
+                formaPagosFiltrados={formaPagosFiltrados}
+                showModal={showModal}
+                setFormaPago={setFormaPago}
+                setAccion={setAccion}
+                setCurrentId={setCurrentId}
+              />
+            ))}
           </div>
         </div>
       </div>
