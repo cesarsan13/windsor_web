@@ -108,7 +108,7 @@ function BuscarCat({
             fetchedData = [];
             break;
           case "profesores":
-            fetchedData = await getProfesores(token, "");
+            fetchedData = await getProfesores(token, false);
             setTiutloInput(["numero", "nombre"]);
             break;
           case "materias":
