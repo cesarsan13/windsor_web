@@ -1,5 +1,7 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
+import { formatDate, formatTime, formatFecha, format_Fecha_String } from "../../globalfn";
+
 
 export const getAsignaturas = async (token, baja) => {
     let url = "";
@@ -131,7 +133,14 @@ export const getAsignaturas = async (token, baja) => {
         Enca1(newPDF);
       }
     });
-    newPDF.guardaReporte("Asignaturas");
+    const date = new Date();
+    const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+    const timeStr = formatTime(date).replace(/:/g, "");
+
+  newPDF.guardaReporte(`Asignaturas_${dateStr}${timeStr}`);
   };
   
   export const ImprimirExcel = (configuracion) => {
@@ -141,6 +150,12 @@ export const getAsignaturas = async (token, baja) => {
     const { nombre } = configuracion;
     newExcel.setColumnas(columns);
     newExcel.addData(body);
-    newExcel.guardaReporte(nombre);
+    const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+  newExcel.guardaReporte(`${nombre}${dateStr}${timeStr}`);
   };
   
