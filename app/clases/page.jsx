@@ -244,9 +244,9 @@ function Clases() {
     } else {
       setisLoadingButton(false);
       showModal(false);
-      await showSwalAndWait(res.alert_title, res.alert_text, res.alert_icon);
+      await showSwalAndWait(res.alert_title, res.alert_text, res.alert_icon, 8000);
       showModal(true);
-    }
+    };6
   });
 
   const showModal = (show) => {
