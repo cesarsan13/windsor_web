@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useRef, useMemo } from "react";
 import Acciones from "@/app/clases/components/Acciones";
 import TablaClases from "@/app/clases/components/tablaClases";
 import { useRouter } from "next/navigation";
@@ -17,7 +17,7 @@ import Busqueda from "@/app/clases/components/Busqueda";
 import ModalClases from "@/app/clases/components/modalClases";
 import { ReportePDF } from "../utils/ReportesPDF";
 import { showSwal, confirmSwal, showSwalAndWait } from "../utils/alerts";
-import { debounce } from "../utils/globalfn";
+import { debounce, obtenerFechaYHoraActual } from "../utils/globalfn";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 
 function Clases() {
@@ -25,7 +25,7 @@ function Clases() {
   const { data: session, status } = useSession();
   const [clases, setClases] = useState([]);
   const [clase, setClase] = useState({});
-  const [clasesFiltrados, setClasesFiltrados] = useState([]);
+  const [clasesFiltrados, setClasesFiltrados] = useState(null);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
@@ -36,6 +36,7 @@ function Clases() {
   const [animateLoading, setAnimateLoading] = useState(false);
   const [isLoadingButton, setisLoadingButton] = useState(false);
   const [isLoading, setisLoading] = useState(false);
+  const clasesRef = useRef(clases);
   const [currentID, setCurrentId] = useState({
     grupo: "",
     materia: "",
@@ -48,9 +49,9 @@ function Clases() {
     tb_profesor: "",
   });
   useEffect(() => {
-    if (status === "loading" || !session) {
-      return;
-    }
+    clasesRef.current = clases;
+  }, [clases]);
+  useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
       const { token } = session.user;
@@ -59,16 +60,19 @@ function Clases() {
       setClasesFiltrados(data);
       setisLoading(false);
     };
+    if (status === "loading" || !session) {
+      return;
+    }
     fetchData();
   }, [session, status, bajas]);
 
   const Buscar = useCallback(() => {
     const { tb_grupo, tb_materia, tb_profesor } = busqueda;
     if (tb_grupo === "" && tb_materia === "" && tb_profesor === "") {
-      setClasesFiltrados(clases);
+      setClasesFiltrados(clasesRef.current);
       return;
     }
-    const infoFiltrada = clases.filter((clase) => {
+    const infoFiltrada = clasesRef.current.filter((clase) => {
       const coincideGrupo = tb_grupo
         ? clase["grupo_descripcion"]?.toString().includes(tb_grupo)
         : true;
@@ -81,16 +85,16 @@ function Clases() {
       return coincideGrupo && coincideMateria && coincideProfesor;
     });
     setClasesFiltrados(infoFiltrada);
-  }, [busqueda, clases]);
+  }, [busqueda]);
 
+  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
   useEffect(() => {
-    const debouncedBuscar = debounce(Buscar, 300);
     debouncedBuscar();
     return () => {
       clearTimeout(debouncedBuscar);
     };
-  }, [busqueda, Buscar]);
+  }, [busqueda, debouncedBuscar]);
 
   const {
     register,
@@ -272,7 +276,9 @@ function Clases() {
     };
     Imprimir(configuracion);
   };
+
   const ImprimeExcel = () => {
+    const { fecha, hora } = obtenerFechaYHoraActual();
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -292,10 +298,11 @@ function Clases() {
         { header: "Sabado", dataKey: "sabado" },
         { header: "Domingo", dataKey: "domingo" },
       ],
-      nombre: "Clases",
+      nombre: `Reporte_Clases_${fecha}${hora}`,
     };
     ImprimirExcel(configuracion);
   };
+
   const handleVerClick = () => {
     setAnimateLoading(true);
     const configuracion = {
@@ -309,9 +316,9 @@ function Clases() {
       if (!doc.tiene_encabezado) {
         doc.imprimeEncabezadoPrincipalH();
         doc.nextRow(12);
-        doc.ImpPosX("Grupo", 14, doc.tw_ren, 12, "L");
-        doc.ImpPosX("Asignatura", 50, doc.tw_ren, 20, "L");
-        doc.ImpPosX("Profesor", 95, doc.tw_ren, 35, "L");
+        doc.ImpPosX("Grupo", 14, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Asignatura", 50, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Profesor", 95, doc.tw_ren, 0, "L");
         doc.ImpPosX("Lunes", 180, doc.tw_ren, 0, "L");
         doc.ImpPosX("Martes", 195, doc.tw_ren, 0, "L");
         doc.ImpPosX("Miercoles", 210, doc.tw_ren, 0, "L");
@@ -332,9 +339,9 @@ function Clases() {
     const reporte = new ReportePDF(configuracion, orientacion);
     Enca1(reporte);
     clasesFiltrados.forEach((clase) => {
-      reporte.ImpPosX(clase.grupo_descripcion?.toString() ?? "", 14, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.materia_descripcion?.toString() ?? "", 50, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.profesor_nombre?.toString() ?? "", 95, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(clase.grupo_descripcion?.toString() ?? "", 14, reporte.tw_ren, 12, "L");
+      reporte.ImpPosX(clase.materia_descripcion?.toString() ?? "", 50, reporte.tw_ren, 20, "L");
+      reporte.ImpPosX(clase.profesor_nombre?.toString() ?? "", 95, reporte.tw_ren, 35, "L");
       reporte.ImpPosX(clase.lunes?.toString() ?? "", 180, reporte.tw_ren, 0, "L");
       reporte.ImpPosX(clase.martes?.toString() ?? "", 195, reporte.tw_ren, 0, "L");
       reporte.ImpPosX(clase.miercoles?.toString() ?? "", 210, reporte.tw_ren, 0, "L");
@@ -400,7 +407,7 @@ function Clases() {
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
       />
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
@@ -427,15 +434,20 @@ function Clases() {
               handleBusquedaChange={handleBusquedaChange}
               busqueda={busqueda}
             />
-            <TablaClases
-              session={session}
-              isLoading={isLoading}
-              clasesFiltrados={clasesFiltrados}
-              showModal={showModal}
-              setClase={setClase}
-              setAccion={setAccion}
-              setCurrentId={setCurrentId}
-            />
+            {status === "loading" ||
+              (!session ? (
+                <></>
+              ) : (
+                <TablaClases
+                  session={session}
+                  isLoading={isLoading}
+                  clasesFiltrados={clasesFiltrados}
+                  showModal={showModal}
+                  setClase={setClase}
+                  setAccion={setAccion}
+                  setCurrentId={setCurrentId}
+                />
+              ))}
           </div>
         </div>
       </div>

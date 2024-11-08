@@ -199,10 +199,10 @@ export const formatNumber = (num) => {
 };
 
 export const formatNumberDecimalOne = (num) => {
-  if (num === null || num === undefined) return ""; 
+  if (num === null || num === undefined) return "";
   const numStr = typeof num === "string" ? num : num.toString();
   const floatNum = parseFloat(numStr.replace(/,/g, "").replace(/[^\d.-]/g, ""));
-  if (isNaN(floatNum)) return ""; 
+  if (isNaN(floatNum)) return "";
   return floatNum.toLocaleString("en-US", {
     minimumFractionDigits: 1,
     maximumFractionDigits: 1,
@@ -302,41 +302,54 @@ export const RegresaCalificacionRedondeo = (twxCalifica, txwRedondea0) => {
   twxCalifica = Math.round(twxCalifica * 100) / 100;
 
   if (txwRedondea0 === "S") {
-      // Condicionales de redondeo exacto
-      if (twxCalifica > 9.49) {
-          twxCalifica = 10;
-      } else if (twxCalifica > 8.99 && twxCalifica < 9.5) {
-          twxCalifica = 9;
-      } else if (twxCalifica > 8.49 && twxCalifica < 9) {
-          twxCalifica = 9;
-      } else if (twxCalifica > 7.99 && twxCalifica < 8.5) {
-          twxCalifica = 8;
-      } else if (twxCalifica > 7.49 && twxCalifica < 8) {
-          twxCalifica = 8;
-      } else if (twxCalifica > 6.99 && twxCalifica < 7.5) {
-          twxCalifica = 7;
-      } else if (twxCalifica > 6.49 && twxCalifica < 7) {
-          twxCalifica = 7;
-      } else if (twxCalifica > 5.99 && twxCalifica < 6.5) {
-          twxCalifica = 6;
-      } else if (twxCalifica < 6) {
-          twxCalifica = 5;
-      }
-      resultado = twxCalifica;
+    // Condicionales de redondeo exacto
+    if (twxCalifica > 9.49) {
+      twxCalifica = 10;
+    } else if (twxCalifica > 8.99 && twxCalifica < 9.5) {
+      twxCalifica = 9;
+    } else if (twxCalifica > 8.49 && twxCalifica < 9) {
+      twxCalifica = 9;
+    } else if (twxCalifica > 7.99 && twxCalifica < 8.5) {
+      twxCalifica = 8;
+    } else if (twxCalifica > 7.49 && twxCalifica < 8) {
+      twxCalifica = 8;
+    } else if (twxCalifica > 6.99 && twxCalifica < 7.5) {
+      twxCalifica = 7;
+    } else if (twxCalifica > 6.49 && twxCalifica < 7) {
+      twxCalifica = 7;
+    } else if (twxCalifica > 5.99 && twxCalifica < 6.5) {
+      twxCalifica = 6;
+    } else if (twxCalifica < 6) {
+      twxCalifica = 5;
+    }
+    resultado = twxCalifica;
   } else {
-      const txwMult = twxCalifica * 10;
-      const txwStrin = txwMult.toString();
-      const posPunto = txwStrin.indexOf(".");
-      let txwEnt;
-      if (posPunto > -1) {
-          txwEnt = parseInt(txwStrin.substring(0, posPunto), 10);
-      } else {
-          txwEnt = parseInt(txwStrin, 10);
-      }
-      resultado = txwEnt / 10;
+    const txwMult = twxCalifica * 10;
+    const txwStrin = txwMult.toString();
+    const posPunto = txwStrin.indexOf(".");
+    let txwEnt;
+    if (posPunto > -1) {
+      txwEnt = parseInt(txwStrin.substring(0, posPunto), 10);
+    } else {
+      txwEnt = parseInt(txwStrin, 10);
+    }
+    resultado = txwEnt / 10;
   }
   return resultado;
 }
+
+export const obtenerFechaYHoraActual = () => {
+  const date = new Date();
+  const dia = String(date.getDate()).padStart(2, '0');
+  const mes = String(date.getMonth() + 1).padStart(2, '0');
+  const año = date.getFullYear();
+  const hor = String(date.getHours()).padStart(2, '0');
+  const min = String(date.getMinutes()).padStart(2, '0');
+  const seg = String(date.getSeconds()).padStart(2, '0');
+  const fecha = `${dia}${mes}${año}`;
+  const hora = `${hor}${min}${seg}`;
+  return { fecha, hora };
+};
 
 
 export const aDec = (value) => {

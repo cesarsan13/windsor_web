@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
-import { ReportePDF } from "../../ReportesPDF";
-import { ReporteExcel } from "../../ReportesExcel";
-
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { obtenerFechaYHoraActual } from "@/app/utils/globalfn";
 export const getClasesBuscaCat = async (token, grupo) => {
   let url = `${process.env.DOMAIN_API}api/proceso/busca-cat`;
   const res = await fetch(url, {
@@ -75,9 +75,9 @@ const Enca1 = (doc) => {
   if (!doc.tiene_encabezado) {
     doc.imprimeEncabezadoPrincipalH();
     doc.nextRow(12);
-    doc.ImpPosX("Grupo", 14, doc.tw_ren, 12, "L");
-    doc.ImpPosX("Asignatura", 50, doc.tw_ren, 20, "L");
-    doc.ImpPosX("Profesor", 95, doc.tw_ren, 35, "L");
+    doc.ImpPosX("Grupo", 14, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Asignatura", 50, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Profesor", 95, doc.tw_ren, 0, "L");
     doc.ImpPosX("Lunes", 180, doc.tw_ren, 0, "L");
     doc.ImpPosX("Martes", 195, doc.tw_ren, 0, "L");
     doc.ImpPosX("Miercoles", 210, doc.tw_ren, 0, "L");
@@ -100,9 +100,9 @@ export const Imprimir = (configuracion) => {
   const { body } = configuracion;
   Enca1(newPDF);
   body.forEach((clase) => {
-    newPDF.ImpPosX(clase.grupo_descripcion?.toString() ?? "", 14, newPDF.tw_ren, 0, "L");
-    newPDF.ImpPosX(clase.materia_descripcion?.toString() ?? "", 50, newPDF.tw_ren, 0, "L");
-    newPDF.ImpPosX(clase.profesor_nombre?.toString() ?? "", 95, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(clase.grupo_descripcion?.toString() ?? "", 14, newPDF.tw_ren, 12, "L");
+    newPDF.ImpPosX(clase.materia_descripcion?.toString() ?? "", 50, newPDF.tw_ren, 20, "L");
+    newPDF.ImpPosX(clase.profesor_nombre?.toString() ?? "", 95, newPDF.tw_ren, 35, "L");
     newPDF.ImpPosX(clase.lunes?.toString() ?? "", 180, newPDF.tw_ren, 0, "L");
     newPDF.ImpPosX(clase.martes?.toString() ?? "", 195, newPDF.tw_ren, 0, "L");
     newPDF.ImpPosX(clase.miercoles?.toString() ?? "", 210, newPDF.tw_ren, 0, "L");
@@ -116,7 +116,8 @@ export const Imprimir = (configuracion) => {
       Enca1(newPDF);
     }
   });
-  newPDF.guardaReporte("Reporte_Clases");
+  const { fecha, hora } = obtenerFechaYHoraActual();
+  newPDF.guardaReporte(`Reporte_Clases_${fecha}${hora}`);
 };
 export const ImprimirExcel = (configuracion) => {
   const newExcel = new ReporteExcel(configuracion)
