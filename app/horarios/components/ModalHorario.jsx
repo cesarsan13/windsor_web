@@ -76,10 +76,10 @@ function ModalHorario({
   };
   return (
     <dialog id="my_modal_horario" className="modal">
-      <div className="modal-box">
+      <div className="modal-box bg-base-200">
         <form onSubmit={onSubmit}>
-          <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
-            <h3 className="font-bold text-lg">{titulo}</h3>
+          <div className="sticky -top-6 flex justify-between items-center bg-base-200 w-full h-10 z-10 mb-5">
+            <h3 className="font-bold text-lg text-black dark:text-white">{titulo}</h3>
             <div className="flex space-x-2 items-center">
               <div
                 className={`tooltip tooltip-bottom ${
@@ -103,7 +103,7 @@ function ModalHorario({
                 </button>
               </div>
               <button
-                className="btn btn-sm btn-circle btn-ghost"
+                className="btn btn-sm btn-circle btn-ghost text-black dark:text-white"
                 onClick={(event) => {
                   event.preventDefault();
                   document.getElementById("my_modal_horario").close();
