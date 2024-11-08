@@ -395,7 +395,7 @@ function Productos() {
       const cam_precio = producto.cam_precio ? "Si" : "No";
       reporte.ImpPosX(cam_precio.toString(), 215, reporte.tw_ren, 0, "L");
       reporte.ImpPosX(producto.ref.toString(), 250, reporte.tw_ren, 0, "L");
-      Enca1(reporte);
+      Enca1(reporte); 
       if (reporte.tw_ren >= reporte.tw_endRenH) {
         reporte.pageBreakH();
         Enca1(reporte);
