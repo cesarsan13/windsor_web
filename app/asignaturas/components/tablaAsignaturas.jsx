@@ -5,6 +5,7 @@ import React from "react";
 import iconos from "@/app/utils/iconos";
 import Image from "next/image";
 function TablaAsignaturas({
+  session,
   asignaturasFiltrados,
   isLoading,
   showModal,
@@ -16,7 +17,7 @@ function TablaAsignaturas({
 }) {
   return !isLoading ? (
     <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white  w-full lg:w-full">
-      {asignaturasFiltrados.length > 0 ? (
+      {asignaturasFiltrados && asignaturasFiltrados.length > 0 ? (
         <table className="table table-xs table-zebra w-full">
           <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
             <tr>
@@ -80,15 +81,16 @@ function TablaAsignaturas({
           </tbody>
           <tfoot />
         </table>
-      ) : (
-        <NoData />
+      ) : asignaturasFiltrados != null &&
+          session &&
+          asignaturasFiltrados.length === 0 ? (
+        <NoData></NoData>
+      ): (
+      <Loading></Loading>
       )}
     </div>
   ) : (
     <Loading></Loading>
-    // <div className="flex justify-center items-center pt-10">
-    //   <span className="loading loading-ring loading-lg text-4xl"></span>
-    // </div>
   );
 }
 
