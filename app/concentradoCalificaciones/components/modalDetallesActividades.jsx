@@ -14,6 +14,7 @@ import {
     getActividadesXHorarioXAlumnoXMateriaXBimestre,
     getActividadesDetalles
 } from "@/app/utils/api/concentradoCalificaciones/concentradoCalificaciones";
+import ModalVistaPreviaDetalleCal from "./components/ModalVistaPreviaDetalleCal";
 
 function Modal_Detalles_Actividades({
     alumnoData,
@@ -47,6 +48,7 @@ function Modal_Detalles_Actividades({
     });
     
     return(
+
         <dialog id="DetallesActividades" className="modal">
             <div className="modal-box w-full max-w-5xl h-full">
                 <form  encType="multipart/form-data">
