@@ -18,7 +18,7 @@ function TablaConcentradoCal({
     setAlumnoData,
     dataEncabezado,
     dataCaliAlumnosBody,
-    setalumnosCalificaciones
+    //setalumnosCalificaciones
 }){
     let indexIngles = 0;
     let indexEspañol = 0;
@@ -27,7 +27,6 @@ function TablaConcentradoCal({
     let datosEspanol = 0;
     let datosIngles = 0;
 
-    const alumnoData = [];
 
     const tableAction = async (evt, alumno, accion) => {
         showModal(true);
@@ -149,8 +148,9 @@ function TablaConcentradoCal({
                         </tr>
                     ) : (
                         alumnoReg.map(alumno => {
-                            let nom = alumno.nombre;
-                            let alumnoData = [nom];
+                            //let nom = alumno.nombre;
+                            let num = (alumno.numero).toString();
+                            let alumnoData = [num];
                         
                             const alumnoRow = (
                                 <tr key={alumno.numero}>

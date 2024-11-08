@@ -12,6 +12,7 @@ function DetallesMaterias({
     dataCaliAlumnosBodyDetalles
 
 }){
+
     const calcularCalificacionesMat = (secuencia) => {
         let sumatoria = 0;
         let evaluaciones = 0;
@@ -46,14 +47,21 @@ function DetallesMaterias({
                                 descripcion: item.descripcion,
                                 index: index
                         });
+                        
                         return(
                             <th key={index} className="w-[20%]">
                                 {item.descripcion}
                             </th>
                         )
                         })
+                        
                     )}
                      <th className="w-[45%]">Promedio</th> 
+                     {
+                        dataEncabezadoDetalles.push({
+                            descripcion: "Promedio"
+                        })
+                     }
                 </tr>
             </thead>
             <tbody>
@@ -63,14 +71,20 @@ function DetallesMaterias({
                     </tr>
                 ) : ( 
                     <tr>
-                        {matAct.map((activ) => (
-                            <td key={activ.secuencia} className="text-right">{calcularCalificacionesMat(activ.secuencia)}</td> 
-                        ))}
-                         <td className="text-right">
-                            {(
-                                matAct.reduce((acc, activ) => acc + Number(calcularCalificacionesMat(activ.secuencia) || 0), 0) 
-                                / matAct.length
-                            ).toFixed(1)}
+                        {matAct.map((activ) => {
+                            dataCaliAlumnosBodyDetalles.push(calcularCalificacionesMat(activ.secuencia))
+                            return(
+                                <td key={activ.secuencia} className="text-right">{calcularCalificacionesMat(activ.secuencia)}</td> 
+                            )
+                        })}
+                        <td className="text-right">
+                            {
+                                (() => {
+                                    const promedio = (matAct.reduce((acc, activ) => acc + Number(calcularCalificacionesMat(activ.secuencia) || 0), 0) / matAct.length).toFixed(1);
+                                    dataCaliAlumnosBodyDetalles.push(promedio); 
+                                    return promedio;
+                                })()
+                            }
                         </td>
                     </tr>
                 )}

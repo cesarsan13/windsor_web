@@ -10,7 +10,8 @@ import {
     getInfoActividadesXGrupo, 
     getActividadesReg, 
     getMateriasReg, 
-    getAlumno, 
+    getAlumno,
+    ImprimirPDF
 } from "@/app/utils/api/concentradoCalificaciones/concentradoCalificaciones";
 import Inputs from "@/app/concentradoCalificaciones/components/Inputs";
 import Modal_Detalles_Actividades from "./components/modalDetallesActividades";
@@ -20,7 +21,6 @@ import TablaConcentradoCal from "@/app/concentradoCalificaciones/components/Tabl
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "jspdf-autotable";
 import ModalVistaPreviaConcentradoCal from "./components/ModalVistaPreviaConcentradoCal";
-
 
 function ConcentradoCalificaciones() {
     const router = useRouter();
@@ -43,6 +43,7 @@ function ConcentradoCalificaciones() {
 
     let dataCaliAlumnosBody = [];
     let dataEncabezado = [];
+    console.log(dataCaliAlumnosBody, dataEncabezado);
 
     const {
         register,
@@ -57,11 +58,9 @@ function ConcentradoCalificaciones() {
       };
 
     const Buscar = handleSubmit(async (data) => {
-        
         if (grupo.numero === 0 && data.bimestre === '0'){
-            showSwal('Error', 'Debes de seleccionar el grupo y el bimestre', 'error');
-        }
-        else {
+            showSwal('Error', 'Debes de seleccionar el Grupo y el Bimestre', 'error');
+        } else {
         const {token} = session.user;
         let b = data.bimestre;
         setBimestre(Number(b));
@@ -83,21 +82,17 @@ function ConcentradoCalificaciones() {
         };
     });
 
+    console.log(materiasEncabezado, calificacionesTodosAlumnos, alumnoReg, materiasReg, actividadesReg);
     const eliminarArreglosDuplicados = (arr) => {
         const arreglosUnicos = [];
         const conjuntosUnicos = new Set();
-    
         arr.forEach(subArray => {
-            // Convertir cada subarreglo a una cadena única para poder compararlos
             const cadena = JSON.stringify(subArray);
-            
-            // Si no está en el conjunto, agregarlo
             if (!conjuntosUnicos.has(cadena)) {
-                conjuntosUnicos.add(cadena); // Marcar como encontrado
-                arreglosUnicos.push(subArray); // Agregar al arreglo de únicos
+                conjuntosUnicos.add(cadena);
+                arreglosUnicos.push(subArray);
             }
         });
-        
         return arreglosUnicos;
     };
 
@@ -105,25 +100,21 @@ function ConcentradoCalificaciones() {
         const resultadoEnc = dataEncabezado.filter((item, pos, arr) => 
             arr.findIndex(i => i.descripcion === item.descripcion) === pos
         );
-
         const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBody);
-
-        console.log("res", resultadoBody);
         setAnimateLoading(true);
         cerrarModalVista();
-        if (grupo.numero === 0 && bimestre === 0){
-            showSwal('Error', 'Debes de seleccionar el grupo y el bimestre', 'error');
+        if ( grupo.numero === 0 && bimestre === 0 )
+        {
+            showSwal('Error', 'Debes de realizar la Busqueda', 'error');
             setTimeout(() => {
               setPdfPreview(false);
               setPdfData("");
               setAnimateLoading(false);
               document.getElementById("modalVConCal").close();
             }, 500);
-        }
-        else {
-            let posicionX = 38; 
+        } else {
+            let posicionX = 29; 
             const incrementoX = 9;
-        
             const configuracion = {
               Encabezado: {
                 Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -136,13 +127,12 @@ function ConcentradoCalificaciones() {
 
             const reporte = new ReportePDF(configuracion, "Landscape");
             const {body} = configuracion;
-
             const Enca1 = (doc) => {
                 if (!doc.tiene_encabezado) {
                   doc.imprimeEncabezadoPrincipalHConcentradoCal();
                   doc.nextRow(12);
-                  //doc.ImpPosX('Num.', 14, doc.tw_ren);
-                  doc.ImpPosX('Alumno', 14, doc.tw_ren);
+                  doc.ImpPosX('Num.', 14, doc.tw_ren,4);
+                  //doc.ImpPosX('Alumno', 14, doc.tw_ren);
                   resultadoEnc.forEach((desc) => {
                       doc.ImpPosX(desc.descripcion, posicionX, doc.tw_ren, 3);
                       posicionX += incrementoX;
@@ -182,15 +172,23 @@ function ConcentradoCalificaciones() {
     };
 
     const ImprimePDF = async () => {
+        let fecha_hoy = new Date();
+    
+        const resultadoEnc = dataEncabezado.filter((item, pos, arr) => 
+            arr.findIndex(i => i.descripcion === item.descripcion) === pos
+        );
+        const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBody);
+
         const configuracion = {
             Encabezado: {
                 Nombre_Aplicacion: "Sistema de Control Escolar",
                 Nombre_Reporte: "Reporte de Concentrado de Calificaciones",
                 Nombre_Usuario: `Usuario: ${session.user.name}`,
+                Datos_Grupo:  `Grupo: ${grupo.horario}     Bimestre: ${bimestre}`,
             },
-            body: "",
+            body: resultadoBody,
         };
-        Imprimir(configuracion)
+        ImprimirPDF(configuracion, resultadoEnc, fecha_hoy)
     };
 
     const ImprimeExcel = async () => {};
@@ -206,9 +204,9 @@ function ConcentradoCalificaciones() {
       document.getElementById("modalVConCal").close();
     };
 
-  const home = () => {
-    router.push("/");
-  };
+    const home = () => {
+        router.push("/");
+    };
 
     if (status === "loading") {
         return (
