@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Inputs from "@/app/concentradoCalificaciones/components/InputMateria";
-import Inputs from "@/app/concentradoCalificaciones/components/AccionesDetalle";
+
 import { useForm } from "react-hook-form";
 import DetallesMaterias from "./TablaDetalles";
 import {
@@ -61,6 +61,8 @@ function Modal_Detalles_Actividades({
                     </div>
                     <fieldset>
                         <div className="flex flex-row justify-center items-center h-full">
+
+                            
                             
                             <Inputs
                                 dataType={"int"}
