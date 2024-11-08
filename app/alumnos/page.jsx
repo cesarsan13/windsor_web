@@ -24,7 +24,12 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import { formatFecha, format_Fecha_String, debounce } from "../utils/globalfn";
+import {
+  formatFecha,
+  format_Fecha_String,
+  debounce,
+  formatTime,
+} from "../utils/globalfn";
 function Alumnos() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -565,7 +570,6 @@ function Alumnos() {
       accion,
       data.numero
     );
-    console.log("data", capturedImage);
     if (res.status) {
       if (accion === "Alta") {
         data.numero = res.data;
@@ -660,6 +664,12 @@ function Alumnos() {
   };
 
   const ImprimeExcel = () => {
+    const date = new Date();
+    const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+    const timeStr = formatTime(date).replace(/:/g, "");
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -676,7 +686,7 @@ function Alumnos() {
         { header: "Fecha Alta", dataKey: "fecha_inscripcion" },
         { header: "Telefono", dataKey: "telefono_1" },
       ],
-      nombre: "Alumnos",
+      nombre: `Alumnos_${dateStr}${timeStr}`,
     };
     ImprimirExcel(configuracion);
   };
@@ -782,6 +792,7 @@ function Alumnos() {
       <ModalAlumnos
         session={session}
         accion={accion}
+        handleSubmit={handleSubmit}
         onSubmit={onSubmitModal}
         currentID={currentID}
         errors={errors}

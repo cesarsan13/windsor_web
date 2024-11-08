@@ -15,6 +15,7 @@ import iconos from "@/app/utils/iconos";
 function ModalAlumnos({
   session,
   accion,
+  handleSubmit,
   onSubmit,
   currentID,
   register,
@@ -117,33 +118,41 @@ function ModalAlumnos({
   // console.log(JSON.stringify(alumno));
 
   const checkErrorsAndSubmit = (event) => {
-    onSubmit(event); // Intnta enviar el formulario
-    if (Object.keys(errors).length > 0) {
-      const primerError = Object.keys(errors)[0];
-      switch (primerError) {
-        case "a_materno": // campo en el tab 'Alumno'
-        case "a_paterno":
-        case "a_nombre":
-        case "estatus":
-        case "fecha_nac":
-        case "sexo":
-        case "escuela":
-        case "telefono1":
-        case "celular":
-          setActiveTab(1);
-          break;
-        case "direccion": // campo en el tab 'Generales'
-        case "colonia":
-        case "ciudad":
-        case "estado":
-        case "cp":
-        case "email":
-          setActiveTab(2);
-          break;
-        default:
-          break;
+    event.preventDefault();
+    handleSubmit(
+      (data) => {
+        onSubmit(data); // Envío si es válido
+      },
+      () => {
+        // Intnta enviar el formulario
+        if (Object.keys(errors).length > 0) {
+          const primerError = Object.keys(errors)[0];
+          switch (primerError) {
+            case "a_materno": // campo en el tab 'Alumno'
+            case "a_paterno":
+            case "a_nombre":
+            case "estatus":
+            case "fecha_nac":
+            case "sexo":
+            case "escuela":
+            case "telefono1":
+            case "celular":
+              setActiveTab(1);
+              break;
+            case "direccion": // campo en el tab 'Generales'
+            case "colonia":
+            case "ciudad":
+            case "estado":
+            case "cp":
+            case "email":
+              setActiveTab(2);
+              break;
+            default:
+              break;
+          }
+        }
       }
-    }
+    )();
   };
 
   return (

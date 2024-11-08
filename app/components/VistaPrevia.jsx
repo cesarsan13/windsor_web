@@ -59,7 +59,12 @@ function VistaPrevia({
               <Worker
                 workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
               >
-                <div className="" style={{ maxHeight: "calc(100vh - 4rem)" }}>
+                <div
+                  className="bg-base-200"
+                  style={{
+                    maxHeight: "calc(100vh - 4rem)",
+                  }}
+                >
                   <Viewer fileUrl={pdfData} />
                 </div>
               </Worker>

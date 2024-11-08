@@ -1,6 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import { format_Fecha_String } from "../../globalfn";
+import { format_Fecha_String, formatTime } from "../../globalfn";
 
 export const getDataSex = async (token) => {
   let url = "";
@@ -145,7 +145,13 @@ export const Imprimir = (configuracion) => {
       Enca1(newPDF);
     }
   });
-  newPDF.guardaReporte("Alumnos");
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+  newPDF.guardaReporte(`Alumnos_${dateStr}${timeStr}`);
 };
 
 export const ImprimirExcel = (configuracion) => {

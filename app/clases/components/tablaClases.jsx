@@ -15,7 +15,7 @@ function TablaClases({
   const tableAction = (evt, clase, accion) => {
     setClase(clase);
     setAccion(accion);
-    setCurrentId({id_grupo:clase.id_grupo, id_materia:clase.id_materia});
+    setCurrentId({ id_grupo: clase.id_grupo, id_materia: clase.id_materia });
     showModal(true);
   };
 
@@ -26,9 +26,9 @@ function TablaClases({
           <table className="table table-xs table-zebra w-full">
             <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
               <tr>
-              <td className="sm:w-[10%]">Asignatura</td>
-                <td className="w-[10%]">Grupo</td>
-                <td className="w-[10%]">Profesor</td>
+                <td className="sm:w-[20%]">Asignatura</td>
+                <td className="w-[20%]">Grupo</td>
+                <td className="w-[50%]">Profesor</td>
                 <td className="w-[10%]">Lunes</td>
                 <td className="w-[10%]">Martes</td>
                 <td className="w-[10%]">Miercoles</td>
@@ -42,21 +42,15 @@ function TablaClases({
               </tr>
             </thead>
             <tbody>
-              {clasesFiltrados.map((item,idx) => (
-                <tr key={idx} className="hover:cursor-pointer">
-                  <th
-                    className={
-                      typeof item.comision === "number"
-                        ? "text-left"
-                        : "text-right"
-                    }
-                  >
-                    {item.grupo}
+              {clasesFiltrados.map((item, idx) => (
+                <tr key={idx} className="w-[20%] hover:cursor-pointer">
+                  <th>
+                    {item.grupo_descripcion}
                   </th>
-                  <td className="w-[10%]  text-right">
-                    {item.materia}
+                  <td className="w-[20%]  text-left">
+                    {item.materia_descripcion}
                   </td>
-                  <td className="w-[10%]  text-right">{item.profesor}</td>
+                  <td className="w-[50%]  text-left">{item.profesor_nombre}</td>
                   <td className="w-[10%]">{item.lunes}</td>
                   <td className="w-[10%]">{item.martes}</td>
                   <td className="w-[10%]">{item.miercoles}</td>
