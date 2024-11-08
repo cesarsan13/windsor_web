@@ -265,7 +265,7 @@ function Cajeros() {
         { header: "Telefono", dataKey: "telefono" },
         { header: "Correo", dataKey: "mail" },
       ],
-      nombre: "Catalogo_Cajeros",
+      nombre: "Cajeros",
     };
     ImprimirExcel(configuracion);
   };
