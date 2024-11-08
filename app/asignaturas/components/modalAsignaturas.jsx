@@ -138,13 +138,13 @@ function ModalAsignaturas({
                   name={"descripcion"}
                   tamañolabel={"w-full"}
                   className={"w-full uppercase"}
-                  Titulo={"Asignatura: "}
+                  Titulo={"Descripción: "}
                   type={"text"}
                   requerido={true}
                   isNumero={false}
                   errors={errors}
                   register={register}
-                  message={"Asignatura requerida"}
+                  message={"Descripción requerida"}
                   maxLenght={100}
                   isDisabled={isDisabled}
                   handleBlur={handleBlur}
