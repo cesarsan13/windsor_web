@@ -8,9 +8,10 @@ function DetallesMaterias({
     Actividades,
     matAct,
     bimestre,
+    dataEncabezadoDetalles,
+    dataCaliAlumnosBodyDetalles
 
 }){
-
     const calcularCalificacionesMat = (secuencia) => {
         let sumatoria = 0;
         let evaluaciones = 0;
@@ -40,11 +41,17 @@ function DetallesMaterias({
                     {matAct.length === undefined ? (
                         <th className="w-[45%]">Sin datos</th> 
                     ) : (
-                        matAct.map((item, index) => (
+                        matAct.map((item, index) => {
+                            dataEncabezadoDetalles.push({
+                                descripcion: item.descripcion,
+                                index: index
+                        });
+                        return(
                             <th key={index} className="w-[20%]">
                                 {item.descripcion}
                             </th>
-                        ))
+                        )
+                        })
                     )}
                      <th className="w-[45%]">Promedio</th> 
                 </tr>

@@ -116,10 +116,43 @@ function ModalAlumnos({
   };
   // console.log(JSON.stringify(alumno));
 
+  const checkErrorsAndSubmit = (event) => {
+    onSubmit(event); // Intnta enviar el formulario
+    if (Object.keys(errors).length > 0) {
+      const primerError = Object.keys(errors)[0];
+      switch (primerError) {
+        case "a_materno": // campo en el tab 'Alumno'
+        case "a_paterno":
+        case "a_nombre":
+        case "estatus":
+        case "fecha_nac":
+        case "sexo":
+        case "escuela":
+        case "telefono1":
+        case "celular":
+          setActiveTab(1);
+          break;
+        case "direccion": // campo en el tab 'Generales'
+        case "colonia":
+        case "ciudad":
+        case "estado":
+        case "cp":
+        case "email":
+          setActiveTab(2);
+          break;
+        default:
+          break;
+      }
+    }
+  };
+
   return (
     <dialog id="my_modal_3" className="modal ">
       <div className="modal-box w-full max-w-3xl h-full bg-base-200">
-        <form onSubmit={onSubmit} encType="multipart/form-data">
+        <form
+          onSubmit={(evt) => checkErrorsAndSubmit(evt)}
+          encType="multipart/form-data"
+        >
           <div className="sticky -top-6 flex justify-between items-center bg-base-200  w-full h-10 z-10 mb-5">
             <h3 className="font-bold text-lg">{titulo}</h3>
             <div className="flex space-x-2 items-center">

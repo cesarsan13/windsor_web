@@ -434,6 +434,9 @@ function Alumnos() {
     document.getElementById("a_paterno").focus();
   };
   const onSubmitModal = handleSubmit(async (data) => {
+    if (Object.keys(errors).length > 0) {
+      alert("hay errores xd");
+    }
     event.preventDefault;
     accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
     let res = null;

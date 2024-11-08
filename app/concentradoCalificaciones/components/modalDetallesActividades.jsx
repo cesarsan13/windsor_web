@@ -20,12 +20,15 @@ function Modal_Detalles_Actividades({
     materiasReg,
     grupo,
     bimestre
-
 }){
     const { data: session, status } = useSession();
     const [Actividades, setActividades] = useState({});
     const [matAct, setMatAct] = useState({});
     let M = 0;
+
+    let dataEncabezadoDetalles = [];
+    let dataCaliAlumnosBodyDetalles = [];
+
     const {
         register,
         handleSubmit,
@@ -88,7 +91,7 @@ function Modal_Detalles_Actividades({
                                 </button>
                                 </div>
                         </div>
-                        <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 w-full">
+                        <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 w-full mt-10">
                             <div className="w-4/5">
                                 <h4 className="font-bold text-lg"> Actividades y Evaluaciones</h4>
                                 <DetallesMaterias
@@ -97,6 +100,7 @@ function Modal_Detalles_Actividades({
                                  AlumnoD = {alumnoData.numero}
                                  materiaD = {M}
                                  bimestre = {bimestre}
+                                 dataEncabezadoDetalles = {dataEncabezadoDetalles}
                                 />
                             </div>
                         </div>
