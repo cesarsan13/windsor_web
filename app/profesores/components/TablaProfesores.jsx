@@ -49,13 +49,7 @@ function TablaProfesores({
               <tr key={item.numero} className="hover:cursor-pointer">
                 <td className="text-right">{item.numero}</td>
                 <td className="text-left">{item.nombre_completo}</td>
-                <td className="text-left">{item.direccion}</td>
-                <td className="text-left">{item.colonia}</td>
-                <td className="text-left">{item.ciudad}</td>
-                <td className="text-left">{item.cp}</td>
                 <td className="text-left">{item.telefono_1}</td>
-                <td className="text-left">{item.telefono_2}</td>
-                <td className="text-left">{item.celular}</td>
                 <td className="text-left">{item.email}</td>
                 <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                   <div
