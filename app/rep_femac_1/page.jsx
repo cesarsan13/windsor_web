@@ -16,7 +16,7 @@ import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { calculaDigitoBvba } from "@/app/utils/globalfn";
-import ModalVistaPreviaRelacionGeneralAlumnos from "./components/ModalVistaPreviaRelacionGeneralAlumnos";
+import VistaPrevia from "../components/VistaPrevia";
 
 function AlumnosPorClase() {
   const router = useRouter();
@@ -198,6 +198,11 @@ function AlumnosPorClase() {
     setPdfData("");
     document.getElementById("modalVPRelacionGeneralAlumnos").close();
   };
+  const CerrarView = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVPRelacionGeneralAlumnos").close();
+  };
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -205,13 +210,16 @@ function AlumnosPorClase() {
   }
   return (
     <>
-      <ModalVistaPreviaRelacionGeneralAlumnos
+      <VistaPrevia
+        id={"modalVPRelacionGeneralAlumnos"}
+        titulo={"Vista Prevoa Relacion General de Alumnos"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
-      <div className="flex flex-col justify-start items-start bg-slate-100 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+      <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">
           {/* Fila de la cabecera de la pagina */}
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">

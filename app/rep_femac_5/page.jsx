@@ -10,7 +10,7 @@ import {
   Imprimir,
   ImprimirExcel,
 } from "@/app/utils/api/rep_femac_5/rep_femac_5";
-import ModalVistaPreviaRep5 from "./components/modalVistaPreviaRep5";
+import VistaPrevia from "../components/VistaPrevia";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { showSwal } from "@/app/utils/alerts";
@@ -213,6 +213,11 @@ function AltasBajasAlumnos() {
     setPdfData("");
     document.getElementById("modalVRep5").close();
   };
+  const CerrarView = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVRep5").close();
+  };
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -220,13 +225,16 @@ function AltasBajasAlumnos() {
   }
   return (
     <>
-      <ModalVistaPreviaRep5
+      <VistaPrevia
+        id={"modalVRep5"}
+        titulo={"Vista Previa de Altas y Bajas de Alumnos"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
-      <div className="flex flex-col justify-start items-start bg-slate-100 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+      <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">
           {/* Fila de la cabecera de la pagina */}
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">

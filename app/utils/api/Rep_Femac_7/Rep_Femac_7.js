@@ -1,5 +1,6 @@
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
+import { formatDate, formatTime, formatFecha, format_Fecha_String } from "../../globalfn";
 
 export const Documentos = async (token, fecha, grupo) => {
   const group = grupo ? 1 : 0;
@@ -157,7 +158,14 @@ export const Imprimir = async (
   });
   newPDF.ImpPosX("Total General", 208, newPDF.tw_ren, 0, "L");
   newPDF.ImpPosX(total_General.toFixed(2), 248, newPDF.tw_ren, 0, "L");
-  newPDF.guardaReporte("Reporte de Adeudos Pendientes");
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+
+newPDF.guardaReporte(`Reporte_de_Adeudos_Pendientes_${dateStr}${timeStr}`);
 };
 
 export const ImprimirExcel = async (
@@ -312,7 +320,13 @@ export const ImprimirExcel = async (
   const { columns } = configuracion;
   newExcel.setColumnas(columns);
   newExcel.addData(Docs);
-  newExcel.guardaReporte(nombre);
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+  newExcel.guardaReporte(`${nombre}${dateStr}${timeStr}`);
 };
 
 export const grupo_cobranza = async (token) => {
