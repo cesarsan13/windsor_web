@@ -17,6 +17,7 @@ import {
   getLastAlumnos,
   Imprimir,
   ImprimirExcel,
+  getTab,
 } from "@/app/utils/api/alumnos/alumnos";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -54,6 +55,7 @@ function Alumnos() {
   const [fecha_hoy, setFechaHoy] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
   const [files, setFile] = useState(null);
+  const [activeTab, setActiveTab] = useState(1);
   const alumnosRef = useRef(alumnos);
   const [busqueda, setBusqueda] = useState({
     tb_id: "",
@@ -439,10 +441,7 @@ function Alumnos() {
     document.getElementById("a_paterno").focus();
   };
   const onSubmitModal = handleSubmit(async (data) => {
-    if (Object.keys(errors).length > 0) {
-      alert("hay errores xd");
-    }
-    event.preventDefault;
+    event.preventDefault();
     accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
     let res = null;
     if (accion === "Eliminar") {
@@ -606,7 +605,20 @@ function Alumnos() {
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
 
       showModal(false);
+      setActiveTab(1);
+      setGrado({});
+      setcond1({});
+      setcond2({});
+
       // Buscar();
+    } else {
+      console.log(res);
+      if (Object.keys(res.errors).length > 0) {
+        const primerError = Object.keys(res.errors)[0];
+        document.getElementById(primerError).focus();
+        setActiveTab(getTab(primerError));
+      }
+      showSwal("Error", res.alert_text, "error", "my_modal_alumnos");
     }
   });
   const dataURLtoBlob = (dataURL) => {
@@ -633,8 +645,8 @@ function Alumnos() {
   };
   const showModal = (show) => {
     show
-      ? document.getElementById("my_modal_3").showModal()
-      : document.getElementById("my_modal_3").close();
+      ? document.getElementById("my_modal_alumnos").showModal()
+      : document.getElementById("my_modal_alumnos").close();
   };
   const showModalVista = (show) => {
     show
@@ -790,6 +802,8 @@ function Alumnos() {
   return (
     <>
       <ModalAlumnos
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
         session={session}
         accion={accion}
         handleSubmit={handleSubmit}

@@ -163,3 +163,32 @@ export const ImprimirExcel = (configuracion) => {
   newExcel.addData(body);
   newExcel.guardaReporte(nombre);
 };
+
+export const getTab = (nombre_campo) => {
+  switch (nombre_campo) {
+    case "a_materno": // campo en el tab 'Alumno'
+    case "a_paterno":
+    case "a_nombre":
+    case "estatus":
+    case "fecha_nac":
+    case "sexo":
+    case "escuela":
+    case "telefono1":
+    case "celular":
+      return 1;
+      // setActiveTab(1);
+      break;
+    case "direccion": // campo en el tab 'Generales'
+    case "colonia":
+    case "ciudad":
+    case "estado":
+    case "cp":
+    case "email":
+      return 2;
+      break;
+    case "rfc_factura":
+      return 7;
+    default:
+      break;
+  }
+};

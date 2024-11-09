@@ -11,8 +11,11 @@ import Webcam from "react-webcam";
 import Image from "next/image";
 import BuscarCat from "@/app/components/BuscarCat";
 import iconos from "@/app/utils/iconos";
+import { getTab } from "@/app/utils/api/alumnos/alumnos";
 
 function ModalAlumnos({
+  activeTab,
+  setActiveTab,
   session,
   accion,
   handleSubmit,
@@ -37,7 +40,6 @@ function ModalAlumnos({
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
-  const [activeTab, setActiveTab] = useState(1);
 
   const columnasBuscaCat = ["numero", "horario"];
   const nameInputs = ["horario_1", "horario_1_nombre"];
@@ -127,38 +129,14 @@ function ModalAlumnos({
         // Intnta enviar el formulario
         if (Object.keys(errors).length > 0) {
           const primerError = Object.keys(errors)[0];
-          switch (primerError) {
-            case "a_materno": // campo en el tab 'Alumno'
-            case "a_paterno":
-            case "a_nombre":
-            case "estatus":
-            case "fecha_nac":
-            case "sexo":
-            case "escuela":
-            case "telefono1":
-            case "celular":
-              setActiveTab(1);
-              break;
-            case "direccion": // campo en el tab 'Generales'
-            case "colonia":
-            case "ciudad":
-            case "estado":
-            case "cp":
-            case "email":
-              setActiveTab(2);
-              break;
-            case "rfc_factura":
-              setActiveTab(7);
-            default:
-              break;
-          }
+          setActiveTab(getTab(primerError));
         }
       }
     )();
   };
 
   return (
-    <dialog id="my_modal_3" className="modal ">
+    <dialog id="my_modal_alumnos" className="modal ">
       <div className="modal-box w-full max-w-3xl h-full bg-base-200">
         <form
           onSubmit={(evt) => checkErrorsAndSubmit(evt)}
@@ -192,7 +170,7 @@ function ModalAlumnos({
                 className="btn btn-sm btn-circle btn-ghost"
                 onClick={(event) => {
                   event.preventDefault();
-                  document.getElementById("my_modal_3").close();
+                  document.getElementById("my_modal_alumnos").close();
                 }}
               >
                 ✕
