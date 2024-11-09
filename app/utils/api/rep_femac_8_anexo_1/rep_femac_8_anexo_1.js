@@ -1,6 +1,8 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { calculaDigitoBvba, formatNumber } from "@/app/utils/globalfn";
+import { formatDate, formatTime, formatFecha, format_Fecha_String } from "../../globalfn";
+
 
 export const getRelaciondeRecibos = async (
   token,
@@ -138,7 +140,14 @@ export const Imprimir = (configuracion) => {
     0,
     "R"
   );
-  newPDF.guardaReporte("Altas_Bajas_Alumnos");
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+
+newPDF.guardaReporte(`Altas_Bajas_Alumnos_${dateStr}${timeStr}`);
 };
 
 export const ImprimirExcel = (configuracion) => {
@@ -181,5 +190,11 @@ export const ImprimirExcel = (configuracion) => {
   });
   newExcel.setColumnas(columns);
   newExcel.addData(newBody);
-  newExcel.guardaReporte(nombre);
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+  newExcel.guardaReporte(`${nombre}${dateStr}${timeStr}`);
 };

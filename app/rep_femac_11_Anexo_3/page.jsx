@@ -18,7 +18,7 @@ import "jspdf-autotable";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import ModalVistaPreviaRepFemac11Anexo3 from "./components/modalVistaPreviaRepFemac11Anexo3";
+import VistaPrevia from "../components/VistaPrevia";
 
 function CobranzaPorAlumno() {
   const router = useRouter();
@@ -357,7 +357,11 @@ function CobranzaPorAlumno() {
       tomaFechas
     );
   };
-
+  const CerrarView = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVPRepFemac11Anexo3").close();
+  };
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -365,13 +369,16 @@ function CobranzaPorAlumno() {
   }
   return (
     <>
-      <ModalVistaPreviaRepFemac11Anexo3
+      <VistaPrevia
+        id={"modalVPRepFemac11Anexo3"}
+        titulo={"Vista Previa de Cobranza por Alumno"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
-      <div className="flex flex-col justify-start items-start bg-slate-100 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+      <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">
           {/* Fila de la cabecera de la pagina */}
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
