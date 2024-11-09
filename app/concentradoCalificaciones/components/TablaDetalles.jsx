@@ -1,7 +1,5 @@
-
-import React, { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
-import {RegresaCalificacionRedondeo, aDec } from "@/app/utils/globalfn";
+import React from "react";
+import {RegresaCalificacionRedondeo} from "@/app/utils/globalfn";
 
 
 function DetallesMaterias({
@@ -34,63 +32,58 @@ function DetallesMaterias({
         }
     }
 
- return(
-    <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-full">
-        <table className="table table-xs table-zebra w-full">
-            <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
-                <tr>
-                    {matAct.length === undefined ? (
-                        <th className="w-[45%]">Sin datos</th> 
-                    ) : (
-                        matAct.map((item, index) => {
-                            dataEncabezadoDetalles.push({
-                                descripcion: item.descripcion,
-                                index: index
-                        });
-                        
-                        return(
-                            <th key={index} className="w-[20%]">
-                                {item.descripcion}
-                            </th>
-                        )
-                        })
-                        
-                    )}
-                     <th className="w-[45%]">Promedio</th> 
-                     {
-                        dataEncabezadoDetalles.push({
-                            descripcion: "Promedio"
-                        })
-                     }
-                </tr>
-            </thead>
-            <tbody>
-                {matAct.length === undefined ? (
+    return(
+        <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-full">
+            <table className="table table-xs table-zebra w-full">
+                <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
                     <tr>
-                        <td className="w-[45%]">Sin datos</td> 
-                    </tr>
-                ) : ( 
-                    <tr>
-                        {matAct.map((activ) => {
-                            dataCaliAlumnosBodyDetalles.push(calcularCalificacionesMat(activ.secuencia))
+                        {matAct.length === undefined ? (
+                            <th className="w-[45%]">Sin datos</th> 
+                        ) : (
+                            matAct.map((item, index) => {
+                                dataEncabezadoDetalles.push({
+                                    descripcion: item.descripcion,
+                                    index: index
+                            });
+
                             return(
-                                <td key={activ.secuencia} className="text-right">{calcularCalificacionesMat(activ.secuencia)}</td> 
+                                <th key={index} className="w-[20%]">
+                                    {item.descripcion}
+                                </th>
                             )
-                        })}
-                        <td className="text-right">
-                            {
-                                (() => {
-                                    const promedio = (matAct.reduce((acc, activ) => acc + Number(calcularCalificacionesMat(activ.secuencia) || 0), 0) / matAct.length).toFixed(1);
-                                    dataCaliAlumnosBodyDetalles.push(promedio); 
-                                    return promedio;
-                                })()
-                            }
-                        </td>
+                            })
+                        )}
+                        <th className="w-[45%]">Promedio</th> 
+
                     </tr>
-                )}
-            </tbody>
-        </table>
-    </div>
- );
+                </thead>
+                <tbody>
+                    {matAct.length === undefined ? (
+                        <tr>
+                            <td className="w-[45%]">Sin datos</td> 
+                        </tr>
+                    ) : ( 
+                        <tr>
+                            {matAct.map((activ) => {
+                                dataCaliAlumnosBodyDetalles.push(calcularCalificacionesMat(activ.secuencia))
+                                return(
+                                    <td key={activ.secuencia} className="text-right">{calcularCalificacionesMat(activ.secuencia)}</td> 
+                                )
+                            })}
+                            <td className="text-right">
+                                {
+                                    (() => {
+                                        const promedio = (matAct.reduce((acc, activ) => acc + Number(calcularCalificacionesMat(activ.secuencia) || 0), 0) / matAct.length).toFixed(1);
+                                        dataCaliAlumnosBodyDetalles.push(promedio); 
+                                        return promedio;
+                                    })()
+                                }
+                            </td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+        </div>
+    );
 }
 export default DetallesMaterias;

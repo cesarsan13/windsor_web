@@ -1,13 +1,17 @@
+
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Inputs from "@/app/concentradoCalificaciones/components/InputMateria";
-
+import Acciones from "@/app/concentradoCalificaciones/components/AccionesDetalle";
 import { useForm } from "react-hook-form";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
 import DetallesMaterias from "./TablaDetalles";
 import {
     getActividadesXHorarioXAlumnoXMateriaXBimestre,
-    getActividadesDetalles
+    getActividadesDetalles,
+    ImprimirPDFDetalle
 } from "@/app/utils/api/concentradoCalificaciones/concentradoCalificaciones";
+import ModalVistaPreviaDetalleCal from "./ModalVistaPreviaDetalleCal";
 
 function Modal_Detalles_Actividades({
     alumnoData,
@@ -15,9 +19,13 @@ function Modal_Detalles_Actividades({
     grupo,
     bimestre
 }){
+    const [isLoading, setisLoading] = useState(false);
     const { data: session, status } = useSession();
     const [Actividades, setActividades] = useState({});
     const [matAct, setMatAct] = useState({});
+    const [pdfData, setPdfData] = useState("");
+    const [pdfPreview, setPdfPreview] = useState(false);
+    const [animateLoading, setAnimateLoading] = useState(false);
     let M = 0;
 
     let dataEncabezadoDetalles = [];
@@ -26,8 +34,11 @@ function Modal_Detalles_Actividades({
     const {
         register,
         handleSubmit,
+        watch,
         formState: { errors },
     } = useForm();
+
+    const materia = watch("Materias");
 
     const Buscar = handleSubmit(async (data) => {
         M = Number(data.Materias);
@@ -39,75 +50,201 @@ function Modal_Detalles_Actividades({
             setMatAct(acres);
         } catch (error) { }
     });
+
+    const eliminarArreglosDuplicados = (arr) => {
+        const arreglosUnicos = [];
+        const conjuntosUnicos = new Set();
+        arr.forEach(subArray => {
+            const cadena = JSON.stringify(subArray);
+            if (!conjuntosUnicos.has(cadena)) {
+                conjuntosUnicos.add(cadena);
+                arreglosUnicos.push(subArray);
+            }
+        });
+        return arreglosUnicos;
+    };
+
+    const handleVerClick = () => {
+        const resultadoEnc = dataEncabezadoDetalles.filter((item, pos, arr) => 
+            arr.findIndex(i => i.descripcion === item.descripcion) === pos
+        );
+        const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBodyDetalles);
+        setAnimateLoading(true);
+        cerrarModalVista();
+        if ( grupo.numero === 0 && bimestre === 0 )
+        {
+            showSwal('Error', 'Debes de realizar la Busqueda', 'error');
+            setTimeout(() => {
+              setPdfPreview(false);
+              setPdfData("");
+              setAnimateLoading(false);
+              document.getElementById("modalVDetCal").close();
+            }, 500);
+        } else {
+            let posicionX = 14; 
+            const incrementoX = 28;
+            const configuracion = {
+              Encabezado: {
+                Nombre_Aplicacion: "Sistema de Control Escolar",
+                Nombre_Reporte: "Reporte de Concentrado de Calificaciones",
+                Nombre_Usuario: `Usuario: ${session.user.name}`,
+                Datos_Grupo:  `Alumno: ${alumnoData.nombre} Materia:`,
+              },
+              body: resultadoBody
+            };
+
+            const reporte = new ReportePDF(configuracion, "Portrait");
+            const {body} = configuracion;
+            const Enca1 = (doc) => {
+                if (!doc.tiene_encabezado) {
+                  doc.imprimeEncabezadoPrincipalVConcentradoCal();
+                  doc.nextRow(12);
+                  
+                  resultadoEnc.forEach((desc) => {
+                      doc.ImpPosX(desc.descripcion, posicionX, doc.tw_ren, 10);
+                      posicionX += incrementoX;
+                  });
+                  doc.ImpPosX("Promedio", posicionX, doc.tw_ren, 25);
+                  doc.nextRow(4);
+                  doc.printLineV();
+                  doc.nextRow(4);
+                  doc.tiene_encabezado = true;
+                } else {
+                  doc.nextRow(6);
+                  doc.tiene_encabezado = true;
+                }
+              };
+            Enca1(reporte);
+            let posicionBody = 14;
+            body.forEach((valor, idx) => {
+                  reporte.ImpPosX(valor, posicionBody, reporte.tw_ren);
+                  posicionBody+= incrementoX;
+            })
+            Enca1(reporte);
+              if (reporte.tw_ren >= reporte.tw_endRenH) {
+                  reporte.pageBreakH();
+                  Enca1(reporte);
+              }
+            
+            setTimeout(() => {
+              const pdfData = reporte.doc.output("datauristring");
+              setPdfData(pdfData);
+              setPdfPreview(true);
+              showModalVista(true);
+              setAnimateLoading(false);
+            }, 500);
+        }
+    };
+    const ImprimePDF = async () => {
+        let fecha_hoy = new Date();
+
+        const resultadoEnc = dataEncabezadoDetalles.filter((item, pos, arr) => 
+            arr.findIndex(i => i.descripcion === item.descripcion) === pos
+        );
+        const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBodyDetalles);
+
+        const configuracion = {
+            Encabezado: {
+              Nombre_Aplicacion: "Sistema de Control Escolar",
+              Nombre_Reporte: "Reporte de Concentrado de Calificaciones",
+              Nombre_Usuario: `Usuario: ${session.user.name}`,
+              Datos_Grupo:  `Alumno: ${alumnoData.nombre} Materia:`,
+            },
+            body: resultadoBody
+          };
+
+          ImprimirPDFDetalle(configuracion, resultadoEnc, fecha_hoy, alumnoData.nombre)
+
+
+    }
+
+    const ImprimeExcel = async () => {};
+
+    const cerrarModalVista = () => {
+      setPdfPreview(false);
+      setPdfData("");
+      document.getElementById("modalVDetCal").close();
+    };
     
+    const showModalVista = (show) => {
+    show
+      ? document.getElementById("modalVDetCal").showModal()
+      : document.getElementById("modalVDetCal").close();
+    };
+   
+  
     return(
+        <>
+            <ModalVistaPreviaDetalleCal
+                pdfPreview={pdfPreview}
+                pdfData={pdfData}
+                PDF={ImprimePDF}
+                Excel={ImprimeExcel}
+            />
 
-        <dialog id="DetallesActividades" className="modal">
-            <div className="modal-box w-full max-w-5xl h-full">
-                <form  encType="multipart/form-data">
-                    <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
-                        <h3 className="font-bold text-lg"> Detalles alumno: {alumnoData.nombre} </h3>
-                        <div className="flex space-x-2 items-center">
-                        <button
-                          className="btn btn-sm btn-circle btn-ghost"
-                          onClick={(event) => {
-                            event.preventDefault();
-                            document.getElementById("DetallesActividades").close();
-                          }}
-                        >
-                          ✕
-                        </button>
-                        </div>
-                    </div>
-                    <fieldset>
-                        <div className="flex flex-row justify-center items-center h-full">
-
-                            
-                            
-                            <Inputs
-                                dataType={"int"}
-                                name={"Materias"}
-                                tamañolabel={""}
-                                className={"fyo8m-select p-1 grow bg-[#ffffff] "}
-                                Titulo={"Materia: "}
-                                type={"select"}
-                                requerido={true}
-                                errors={errors}
-                                register={register}
-                                message={"Materia Requerido"}
-                                isDisabled={false}
-                                maxLenght={5}
-                                arreglos={materiasReg}
-                            />
-                            
-                            {/*<button
-                              type="button"
-                              className="bg-transparent join-item hover:bg-transparent border-none shadow-none dark:text-white text-black btn rounded-r-lg max-[499px]:pb-4 max-[768px]:pb-4 max-[499px]:pt-0 max-[499px]:pl-0 max-[499px]:pr-0"
-                              onClick={Buscar}
+            <dialog id="DetallesActividades" className="modal">
+                <div className="modal-box w-full max-w-5xl h-full">
+                    <form  encType="multipart/form-data">
+                        <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
+                            <h3 className="font-bold text-lg"> Detalles alumno: {alumnoData.nombre} </h3>
+                            <div className="flex space-x-2 items-center">
+                            <button
+                              className="btn btn-sm btn-circle btn-ghost"
+                              onClick={(event) => {
+                                event.preventDefault();
+                                document.getElementById("DetallesActividades").close();
+                              }}
                             >
-                              <i className="fa-solid fa-magnifying-glass"></i>
+                              ✕
                             </button>
-                            </div> */}
-                                
-                        </div>
-                        <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 w-full mt-10">
-                            <div className="w-4/5">
-                                <h4 className="font-bold text-lg"> Actividades y Evaluaciones</h4>
-                                <DetallesMaterias
-                                 Actividades = {Actividades}
-                                 matAct = {matAct}
-                                 AlumnoD = {alumnoData.numero}
-                                 materiaD = {M}
-                                 bimestre = {bimestre}
-                                 dataEncabezadoDetalles = {dataEncabezadoDetalles}
-                                 dataCaliAlumnosBodyDetalles={dataCaliAlumnosBodyDetalles}
-                                />
                             </div>
                         </div>
-                    </fieldset>
-                </form>
-            </div>
-        </dialog>
+                        <fieldset>
+                            <div className="flex flex-row justify-center items-center h-full">
+                                <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
+                                    <Acciones
+                                        Buscar={Buscar}
+                                        Ver={handleVerClick}
+                                        isLoading={isLoading}  
+                                    />
+                                    </div>
+
+                                    <Inputs
+                                        dataType={"int"}
+                                        name={"Materias"}
+                                        tamañolabel={""}
+                                        className={"fyo8m-select p-1 grow bg-[#ffffff] "}
+                                        Titulo={"Materia: "}
+                                        type={"select"}
+                                        requerido={true}
+                                        errors={errors}
+                                        register={register}
+                                        message={"Materia Requerido"}
+                                        isDisabled={false}
+                                        maxLenght={5}
+                                        arreglos={materiasReg}
+                                    />
+
+                                </div>
+                                <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 w-full mt-10">
+                                    <div className="w-4/5">
+                                        <h4 className="font-bold text-lg"> Actividades y Evaluaciones</h4>
+                                        <DetallesMaterias
+                                         Actividades = {Actividades}
+                                         matAct = {matAct}
+                                         AlumnoD = {alumnoData.numero}
+                                         materiaD = {M}
+                                         bimestre = {bimestre}
+                                         dataEncabezadoDetalles = {dataEncabezadoDetalles}
+                                         dataCaliAlumnosBodyDetalles={dataCaliAlumnosBodyDetalles}
+                                        />
+                                    </div>
+                                </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </dialog>
+        </>
     );
 }
 export default Modal_Detalles_Actividades;

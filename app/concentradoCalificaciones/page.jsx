@@ -1,9 +1,9 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { showSwal, confirmSwal } from "@/app/utils/alerts";
+import { showSwal} from "@/app/utils/alerts";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import {
     getMateriasPorGrupo, 
@@ -18,9 +18,9 @@ import Modal_Detalles_Actividades from "./components/modalDetallesActividades";
 import Acciones from "@/app/concentradoCalificaciones/components/Acciones";
 import BuscarCat from "@/app/components/BuscarCat";
 import TablaConcentradoCal from "@/app/concentradoCalificaciones/components/TablaConcentradoCal";
+import ModalVistaPreviaConcentradoCal from "./components/ModalVistaPreviaConcentradoCal";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "jspdf-autotable";
-import ModalVistaPreviaConcentradoCal from "./components/ModalVistaPreviaConcentradoCal";
 
 function ConcentradoCalificaciones() {
     const router = useRouter();
@@ -43,7 +43,6 @@ function ConcentradoCalificaciones() {
 
     let dataCaliAlumnosBody = [];
     let dataEncabezado = [];
-    console.log(dataCaliAlumnosBody, dataEncabezado);
 
     const {
         register,
@@ -82,7 +81,6 @@ function ConcentradoCalificaciones() {
         };
     });
 
-    console.log(materiasEncabezado, calificacionesTodosAlumnos, alumnoReg, materiasReg, actividadesReg);
     const eliminarArreglosDuplicados = (arr) => {
         const arreglosUnicos = [];
         const conjuntosUnicos = new Set();
@@ -168,7 +166,6 @@ function ConcentradoCalificaciones() {
               setAnimateLoading(false);
             }, 500);
         }
-
     };
 
     const ImprimePDF = async () => {
@@ -283,6 +280,7 @@ function ConcentradoCalificaciones() {
                                 ]}
                             />
                         </div> 
+                        
                         <TablaConcentradoCal
                             materiasEncabezado = {materiasEncabezado}
                             calificacionesTodosAlumnos={calificacionesTodosAlumnos}
