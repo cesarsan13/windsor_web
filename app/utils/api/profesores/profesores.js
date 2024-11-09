@@ -1,5 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { formatDate, formatTime, formatFecha, format_Fecha_String } from "../../globalfn";
 
 export const getProfesores = async (token, baja) => {
     let url = "";
@@ -77,15 +78,15 @@ const Enca1 = (doc) => {
         doc.ImpPosX("Numero", 15, doc.tw_ren);
         doc.ImpPosX("Nombre", 40, doc.tw_ren);
         doc.ImpPosX("Dirección", 110, doc.tw_ren);
-        doc.ImpPosX("Colonia", 140, doc.tw_ren);
-        doc.ImpPosX("Ciudad", 170, doc.tw_ren);
-        doc.ImpPosX("Estado", 215, doc.tw_ren);
-        doc.ImpPosX("C.P.", 240, doc.tw_ren);
+        doc.ImpPosX("Colonia", 155, doc.tw_ren);
+        doc.ImpPosX("Ciudad", 200, doc.tw_ren);
+        doc.ImpPosX("Estado", 245, doc.tw_ren);
+        doc.ImpPosX("C.P.", 270, doc.tw_ren);
         doc.nextRow(4);
         doc.ImpPosX("Email", 15, doc.tw_ren);
-        doc.ImpPosX("Telefono1", 140, doc.tw_ren);
-        doc.ImpPosX("Telefono2", 170, doc.tw_ren);
-        doc.ImpPosX("Celular", 200, doc.tw_ren);
+        doc.ImpPosX("Telefono1", 155, doc.tw_ren);
+        doc.ImpPosX("Telefono2", 200, doc.tw_ren);
+        doc.ImpPosX("Celular", 245, doc.tw_ren);
         doc.nextRow(4);
         doc.printLineH();
         doc.nextRow(4);
@@ -102,25 +103,32 @@ export const ImprimirPDF = (configuracion) => {
     const { body } = configuracion;
     Enca1(newPDF);
     body.forEach((profesores) => {
+        newPDF.setFontSize(8)
         newPDF.ImpPosX(profesores.numero.toString(), 20, newPDF.tw_ren, 0, "R");
         newPDF.ImpPosX(profesores.nombre_completo.toString(), 40, newPDF.tw_ren, 0, "L");
         newPDF.ImpPosX(profesores.direccion.toString(), 110, newPDF.tw_ren, 0, "L");
-        newPDF.ImpPosX(profesores.colonia.toString(), 140, newPDF.tw_ren, 0, "L");
-        newPDF.ImpPosX(profesores.ciudad.toString(), 170, newPDF.tw_ren, 0, "L");
-        newPDF.ImpPosX(profesores.estado.toString(), 215, newPDF.tw_ren, 0, "L");
-        newPDF.ImpPosX(profesores.cp.toString(), 240, newPDF.tw_ren, 0, "L");
+        newPDF.ImpPosX(profesores.colonia.toString(), 155, newPDF.tw_ren, 0, "L");
+        newPDF.ImpPosX(profesores.ciudad.toString(), 200, newPDF.tw_ren, 0, "L");
+        newPDF.ImpPosX(profesores.estado.toString(), 245, newPDF.tw_ren, 0, "L");
+        newPDF.ImpPosX(profesores.cp.toString(), 270, newPDF.tw_ren, 0, "L");
         newPDF.nextRow(4);
         newPDF.ImpPosX(profesores.email.toString(), 15, newPDF.tw_ren, 0, "L");
-        newPDF.ImpPosX(profesores.telefono_1.toString(), 140, newPDF.tw_ren, 12, "L");
-        newPDF.ImpPosX(profesores.telefono_2.toString(), 170, newPDF.tw_ren, 12, "L");
-        newPDF.ImpPosX(profesores.celular.toString(), 200, newPDF.tw_ren, 12, "L");
+        newPDF.ImpPosX(profesores.telefono_1.toString(), 155, newPDF.tw_ren, 12, "L");
+        newPDF.ImpPosX(profesores.telefono_2.toString(), 200, newPDF.tw_ren, 12, "L");
+        newPDF.ImpPosX(profesores.celular.toString(), 245, newPDF.tw_ren, 12, "L");
         Enca1(newPDF);
         if (newPDF.tw_ren >= newPDF.tw_endRenH) {
             newPDF.pageBreakH();
             Enca1(newPDF);
         }
     });
-    newPDF.guardaReporte("Profesores")
+    const date = new Date();
+    const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+    const timeStr = formatTime(date).replace(/:/g, "");
+    newPDF.guardaReporte(`Profesores_${dateStr}${timeStr}`)
 };
 
 export const ImprimirExcel = (configuracion) => {
@@ -130,7 +138,13 @@ export const ImprimirExcel = (configuracion) => {
     const { nombre } = configuracion
     newExcel.setColumnas(columns);
     newExcel.addData(body);
-    newExcel.guardaReporte(nombre);
+    const date = new Date();
+    const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+    const timeStr = formatTime(date).replace(/:/g, "");
+    newExcel.guardaReporte(`${nombre}${dateStr}${timeStr}`);
 }
 
 export const getContraseñaProfe = async (token, grupo, materia) => {

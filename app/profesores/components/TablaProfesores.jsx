@@ -6,6 +6,7 @@ import iconos from "@/app/utils/iconos";
 import React from "react";
 function TablaProfesores({
   profesoresFiltrados,
+  session,
   isLoading,
   showModal,
   setProfesor,
@@ -21,7 +22,7 @@ function TablaProfesores({
 
   return !isLoading ? (
     <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-full">
-      {profesoresFiltrados.length > 0 ? (
+      {profesoresFiltrados && profesoresFiltrados.length > 0 ? (
         <table
           className="table table-xs table-zebra w-full"
           style={{ tableLayout: "fixed" }}
@@ -56,7 +57,7 @@ function TablaProfesores({
                 <td className="text-left">{item.telefono_2}</td>
                 <td className="text-left">{item.celular}</td>
                 <td className="text-left">{item.email}</td>
-                <th className="pt-[.10rem] pb-[.10rem]">
+                <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                   <div
                     className=" kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
                     data-tip={`Ver`}
@@ -65,7 +66,7 @@ function TablaProfesores({
                     <Image src={iconos.ver} alt="Ver" />
                   </div>
                 </th>
-                <th className="w-[50px] pt-[.10rem] pb-[.10rem]">
+                <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                   <div
                     className=" kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
                     data-tip={`Editar`}
@@ -74,7 +75,7 @@ function TablaProfesores({
                     <Image src={iconos.editar} alt="Editar" />
                   </div>
                 </th>
-                <th className="w-[50px] pt-[.10rem] pb-[.10rem]">
+                <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                   <div
                     className=" kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
                     data-tip={`Eliminar`}
@@ -88,9 +89,13 @@ function TablaProfesores({
           </tbody>
           <tfoot />
         </table>
-      ) : (
-        <NoData />
-      )}
+      ) : profesoresFiltrados != null &&
+      session &&
+      profesoresFiltrados.length === 0 ? (
+      <NoData></NoData>
+    ) : (
+      <Loading></Loading>
+    )}
     </div>
   ) : (
     <Loading></Loading>
