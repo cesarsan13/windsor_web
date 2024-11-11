@@ -5,13 +5,15 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { showSwal} from "@/app/utils/alerts";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
+import {formatDate, formatTime} from "@/app/utils/globalfn"
 import {
     getMateriasPorGrupo, 
     getInfoActividadesXGrupo, 
     getActividadesReg, 
     getMateriasReg, 
     getAlumno,
-    ImprimirPDF
+    ImprimirPDF,
+    ImprimirExcel
 } from "@/app/utils/api/concentradoCalificaciones/concentradoCalificaciones";
 import Inputs from "@/app/concentradoCalificaciones/components/Inputs";
 import Modal_Detalles_Actividades from "./components/modalDetallesActividades";
@@ -27,7 +29,6 @@ function ConcentradoCalificaciones() {
     const { data: session, status } = useSession();
     const [grupo, setGrupo] = useState({"numero": 0});
     const [isLoading, setisLoading] = useState(false);
-    //const [isDisabledSave, setIsDisabledSave] = useState(true);
     const [materiasEncabezado, setMateriasEncabezado] = useState({});
     const [calificacionesTodosAlumnos, setCalificacionesTodosAlumnos] = useState({});
     const [materiasReg, setMateriasReg] = useState({});
@@ -111,7 +112,7 @@ function ConcentradoCalificaciones() {
               document.getElementById("modalVConCal").close();
             }, 500);
         } else {
-            let posicionX = 29; 
+            let posicionX = 23; 
             const incrementoX = 9;
             const configuracion = {
               Encabezado: {
@@ -129,7 +130,7 @@ function ConcentradoCalificaciones() {
                 if (!doc.tiene_encabezado) {
                   doc.imprimeEncabezadoPrincipalHConcentradoCal();
                   doc.nextRow(12);
-                  doc.ImpPosX('Num.', 14, doc.tw_ren,4);
+                  doc.ImpPosX('Num.', 14, doc.tw_ren);
                   //doc.ImpPosX('Alumno', 14, doc.tw_ren);
                   resultadoEnc.forEach((desc) => {
                       doc.ImpPosX(desc.descripcion, posicionX, doc.tw_ren, 3);
@@ -170,12 +171,10 @@ function ConcentradoCalificaciones() {
 
     const ImprimePDF = async () => {
         let fecha_hoy = new Date();
-    
         const resultadoEnc = dataEncabezado.filter((item, pos, arr) => 
             arr.findIndex(i => i.descripcion === item.descripcion) === pos
         );
         const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBody);
-
         const configuracion = {
             Encabezado: {
                 Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -188,7 +187,34 @@ function ConcentradoCalificaciones() {
         ImprimirPDF(configuracion, resultadoEnc, fecha_hoy)
     };
 
-    const ImprimeExcel = async () => {};
+    const ImprimeExcel = async () => {
+        let fecha_hoy = new Date();
+        const dateStr = formatDate(fecha_hoy);
+        const timeStr = formatTime(fecha_hoy);
+
+        const resultadoEnc = dataEncabezado.filter((item, pos, arr) => 
+            arr.findIndex(i => i.descripcion === item.descripcion) === pos
+        );
+        const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBody);
+        const columns = resultadoEnc.map((item, index) => ({
+            header: item.descripcion,
+            dataKey: index.toString(),
+        }));
+
+        const configuracion = {
+            Encabezado: {
+                Nombre_Aplicacion: "Sistema de Control Escolar",
+                Nombre_Reporte: "Reporte de Comentarios",
+                Nombre_Usuario: `Usuario: ${session.user.name}`,
+                Clase: `Grupo: ${grupo.horario}     Bimestre: ${bimestre}`
+            },
+
+            body: resultadoBody,
+            columns: columns,
+            nombre: `ConcentradoCalificaciones_${dateStr.replaceAll("/","")}${timeStr.replaceAll(":","")}`,
+        };
+        ImprimirExcel(configuracion);
+    };
 
     const showModalVista = (show) => {
     show

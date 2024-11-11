@@ -1,3 +1,4 @@
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import {formatDate, formatTime} from "@/app/utils/globalfn"
 
@@ -15,7 +16,6 @@ export const getMateriasPorGrupo = async (token, idHorario) => {
     return resJson.data;
     }
 };
-
 
 export const getInfoActividadesXGrupo = async (token, idHorario, idBimestre) => {
     if(idHorario > 0 && idBimestre > 0){
@@ -105,10 +105,8 @@ export const getActividadesDetalles = async (token, idMateria) => {
     }
 };
 
-
-
 export const ImprimirPDF = (configuracion, resultadoEnc, fecha_hoy) => {
-    let posicionX = 38; 
+    let posicionX = 23; 
     const incrementoX = 9;
     const orientacion = "Landscape";
     const newPDF = new ReportePDF(configuracion, orientacion);
@@ -156,7 +154,7 @@ export const ImprimirPDF = (configuracion, resultadoEnc, fecha_hoy) => {
     const newPDF = new ReportePDF(configuracion, "Portrait");
     const {body} = configuracion;
     let posicionX = 14; 
-    const incrementoX = 28;
+    const incrementoX = 27;
     const Enca1 = (newPDF) => {
         if (!newPDF.tiene_encabezado) {
           newPDF.imprimeEncabezadoPrincipalVConcentradoCal();
@@ -178,9 +176,9 @@ export const ImprimirPDF = (configuracion, resultadoEnc, fecha_hoy) => {
       };
     Enca1(newPDF);
 
-    let posicionBody = 14;
+    let posicionBody = 34;
     body.forEach((valor, idx) => {
-          newPDF.ImpPosX(valor, posicionBody, newPDF.tw_ren);
+          newPDF.ImpPosX(valor, posicionBody, newPDF.tw_ren, 0, "R");
           posicionBody+= incrementoX;
     })
     Enca1(newPDF);
@@ -192,4 +190,14 @@ export const ImprimirPDF = (configuracion, resultadoEnc, fecha_hoy) => {
       const dateStr = formatDate(fecha_hoy)
       const timeStr = formatTime(fecha_hoy)
       newPDF.guardaReporte(`ConcentradoCalificaciones_${alumno}_${dateStr.replaceAll("/","")}${timeStr.replaceAll(":","")}`);
+  };
+
+  export const ImprimirExcel = (configuracion) => {
+    const newExcel = new ReporteExcel(configuracion);
+    const { columns } = configuracion;
+    const { body } = configuracion;
+    const { nombre } = configuracion;
+    newExcel.setColumnas(columns);
+    newExcel.addData(body);
+    newExcel.guardaReporte(nombre);
   };

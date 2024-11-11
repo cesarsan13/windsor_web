@@ -6,10 +6,12 @@ import Acciones from "@/app/concentradoCalificaciones/components/AccionesDetalle
 import { useForm } from "react-hook-form";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import DetallesMaterias from "./TablaDetalles";
+import {formatDate, formatTime} from "@/app/utils/globalfn"
 import {
     getActividadesXHorarioXAlumnoXMateriaXBimestre,
     getActividadesDetalles,
-    ImprimirPDFDetalle
+    ImprimirPDFDetalle,
+    ImprimirExcel
 } from "@/app/utils/api/concentradoCalificaciones/concentradoCalificaciones";
 import ModalVistaPreviaDetalleCal from "./ModalVistaPreviaDetalleCal";
 
@@ -17,7 +19,7 @@ function Modal_Detalles_Actividades({
     alumnoData,
     materiasReg,
     grupo,
-    bimestre
+    bimestre,
 }){
     const [isLoading, setisLoading] = useState(false);
     const { data: session, status } = useSession();
@@ -82,13 +84,13 @@ function Modal_Detalles_Actividades({
             }, 500);
         } else {
             let posicionX = 14; 
-            const incrementoX = 28;
+            const incrementoX = 27;
             const configuracion = {
               Encabezado: {
                 Nombre_Aplicacion: "Sistema de Control Escolar",
                 Nombre_Reporte: "Reporte de Concentrado de Calificaciones",
                 Nombre_Usuario: `Usuario: ${session.user.name}`,
-                Datos_Grupo:  `Alumno: ${alumnoData.nombre} Materia:`,
+                Datos_Grupo:  `Alumno: ${alumnoData.nombre}   Bimestre: ${bimestre}   Materia:${materia}`,
               },
               body: resultadoBody
             };
@@ -115,9 +117,9 @@ function Modal_Detalles_Actividades({
                 }
               };
             Enca1(reporte);
-            let posicionBody = 14;
+            let posicionBody = 34;
             body.forEach((valor, idx) => {
-                  reporte.ImpPosX(valor, posicionBody, reporte.tw_ren);
+                  reporte.ImpPosX(valor, posicionBody, reporte.tw_ren, 0, "R");
                   posicionBody+= incrementoX;
             })
             Enca1(reporte);
@@ -142,23 +144,52 @@ function Modal_Detalles_Actividades({
             arr.findIndex(i => i.descripcion === item.descripcion) === pos
         );
         const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBodyDetalles);
-
         const configuracion = {
             Encabezado: {
               Nombre_Aplicacion: "Sistema de Control Escolar",
               Nombre_Reporte: "Reporte de Concentrado de Calificaciones",
               Nombre_Usuario: `Usuario: ${session.user.name}`,
-              Datos_Grupo:  `Alumno: ${alumnoData.nombre} Materia:`,
+              Datos_Grupo:  `Alumno: ${alumnoData.nombre}   Bimestre: ${bimestre}   Materia:${materia}`,
             },
             body: resultadoBody
           };
-
           ImprimirPDFDetalle(configuracion, resultadoEnc, fecha_hoy, alumnoData.nombre)
-
-
     }
 
-    const ImprimeExcel = async () => {};
+    const ImprimeExcel = async () => {
+        let fecha_hoy = new Date();
+        const dateStr = formatDate(fecha_hoy);
+        const timeStr = formatTime(fecha_hoy);
+
+        const resultadoEnc = dataEncabezadoDetalles.filter((item, pos, arr) => 
+            arr.findIndex(i => i.descripcion === item.descripcion) === pos
+        );
+        const columns = resultadoEnc.map((item, index) => ({
+            header: item.descripcion,
+            dataKey: index.toString(),
+        }));
+        columns.push({
+            header: "Promedio",
+            dataKey: resultadoEnc.length.toString(),
+        });
+
+        const ArregloProvisional = [];
+        const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBodyDetalles);
+        ArregloProvisional.push(resultadoBody);
+
+        const configuracion = {
+            Encabezado: {
+                Nombre_Aplicacion: "Sistema de Control Escolar",
+                Nombre_Reporte: "Reporte de Comentarios",
+                Nombre_Usuario: `Usuario: ${session.user.name}`,
+                Clase: `Alumno: ${alumnoData.nombre}   Bimestre: ${bimestre}   Materia:`
+            },
+            body: ArregloProvisional,
+            columns: columns,
+            nombre: `ConcentradoCalificaciones_${alumnoData.nombre}_${dateStr.replaceAll("/","")}${timeStr.replaceAll(":","")}`,
+        };
+        ImprimirExcel(configuracion);
+    };
 
     const cerrarModalVista = () => {
       setPdfPreview(false);
@@ -172,7 +203,6 @@ function Modal_Detalles_Actividades({
       : document.getElementById("modalVDetCal").close();
     };
    
-  
     return(
         <>
             <ModalVistaPreviaDetalleCal
