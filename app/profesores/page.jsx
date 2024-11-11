@@ -26,7 +26,7 @@ function Profesores() {
   const { data: session, status } = useSession();
   const [profesores, setProfesores] = useState([]);
   const [profesor, setProfesor] = useState({});
-  const [profesoresFiltrados, setProfesoresFiltrados] = useState([]);
+  const [profesoresFiltrados, setProfesoresFiltrados] = useState(null);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");

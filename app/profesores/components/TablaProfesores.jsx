@@ -31,13 +31,7 @@ function TablaProfesores({
             <tr>
               <td className="w-[50px]">Núm.</td>
               <td className="w-[200px]">Nombre</td>
-              <td className="w-[150px]">Dirección</td>
-              <td className="w-[150px]">Colonia</td>
-              <td className="w-[100px]">Ciudad</td>
-              <td className="w-[80px]">C.P.</td>
               <td className="w-[150px]">Telefono1</td>
-              <td className="w-[150px]">Telefono2</td>
-              <td className="w-[150px]">Celular</td>
               <td className="w-[200px]">Email</td>
               <th className="w-[50px] pt-[.10rem] pb-[.10rem]">Ver</th>
               <th className="w-[50px] pt-[.10rem] pb-[.10rem]">Editar</th>
@@ -49,13 +43,7 @@ function TablaProfesores({
               <tr key={item.numero} className="hover:cursor-pointer">
                 <td className="text-right">{item.numero}</td>
                 <td className="text-left">{item.nombre_completo}</td>
-                <td className="text-left">{item.direccion}</td>
-                <td className="text-left">{item.colonia}</td>
-                <td className="text-left">{item.ciudad}</td>
-                <td className="text-left">{item.cp}</td>
                 <td className="text-left">{item.telefono_1}</td>
-                <td className="text-left">{item.telefono_2}</td>
-                <td className="text-left">{item.celular}</td>
                 <td className="text-left">{item.email}</td>
                 <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                   <div
