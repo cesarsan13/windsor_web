@@ -368,6 +368,7 @@ function Profesores() {
       );
       if (!confirmed) {
         showModal(true);
+        setisLoadingButton(false);
         return;
       }
     }
