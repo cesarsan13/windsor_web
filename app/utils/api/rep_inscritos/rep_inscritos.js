@@ -1,6 +1,8 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { format_Fecha_String, formatNumber } from "@/app/utils/globalfn";
+import { formatDate, formatTime, formatFecha } from "../../globalfn";
+
 
 export const getConsultasInscripcion = async (token) => {
     let url = `${process.env.DOMAIN_API}api/reportes/rep_inscritos`
@@ -161,7 +163,14 @@ export const Imprimir = (configuracion) => {
     newPDF.ImpPosX(`Total: ${formatNumber(total_inscripcion)}` || '0.00', 175, newPDF.tw_ren);
     newPDF.nextRow(4);
     newPDF.ImpPosX(`Total Alumnos: ${alumnos.toString() || '0'}`, 175, newPDF.tw_ren);
-    newPDF.guardaReporte("Reporte Alumnos Inscritos");
+    const date = new Date();
+    const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+    const timeStr = formatTime(date).replace(/:/g, "");
+
+  newPDF.guardaReporte(`Reporte_Alumnos_Inscritos${dateStr}${timeStr}`);
 };
 
 export const ImprimirExcel = (configuracion) => {
@@ -218,7 +227,13 @@ export const ImprimirExcel = (configuracion) => {
     });
     newExcel.setColumnas(columns);
     newExcel.addData(newBody);
-    newExcel.guardaReporte(nombre);
+    const date = new Date();
+    const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+    const timeStr = formatTime(date).replace(/:/g, "");
+    newExcel.guardaReporte(`${nombre}${dateStr}${timeStr}`);
 };
 
 

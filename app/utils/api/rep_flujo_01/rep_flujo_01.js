@@ -1,5 +1,7 @@
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
+import { formatDate, formatTime, formatFecha, format_Fecha_String } from "../../globalfn";
+
 
 export const DocumentosCobranza = async (token, fecha1, fecha2) => {
   const res = await fetch(`${process.env.DOMAIN_API}api/documentosCobranza`, {
@@ -152,7 +154,14 @@ export const ImprimirPDF = (
   newPDF.ImpPosX(Tw_TGe[8].toString(), 154, newPDF.tw_ren);
   const sum = Number(Tw_TGe[7].toString()) - Number(Tw_TGe[8].toString());
   newPDF.ImpPosX(sum.toString(), 174, newPDF.tw_ren);
-  newPDF.guardaReporte("Reporte de Adeudos Pendientes");
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+
+newPDF.guardaReporte(`Reporte_Adeudos_Pendientes_${dateStr}${timeStr}`);
 };
 
 export const ImprimirExcel = (
@@ -293,8 +302,13 @@ export const ImprimirExcel = (
   const {nombre} = configuracion
   newExcel.setColumnas(columns);
   newExcel.addData(data);
-  newExcel.guardaReporte(nombre);
-  console.log(data);
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+  newExcel.guardaReporte(`${nombre}${dateStr}${timeStr}`);
 };
 
 const Enca1 = (doc) => {

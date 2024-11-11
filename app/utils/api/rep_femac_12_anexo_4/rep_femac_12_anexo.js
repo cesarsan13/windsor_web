@@ -1,6 +1,8 @@
 import { calculaDigitoBvba } from "../../globalfn";
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
+import { formatDate, formatTime, formatFecha, format_Fecha_String } from "../../globalfn";
+
 
 export const getDetallePedido = async (
   token,
@@ -134,7 +136,14 @@ export const ImprimirPDF = async (
   Cambia_Articulo(newPDF, tot_art);
   newPDF.ImpPosX("TOTAL General", 98, newPDF.tw_ren,0,"L");
   newPDF.ImpPosX(total_general.toString(), 138, newPDF.tw_ren,0,"R");
-  newPDF.guardaReporte("Reporte Cobranza por Producto");
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+
+newPDF.guardaReporte(`Reporte_Cobranza_Producto_${dateStr}${timeStr}`);
 };
 const Cambia_Articulo = (doc, Total_Art) => {
   doc.ImpPosX("TOTAL", 108, doc.tw_ren,0,"L");
@@ -246,7 +255,13 @@ export const ImprimirExcel = async (
   });
   // newExcel.addData(data1);
   newExcel.addData(data1);
-  newExcel.guardaReporte(nombre);
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+  newExcel.guardaReporte(`${nombre}${dateStr}${timeStr}`);
 };
 
 const Cambia_Articulo_Excel = (tot_art, data) => {

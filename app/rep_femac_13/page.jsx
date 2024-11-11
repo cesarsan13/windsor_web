@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Acciones from "@/app/rep_femac_13/components/Acciones";
-import ModalVistaPreviaRepFemac13 from "./components/modalVistaPreviaRepFemac13";
+import VistaPrevia from "../components/VistaPrevia";
 import {
   getRepASem,
   ImprimirExcel,
@@ -178,6 +178,11 @@ function Rep_Femac_13() {
     setPdfData("");
     document.getElementById("modalVPRepFemac13").close();
   };
+  const CerrarView = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVPRepFemac13").close();
+  };
   const ImprimePDF = () => {
     const configuracion = {
       Encabezado: {
@@ -306,13 +311,16 @@ function Rep_Femac_13() {
 
   return (
     <>
-      <ModalVistaPreviaRepFemac13
+      <VistaPrevia
+        id={"modalVPRepFemac13"}
+        titulo={"Vista Previa de Alumnos por Clase Semanal"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
-      <div className="flex flex-col justify-start items-start bg-slate-100 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+      <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">
           {/* Fila de la cabecera de la pagina */}
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">

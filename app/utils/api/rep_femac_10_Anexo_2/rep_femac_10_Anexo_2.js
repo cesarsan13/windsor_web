@@ -1,6 +1,8 @@
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
 import { calculaDigitoBvba, format_Fecha_String, formatNumber } from "../../globalfn";
+import { formatDate, formatTime, formatFecha } from "../../globalfn";
+
 
 export const getReporteEstadodeCuenta = async (token, fecha_ini, fecha_fin, alumno_ini,
     alumno_fin, tomaFechas) => {
