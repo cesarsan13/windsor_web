@@ -12,7 +12,7 @@ function ConfigReporte({
   const { data: session, status } = useSession();
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [textoAnterior, setTextoAnterior] = useState("");
-  const [arreglo,setArreglo]=useState({})
+  const [arreglo, setArreglo] = useState({})
   const changeSelectedLabel = (name) => {
     if (textoAnterior !== "" && textoAnterior !== name) {
       const labelAnterior = document.getElementById(textoAnterior);
@@ -24,13 +24,13 @@ function ConfigReporte({
       );
     }
   };
-  useEffect(()=>{
+  useEffect(() => {
     const arreglo = labels
-    .filter((l) => l.visible === 1)
-    .map((label) => (
-      { id: label.numero_dato-1, descripcion: `Texto_${label.numero_dato}` }))
-      setArreglo(arreglo)
-  },[labels])
+      .filter((l) => l.visible === 1)
+      .map((label) => (
+        { id: label.numero_dato - 1, descripcion: `Texto_${label.numero_dato}` }))
+    setArreglo(arreglo)
+  }, [labels])
   return (
     <div className=" w-11/12 max-w-5xl">
       <button
@@ -40,9 +40,9 @@ function ConfigReporte({
         ✕
       </button>
       <>
-        <h1 className="font-bold text-2xl mb-5">Actualizacion de formato</h1>
+        <h1 className="font-bold text-2xl mb-5 text-black dark:text-white">Actualizacion de formato</h1>
         <fieldset id="fs_formapago" className="flex flex-row">
-          <div className=" overflow-y-scroll overflow-x-hidden h-[100%]">
+          <div className=" overflow-y-scroll overflow-x-hidden gap-2 h-[100%] flex flex-row">
             <Sheet
               labels={labels}
               setLabels={setLabels}
@@ -52,24 +52,25 @@ function ConfigReporte({
               setTextoAnterior={setTextoAnterior}
               currentID={currentID}
             ></Sheet>
+            {selectedIndex && (
+              <div className="pt-5">
+                <PropertyPage
+                  session={session}
+                  labels={labels}
+                  setLabels={setLabels}
+                  selectedIndex={selectedIndex}
+                  propertyData={propertyData}
+                  setShowSheet={setShowSheet}
+                  setSelectedIndex={setSelectedIndex}
+                  setTextoAnterior={setTextoAnterior}
+                  changeSelectedLabel={changeSelectedLabel}
+                  textoAnterior={textoAnterior}
+                  arreglo={arreglo}
+                ></PropertyPage>
+              </div>
+            )}
           </div>
-          {selectedIndex && (
-            <div className="pt-5">
-              <PropertyPage
-                session={session}
-                labels={labels}
-                setLabels={setLabels}
-                selectedIndex={selectedIndex}
-                propertyData={propertyData}
-                setShowSheet={setShowSheet}
-                setSelectedIndex={setSelectedIndex}
-                setTextoAnterior={setTextoAnterior}
-                changeSelectedLabel={changeSelectedLabel}
-                textoAnterior={textoAnterior}
-                arreglo={arreglo}
-              ></PropertyPage>
-            </div>
-          )}
+
         </fieldset>
       </>
     </div>
