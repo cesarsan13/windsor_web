@@ -21,9 +21,9 @@ function ModalParciales({
     };
     return (
         <dialog id="modal_parciales" className="modal">
-            <div className="modal-box w-full md:w-3/4 max-w-2xl h-auto">
-                <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
-                    <h3 className="font-bold text-lg">Añadir un Nuevo Parcial</h3>
+            <div className="modal-box w-full md:w-3/4 max-w-2xl h-auto bg-base-200">
+                <div className="sticky -top-6 flex justify-between items-center bg-base-200 dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
+                    <h3 className="font-bold text-lg text-neutral-600 dark:text-white">Añadir un Nuevo Parcial</h3>
                     <div className="flex space-x-2 items-center">
                         <div data-tip="Guardar">
                             <button
@@ -40,7 +40,7 @@ function ModalParciales({
                             </button>
                         </div>
                         <button
-                            className="btn btn-sm btn-circle btn-ghost"
+                            className="btn btn-sm btn-circle btn-ghost bg-base-200 dark:bg-[#1d232a] text-neutral-600 dark:text-white"
                             onClick={(event) => {
                                 event.preventDefault();
                                 document.getElementById("modal_parciales").close();

@@ -1,6 +1,7 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { calculaDigitoBvba } from "@/app/utils/globalfn";
+import { obtenerFechaYHoraActual } from "@/app/utils/globalfn";
 
 export const validarClaveCajero = async (token, data) => {
   let url = `${process.env.DOMAIN_API}api/pagos1/validar-clave-cajero`;
@@ -292,7 +293,8 @@ export const Imprimir = (configuracion) => {
     240,
     newPDF.tw_ren
   );
-  newPDF.guardaReporte("Pagos");
+  const { fecha, hora } = obtenerFechaYHoraActual();
+  newPDF.guardaReporte(`Pagos_${fecha}${hora}`);
 };
 
 export const ImprimirExcel = (configuracion) => {

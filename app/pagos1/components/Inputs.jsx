@@ -35,6 +35,7 @@ function Inputs({
             type={type}
             className={`text-black dark:text-white ${className}`}
             disabled={isDisabled}
+            onFocus={(e) => e.target.select()}
           // onChange={(event) => setValue(event.target.value)}
           />
         </label>
@@ -59,6 +60,7 @@ function Inputs({
             type={type}
             className={`text-black dark:text-white ${className}`}
             disabled={isDisabled}
+            onFocus={(e) => e.target.select()}
             value={valueInput}
             {...register(name, {
               ...(requerido && { required: message }),
@@ -84,6 +86,7 @@ function Inputs({
             name={name}
             id={name}
             type={type}
+            onFocus={(e) => e.target.select()}
             className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none  ${className}`}
             disabled={isDisabled}
             // onKeyDown={soloEnteros}
@@ -129,6 +132,7 @@ function Inputs({
             name={name}
             id={name}
             type={type}
+            onFocus={(e) => e.target.select()}
             className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none  ${className}`}
             {...(dataType === "int" && { onKeyDown: soloEnteros })}
             {...(dataType === "float" && { onKeyDown: soloDecimales })}
@@ -164,6 +168,7 @@ function Inputs({
             type={type}
             className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${className}`}
             disabled={isDisabled}
+            onFocus={(e) => e.target.select()}
             {...(dataType === "int" && { onKeyDown: soloEnteros })}
             {...(dataType === "float" && { onKeyDown: soloDecimales })}
             {...(dataType === "int" ||
