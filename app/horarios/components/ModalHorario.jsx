@@ -32,23 +32,23 @@ function ModalHorario({
       accion === "Alta"
         ? `Nuevo Horario: ${currentID}`
         : accion === "Editar"
-        ? `Editar Horario: ${currentID}`
-        : accion === "Eliminar"
-        ? `Eliminar Horario: ${currentID}`
-        : `Ver Horario: ${currentID}`
+          ? `Editar Horario: ${currentID}`
+          : accion === "Eliminar"
+            ? `Eliminar Horario: ${currentID}`
+            : `Ver Horario: ${currentID}`
     );
   }, [accion]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
       ? setHorarios((horarios) => ({
-          ...horarios,
-          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-        }))
+        ...horarios,
+        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+      }))
       : setHorarios((horarios) => ({
-          ...horarios,
-          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-        }));
+        ...horarios,
+        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+      }));
   };
   const options = [
     { value: "LU", label: "Lunes" },
@@ -76,17 +76,16 @@ function ModalHorario({
   };
   return (
     <dialog id="my_modal_horario" className="modal">
-      <div className="modal-box bg-base-200">
+      <div className="modal-box max-w-xl bg-base-200">
         <form onSubmit={onSubmit}>
           <div className="sticky -top-6 flex justify-between items-center bg-base-200 w-full h-10 z-10 mb-5">
             <h3 className="font-bold text-lg text-black dark:text-white">{titulo}</h3>
             <div className="flex space-x-2 items-center">
               <div
-                className={`tooltip tooltip-bottom ${
-                  accion === "Ver"
-                    ? "hover:cursor-not-allowed hidden"
-                    : "hover:cursor-pointer"
-                }`}
+                className={`tooltip tooltip-bottom ${accion === "Ver"
+                  ? "hover:cursor-not-allowed hidden"
+                  : "hover:cursor-pointer"
+                  }`}
                 data-tip="Guardar"
               >
                 <button
@@ -147,10 +146,10 @@ function ModalHorario({
                 titulo={"Dias de la semana"}
                 name={"dia"}
                 Titulo={"Dias de la semana"}
-                tamañolabel={"w-full sm:w-96"}
+                tamañolabel={"input input-bordered flex items-center gap-3 grow text-black dark:text-white"}
                 message={"dia requerido"}
                 register={register}
-                className={"p-1.5 grow  sm:w-auto"}
+                className={"p-1.5 grow react-select-container text-black"}
                 errors={errors}
                 requerido={true}
                 dataType={"multi-select"}
@@ -166,7 +165,7 @@ function ModalHorario({
               <Inputs
                 dataType={"string"}
                 name={"horario"}
-                tamañolabel={"w-5/6"}
+                tamañolabel={"w-3/6"}
                 className={"w-5/6"}
                 Titulo={"Horario: "}
                 type={"text"}
@@ -181,8 +180,8 @@ function ModalHorario({
               <Inputs
                 dataType={"int"}
                 name={"max_niños"}
-                tamañolabel={"w-5/6"}
-                className={"w-4/6 text-right"}
+                tamañolabel={"w-2/5"}
+                className={"w-2/5 text-right"}
                 Titulo={"Max Niños: "}
                 type={"text"}
                 requerido={true}
@@ -197,8 +196,8 @@ function ModalHorario({
                 Titulo={"Sexo"}
                 name={"sexo"}
                 message={"sexo requerido"}
-                className={"fyo8m-select w-4/6 bg-[#ffffff] "}
-                tamañolabel={"w-5/6"}
+                tamañolabel={""}
+                className={"fyo8m-select p-1.5 grow bg-[#ffffff]"}
                 register={register}
                 errors={errors}
                 requerido={true}
@@ -213,8 +212,8 @@ function ModalHorario({
               <Inputs
                 dataType={"int"}
                 name={"edad_ini"}
-                tamañolabel={"w-3/6"}
-                className={"w-3/6 text-right"}
+                tamañolabel={"w-2/5"}
+                className={"w-2/5 text-right"}
                 Titulo={"Edad Ini: "}
                 type={"text"}
                 requerido={true}
@@ -228,8 +227,8 @@ function ModalHorario({
               <Inputs
                 dataType={"int"}
                 name={"edad_fin"}
-                tamañolabel={"w-3/6"}
-                className={"w-3/6 text-right"}
+                tamañolabel={"w-2/5"}
+                className={"w-2/5 text-right"}
                 Titulo={"Edad Fin: "}
                 type={"text"}
                 requerido={true}
