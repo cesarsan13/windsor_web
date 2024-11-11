@@ -175,9 +175,9 @@ function PropertyPage({
     setSelectedIndex(evt.target.value);
   };  
   return (
-    <div className="flex flex-col card bg-slate-100 dark:bg-slate-800 rounded-lg ">
+    <div className="flex flex-col card w-5/6 bg-slate-100 dark:bg-slate-800 rounded-lg ">
       <div className=" bg-slate-400 w-full p-2 rounded-lg rounde flex flex-row">
-        <h3 className="text-center font-bold ">Propiedades de </h3>
+        <h3 className="text-center font-bold text-black dark:text-white">Propiedades de </h3>
         <Inputs
           dataType={"string"}
           name={"idlabel"}
@@ -200,7 +200,7 @@ function PropertyPage({
         <form action="">
           <div className="collapse collapse-arrow bg-base-200">
             <input type="radio" name="my-accordion-2" defaultChecked />
-            <div className="collapse-title text-xl font-medium">Posicion</div>
+            <div className="collapse-title text-xl font-medium text-black dark:text-white">Posicion</div>
             <div className="collapse-content grid gap-2">
               <Inputs
                 dataType={"int"}
@@ -238,7 +238,7 @@ function PropertyPage({
           <div className="divider mt-0 mb-0"></div>
           <div className="collapse collapse-arrow bg-base-200">
             <input type="radio" name="my-accordion-2" defaultChecked />
-            <div className="collapse-title text-xl font-medium">Fuente</div>
+            <div className="collapse-title text-xl font-medium text-black dark:text-white">Fuente</div>
             <div className="collapse-content grid gap-2">
               <Inputs
                 dataType={"string"}
@@ -270,10 +270,10 @@ function PropertyPage({
                 isDisabled={false}
                 handleChange={handleChange}
               />
-              <div className="flex flex-row">
+              <div className="flex flex-col space-y-2">
                 <Inputs
                   name={"font_bold"}
-                  tamañolabel={"w-full input-xs"}
+                  tamañolabel={"w-4/6 input-xs"}
                   className={"toggle toggle-sm toggle-success"}
                   Titulo={"Bold: "}
                   type={"checkbox"}
@@ -286,7 +286,7 @@ function PropertyPage({
                 />
                 <Inputs
                   name={"font_italic"}
-                  tamañolabel={"w-full input-xs"}
+                  tamañolabel={"w-4/6 input-xs"}
                   className={"toggle toggle-sm toggle-success"}
                   Titulo={"Itallic: "}
                   type={"checkbox"}
@@ -298,10 +298,10 @@ function PropertyPage({
                   handleChange={handleChange}
                 />
               </div>
-              <div className="flex flex-row">
+              <div className="flex flex-col space-y-2">
                 <Inputs
                   name={"font_rallado"}
-                  tamañolabel={"w-full input-xs"}
+                  tamañolabel={"w-4/6 input-xs"}
                   className={"toggle toggle-sm toggle-success"}
                   Titulo={"Rallado: "}
                   type={"checkbox"}
@@ -314,7 +314,7 @@ function PropertyPage({
                 />
                 <Inputs
                   name={"font_subrallado"}
-                  tamañolabel={"w-full input-xs"}
+                  tamañolabel={"w-4/6 input-xs"}
                   className={"toggle toggle-sm toggle-success"}
                   Titulo={"Subrallado: "}
                   type={"checkbox"}
@@ -331,7 +331,7 @@ function PropertyPage({
           <div className="divider mt-0 mb-0"></div>
           <div className="collapse collapse-arrow bg-base-200">
             <input type="radio" name="my-accordion-2" defaultChecked />
-            <div className="collapse-title text-xl font-medium">Texto</div>
+            <div className="collapse-title text-xl font-medium text-black dark:text-white">Texto</div>
             <div className="collapse-content grid gap-2">
               <Inputs
                 dataType={"string"}
