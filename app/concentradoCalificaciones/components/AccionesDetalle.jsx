@@ -6,8 +6,8 @@ import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 function Acciones({Buscar, isLoading, Ver }) { 
   const images = [
-    { src: iconos.vistaPrevia, alt: 'Vista previa', tooltipTitle: 'Vista previa', onClick: Ver },
-    { src: iconos.buscar, alt: "Buscar", tooltipTitle: "Buscar", onClick: Buscar, isLoading: isLoading }
+    { src: iconos.buscar, alt: "Buscar", tooltipTitle: "Buscar", onClick: Buscar, isLoading: isLoading },
+    { src: iconos.vistaPrevia, alt: 'Vista previa', tooltipTitle: 'Vista previa', onClick: Ver}
   ];
 
   const ImageTooltip = ({ src, tooltipTitle, onClick }) => {  //, isLoading
@@ -15,6 +15,7 @@ function Acciones({Buscar, isLoading, Ver }) {
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
           className="w-6 h-5 bg-transparent hover:bg-transparent border-none shadow-none text-black dark:text-white rounded-lg"
+          type = "button"
           onClick={onClick}
         >
           <Image src={src} alt={tooltipTitle} className="w-5 h-5 md:w-6 md:h-6" />

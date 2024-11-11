@@ -262,6 +262,38 @@ export class ReportePDF {
     }
   }
 
+  //Para la impresion Vertical para concentrado calificaciones
+  imprimeEncabezadoPrincipalVConcentradoCal() {
+    const { Encabezado } = this.configuracion;
+
+    //la imagen tiene que ser en png para que la imprima
+    const ImagenL = "resources/Logo_Interaccion.png";
+    if (!this.tiene_encabezado) {
+      this.doc.addImage(ImagenL, "PNG", 10, 10, 26, 25);
+      this.setFontSize(14);
+      this.setTw_Ren(16);
+      this.ImpPosX(Encabezado.Nombre_Aplicacion, 35, this.tw_ren);
+      this.setFontSize(10);
+      this.nextRow(6);
+      this.ImpPosX(Encabezado.Nombre_Reporte, 35, this.tw_ren);
+      this.nextRow(6);
+      this.setFontSize(10);
+      this.ImpPosX(Encabezado.Nombre_Usuario, 35, this.tw_ren);
+      this.nextRow(6);
+      this.setFontSize(10);
+      this.ImpPosX(Encabezado.Datos_Grupo, 35, this.tw_ren);
+      const date = new Date();
+      const dateStr = formatDate(date);
+      const timeStr = formatTime(date);
+      this.setTw_Ren(16);
+      this.ImpPosX(`Fecha: ${dateStr}`, 150, this.tw_ren);
+      this.nextRow(6);
+      this.ImpPosX(`Hora: ${timeStr}`, 150, this.tw_ren);
+      this.nextRow(6);
+      this.ImpPosX(`Hoja: ${this.getNumberPages()}`, 150, this.tw_ren);
+    }
+  }
+
   generateTable(headers, data) {
     this.doc.autoTable({
       head: [headers], // Encabezados de las columnas

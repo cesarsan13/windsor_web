@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from "react";
-import Loading from "@/app/components/loading";
-import NoData from "@/app/components/NoData";
+import React from "react";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 import { RegresaCalificacionRedondeo, aDec } from "@/app/utils/globalfn";
-
 
 function TablaConcentradoCal({
     materiasEncabezado,
@@ -18,7 +15,6 @@ function TablaConcentradoCal({
     setAlumnoData,
     dataEncabezado,
     dataCaliAlumnosBody,
-    //setalumnosCalificaciones
 }){
     let indexIngles = 0;
     let indexEspañol = 0;
@@ -26,7 +22,6 @@ function TablaConcentradoCal({
     let contadorIngles = 0;
     let datosEspanol = 0;
     let datosIngles = 0;
-
 
     const tableAction = async (evt, alumno, accion) => {
         showModal(true);
@@ -97,7 +92,7 @@ function TablaConcentradoCal({
                         <td className="w-[80%]">Alumno</td>
                         {materiasEncabezado.length === undefined ? (
                             <td className="w-[45%]">Sin datos</td> 
-                        ) :(
+                        ):(
                             materiasEncabezado.map((item, index) => {
                                 const esUltimoDeArea = 
                                 (item.area === 1 || item.area === 4) &&
@@ -193,7 +188,6 @@ function TablaConcentradoCal({
                                 </tr>
                             );
                             dataCaliAlumnosBody.push(alumnoData);
-                        
                             return alumnoRow;
                         })
                     )}
