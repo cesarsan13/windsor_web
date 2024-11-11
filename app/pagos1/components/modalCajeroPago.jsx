@@ -2,7 +2,7 @@ import { soloEnteros, soloDecimales, pone_ceros } from "@/app/utils/globalfn";
 import React from "react";
 import { showSwalAndWait } from "@/app/utils/alerts";
 import { useState, useEffect } from "react";
-import Inputs from "@/app/cajeros/components/Inputs";
+import Inputs from "@/app/pagos1/components/Inputs";
 import BuscarCat from "@/app/components/BuscarCat";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
@@ -23,6 +23,10 @@ function ModalCajeroPago({
 }) {
   const columnasBuscaCat = ["numero", "nombre"];
   const nameInputs = ["numero", "nombre"];
+
+  useEffect(() => {
+    document.getElementById("clave_cajero").focus();
+  }, [cajero.numero]);
 
   const onSubmitModal = handleSubmitCaj(async (data) => {
     data.cajero = cajero.numero;
@@ -59,16 +63,16 @@ function ModalCajeroPago({
 
   return (
     <dialog id="my_modal_3" className="modal">
-      <div className="modal-box w-full max-w-md sm:max-w-lg p-6">
+      <div className="modal-box w-full max-w-md sm:max-w-lg p-6 bg-base-200">
         <form onSubmit={onSubmitModal}>
-          <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
-            <h3 className="font-bold text-lg">Ingresa Clave del Cajero</h3>
+          <div className="sticky -top-6 flex justify-between items-center bg-base-200 dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
+            <h3 className="font-bold text-lg text-neutral-600 dark:text-white">Ingresa Clave del Cajero</h3>
             <div className="flex space-x-2 items-center">
               <div className={`tooltip tooltip-bottom`} data-tip="Validar">
                 <button
                   type="submit"
                   id="btn_guardar"
-                  className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
+                  className="bg-transparent hover:bg-base-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
                 >
                   <Image
                     src={iconos.guardar}
@@ -80,7 +84,7 @@ function ModalCajeroPago({
               </div>
               <button
                 type="button"
-                className="btn btn-sm btn-circle btn-ghost"
+                className="btn btn-sm btn-circle btn-ghost bg-base-200 dark:bg-[#1d232a] text-neutral-600 dark:text-white"
                 onClick={() => backCloseAndHome()}
               >
                 ✕

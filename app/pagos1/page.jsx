@@ -395,8 +395,13 @@ function Pagos_1() {
       );
       return;
     }
+    reset({
+      cantidad_producto: 1,
+    });
+    setPrecioBase(0);
+    setAccionB("Alta");
     showModal("modal_nuevo_registro", true);
-    document.getElementById("numero_producto").focus();
+    document.getElementById("cantidad_producto").focus();
   };
 
   const btnParciales = (event) => {
@@ -758,6 +763,7 @@ function Pagos_1() {
     <>
       <ModalNuevoRegistro
         session={session}
+        productos1={productos1}
         setProductos1={setProductos1}
         register={register}
         errors={errors}
@@ -923,6 +929,7 @@ function Pagos_1() {
             </div>
             <div className="pb-5">
               <TablaPagos1
+                session={session}
                 isLoading={isLoading}
                 pagosFiltrados={pagosFiltrados}
                 setPago={setPago}
