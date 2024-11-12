@@ -8,8 +8,8 @@ import iconos from "@/app/utils/iconos";
 function Acciones({ home, Bproceso, isLoading }) {
   const isAnyLoading = isLoading;
   const images = [
+    { src: iconos.procesa, alt: "Proceso", tooltipTitle: "Proceso", onClick: Bproceso, isLoading: isLoading },
     { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home, isLoading: false },
-    { src: iconos.guardar, alt: "Proceso", tooltipTitle: "Proceso", onClick: Bproceso, isLoading: isLoading },
   ];
 
   const ImageTooltip = ({ src, tooltipTitle, onClick, isLoading, disabled }) => {

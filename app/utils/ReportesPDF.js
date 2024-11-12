@@ -101,7 +101,7 @@ export class ReportePDF {
   printLineZ() {
     this.doc.line(185, this.tw_ren, 286, this.tw_ren);
   }
-  printLine(x1,x2){
+  printLine(x1, x2) {
     this.doc.line(x1, this.tw_ren, x2, this.tw_ren);
   }
   //añade una nueva pagina al documento
@@ -192,7 +192,7 @@ export class ReportePDF {
         this.tw_ren
       );
       this.nextRow(6);
-      this.ImpPosX(`Comentario: ${body.comentario}`, 35, this.tw_ren);
+      this.ImpPosX(`Comentario: ${body.comentario}`, 35, this.tw_ren, 40, "L");
       this.ImpPosX(
         `Num. Alumno: ${body.alumno_seleccionado}`,
         120,
@@ -236,7 +236,7 @@ export class ReportePDF {
       startY: this.tw_ren + 10, // Posición Y donde empieza la tabla
       theme: "plain", // Tema de la tabla
       // headStyles: { fillColor: [255, 255, 255],textColor: [0, 0, 0]  }, // Estilos para la cabecera
-      styles: { fontSize: 10,lineWidth:0.5,lineColor:[211, 211, 211] }, // Estilos generales
+      styles: { fontSize: 10, lineWidth: 0.5, lineColor: [211, 211, 211] }, // Estilos generales
       margin: { top: 10 },
       didDrawPage: (data) => {
         // Callback para agregar encabezado en cada página
