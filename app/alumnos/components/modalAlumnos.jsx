@@ -715,112 +715,75 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 space-y-4 ${
                   activeTab === 5 ? "tab-active " : ""
                 }`}
               >
-                <div className="flex flex-wrap -mx-3 mb-6">
-                  <Inputs
-                    dataType={"string"}
-                    name={"ciclo_escolar"}
-                    tamañolabel={""}
-                    className={"rounded block grow"}
-                    Titulo={"Ciclo escolar: "}
-                    type={"text"}
-                    requerido={false}
-                    isNumero={false}
-                    errors={errors}
-                    register={register}
-                    message={"Ciclo escolar requerido"}
-                    maxLenght={50}
-                    isDisabled={isDisabled}
-                    handleBlur={handleBlur}
-                  />
-                  <Inputs
-                    dataType={"double"}
-                    name={"descuento"}
-                    tamañolabel={""}
-                    className={"rounded block grow text-right"}
-                    Titulo={"Descuento: "}
-                    type={"text"}
-                    requerido={false}
-                    isNumero={true}
-                    errors={errors}
-                    register={register}
-                    message={"Descuento requerido"}
-                    maxLenght={12}
-                    isDisabled={isDisabled}
-                    handleBlur={handleBlur}
-                  />
-                  <BuscarCat
-                    table="formaPago"
-                    fieldsToShow={columnasBuscaCat1}
-                    nameInput={nameInputs3}
-                    setItem={setcond1}
-                    token={session.user.token}
-                    modalId="modal_formaPago1"
-                    array={alumno.cond_1}
-                    id={alumno.cond_1}
-                    titulo="Forma pago: "
-                    alignRight={true}
-                    inputWidths={{ first: "80px", second: "380px" }}
-                    accion={accion}
-                  />
-                  <BuscarCat
-                    table={"formaPago"}
-                    fieldsToShow={columnasBuscaCat1}
-                    nameInput={nameInputs4}
-                    setItem={setcond2}
-                    token={session.user.token}
-                    modalId="modal_formaPago2"
-                    array={alumno.cond_2}
-                    id={alumno.cond_2}
-                    titulo={"Forma pago:"}
-                    alignRight={true}
-                    inputWidths={{ first: "80px", second: "380px" }}
-                    accion={accion}
-                  />
-                  {/*
-                  <Inputs
-                    dataType={"string"}
-                    name={"cond_1"}
-                    tamañolabel={""}
-                    className={"form-select p-1.5 grow bg-[#1d232a] "}
-                    Titulo={"Pago: "}
-                    type={"select"}
-                    requerido={true}
-                    isNumero={false}
-                    errors={errors}
-                    register={register}
-                    message={"Pago 1 requerido"}
-                    maxLenght={50}
-                    isDisabled={isDisabled}
-                    handleBlur={handleBlur}
-                    arreglos={[
-                      { label: "PENDIENTE", value: "PENDIENTE" },
-                    ]}
-                  />
-                  <Inputs
-                    dataType={"string"}
-                    name={"cond_2"}
-                    tamañolabel={""}
-                    className={"form-select p-1.5 grow bg-[#1d232a] "}
-                    Titulo={"Pago: "}
-                    type={"select"}
-                    requerido={true}
-                    isNumero={false}
-                    errors={errors}
-                    register={register}
-                    message={"Pago 2 requerido"}
-                    maxLenght={50}
-                    isDisabled={isDisabled}
-                    handleBlur={handleBlur}
-                    arreglos={[
-                      { label: "PENDIENTE", value: "PENDIENTE" },
-                    ]}
-                  /> */}
-                </div>
-              </div>
+                 <div className="flex flex-wrap -mx-3 mb-6 gap-4">
+    <div className="flex w-full md:w-full gap-4">
+      <Inputs
+        dataType={"string"}
+        name={"ciclo_escolar"}
+        tamañolabel={""}
+        className={"rounded block grow"}
+        Titulo={"Ciclo escolar: "}
+        type={"text"}
+        requerido={false}
+        isNumero={false}
+        errors={errors}
+        register={register}
+        message={"Ciclo escolar requerido"}
+        maxLenght={50}
+        isDisabled={isDisabled}
+        handleBlur={handleBlur}
+      />
+      <Inputs
+        dataType={"double"}
+        name={"descuento"}
+        tamañolabel={""}
+        className={"rounded block grow text-right"}
+        Titulo={"Descuento: "}
+        type={"text"}
+        requerido={false}
+        isNumero={true}
+        errors={errors}
+        register={register}
+        message={"Descuento requerido"}
+        maxLenght={12}
+        isDisabled={isDisabled}
+        handleBlur={handleBlur}
+      />
+    </div>
+    <BuscarCat
+      table="formaPago"
+      fieldsToShow={columnasBuscaCat1}
+      nameInput={nameInputs3}
+      setItem={setcond1}
+      token={session.user.token}
+      modalId="modal_formaPago1"
+      array={alumno.cond_1}
+      id={alumno.cond_1}
+      titulo="Forma pago: "
+      alignRight={true}
+      inputWidths={{ first: "80px", second: "380px" }}
+      accion={accion}
+    />
+    <BuscarCat
+      table={"formaPago"}
+      fieldsToShow={columnasBuscaCat1}
+      nameInput={nameInputs4}
+      setItem={setcond2}
+      token={session.user.token}
+      modalId="modal_formaPago2"
+      array={alumno.cond_2}
+      id={alumno.cond_2}
+      titulo={"Forma pago:"}
+      alignRight={true}
+      inputWidths={{ first: "80px", second: "380px" }}
+      accion={accion}
+    />
+  </div>
+</div>
 
               <input
                 type="radio"
