@@ -48,8 +48,6 @@ function DetallesMaterias({
         }
     }
 
-
-
     return(
         <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-full">
             <table className="table table-xs table-zebra w-full">
