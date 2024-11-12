@@ -194,6 +194,8 @@ function Modal_Detalles_Actividades({
     const cerrarModalVista = () => {
       setPdfPreview(false);
       setPdfData("");
+      setActividades({});
+      setMatAct({});
       document.getElementById("modalVDetCal").close();
     };
     

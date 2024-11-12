@@ -1,5 +1,5 @@
 import React from "react";
-import {RegresaCalificacionRedondeo} from "@/app/utils/globalfn";
+import {RegresaCalificacionRedondeo, aDec} from "@/app/utils/globalfn";
 
 
 function DetallesMaterias({
@@ -18,6 +18,21 @@ function DetallesMaterias({
         if (actividades.length === 0) {
             return 0;
         } else {
+            if (Actividades.length === 1) {
+                
+                actividades.forEach(actividad => {
+                    const filtroActividad = Actividades.filter(cal => 
+                        cal.actividad === 0 && 
+                        cal.unidad <= actividad[`EB${bimestre}`]
+                    );
+                    sumatoria = aDec(Number(filtroActividad[0]?.calificacion || 0));                    
+                    evaluaciones = 1;
+                
+                });
+                //const calMat = (sumatoria / evaluaciones).toFixed(1);
+                //return evaluaciones === 0 ? 0 : calMat;
+
+            } else {
             actividades.forEach(actividad => {
                 const filtroActividad = Actividades.filter(cal => 
                     cal.actividad === secuencia && 
@@ -27,10 +42,13 @@ function DetallesMaterias({
                 sumatoria += filtroActividad.length > 0 ? RegresaCalificacionRedondeo(califSum / filtroActividad.length, "N") : 0;
                 evaluaciones++; 
             });
+            }
             const calMat = (sumatoria / evaluaciones).toFixed(1);
             return evaluaciones === 0 ? 0 : calMat;
         }
     }
+
+
 
     return(
         <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-full">
