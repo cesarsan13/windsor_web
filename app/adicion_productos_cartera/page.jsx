@@ -26,11 +26,13 @@ function Adicion_Productos_Cartera() {
         register,
         handleSubmit,
         watch,
+        reset,
         formState: { errors },
     } = useForm({
         defaultValues: {
             fecha: date,
             periodo: 0,
+            cond_1:0
         },
     });
 
@@ -98,6 +100,15 @@ function Adicion_Productos_Cartera() {
         }
     });
 
+    // useEffect(() => {
+    //     cond_1 = articulo.cond_1;
+    //   }, [articulo]);
+    useEffect(() => {
+        reset({
+          cond_1: articulo.cond_1 || 0
+        });
+      }, [articulo, reset]);
+
     const home = () => {
         router.push("/");
     };
@@ -109,7 +120,7 @@ function Adicion_Productos_Cartera() {
     }
     return (
         <>
-            <div className='container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden'>
+            <div className='container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden'>
                 <div className='flex flex-col justify-start p-3'>
                     <div className='flex flex-wrap md:flex-nowrap items-start md:items-center'>
                         <div className='order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0'>
@@ -129,18 +140,34 @@ function Adicion_Productos_Cartera() {
                 </div>
                 <div className="flex flex-col items-center h-full">
                     <div className="w-full max-w-4xl">
-                        <BuscarCat
-                            table="productos_cond"
-                            itemData={[]}
-                            fieldsToShow={["numero", "descripcion"]}
-                            nameInput={["numero", "descripcion"]}
-                            titulo={"Articulos: "}
-                            setItem={setArticulos}
-                            token={session.user.token}
-                            modalId="modal_articulos1"
-                            alignRight={"text-right"}
-                            inputWidths={{ contdef: "150px", first: "70px", second: "120px" }}
-                        />
+                        <div class="min-[639px]:flex min-[639px]:space-x-4">
+                            <BuscarCat
+                                table="productos_cond"
+                                itemData={[]}
+                                fieldsToShow={["numero", "descripcion"]}
+                                nameInput={["numero", "descripcion"]}
+                                titulo={"Articulos: "}
+                                setItem={setArticulos}
+                                token={session.user.token}
+                                modalId="modal_articulos1"
+                                alignRight={"text-right"}
+                                inputWidths={{ contdef: "150px", first: "70px", second: "120px" }}
+                            />
+                            <Inputs
+                                dataType={"int"}
+                                name={"cond_1"}
+                                tamañolabel={""}
+                                className={"w-2/6 text-right"}
+                                Titulo={"Cond 1: "}
+                                type={"text"}
+                                requerido={false}
+                                errors={errors}
+                                register={register}
+                                message={"Cond 1 Requerida"}
+                                isDisabled={true}
+                                maxLenght={7}
+                            />
+                        </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center mt-4">
                             <div className="md:col-span-1">
                                 <Inputs
