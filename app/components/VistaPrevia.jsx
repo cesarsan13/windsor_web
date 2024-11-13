@@ -3,6 +3,7 @@ import Tooltip from "@/app/components/tooltip";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
+import "@react-pdf-viewer/core/lib/styles/index.css";
 
 function VistaPrevia({
   id,
@@ -15,7 +16,7 @@ function VistaPrevia({
 }) {
   return (
     <dialog id={id} className="modal">
-      <div className="modal-box w-full max-w-4xl h-full">
+      <div className="modal-box w-full max-w-4xl h-full  bg-base-200">
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black"
           onClick={(evt) => CerrarView(evt)}
@@ -55,11 +56,16 @@ function VistaPrevia({
         </div>
         {pdfPreview && pdfData && (
           <div className="w-full">
-            <div className="pdf-preview">
+            <div className="pdf-preview  bg-base-200">
               <Worker
                 workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
               >
-                <div className="" style={{ maxHeight: "calc(100vh - 4rem)" }}>
+                <div
+                  className="bg-base-200"
+                  style={{
+                    maxHeight: "calc(100vh - 4rem)",
+                  }}
+                >
                   <Viewer fileUrl={pdfData} />
                 </div>
               </Worker>

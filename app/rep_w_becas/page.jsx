@@ -14,7 +14,7 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "jspdf-autotable";
 import BuscarCat from "../components/BuscarCat";
-import ModalVistaPreviaRepWBecas from "./components/modalVistaPreviaRepWBecas";
+import VistaPrevia from "../components/VistaPrevia";
 import { showSwal } from "@/app/utils/alerts";
 
 function RepBecas(){
@@ -48,7 +48,9 @@ function RepBecas(){
       };
       const CerrarView = () => {
         setPdfPreview(false);
-        setPdfData('');
+        setPdfData("");
+        document.getElementById("modalVPRepWBecas").close();
+
     };
     
       const ImprimePDF = () => {
@@ -156,14 +158,17 @@ function RepBecas(){
   }
   return (
     <>
-    <ModalVistaPreviaRepWBecas
+    <VistaPrevia
+        id={"modalVPRepWBecas"}
+        titulo={"Vista Previa de Reporte de Becas"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
     />
 
-    <div className="container w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
+    <div className="container w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3">
         <div className="flex justify-start p-3">
             <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
                 Reporte de Becas.

@@ -1,6 +1,8 @@
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
 import { calculaDigitoBvba, format_Fecha_String } from "../../globalfn";
+import { formatDate, formatTime, formatFecha } from "../../globalfn";
+
 
 export const getReporteCobranzaporAlumno = async (token, fecha_ini, fecha_fin, alumno_ini,
     alumno_fin, cajero_ini, cajero_fin, tomaFechas) => {
@@ -159,7 +161,14 @@ export const ImprimirPDF = (configuracion, fecha_ini, fecha_fin, cajero_ini, caj
     Cambia_Alumno(newPDF, total_importe);
     
     newPDF.ImpPosX(`TOTAL IMPORTE: ${total_general}` || '', 80, newPDF.tw_ren, 0 , "R");
-    newPDF.guardaReporte("Reporte Cobranza por Alumno(s)")
+    const date = new Date();
+    const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+    const timeStr = formatTime(date).replace(/:/g, "");
+
+  newPDF.guardaReporte(`Reporte_Cobranza_Alumno_${dateStr}${timeStr}`);
   
 };
 
@@ -244,7 +253,13 @@ export const ImprimirExcel = (configuracion) =>{
     nombre: "",
   });
   newExcel.addData(data1);
-  newExcel.guardaReporte(nombre);
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+  newExcel.guardaReporte(`${nombre}${dateStr}${timeStr}`);
 };
 
 const Cambia_Alumno_Excel = (total_importe, data) => {

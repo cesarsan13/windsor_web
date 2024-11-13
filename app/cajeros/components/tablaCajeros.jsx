@@ -5,6 +5,7 @@ import React from "react";
 import iconos from "@/app/utils/iconos";
 import Image from "next/image";
 function TablaCajeros({
+  session,
   cajerosFiltrados,
   isLoading,
   showModal,
@@ -22,7 +23,7 @@ function TablaCajeros({
   return !isLoading ? (
     <>
       <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white  w-full lg:w-full">
-        {cajerosFiltrados.length > 0 ? (
+        {cajerosFiltrados && cajerosFiltrados.length > 0 ? (
           <table className="table table-xs table-zebra w-full">
             <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
               <tr>
@@ -84,13 +85,18 @@ function TablaCajeros({
               ))}
             </tbody>
           </table>
-        ) : (
-          <NoData />
-        )}
+        ) : cajerosFiltrados != null &&
+          session &&
+          cajerosFiltrados.length === 0 ? (
+            <NoData></NoData>
+          ) : (
+            <Loading></Loading>
+          )}
+        
       </div>
     </>
   ) : (
-    <Loading />
+    <Loading></Loading>
   );
 }
 

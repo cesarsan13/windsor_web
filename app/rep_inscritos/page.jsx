@@ -16,7 +16,7 @@ import { useSession } from "next-auth/react";
 import { showSwal } from "@/app/utils/alerts";
 import BuscarCat from "@/app/components/BuscarCat";
 import "jspdf-autotable";
-import ModalVistaPreviaRepInsc from "@/app/rep_inscritos/components/ModalVistaPreviaRepInsc";
+import VistaPrevia from "../components/VistaPrevia";
 
 function AltasBajasAlumnos() {
   const router = useRouter();
@@ -206,6 +206,11 @@ function AltasBajasAlumnos() {
     setPdfData("");
     document.getElementById("modalVPRepInsc").close();
   };
+  const CerrarView = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVPRepInsc").close();
+  };
 
   if (status === "loading") {
     return (
@@ -214,13 +219,16 @@ function AltasBajasAlumnos() {
   }
   return (
     <>
-      <ModalVistaPreviaRepInsc
+      <VistaPrevia
+        id={"modalVPRepInsc"}
+        titulo={"Vista Previa Relación de Alumnos Inscritos"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
-      <div className="flex flex-col justify-start items-start bg-slate-100 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+      <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">
           {/* Fila de la cabecera de la pagina */}
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">

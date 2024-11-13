@@ -1,33 +1,34 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { showSwal, confirmSwal } from "@/app/utils/alerts";
+import { showSwal} from "@/app/utils/alerts";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
+import {formatDate, formatTime} from "@/app/utils/globalfn"
 import {
     getMateriasPorGrupo, 
     getInfoActividadesXGrupo, 
     getActividadesReg, 
     getMateriasReg, 
-    getAlumno, 
+    getAlumno,
+    ImprimirPDF,
+    ImprimirExcel
 } from "@/app/utils/api/concentradoCalificaciones/concentradoCalificaciones";
 import Inputs from "@/app/concentradoCalificaciones/components/Inputs";
 import Modal_Detalles_Actividades from "./components/modalDetallesActividades";
 import Acciones from "@/app/concentradoCalificaciones/components/Acciones";
 import BuscarCat from "@/app/components/BuscarCat";
 import TablaConcentradoCal from "@/app/concentradoCalificaciones/components/TablaConcentradoCal";
+import ModalVistaPreviaConcentradoCal from "./components/ModalVistaPreviaConcentradoCal";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "jspdf-autotable";
-import ModalVistaPreviaConcentradoCal from "./components/ModalVistaPreviaConcentradoCal";
-
 
 function ConcentradoCalificaciones() {
     const router = useRouter();
     const { data: session, status } = useSession();
     const [grupo, setGrupo] = useState({"numero": 0});
     const [isLoading, setisLoading] = useState(false);
-    //const [isDisabledSave, setIsDisabledSave] = useState(true);
     const [materiasEncabezado, setMateriasEncabezado] = useState({});
     const [calificacionesTodosAlumnos, setCalificacionesTodosAlumnos] = useState({});
     const [materiasReg, setMateriasReg] = useState({});
@@ -39,10 +40,10 @@ function ConcentradoCalificaciones() {
     const [animateLoading, setAnimateLoading] = useState(false);
     const [pdfPreview, setPdfPreview] = useState(false);
     const [pdfData, setPdfData] = useState("");
-    //const [dataEncabezado, setDataEncabezado] = useState([]);
-    const [ dataCaliAlumnosBody, setDataCaliAlumnosBody] = useState([]);
+    const [alumnosCalificaciones, setalumnosCalificaciones] = useState([]);
 
-    const dataEncabezado = [];
+    let dataCaliAlumnosBody = [];
+    let dataEncabezado = [];
 
     const {
         register,
@@ -57,11 +58,9 @@ function ConcentradoCalificaciones() {
       };
 
     const Buscar = handleSubmit(async (data) => {
-        
         if (grupo.numero === 0 && data.bimestre === '0'){
-            showSwal('Error', 'Debes de seleccionar el grupo y el bimestre', 'error');
-        }
-        else {
+            showSwal('Error', 'Debes de seleccionar el Grupo y el Bimestre', 'error');
+        } else {
         const {token} = session.user;
         let b = data.bimestre;
         setBimestre(Number(b));
@@ -83,43 +82,58 @@ function ConcentradoCalificaciones() {
         };
     });
 
+    const eliminarArreglosDuplicados = (arr) => {
+        const arreglosUnicos = [];
+        const conjuntosUnicos = new Set();
+        arr.forEach(subArray => {
+            const cadena = JSON.stringify(subArray);
+            if (!conjuntosUnicos.has(cadena)) {
+                conjuntosUnicos.add(cadena);
+                arreglosUnicos.push(subArray);
+            }
+        });
+        return arreglosUnicos;
+    };
+
     const handleVerClick = () => {
+        const resultadoEnc = dataEncabezado.filter((item, pos, arr) => 
+            arr.findIndex(i => i.descripcion === item.descripcion) === pos
+        );
+        const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBody);
         setAnimateLoading(true);
         cerrarModalVista();
-        console.log(grupo.numero, bimestre);
-        console.log("body", dataCaliAlumnosBody);
-        if (grupo.numero === 0 && bimestre === 0){
-            showSwal('Error', 'Debes de seleccionar el grupo y el bimestre', 'error');
+        if ( grupo.numero === 0 && bimestre === 0 )
+        {
+            showSwal('Error', 'Debes de realizar la Busqueda', 'error');
             setTimeout(() => {
               setPdfPreview(false);
               setPdfData("");
               setAnimateLoading(false);
               document.getElementById("modalVConCal").close();
             }, 500);
-        }
-        else {
-            console.log(dataEncabezado);
-            let posicionX = 45; 
-            const incrementoX = 25;
-
+        } else {
+            let posicionX = 23; 
+            const incrementoX = 9;
             const configuracion = {
               Encabezado: {
                 Nombre_Aplicacion: "Sistema de Control Escolar",
-                Nombre_Reporte: "Reporte Altas Bajas de Alumnos por Periodo",
+                Nombre_Reporte: "Reporte de Concentrado de Calificaciones",
                 Nombre_Usuario: `Usuario: ${session.user.name}`,
+                Datos_Grupo:  `Grupo: ${grupo.horario}     Bimestre: ${bimestre}`,
               },
+              body: resultadoBody
             };
+
+            const reporte = new ReportePDF(configuracion, "Landscape");
+            const {body} = configuracion;
             const Enca1 = (doc) => {
                 if (!doc.tiene_encabezado) {
-                  doc.imprimeEncabezadoPrincipalH();
+                  doc.imprimeEncabezadoPrincipalHConcentradoCal();
                   doc.nextRow(12);
                   doc.ImpPosX('Num.', 14, doc.tw_ren);
-                  doc.ImpPosX('Alumno', 28, doc.tw_ren);
-                  //datosEncabezado.forEach((desc) => {
-                  //  doc.ImpPosX(desc.descripcion.toString(), 45, doc.tw_ren);
-                  //});
-                  dataEncabezado.forEach((desc) => {
-                      doc.ImpPosX(desc.descripcion, posicionX, doc.tw_ren);
+                  //doc.ImpPosX('Alumno', 14, doc.tw_ren);
+                  resultadoEnc.forEach((desc) => {
+                      doc.ImpPosX(desc.descripcion, posicionX, doc.tw_ren, 3);
                       posicionX += incrementoX;
                   });
                   doc.nextRow(4);
@@ -131,8 +145,19 @@ function ConcentradoCalificaciones() {
                   doc.tiene_encabezado = true;
                 }
               };
-              const reporte = new ReportePDF(configuracion, "Landscape");
+            Enca1(reporte);
+            body.forEach((arreglo2, index) => {
+                let posicionBody = 14;
+              arreglo2.forEach((valor, idx) => {
+                  reporte.ImpPosX(valor, posicionBody, reporte.tw_ren, 4);
+                  posicionBody+= incrementoX;
+              })
               Enca1(reporte);
+              if (reporte.tw_ren >= reporte.tw_endRenH) {
+                  reporte.pageBreakH();
+                  Enca1(reporte);
+              }
+            })
             
             setTimeout(() => {
               const pdfData = reporte.doc.output("datauristring");
@@ -142,22 +167,54 @@ function ConcentradoCalificaciones() {
               setAnimateLoading(false);
             }, 500);
         }
-
     };
 
     const ImprimePDF = async () => {
+        let fecha_hoy = new Date();
+        const resultadoEnc = dataEncabezado.filter((item, pos, arr) => 
+            arr.findIndex(i => i.descripcion === item.descripcion) === pos
+        );
+        const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBody);
         const configuracion = {
             Encabezado: {
                 Nombre_Aplicacion: "Sistema de Control Escolar",
                 Nombre_Reporte: "Reporte de Concentrado de Calificaciones",
                 Nombre_Usuario: `Usuario: ${session.user.name}`,
+                Datos_Grupo:  `Grupo: ${grupo.horario}     Bimestre: ${bimestre}`,
             },
-            body: "",
+            body: resultadoBody,
         };
-        Imprimir(configuracion)
+        ImprimirPDF(configuracion, resultadoEnc, fecha_hoy)
     };
 
-    const ImprimeExcel = async () => {};
+    const ImprimeExcel = async () => {
+        let fecha_hoy = new Date();
+        const dateStr = formatDate(fecha_hoy);
+        const timeStr = formatTime(fecha_hoy);
+
+        const resultadoEnc = dataEncabezado.filter((item, pos, arr) => 
+            arr.findIndex(i => i.descripcion === item.descripcion) === pos
+        );
+        const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBody);
+        const columns = resultadoEnc.map((item, index) => ({
+            header: item.descripcion,
+            dataKey: index.toString(),
+        }));
+
+        const configuracion = {
+            Encabezado: {
+                Nombre_Aplicacion: "Sistema de Control Escolar",
+                Nombre_Reporte: "Reporte de Comentarios",
+                Nombre_Usuario: `Usuario: ${session.user.name}`,
+                Clase: `Grupo: ${grupo.horario}     Bimestre: ${bimestre}`
+            },
+
+            body: resultadoBody,
+            columns: columns,
+            nombre: `ConcentradoCalificaciones_${dateStr.replaceAll("/","")}${timeStr.replaceAll(":","")}`,
+        };
+        ImprimirExcel(configuracion);
+    };
 
     const showModalVista = (show) => {
     show
@@ -169,11 +226,10 @@ function ConcentradoCalificaciones() {
       setPdfData("");
       document.getElementById("modalVConCal").close();
     };
-    
 
-  const home = () => {
-    router.push("/");
-  };
+    const home = () => {
+        router.push("/");
+    };
 
     if (status === "loading") {
         return (
@@ -214,9 +270,7 @@ function ConcentradoCalificaciones() {
                 </div>
                 <div className="flex flex-col items-center h-full">
                     <div className="w-full max-w-4xl">
-                        {/*<div className="flex flex-row justify-center space-x-4 w-[calc(100%)]">*/}
                         <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 w-full">
-
                             <BuscarCat
                                 table="horarios"
                                 itemData={[]}
@@ -252,6 +306,7 @@ function ConcentradoCalificaciones() {
                                 ]}
                             />
                         </div> 
+                        
                         <TablaConcentradoCal
                             materiasEncabezado = {materiasEncabezado}
                             calificacionesTodosAlumnos={calificacionesTodosAlumnos}
@@ -262,9 +317,9 @@ function ConcentradoCalificaciones() {
                             showModal={showModal}
                             setAccion={setAccion}
                             setAlumnoData = {setAlumnoData}
-                            setDataEncabezado = {dataEncabezado}
-                            setDataCaliAlumnosBody = {setDataCaliAlumnosBody}
-
+                            dataEncabezado = {dataEncabezado}
+                            dataCaliAlumnosBody = {dataCaliAlumnosBody}
+                            setalumnosCalificaciones = { setalumnosCalificaciones}
                         />
                     </div>
                 </div>

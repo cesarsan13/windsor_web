@@ -1,6 +1,7 @@
 import { format_Fecha_String, formatNumber } from "../../globalfn";
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
+import { formatDate, formatTime, formatFecha} from "../../globalfn";
 
 export const ImprimirExcel = (configuracion, cajero) => {
   const newExcel = new ReporteExcel(configuracion);
@@ -207,7 +208,13 @@ export const ImprimirExcel = (configuracion, cajero) => {
     newExcel.addData(cajeros);
   }
   const { nombre } = configuracion;
-  newExcel.guardaReporte(nombre);
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+  newExcel.guardaReporte(`${nombre}${dateStr}${timeStr}`);
 };
 
 export const Imprimir = (configuracion, cajero) => {
@@ -377,7 +384,14 @@ export const Imprimir = (configuracion, cajero) => {
     newPDF.ImpPosX("Total Cajeros", 34, newPDF.tw_ren, 0,"L");
     newPDF.ImpPosX(formatNumber(total_cajero), 166, newPDF.tw_ren, 0,"R");
   }
-  newPDF.guardaReporte("Reporte de Cobranza");
+  const date = new Date();
+    const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+    const timeStr = formatTime(date).replace(/:/g, "");
+
+  newPDF.guardaReporte(`Reporte_Cobranza_${dateStr}${timeStr}`);
 };
 function roundNumber(value, decimals) {
   const factor = Math.pow(10, decimals);

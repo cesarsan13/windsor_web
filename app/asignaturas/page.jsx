@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalAsignaturas from "@/app/asignaturas/components/modalAsignaturas";
@@ -32,7 +32,7 @@ function Asignaturas() {
   const { data: session, status } = useSession();
   const [asignaturas, setAsignaturas] = useState([]);
   const [asignatura, setAsignatura] = useState({});
-  const [asignaturasFiltrados, setAsignaturasFiltrados] = useState([]);
+  const [asignaturasFiltrados, setAsignaturasFiltrados] = useState(null);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
@@ -46,11 +46,9 @@ function Asignaturas() {
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
   const [disabledNum, setDisableNum] = useState(false);
   const [num, setNum] = useState("");
+  const asignaturasRef = useRef(asignaturas)
 
   useEffect(() => {
-    if (status === "loading" || !session) {
-      return;
-    }
     const fetchData = async () => {
       setisLoading(true);
       const { token } = session.user;
@@ -60,6 +58,9 @@ function Asignaturas() {
       setAsignaturasFiltrados(data);
       setisLoading(false);
     };
+    if (status === "loading" || !session) {
+      return;
+    }
     fetchData();
   }, [session, status, bajas]);
 
@@ -96,13 +97,17 @@ function Asignaturas() {
     });
   }, [asignatura, reset]);
 
+  useEffect(() => {
+    asignaturasRef.current = asignaturas;
+  }, [asignaturas]);
+
   const Buscar = useCallback(() => {
     const { tb_id, tb_desc } = busqueda;
     if (tb_id === "" && tb_desc === "") {
-      setAsignaturasFiltrados(asignaturas);
+      setAsignaturasFiltrados(asignaturasRef.current);
       return;
     }
-    const infoFiltrada = asignaturas.filter((asignatura) => {
+    const infoFiltrada = asignaturasRef.current.filter((asignatura) => {
       const coincideId = tb_id
         ? asignatura["numero"].toString().includes(tb_id)
         : true;
@@ -115,15 +120,15 @@ function Asignaturas() {
       return coincideId && coincideDescripcion;
     });
     setAsignaturasFiltrados(infoFiltrada);
-  }, [busqueda, asignaturas]);
+  }, [busqueda]);
 
+  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
   useEffect(() => {
-    const debouncedBuscar = debounce(Buscar, 500);
     debouncedBuscar();
     return () => {
       clearTimeout(debouncedBuscar);
     };
-  }, [busqueda, Buscar]);
+  }, [busqueda, debouncedBuscar]);
 
   const formatNumber = (num) => {
     if (!num) return "";
@@ -250,24 +255,8 @@ function Asignaturas() {
       }
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
-    } else {
-      // const alertText = res.alert_text ? formatValidationErrors(res.alert_text) : "Error desconocido";
-      // console.log(alertText);
-      showModal(false);
-      const confirmed = await confirmSwal(
-        res.alert_title,
-        res.alert_text,
-        res.alert_icon,
-        "Aceptar",
-        "Cancelar"
-      );
-      if (!confirmed) {
-        showModal(true);
-        return;
-      } else {
-        showModal(true);
-        return;
-      }
+    }  else {
+      showSwal(res.alert_title, res.alert_text, "error", "my_modal_3");
     }
   });
   const limpiarBusqueda = (evt) => {
@@ -455,7 +444,6 @@ function Asignaturas() {
               busqueda={busqueda}
             />
             <TablaAsignaturas
-              session={session}
               isLoading={isLoading}
               asignaturasFiltrados={asignaturasFiltrados}
               showModal={showModal}
@@ -464,7 +452,8 @@ function Asignaturas() {
               setCurrentId={setCurrentId}
               formatNumber={formatNumber}
               tableAction={tableAction}
-            />
+              />
+            ))}
           </div>
         </div>
       </div>

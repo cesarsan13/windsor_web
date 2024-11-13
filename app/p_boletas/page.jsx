@@ -42,7 +42,10 @@ function P_Boletas() {
             const { token } = session.user;
             const datos = await getCalificacionesAlumnos(token, grupo)
             console.log(datos)
-            if (!datos) { return }
+            if (datos.length===0) { 
+                setisLoadingGrupos(false)
+                return 
+            }
             let alumnosArea1 = datos.alumnos.map(alumno => {
                 return {
                     ...alumno,

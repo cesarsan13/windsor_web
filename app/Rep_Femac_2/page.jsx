@@ -14,9 +14,8 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "jspdf-autotable";
 import BuscarCat from "../components/BuscarCat";
-import ModalVistaPreviaAlumnosPorClase from "./components/modalVistaPreviaRepFemac2";
 import { showSwal } from "@/app/utils/alerts";
-
+import VistaPrevia from "../components/VistaPrevia";
 function AlumnosPorClase() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -50,6 +49,8 @@ function AlumnosPorClase() {
   const CerrarView = () => {
     setPdfPreview(false);
     setPdfData("");
+    document.getElementById("modalVPAlumnosPorClase").close();
+
   };
 
   const ImprimePDF = () => {
@@ -256,14 +257,17 @@ function AlumnosPorClase() {
   }
   return (
     <>
-      <ModalVistaPreviaAlumnosPorClase
+      <VistaPrevia
+        id={"modalVPAlumnosPorClase"}
+        titulo={"Vista Previa de Alumnos Por Clase"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
 
-      <div className="flex flex-col justify-start items-start bg-slate-100 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+      <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">
           {/* Fila de la cabecera de la pagina */}
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
@@ -277,11 +281,11 @@ function AlumnosPorClase() {
             </div>
           </div>
         </div>
-        <div className="w-full py-3 flex flex-col gap-y-4">
+        <div className="w-full py-3 flex flex-col gap-y-4 mb-3">
           {/* Fila del formulario de la pagina */}
           <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4  w-1/2 mx-auto ">
             {/*min-[1920px]:w-1/4*/}
-            <div className="flex min-[1920px]:flex-row flex-col min-[1920px]:space-x-4">
+            <div className="flex min-[1920px]:flex-row flex-col min-[1920px]:space-x-4 space-y-2">
               <BuscarCat
                 table="horarios"
                 titulo={"horario 1: "}

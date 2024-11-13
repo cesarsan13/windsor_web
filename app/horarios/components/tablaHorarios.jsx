@@ -11,6 +11,7 @@ function TablaHorarios({
   setHorario,
   setAccion,
   setCurrentId,
+  session
 }) {
   const tableAction = (evt, horario, accion) => {
     setHorario(horario);
@@ -20,7 +21,7 @@ function TablaHorarios({
   };
   return !isLoading ? (
     <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white  w-full lg:w-full">
-      {HorariosFiltrados.length > 0 ? (
+      {HorariosFiltrados && HorariosFiltrados.length > 0 ? (
         <table className="table table-xs table-zebra w-full">
           <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
             <tr>
@@ -95,9 +96,13 @@ function TablaHorarios({
           </tbody>
           <tfoot />
         </table>
-      ) : (
-        <NoData />
-      )}
+      ) : HorariosFiltrados != null &&
+        session &&
+        HorariosFiltrados.length===0 ? (
+          <NoData></NoData>
+        ):(
+          <Loading></Loading>
+        )}
     </div>
   ) : (
     <Loading></Loading>

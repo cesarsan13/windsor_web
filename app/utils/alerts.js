@@ -4,7 +4,7 @@ export const showSwalAndWait = (title, text, icon, wait = 2000) => {
   return new Promise((resolve) => {
     Swal.fire({
       title: title,
-      text: text,
+      html: text,
       icon: icon,
       timer: wait,
       showConfirmButton: false,
@@ -31,6 +31,7 @@ export const showSwal = (titulo, mensaje, icono, target = "") => {
   }
   Swal.fire(options);
 };
+
 
 export const confirmSwal = async (
   titulo,
@@ -60,3 +61,4 @@ export const confirmSwal = async (
     });
   });
 };
+

@@ -1,6 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import { format_Fecha_String } from "../../globalfn";
+import { format_Fecha_String, formatTime } from "../../globalfn";
 
 export const getDataSex = async (token) => {
   let url = "";
@@ -145,7 +145,13 @@ export const Imprimir = (configuracion) => {
       Enca1(newPDF);
     }
   });
-  newPDF.guardaReporte("Alumnos");
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+  newPDF.guardaReporte(`Alumnos_${dateStr}${timeStr}`);
 };
 
 export const ImprimirExcel = (configuracion) => {
@@ -156,4 +162,33 @@ export const ImprimirExcel = (configuracion) => {
   newExcel.setColumnas(columns);
   newExcel.addData(body);
   newExcel.guardaReporte(nombre);
+};
+
+export const getTab = (nombre_campo) => {
+  switch (nombre_campo) {
+    case "a_materno": // campo en el tab 'Alumno'
+    case "a_paterno":
+    case "a_nombre":
+    case "estatus":
+    case "fecha_nac":
+    case "sexo":
+    case "escuela":
+    case "telefono1":
+    case "celular":
+      return 1;
+      // setActiveTab(1);
+      break;
+    case "direccion": // campo en el tab 'Generales'
+    case "colonia":
+    case "ciudad":
+    case "estado":
+    case "cp":
+    case "email":
+      return 2;
+      break;
+    case "rfc_factura":
+      return 7;
+    default:
+      break;
+  }
 };

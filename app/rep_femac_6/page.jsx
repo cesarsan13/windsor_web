@@ -13,7 +13,7 @@ import {
 import { formatDate, formatNumber } from "../utils/globalfn";
 import { ReportePDF } from "../utils/ReportesPDF";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
-import ModalVistaPreviaRep6 from "./components/modalVistaPreviaRep6";
+import VistaPrevia from "../components/VistaPrevia";
 import Swal from "sweetalert2"; // Importa SweetAlert2
 
 function Rep_Femac_6() {
@@ -106,7 +106,7 @@ function Rep_Femac_6() {
         { header: "Descripcion", dataKey: "descripcion" },
         { header: "Importe", dataKey: "importe" },
       ],
-      nombre: "Reporte de Cobranza",
+      nombre: "Reporte de Cobranza_",
     };
     // console.log("hohoho", configuracion);
     ImprimirExcel(configuracion, cajero.numero);
@@ -385,6 +385,11 @@ function Rep_Femac_6() {
       ? document.getElementById("modalVRep6").showModal()
       : document.getElementById("modalVRep6").close();
   };
+  const CerrarView = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVRep6").close();
+  };
   const cerrarModalVista = () => {
     setPdfPreview(false);
     setPdfData("");
@@ -396,14 +401,17 @@ function Rep_Femac_6() {
   }
   return (
     <>
-      <ModalVistaPreviaRep6
+      <VistaPrevia
+        id={"modalVRep6"}
+        titulo={"Vista Previa de Resumen de Cobranza"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
 
-      <div className="flex flex-col justify-start items-start bg-slate-100 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+      <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">
           {/* Fila de la cabecera de la pagina */}
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">

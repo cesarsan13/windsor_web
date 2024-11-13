@@ -11,7 +11,7 @@ import {
   ImprimirExcel,
   ImprimirPDF,
 } from "../utils/api/rep_flujo_01/rep_flujo_01";
-import ModalVistaPreviaRepFlujo01 from "./components/modalVistaPreviaRepFlujo01";
+import VistaPrevia from "../components/VistaPrevia";
 import { ReportePDF } from "../utils/ReportesPDF";
 
 function Rep_Flujo_01() {
@@ -263,15 +263,23 @@ function Rep_Flujo_01() {
       ? document.getElementById("modalVPRepFlujo01").showModal()
       : document.getElementById("modalVPRepFlujo01").close();
   };
+  const CerrarView = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVPRepFlujo01").close();
+  };
   return (
     <>
-      <ModalVistaPreviaRepFlujo01
+      <VistaPrevia
+        id={"modalVPRepFlujo01"}
+        titulo={"Vista Previa de Adeudos Pendientes"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">

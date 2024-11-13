@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalComentarios from "./components/ModalComentarios";
@@ -27,7 +27,7 @@ function Comentarios() {
   const { data: session, status } = useSession();
   const [formasComentarios, setFormasComentarios] = useState([]);
   const [formaComentarios, setFormaComentarios] = useState({});
-  const [formaComentariosFiltrados, setFormaComentariosFiltrados] = useState([]);
+  const [formaComentariosFiltrados, setFormaComentariosFiltrados] = useState(null);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
@@ -36,14 +36,55 @@ function Comentarios() {
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
+  const comentariosRef = useRef(formasComentarios);
   const [busqueda, setBusqueda] = useState({
     tb_numero: "",
     tb_comentario1: "",
   });
   useEffect(() => {
-    if (status === "loading" || !session) {
+    comentariosRef.current = formasComentarios; // Actualiza el ref cuando alumnos cambia
+  }, [formasComentarios]);
+  const Buscar = useCallback(() => {
+    const { tb_numero, tb_comentario1 } = busqueda;
+
+    if (tb_numero === "" && tb_comentario1 === "") {
+      setFormaComentariosFiltrados(comentariosRef.current);
       return;
     }
+    const infoFiltrada = comentariosRef.current.filter((formaComentarios) => {
+      const coincideID = tb_numero
+        ? formaComentarios["numero"].toString().includes(tb_numero)
+        : true;
+      const coincideComentario1 = tb_comentario1
+        ? formaComentarios["comentario_1"]
+            .toString()
+            .toLowerCase()
+            .includes(tb_comentario1.toLowerCase())
+        : true;
+      return coincideID && coincideComentario1;
+    });
+    setFormaComentariosFiltrados(infoFiltrada);
+  }, [busqueda, formasComentarios]);
+
+  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
+
+  useEffect(() => {
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar);
+    };
+  }, [busqueda, debouncedBuscar]);
+
+  useEffect(() => {
+    const debouncedBuscar = debounce(Buscar, 500);
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar);
+    };
+  }, [busqueda, Buscar]);
+
+  useEffect(() => {
+    
     const fetchData = async () => {
       setisLoading(true);
       const { token } = session.user;
@@ -52,6 +93,9 @@ function Comentarios() {
       setFormaComentariosFiltrados(data);
       setisLoading(false);
     };
+    if (status === "loading" || !session) {
+      return;
+    }
     fetchData();
   }, [session, status, bajas]);
 
@@ -80,35 +124,8 @@ function Comentarios() {
   }, [formaComentarios, reset]);
 
 
-  const Buscar = useCallback(() => {
-    const { tb_numero, tb_comentario1 } = busqueda;
+  
 
-    if (tb_numero === "" && tb_comentario1 === "") {
-      setFormaComentariosFiltrados(formasComentarios);
-      return;
-    }
-    const infoFiltrada = formasComentarios.filter((formaComentarios) => {
-      const coincideID = tb_numero
-        ? formaComentarios["numero"].toString().includes(tb_numero)
-        : true;
-      const coincideComentario1 = tb_comentario1
-        ? formaComentarios["comentario_1"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_comentario1.toLowerCase())
-        : true;
-      return coincideID && coincideComentario1;
-    });
-    setFormaComentariosFiltrados(infoFiltrada);
-  }, [busqueda, formasComentarios]);
-
-  useEffect(() => {
-    const debouncedBuscar = debounce(Buscar, 500);
-    debouncedBuscar();
-    return () => {
-      clearTimeout(debouncedBuscar);
-    };
-  }, [busqueda, Buscar]);
 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault();
@@ -259,7 +276,7 @@ function Comentarios() {
         { header: "Generales", dataKey: "generales" },
       ],
 
-      nombre: "Comentarios",
+      nombre: "Comentarios_",
     };
     ImprimirExcel(configuracion);
   };
@@ -285,6 +302,7 @@ function Comentarios() {
       }
     }
     res = await guardaComentarios(session.user.token, data, accion);
+    console.log("Res => ",res);
     if (res.status) {
       if (accion === "Alta") {
         data.numero = res.data;
@@ -328,6 +346,8 @@ function Comentarios() {
       }
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
+    }else{
+      showSwal(res.alert_title, res.alert_text, res.alert_icon,"my_modal_3");
     }
   });
 
@@ -373,7 +393,7 @@ function Comentarios() {
         CerrarView={CerrarView}
       />
 
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
@@ -404,15 +424,22 @@ function Comentarios() {
               handleBusquedaChange={handleBusquedaChange}
               busqueda={busqueda}
             />
-            <TablaComentarios
-              isLoading={isLoading}
-              formaComentariosFiltrados={formaComentariosFiltrados}
-              showModal={showModal}
-              setFormaComentarios={setFormaComentarios}
-              setAccion={setAccion}
-              setCurrentId={setCurrentId}
-              
-            />
+            {status === "loading" ||
+              (!session ? (
+                <></>
+              ) : (
+                <TablaComentarios
+                  isLoading={isLoading}
+                  session={session}
+                  formaComentariosFiltrados={formaComentariosFiltrados}
+                  showModal={showModal}
+                  setFormaComentarios={setFormaComentarios}
+                  setAccion={setAccion}
+                  setCurrentId={setCurrentId}
+                  
+                />
+              ))}
+            
           </div>
         </div>
       </div>

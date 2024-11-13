@@ -81,19 +81,12 @@ function TablaAsignaturas({
           </tbody>
           <tfoot />
         </table>
-      ) : asignaturasFiltrados != null &&
-        session &&
-        asignaturasFiltrados.length === 0 ? (
-        <NoData></NoData>
       ) : (
-        <Loading></Loading>
+        <NoData />
       )}
     </div>
   ) : (
     <Loading></Loading>
-    // <div className="flex justify-center items-center pt-10">
-    //   <span className="loading loading-ring loading-lg text-4xl"></span>
-    // </div>
   );
 }
 

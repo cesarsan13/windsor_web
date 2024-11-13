@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalProductos from "@/app/productos/components/modalProductos";
@@ -29,7 +29,7 @@ function Productos() {
   const { data: session, status } = useSession();
   const [productos, setProductos] = useState([]);
   const [producto, setProducto] = useState({});
-  const [productosFiltrados, setProductosFiltrados] = useState([]);
+  const [productosFiltrados, setProductosFiltrados] = useState(null);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
@@ -43,11 +43,42 @@ function Productos() {
   const [disabledNum, setDisableNum] = useState(false);
   const [num, setNum] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
+  const productosRef = useRef(productos)
 
   useEffect(() => {
-    if (status === "loading" || !session) {
+    productosRef.current = productos
+  }, [productos])
+  const Buscar = useCallback(() => {
+    const { tb_id, tb_desc } = busqueda;
+    if (tb_id === "" && tb_desc === "") {
+      setProductosFiltrados(productosRef.current);
       return;
     }
+    const infoFiltrada = productosRef.current.filter((producto) => {
+      const coincideId = tb_id
+        ? producto["numero"].toString().includes(tb_id)
+        : true;
+      const coincideDescripcion = tb_desc
+        ? producto["descripcion"]
+          .toString()
+          .toLowerCase()
+          .includes(tb_desc.toLowerCase())
+        : true;
+      return coincideId && coincideDescripcion;
+    });
+    setProductosFiltrados(infoFiltrada);
+  }, [busqueda])
+
+  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar])
+
+  useEffect(() => {
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar)
+    };
+  }, [busqueda, debouncedBuscar]);
+
+  useEffect(() => {    
     const fetchData = async () => {
       setisLoading(true);
       const { token } = session.user;
@@ -56,6 +87,9 @@ function Productos() {
       setProductosFiltrados(data);
       setisLoading(false);
     };
+    if (status === "loading" || !session) {
+      return;
+    }
     fetchData();
   }, [session, status, bajas]);
 
@@ -94,35 +128,6 @@ function Productos() {
       ref: producto.ref,
     });
   }, [producto, reset]);
-
-  const Buscar = useCallback(() => {
-    const { tb_id, tb_desc } = busqueda;
-    if (tb_id === "" && tb_desc === "") {
-      setProductosFiltrados(productos);
-      return;
-    }
-    const infoFiltrada = productos.filter((producto) => {
-      const coincideId = tb_id
-        ? producto["numero"].toString().includes(tb_id)
-        : true;
-      const coincideDescripcion = tb_desc
-        ? producto["descripcion"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_desc.toLowerCase())
-        : true;
-      return coincideId && coincideDescripcion;
-    });
-    setProductosFiltrados(infoFiltrada);
-  }, [busqueda, productos]);
-
-  useEffect(() => {
-    const debouncedBuscar = debounce(Buscar, 500);
-    debouncedBuscar();
-    return () => {
-      clearTimeout(debouncedBuscar);
-    };
-  }, [busqueda, Buscar]);
 
   const formatNumber = (num) => {
     if (!num) return "";
@@ -244,21 +249,7 @@ function Productos() {
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
     } else {
-      showModal(false);
-      const confirmed = await confirmSwal(
-        res.alert_title,
-        res.alert_text,
-        res.alert_icon,
-        "Aceptar",
-        "Cancelar"
-      );
-      if (!confirmed) {
-        showModal(true);
-        return;
-      } else {
-        showModal(true);
-        return;
-      }
+     showSwal(res.alert_title, res.alert_text, "error", "my_modal_3")
     }
   });
   const formatValidationErrors = (errors) => {
@@ -404,7 +395,7 @@ function Productos() {
       const cam_precio = producto.cam_precio ? "Si" : "No";
       reporte.ImpPosX(cam_precio.toString(), 215, reporte.tw_ren, 0, "L");
       reporte.ImpPosX(producto.ref.toString(), 250, reporte.tw_ren, 0, "L");
-      Enca1(reporte);
+      Enca1(reporte); 
       if (reporte.tw_ren >= reporte.tw_endRenH) {
         reporte.pageBreakH();
         Enca1(reporte);
@@ -463,10 +454,10 @@ function Productos() {
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={imprimirPDF}
-        Excel={ImprimirExcel}
+        Excel={imprimirEXCEL}
         CerrarView={CerrarView}
       />
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
@@ -493,16 +484,21 @@ function Productos() {
               handleBusquedaChange={handleBusquedaChange}
               busqueda={busqueda}
             />
-            <TablaProductos
-              isLoading={isLoading}
-              productosFiltrados={productosFiltrados}
-              showModal={showModal}
-              setProducto={setProducto}
-              setAccion={setAccion}
-              setCurrentId={setCurrentId}
-              formatNumber={formatNumber}
-              tableAction={tableAction}
-            />
+            {status === "loading" || (!session) ?
+              (<></>) :
+              (
+                <TablaProductos
+                  isLoading={isLoading}
+                  productosFiltrados={productosFiltrados}
+                  showModal={showModal}
+                  setProducto={setProducto}
+                  setAccion={setAccion}
+                  setCurrentId={setCurrentId}
+                  formatNumber={formatNumber}
+                  tableAction={tableAction}
+                  session={session}
+                />
+              )}
           </div>
         </div>
       </div>

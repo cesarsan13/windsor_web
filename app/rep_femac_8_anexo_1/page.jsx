@@ -14,7 +14,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import BuscarCat from "@/app/components/BuscarCat";
 import "jspdf-autotable";
-import ModalVistaPreviaRepFemac8Anexo1 from "./components/ModalVistaPreviaRepFemac8Anexo1";
+import VistaPrevia from "../components/VistaPrevia";
 
 function RelacionDeRecivos() {
   const router = useRouter();
@@ -150,6 +150,11 @@ function RelacionDeRecivos() {
     setPdfData("");
     document.getElementById("modalVPRepFemac8Anexo1").close();
   };
+  const CerrarView = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVPRepFemac8Anexo1").close();
+  };
 
   if (status === "loading") {
     return (
@@ -158,13 +163,16 @@ function RelacionDeRecivos() {
   }
   return (
     <>
-      <ModalVistaPreviaRepFemac8Anexo1
+      <VistaPrevia
+        id={"modalVPRepFemac8Anexo1"}
+        titulo={"Vista Previa Relacion de Recibos"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
-      <div className="flex flex-col justify-start items-start bg-slate-100 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+      <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">
           {/* Fila de la cabecera de la pagina */}
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">

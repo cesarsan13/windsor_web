@@ -26,11 +26,11 @@ function Sheet({
         descripcion_campo: "Texto",
 
         cuenta: 0,
-        font_bold: "N",
-        font_italic: "N",
+        font_bold: 0,
+        font_italic: 0,
         font_nombre: "Arial",
-        font_rallado: "N",
-        font_subrallado: "N",
+        font_rallado: 0,
+        font_subrallado: 0,
         font_tamaño: 9,
         forma_columna: 9030,
         forma_columna_dos: 0,
@@ -101,7 +101,7 @@ function Sheet({
 
   return (
     <div
-      className="w-[calc(210mm)] h-[calc(297mm)] m-5  border-solid border bg-white  shadow-xl flex flex-col relative"
+      className={`w-[calc(210mm)] h-[calc(297mm)] m-1 border-solid border bg-white shadow-xl flex flex-col relative`}
       onDoubleClick={(evt) => handleDoubleClick(evt)}
       onDragOver={(evt) => handleDragOver(evt)}
       onDrop={(evt) => handleDrop(evt)}
@@ -114,21 +114,18 @@ function Sheet({
           data-key={index}
           name={`texto_${label.numero_dato}`}
           id={`texto_${label.numero_dato}`}
-          className="hover:cursor-move  text-black dark:text-black"
+          className="hover:cursor-move text-black dark:text-black"
           onClick={(evt) => handleClick(evt, index)}
           style={{
             position: "absolute",
-            left: `${label.columna_impresion}px`, //x
-            top: `${label.renglon_impresion}px`, //y
-            // backgroundColor: "rgba(255, 255, 255, 0.8)",
-            alignContent: "center",
+            left: `${label.columna_impresion}px`,
+            top: `${label.renglon_impresion}px`,
             padding: "2px 2px",
             fontFamily: `${label.font_nombre}`,
-            fontWeight: label.font_bold === "S" ? `bold` : `normal`,
+            fontWeight: label.font_bold === 1 ? "bold" : "normal",
             fontSize: `${label.font_tamaño * 1.3333}px`,
-            fontStyle: label.font_italic === "S" ? "italic" : "normal",
-            textDecoration: `${label.font_subrallado === "S" ? "underline" : ""
-              } ${label.font_rallado === "S" ? "line-through" : ""}`,
+            fontStyle: label.font_italic === 1 ? "italic" : "normal",
+            textDecoration: `${label.font_subrallado === 1 ? "underline" : ""} ${label.font_rallado === 1 ? "line-through" : ""}`,
           }}
         >
           {label.descripcion_campo}
