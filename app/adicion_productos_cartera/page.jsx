@@ -105,7 +105,9 @@ function Adicion_Productos_Cartera() {
     //   }, [articulo]);
     useEffect(() => {
         reset({
-          cond_1: articulo.cond_1 || 0
+          cond_1: articulo.cond_1 || 0,
+          fecha: date,
+          periodo: 0
         });
       }, [articulo, reset]);
 
