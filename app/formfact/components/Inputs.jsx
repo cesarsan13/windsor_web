@@ -17,7 +17,9 @@ function Inputs({
   handleBlur,
   arreglos,
   handleChange,
-  idlabel
+  idlabel,
+  handleKeyDown,
+  onChange
 }) {
   if(type!=="select"){
     return (
@@ -46,6 +48,8 @@ function Inputs({
                 onBlur: (event) => handleBlur(event, dataType),
               }))}
             disabled={isDisabled}
+            onKeyDown={handleKeyDown}
+            onChange={onChange}
           />
         </label>
         {errors[name] && (
@@ -55,7 +59,8 @@ function Inputs({
         )}
       </div>
     )
-  }  else{    
+  }  else{ 
+    console.log(arreglos)   
     return(
       <div className="flex flex-col">
         <label
@@ -70,6 +75,7 @@ function Inputs({
             disabled={isDisabled}
             onChange={handleChange}
             value={idlabel}
+            style={{ zIndex: 999 }}
           >
             {arreglos.map((arreglo) => (
               <option

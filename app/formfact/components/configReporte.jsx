@@ -31,6 +31,12 @@ function ConfigReporte({
         { id: label.numero_dato - 1, descripcion: `Texto_${label.numero_dato}` }))
     setArreglo(arreglo)
   }, [labels])
+  const handleCancelarClick = (evt) => {
+    evt.preventDefault();
+    setShowSheet(false);
+    setSelectedIndex(null);
+    setLabels([]);
+  };
   return (
     <div className=" w-11/12 max-w-5xl">
       <button
@@ -41,6 +47,20 @@ function ConfigReporte({
       </button>
       <>
         <h1 className="font-bold text-2xl mb-5 text-black dark:text-white">Actualizacion de formato</h1>
+        <div
+            className={`tooltip tooltip-top "hover:cursor-pointer"
+              `}
+            data-tip="cancelar"
+          >
+            <button
+              type="submit"
+              id="btn_cancelar"
+              className="btn  bg-red-500 hover:bg-red-700 text-white"
+              onClick={(evt) => handleCancelarClick(evt)}
+            >
+              <i className="fas fa-x mx-2"></i> Cerrar
+            </button>
+          </div>
         <fieldset id="fs_formapago" className="flex flex-row">
           <div className=" overflow-y-scroll overflow-x-hidden gap-2 h-[100%] flex flex-row">
             <Sheet
