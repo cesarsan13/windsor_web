@@ -44,7 +44,7 @@ function Cajeros() {
   });
 
   useEffect(() => {
-  
+
     const fetchData = async () => {
       setisLoading(true);
       const { token } = session.user;
@@ -398,8 +398,7 @@ function Cajeros() {
               setCajero={setCajero}
               setAccion={setAccion}
               setCurrentId={setCurrentId}
-              />
-            ))}
+            />
           </div>
         </div>
       </div>

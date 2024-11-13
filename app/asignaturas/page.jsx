@@ -255,7 +255,7 @@ function Asignaturas() {
       }
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
-    }  else {
+    } else {
       showSwal(res.alert_title, res.alert_text, "error", "my_modal_3");
     }
   });
@@ -452,8 +452,7 @@ function Asignaturas() {
               setCurrentId={setCurrentId}
               formatNumber={formatNumber}
               tableAction={tableAction}
-              />
-            ))}
+            />
           </div>
         </div>
       </div>

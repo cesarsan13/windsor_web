@@ -5,7 +5,6 @@ import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 import React from "react";
 function TablaProfesores({
-  session,
   profesoresFiltrados,
   session,
   isLoading,
