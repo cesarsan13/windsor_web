@@ -14,6 +14,7 @@ import {
     ImprimirExcel
 } from "@/app/utils/api/concentradoCalificaciones/concentradoCalificaciones";
 import ModalVistaPreviaDetalleCal from "./ModalVistaPreviaDetalleCal";
+import { showSwal } from "@/app/utils/alerts";
 
 function Modal_Detalles_Actividades({
     alumnoData,
@@ -37,20 +38,25 @@ function Modal_Detalles_Actividades({
         register,
         handleSubmit,
         watch,
+        reset,
         formState: { errors },
     } = useForm();
 
-    const materia = watch("Materias");
+    const materia = watch("materias");
 
-    const Buscar = handleSubmit(async (data) => {
-        M = Number(data.Materias);
-        try{
-            const { token } = session.user;
-            const res = await getActividadesXHorarioXAlumnoXMateriaXBimestre(token, grupo, alumnoData.numero, M, bimestre);
-            const acres = await getActividadesDetalles(token, M);
-            setActividades(res);
-            setMatAct(acres);
-        } catch (error) { }
+    const Buscar = handleSubmit(async (data) => {      
+        if(data.materias === '0'){
+            showSwal("Error", "Debes de seleccionar la Materia", "error", "DetallesActividades");
+        } else {
+            M = Number(data.materias);
+            try{
+                const { token } = session.user;
+                const res = await getActividadesXHorarioXAlumnoXMateriaXBimestre(token, grupo, alumnoData.numero, M, bimestre);
+                const acres = await getActividadesDetalles(token, M);
+                setActividades(res);
+                setMatAct(acres);
+            } catch (error) { }
+        }
     });
 
     const eliminarArreglosDuplicados = (arr) => {
@@ -67,6 +73,9 @@ function Modal_Detalles_Actividades({
     };
 
     const handleVerClick = () => {
+        if(materia === '0' && Actividades.length == undefined && matAct.length == undefined){
+            showSwal("Error", "Debes de realizar la Busqueda", "error", "DetallesActividades");
+        } else {
         const resultadoEnc = dataEncabezadoDetalles.filter((item, pos, arr) => 
             arr.findIndex(i => i.descripcion === item.descripcion) === pos
         );
@@ -135,6 +144,7 @@ function Modal_Detalles_Actividades({
               showModalVista(true);
               setAnimateLoading(false);
             }, 500);
+        }
         }
     };
     const ImprimePDF = async () => {
@@ -212,7 +222,7 @@ function Modal_Detalles_Actividades({
                 Excel={ImprimeExcel}
             />
 
-            <dialog id="DetallesActividades" className="modal">
+            <dialog id='DetallesActividades' className="modal">
                 <div className="modal-box w-full max-w-5xl h-full">
                     <form  encType="multipart/form-data">
                         <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
@@ -223,6 +233,11 @@ function Modal_Detalles_Actividades({
                               onClick={(event) => {
                                 event.preventDefault();
                                 document.getElementById("DetallesActividades").close();
+                                setActividades({});
+                                setMatAct({});
+                                reset({
+                                  materias: 0,
+                                });
                               }}
                             >
                               ✕
@@ -241,7 +256,7 @@ function Modal_Detalles_Actividades({
 
                                     <Inputs
                                         dataType={"int"}
-                                        name={"Materias"}
+                                        name={"materias"}
                                         tamañolabel={""}
                                         className={"fyo8m-select p-1 grow bg-[#ffffff] "}
                                         Titulo={"Materia: "}

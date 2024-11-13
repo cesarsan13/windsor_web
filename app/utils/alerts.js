@@ -32,6 +32,7 @@ export const showSwal = (titulo, mensaje, icono, target = "") => {
   Swal.fire(options);
 };
 
+
 export const confirmSwal = async (
   titulo,
   mensaje,
@@ -60,3 +61,4 @@ export const confirmSwal = async (
     });
   });
 };
+

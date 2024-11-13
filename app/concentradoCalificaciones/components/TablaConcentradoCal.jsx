@@ -23,6 +23,9 @@ function TablaConcentradoCal({
     let datosEspanol = 0;
     let datosIngles = 0;
 
+    let arregloprueba = [];
+
+    //console.log("ap", arregloprueba);
     const tableAction = async (evt, alumno, accion) => {
         showModal(true);
         setAccion(accion);
@@ -63,6 +66,7 @@ function TablaConcentradoCal({
                         const califSum = filtroActividad.reduce((acc, cal) => acc + Number(cal.calificacion), 0);
                         sumatoria += RegresaCalificacionRedondeo(califSum / filtroActividad.length, "N");
                         evaluaciones++; 
+                        arregloprueba.push((sumatoria / evaluaciones).toFixed(1));
                     });
                 }
             }
