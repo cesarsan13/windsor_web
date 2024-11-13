@@ -281,11 +281,11 @@ function AlumnosPorClase() {
             </div>
           </div>
         </div>
-        <div className="w-full py-3 flex flex-col gap-y-4">
+        <div className="w-full py-3 flex flex-col gap-y-4 mb-3">
           {/* Fila del formulario de la pagina */}
           <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4  w-1/2 mx-auto ">
             {/*min-[1920px]:w-1/4*/}
-            <div className="flex min-[1920px]:flex-row flex-col min-[1920px]:space-x-4">
+            <div className="flex min-[1920px]:flex-row flex-col min-[1920px]:space-x-4 space-y-2">
               <BuscarCat
                 table="horarios"
                 titulo={"horario 1: "}
