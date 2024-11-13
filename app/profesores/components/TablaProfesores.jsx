@@ -5,6 +5,7 @@ import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 import React from "react";
 function TablaProfesores({
+  session,
   profesoresFiltrados,
   isLoading,
   showModal,
@@ -21,7 +22,7 @@ function TablaProfesores({
 
   return !isLoading ? (
     <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-full">
-      {profesoresFiltrados.length > 0 ? (
+      {profesoresFiltrados && profesoresFiltrados.length > 0 ? (
         <table
           className="table table-xs table-zebra w-full"
           style={{ tableLayout: "fixed" }}
@@ -88,8 +89,12 @@ function TablaProfesores({
           </tbody>
           <tfoot />
         </table>
+      ) : profesoresFiltrados != null &&
+        session &&
+        profesoresFiltrados.length === 0 ? (
+        <NoData></NoData>
       ) : (
-        <NoData />
+        <Loading></Loading>
       )}
     </div>
   ) : (

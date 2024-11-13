@@ -100,15 +100,15 @@ function Cajeros() {
         : true;
       const coincideNombre = tb_desc
         ? cajero["nombre"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_desc.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_desc.toLowerCase())
         : true;
       const coincideCorreo = tb_correo
         ? cajero["mail"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_correo.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_correo.toLowerCase())
         : true;
       const coincideTelefono = tb_tel
         ? cajero["telefono"].toString().includes(tb_tel)
@@ -354,7 +354,7 @@ function Cajeros() {
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
       />
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
@@ -383,6 +383,7 @@ function Cajeros() {
               busqueda={busqueda}
             />
             <TablaCajeros
+              session={session}
               isLoading={isLoading}
               cajerosFiltrados={cajerosFiltrados}
               showModal={showModal}
