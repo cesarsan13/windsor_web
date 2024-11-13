@@ -8,8 +8,8 @@ function Acciones({ home, BRef, Bproceso, isLoadingRef, isLoadingProc }) {
   const isAnyLoading = isLoadingRef || isLoadingProc;
 
   const images = [
-    { src: iconos.guardar, alt: "Act. Ref.", tooltipTitle: "Act. Ref.", onClick: BRef, isLoading: isLoadingRef },
     { src: iconos.procesa, alt: "Proceso", tooltipTitle: "Proceso", onClick: Bproceso, isLoading: isLoadingProc },
+    { src: iconos.guardar, alt: "Act. Ref.", tooltipTitle: "Act. Ref.", onClick: BRef, isLoading: isLoadingRef },
     { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home, isLoading: false },
   ];
 

@@ -126,8 +126,8 @@ function ModalPagoImprime({
       };
       Imprimir(configuracion);
       setisLoading(false);
-      reiniciarPage();
-      showModal("my_modal_4", false);
+      // reiniciarPage();
+      // showModal("my_modal_4", false);
     } catch (e) {
       console.log(e.message);
       setisLoading(false);
