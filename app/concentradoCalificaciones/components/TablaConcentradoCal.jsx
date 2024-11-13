@@ -2,8 +2,11 @@ import React from "react";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 import { RegresaCalificacionRedondeo, aDec } from "@/app/utils/globalfn";
+import NoData from "@/app/components/NoData";
+import Loading from "@/app/components/loading";
 
 function TablaConcentradoCal({
+    isLoading, 
     materiasEncabezado,
     calificacionesTodosAlumnos,
     materiasReg,
@@ -15,6 +18,7 @@ function TablaConcentradoCal({
     setAlumnoData,
     dataEncabezado,
     dataCaliAlumnosBody,
+    dataCaliAlumnosBodyEXCEL
 }){
     let indexIngles = 0;
     let indexEspañol = 0;
@@ -23,9 +27,7 @@ function TablaConcentradoCal({
     let datosEspanol = 0;
     let datosIngles = 0;
 
-    let arregloprueba = [];
 
-    //console.log("ap", arregloprueba);
     const tableAction = async (evt, alumno, accion) => {
         showModal(true);
         setAccion(accion);
@@ -47,7 +49,8 @@ function TablaConcentradoCal({
                     cal.actividad === 0 && 
                     cal.bimestre === bimestre
                 );
-                sumatoria = aDec(Number(filtro[0]?.calificacion || 0));
+                const calificacion = aDec(Number(filtro[0]?.calificacion || 0));
+                sumatoria = calificacion;
                 evaluaciones = materia ? filtro.length : 0;
             } else {
                 const actividades = actividadesReg.filter(act => act.materia === materianumero);
@@ -64,16 +67,16 @@ function TablaConcentradoCal({
                             cal.unidad <= actividad[`EB${bimestre}`]
                         );
                         const califSum = filtroActividad.reduce((acc, cal) => acc + Number(cal.calificacion), 0);
-                        sumatoria += RegresaCalificacionRedondeo(califSum / filtroActividad.length, "N");
+                        const calPromedio = RegresaCalificacionRedondeo(califSum / filtroActividad.length, "N");
+                        sumatoria += calPromedio;
+
                         evaluaciones++; 
-                        arregloprueba.push((sumatoria / evaluaciones).toFixed(1));
-                    });
+                    }); 
                 }
             }
             const sum = isNaN(sumatoria) ? 0 : sumatoria;
             const calMat = (sum / evaluaciones).toFixed(1);
-            //const calMat = (sumatoria / evaluaciones).toFixed(1);
-            //const calMat = isNaN(sumatoria / evaluaciones) ? 0 : (sumatoria / evaluaciones).toFixed(1);
+
             if (materia.area === 1) {
                 a += calMat;
                 datosEspanol += Number(calMat);
@@ -86,18 +89,16 @@ function TablaConcentradoCal({
             return evaluaciones === 0 ? 0 : calMat;
         }
     };
-   
-    return  (
+
+    return  !isLoading ? (
         <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-full">
-            <table className="table table-xs table-zebra w-full">
-                <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
-                    <tr>
-                        <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
-                        <td className="w-[80%]">Alumno</td>
-                        {materiasEncabezado.length === undefined ? (
-                            <td className="w-[45%]">Sin datos</td> 
-                        ):(
-                            materiasEncabezado.map((item, index) => {
+            {alumnoReg.length !== undefined && materiasEncabezado.length !== undefined ? (
+                <table className="table table-xs table-zebra w-full">
+                    <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
+                        <tr>
+                            <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
+                            <td className="w-[80%]">Alumno</td>
+                            {materiasEncabezado.map((item, index) => {
                                 const esUltimoDeArea = 
                                 (item.area === 1 || item.area === 4) &&
                                 (index === materiasEncabezado.length - 1 || materiasEncabezado[index + 1].area !== item.area);
@@ -135,21 +136,16 @@ function TablaConcentradoCal({
                                         )}
                                     </React.Fragment>
                                 );  
-                            })
-                        )}
-                        <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Ver</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {alumnoReg.length === undefined ? (
-                        <tr>
-                            <td className="w-[45%]"> sin datos </td> 
+                            })}
+                            <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Ver</th>
                         </tr>
-                    ) : (
-                        alumnoReg.map(alumno => {
-                            //let nom = alumno.nombre;
+                    </thead>
+                    <tbody>
+                        {alumnoReg.map(alumno => {
                             let num = (alumno.numero).toString();
+                            let nom = (alumno.nombre).toString();
                             let alumnoData = [num];
+                            let alumnoDataExcel = [num, nom];
                         
                             const alumnoRow = (
                                 <tr key={alumno.numero}>
@@ -158,11 +154,15 @@ function TablaConcentradoCal({
                                     {materiasReg.map((materia, idx) => {
                                         if (idx === indexEspañol) {
                                             alumnoData.push((datosEspanol / contadorEspanol).toFixed(1));
+                                            alumnoDataExcel.push((datosEspanol / contadorEspanol).toFixed(1));
                                         }
                                         if (idx === indexIngles) {
                                             alumnoData.push((datosIngles / contadorIngles).toFixed(1));
+                                            alumnoDataExcel.push((datosIngles / contadorIngles).toFixed(1));
+                                        
                                         }
                                         alumnoData.push(calcularCalificaciones(alumno.numero, materia.numero));
+                                        alumnoDataExcel.push(calcularCalificaciones(alumno.numero, materia.numero));
                                     
                                         return (
                                             <React.Fragment key={materia.numero}>
@@ -192,13 +192,18 @@ function TablaConcentradoCal({
                                 </tr>
                             );
                             dataCaliAlumnosBody.push(alumnoData);
+                            dataCaliAlumnosBodyEXCEL.push(alumnoDataExcel);
                             return alumnoRow;
-                        })
-                    )}
-                </tbody>
-            </table>
+                        })}
+                    </tbody>
+                </table>
+            ):(
+                <NoData/>
+            )}
         </div>
-    );
+    ) : (
+        <Loading></Loading>
+      )
 }
 
 export default TablaConcentradoCal;
