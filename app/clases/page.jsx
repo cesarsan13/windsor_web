@@ -41,6 +41,7 @@ function Clases() {
     grupo: "",
     materia: "",
   });
+  const [contador, setContador] = useState(0);
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [busqueda, setBusqueda] = useState({
@@ -100,6 +101,7 @@ function Clases() {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -136,9 +138,14 @@ function Clases() {
     evt.preventDefault;
     setBusqueda({ tb_grupo: "", tb_materia: "", tb_profesor: "" });
   };
-
+  // useEffect(() => {
+  //   setMateria({});
+  //   setProfesor({});
+  //   setGrado({});
+  // }, [limpiaBusCat]);
   const Alta = async (event) => {
     setCurrentId("");
+    setContador(prevCount => prevCount + 1); // Cambia la clave para re-renderizar los buscat
     reset({
       grupo: "",
       materia: "",
@@ -154,15 +161,32 @@ function Clases() {
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);
+    console.log("Materia: ",materia);
+    console.log("Profesor: ",profesor);
+    console.log("Grado: ",grado);
+    // setMateria({numero:"",descripcion:""});
+    // setProfesor({numero:"",nombre:""});
+    // setGrado({numero:"",horario:""});
+    // setLimpiaBusCat(true)
+    // Forzar un renderizado
     setMateria({});
     setProfesor({});
     setGrado({});
+    console.log("2Materia: ",materia);
+    console.log("2Profesor: ",profesor);
+    console.log("2Grado: ",grado);
     document.getElementById("lunes").focus();
   };
 
+  const handleReset = () => {
+    setMateria({});
+    setProfesor({});
+    setGrado({});
+};
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault();
     if (!currentID) {
+      // console.log("Clases: ",clases);
       const claseExistente = clases.find(
         (clase) =>
           clase.grupo === data.grupo &&
@@ -396,7 +420,9 @@ function Clases() {
         setGrado2={setGrado2}
         setProfesor={setProfesor}
         setMateria={setMateria}
+        watch={watch}
         isLoadingButton={isLoadingButton}
+        contador={contador}
       />
       <VistaPrevia
         id="modalVPClase"
@@ -417,6 +443,7 @@ function Clases() {
                 home={home}
                 Ver={handleVerClick}
                 animateLoading={animateLoading}
+                contador={contador}
               />
             </div>
 

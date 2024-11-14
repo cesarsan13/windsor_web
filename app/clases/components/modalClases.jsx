@@ -17,7 +17,9 @@ function ModalClases({
   setGrado,
   setProfesor,
   setMateria,
+  watch,
   isLoadingButton,
+  contador
 }) {
   const [error, setError] = useState(null);
   //Horario
@@ -111,7 +113,7 @@ function ModalClases({
                 alignRight={true}
                 inputWidths={{ first: "80px", second: "380px" }}
                 accion={accion}
-
+                contador={contador}
               />
               <BuscarCat
                 deshabilitado={isDisabledBusca}
@@ -127,8 +129,10 @@ function ModalClases({
                 alignRight={true}
                 inputWidths={{ first: "80px", second: "380px" }}
                 accion={accion}
+                contador={contador}
               />
               <BuscarCat
+                deshabilitado={isDisabledBusca}
                 table="profesores"
                 fieldsToShow={columnasBuscaCat1}
                 nameInput={nameInputs3}
@@ -141,6 +145,7 @@ function ModalClases({
                 alignRight={true}
                 inputWidths={{ first: "80px", second: "380px" }}
                 accion={accion}
+                contador={contador}
               />
             </div>
             <div className="container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6 items-start">

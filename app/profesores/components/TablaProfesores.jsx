@@ -6,7 +6,6 @@ import iconos from "@/app/utils/iconos";
 import React from "react";
 function TablaProfesores({
   profesoresFiltrados,
-  session,
   isLoading,
   showModal,
   setProfesor,
@@ -87,6 +86,18 @@ function TablaProfesores({
           </tbody>
           <tfoot />
         </table>
+      ) : profesoresFiltrados != null &&
+<<<<<<<<< Temporary merge branch 1
+      session &&
+      profesoresFiltrados.length === 0 ? (
+      <NoData></NoData>
+    ) : (
+      <Loading></Loading>
+    )}
+=========
+        session &&
+        profesoresFiltrados.length === 0 ? (
+        <NoData></NoData>
       ) : (
         <NoData />
       )}

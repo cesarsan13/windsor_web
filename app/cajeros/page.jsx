@@ -391,7 +391,16 @@ function Cajeros() {
               handleBusquedaChange={handleBusquedaChange}
               busqueda={busqueda}
             />
+<<<<<<<<< Temporary merge branch 1
+            {status === "loading" ||
+            (!session? (
+              <></>
+            ) : (
+              <TablaCajeros
+=========
             <TablaCajeros
+>>>>>>>>> Temporary merge branch 2
+              session={session}
               isLoading={isLoading}
               cajerosFiltrados={cajerosFiltrados}
               showModal={showModal}
