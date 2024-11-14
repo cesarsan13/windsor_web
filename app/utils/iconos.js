@@ -1,4 +1,5 @@
 const iconos = {
+  //iconos negros
   alta: require("@/public/Iconos/Btn_Alta_32x32.png"),
   buscar: require("@/public/Iconos/Btn_Buscar_32x32.png"),
   vistaPrevia: require("@/public/Iconos/Btn_Vista_Previa.png"),
@@ -18,6 +19,27 @@ const iconos = {
   lista: require("@/public/Iconos/lista.png"),
   tarjetas: require("@/public/Iconos/tarjetas.png"),
   procesa: require("@/public/Iconos/Btn_Procesa_Negro.png"),
+
+  //iconos blancos
+  alta_w: require("@/public/Iconos/Btn_Alta_32x32_w.png"),
+  buscar_w: require("@/public/Iconos/Btn_Buscar_32x32_w.png"),
+  vistaPrevia_w: require("@/public/Iconos/Btn_Vista_Previa_w.png"),
+  salir_w: require("@/public/Iconos/Btn_Partida_Negro_w.png"),
+  ver_w: require("@/public/Iconos/Btn_Ver_Negro_w.png"),
+  editar_w: require("@/public/Iconos/Btn_Editar_32x32_w.png"),
+  eliminar_w: require("@/public/Iconos/Btn_Eliminar_32x32_w.png"),
+  excel_w: require("@/public/Iconos/Btn_Negro_Excel_32_w.png"),
+  imprimir_w: require("@/public/Iconos/Btn_Imprime_32x32_w.png"),
+  guardar_w: require("@/public/Iconos/Btn_Guardar_Negro_w.png"),
+  limpiar_w: require("@/public/Iconos/Btn_Limpia_Negro_w.png"),
+  seleccionar_w: require("@/public/Iconos/Btn_Seleccionar_Negro_w.png"),
+  documento_w: require("@/public/Iconos/Btn_documento_w.png"),
+  recargo_w: require("@/public/Iconos/Btn_recargos_w.png"),
+  actualizar_formato_w: require("@/public/Iconos/Btn_actualizar_formato_w.png"),
+  calendario_w: require("@/public/Iconos/Btn_Periodo_Negro_w.png"),
+  lista_w: require("@/public/Iconos/lista_w.png"),
+  tarjetas_w: require("@/public/Iconos/tarjetas_w.png"),
+  procesa_w: require("@/public/Iconos/Btn_Procesa_Negro_w.png"),
 
   //Imagenes de Fondo
   fondoLogin: require("@/public/Iconos/Login_Ventio.JPG"),

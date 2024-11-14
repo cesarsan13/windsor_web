@@ -36,7 +36,12 @@ function VistaPrevia({
               <Image
                 src={iconos.imprimir}
                 alt="Imprimir"
-                className="w-5 h-5 md:w-6 md:h-6"
+                className="w-5 h-5 md:w-6 md:h-6 block dark:hidden"
+              />
+              <Image
+                src={iconos.imprimir_w}
+                alt="Imprimir"
+                className="w-5 h-5 md:w-6 md:h-6 hidden dark:block"
               />
             </button>
           </Tooltip>
@@ -49,7 +54,12 @@ function VistaPrevia({
               <Image
                 src={iconos.excel}
                 alt="Excel"
-                className="w-5 h-5 md:w-6 md:h-6"
+                className="w-5 h-5 md:w-6 md:h-6 block dark:hidden"
+              />
+              <Image
+                src={iconos.excel_w}
+                alt="Excel"
+                className="w-5 h-5 md:w-6 md:h-6 hidden dark:block"
               />
             </button>
           </Tooltip>

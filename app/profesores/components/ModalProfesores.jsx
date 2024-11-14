@@ -3,7 +3,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Inputs from "@/app/profesores/components/Inputs";
 import Image from "next/image";
-import iconos from "@/app/utils/iconos"; 
+import iconos from "@/app/utils/iconos";
 import { FaSpinner } from "react-icons/fa";
 
 function ModalProfesores({
@@ -57,13 +57,8 @@ function ModalProfesores({
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box bg-base-200">
         <form onSubmit={onSubmit}>
-<<<<<<<<< Temporary merge branch 1
-          <div className="sticky -top-6 flex justify-between items-center bg-base-200 dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
-            <h3 className="font-bold text-lg">{titulo}</h3>
-=========
-          <div className="sticky -top-6 flex justify-between items-center bg-base-200 dark:bg-[#191e24] w-full h-10 z-10 mb-5">
+          <div className="sticky -top-6 flex justify-between items-center bg-base-200  w-full h-10 z-10 mb-5">
             <h3 className="font-bold text-lg text-neutral-600 dark:text-white">{titulo}</h3>
->>>>>>>>> Temporary merge branch 2
             <div className="flex space-x-2 items-center">
               <div
                 className={`tooltip tooltip-bottom ${accion === "Ver"
@@ -82,7 +77,10 @@ function ModalProfesores({
                   {isLoadingButton ? (
                     <FaSpinner className="animate-spin mx-2" />
                   ) : (
-                    <Image src={iconos.guardar} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6" />
+                    <>
+                      <Image src={iconos.guardar} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 block dark:hidden" />
+                      <Image src={iconos.guardar_w} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 hidden dark:block" />
+                    </>
                   )}
                   {isLoadingButton ? " Cargando..." : " Guardar"}
                 </button>
@@ -381,8 +379,8 @@ function ModalProfesores({
             </div>
           </fieldset>
         </form>
-      </div>
-    </dialog>
+      </div >
+    </dialog >
   );
 }
 
