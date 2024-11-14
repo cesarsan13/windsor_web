@@ -87,20 +87,18 @@ function TablaProfesores({
           <tfoot />
         </table>
       ) : profesoresFiltrados != null &&
-<<<<<<<<< Temporary merge branch 1
-      session &&
-      profesoresFiltrados.length === 0 ? (
-      <NoData></NoData>
-    ) : (
-      <Loading></Loading>
-    )}
-=========
         session &&
         profesoresFiltrados.length === 0 ? (
         <NoData></NoData>
       ) : (
-        <NoData />
+        <Loading></Loading>
       )}
+      session &&
+      profesoresFiltrados.length === 0 ? (
+      <NoData></NoData>
+      ) : (
+      <NoData />
+      );
     </div>
   ) : (
     <Loading></Loading>
