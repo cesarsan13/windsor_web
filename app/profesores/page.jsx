@@ -120,7 +120,7 @@ function Profesores() {
       contraseña: "",
     },
   });
- 
+
   useEffect(() => {
     reset({
       numero: profesor.numero,

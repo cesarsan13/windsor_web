@@ -106,15 +106,15 @@ function Cajeros() {
         : true;
       const coincideNombre = tb_desc
         ? cajero["nombre"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_desc.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_desc.toLowerCase())
         : true;
       const coincideCorreo = tb_correo
         ? cajero["mail"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_correo.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_correo.toLowerCase())
         : true;
       const coincideTelefono = tb_tel
         ? cajero["telefono"].toString().includes(tb_tel)

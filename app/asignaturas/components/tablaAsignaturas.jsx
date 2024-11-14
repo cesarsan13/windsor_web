@@ -42,12 +42,12 @@ function TablaAsignaturas({
                 </th>
                 <td>{item.descripcion}</td>
                 <td className={
-                    typeof item.area === "number" ? "text-right" : "text-left"
-                  }
+                  typeof item.area === "number" ? "text-right" : "text-left"
+                }
                 >{item.area}</td>
                 <td className={
-                    typeof item.orden === "number" ? "text-right" : "text-left"
-                  }
+                  typeof item.orden === "number" ? "text-right" : "text-left"
+                }
                 >{item.orden}</td>
                 <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                   <div
@@ -82,11 +82,11 @@ function TablaAsignaturas({
           <tfoot />
         </table>
       ) : asignaturasFiltrados != null &&
-          session &&
-          asignaturasFiltrados.length === 0 ? (
+        session &&
+        asignaturasFiltrados.length === 0 ? (
         <NoData></NoData>
-      ): (
-      <Loading></Loading>
+      ) : (
+        <Loading></Loading>
       )}
     </div>
   ) : (

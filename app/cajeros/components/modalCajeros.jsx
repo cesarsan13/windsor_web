@@ -29,58 +29,57 @@ function ModalCajeros({
       accion === "Alta"
         ? `Nuevo Cajero: ${currentID}`
         : accion === "Editar"
-        ? `Editar Cajero: ${currentID}`
-        : accion === "Eliminar"
-        ? `Eliminar Cajero: ${currentID}`
-        : `Ver Cajero: ${currentID}`
+          ? `Editar Cajero: ${currentID}`
+          : accion === "Eliminar"
+            ? `Eliminar Cajero: ${currentID}`
+            : `Ver Cajero: ${currentID}`
     );
   }, [accion]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
       ? setCajero((cajero) => ({
-          ...cajero,
-          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-        }))
+        ...cajero,
+        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+      }))
       : setCajero((cajero) => ({
-          ...cajero,
-          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-        }));
+        ...cajero,
+        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+      }));
   };
   return (
-<dialog id="my_modal_3" className="modal">
-  <div className="modal-box bg-base-200">
-    <form onSubmit={onSubmit}>
-      <div className="sticky -top-6 flex justify-between items-center bg-base-200 dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
-        <h3 className="font-bold text-lg">{titulo}</h3>
-        <div className="flex space-x-2 items-center">
-          <div
-            className={`tooltip tooltip-bottom ${
-              accion === "Ver"
-                ? "hover:cursor-not-allowed hidden"
-                : "hover:cursor-pointer"
-            }`}
-            data-tip="Guardar"
-          >
-            <button
-              type="submit"
-              id="btn_guardar"
-              className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
-            >
-              <Image src={iconos.guardar} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 mr-1" />
-              <span className="hidden sm:inline">Guardar</span>
-            </button>
+    <dialog id="my_modal_3" className="modal">
+      <div className="modal-box bg-base-200">
+        <form onSubmit={onSubmit}>
+          <div className="sticky -top-6 flex justify-between items-center bg-base-200 dark:bg-[#191e24] w-full h-10 z-10 mb-5">
+            <h3 className="font-bold text-lg text-neutral-600 dark:text-white">{titulo}</h3>
+            <div className="flex space-x-2 items-center">
+              <div
+                className={`tooltip tooltip-bottom ${accion === "Ver"
+                  ? "hover:cursor-not-allowed hidden"
+                  : "hover:cursor-pointer"
+                  }`}
+                data-tip="Guardar"
+              >
+                <button
+                  type="submit"
+                  id="btn_guardar"
+                  className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
+                >
+                  <Image src={iconos.guardar} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 mr-1" />
+                  <span className="hidden sm:inline">Guardar</span>
+                </button>
+              </div>
+              <button
+                type="button"
+                className="btn btn-sm btn-circle btn-ghost bg-base-200 dark:bg-[#1d232a] text-neutral-600 dark:text-white"
+                onClick={() => document.getElementById("my_modal_3").close()}
+              >
+                ✕
+              </button>
+            </div>
           </div>
-          <button
-            type="button"
-            className="btn btn-sm btn-circle btn-ghost"
-            onClick={() => document.getElementById("my_modal_3").close()}
-          >
-            ✕
-          </button>
-        </div>
-      </div>
-      
+
           <fieldset id="fs_formapago">
             <div className="container flex flex-col space-y-5">
               <Inputs
@@ -222,7 +221,7 @@ function ModalCajeros({
       </div>
     </dialog>
   );
-  
+
 }
 
 export default ModalCajeros;

@@ -5,8 +5,8 @@ import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 import React from "react";
 function TablaProfesores({
-  profesoresFiltrados,
   session,
+  profesoresFiltrados,
   isLoading,
   showModal,
   setProfesor,
@@ -78,12 +78,12 @@ function TablaProfesores({
           <tfoot />
         </table>
       ) : profesoresFiltrados != null &&
-      session &&
-      profesoresFiltrados.length === 0 ? (
-      <NoData></NoData>
-    ) : (
-      <Loading></Loading>
-    )}
+        session &&
+        profesoresFiltrados.length === 0 ? (
+        <NoData></NoData>
+      ) : (
+        <Loading></Loading>
+      )}
     </div>
   ) : (
     <Loading></Loading>

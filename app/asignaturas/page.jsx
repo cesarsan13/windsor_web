@@ -113,9 +113,9 @@ function Asignaturas() {
         : true;
       const coincideDescripcion = tb_desc
         ? asignatura["descripcion"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_desc.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_desc.toLowerCase())
         : true;
       return coincideId && coincideDescripcion;
     });

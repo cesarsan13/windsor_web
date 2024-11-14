@@ -38,6 +38,7 @@ function Inputs({
               onBlur: (event) => handleBlur(event, dataType),
             }))}
           disabled={isDisabled}
+          onFocus={(event) => event.target.select()}
         />
       </label>
       {errors[name] && (
