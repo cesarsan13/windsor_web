@@ -4,24 +4,25 @@ import Button from "@/app/components/button";
 import { TbLoader3 } from "react-icons/tb";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
-function Acciones({Buscar, Ver, animateLoading }) { 
+function Acciones({Buscar, Ver, isLoadingFind, isLoadingPDF, }) { 
   const images = [
     { 
       src: iconos.buscar, 
       alt: "Buscar", 
       tooltipTitle: "Buscar", 
       onClick: Buscar, 
-      isLoading: Buscar
+      isLoading: isLoadingFind
     },
     { 
       src: iconos.vistaPrevia, 
       alt: 'Vista previa', 
       tooltipTitle: 'Vista previa', 
-      onClick: Ver
+      onClick: Ver,
+      isLoading: isLoadingPDF
     }
   ];
 
-  const ImageTooltip = ({ src, tooltipTitle, onClick, animateLoading }) => {  //, isLoading
+  const ImageTooltip = ({ src, tooltipTitle, onClick, isLoading }) => {
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
@@ -29,7 +30,7 @@ function Acciones({Buscar, Ver, animateLoading }) {
           type = "button"
           onClick={onClick}
         >
-          {animateLoading ? (
+          {isLoading ? (
             <TbLoader3 className="animate-spin text-2xl" />
           ) : (
           <Image src={src} alt={tooltipTitle} className="w-5 h-5 md:w-6 md:h-6" />
@@ -45,9 +46,9 @@ function Acciones({Buscar, Ver, animateLoading }) {
         <ImageTooltip
         key={idx}
         src={image.src}
-        {...image}
-        animateLoading={idx === 1 && animateLoading}
-        
+        tooltipTitle={image.tooltipTitle}
+         onClick={image.onClick}
+        isLoading={image.isLoading}
         />
       ))}
     </div>

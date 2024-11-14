@@ -96,6 +96,6 @@ function DetallesMaterias({
         </div>
     ) : (
         <Loading></Loading>
-      )
+    )
 }
 export default DetallesMaterias;

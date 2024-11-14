@@ -28,7 +28,9 @@ function Modal_Detalles_Actividades({
     const [matAct, setMatAct] = useState({});
     const [pdfData, setPdfData] = useState("");
     const [pdfPreview, setPdfPreview] = useState(false);
-    const [animateLoading, setAnimateLoading] = useState(false);
+    const [isLoadingFind, setisLoadingFind] = useState(false);
+    const [isLoadingPDF, setisLoadingPDF] = useState(false);
+
     let M = 0;
 
     let dataEncabezadoDetalles = [];
@@ -49,6 +51,7 @@ function Modal_Detalles_Actividades({
             showSwal("Error", "Debes de seleccionar la Materia", "error", "DetallesActividades");
         } else {
             setisLoading(true);
+            setisLoadingFind(true);
             M = Number(data.materias);
             try{
                 const { token } = session.user;
@@ -58,6 +61,7 @@ function Modal_Detalles_Actividades({
                 setMatAct(acres);
             } catch (error) { }
             setisLoading(false);
+            setisLoadingFind(false);
         }
     });
 
@@ -76,7 +80,7 @@ function Modal_Detalles_Actividades({
 
     
     const handleVerClick = () => {
-        setAnimateLoading(true);
+        setisLoadingPDF(true);
         if(materia === '0' && Actividades.length == undefined && matAct.length == undefined){
             showSwal("Error", "Debes de realizar la Busqueda", "error", "DetallesActividades");
         } else {
@@ -92,7 +96,7 @@ function Modal_Detalles_Actividades({
             setTimeout(() => {
               setPdfPreview(false);
               setPdfData("");
-              setAnimateLoading(false);
+              setisLoadingPDF(false);
               document.getElementById("modalVDetCal").close();
             }, 500);
         } else {
@@ -146,7 +150,7 @@ function Modal_Detalles_Actividades({
               setPdfData(pdfData);
               setPdfPreview(true);
               showModalVista(true);
-              setAnimateLoading(false);
+              setisLoadingPDF(false);
             }, 500);
         }
         }
@@ -254,7 +258,8 @@ function Modal_Detalles_Actividades({
                                     <Acciones
                                         Buscar={Buscar}
                                         Ver={handleVerClick}
-                                        animateLoading={animateLoading}
+                                        isLoadingFind={isLoadingFind}
+                                        isLoadingPDF={isLoadingPDF}
                                     />
                                     </div>
 

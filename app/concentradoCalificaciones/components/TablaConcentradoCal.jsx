@@ -203,7 +203,7 @@ function TablaConcentradoCal({
         </div>
     ) : (
         <Loading></Loading>
-      )
+    )
 }
 
 export default TablaConcentradoCal;

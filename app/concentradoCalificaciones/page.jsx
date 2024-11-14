@@ -37,10 +37,11 @@ function ConcentradoCalificaciones() {
     const [bimestre, setBimestre] = useState(0);
     const [accion, setAccion] = useState("");
     const [alumnoData, setAlumnoData] = useState({});
-    const [animateLoading, setAnimateLoading] = useState(false);
     const [pdfPreview, setPdfPreview] = useState(false);
     const [pdfData, setPdfData] = useState("");
     const [alumnosCalificaciones, setalumnosCalificaciones] = useState([]);
+    const [isLoadingFind, setisLoadingFind] = useState(false);
+    const [isLoadingPDF, setisLoadingPDF] = useState(false);
     
 
     let dataCaliAlumnosBody = [];
@@ -64,6 +65,7 @@ function ConcentradoCalificaciones() {
         if (grupo.numero === 0 && data.bimestre === '0'){
             showSwal('Error', 'Debes de seleccionar el Grupo y el Bimestre', 'error');
         } else {
+            setisLoadingFind(true);
             setisLoading(true);
             const {token} = session.user; 
             let b = data.bimestre;
@@ -84,7 +86,9 @@ function ConcentradoCalificaciones() {
                     setActividadesReg(actividades);
             } catch (error) { }
             setisLoading(false);
+            setisLoadingFind(false);
         }
+        
     });
 
     const eliminarArreglosDuplicados = (arr) => {
@@ -101,7 +105,7 @@ function ConcentradoCalificaciones() {
     };
 
     const handleVerClick = () => {
-        setAnimateLoading(true);
+        setisLoadingPDF(true);
         const resultadoEnc = dataEncabezado.filter((item, pos, arr) => 
             arr.findIndex(i => i.descripcion === item.descripcion) === pos
         );
@@ -113,7 +117,7 @@ function ConcentradoCalificaciones() {
             setTimeout(() => {
               setPdfPreview(false);
               setPdfData("");
-              setAnimateLoading(false);
+              setisLoadingPDF(false);
               document.getElementById("modalVConCal").close();
             }, 500);
         } else {
@@ -169,7 +173,7 @@ function ConcentradoCalificaciones() {
               setPdfData(pdfData);
               setPdfPreview(true);
               showModalVista(true);
-              setAnimateLoading(false);
+              setisLoadingPDF(false);
             }, 500);
         }
     };
@@ -202,7 +206,7 @@ function ConcentradoCalificaciones() {
             arr.findIndex(i => i.descripcion === item.descripcion) === pos
         );
         const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBodyEXCEL);
-
+        
         let columns = [
             { header: "Núm", dataKey: "0" },
             { header: "Alumno", dataKey: "1" },
@@ -270,7 +274,8 @@ function ConcentradoCalificaciones() {
                                 home={home}
                                 Buscar={Buscar}
                                 Ver={handleVerClick}
-                                animateLoading={animateLoading}
+                                isLoadingFind={isLoadingFind}
+                                isLoadingPDF={isLoadingPDF}
                             />
                         </div>
                         <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
