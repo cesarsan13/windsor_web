@@ -44,7 +44,6 @@ function Cajeros() {
   });
 
   useEffect(() => {
-
     const fetchData = async () => {
       setisLoading(true);
       const { token } = session.user;
@@ -106,15 +105,15 @@ function Cajeros() {
         : true;
       const coincideNombre = tb_desc
         ? cajero["nombre"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_desc.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
         : true;
       const coincideCorreo = tb_correo
         ? cajero["mail"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_correo.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_correo.toLowerCase())
         : true;
       const coincideTelefono = tb_tel
         ? cajero["telefono"].toString().includes(tb_tel)
@@ -219,8 +218,7 @@ function Cajeros() {
       }
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
-    }
-    else {
+    } else {
       showSwal(res.alert_title, res.alert_text, "error", "my_modal_3");
     }
   });
@@ -391,23 +389,20 @@ function Cajeros() {
               handleBusquedaChange={handleBusquedaChange}
               busqueda={busqueda}
             />
-<<<<<<<<< Temporary merge branch 1
             {status === "loading" ||
-            (!session? (
-              <></>
-            ) : (
-              <TablaCajeros
-=========
-            <TablaCajeros
->>>>>>>>> Temporary merge branch 2
-              session={session}
-              isLoading={isLoading}
-              cajerosFiltrados={cajerosFiltrados}
-              showModal={showModal}
-              setCajero={setCajero}
-              setAccion={setAccion}
-              setCurrentId={setCurrentId}
-            />
+              (!session ? (
+                <></>
+              ) : (
+                <TablaCajeros
+                  session={session}
+                  isLoading={isLoading}
+                  cajerosFiltrados={cajerosFiltrados}
+                  showModal={showModal}
+                  setCajero={setCajero}
+                  setAccion={setAccion}
+                  setCurrentId={setCurrentId}
+                />
+              ))}
           </div>
         </div>
       </div>
