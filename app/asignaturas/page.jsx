@@ -443,25 +443,22 @@ function Asignaturas() {
               handleBusquedaChange={handleBusquedaChange}
               busqueda={busqueda}
             />
-<<<<<<<<< Temporary merge branch 1
             {status === "loading" ||
-            (!session? (
-              <></>
-            ): (
-              <TablaAsignaturas
-=========
-            <TablaAsignaturas
->>>>>>>>> Temporary merge branch 2
-              session={session}
-              isLoading={isLoading}
-              asignaturasFiltrados={asignaturasFiltrados}
-              showModal={showModal}
-              setAsignatura={setAsignatura}
-              setAccion={setAccion}
-              setCurrentId={setCurrentId}
-              formatNumber={formatNumber}
-              tableAction={tableAction}
-            />
+              (!session ? (
+                <></>
+              ) : (
+                <TablaAsignaturas
+                  session={session}
+                  isLoading={isLoading}
+                  asignaturasFiltrados={asignaturasFiltrados}
+                  showModal={showModal}
+                  setAsignatura={setAsignatura}
+                  setAccion={setAccion}
+                  setCurrentId={setCurrentId}
+                  formatNumber={formatNumber}
+                  tableAction={tableAction}
+                />
+              ))}
           </div>
         </div>
       </div>

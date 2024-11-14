@@ -82,19 +82,11 @@ function TablaAsignaturas({
           <tfoot />
         </table>
       ) : asignaturasFiltrados != null &&
-<<<<<<<<< Temporary merge branch 1
-          session &&
-          asignaturasFiltrados.length === 0 ? (
-        <NoData></NoData>
-      ): (
-      <Loading></Loading>
-=========
         session &&
         asignaturasFiltrados.length === 0 ? (
         <NoData></NoData>
       ) : (
         <Loading></Loading>
->>>>>>>>> Temporary merge branch 2
       )}
     </div>
   ) : (
