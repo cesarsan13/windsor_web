@@ -51,7 +51,17 @@ function TablaProfesores({
                     data-tip={`Ver`}
                     onClick={(evt) => tableAction(evt, item, `Ver`)}
                   >
-                    <Image src={iconos.ver} alt="Ver" />
+                    {/* ESTO ES UNA PRUEBA PARA LOS ICONOS CLAROS Y OSCUROS USANDO LA CLASE DE DARK CON TAILWIND */}
+                    <Image
+                      src={iconos.ver}
+                      alt="Ver"
+                      className="block dark:hidden"
+                    />
+                    <Image
+                      src={iconos.guardar}
+                      alt="Guardar en oscuro"
+                      className="hidden dark:block"
+                    />
                   </div>
                 </th>
                 <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
