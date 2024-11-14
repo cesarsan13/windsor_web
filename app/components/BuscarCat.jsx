@@ -9,7 +9,8 @@ import {
 } from "@/app/utils/api/horarios/horarios";
 import { getCajeros } from "@/app/utils/api/cajeros/cajeros";
 import { getFormasPago } from "@/app/utils/api/formapago/formapago";
-import { getAsignaturas,getAsignaturasCasoOtro } from "@/app/utils/api/asignaturas/asignaturas";
+import { getAsignaturas,
+         getAsignaturasCasoOtro } from "@/app/utils/api/asignaturas/asignaturas";
 import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
 import { getComentarios } from "@/app/utils/api/comentarios/comentarios";
 import { getGrupos } from "@/app/utils/api/grupos/grupos";

@@ -41,8 +41,10 @@ function ConcentradoCalificaciones() {
     const [pdfPreview, setPdfPreview] = useState(false);
     const [pdfData, setPdfData] = useState("");
     const [alumnosCalificaciones, setalumnosCalificaciones] = useState([]);
+    
 
     let dataCaliAlumnosBody = [];
+    let dataCaliAlumnosBodyEXCEL = [];
     let dataEncabezado = [];
 
     const {
@@ -58,28 +60,31 @@ function ConcentradoCalificaciones() {
       };
 
     const Buscar = handleSubmit(async (data) => {
+        
         if (grupo.numero === 0 && data.bimestre === '0'){
             showSwal('Error', 'Debes de seleccionar el Grupo y el Bimestre', 'error');
         } else {
-        const {token} = session.user;
-        let b = data.bimestre;
-        setBimestre(Number(b));
-        try{
-            const [materiasEncabezado, matAlumnos, alumno, materias, actividades] = 
-              await Promise.all([
-                getMateriasPorGrupo(token, grupo.numero),
-                getInfoActividadesXGrupo(token, grupo.numero, b),
-                getAlumno(token, grupo.numero),
-                getMateriasReg(token, grupo.numero),
-                getActividadesReg(token),
-            ]);
-                setMateriasEncabezado(materiasEncabezado);
-                setCalificacionesTodosAlumnos(matAlumnos);
-                setAlumnoReg(alumno);
-                setMateriasReg(materias);
-                setActividadesReg(actividades);
-        } catch (error) { }
-        };
+            setisLoading(true);
+            const {token} = session.user; 
+            let b = data.bimestre;
+            setBimestre(Number(b));
+            try{
+                const [materiasEncabezado, matAlumnos, alumno, materias, actividades] = 
+                  await Promise.all([
+                    getMateriasPorGrupo(token, grupo.numero),
+                    getInfoActividadesXGrupo(token, grupo.numero, b),
+                    getAlumno(token, grupo.numero),
+                    getMateriasReg(token, grupo.numero),
+                    getActividadesReg(token),
+                ]);
+                    setMateriasEncabezado(materiasEncabezado);
+                    setCalificacionesTodosAlumnos(matAlumnos);
+                    setAlumnoReg(alumno);
+                    setMateriasReg(materias);
+                    setActividadesReg(actividades);
+            } catch (error) { }
+            setisLoading(false);
+        }
     });
 
     const eliminarArreglosDuplicados = (arr) => {
@@ -96,11 +101,11 @@ function ConcentradoCalificaciones() {
     };
 
     const handleVerClick = () => {
+        setAnimateLoading(true);
         const resultadoEnc = dataEncabezado.filter((item, pos, arr) => 
             arr.findIndex(i => i.descripcion === item.descripcion) === pos
         );
         const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBody);
-        setAnimateLoading(true);
         cerrarModalVista();
         if ( grupo.numero === 0 && bimestre === 0 )
         {
@@ -189,17 +194,23 @@ function ConcentradoCalificaciones() {
 
     const ImprimeExcel = async () => {
         let fecha_hoy = new Date();
+
         const dateStr = formatDate(fecha_hoy);
         const timeStr = formatTime(fecha_hoy);
 
         const resultadoEnc = dataEncabezado.filter((item, pos, arr) => 
             arr.findIndex(i => i.descripcion === item.descripcion) === pos
         );
-        const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBody);
-        const columns = resultadoEnc.map((item, index) => ({
-            header: item.descripcion,
-            dataKey: index.toString(),
-        }));
+        const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBodyEXCEL);
+
+        let columns = [
+            { header: "Núm", dataKey: "0" },
+            { header: "Alumno", dataKey: "1" },
+            ...resultadoEnc.map((item, index) => ({
+                header: item.descripcion,
+                dataKey: (index + 2).toString(),
+            })),
+        ];
 
         const configuracion = {
             Encabezado: {
@@ -236,7 +247,6 @@ function ConcentradoCalificaciones() {
             <div className="container skeleton w-full max-w-screen-xl shadow-xl rounded-xl"></div>
         );
     }
-
     return(
         <>
            <Modal_Detalles_Actividades
@@ -252,7 +262,7 @@ function ConcentradoCalificaciones() {
                 Excel={ImprimeExcel}
             />
 
-            <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+            <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
                 <div className="flex flex-col justify-start p-3">
                     <div className="flex flex-wrap md:flex-nowrap items-start md:items-center"> 
                         <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
@@ -260,7 +270,7 @@ function ConcentradoCalificaciones() {
                                 home={home}
                                 Buscar={Buscar}
                                 Ver={handleVerClick}
-                                isLoading={isLoading}  
+                                animateLoading={animateLoading}
                             />
                         </div>
                         <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
@@ -306,8 +316,12 @@ function ConcentradoCalificaciones() {
                                 ]}
                             />
                         </div> 
-                        
+                        {status === "loading" ||
+                        (!session ? (
+                          <></>
+                        ) : (
                         <TablaConcentradoCal
+                            isLoading={isLoading}  
                             materiasEncabezado = {materiasEncabezado}
                             calificacionesTodosAlumnos={calificacionesTodosAlumnos}
                             materiasReg = {materiasReg}
@@ -320,7 +334,9 @@ function ConcentradoCalificaciones() {
                             dataEncabezado = {dataEncabezado}
                             dataCaliAlumnosBody = {dataCaliAlumnosBody}
                             setalumnosCalificaciones = { setalumnosCalificaciones}
+                            dataCaliAlumnosBodyEXCEL = {dataCaliAlumnosBodyEXCEL}
                         />
+                    ))}
                     </div>
                 </div>
             </div>

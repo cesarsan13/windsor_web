@@ -44,10 +44,11 @@ function Modal_Detalles_Actividades({
 
     const materia = watch("materias");
 
-    const Buscar = handleSubmit(async (data) => {      
-        if(data.materias === '0'){
+    const Buscar = handleSubmit(async (data) => {  
+        if(data.materias === '0' || data.materias === 0){
             showSwal("Error", "Debes de seleccionar la Materia", "error", "DetallesActividades");
         } else {
+            setisLoading(true);
             M = Number(data.materias);
             try{
                 const { token } = session.user;
@@ -56,6 +57,7 @@ function Modal_Detalles_Actividades({
                 setActividades(res);
                 setMatAct(acres);
             } catch (error) { }
+            setisLoading(false);
         }
     });
 
@@ -72,7 +74,9 @@ function Modal_Detalles_Actividades({
         return arreglosUnicos;
     };
 
+    
     const handleVerClick = () => {
+        setAnimateLoading(true);
         if(materia === '0' && Actividades.length == undefined && matAct.length == undefined){
             showSwal("Error", "Debes de realizar la Busqueda", "error", "DetallesActividades");
         } else {
@@ -80,7 +84,7 @@ function Modal_Detalles_Actividades({
             arr.findIndex(i => i.descripcion === item.descripcion) === pos
         );
         const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBodyDetalles);
-        setAnimateLoading(true);
+        
         cerrarModalVista();
         if ( grupo.numero === 0 && bimestre === 0 )
         {
@@ -223,10 +227,10 @@ function Modal_Detalles_Actividades({
             />
 
             <dialog id='DetallesActividades' className="modal">
-                <div className="modal-box w-full max-w-5xl h-full">
+                <div className="modal-box w-full max-w-5xl h-full bg-base-200">
                     <form  encType="multipart/form-data">
-                        <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
-                            <h3 className="font-bold text-lg"> Detalles alumno: {alumnoData.nombre} </h3>
+                        <div className="sticky -top-6 flex justify-between items-center bg-base-200 w-full h-10 z-10 mb-5">
+                            <h3 className="font-bold text-lg bg-base-200"> Detalles alumno: {alumnoData.nombre} </h3>
                             <div className="flex space-x-2 items-center">
                             <button
                               className="btn btn-sm btn-circle btn-ghost"
@@ -250,7 +254,7 @@ function Modal_Detalles_Actividades({
                                     <Acciones
                                         Buscar={Buscar}
                                         Ver={handleVerClick}
-                                        isLoading={isLoading}  
+                                        animateLoading={animateLoading}
                                     />
                                     </div>
 
@@ -275,6 +279,7 @@ function Modal_Detalles_Actividades({
                                     <div className="w-4/5">
                                         <h4 className="font-bold text-lg"> Actividades y Evaluaciones</h4>
                                         <DetallesMaterias
+                                         isLoading={isLoading}
                                          Actividades = {Actividades}
                                          matAct = {matAct}
                                          AlumnoD = {alumnoData.numero}
