@@ -5,25 +5,27 @@ import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 import { TbLoader3 } from "react-icons/tb"; // Icono de carga
 
-function Acciones({ Buscar, Alta, home, Ver, animateLoading,contador }) {
+function Acciones({ Buscar, Alta, home, Ver, animateLoading, contador }) {
   const images = [
     {
-      src: iconos.buscar,
+      srcLight: iconos.buscar_w,
+      srcDark: iconos.buscar,
       alt: "Buscar",
       tooltipTitle: "Buscar",
       onClick: Buscar,
     },
-    { src: iconos.alta, alt: "Alta", tooltipTitle: "Alta", onClick: Alta },
+    { srcLight:iconos.alta_w, srcDark: iconos.alta, alt: "Alta", tooltipTitle: "Alta", onClick: Alta },
     {
-      src: iconos.vistaPrevia,
+      srcDark: iconos.vistaPrevia,
+      srcLight:iconos.vistaPrevia_w,
       alt: "Vista previa",
       tooltipTitle: "Vista previa",
       onClick: Ver,
     },
-    { src: iconos.salir, alt: "Salir", tooltipTitle: "Salir", onClick: home },
+    { srcLight:iconos.salir_w, srcDark: iconos.salir, alt: "Salir", tooltipTitle: "Salir", onClick: home },
   ];
 
-  const ImageTooltip = ({ src, tooltipTitle, onClick, animateLoading }) => {
+  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, animateLoading }) => {
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
@@ -33,11 +35,18 @@ function Acciones({ Buscar, Alta, home, Ver, animateLoading,contador }) {
           {animateLoading ? (
             <TbLoader3 className="animate-spin text-2xl" />
           ) : (
-            <Image
-              src={src}
-              alt={tooltipTitle}
-              className="w-5 h-5 md:w-6 md:h-6"
-            />
+            <>
+              <Image
+                src={srcDark}
+                alt={tooltipTitle}
+                className="w-5 h-5 md:w-6 md:h-6 block dark:hidden"
+              />
+              <Image
+                src={srcLight}
+                alt={tooltipTitle}
+                className="w-5 h-5 md:w-6 md:h-6 hidden dark:block"
+              />
+            </>
           )}
         </button>
       </Tooltip>

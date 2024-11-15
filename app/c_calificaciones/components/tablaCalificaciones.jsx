@@ -149,7 +149,8 @@ function TablaCalificaciones({
                                             data-tip={`Editar`}
                                             onClick={(evt) => tableAction(evt, item, "Editar")}
                                         >
-                                            <Image src={iconos.editar} alt="Editar" />
+                                            <Image src={iconos.editar_w} alt="Editar" className="hidden dark:block" />
+                                            <Image src={iconos.editar} alt="Editar" className="block dark:hidden" />
                                         </div>
                                     )}
                                 </th>

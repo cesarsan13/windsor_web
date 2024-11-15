@@ -44,7 +44,8 @@ function Busqueda({
                         className=" join-item  dark:text-neutral-200 text-neutral-600 border-none shadow-none w-5 h-5 md:w-6 md:h-6 mt-4 "
                         onClick={(evt) => limpiarBusqueda(evt)}
                     >
-                        <Image src={iconos.limpiar} alt="Limpiar" />
+                        <Image src={iconos.limpiar} alt="Limpiar" className='block dark:hidden' />
+                        <Image src={iconos.limpiar_w} alt="Limpiar" className='hidden dark:block' />
                     </button>
                 </div>
             </div>

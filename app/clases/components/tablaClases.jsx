@@ -66,7 +66,8 @@ function TablaClases({
                       data-tip={`Ver`}
                       onClick={(evt) => tableAction(evt, item, `Ver`)}
                     >
-                      <Image src={iconos.ver} alt="Ver" />
+                      <Image src={iconos.ver}  className="block dark:hidden" alt="Ver" />
+                      <Image src={iconos.ver_w} className="hidden dark:block"  alt="Ver" />
                     </div>
                   </th>
                   <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
@@ -74,8 +75,9 @@ function TablaClases({
                       className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
                       data-tip={`Editar`}
                       onClick={(evt) => tableAction(evt, item, `Editar`)}
-                    >
-                      <Image src={iconos.editar} alt="Editar" />
+                    >                      
+                      <Image src={iconos.editar}  className="block dark:hidden" alt="Editar" />
+                      <Image src={iconos.editar_w} className="hidden dark:block"  alt="Editar" />
                     </div>
                   </th>
                   <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
@@ -83,8 +85,9 @@ function TablaClases({
                       className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
                       data-tip={`Eliminar`}
                       onClick={(evt) => tableAction(evt, item, "Eliminar")}
-                    >
-                      <Image src={iconos.eliminar} alt="Eliminar" />
+                    >                      
+                      <Image src={iconos.eliminar}  className="block dark:hidden" alt="Eliminar" />
+                      <Image src={iconos.eliminar_w} className="hidden dark:block"  alt="Eliminar" />
                     </div>
                   </th>
                 </tr>

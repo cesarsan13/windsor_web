@@ -8,12 +8,13 @@ import iconos from "@/app/utils/iconos";
 function Acciones({ home, Bproceso, isLoading }) {
   const isAnyLoading = isLoading;
   const images = [
-    { src: iconos.procesa, alt: "Proceso", tooltipTitle: "Proceso", onClick: Bproceso, isLoading: isLoading },
-    { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home, isLoading: false },
+    { srcDark: iconos.procesa, srcLight:iconos.procesa_w, alt: "Proceso", tooltipTitle: "Proceso", onClick: Bproceso, isLoading: isLoading },
+    { srcDark: iconos.salir, srcLight:iconos.salir_w, alt: 'Salir', tooltipTitle: 'Salir', onClick: home, isLoading: false },
   ];
 
   const ImageTooltip = ({
-    src,
+    srcDark,
+    srcLight,
     tooltipTitle,
     onClick,
     isLoading,
@@ -29,11 +30,18 @@ function Acciones({ home, Bproceso, isLoading }) {
           {isLoading ? (
             <TbLoader3 className="animate-spin text-2xl" />
           ) : (
-            <Image
-              src={src}
+            <>
+              <Image
+                src={srcDark}
+                alt={tooltipTitle}
+                className="w-5 h-5 md:w-6 md:h-6 dark:hidden block"
+              />
+              <Image
+              src={srcLight}
               alt={tooltipTitle}
-              className="w-5 h-5 md:w-6 md:h-6"
+              className="w-5 h-5 md:w-6 md:h-6 dark:block hidden"
             />
+            </>
           )}
         </button>
       </Tooltip>
@@ -45,7 +53,8 @@ function Acciones({ home, Bproceso, isLoading }) {
       {images.map((image, idx) => (
         <ImageTooltip
           key={idx}
-          src={image.src}
+          srcDark={image.srcDark}
+          srcLight={image.srcLight}
           tooltipTitle={image.tooltipTitle}
           onClick={image.onClick}
           isLoading={image.isLoading}

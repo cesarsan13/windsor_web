@@ -56,7 +56,8 @@ function TablaDocumentosCobranza({
                     onClick={(evt) => tableAction(evt, item, `Ver`)}
                     className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
                   >
-                    <Image src={iconos.ver} alt="Editar" />
+                    <Image src={iconos.ver} alt="Editar" className="block dark:hidden"/>
+                    <Image src={iconos.ver_w} alt="Editar" className="hidden dark:block" />
                   </div>
                 </th>
                 <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
@@ -65,7 +66,8 @@ function TablaDocumentosCobranza({
                     data-tip={`Editar`}
                     onClick={(evt) => tableAction(evt, item, `Editar`)}
                   >
-                    <Image src={iconos.editar} alt="Editar" />
+                    <Image src={iconos.editar} alt="Editar" className="block dark:hidden"/>
+                    <Image src={iconos.editar_w} alt="Editar" className="hidden dark:block"/>
                   </div>
                 </th>
                 <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
@@ -74,7 +76,8 @@ function TablaDocumentosCobranza({
                     data-tip={`Eliminar`}
                     onClick={(evt) => tableAction(evt, item, "Eliminar")}
                   >
-                    <Image src={iconos.eliminar} alt="Eliminar" />
+                    <Image src={iconos.eliminar} alt="Eliminar" className="block dark:hidden"/>
+                    <Image src={iconos.eliminar_w} alt="Eliminar" className="hidden dark:block"/>
                   </div>
                 </th>
                 <th

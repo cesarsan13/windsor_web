@@ -6,14 +6,15 @@ import React from 'react'
 
 function Acciones({ Buscar, Alta, home }) {
     const images = [
-        { src: iconos.buscar, alt: 'Buscar', tooltipTitle: 'Buscar', onClick: Buscar },
-        { src: iconos.alta, alt: 'Alta', tooltipTitle: 'Alta', onClick: Alta },        
-        { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home },
+        { srcDark: iconos.buscar,srcLight:iconos.buscar_w, alt: 'Buscar', tooltipTitle: 'Buscar', onClick: Buscar },
+        { srcDark: iconos.alta,srcLight:iconos.alta_w, alt: 'Alta', tooltipTitle: 'Alta', onClick: Alta },        
+        { srcDark: iconos.salir,srcLight:iconos.salir_w, alt: 'Salir', tooltipTitle: 'Salir', onClick: home },
     ];
-    const ImageTooltip = ({ src, tooltipTitle, onClick }) => {
+    const ImageTooltip = ({ srcDark,srcLight, tooltipTitle, onClick }) => {
         return (
             <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
-                <Image src={src} alt={tooltipTitle} onClick={onClick} className="w-5 h-5 md:w-6 md:h-6" />
+                <Image src={srcDark} alt={tooltipTitle} onClick={onClick} className="w-5 h-5 md:w-6 md:h-6 block dark:hidden" />
+                <Image src={srcLight} alt={tooltipTitle} onClick={onClick} className="w-5 h-5 md:w-6 md:h-6 hidden dark:block" />
             </Tooltip>
         );
     }

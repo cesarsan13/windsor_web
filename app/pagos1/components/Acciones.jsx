@@ -18,44 +18,49 @@ function Acciones({
   const isAnyLoading = muestraRecargos || muestraParciales || muestraImpresion || muestraDocumento;
   const images = [
     {
-      src: iconos.alta,
+      srcLight: iconos.alta_w,
+      srcDark: iconos.alta,
       alt: "Añadir Pago",
       tooltipTitle: "Nuevo Pago",
       onClick: Alta,
       isLoading: false,
     },
     {
-      src: iconos.documento,
+      srcLight: iconos.documento_w,
+      srcDark: iconos.documento,
       alt: "Documento",
       tooltipTitle: "Documento",
       onClick: Documento,
       isLoading: muestraDocumento,
     },
     {
-      src: iconos.recargo,
+      srcLight: iconos.recargo_w,
+      srcDark: iconos.recargo,
       alt: "Recargos",
       tooltipTitle: "Recargos",
       onClick: Recargos,
       isLoading: muestraRecargos,
     },
     {
-      src: iconos.actualizar_formato,
+      srcLight: iconos.actualizar_formato_w,
+      srcDark: iconos.actualizar_formato,
       alt: "Parciales",
       tooltipTitle: "Parciales",
       onClick: Parciales,
       isLoading: muestraParciales,
     },
     {
-      src: iconos.vistaPrevia,
+      srcLight: iconos.vistaPrevia_w,
+      srcDark: iconos.vistaPrevia,
       alt: "Imprimir",
       tooltipTitle: "Imprimir",
       onClick: ImprimePDF,
       isLoading: muestraImpresion
     },
-    { src: iconos.salir, alt: "Salir", tooltipTitle: "Salir", onClick: home },
+    { srcLight: iconos.salir_w, srcDark:iconos.salir, alt: "Salir", tooltipTitle: "Salir", onClick: home },
   ];
 
-  const ImageTooltip = ({ src, tooltipTitle, onClick, isLoading, disabled }) => {
+  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading, disabled }) => {
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
@@ -66,7 +71,16 @@ function Acciones({
           {isLoading ? (
             <TbLoader3 className="animate-spin text-2xl" />
           ) : (
-            <Image src={src} alt={tooltipTitle} className="w-5 h-5 md:w-6 md:h-6" />
+            <>
+              <Image
+                src={srcDark}
+                alt={tooltipTitle}
+                className="w-5 h-5 md:w-6 md:h-6 block dark:hidden"/>
+              <Image
+                src={srcLight}
+                alt={tooltipTitle}
+                className="w-5 h-5 md:w-6 md:h-6 hidden dark:block" />
+            </>
           )}
         </button>
       </Tooltip>
@@ -78,7 +92,8 @@ function Acciones({
       {images.map((image, idx) => (
         <ImageTooltip
           key={idx}
-          src={image.src}
+          srcLight={image.srcLight}
+          srcDark={image.srcDark}
           tooltipTitle={image.tooltipTitle}
           onClick={image.onClick}
           isLoading={image.isLoading}

@@ -87,7 +87,8 @@ function TablaPagos1({
                       data-tip={`Eliminar`}
                       onClick={(evt) => tableAction(evt, item, "Eliminar")}
                     >
-                      <Image src={iconos.eliminar} alt="Eliminar" />
+                      <Image src={iconos.eliminar}  className="block dark:hidden" alt="Eliminar" />
+                      <Image src={iconos.eliminar_w} className="hidden dark:block"  alt="Eliminar" />
                     </div>
                   </th>
                   <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
@@ -95,8 +96,9 @@ function TablaPagos1({
                       className="hidden sm:hidden md:block lg:block kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[2rem] md:h-[2rem] content-center"
                       data-tip={`Seleccionar`}
                       onClick={(evt) => tableAction(evt, item, "Seleccionar")}
-                    >
-                      <Image src={iconos.documento} alt="Seleccionar" />
+                    >                      
+                      <Image src={iconos.documento}  className="block dark:hidden" alt="Seleccionar" />
+                      <Image src={iconos.documento_w} className="hidden dark:block"  alt="Seleccionar" />
                     </div>
                   </th>
                 </tr>
