@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import Inputs from "@/app/formapago/components/Inputs";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
+import { FaSpinner } from "react-icons/fa";
 
 function ModalFormaPago({
   accion,
@@ -14,6 +15,7 @@ function ModalFormaPago({
   errors,
   setFormaPago,
   formaPago,
+  isLoadingButton
 }) {
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
@@ -69,13 +71,25 @@ function ModalFormaPago({
                   type="submit"
                   id="btn_guardar"
                   className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
+                  onClick={onsubmit}
+                  disabled={isLoadingButton}
                 >
-                  <Image
+
+                  {isLoadingButton ? (
+                    <FaSpinner className="animate-spin mx-2" />
+                  ) : (
+                    <>
+                      <Image src={iconos.guardar} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 mr-1 block dark:hidden" />
+                      <Image src={iconos.guardar_w} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 mr-1 hidden dark:block" />
+                    </>
+                  )}
+                  {isLoadingButton ? " Cargando..." : " Guardar"}
+                  {/* <Image
                     src={iconos.guardar}
                     alt="Guardar"
                     className="w-5 h-5 md:w-6 md:h-6 mr-1"
-                  />
-                  <span className="hidden sm:inline">Guardar</span>
+                  /> */}
+                  {/* <span className="hidden sm:inline">Guardar</span> */}
                 </button>
               </div>
               <button

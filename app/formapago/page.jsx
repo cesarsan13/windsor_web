@@ -35,7 +35,7 @@ function FormaPago() {
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
   const [animateLoading, setAnimateLoading] = useState(false);
   const formasPagoRef = useRef(formasPago);
-
+  const [isLoadingButton, setisLoadingButton] = useState(false);
 
   useEffect(() => {
     formasPagoRef.current = formasPago; // Actualiza el ref cuando alumnos cambia
@@ -143,6 +143,7 @@ function FormaPago() {
 
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
+    setisLoadingButton(true);
     const dataj = JSON.stringify(data);
     data.id = currentID;
     let res = null;
@@ -157,6 +158,7 @@ function FormaPago() {
       );
       if (!confirmed) {
         showModal(true);
+        setisLoadingButton(false);
         return;
       }
     }
@@ -200,6 +202,7 @@ function FormaPago() {
     }else{
       showSwal(res.alert_title, res.alert_text, res.alert_icon,"my_modal_3");
     }
+    setisLoadingButton(false);
   });
   const showModal = (show) => {
     show
@@ -343,6 +346,7 @@ function FormaPago() {
         register={register}
         setFormaPago={setFormaPago}
         formaPago={formaPago}
+        isLoadingButton={isLoadingButton}
       />
       <VistaPrevia
         pdfPreview={pdfPreview}
