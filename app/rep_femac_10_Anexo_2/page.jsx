@@ -161,6 +161,7 @@ function EstadodeCuenta() {
 
     Enca1(reporte);
     body.forEach((reporte2) => {
+      console.log(reporte2);
       let tipoPago2 = " ";
       let documento = "0";
 

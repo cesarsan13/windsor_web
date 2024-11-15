@@ -105,7 +105,7 @@ function AlumnosPorClase() {
         setPdfPreview(false);
         setPdfData("");
         setAnimateLoading(false);
-        document.getElementById("modalVRep6").close();
+        //document.getElementById("modalVRep6").close();
       }, 500);
     } else {
       const configuracion = {

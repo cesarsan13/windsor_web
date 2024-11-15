@@ -88,6 +88,8 @@ function Modal_Detalles_Actividades({
             arr.findIndex(i => i.descripcion === item.descripcion) === pos
         );
         const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBodyDetalles);
+
+        const MateriaNombre = materiasReg.filter((c) => c.numero === Number(materia));
         
         cerrarModalVista();
         if ( grupo.numero === 0 && bimestre === 0 )
@@ -107,7 +109,7 @@ function Modal_Detalles_Actividades({
                 Nombre_Aplicacion: "Sistema de Control Escolar",
                 Nombre_Reporte: "Reporte de Concentrado de Calificaciones",
                 Nombre_Usuario: `Usuario: ${session.user.name}`,
-                Datos_Grupo:  `Alumno: ${alumnoData.nombre}   Bimestre: ${bimestre}   Materia:${materia}`,
+                Datos_Grupo:  `Alumno: ${alumnoData.nombre}   Bimestre: ${bimestre}   Materia:${MateriaNombre[0].descripcion}`,
               },
               body: resultadoBody
             };
@@ -162,12 +164,15 @@ function Modal_Detalles_Actividades({
             arr.findIndex(i => i.descripcion === item.descripcion) === pos
         );
         const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBodyDetalles);
+
+        const MateriaNombre = materiasReg.filter((c) => c.numero === Number(materia));
+
         const configuracion = {
             Encabezado: {
               Nombre_Aplicacion: "Sistema de Control Escolar",
               Nombre_Reporte: "Reporte de Concentrado de Calificaciones",
               Nombre_Usuario: `Usuario: ${session.user.name}`,
-              Datos_Grupo:  `Alumno: ${alumnoData.nombre}   Bimestre: ${bimestre}   Materia:${materia}`,
+              Datos_Grupo:  `Alumno: ${alumnoData.nombre}   Bimestre: ${bimestre}   Materia:${MateriaNombre[0].descripcion}`,
             },
             body: resultadoBody
           };
@@ -175,6 +180,8 @@ function Modal_Detalles_Actividades({
     }
 
     const ImprimeExcel = async () => {
+        const MateriaNombre = materiasReg.filter((c) => c.numero === Number(materia));
+        
         let fecha_hoy = new Date();
         const dateStr = formatDate(fecha_hoy);
         const timeStr = formatTime(fecha_hoy);
@@ -200,7 +207,7 @@ function Modal_Detalles_Actividades({
                 Nombre_Aplicacion: "Sistema de Control Escolar",
                 Nombre_Reporte: "Reporte de Comentarios",
                 Nombre_Usuario: `Usuario: ${session.user.name}`,
-                Clase: `Alumno: ${alumnoData.nombre}   Bimestre: ${bimestre}   Materia:`
+                Clase: `Alumno: ${alumnoData.nombre}   Bimestre: ${bimestre}   Materia:${MateriaNombre[0].descripcion}`
             },
             body: ArregloProvisional,
             columns: columns,
