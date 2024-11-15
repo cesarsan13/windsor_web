@@ -22,7 +22,7 @@ import Modal_Detalles_Actividades from "./components/modalDetallesActividades";
 import Acciones from "@/app/concentradoCalificaciones/components/Acciones";
 import BuscarCat from "@/app/components/BuscarCat";
 import TablaConcentradoCal from "@/app/concentradoCalificaciones/components/TablaConcentradoCal";
-import ModalVistaPreviaConcentradoCal from "./components/ModalVistaPreviaConcentradoCal";
+import VistaPrevia from "@/app/components/VistaPrevia";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "jspdf-autotable";
 
@@ -322,11 +322,14 @@ function ConcentradoCalificaciones() {
                 grupo = {grupo.numero}
                 bimestre = {bimestre}
             />
-            <ModalVistaPreviaConcentradoCal
+            <VistaPrevia
                 pdfPreview={pdfPreview}
                 pdfData={pdfData}
                 PDF={ImprimePDF}
                 Excel={ImprimeExcel}
+                id="modalVConCal"
+                titulo="Vista Previa Concentrado Calificaciones"
+                CerrarView={cerrarModalVista}
             />
 
             <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">

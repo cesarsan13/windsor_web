@@ -13,7 +13,7 @@ import {
     ImprimirPDFDetalle,
     ImprimirExcel
 } from "@/app/utils/api/concentradoCalificaciones/concentradoCalificaciones";
-import ModalVistaPreviaDetalleCal from "./ModalVistaPreviaDetalleCal";
+import VistaPrevia from "@/app/components/VistaPrevia";
 import { showSwal } from "@/app/utils/alerts";
 
 function Modal_Detalles_Actividades({
@@ -223,21 +223,25 @@ function Modal_Detalles_Actividades({
    
     return(
         <>
-            <ModalVistaPreviaDetalleCal
+
+            <VistaPrevia
                 pdfPreview={pdfPreview}
                 pdfData={pdfData}
                 PDF={ImprimePDF}
                 Excel={ImprimeExcel}
+                id="modalVDetCal"
+                titulo="Vista Previa Detalles Calificaciones"
+                CerrarView={cerrarModalVista}
             />
 
             <dialog id='DetallesActividades' className="modal">
                 <div className="modal-box w-full max-w-5xl h-full bg-base-200">
                     <form  encType="multipart/form-data">
                         <div className="sticky -top-6 flex justify-between items-center bg-base-200 w-full h-10 z-10 mb-5">
-                            <h3 className="font-bold text-lg bg-base-200"> Detalles alumno: {alumnoData.nombre} </h3>
+                            <h3 className="font-bold text-lg text-neutral-600 dark:text-white"> Detalles alumno: {alumnoData.nombre} </h3>
                             <div className="flex space-x-2 items-center">
                             <button
-                              className="btn btn-sm btn-circle btn-ghost"
+                              className="btn btn-sm btn-circle btn-ghost bg-base-200 dark:bg-[#1d232a] text-neutral-600 dark:text-white"
                               onClick={(event) => {
                                 event.preventDefault();
                                 document.getElementById("DetallesActividades").close();
@@ -282,7 +286,7 @@ function Modal_Detalles_Actividades({
                                 </div>
                                 <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 w-full mt-10">
                                     <div className="w-4/5">
-                                        <h4 className="font-bold text-lg"> Actividades y Evaluaciones</h4>
+                                        <h4 className="font-bold text-lg text-neutral-600 dark:text-white"> Actividades y Evaluaciones</h4>
                                         <DetallesMaterias
                                          isLoading={isLoading}
                                          Actividades = {Actividades}

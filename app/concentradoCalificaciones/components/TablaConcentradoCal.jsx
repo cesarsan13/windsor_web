@@ -187,7 +187,8 @@ function TablaConcentradoCal({
                                             data-tip={`Editar`}
                                             onClick={(evt) => tableAction(evt, alumno, `Editar`)}
                                         >
-                                            <Image src={iconos.editar} alt="Editar" />
+                                            <Image src={iconos.editar} alt="Editar" className="block dark:hidden" />
+                                            <Image src={iconos.editar_w} alt="Editar" className="hidden dark:block" />
                                         </div>
                                     </th>
                                 </tr>
