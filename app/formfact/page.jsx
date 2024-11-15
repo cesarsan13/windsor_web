@@ -1,5 +1,5 @@
 "use client";
-import React, { useTransition, useCallback } from "react";
+import React, { useTransition, useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalFormFact from "@/app/formfact/components/modalFormFact";
@@ -25,7 +25,7 @@ function FormFact() {
   const { data: session, status } = useSession();
   const [formFacts, setFormFacts] = useState([]); //formasPago
   const [formFact, setFormFact] = useState({}); //formaPago
-  const [formFactsFiltrados, setFormFactsFiltrados] = useState([]);
+  const [formFactsFiltrados, setFormFactsFiltrados] = useState(null);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
@@ -38,6 +38,7 @@ function FormFact() {
   const [labels, setLabels] = useState([]);
   const [propertyData, setPropertyData] = useState({});
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
+  const formFactsRef = useRef(formFacts)
 
   const [configuracion, setConfiguracion] = useState({
     Encabezado: {
@@ -48,6 +49,9 @@ function FormFact() {
     body: {},
   });
   useEffect(() => {
+    formFactsRef.current = formFacts
+  }, [formFacts])
+  useEffect(() => {
     if (formato === "") {
       return;
     }
@@ -56,9 +60,6 @@ function FormFact() {
   }, [formato]);
 
   useEffect(() => {
-    if (status === "loading" || !session) {
-      return;
-    }
     const fetchData = async () => {
       setisLoading(true);
       const { token } = session.user;
@@ -67,6 +68,9 @@ function FormFact() {
       setFormFactsFiltrados(data);
       setisLoading(false);
     };
+    if (status === "loading" || !session) {
+      return;
+    }
     fetchData();
     setFormato("Facturas");
   }, [session, status, bajas]);
@@ -103,10 +107,10 @@ function FormFact() {
   const Buscar = useCallback(() => {
     const { tb_id, tb_desc } = busqueda;
     if (tb_id === "" && tb_desc === "") {
-      setFormFactsFiltrados(formFacts);
+      setFormFactsFiltrados(formFactsRef.current);
       return;
     }
-    const infoFiltrada = formFacts.filter((formFact) => {
+    const infoFiltrada = formFactsRef.current.filter((formFact) => {
       const coincideId = tb_id
         ? formFact["numero_forma"].toString().includes(tb_id)
         : true;
@@ -116,15 +120,16 @@ function FormFact() {
       return coincideId && coincideDescripcion;
     });
     setFormFactsFiltrados(infoFiltrada);
-  }, [busqueda, formFacts]);
+  }, [busqueda]);
+
+  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar])
 
   useEffect(() => {
-    const debouncedBuscar = debounce(Buscar, 500);
     debouncedBuscar();
     return () => {
       clearTimeout(debouncedBuscar);
     };
-  }, [busqueda, Buscar]);
+  }, [busqueda, debouncedBuscar]);
 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault();
@@ -246,7 +251,7 @@ function FormFact() {
         setFormFact={setFormFact}
         formFact={formFact}
       />
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
@@ -278,17 +283,23 @@ function FormFact() {
                 currentID={currentID}
               ></ConfigReporte>
             ) : (
-              <TablaFormFact
-                isLoading={isLoading}
-                formFactsFiltrados={formFactsFiltrados}
-                showModal={showModal}
-                setFormFact={setFormFact}
-                setAccion={setAccion}
-                setCurrentId={setCurrentId}
-                setShowSheet={setShowSheet}
-                fetchFacturasFormato={fetchFacturasFormato}
-                formato={formato}
-              />
+              (status === "loading" || (!session)) ?
+                (<></>) :
+                (
+                  <TablaFormFact
+                    isLoading={isLoading}
+                    formFactsFiltrados={formFactsFiltrados}
+                    showModal={showModal}
+                    setFormFact={setFormFact}
+                    setAccion={setAccion}
+                    setCurrentId={setCurrentId}
+                    setShowSheet={setShowSheet}
+                    fetchFacturasFormato={fetchFacturasFormato}
+                    formato={formato}
+                    session={session}
+                  />
+                )
+
             )}
           </div>
         </div>

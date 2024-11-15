@@ -6,6 +6,7 @@ import iconos from "@/app/utils/iconos";
 import Image from "next/image";
 function TablaFormaPago({
   formaPagosFiltrados,
+  session,
   isLoading,
   showModal,
   setFormaPago,
@@ -21,7 +22,7 @@ function TablaFormaPago({
 
   return !isLoading ? (
     <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-full">
-      {formaPagosFiltrados.length > 0 ? (
+      {formaPagosFiltrados && formaPagosFiltrados.length > 0 ? (
         <table className="table table-xs table-zebra w-full">
           <thead className="sticky top-0 bg-white dark:bg-[#1d232a]">
             <tr>
@@ -75,15 +76,16 @@ function TablaFormaPago({
           </tbody>
           <tfoot />
         </table>
-      ) : (
-        <NoData />
-      )}
+      ) : formaPagosFiltrados != null &&
+      session &&
+      formaPagosFiltrados.length === 0 ? (
+      <NoData></NoData>
+    ) : (
+      <Loading></Loading>
+    )}
     </div>
   ) : (
     <Loading></Loading>
-    // <div className="flex justify-center items-center pt-10">
-    //   <span className="loading loading-ring loading-lg text-4xl"></span>
-    // </div>
   );
 }
 

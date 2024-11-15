@@ -1,12 +1,12 @@
 import Swal from "sweetalert2";
 
-export const showSwalAndWait = (title, text, icon) => {
+export const showSwalAndWait = (title, text, icon, wait = 2000) => {
   return new Promise((resolve) => {
     Swal.fire({
       title: title,
-      text: text,
+      html: text,
       icon: icon,
-      timer: 2000,
+      timer: wait,
       showConfirmButton: false,
       customClass: {
         popup: "swal-popup",

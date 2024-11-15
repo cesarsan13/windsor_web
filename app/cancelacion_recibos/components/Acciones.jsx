@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import Tooltip from "@/app/components/tooltip";
 import Button from "@/app/components/button";
 import { TbLoader3 } from "react-icons/tb";
@@ -8,11 +8,17 @@ import iconos from "@/app/utils/iconos";
 function Acciones({ home, Bproceso, isLoading }) {
   const isAnyLoading = isLoading;
   const images = [
+    { src: iconos.procesa, alt: "Proceso", tooltipTitle: "Proceso", onClick: Bproceso, isLoading: isLoading },
     { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home, isLoading: false },
-    { src: iconos.guardar, alt: "Proceso", tooltipTitle: "Proceso", onClick: Bproceso, isLoading: isLoading },
   ];
 
-  const ImageTooltip = ({ src, tooltipTitle, onClick, isLoading, disabled }) => {
+  const ImageTooltip = ({
+    src,
+    tooltipTitle,
+    onClick,
+    isLoading,
+    disabled,
+  }) => {
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
@@ -23,7 +29,11 @@ function Acciones({ home, Bproceso, isLoading }) {
           {isLoading ? (
             <TbLoader3 className="animate-spin text-2xl" />
           ) : (
-            <Image src={src} alt={tooltipTitle} className="w-5 h-5 md:w-6 md:h-6" />
+            <Image
+              src={src}
+              alt={tooltipTitle}
+              className="w-5 h-5 md:w-6 md:h-6"
+            />
           )}
         </button>
       </Tooltip>

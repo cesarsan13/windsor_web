@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Acciones from "@/app/rep_femac_3/components/Acciones";
-import ModalVistaPreviaRepFemac3 from "./components/modalVistaPreviaRepFemac3";
+import VistaPrevia from "../components/VistaPrevia";
 import {
   getAlumnosPorMes,
   Imprimir,
@@ -205,15 +205,23 @@ function Rep_Femac_3() {
     setPdfData("");
     document.getElementById("modalVPRepFemac3").close();
   };
+  const CerrarView = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVPRepFemac3").close();
+  };
   return (
     <>
-      <ModalVistaPreviaRepFemac3
+      <VistaPrevia
+        id={"modalVPRepFemac3"}
+        titulo={"Vista Previa de Alumnos por Clase Mensual"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
-      <div className="flex flex-col justify-start items-start bg-slate-100 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+      <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">
           {/* Fila de la cabecera de la pagina */}
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">

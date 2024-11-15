@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalHorario from "@/app/horarios/components/ModalHorario";
@@ -24,9 +24,9 @@ import { debounce } from "../utils/globalfn";
 function Horarios() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [horarios, setHorarios] = useState([]);
+  const [horarios, setHorarios] = useState(null);
   const [horario, setHorario] = useState({});
-  const [horariosFiltrados, setHorariosFiltrados] = useState([]);
+  const [horariosFiltrados, setHorariosFiltrados] = useState(null);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
@@ -39,11 +39,42 @@ function Horarios() {
   const [pdfData, setPdfData] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
+  const horariosRef = useRef(horarios)
 
   useEffect(() => {
-    if (status === "loading" || !session) {
+    horariosRef.current = horarios
+  }, [horarios])
+  const Buscar = useCallback(() => {
+    const { tb_id, tb_desc } = busqueda;
+    if (tb_id === "" && tb_desc === "") {
+      setHorariosFiltrados(horariosRef.current);
       return;
     }
+    const infoFiltrada = horariosRef.current.filter((horario) => {
+      const coincideId = tb_id
+        ? horario["numero"].toString().includes(tb_id)
+        : true;
+      const coincideDescripcion = tb_desc
+        ? horario["horario"]
+          .toString()
+          .toLowerCase()
+          .includes(tb_desc.toLowerCase())
+        : true;
+      return coincideId && coincideDescripcion;
+    });
+    setHorariosFiltrados(infoFiltrada);
+  }, [busqueda]);
+
+  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar])
+
+  useEffect(() => {
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar);
+    };
+  }, [busqueda, debouncedBuscar]);
+
+  useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
       const { token } = session.user;
@@ -52,6 +83,9 @@ function Horarios() {
       setHorariosFiltrados(data);
       setisLoading(false);
     };
+    if (status === "loading" || !session) {
+      return;
+    }
     fetchData();
   }, [session, status, bajas]);
 
@@ -87,35 +121,6 @@ function Horarios() {
       salon: horario.salon,
     });
   }, [horario, reset]);
-
-  const Buscar = useCallback(() => {
-    const { tb_id, tb_desc } = busqueda;
-    if (tb_id === "" && tb_desc === "") {
-      setHorariosFiltrados(horarios);
-      return;
-    }
-    const infoFiltrada = horarios.filter((horario) => {
-      const coincideId = tb_id
-        ? horario["numero"].toString().includes(tb_id)
-        : true;
-      const coincideDescripcion = tb_desc
-        ? horario["horario"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_desc.toLowerCase())
-        : true;
-      return coincideId && coincideDescripcion;
-    });
-    setHorariosFiltrados(infoFiltrada);
-  }, [busqueda, horarios]);
-
-  useEffect(() => {
-    const debouncedBuscar = debounce(Buscar, 500);
-    debouncedBuscar();
-    return () => {
-      clearTimeout(debouncedBuscar);
-    };
-  }, [busqueda, Buscar]);
 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault();
@@ -363,7 +368,7 @@ function Horarios() {
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
       />
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
@@ -390,14 +395,16 @@ function Horarios() {
               handleBusquedaChange={handleBusquedaChange}
               busqueda={busqueda}
             />
-            <TablaHorarios
-              isLoading={isLoading}
-              HorariosFiltrados={horariosFiltrados}
-              showModal={showModal}
-              setHorario={setHorario}
-              setAccion={setAccion}
-              setCurrentId={setCurrentId}
-            />
+            {status === "loading" || (!session) ?
+              (<></>) : (<TablaHorarios
+                isLoading={isLoading}
+                HorariosFiltrados={horariosFiltrados}
+                showModal={showModal}
+                setHorario={setHorario}
+                setAccion={setAccion}
+                setCurrentId={setCurrentId}
+                session={session}
+              />)}
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { Elimina_Comas, formatNumber, pone_ceros } from "@/app/utils/globalfn";
 import React from "react";
 import { useState, useEffect } from "react";
-import Inputs from "@/app/cajeros/components/Inputs";
+import Inputs from "@/app/pagos1/components/Inputs";
 import BuscarCat from "@/app/components/BuscarCat";
 import { useForm } from "react-hook-form";
 import { showSwalAndWait } from "@/app/utils/alerts";
@@ -126,8 +126,8 @@ function ModalPagoImprime({
       };
       Imprimir(configuracion);
       setisLoading(false);
-      reiniciarPage();
-      showModal("my_modal_4", false);
+      // reiniciarPage();
+      // showModal("my_modal_4", false);
     } catch (e) {
       console.log(e.message);
       setisLoading(false);
@@ -185,10 +185,10 @@ function ModalPagoImprime({
 
   return (
     <dialog id="my_modal_4" className="modal">
-      <div className="modal-box">
+      <div className="modal-box bg-base-200">
         <form onSubmit={onSubmitModal}>
-          <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
-            <h3 className="font-bold text-lg">Imprime.</h3>
+          <div className="sticky -top-6 flex justify-between items-center bg-base-200 dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
+            <h3 className="font-bold text-lg text-neutral-600 dark:text-white">Imprime.</h3>
             <div className="flex space-x-2 items-center">
               <div className={`tooltip tooltip-bottom`} data-tip="Guardar">
                 <button
@@ -212,7 +212,7 @@ function ModalPagoImprime({
               </div>
               <button
                 type="button"
-                className="btn btn-sm btn-circle btn-ghost"
+                className="btn btn-sm btn-circle btn-ghost bg-base-200 dark:bg-[#1d232a] text-neutral-600 dark:text-white"
                 onClick={() => document.getElementById("my_modal_4").close()}
               >
                 ✕
@@ -237,6 +237,7 @@ function ModalPagoImprime({
                       modalId="modal_formpago"
                       id={formaPagoPage.forma_pago_id}
                       alignRight={"text-right"}
+                      array={1}
                       inputWidths={{
                         contdef: "180px",
                         first: "70px",

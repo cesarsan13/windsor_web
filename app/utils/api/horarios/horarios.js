@@ -1,3 +1,4 @@
+import { formatDate, formatTime } from "../../globalfn";
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
 
@@ -117,7 +118,10 @@ export const Imprimir = (configuracion) => {
       Enca1(newPDF);
     }
   });
-  newPDF.guardaReporte("Horarios");
+  const date = new Date()
+  const dateStr = formatDate(date)
+  const timeStr = formatTime(date)
+  newPDF.guardaReporte(`Horarios_${dateStr.replaceAll("/","")}_${timeStr.replaceAll(":","")}`);
 };
 export const ImprimirExcel = (configuracion) => {
   const newExcel = new ReporteExcel(configuracion);
@@ -126,7 +130,10 @@ export const ImprimirExcel = (configuracion) => {
   const { nombre } = configuracion;
   newExcel.setColumnas(columns);
   newExcel.addData(body);
-  newExcel.guardaReporte(nombre);
+  const date = new Date()
+  const dateStr = formatDate(date)
+  const timeStr = formatTime(date)
+  newExcel.guardaReporte(`${nombre}_${dateStr.replaceAll("/","")}_${timeStr.replaceAll(":","")}`);
 };
 
 export const getHorariosXAlumno = async (token, horario) => {

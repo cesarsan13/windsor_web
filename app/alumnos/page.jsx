@@ -17,6 +17,7 @@ import {
   getLastAlumnos,
   Imprimir,
   ImprimirExcel,
+  getTab,
 } from "@/app/utils/api/alumnos/alumnos";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -24,7 +25,12 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import { formatFecha, format_Fecha_String, debounce } from "../utils/globalfn";
+import {
+  formatFecha,
+  format_Fecha_String,
+  debounce,
+  formatTime,
+} from "../utils/globalfn";
 function Alumnos() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -49,6 +55,7 @@ function Alumnos() {
   const [fecha_hoy, setFechaHoy] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
   const [files, setFile] = useState(null);
+  const [activeTab, setActiveTab] = useState(1);
   const alumnosRef = useRef(alumnos);
   const [busqueda, setBusqueda] = useState({
     tb_id: "",
@@ -434,10 +441,7 @@ function Alumnos() {
     document.getElementById("a_paterno").focus();
   };
   const onSubmitModal = handleSubmit(async (data) => {
-    if (Object.keys(errors).length > 0) {
-      alert("hay errores xd");
-    }
-    event.preventDefault;
+    event.preventDefault();
     accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
     let res = null;
     if (accion === "Eliminar") {
@@ -565,7 +569,6 @@ function Alumnos() {
       accion,
       data.numero
     );
-    console.log("data", capturedImage);
     if (res.status) {
       if (accion === "Alta") {
         data.numero = res.data;
@@ -602,7 +605,20 @@ function Alumnos() {
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
 
       showModal(false);
+      setActiveTab(1);
+      setGrado({});
+      setcond1({});
+      setcond2({});
+
       // Buscar();
+    } else {
+      console.log(res);
+      if (Object.keys(res.errors).length > 0) {
+        const primerError = Object.keys(res.errors)[0];
+        document.getElementById(primerError).focus();
+        setActiveTab(getTab(primerError));
+      }
+      showSwal("Error", res.alert_text, "error", "my_modal_alumnos");
     }
   });
   const dataURLtoBlob = (dataURL) => {
@@ -629,8 +645,8 @@ function Alumnos() {
   };
   const showModal = (show) => {
     show
-      ? document.getElementById("my_modal_3").showModal()
-      : document.getElementById("my_modal_3").close();
+      ? document.getElementById("my_modal_alumnos").showModal()
+      : document.getElementById("my_modal_alumnos").close();
   };
   const showModalVista = (show) => {
     show
@@ -660,6 +676,12 @@ function Alumnos() {
   };
 
   const ImprimeExcel = () => {
+    const date = new Date();
+    const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+    const timeStr = formatTime(date).replace(/:/g, "");
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -676,7 +698,7 @@ function Alumnos() {
         { header: "Fecha Alta", dataKey: "fecha_inscripcion" },
         { header: "Telefono", dataKey: "telefono_1" },
       ],
-      nombre: "Alumnos",
+      nombre: `Alumnos_${dateStr}${timeStr}`,
     };
     ImprimirExcel(configuracion);
   };
@@ -780,8 +802,11 @@ function Alumnos() {
   return (
     <>
       <ModalAlumnos
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
         session={session}
         accion={accion}
+        handleSubmit={handleSubmit}
         onSubmit={onSubmitModal}
         currentID={currentID}
         errors={errors}

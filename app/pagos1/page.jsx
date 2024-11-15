@@ -395,8 +395,13 @@ function Pagos_1() {
       );
       return;
     }
+    reset({
+      cantidad_producto: 1,
+    });
+    setPrecioBase(0);
+    setAccionB("Alta");
     showModal("modal_nuevo_registro", true);
-    document.getElementById("numero_producto").focus();
+    document.getElementById("cantidad_producto").focus();
   };
 
   const btnParciales = (event) => {
@@ -758,6 +763,7 @@ function Pagos_1() {
     <>
       <ModalNuevoRegistro
         session={session}
+        productos1={productos1}
         setProductos1={setProductos1}
         register={register}
         errors={errors}
@@ -824,7 +830,7 @@ function Pagos_1() {
         isLoading={isLoading}
         tableSelect={tableSelect}
       />
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="flex items-center space-x-4">
@@ -923,6 +929,7 @@ function Pagos_1() {
             </div>
             <div className="pb-5">
               <TablaPagos1
+                session={session}
                 isLoading={isLoading}
                 pagosFiltrados={pagosFiltrados}
                 setPago={setPago}

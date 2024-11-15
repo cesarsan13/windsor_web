@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal, showSwalAndWait } from "@/app/utils/alerts";
 import ModalProfesores from "@/app/profesores/components/ModalProfesores";
@@ -26,7 +26,7 @@ function Profesores() {
   const { data: session, status } = useSession();
   const [profesores, setProfesores] = useState([]);
   const [profesor, setProfesor] = useState({});
-  const [profesoresFiltrados, setProfesoresFiltrados] = useState([]);
+  const [profesoresFiltrados, setProfesoresFiltrados] = useState(null);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
@@ -35,6 +35,7 @@ function Profesores() {
   const [currentID, setCurrentId] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const profesoresRef = useRef(profesores);
   const [busqueda, setBusqueda] = useState({
     tb_numero: "",
     tb_nombre: "",
@@ -42,9 +43,42 @@ function Profesores() {
   const [animateLoading, setAnimateLoading] = useState(false);
 
   useEffect(() => {
-    if (status === "loading" || !session) {
+    profesoresRef.current = profesores; // Actualiza el ref cuando profesores cambia
+  }, [profesores]);
+
+  const Buscar = useCallback(() => {
+    const { tb_numero, tb_nombre } = busqueda;
+    if (tb_numero === "" && tb_nombre === "") {
+      setProfesoresFiltrados(profesoresRef.current);
       return;
     }
+    const infoFiltrada = profesoresRef.current.filter((profesor) => {
+      const coincideID = tb_numero
+        ? profesor["numero"].toString().includes(tb_numero)
+        : true;
+      const coincideNombre = tb_nombre
+        ? profesor["nombre"]
+          .toString()
+          .toLowerCase()
+          .includes(tb_nombre.toLowerCase())
+        : true;
+      return coincideID && coincideNombre;
+    });
+    setProfesoresFiltrados(infoFiltrada);
+  }, [busqueda]);
+
+  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
+
+  useEffect(() => {
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar);
+    };
+  }, [busqueda, debouncedBuscar]);
+
+
+  useEffect(() => {
+    
     const fetchData = async () => {
       setisLoading(true);
       const { token } = session.user;
@@ -53,6 +87,9 @@ function Profesores() {
       setProfesoresFiltrados(data);
       setisLoading(false);
     };
+    if (status === "loading" || !session) {
+      return;
+    }
     fetchData();
   }, [session, status, bajas]);
 
@@ -83,7 +120,7 @@ function Profesores() {
       contraseña: "",
     },
   });
- 
+
   useEffect(() => {
     reset({
       numero: profesor.numero,
@@ -107,34 +144,7 @@ function Profesores() {
     });
   }, [profesor, reset]);
 
-  const Buscar = useCallback(() => {
-    const { tb_numero, tb_nombre } = busqueda;
-    if (tb_numero === "" && tb_nombre === "") {
-      setProfesoresFiltrados(profesores);
-      return;
-    }
-    const infoFiltrada = profesores.filter((profesor) => {
-      const coincideID = tb_numero
-        ? profesor["numero"].toString().includes(tb_numero)
-        : true;
-      const coincideNombre = tb_nombre
-        ? profesor["nombre"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_nombre.toLowerCase())
-        : true;
-      return coincideID && coincideNombre;
-    });
-    setProfesoresFiltrados(infoFiltrada);
-  }, [busqueda, profesores]);
-
-  useEffect(() => {
-    const debouncedBuscar = debounce(Buscar, 500);
-    debouncedBuscar();
-    return () => {
-      clearTimeout(debouncedBuscar);
-    };
-  }, [busqueda, Buscar]);
+  
 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault();
@@ -162,15 +172,15 @@ function Profesores() {
         doc.ImpPosX("Numero", 15, doc.tw_ren);
         doc.ImpPosX("Nombre", 40, doc.tw_ren);
         doc.ImpPosX("Dirección", 110, doc.tw_ren);
-        doc.ImpPosX("Colonia", 140, doc.tw_ren);
-        doc.ImpPosX("Ciudad", 170, doc.tw_ren);
-        doc.ImpPosX("Estado", 215, doc.tw_ren);
-        doc.ImpPosX("C.P.", 240, doc.tw_ren);
+        doc.ImpPosX("Colonia", 155, doc.tw_ren);
+        doc.ImpPosX("Ciudad", 200, doc.tw_ren);
+        doc.ImpPosX("Estado", 245, doc.tw_ren);
+        doc.ImpPosX("C.P.", 270, doc.tw_ren);
         doc.nextRow(4);
         doc.ImpPosX("Email", 15, doc.tw_ren);
-        doc.ImpPosX("Telefono1", 140, doc.tw_ren);
-        doc.ImpPosX("Telefono2", 170, doc.tw_ren);
-        doc.ImpPosX("Celular", 200, doc.tw_ren);
+        doc.ImpPosX("Telefono1", 155, doc.tw_ren);
+        doc.ImpPosX("Telefono2", 200, doc.tw_ren);
+        doc.ImpPosX("Celular", 245, doc.tw_ren);
         doc.nextRow(4);
         doc.printLineH();
         doc.nextRow(4);
@@ -183,6 +193,7 @@ function Profesores() {
 
     Enca1(reporte);
     body.forEach((profesores) => {
+      reporte.setFontSize(8)
       reporte.ImpPosX(profesores.numero.toString(), 20, reporte.tw_ren, 0, "R");
       reporte.ImpPosX(
         profesores.nombre_completo.toString(),
@@ -200,45 +211,45 @@ function Profesores() {
       );
       reporte.ImpPosX(
         profesores.colonia.toString(),
-        140,
+        155,
         reporte.tw_ren,
         0,
         "L"
       );
       reporte.ImpPosX(
         profesores.ciudad.toString(),
-        170,
+        200,
         reporte.tw_ren,
         0,
         "L"
       );
       reporte.ImpPosX(
         profesores.estado.toString(),
-        215,
+        245,
         reporte.tw_ren,
         0,
         "L"
       );
-      reporte.ImpPosX(profesores.cp.toString(), 240, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(profesores.cp.toString(), 270, reporte.tw_ren, 0, "L");
       reporte.nextRow(4);
       reporte.ImpPosX(profesores.email.toString(), 15, reporte.tw_ren, 0, "L");
       reporte.ImpPosX(
         profesores.telefono_1.toString(),
-        140,
+        155,
         reporte.tw_ren,
         12,
         "L"
       );
       reporte.ImpPosX(
         profesores.telefono_2.toString(),
-        170,
+        200,
         reporte.tw_ren,
         12,
         "L"
       );
       reporte.ImpPosX(
         profesores.celular.toString(),
-        200,
+        245,
         reporte.tw_ren,
         12,
         "L"
@@ -336,7 +347,7 @@ function Profesores() {
         { header: "Celular", dataKey: "celular" },
         { header: "C.P.", dataKey: "cp" },
       ],
-      nombre: "Profesores",
+      nombre: "Profesores_",
     };
     ImprimirExcel(configuracion);
   };
@@ -357,6 +368,7 @@ function Profesores() {
       );
       if (!confirmed) {
         showModal(true);
+        setisLoadingButton(false);
         return;
       }
     }
@@ -450,7 +462,7 @@ function Profesores() {
         CerrarView={CerrarView}
       />
 
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
@@ -479,6 +491,7 @@ function Profesores() {
               busqueda={busqueda}
             />
             <TablaProfesores
+              session={session}
               isLoading={isLoading}
               profesoresFiltrados={profesoresFiltrados}
               showModal={showModal}

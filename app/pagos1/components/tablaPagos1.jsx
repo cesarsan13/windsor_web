@@ -7,6 +7,7 @@ import Image from "next/image";
 import { formatNumber } from "@/app/utils/globalfn";
 
 function TablaPagos1({
+  session,
   pagosFiltrados,
   isLoading,
   setPago,
@@ -38,7 +39,7 @@ function TablaPagos1({
         className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white  w-full lg:w-full"
         style={{ height: `auto` }}
       >
-        {pagosFiltrados.length > 0 ? (
+        {pagosFiltrados && pagosFiltrados.length > 0 ? (
           <table className="table table-xs w-full">
             <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
               <tr>
@@ -118,8 +119,12 @@ function TablaPagos1({
               </tr>
             </tfoot> */}
           </table>
+        ) : pagosFiltrados != null &&
+          session &&
+          pagosFiltrados.length === 0 ? (
+          <NoData></NoData>
         ) : (
-          <NoData />
+          <Loading></Loading>
         )}
       </div>
     </>

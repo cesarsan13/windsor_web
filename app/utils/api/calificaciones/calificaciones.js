@@ -1,5 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { formatDate, formatTime } from "../../globalfn";
 
 export const getProcesoCalificaciones = async (token, data) => {
   let url = `${process.env.DOMAIN_API}api/proceso/calificaciones-get`;
@@ -770,7 +771,10 @@ export const ImprimirPDF = (configuracion) => {
       Enca1(newPDF);
     }
   });
-  newPDF.guardaReporte("Calificaciones");
+  const date = new Date()
+  const dateStr = formatDate(date)
+  const timeStr = formatTime(date)
+  newPDF.guardaReporte(`Calificaciones_${dateStr.replaceAll("/","")}_${timeStr.replaceAll(":","")}`);
 };
 export const ImprimirExcel = (configuracion) => {
   const newExcel = new ReporteExcel(configuracion);
@@ -779,5 +783,8 @@ export const ImprimirExcel = (configuracion) => {
   const { nombre } = configuracion;
   newExcel.setColumnas(columns);
   newExcel.addData(body);
-  newExcel.guardaReporte(nombre);
+  const date = new Date()
+  const dateStr = formatDate(date)
+  const timeStr = formatTime(date)
+  newExcel.guardaReporte(`${nombre}_${dateStr.replaceAll("/","")}_${timeStr.replaceAll(":","")}`);
 };

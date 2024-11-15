@@ -33,6 +33,7 @@ function BuscarCat({
   idBusqueda,
   inputWidths = { contdef: "180px", first: "100px", second: "150px" },
   accion,
+  contador,
   descClassName = "flex  md:w-56 sm:w-60 w-full ",
   contClassName = "flex flex-row ",
 }) {
@@ -49,12 +50,13 @@ function BuscarCat({
   });
 
   useEffect(() => {
-    // console.log(accion);
+    console.log(accion);
+    console.log(contador);
     if (accion === "Alta") {
       setValue(nameInput[0], "");
       setValue(nameInput[1], "");
     }
-  }, [accion]);
+  }, [accion,contador]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -118,7 +120,7 @@ function BuscarCat({
             fetchedData = [];
             break;
           case "profesores":
-            fetchedData = await getProfesores(token, "");
+            fetchedData = await getProfesores(token, false);
             setTiutloInput(["numero", "nombre"]);
             break;
           case "materias":

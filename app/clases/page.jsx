@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useRef, useMemo } from "react";
 import Acciones from "@/app/clases/components/Acciones";
 import TablaClases from "@/app/clases/components/tablaClases";
 import { useRouter } from "next/navigation";
@@ -16,28 +16,32 @@ import VistaPrevia from "@/app/components/VistaPrevia";
 import Busqueda from "@/app/clases/components/Busqueda";
 import ModalClases from "@/app/clases/components/modalClases";
 import { ReportePDF } from "../utils/ReportesPDF";
-import { showSwal, confirmSwal } from "../utils/alerts";
-import { debounce } from "../utils/globalfn";
+import { showSwal, confirmSwal, showSwalAndWait } from "../utils/alerts";
+import { debounce, obtenerFechaYHoraActual } from "../utils/globalfn";
+import "@react-pdf-viewer/core/lib/styles/index.css";
 
 function Clases() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [clases, setClases] = useState([]);
   const [clase, setClase] = useState({});
-  const [clasesFiltrados, setClasesFiltrados] = useState([]);
+  const [clasesFiltrados, setClasesFiltrados] = useState(null);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
   const [grado, setGrado] = useState({});
   const [grado2, setGrado2] = useState({});
-  const [prof1, setprof1] = useState({});
-  const [prof2, setprof2] = useState({});
+  const [materia, setMateria] = useState({});
+  const [profesor, setProfesor] = useState({});
   const [animateLoading, setAnimateLoading] = useState(false);
+  const [isLoadingButton, setisLoadingButton] = useState(false);
   const [isLoading, setisLoading] = useState(false);
+  const clasesRef = useRef(clases);
   const [currentID, setCurrentId] = useState({
     grupo: "",
     materia: "",
   });
+  const [contador, setContador] = useState(0);
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [busqueda, setBusqueda] = useState({
@@ -46,9 +50,9 @@ function Clases() {
     tb_profesor: "",
   });
   useEffect(() => {
-    if (status === "loading" || !session) {
-      return;
-    }
+    clasesRef.current = clases;
+  }, [clases]);
+  useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
       const { token } = session.user;
@@ -57,47 +61,47 @@ function Clases() {
       setClasesFiltrados(data);
       setisLoading(false);
     };
+    if (status === "loading" || !session) {
+      return;
+    }
     fetchData();
   }, [session, status, bajas]);
 
   const Buscar = useCallback(() => {
     const { tb_grupo, tb_materia, tb_profesor } = busqueda;
     if (tb_grupo === "" && tb_materia === "" && tb_profesor === "") {
-      setClasesFiltrados(clases);
+      setClasesFiltrados(clasesRef.current);
       return;
     }
-    const infoFiltrada = clases.filter((clase) => {
+    const infoFiltrada = clasesRef.current.filter((clase) => {
       const coincideGrupo = tb_grupo
-        ? clase["grupo"].toString().includes(tb_grupo)
+        ? clase["grupo_descripcion"]?.toString().includes(tb_grupo)
         : true;
       const coincideMateria = tb_materia
-        ? clase["materia"].toString().includes(tb_materia)
+        ? clase["materia_descripcion"]?.toString().includes(tb_materia)
         : true;
       const coincideProfesor = tb_profesor
-        ? clase["profesor"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_profesor.toLowerCase())
+        ? clase["profesor_nombre"]?.toString().toLowerCase().includes(tb_profesor.toLowerCase())
         : true;
-      return  (
-        coincideGrupo && coincideMateria && coincideProfesor
-      );
+      return coincideGrupo && coincideMateria && coincideProfesor;
     });
     setClasesFiltrados(infoFiltrada);
-  }, [busqueda, clases]);
+  }, [busqueda]);
+
+  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
   useEffect(() => {
-    const debouncedBuscar = debounce(Buscar, 300);
     debouncedBuscar();
     return () => {
       clearTimeout(debouncedBuscar);
     };
-  }, [busqueda, Buscar]);
+  }, [busqueda, debouncedBuscar]);
 
   const {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -128,15 +132,20 @@ function Clases() {
     });
   }, [clase, reset]);
 
- 
+
 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
     setBusqueda({ tb_grupo: "", tb_materia: "", tb_profesor: "" });
   };
-
+  // useEffect(() => {
+  //   setMateria({});
+  //   setProfesor({});
+  //   setGrado({});
+  // }, [limpiaBusCat]);
   const Alta = async (event) => {
     setCurrentId("");
+    setContador(prevCount => prevCount + 1); // Cambia la clave para re-renderizar los buscat
     reset({
       grupo: "",
       materia: "",
@@ -152,33 +161,39 @@ function Clases() {
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);
-    setprof1({});
-    setprof2({});
+    console.log("Materia: ",materia);
+    console.log("Profesor: ",profesor);
+    console.log("Grado: ",grado);
+    // setMateria({numero:"",descripcion:""});
+    // setProfesor({numero:"",nombre:""});
+    // setGrado({numero:"",horario:""});
+    // setLimpiaBusCat(true)
+    // Forzar un renderizado
+    setMateria({});
+    setProfesor({});
     setGrado({});
-
+    console.log("2Materia: ",materia);
+    console.log("2Profesor: ",profesor);
+    console.log("2Grado: ",grado);
     document.getElementById("lunes").focus();
   };
 
+  const handleReset = () => {
+    setMateria({});
+    setProfesor({});
+    setGrado({});
+};
   const onSubmitModal = handleSubmit(async (data) => {
-    event.preventDefault;
-
-    // const dataj = JSON.stringify(data);
-   // data.id = currentID;
-    data.grupo = grado.numero;
-    data.horario_1_nombre = grado.horario;
-    data.materia = prof1.numero;
-    data.profesor = prof2.numero;
-
+    event.preventDefault();
     if (!currentID) {
+      // console.log("Clases: ",clases);
       const claseExistente = clases.find(
         (clase) =>
           clase.grupo === data.grupo &&
-        clase.materia === data.materia &&
-        clase.profesor === data.profesor &&
-        clase.id !== currentID
-        
+          clase.materia === data.materia &&
+          clase.profesor === data.profesor &&
+          clase.id !== currentID
       );
-      
       if (claseExistente) {
         showSwal(
           "Error",
@@ -189,7 +204,7 @@ function Clases() {
         return;
       }
     }
-
+    setisLoadingButton(true);
     let res = null;
     if (accion === "Eliminar") {
       showModal(false);
@@ -204,8 +219,13 @@ function Clases() {
         showModal(true);
         return;
       }
-      //showModal(true);
     }
+    data.grupo = grado.numero ?? clase.grupo;
+    data.grupo_descripcion = grado.horario ?? clase.grupo_descripcion;
+    data.materia = materia.numero ?? clase.materia;
+    data.materia_descripcion = materia.descripcion ?? clase.materia_descripcion;
+    data.profesor = profesor.numero ?? clase.profesor;
+    data.profesor_nombre = profesor.nombre_completo ?? clase.profesor_nombre;
     res = await guardaClase(session.user.token, data, accion);
     if (res.status) {
       if (accion === "Alta") {
@@ -214,26 +234,27 @@ function Clases() {
         if (!bajas) {
           setClasesFiltrados([...clasesFiltrados, nuevaClase]);
         }
-      }
-      if (accion === "Eliminar" || accion === "Editar") {
+      } else if (accion === "Eliminar" || accion === "Editar") {
         const index = clases.findIndex(
           (c) => c.grupo === data.grupo && c.materia === data.materia
         );
         if (index !== -1) {
           if (accion === "Eliminar") {
             const cFiltrados = clases.filter(
-              (c) => c.grupo !== data.grupo && c.materia !== data.materia
+              (c) => c.grupo !== data.grupo || c.materia !== data.materia
             );
             setClases(cFiltrados);
             setClasesFiltrados(cFiltrados);
           } else {
             if (bajas) {
-              const cFiltrados = clases.filter((c) => c.grupo !== data.grupo && c.materia !== data.materia);
+              const cFiltrados = clases.filter(
+                (c) => c.grupo !== data.grupo || c.materia !== data.materia
+              );
               setClases(cFiltrados);
               setClasesFiltrados(cFiltrados);
             } else {
               const cActualizadas = clases.map((c) =>
-                c.grupo && c.materia === currentID ? { ...c, ...data } : c
+                c.grupo === data.grupo && c.materia === data.materia ? { ...c, ...data } : c
               );
               setClases(cActualizadas);
               setClasesFiltrados(cActualizadas);
@@ -241,10 +262,17 @@ function Clases() {
           }
         }
       }
-      showSwal(res.alert_title, res.alert_text, res.alert_icon);
+      setisLoadingButton(false);
       showModal(false);
-    }
+      await showSwalAndWait(res.alert_title, res.alert_text, res.alert_icon);
+    } else {
+      setisLoadingButton(false);
+      showModal(false);
+      await showSwalAndWait(res.alert_title, res.alert_text, res.alert_icon, 8000);
+      showModal(true);
+    };6
   });
+
   const showModal = (show) => {
     show
       ? document.getElementById("my_modal_3").showModal()
@@ -272,7 +300,9 @@ function Clases() {
     };
     Imprimir(configuracion);
   };
+
   const ImprimeExcel = () => {
+    const { fecha, hora } = obtenerFechaYHoraActual();
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -281,9 +311,9 @@ function Clases() {
       },
       body: clasesFiltrados,
       columns: [
-        { header: "Grupo", dataKey: "grupo" },
-        { header: "Asignatura", dataKey: "materia" },
-        { header: "Profesor", dataKey: "profesor" },
+        { header: "Grupo", dataKey: "grupo_descripcion" },
+        { header: "Asignatura", dataKey: "materia_descripcion" },
+        { header: "Profesor", dataKey: "profesor_nombre" },
         { header: "Lunes", dataKey: "lunes" },
         { header: "Martes", dataKey: "martes" },
         { header: "Miercoles", dataKey: "miercoles" },
@@ -292,10 +322,11 @@ function Clases() {
         { header: "Sabado", dataKey: "sabado" },
         { header: "Domingo", dataKey: "domingo" },
       ],
-      nombre: "Clases",
+      nombre: `Reporte_Clases_${fecha}${hora}`,
     };
     ImprimirExcel(configuracion);
   };
+
   const handleVerClick = () => {
     setAnimateLoading(true);
     const configuracion = {
@@ -307,20 +338,20 @@ function Clases() {
     };
     const Enca1 = (doc) => {
       if (!doc.tiene_encabezado) {
-        doc.imprimeEncabezadoPrincipalV();
+        doc.imprimeEncabezadoPrincipalH();
         doc.nextRow(12);
         doc.ImpPosX("Grupo", 14, doc.tw_ren, 0, "L");
-        doc.ImpPosX("Asignatura", 28, doc.tw_ren, 0, "L");
-        doc.ImpPosX("Profesor", 55, doc.tw_ren, 0, "L");
-        doc.ImpPosX("Lunes", 80, doc.tw_ren, 0, "L");
-        doc.ImpPosX("Martes", 95, doc.tw_ren, 0, "L");
-        doc.ImpPosX("Miercoles", 110, doc.tw_ren, 0, "L");
-        doc.ImpPosX("Jueves", 130, doc.tw_ren, 0, "L");
-        doc.ImpPosX("Viernes", 150, doc.tw_ren, 0, "L");
-        doc.ImpPosX("Sabado", 170, doc.tw_ren, 0, "L");
-        doc.ImpPosX("Domingo", 190, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Asignatura", 50, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Profesor", 95, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Lunes", 180, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Martes", 195, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Miercoles", 210, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Jueves", 230, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Viernes", 245, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Sabado", 260, doc.tw_ren, 0, "L");
+        doc.ImpPosX("Domingo", 275, doc.tw_ren, 0, "L");
         doc.nextRow(4);
-        doc.printLineV();
+        doc.printLineH();
         doc.nextRow(4);
         doc.tiene_encabezado = true;
       } else {
@@ -328,26 +359,26 @@ function Clases() {
         doc.tiene_encabezado = true;
       }
     };
-    const reporte = new ReportePDF(configuracion);
+    const orientacion = "Landscape";
+    const reporte = new ReportePDF(configuracion, orientacion);
     Enca1(reporte);
     clasesFiltrados.forEach((clase) => {
-      reporte.ImpPosX(clase.grupo.toString(), 24, reporte.tw_ren, 0, "R");
-      reporte.ImpPosX(clase.materia.toString(), 28, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.profesor.toString(), 55, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.lunes.toString(), 80, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.martes.toString(), 95, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.miercoles.toString(), 110, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.jueves.toString(), 130, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.viernes.toString(), 150, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.sabado.toString(), 170, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.domingo.toString(), 190, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(clase.grupo_descripcion?.toString() ?? "", 14, reporte.tw_ren, 12, "L");
+      reporte.ImpPosX(clase.materia_descripcion?.toString() ?? "", 50, reporte.tw_ren, 20, "L");
+      reporte.ImpPosX(clase.profesor_nombre?.toString() ?? "", 95, reporte.tw_ren, 35, "L");
+      reporte.ImpPosX(clase.lunes?.toString() ?? "", 180, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(clase.martes?.toString() ?? "", 195, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(clase.miercoles?.toString() ?? "", 210, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(clase.jueves?.toString() ?? "", 230, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(clase.viernes?.toString() ?? "", 245, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(clase.sabado?.toString() ?? "", 260, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(clase.domingo?.toString() ?? "", 275, reporte.tw_ren, 0, "L");
       Enca1(reporte);
-      if (reporte.tw_ren >= reporte.tw_endRen) {
-        reporte.pageBreak();
+      if (reporte.tw_ren >= reporte.tw_endRenH) {
+        reporte.pageBreakH();
         Enca1(reporte);
       }
     });
-
     setTimeout(() => {
       const pdfData = reporte.doc.output("datauristring");
       setPdfData(pdfData);
@@ -369,6 +400,11 @@ function Clases() {
     document.getElementById("modalVPClase").close();
   };
 
+  if (status === "loading") {
+    return (
+      <div className="container skeleton w-full max-w-screen-xl shadow-xl rounded-xl"></div>
+    );
+  };
   return (
     <>
       <ModalClases
@@ -382,8 +418,11 @@ function Clases() {
         clase={clase}
         setGrado={setGrado}
         setGrado2={setGrado2}
-        setprof1={setprof1}
-        setprof2={setprof2}
+        setProfesor={setProfesor}
+        setMateria={setMateria}
+        watch={watch}
+        isLoadingButton={isLoadingButton}
+        contador={contador}
       />
       <VistaPrevia
         id="modalVPClase"
@@ -394,7 +433,7 @@ function Clases() {
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
       />
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
@@ -404,6 +443,7 @@ function Clases() {
                 home={home}
                 Ver={handleVerClick}
                 animateLoading={animateLoading}
+                contador={contador}
               />
             </div>
 
@@ -421,15 +461,20 @@ function Clases() {
               handleBusquedaChange={handleBusquedaChange}
               busqueda={busqueda}
             />
-            <TablaClases
-              session={session}
-              isLoading={isLoading}
-              clasesFiltrados={clasesFiltrados}
-              showModal={showModal}
-              setClase={setClase}
-              setAccion={setAccion}
-              setCurrentId={setCurrentId}
-            />
+            {status === "loading" ||
+              (!session ? (
+                <></>
+              ) : (
+                <TablaClases
+                  session={session}
+                  isLoading={isLoading}
+                  clasesFiltrados={clasesFiltrados}
+                  showModal={showModal}
+                  setClase={setClase}
+                  setAccion={setAccion}
+                  setCurrentId={setCurrentId}
+                />
+              ))}
           </div>
         </div>
       </div>

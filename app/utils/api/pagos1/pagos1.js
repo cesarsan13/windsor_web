@@ -1,6 +1,7 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { calculaDigitoBvba } from "@/app/utils/globalfn";
+import { obtenerFechaYHoraActual } from "@/app/utils/globalfn";
 
 export const validarClaveCajero = async (token, data) => {
   let url = `${process.env.DOMAIN_API}api/pagos1/validar-clave-cajero`;
@@ -239,9 +240,9 @@ const Enca1 = (doc, body) => {
     doc.nextRow(12);
     doc.ImpPosX("Mat", 15, doc.tw_ren);
     doc.ImpPosX("Alumno", 30, doc.tw_ren);
-    doc.ImpPosX("Descripcion", 160, doc.tw_ren);
-    doc.ImpPosX("Nom Docto", 200, doc.tw_ren);
-    doc.ImpPosX("Precio", 240, doc.tw_ren);
+    doc.ImpPosX("Descripcion", 140, doc.tw_ren);
+    doc.ImpPosX("Nom Doctor", 195, doc.tw_ren);
+    doc.ImpPosX("Precio", 250, doc.tw_ren);
     doc.ImpPosX("Importe", 270, doc.tw_ren);
     doc.nextRow(4);
     doc.printLineH();
@@ -269,14 +270,14 @@ export const Imprimir = (configuracion) => {
     const precio = (pagos.precio || "").toString();
     const importe = (pagos.importe || "").toString();
 
-    newPDF.ImpPosX(`${alumno}`, 15, newPDF.tw_ren);
-    newPDF.ImpPosX(alumno_nombre, 30, newPDF.tw_ren);
-    newPDF.ImpPosX(articulo_id, 150, newPDF.tw_ren);
-    newPDF.ImpPosX(articulo_des, 160, newPDF.tw_ren);
-    newPDF.ImpPosX(nom_doc, 200, newPDF.tw_ren);
-    newPDF.ImpPosX(cantidad, 230, newPDF.tw_ren);
-    newPDF.ImpPosX(precio, 240, newPDF.tw_ren);
-    newPDF.ImpPosX(importe, 270, newPDF.tw_ren);
+    newPDF.ImpPosX(`${alumno}`, 23, newPDF.tw_ren, 40, "R");
+    newPDF.ImpPosX(alumno_nombre, 30, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(articulo_id, 150, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(articulo_des, 140, newPDF.tw_ren, 30, "L");
+    newPDF.ImpPosX(nom_doc, 215, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(cantidad, 240, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(precio, 265, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(importe, 285, newPDF.tw_ren, 0, "R");
     Enca1(newPDF, encaBody);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
       newPDF.pageBreak();
@@ -292,7 +293,8 @@ export const Imprimir = (configuracion) => {
     240,
     newPDF.tw_ren
   );
-  newPDF.guardaReporte("Pagos");
+  const { fecha, hora } = obtenerFechaYHoraActual();
+  newPDF.guardaReporte(`Pagos_${fecha}${hora}`);
 };
 
 export const ImprimirExcel = (configuracion) => {

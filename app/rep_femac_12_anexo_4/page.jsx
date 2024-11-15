@@ -21,7 +21,7 @@ import {
 import { ReportePDF } from "../utils/ReportesPDF";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import ModalVistaPreviaRepFemac12Anexo4 from "./components/ModalVistaPreviaRepFemac12Anexo4";
+import VistaPrevia from "../components/VistaPrevia";
 import { useEffect } from "react";
 
 function RepFemac12Anexo() {
@@ -269,17 +269,24 @@ function RepFemac12Anexo() {
     document.getElementById("modalVPRepFemac12Anexo4").close();
   };
 
-  
+  const CerrarView = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVPRepFemac12Anexo4").close();
+  };
   return (
     <>
-      <ModalVistaPreviaRepFemac12Anexo4
+      <VistaPrevia
+        id={"modalVPRepFemac12Anexo4"}
+        titulo={"Vista Previa de Corbanza por Productos"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
 
-      <div className="flex flex-col justify-start items-start bg-slate-100 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+      <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">
           {/* Fila de la cabecera de la pagina */}
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">

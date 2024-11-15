@@ -5,10 +5,10 @@ import React from "react";
 import iconos from "@/app/utils/iconos";
 import Image from "next/image";
 
-function TablaDoc({ docFiltrados, isLoading, tableSelect }) {
+function TablaDoc({ docFiltrados, isLoading, tableSelect, session }) {
   return !isLoading ? (
     <div className="overflow-x-auto mt-3 text-black bg-white dark:bg-[#1d232a] dark:text-white m-2 w-full lg:w-5/8 h-auto">
-      {docFiltrados.length > 0 ? (
+      {docFiltrados && docFiltrados.length > 0 ? (
         <table className="table table-xs table-pin-rows table-pin-cols max-h-full">
           <thead className="relative z-[1] md:static">
             <tr>
@@ -45,8 +45,12 @@ function TablaDoc({ docFiltrados, isLoading, tableSelect }) {
             ))}
           </tbody>
         </table>
+      ) : docFiltrados != null &&
+        session &&
+        docFiltrados.length === 0 ? (
+        <NoData></NoData>
       ) : (
-        <NoData />
+        <Loading></Loading>
       )}
     </div>
   ) : (

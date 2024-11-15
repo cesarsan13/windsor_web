@@ -95,7 +95,7 @@ function NavBar() {
           className="btn btn-ghost text-xl text-black dark:text-white"
           href="/"
         >
-          Sistema Escolar
+          <h1>Sistema Escolar</h1>
         </Link>
         <div className="navbar-center hidden lg:flex">
           <Menu vertical={false}></Menu>

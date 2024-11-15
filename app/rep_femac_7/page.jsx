@@ -12,7 +12,7 @@ import {
 import { useSession } from "next-auth/react";
 import { ReportePDF } from "../utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import ModalVistaPreviaReporteAdeudoPendientes from "./components/modalVistaPreviaRepAdeudoPendiente";
+import VistaPrevia from "../components/VistaPrevia";
 
 function Repo_Femac_7() {
   const date = new Date();
@@ -237,6 +237,11 @@ function Repo_Femac_7() {
       ? document.getElementById("modalVPRepAdeudosPendientes").showModal()
       : document.getElementById("modalVPRepAdeudosPendientes").close();
   };
+  const CerrarView = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVPRepAdeudosPendientes").close();
+  };
   const cerrarModalVista = () => {
     setPdfPreview(false);
     setPdfData("");
@@ -244,13 +249,16 @@ function Repo_Femac_7() {
   };
   return (
     <>
-      <ModalVistaPreviaReporteAdeudoPendientes
+      <VistaPrevia
+        id={"modalVPRepAdeudosPendientes"}
+        titulo={"Vista Previa de Adeudos Pendientes"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
-      <div className="flex flex-col justify-start items-start bg-slate-100 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+      <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">
           {/* Fila de la cabecera de la pagina */}
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
