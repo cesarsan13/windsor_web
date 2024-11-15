@@ -28,7 +28,16 @@ function ModalVistaPreviaBoleta3({ pdfPreview, pdfData, PDF, Excel }) {
                             onClick={PDF}
                         >
                             <span className="hidden sm:inline">Generar PDF</span>
-                            <Image src={iconos.imprimir} alt="Imprimir" className="w-5 h-5 md:w-6 md:h-6" />
+                            <Image
+                                src={iconos.imprimir}
+                                alt="Imprimir"
+                                className="w-5 h-5 md:w-6 md:h-6 block dark:hidden"
+                            />
+                            <Image
+                                src={iconos.imprimir_w}
+                                alt="Imprimir"
+                                className="w-5 h-5 md:w-6 md:h-6 hidden dark:block"
+                            />
                         </button>
                     </Tooltip>
                     {/* <Tooltip Titulo={"Imprimir Excel"} posicion={"tooltip-top"}>

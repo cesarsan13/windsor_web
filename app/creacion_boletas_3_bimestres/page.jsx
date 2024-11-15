@@ -949,28 +949,28 @@ function CreacionBoletas3Bimestre() {
           });
         }
       }
-      if (asignacion === "asig_español") {
-        desplegarPromedioLugar(
-          datosEspañol,
-          "Español",
-          datosEspañolAr2,
-          datosEspañolAr3,
-          [],
-          false,
-          ""
-        );
-      } else {
-        desplegarPromedioLugar(
-          datosIngles,
-          "Ingles",
-          [],
-          [],
-          datosInglesAr5,
-          false,
-          ""
-        );
-      }
+      // if (asignacion === "asig_español") {
+      desplegarPromedioLugar(
+        datosEspañol,
+        "Español",
+        datosEspañolAr2,
+        datosEspañolAr3,
+        [],
+        false,
+        ""
+      );
+      // } else {
+      desplegarPromedioLugar(
+        datosIngles,
+        "Ingles",
+        [],
+        [],
+        datosInglesAr5,
+        false,
+        ""
+      );
     }
+    // }
     setisLoadingFind(false);
   });
 
@@ -1588,7 +1588,7 @@ function CreacionBoletas3Bimestre() {
         PDF={ImprimePDF}
       />
 
-      <div className='container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y'>
+      <div className='container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y'>
         <div className='flex flex-col justify-start p-3'>
           <div className='flex flex-wrap md:flex-nowrap items-start md:items-center'>
             <div className='order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0'>
@@ -1749,12 +1749,14 @@ function CreacionBoletas3Bimestre() {
             <div className="flex flex-col items-center h-full">
               <div className="w-full max-w-4xl">
                 <TablaPromedioEspañol
+                  session={session}
                   isLoading={isLoading}
                   promediosEsFiltrados={promediosEspañol}
                   promediosEspañolAr2={promediosEspañolAr2}
                   promediosEspañolAr3={promediosEspañolAr3}
                 />
                 <TablaPromedioIngles
+                  session={session}
                   isLoading={isLoading}
                   promediosEsFiltrados={promediosIngles}
                   promediosInglesAr5={promediosInglesAr5}

@@ -32,7 +32,7 @@ function Busqueda({
             type='date'
             name='fecha'
             id='fecha'
-            onChange={(event)=>handleBusqueda(event)}
+            onChange={(event) => handleBusqueda(event)}
             value={fecha}
             className='text-black dark:text-white border-b-2 border-slate-300 w-full md:w-4/5 dark:border-slate-700 input-xs md:input-sm'
           />
@@ -56,7 +56,7 @@ function Busqueda({
             onClick={(evt) => setCheque(evt.target.checked)}
           />
           <span className="label-text font-bold text-neutral-600 dark:text-neutral-200">
-          Solo cheques
+            Solo cheques
           </span>
         </label>
       </div>

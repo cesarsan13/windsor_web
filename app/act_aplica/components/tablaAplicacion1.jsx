@@ -20,10 +20,10 @@ function TablaAplicacion1({
         showModal(true)
     }
     return !isLoading ? (
-        <div className='overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-full'>
+        <div className='overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-base-200 dark:bg-[#1d232a] dark:text-white w-full lg:w-full'>
             {aplicaciones.length > 0 ? (
                 <table className='table table-xs table-zebra w-full'>
-                    <thead className='sticky top-0 bg-white dark:bg-[#1d232a] z-[2]'>
+                    <thead className='sticky top-0 bg-base-200 dark:bg-[#1d232a] z-[2]'>
                         <tr>
                             <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Sec.</td>
                             <td className="w-[10%]">Cuenta</td>
@@ -49,8 +49,8 @@ function TablaAplicacion1({
                                     {item.numero}
                                 </th>
                                 <td>{item.numero_cuenta}</td>
-                                {item.cargo_abono === "C" ? <td className='text-right'>{formatNumber(item.importe_movimiento,2)}</td> : <td className='text-right'>{0}</td>}
-                                {item.cargo_abono === "A" ? <td className='text-right'>{formatNumber(item.importe_movimiento,2)}</td> : <td className='text-right'>{0}</td>}
+                                {item.cargo_abono === "C" ? <td className='text-right'>{formatNumber(item.importe_movimiento, 2)}</td> : <td className='text-right'>{0}</td>}
+                                {item.cargo_abono === "A" ? <td className='text-right'>{formatNumber(item.importe_movimiento, 2)}</td> : <td className='text-right'>{0}</td>}
                                 <td>{item.referencia}</td>
                                 <td>{item.fecha_referencia}</td>
                                 <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
@@ -59,7 +59,8 @@ function TablaAplicacion1({
                                         data-tip={`Ver`}
                                         onClick={(evt) => tableAction(evt, item, `Ver`)}
                                     >
-                                        <Image src={iconos.ver} alt="Editar" />
+                                        <Image src={iconos.ver} alt="Ver" className="block dark:hidden" />
+                                        <Image src={iconos.ver_w} alt="Guardar en oscuro" className="hidden dark:block" />
                                     </div>
                                 </th>
                                 <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
@@ -68,7 +69,8 @@ function TablaAplicacion1({
                                         data-tip={`Editar`}
                                         onClick={(evt) => tableAction(evt, item, `Editar`)}
                                     >
-                                        <Image src={iconos.editar} alt="Editar" />
+                                        <Image src={iconos.editar} alt="Editar" className="block dark:hidden" />
+                                        <Image src={iconos.editar_w} alt="Editar" className="hidden dark:block" />
                                     </div>
                                 </th>
                                 <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
@@ -77,7 +79,8 @@ function TablaAplicacion1({
                                         data-tip={`Eliminar`}
                                         onClick={(evt) => tableAction(evt, item, "Eliminar")}
                                     >
-                                        <Image src={iconos.eliminar} alt="Editar" />
+                                        <Image src={iconos.eliminar} alt="Eliminar" className="block dark:hidden" />
+                                        <Image src={iconos.eliminar_w} alt="Eliminar" className="hidden dark:block" />
                                     </div>
                                 </th>
                             </tr>

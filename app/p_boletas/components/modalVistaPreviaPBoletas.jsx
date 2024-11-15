@@ -5,7 +5,7 @@ import Image from 'next/image';
 import React from 'react'
 import "@react-pdf-viewer/core/lib/styles/index.css";
 
-function ModalVistaPreviaPBoletas({ pdfPreview, pdfData, PDF     }) {
+function ModalVistaPreviaPBoletas({ pdfPreview, pdfData, PDF }) {
     return (
         <dialog id="modalVPAlumno" className="modal">
             <div className='modal-box w-full max-w-4xl h-full'>
@@ -28,23 +28,32 @@ function ModalVistaPreviaPBoletas({ pdfPreview, pdfData, PDF     }) {
                             onClick={PDF}
                         >
                             <span className="hidden sm:inline ">Generar PDF</span>
-                            <Image src={iconos.imprimir} alt="Imprimir" className="w-5 h-5 md:w-6 md:h-6" />
+                            <Image
+                                src={iconos.imprimir}
+                                alt="Imprimir"
+                                className="w-5 h-5 md:w-6 md:h-6 block dark:hidden"
+                            />
+                            <Image
+                                src={iconos.imprimir_w}
+                                alt="Imprimir"
+                                className="w-5 h-5 md:w-6 md:h-6 hidden dark:block"
+                            />
                         </button>
-                    </Tooltip>                    
+                    </Tooltip>
                 </div>
                 {pdfPreview && pdfData && (
-          <div className="w-full">
-            <div className="pdf-preview">
-              <Worker
-                workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
-              >
-                <div className="" style={{ maxHeight: "calc(100vh - 4rem)" }}>
-                  <Viewer fileUrl={pdfData} />
-                </div>
-              </Worker>
-            </div>
-          </div>
-        )}
+                    <div className="w-full">
+                        <div className="pdf-preview">
+                            <Worker
+                                workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
+                            >
+                                <div className="" style={{ maxHeight: "calc(100vh - 4rem)" }}>
+                                    <Viewer fileUrl={pdfData} />
+                                </div>
+                            </Worker>
+                        </div>
+                    </div>
+                )}
             </div>
         </dialog>
     )

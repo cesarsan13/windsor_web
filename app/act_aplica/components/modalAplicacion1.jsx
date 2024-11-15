@@ -37,9 +37,9 @@ function ModalAplicacion1({
 
     return (
         <dialog id="my_modal_3" className="modal">
-            <div className='modal-box'>
+            <div className='modal-box bg-base-200'>
                 <form onSubmit={onSubmit}>
-                    <div className='sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5'>
+                    <div className='sticky -top-6 flex justify-between items-center bg-base-200 dark:bg-[#1d232a] w-full h-10 z-10 mb-5'>
                         <h3 className='font-bold text-lg dark:text-white text-black'>{titulo}</h3>
                         <div className='flex space-x-2 items-center'>
                             <div
@@ -54,11 +54,8 @@ function ModalAplicacion1({
                                     id="btn_guardar"
                                     className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
                                 >
-                                    <Image
-                                        src={iconos.guardar}
-                                        alt="Guardar"
-                                        className="w-5 h-5 md:w-6 md:h-6 mr-1"
-                                    />
+                                    <Image src={iconos.guardar} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 block dark:hidden" />
+                                    <Image src={iconos.guardar_w} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 hidden dark:block" />
                                     <span className="hidden sm:inline">Guardar</span>
                                 </button>
                             </div>

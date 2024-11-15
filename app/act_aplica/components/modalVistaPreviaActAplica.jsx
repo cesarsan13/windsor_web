@@ -4,7 +4,7 @@ import { Viewer, Worker } from '@react-pdf-viewer/core';
 import Image from 'next/image';
 import React from 'react'
 
-function ModalVistaPreviaActAplica({ pdfPreview, pdfData, PDF,Excel }) {
+function ModalVistaPreviaActAplica({ pdfPreview, pdfData, PDF, Excel }) {
     return (
         <dialog id="modalVPActAplica" className="modal">
             <div className='modal-box w-full max-w-4xl h-full'>
@@ -27,7 +27,16 @@ function ModalVistaPreviaActAplica({ pdfPreview, pdfData, PDF,Excel }) {
                             onClick={PDF}
                         >
                             <span className="hidden sm:inline ">Generar PDF</span>
-                            <Image src={iconos.imprimir} alt="Imprimir" className="w-5 h-5 md:w-6 md:h-6" />
+                            <Image
+                                src={iconos.imprimir}
+                                alt="Imprimir"
+                                className="w-5 h-5 md:w-6 md:h-6 block dark:hidden"
+                            />
+                            <Image
+                                src={iconos.imprimir_w}
+                                alt="Imprimir"
+                                className="w-5 h-5 md:w-6 md:h-6 hidden dark:block"
+                            />
                         </button>
                     </Tooltip>
                     <Tooltip Titulo={"Imprimir Excel"} posicion={"tooltip-top"}>
@@ -36,7 +45,16 @@ function ModalVistaPreviaActAplica({ pdfPreview, pdfData, PDF,Excel }) {
                             onClick={Excel}
                         >
                             <span className="hidden sm:inline ">Generar Excel</span>
-                            <Image src={iconos.excel} alt="Imprimir" className="w-5 h-5 md:w-6 md:h-6" />
+                            <Image
+                                src={iconos.excel}
+                                alt="Excel"
+                                className="w-5 h-5 md:w-6 md:h-6 block dark:hidden"
+                            />
+                            <Image
+                                src={iconos.excel_w}
+                                alt="Excel"
+                                className="w-5 h-5 md:w-6 md:h-6 hidden dark:block"
+                            />
                         </button>
                     </Tooltip>
                 </div>

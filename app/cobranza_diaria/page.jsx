@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react'
 import Acciones from './components/acciones'
 import Busqueda from './components/busqueda'
 import { Elimina_Comas, format_Fecha_String, formatDate, formatNumber } from '../utils/globalfn'
-import { getCobranzaDiaria, guardarCobranzaDiaria, Imprimir,ImprimirExcel } from '../utils/api/cobranzaDiaria/cobranzaDiaria'
+import { getCobranzaDiaria, guardarCobranzaDiaria, Imprimir, ImprimirExcel } from '../utils/api/cobranzaDiaria/cobranzaDiaria'
 import ModalCobranzaDiaria from './components/modalCobranzaDiaria'
 import { useForm } from 'react-hook-form'
 import { showSwal } from '../utils/alerts'
@@ -357,20 +357,20 @@ function Cobranza_Diaria() {
                 Nombre_Reporte: "Reporte Cobranza Diaria",
                 Nombre_Usuario: `Usuario: ${session.user.name}`,
             },
-            body:data,
-            columns:[
-                {header:"Recibo",dataKey:"recibo"},
-                {header:"TP",dataKey:"tipo_pago_1"},
-                {header:"Impote",dataKey:"importe_pago_1"},
-                {header:"Referencia",dataKey:"referencia_1"},
-                {header:"TP",dataKey:"tipo_pago_2"},
-                {header:"Importe",dataKey:"importe_pago_2"},
-                {header:"Referencia",dataKey:"referencia_2"},
-                {header:"TP",dataKey:"cue_banco"},
-                {header:"Importe",dataKey:"importe"},
-                {header:"Referencia",dataKey:"referencia"},
+            body: data,
+            columns: [
+                { header: "Recibo", dataKey: "recibo" },
+                { header: "TP", dataKey: "tipo_pago_1" },
+                { header: "Impote", dataKey: "importe_pago_1" },
+                { header: "Referencia", dataKey: "referencia_1" },
+                { header: "TP", dataKey: "tipo_pago_2" },
+                { header: "Importe", dataKey: "importe_pago_2" },
+                { header: "Referencia", dataKey: "referencia_2" },
+                { header: "TP", dataKey: "cue_banco" },
+                { header: "Importe", dataKey: "importe" },
+                { header: "Referencia", dataKey: "referencia" },
             ],
-            nombre:"Cobranza Diaria"
+            nombre: "Cobranza Diaria"
         }
         ImprimirExcel(configuracion)
     }
@@ -391,9 +391,9 @@ function Cobranza_Diaria() {
                 onSubmit={onSubmitModal}
                 handleInputClick={handleInputClick}
                 obtenerCuenta={obtenerCuenta}
-                obtenerImporte={obtenerImporte}                
+                obtenerImporte={obtenerImporte}
             />
-            <div className='container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden'>
+            <div className='container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden'>
                 <div className='flex flex-col justify-start p-3'>
                     <div className='flex flex-wrap md:flex-nowrap items-start md:items-center'>
                         <div className='order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0'>

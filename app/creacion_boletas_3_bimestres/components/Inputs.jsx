@@ -85,7 +85,7 @@ function Inputs({
     return (
       <div className="w-full md:w-1/2 px-0.5 py-2 mb-2 md:mb-0">
         <span className="text-black dark:text-white">{Titulo}</span>
-        <div className="flex flex-col">
+        <div className="flex flex-col text-black dark:text-white">
           {options.map((option) => (
             <label key={option.value} className="flex items-center mb-2">
               <input
