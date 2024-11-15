@@ -32,6 +32,7 @@ function Comentarios() {
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
   const [isLoading, setisLoading] = useState(false);
+  const [isLoadingButton, setisLoadingButton] = useState(false);
   const [currentID, setCurrentId] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
@@ -282,7 +283,8 @@ function Comentarios() {
   };
 
   const onSubmitModal = handleSubmit(async (data) => {
-    event.preventDefault;
+    event.preventDefault();
+    setisLoadingButton(true);
     const dataj = JSON.stringify(data);
     accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
     // data.numero = currentID;
@@ -298,6 +300,7 @@ function Comentarios() {
       );
       if (!confirmed) {
         showModal(true);
+        setisLoadingButton(false);
         return;
       }
     }
@@ -349,6 +352,7 @@ function Comentarios() {
     }else{
       showSwal(res.alert_title, res.alert_text, res.alert_icon,"my_modal_3");
     }
+    setisLoadingButton(false);
   });
 
   const showModal = (show) => {
@@ -382,6 +386,7 @@ function Comentarios() {
         register={register}
         setFormaComentarios={setFormaComentarios}
         formaComentarios={formaComentarios}
+        isLoadingButton={isLoadingButton}
       />
       <VistaPrevia
         id={"modalVPComentario"}

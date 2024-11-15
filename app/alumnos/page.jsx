@@ -41,6 +41,7 @@ function Alumnos() {
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
   const [isLoading, setisLoading] = useState(false);
+  const [isLoadingButton, setisLoadingButton] = useState(false);
   const [currentID, setCurrentId] = useState("");
   const [filtro, setFiltro] = useState("");
   const [TB_Busqueda, setTB_Busqueda] = useState("");
@@ -56,6 +57,7 @@ function Alumnos() {
   const [animateLoading, setAnimateLoading] = useState(false);
   const [files, setFile] = useState(null);
   const [activeTab, setActiveTab] = useState(1);
+  
   const alumnosRef = useRef(alumnos);
   const [busqueda, setBusqueda] = useState({
     tb_id: "",
@@ -442,6 +444,7 @@ function Alumnos() {
   };
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault();
+    setisLoadingButton(true);
     accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
     let res = null;
     if (accion === "Eliminar") {
@@ -455,6 +458,7 @@ function Alumnos() {
       );
       if (!confirmed) {
         showModal(true);
+        setisLoadingButton(false);
         return;
       }
     }
@@ -620,6 +624,7 @@ function Alumnos() {
       }
       showSwal("Error", res.alert_text, "error", "my_modal_alumnos");
     }
+    setisLoadingButton(false);
   });
   const dataURLtoBlob = (dataURL) => {
     const parts = dataURL.split(";base64,");
@@ -824,6 +829,7 @@ function Alumnos() {
         setcond2={setcond2}
         setFile={setFile}
         files={files}
+        isLoadingButton={isLoadingButton}
       />
       <VistaPrevia
         id="modalVPAlumno"

@@ -34,6 +34,7 @@ function Productos() {
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
   const [isLoading, setisLoading] = useState(false);
+  const [isLoadingButton, setisLoadingButton] = useState(false);
   const [currentID, setCurrentId] = useState("");
   const [filtro, setFiltro] = useState("id");
   // const [TB_Busqueda, setTB_Busqueda] = useState("");
@@ -192,6 +193,7 @@ function Productos() {
 
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
+    setisLoadingButton(true);
     const dataj = JSON.stringify(data);
     // data.numero = currentID;
     let res = null;
@@ -206,6 +208,7 @@ function Productos() {
       );
       if (!confirmed) {
         showModal(true);
+        setisLoadingButton(false)
         return;
       }
     }
@@ -251,6 +254,7 @@ function Productos() {
     } else {
      showSwal(res.alert_title, res.alert_text, "error", "my_modal_3")
     }
+    setisLoadingButton(false);
   });
   const formatValidationErrors = (errors) => {
     let errorMessages = [];
@@ -447,6 +451,7 @@ function Productos() {
         num={num}
         setNum={setNum}
         productos={productos}
+        isLoadingButton={isLoadingButton}
       />
       <VistaPrevia
         id={"modalVProducto"}
