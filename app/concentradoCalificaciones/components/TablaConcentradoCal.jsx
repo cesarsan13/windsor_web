@@ -114,6 +114,7 @@ function TablaConcentradoCal({
                                     descripcion: item.descripcion,
                                     esUltimoDeArea: esUltimoDeArea,
                                     promedio: esUltimoDeArea ? `Promedio ${item.area === 1 ? "Español" : "Inglés"}` : null,
+                                    idMat: item.numero
                                 });
                                 if (esUltimoDeArea) {
                                     dataEncabezado.push({

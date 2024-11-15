@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { showSwal} from "@/app/utils/alerts";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import {formatDate, formatTime} from "@/app/utils/globalfn"
+import {formatDate, formatTime, RegresaCalificacionRedondeo, aDec} from "@/app/utils/globalfn"
 import {
     getMateriasPorGrupo, 
     getInfoActividadesXGrupo, 
@@ -13,7 +13,9 @@ import {
     getMateriasReg, 
     getAlumno,
     ImprimirPDF,
-    ImprimirExcel
+    ImprimirExcel,
+    getActividadesXHorarioXAlumnoXMateriaXBimestre,
+    getActividadesDetalles,
 } from "@/app/utils/api/concentradoCalificaciones/concentradoCalificaciones";
 import Inputs from "@/app/concentradoCalificaciones/components/Inputs";
 import Modal_Detalles_Actividades from "./components/modalDetallesActividades";
@@ -196,6 +198,31 @@ function ConcentradoCalificaciones() {
         ImprimirPDF(configuracion, resultadoEnc, fecha_hoy)
     };
 
+    const calcularCalificacionesMat = (secuencia,  resActividadE, resMatActE) => {
+        let sumatoria = 0;
+        let evaluaciones = 0;
+        const actividades = resMatActE.filter(act => act.secuencia === secuencia);
+        if (actividades.length === 0) {
+            return 0;
+        } else {
+            if (resActividadE.length > 1) {
+            actividades.forEach(actividad => {
+                const filtroActividad = resActividadE.filter(cal => 
+                    cal.actividad === secuencia && 
+                    cal.unidad <= actividad[`EB${bimestre}`]
+                );
+                const califSum = filtroActividad.reduce((acc, cal) => acc + Number(cal.calificacion), 0);
+                sumatoria += filtroActividad.length > 0 ? RegresaCalificacionRedondeo(califSum / filtroActividad.length, "N") : 0;
+                evaluaciones++; 
+            });
+            }
+            const calMat = (sumatoria / evaluaciones).toFixed(1);
+            return evaluaciones === 0 ? 0 : calMat;
+        }
+    };
+
+
+
     const ImprimeExcel = async () => {
         let fecha_hoy = new Date();
 
@@ -215,6 +242,42 @@ function ConcentradoCalificaciones() {
                 dataKey: (index + 2).toString(),
             })),
         ];
+
+        {/*let dataCaliAlumnosBodyDetalles = [];
+
+        resultadoBody.map(async (itemB, indexB) => {
+            
+            resultadoEnc.map( async (itemE, indexE) => {
+                let noAlumno = itemB[0];
+                let materiaD = itemE.idMat;
+                const { token } = session.user;
+
+                const [resActividadE, resMatActE] = await Promise.all([
+                    getActividadesXHorarioXAlumnoXMateriaXBimestre(token, grupo.numero, Number(noAlumno), materiaD, bimestre),
+                    getActividadesDetalles(token, materiaD)
+                ]);
+                //console.log(resActividadE, resMatActE);
+
+                resMatActE.map((activ) => {
+                    dataCaliAlumnosBodyDetalles.push(calcularCalificacionesMat(activ.secuencia, resActividadE, resMatActE))
+                })
+               
+
+                
+                //let MatActividad = resultadoBusqueda.resMatActE;
+                //let Actividad = resultadoBusqueda.resActividadE;
+                //console.log(MatActividad, Actividad);
+                //MatActividad.map((act) => {
+                //    console.log("secuencia", act.secuencia);
+                //})
+                
+
+
+            })
+            
+        });
+
+        console.log(dataCaliAlumnosBodyDetalles);*/}
 
         const configuracion = {
             Encabezado: {
