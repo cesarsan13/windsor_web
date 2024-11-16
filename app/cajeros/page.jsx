@@ -31,6 +31,7 @@ function Cajeros() {
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
   const [isLoading, setisLoading] = useState(false);
+  const [isLoadingButton, setisLoadingButton] = useState(false);
   const [currentID, setCurrentId] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [animateLoading, setAnimateLoading] = useState(false);
@@ -165,6 +166,7 @@ function Cajeros() {
 
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
+    setisLoadingButton(true);
     // const dataj = JSON.stringify(data);
     data.id = currentID;
     let res = null;
@@ -179,6 +181,7 @@ function Cajeros() {
       );
       if (!confirmed) {
         showModal(true);
+        setisLoadingButton(false);
         return;
       }
       // showModal(true);
@@ -221,6 +224,7 @@ function Cajeros() {
     } else {
       showSwal(res.alert_title, res.alert_text, "error", "my_modal_3");
     }
+    setisLoadingButton(false);
   });
   const showModal = (show) => {
     show
@@ -351,6 +355,7 @@ function Cajeros() {
         register={register}
         setCajero={setCajero}
         cajero={cajero}
+        isLoadingButton={isLoadingButton}
       />
       <VistaPrevia
         id={"modalVPCajero"}

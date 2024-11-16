@@ -56,7 +56,8 @@ function Busqueda({
             className=" join-item  dark:text-neutral-200 text-neutral-600 border-none shadow-none w-5 h-5 md:w-6 md:h-6 mt-4 "
             onClick={(evt) => limpiarBusqueda(evt)}
           >
-                <Image src={iconos.limpiar} alt="Limpiar" />
+              <Image src={iconos.limpiar} alt="Limpiar" className="block dark:hidden" />
+              <Image src={iconos.limpiar_w} alt="Limpiar" className="hidden dark:block" />
                 </button>
         </div>
       </div>
@@ -66,16 +67,15 @@ function Busqueda({
             <input
               id="ch_bajas"
               type="checkbox"
-              className=" checkbox mx-2 checkbox-md md:mt-2"
+              className=" checkbox mx-2 checkbox-md"
               onClick={(evt) => setBajas(evt.target.checked)}
             />
-            <button
-            className=" join-item  dark:text-neutral-200 text-neutral-600 border-none shadow-none w-5 h-5 md:w-6 md:h-6 mt-1"
+            <button className=" join-item  dark:text-neutral-200 text-neutral-600 border-none shadow-none w-5 h-5 md:w-6 md:h-6 mt-1"
             >
-
-              <Image src={iconos.eliminar} alt="Bajas"></Image>
+              <Image src={iconos.eliminar} alt="Bajas" className="block dark:hidden"></Image>
+              <Image src={iconos.eliminar_w} alt="Bajas" className="hidden dark:block"></Image>
             </button>
-            <span className=" text-lg font-xthin text-black hidden sm:inline">Bajas</span>
+            <span className=" text-lg font-xthin text-neutral-600 dark:text-white hidden sm:inline">Bajas</span>
           </label>
         </div>
       </div>
