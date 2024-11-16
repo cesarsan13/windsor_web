@@ -47,6 +47,7 @@ function Asignaturas() {
   const [disabledNum, setDisableNum] = useState(false);
   const [num, setNum] = useState("");
   const asignaturasRef = useRef(asignaturas)
+  const [isLoadingButton, setisLoadingButton] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -198,6 +199,7 @@ function Asignaturas() {
   };
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
+    setisLoadingButton(true);
     const dataj = JSON.stringify(data);
     let res = null;
     if (accion === "Eliminar") {
@@ -211,6 +213,7 @@ function Asignaturas() {
       );
       if (!confirmed) {
         showModal(true);
+        setisLoadingButton(false);
         return;
       }
     }
@@ -258,6 +261,7 @@ function Asignaturas() {
     } else {
       showSwal(res.alert_title, res.alert_text, "error", "my_modal_3");
     }
+    setisLoadingButton(false);
   });
   const limpiarBusqueda = (evt) => {
     evt.preventDefault();
@@ -406,6 +410,7 @@ function Asignaturas() {
         num={num}
         // setNum={setNum}
         getValues={getValues}
+        isLoadingButton={isLoadingButton}
       />
       <VistaPrevia
         id={"modalVAsignatura"}

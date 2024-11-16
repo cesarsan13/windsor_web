@@ -39,6 +39,8 @@ function FormFact() {
   const [propertyData, setPropertyData] = useState({});
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
   const formFactsRef = useRef(formFacts)
+  const [isLoadingButton, setisLoadingButton] = useState(false);
+  const [animateLoading, setAnimateLoading] = useState(false);
 
   const [configuracion, setConfiguracion] = useState({
     Encabezado: {
@@ -154,6 +156,7 @@ function FormFact() {
     document.getElementById("nombre_forma").focus();
   };
   const onSubmitModal = handleSubmit(async (data) => {
+    setisLoadingButton(true);
     event.preventDefault;
     const dataj = JSON.stringify(data);
     data.id = currentID;
@@ -169,6 +172,7 @@ function FormFact() {
       );
       if (!confirmed) {
         showModal(true);
+        setisLoadingButton(false);
         return;
       }
     }
@@ -212,6 +216,7 @@ function FormFact() {
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
     }
+    setisLoadingButton(false);
   });
   const showModal = (show) => {
     show
@@ -250,12 +255,13 @@ function FormFact() {
         register={register}
         setFormFact={setFormFact}
         formFact={formFact}
+        isLoadingButton={isLoadingButton}
       />
       <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
-              <Acciones Buscar={Buscar} Alta={Alta} home={home}></Acciones>
+              <Acciones Buscar={Buscar} Alta={Alta} home={home} ></Acciones>
             </div>
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-16">
               Formas Facturas

@@ -40,6 +40,7 @@ function Horarios() {
   const [animateLoading, setAnimateLoading] = useState(false);
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
   const horariosRef = useRef(horarios)
+  const [isLoadingButton, setisLoadingButton] = useState(false);
 
   useEffect(() => {
     horariosRef.current = horarios
@@ -152,6 +153,7 @@ function Horarios() {
   };
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
+    setisLoadingButton(true);
     data.numero = currentID;
     let res = null;
     if (accion === "Eliminar") {
@@ -165,6 +167,7 @@ function Horarios() {
       );
       if (!confirmed) {
         showModal(true);
+        setisLoadingButton(false);
         return;
       }
     }
@@ -213,6 +216,7 @@ function Horarios() {
     } else {
       showSwal(res.alert_title, res.alert_text, "error", "my_modal_horario");
     }
+    setisLoadingButton(false);
   });
   const showModal = (show) => {
     show
@@ -358,6 +362,7 @@ function Horarios() {
         horarios={horario}
         control={control}
         setDia={setDia}
+        isLoadingButton={isLoadingButton}
       />
       <VistaPrevia
         id="modalVPHorarios"

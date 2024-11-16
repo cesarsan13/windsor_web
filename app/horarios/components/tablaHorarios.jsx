@@ -70,7 +70,8 @@ function TablaHorarios({
                     data-tip={`Ver`}
                     onClick={(evt) => tableAction(evt, item, `Ver`)}
                   >
-                    <Image src={iconos.ver} alt="Ver" />
+                    <Image src={iconos.ver} alt="Ver" className="block dark:hidden" />
+                    <Image src={iconos.ver_w} alt="Ver" className="hidden dark:block" />
                   </div>
                 </th>
                 <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
@@ -79,7 +80,8 @@ function TablaHorarios({
                     data-tip={`Editar`}
                     onClick={(evt) => tableAction(evt, item, `Editar`)}
                   >
-                    <Image src={iconos.editar} alt="Editar" />
+                    <Image src={iconos.editar} alt="Editar" className="block dark:hidden" />
+                    <Image src={iconos.editar_w} alt="Editar" className="hidden dark:block" />
                   </div>
                 </th>
                 <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
@@ -88,7 +90,8 @@ function TablaHorarios({
                     data-tip={`Eliminar`}
                     onClick={(evt) => tableAction(evt, item, "Eliminar")}
                   >
-                    <Image src={iconos.eliminar} alt="Eliminar" />
+                    <Image src={iconos.eliminar} alt="Eliminar" className="block dark:hidden" />
+                    <Image src={iconos.eliminar_w} alt="Eliminar" className="hidden dark:block" />
                   </div>
                 </th>
               </tr>
