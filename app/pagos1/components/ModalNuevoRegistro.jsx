@@ -30,7 +30,7 @@ function ModalNuevoRegistro({
   return (
     <dialog id="modal_nuevo_registro" className="modal">
       <div className="modal-box w-full md:w-3/4 max-w-xl h-auto bg-base-200">
-        <div className="sticky -top-6 flex justify-between items-center bg-base-200 dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
+        <div className="sticky -top-6 flex justify-between items-center bg-base-200  w-full h-10 z-10 mb-5">
           <h3 className="font-bold text-lg text-neutral-600 dark:text-white">Añadir Nuevo Pago</h3>
           <div className="flex space-x-2 items-center">
             <div data-tip="Guardar">
@@ -40,9 +40,14 @@ function ModalNuevoRegistro({
                 className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm "
               >
                 <Image
+                  src={iconos.guardar_w}
+                  alt="Guardar"
+                  className="w-5 h-5 md:w-6 md:h-6 mr-1 hidden dark:block"
+                />
+                <Image
                   src={iconos.guardar}
                   alt="Guardar"
-                  className="w-5 h-5 md:w-6 md:h-6 mr-1"
+                  className="w-5 h-5 md:w-6 md:h-6 mr-1 block dark:hidden"
                 />
                 <span className="hidden sm:inline">Guardar</span>
               </button>

@@ -50,7 +50,8 @@ function tablaActCobranzaAlumnos({
                     onClick={(evt) => tableAction(evt, item)}
                     className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
                   >
-                    <Image src={iconos.ver} alt="Editar" />
+                    <Image src={iconos.ver} alt="Editar" className="block dark:hidden"/>
+                    <Image src={iconos.ver_w} alt="Editar" className="hidden dark:block"/>
                   </div>
                 </th>
               </tr>

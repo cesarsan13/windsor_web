@@ -57,7 +57,8 @@ function Busqueda({
             className="join-item dark:text-neutral-200 text-neutral-600 border-none  w-5 h-5 md:w-6 md:h-6 mt-4"
             onClick={(evt) => limpiarBusqueda(evt)}
           >
-                <Image src={iconos.limpiar} alt="Limpiar" />
+                <Image src={iconos.limpiar} className="block dark:hidden" alt="Limpiar" />
+                <Image src={iconos.limpiar_w} className="hidden dark:block" alt="Limpiar" />
                 </button>
         </div>
       </div>
@@ -74,9 +75,10 @@ function Busqueda({
             className=" join-item  dark:text-neutral-200 text-neutral-600 border-none shadow-none w-5 h-5 md:w-6 md:h-6 mt-1"
             >
 
-              <Image src={iconos.eliminar} alt="Bajas"></Image>
+              <Image src={iconos.eliminar} className="block dark:hidden" alt="Bajas"></Image>
+              <Image src={iconos.eliminar_w} className="hidden dark:block" alt="Bajas"></Image>
             </button>
-            <span className=" text-lg font-xthin text-black hidden sm:inline">Bajas</span>
+            <span className=" text-lg font-xthin text-black dark:text-white hidden sm:inline">Bajas</span>
           </label>
         </div>
       </div>

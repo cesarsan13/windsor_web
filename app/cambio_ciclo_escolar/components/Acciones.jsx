@@ -5,14 +5,15 @@ import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 function Acciones({ home, Alta }) {
   const images = [
-    { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home },
-    { src: iconos.procesa, alt: "Guardar", tooltipTitle: "Cambiar Ciclo", onClick: Alta },
+    { srcDark: iconos.salir, srcLight:iconos.salir_w, alt: 'Salir', tooltipTitle: 'Salir', onClick: home },
+    { srcDark: iconos.procesa, srcLight:iconos.procesa_w, alt: "Guardar", tooltipTitle: "Cambiar Ciclo", onClick: Alta },
   ];
 
-  const ImageTooltip = ({ src, tooltipTitle, onClick }) => {
+  const ImageTooltip = ({ srcDark,srcLight, tooltipTitle, onClick }) => {
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
-        <Image src={src} alt={tooltipTitle} onClick={onClick} className="w-5 h-5 md:w-6 md:h-6" />
+        <Image src={srcDark} alt={tooltipTitle} onClick={onClick} className="w-5 h-5 md:w-6 md:h-6 block dark:hidden" />
+        <Image src={srcLight} alt={tooltipTitle} onClick={onClick} className="w-5 h-5 md:w-6 md:h-6 hidden dark:block" />
       </Tooltip>
     );
   };

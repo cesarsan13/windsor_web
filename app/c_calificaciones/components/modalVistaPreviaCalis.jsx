@@ -39,9 +39,14 @@ function ModalVistaPreviaCalis({ pdfPreview, pdfData, PDF, Excel }) {
                         >
                             <span className="hidden sm:inline">Generar PDF</span>
                             <Image
+                                src={iconos.imprimir_w}
+                                alt="Imprimir"
+                                className="w-5 h-5 md:w-6 md:h-6 hidden dark:block"
+                            />
+                            <Image
                                 src={iconos.imprimir}
                                 alt="Imprimir"
-                                className="w-5 h-5 md:w-6 md:h-6"
+                                className="w-5 h-5 md:w-6 md:h-6 block dark:hidden"
                             />
                         </button>
                     </Tooltip>
@@ -52,9 +57,14 @@ function ModalVistaPreviaCalis({ pdfPreview, pdfData, PDF, Excel }) {
                         >
                             <span className="hidden sm:inline">Generar Excel</span>
                             <Image
+                                src={iconos.excel_w}
+                                alt="Excel"
+                                className="w-5 h-5 md:w-6 md:h-6 hidden dark:block"
+                            />
+                            <Image
                                 src={iconos.excel}
                                 alt="Excel"
-                                className="w-5 h-5 md:w-6 md:h-6"
+                                className="w-5 h-5 md:w-6 md:h-6 block dark:hidden"
                             />
                         </button>
                     </Tooltip>

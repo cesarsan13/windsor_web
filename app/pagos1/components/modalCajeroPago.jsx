@@ -65,7 +65,7 @@ function ModalCajeroPago({
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box w-full max-w-md sm:max-w-lg p-6 bg-base-200">
         <form onSubmit={onSubmitModal}>
-          <div className="sticky -top-6 flex justify-between items-center bg-base-200 dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
+          <div className="sticky -top-6 flex justify-between items-center bg-base-200 w-full h-10 z-10 mb-5">
             <h3 className="font-bold text-lg text-neutral-600 dark:text-white">Ingresa Clave del Cajero</h3>
             <div className="flex space-x-2 items-center">
               <div className={`tooltip tooltip-bottom`} data-tip="Validar">
@@ -75,9 +75,14 @@ function ModalCajeroPago({
                   className="bg-transparent hover:bg-base-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
                 >
                   <Image
+                    src={iconos.guardar_w}
+                    alt="Validar"
+                    className="w-5 h-5 md:w-6 md:h-6 mr-1 hidden dark:block"
+                  />
+                  <Image
                     src={iconos.guardar}
                     alt="Validar"
-                    className="w-5 h-5 md:w-6 md:h-6 mr-1"
+                    className="w-5 h-5 md:w-6 md:h-6 mr-1 block dark:hidden"
                   />
                   <span className="hidden sm:inline">Validar</span>
                 </button>

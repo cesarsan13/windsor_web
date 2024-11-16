@@ -6,13 +6,13 @@ import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 function Acciones({ home, Alta, Buscar, isLoading, isDisabledSave, Ver }) {
   const images = [
-    { src: iconos.buscar, alt: "Buscar", tooltipTitle: "Buscar", onClick: Buscar, isLoading: isLoading },
-    { src: iconos.guardar, alt: "Guardar", tooltipTitle: "Guardar", onClick: Alta, isLoading: isDisabledSave },
-    { src: iconos.vistaPrevia, alt: 'Vista previa', tooltipTitle: 'Vista previa', onClick: Ver },
-    { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home, isLoading: false },
+    { srcDark: iconos.buscar, srcLigth:iconos.buscar_w, alt: "Buscar", tooltipTitle: "Buscar", onClick: Buscar, isLoading: isLoading },
+    { srcDark: iconos.guardar,srcLigth:iconos.guardar_w, alt: "Guardar", tooltipTitle: "Guardar", onClick: Alta, isLoading: isDisabledSave },
+    { srcDark: iconos.vistaPrevia,srcLigth:iconos.vistaPrevia_w, alt: 'Vista previa', tooltipTitle: 'Vista previa', onClick: Ver },
+    { srcDark: iconos.salir, alt: 'Salir', srcLigth:iconos.salir_w, tooltipTitle: 'Salir', onClick: home, isLoading: false },
   ];
 
-  const ImageTooltip = ({ src, tooltipTitle, onClick, isLoading }) => {
+  const ImageTooltip = ({ srcDark,srcLigth, tooltipTitle, onClick, isLoading }) => {
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
@@ -22,7 +22,10 @@ function Acciones({ home, Alta, Buscar, isLoading, isDisabledSave, Ver }) {
           {isLoading ? (
             <TbLoader3 className="animate-spin text-2xl" />
           ) : (
-            <Image src={src} alt={tooltipTitle} className="w-5 h-5 md:w-6 md:h-6" />
+            <>
+              <Image src={srcDark} alt={tooltipTitle} className="w-5 h-5 md:w-6 md:h-6  block dark:hidden" />
+              <Image src={srcLigth} alt={tooltipTitle} className="w-5 h-5 md:w-6 md:h-6 hidden dark:block" />
+            </>
           )}
         </button>
       </Tooltip>
@@ -34,7 +37,8 @@ function Acciones({ home, Alta, Buscar, isLoading, isDisabledSave, Ver }) {
       {images.map((image, idx) => (
         <ImageTooltip
           key={idx}
-          src={image.src}
+          srcDark={image.srcDark}
+          srcLigth={image.srcLigth}
           tooltipTitle={image.tooltipTitle}
           onClick={image.onClick}
           isLoading={image.isLoading}

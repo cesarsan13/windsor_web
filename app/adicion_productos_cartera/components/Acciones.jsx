@@ -8,12 +8,12 @@ function Acciones({ home, BRef, Bproceso, isLoadingRef, isLoadingProc }) {
   const isAnyLoading = isLoadingRef || isLoadingProc;
 
   const images = [
-    { src: iconos.editar, alt: "Act. Ref.", tooltipTitle: "Act. Ref.", onClick: BRef, isLoading: isLoadingRef },
-    { src: iconos.procesa, alt: "Proceso", tooltipTitle: "Proceso", onClick: Bproceso, isLoading: isLoadingProc },
-    { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home, isLoading: false },
+    { srcDark: iconos.editar, srcLight: iconos.editar_w, alt: "Act. Ref.", tooltipTitle: "Act. Ref.", onClick: BRef, isLoading: isLoadingRef },
+    { srcDark: iconos.procesa, srcLight:iconos.procesa_w, alt: "Proceso", tooltipTitle: "Proceso", onClick: Bproceso, isLoading: isLoadingProc },
+    { srcDark: iconos.salir, srcLight:iconos.salir_w, alt: 'Salir', tooltipTitle: 'Salir', onClick: home, isLoading: false },
   ];
 
-  const ImageTooltip = ({ src, tooltipTitle, onClick, isLoading, disabled }) => {
+  const ImageTooltip = ({ srcDark, srcLight, tooltipTitle, onClick, isLoading, disabled }) => {
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
@@ -24,7 +24,11 @@ function Acciones({ home, BRef, Bproceso, isLoadingRef, isLoadingProc }) {
           {isLoading ? (
             <TbLoader3 className="animate-spin text-2xl" />
           ) : (
-            <Image src={src} alt={tooltipTitle} className="w-5 h-5 md:w-6 md:h-6" />
+            <>
+              <Image src={srcDark} alt={tooltipTitle} className="w-5 h-5 md:w-6 md:h-6 block dark:hidden" />
+              <Image src={srcLight} alt={tooltipTitle} className="w-5 h-5 md:w-6 md:h-6 hidden dark:block" />
+            </>
+
           )}
         </button>
       </Tooltip>
@@ -36,7 +40,8 @@ function Acciones({ home, BRef, Bproceso, isLoadingRef, isLoadingProc }) {
       {images.map((image, idx) => (
         <ImageTooltip
           key={idx}
-          src={image.src}
+          srcLight={image.srcLight}
+          srcDark={image.srcDark}
           tooltipTitle={image.tooltipTitle}
           onClick={image.onClick}
           isLoading={image.isLoading}
