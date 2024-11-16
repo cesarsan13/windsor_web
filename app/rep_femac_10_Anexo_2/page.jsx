@@ -55,11 +55,6 @@ function EstadodeCuenta() {
     }
     const fetchData = async () => {
       const { token } = session.user;
-      console.log(fecha_ini,
-        fecha_fin,
-        alumno_ini.numero,
-        alumno_fin.numero,
-        tomaFechas);
       const data = await getReporteEstadodeCuenta(
         token,
         fecha_ini,
@@ -161,7 +156,6 @@ function EstadodeCuenta() {
 
     Enca1(reporte);
     body.forEach((reporte2) => {
-      console.log(reporte2);
       let tipoPago2 = " ";
       let documento = "0";
 

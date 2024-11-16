@@ -238,20 +238,43 @@ function ConcentradoCalificaciones() {
             
             let columns = [
                 { header: "Núm", dataKey: "0" },
-                { header: "Alumno", dataKey: "1" },
-                ...resultadoEnc.map((item, index) => ({
-                    header: item.descripcion,
-                    dataKey: (index + 2).toString(),
-                })),
+                { header: "Alumno", dataKey: "1" }
+                //...resultadoEnc.map((item, index) => ({
+                //    header: item.descripcion,
+                //    dataKey: (index + 2).toString(),
+                //})),
             ];
-    
-            let dataCaliAlumnosBodyDetalles = [];
-            let contador = 2;
+
+            resultadoEnc.forEach((item, index) => {
+                const materiaId = item.idMat; // ID de la materia actual
+                const actividades = matActE.filter(activ => activ.idMat === materiaId); // Filtrar actividades de la materia
+            
+                // Agregar columnas para cada actividad asociada a la materia
+                actividades.forEach((actividad, actIndex) => {
+                    columns.push({
+                        header: `${item.descripcion}`,
+                        dataKey: `${materiaId}_act${actIndex}`, // Llave única para la actividad
+                    });
+                });
+            
+                // Agregar la columna de la materia
+                columns.push({
+                    header: item.descripcion,
+                    dataKey: (index + 2).toString(), // Llave basada en el índice
+                });
+            });
+
+            console.log(columns)
+
+            let dataCaliAlumnosBodyGeneral = [];
+            
     
             for (const itemB of resultadoBody) {
-                console.log("B", itemB);
+                let dataCaliAlumnosBodyDetalles = [];
+                let contador = 2;
+
                 for (const itemE of resultadoEnc) {
-                    console.log("E", itemE);
+                    
                     let noAlumno = itemB[0];
                     let materiaD = itemE.idMat;
                     const { token } = session.user;
@@ -265,6 +288,7 @@ function ConcentradoCalificaciones() {
                         ]);
         
                         for (const activ of resMatActE) {
+                            
     
                             let promedios = calcularCalificacionesMat(activ.secuencia, resActividadE, resMatActE);
                             
@@ -281,13 +305,14 @@ function ConcentradoCalificaciones() {
                         let promedio = itemB[contador];
                         dataCaliAlumnosBodyDetalles.push(promedio);
                         contador++;
-                    }
-    
-                    
-                    console.log("det", dataCaliAlumnosBodyDetalles);
+                    } 
                 }
-                
+                dataCaliAlumnosBodyDetalles.unshift(itemB[1], itemB[0]);
+                dataCaliAlumnosBodyDetalles = dataCaliAlumnosBodyDetalles.filter(detalle => detalle !== ' ');
+                console.log(itemB[0], itemB[1]);
+                dataCaliAlumnosBodyGeneral.push(dataCaliAlumnosBodyDetalles);
             };
+            console.log(dataCaliAlumnosBodyGeneral);
     
             const configuracion = {
                 Encabezado: {

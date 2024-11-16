@@ -50,8 +50,6 @@ function BuscarCat({
   });
 
   useEffect(() => {
-    console.log(accion);
-    console.log(contador);
     if (accion === "Alta") {
       setValue(nameInput[0], "");
       setValue(nameInput[1], "");
