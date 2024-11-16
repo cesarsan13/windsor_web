@@ -242,12 +242,12 @@ function ConcentradoCalificaciones() {
                 dataKey: (index + 2).toString(),
             })),
         ];
+        console.log(columns);
 
-        {/*let dataCaliAlumnosBodyDetalles = [];
+        let dataCaliAlumnosBodyDetalles = [];
 
-        resultadoBody.map(async (itemB, indexB) => {
-            
-            resultadoEnc.map( async (itemE, indexE) => {
+        for (const itemB of resultadoBody) {
+            for (const itemE of resultadoEnc) {
                 let noAlumno = itemB[0];
                 let materiaD = itemE.idMat;
                 const { token } = session.user;
@@ -256,28 +256,17 @@ function ConcentradoCalificaciones() {
                     getActividadesXHorarioXAlumnoXMateriaXBimestre(token, grupo.numero, Number(noAlumno), materiaD, bimestre),
                     getActividadesDetalles(token, materiaD)
                 ]);
-                //console.log(resActividadE, resMatActE);
 
-                resMatActE.map((activ) => {
-                    dataCaliAlumnosBodyDetalles.push(calcularCalificacionesMat(activ.secuencia, resActividadE, resMatActE))
-                })
-               
-
+                for (const activ of resMatActE) {
+                    dataCaliAlumnosBodyDetalles.push(calcularCalificacionesMat(activ.secuencia, resActividadE, resMatActE));
+                    
+                }
                 
-                //let MatActividad = resultadoBusqueda.resMatActE;
-                //let Actividad = resultadoBusqueda.resActividadE;
-                //console.log(MatActividad, Actividad);
-                //MatActividad.map((act) => {
-                //    console.log("secuencia", act.secuencia);
-                //})
-                
+                dataCaliAlumnosBodyDetalles.unshift(itemB[0], itemB[1])
+                console.log("det", dataCaliAlumnosBodyDetalles);
+            }
 
-
-            })
-            
-        });
-
-        console.log(dataCaliAlumnosBodyDetalles);*/}
+        };
 
         const configuracion = {
             Encabezado: {
