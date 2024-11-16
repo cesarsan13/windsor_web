@@ -7,66 +7,80 @@ import { TbLoader3 } from 'react-icons/tb'
 function Acciones({ home, cobranzaD, ver, Alta }) {
     const images = [
         {
-            src: iconos.alta,
+            srcLight: iconos.alta_w,
+            srcDark: iconos.alta,
             alt: "Alta",
             tooltipTitle: "Alta",
             onClick: Alta,
-            animateLoading: false,
+            isLoading: false,
         },
         {
-            src: iconos.vistaPrevia,
+            srcLight: iconos.vistaPrevia_w,
+            srcDark: iconos.vistaPrevia,
             alt: "Vista previa",
             tooltipTitle: "Vista previa",
             onClick: ver,
-            animateLoading: false,
+            isLoading: false,
         },
         {
-            src: iconos.salir,
+            srcLight: iconos.salir_w,
+            srcDark: iconos.salir,
             alt: "Salir",
             tooltipTitle: "Salir",
             onClick: home,
-            animateLoading: false,
+            isLoading: false,
         },
         {
-            src: iconos.salir,
+            srcLight: iconos.salir_w,
+            srcDark: iconos.salir,
             alt: "Regresar a cobranza diaria",
             tooltipTitle: "Regresar a cobranza diaria",
             onClick: cobranzaD,
-            animateLoading: false,
+            isLoading: false,
         },
     ]
-    const ImageTooltip = ({ src, tooltipTitle, onClick, animateLoading }) => {
+    const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading }) => {
         return (
             <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
                 <button
                     className="w-6 h-5 bg-transparent hover:bg-transparent border-none shadow-none text-black dark:text-white rounded-lg"
                     onClick={onClick}
                 >
-                    {animateLoading ? (
+                    {isLoading ? (
                         <TbLoader3 className="animate-spin text-2xl" />
                     ) : (
-                        <Image
-                            src={src}
-                            alt={tooltipTitle}
-                            className="w-5 h-5 md:w-6 md:h-6"
-                        />
+                        <>
+                            <Image
+                                src={srcDark}
+                                alt={tooltipTitle}
+                                className="w-5 h-5 md:w-6 md:h-6 block dark:hidden"
+                            />
+                            <Image
+                                src={srcLight}
+                                alt={tooltipTitle}
+                                className="w-5 h-5 md:w-6 md:h-6 hidden dark:block"
+                            />
+                        </>
                     )}
                 </button>
             </Tooltip>
-        )
-    }
+        );
+    };
+
     return (
         <div className="grid grid-flow-col gap-5 justify-around w-full">
-        {images.map((image, idx) => (
-            <ImageTooltip
-                key={idx}
-                src={image.src}
-                {...image}
-                animateLoading={image.animateLoading}
-            />
-        ))}
-    </div>
-    )
+            {images.map((image, idx) => (
+                <ImageTooltip
+                    key={idx}
+                    srcLight={image.srcLight}
+                    srcDark={image.srcDark}
+                    tooltipTitle={image.tooltipTitle}
+                    onClick={image.onClick}
+                    isLoading={image.isLoading}
+                />
+            ))}
+        </div>
+    );
 }
 
 export default Acciones

@@ -4,14 +4,42 @@ import Image from 'next/image';
 import React from 'react'
 import { TbLoader3 } from 'react-icons/tb';
 
-function Acciones({ Buscar, home, Ver, BoletasGrupo, isLoadingBoletasGrupo,isLoadingVistaPrevia }) {
+function Acciones({ Buscar, home, Ver, BoletasGrupo, isLoadingBoletasGrupo, isLoadingVistaPrevia }) {
     const images = [
-        { src: iconos.buscar, alt: 'Buscar', tooltipTitle: 'Buscar', onClick: Buscar, isLoading: false },
-        { src: iconos.vistaPrevia, alt: 'Vista previa', tooltipTitle: 'Vista previa', onClick: Ver, isLoading: isLoadingVistaPrevia },
-        { src: iconos.imprimir, alt: 'Imprimir Boletas de Grupo', tooltipTitle: 'Imprimir Boletas de Grupo', onClick: BoletasGrupo, isLoading: isLoadingBoletasGrupo },
-        { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home, isLoading: false },
+        {
+            srcLight: iconos.buscar_w,
+            srcDark: iconos.buscar,
+            alt: 'Buscar',
+            tooltipTitle: 'Buscar',
+            onClick: Buscar,
+            isLoading: false
+        },
+        {
+            srcLight: iconos.vistaPrevia_w,
+            srcDark: iconos.vistaPrevia,
+            alt: 'Vista previa',
+            tooltipTitle: 'Vista previa',
+            onClick: Ver,
+            isLoading: isLoadingVistaPrevia
+        },
+        {
+            srcLight: iconos.imprimir_w,
+            srcDark: iconos.imprimir,
+            alt: 'Imprimir Boletas de Grupo',
+            tooltipTitle: 'Imprimir Boletas de Grupo',
+            onClick: BoletasGrupo,
+            isLoading: isLoadingBoletasGrupo
+        },
+        {
+            srcLight: iconos.salir_w,
+            srcDark: iconos.salir,
+            alt: 'Salir',
+            tooltipTitle: 'Salir',
+            onClick: home,
+            isLoading: false
+        },
     ];
-    const ImageTooltip = ({ src, tooltipTitle, onClick, isLoading }) => {
+    const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading }) => {
         return (
             <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
                 <button
@@ -21,19 +49,38 @@ function Acciones({ Buscar, home, Ver, BoletasGrupo, isLoadingBoletasGrupo,isLoa
                     {isLoading ? (
                         <TbLoader3 className="animate-spin text-2xl" />
                     ) : (
-                        <Image src={src} alt={tooltipTitle} className="w-5 h-5 md:w-6 md:h-6" />
+                        <>
+                            <Image
+                                src={srcDark}
+                                alt={tooltipTitle}
+                                className="w-5 h-5 md:w-6 md:h-6 block dark:hidden"
+                            />
+                            <Image
+                                src={srcLight}
+                                alt={tooltipTitle}
+                                className="w-5 h-5 md:w-6 md:h-6 hidden dark:block"
+                            />
+                        </>
                     )}
                 </button>
             </Tooltip>
         );
-    }
+    };
+
     return (
         <div className="grid grid-flow-col gap-5 justify-around w-full">
             {images.map((image, idx) => (
-                <ImageTooltip key={idx} src={image.src} onClick={image.onClick} tooltipTitle={image.tooltipTitle} isLoading={image.isLoading} />
+                <ImageTooltip
+                    key={idx}
+                    srcLight={image.srcLight}
+                    srcDark={image.srcDark}
+                    tooltipTitle={image.tooltipTitle}
+                    onClick={image.onClick}
+                    isLoading={image.isLoading}
+                />
             ))}
         </div>
-    )
+    );
 }
 
 export default Acciones

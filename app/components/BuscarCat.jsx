@@ -9,8 +9,10 @@ import {
 } from "@/app/utils/api/horarios/horarios";
 import { getCajeros } from "@/app/utils/api/cajeros/cajeros";
 import { getFormasPago } from "@/app/utils/api/formapago/formapago";
-import { getAsignaturas,
-         getAsignaturasCasoOtro } from "@/app/utils/api/asignaturas/asignaturas";
+import {
+  getAsignaturas,
+  getAsignaturasCasoOtro
+} from "@/app/utils/api/asignaturas/asignaturas";
 import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
 import { getComentarios } from "@/app/utils/api/comentarios/comentarios";
 import { getGrupos } from "@/app/utils/api/grupos/grupos";
@@ -54,7 +56,7 @@ function BuscarCat({
       setValue(nameInput[0], "");
       setValue(nameInput[1], "");
     }
-  }, [accion,contador]);
+  }, [accion, contador]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,7 +64,7 @@ function BuscarCat({
         let fetchedData = [];
         setisLoading(true);
         switch (table) {
-          case "asignaturascasootro": 
+          case "asignaturascasootro":
             fetchedData = await getAsignaturasCasoOtro(token, false);
             setTiutloInput(["numero", "Descripción"]);
             break;
@@ -247,9 +249,8 @@ function BuscarCat({
                       e.preventDefault();
                     }
                   }}
-                  className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${
-                    alignRight ? "text-right" : ""
-                  } `}
+                  className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${alignRight ? "text-right" : ""
+                    } `}
                   style={{ width: inputWidths.first }}
                 />
               </label>

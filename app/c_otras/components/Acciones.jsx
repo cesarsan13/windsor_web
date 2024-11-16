@@ -7,13 +7,40 @@ import iconos from "@/app/utils/iconos";
 function Acciones({ home, Alta, Buscar, isLoading, isDisabledSave, Ver }) {
   const isAnyLoading = isLoading || isDisabledSave;
   const images = [
-    { src: iconos.buscar, alt: "Buscar", tooltipTitle: "Buscar", onClick: Buscar, isLoading: isLoading },
-    { src: iconos.guardar, alt: "Guardar", tooltipTitle: "Guardar", onClick: Alta, isLoading: isDisabledSave },
-    { src: iconos.vistaPrevia, alt: 'Vista previa', tooltipTitle: 'Vista previa', onClick: Ver },
-    { src: iconos.salir, alt: 'Salir', tooltipTitle: 'Salir', onClick: home, isLoading: false },
+    {
+      srcLight: iconos.buscar_w,
+      srcDark: iconos.buscar,
+      alt: "Buscar",
+      tooltipTitle: "Buscar",
+      onClick: Buscar,
+      isLoading: isLoading
+    },
+    {
+      srcLight: iconos.guardar_w,
+      srcDark: iconos.guardar,
+      alt: "Guardar",
+      tooltipTitle: "Guardar",
+      onClick: Alta,
+      isLoading: isDisabledSave
+    },
+    {
+      srcLight: iconos.vistaPrevia_w,
+      srcDark: iconos.vistaPrevia,
+      alt: 'Vista previa',
+      tooltipTitle: 'Vista previa',
+      onClick: Ver
+    },
+    {
+      srcLight: iconos.salir_w,
+      srcDark: iconos.salir,
+      alt: 'Salir',
+      tooltipTitle: 'Salir',
+      onClick: home,
+      isLoading: false
+    },
   ];
 
-  const ImageTooltip = ({ src, tooltipTitle, onClick, isLoading, disabled }) => {
+  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading, disabled }) => {
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
@@ -24,7 +51,18 @@ function Acciones({ home, Alta, Buscar, isLoading, isDisabledSave, Ver }) {
           {isLoading ? (
             <TbLoader3 className="animate-spin text-2xl" />
           ) : (
-            <Image src={src} alt={tooltipTitle} className="w-5 h-5 md:w-6 md:h-6" />
+            <>
+              <Image
+                src={srcDark}
+                alt={tooltipTitle}
+                className="w-5 h-5 md:w-6 md:h-6 block dark:hidden"
+              />
+              <Image
+                src={srcLight}
+                alt={tooltipTitle}
+                className="w-5 h-5 md:w-6 md:h-6 hidden dark:block"
+              />
+            </>
           )}
         </button>
       </Tooltip>
@@ -36,7 +74,8 @@ function Acciones({ home, Alta, Buscar, isLoading, isDisabledSave, Ver }) {
       {images.map((image, idx) => (
         <ImageTooltip
           key={idx}
-          src={image.src}
+          srcLight={image.srcLight}
+          srcDark={image.srcDark}
           tooltipTitle={image.tooltipTitle}
           onClick={image.onClick}
           isLoading={image.isLoading}

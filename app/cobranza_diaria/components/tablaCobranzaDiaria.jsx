@@ -20,10 +20,10 @@ function TablaCobranzaDiaria({
       };
     return !isLoading ? (
         <>
-            <div className='overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white  w-full lg:w-full'>
+            <div className='overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-base-200 dark:bg-[#1d232a] dark:text-white  w-full lg:w-full'>
                 {cobranzaDiaria.length > 0 ? (
                     <table className='table table-xs table-zebra w-full'>
-                        <thead className='sticky top-0 bg-white dark:bg-[#1d232a] z-[2]'>
+                        <thead className='sticky top-0 bg-base-200 dark:bg-[#1d232a] z-[2]'>
                             <tr>
                                 <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Editar</th>
                                 <td>Recibo</td>

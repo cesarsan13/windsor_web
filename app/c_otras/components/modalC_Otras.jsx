@@ -39,10 +39,10 @@ function ModalC_Otras({
       accion === "Alta"
         ? `Nuevo ${materiaDesc}: ${currentID}`
         : accion === "Editar"
-        ? `Editar ${materiaDesc}: ${currentID}`
-        : accion === "Eliminar"
-        ? `Eliminar ${materiaDesc}: ${currentID}`
-        : `Ver ${materiaDesc}: ${currentID}`
+          ? `Editar ${materiaDesc}: ${currentID}`
+          : accion === "Eliminar"
+            ? `Eliminar ${materiaDesc}: ${currentID}`
+            : `Ver ${materiaDesc}: ${currentID}`
     );
   }, [accion, currentID]);
 
@@ -52,10 +52,10 @@ function ModalC_Otras({
       accion === "Alta"
         ? `Nuevo ${materiaDesc}: ${num}`
         : accion === "Editar"
-        ? `Editar ${materiaDesc}: ${num}`
-        : accion === "Eliminar"
-        ? `Eliminar ${materiaDesc}: ${num}`
-        : `Ver ${materiaDesc}: ${num}`
+          ? `Editar ${materiaDesc}: ${num}`
+          : accion === "Eliminar"
+            ? `Eliminar ${materiaDesc}: ${num}`
+            : `Ver ${materiaDesc}: ${num}`
     );
   }, [num]);
 
@@ -70,13 +70,13 @@ function ModalC_Otras({
     if (evt.target.value === "") return;
     datatype === "int"
       ? setC_otra((c_otra) => ({
-          ...c_otra,
-          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-        }))
+        ...c_otra,
+        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+      }))
       : setC_otra((c_otra) => ({
-          ...c_otra,
-          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-        }));
+        ...c_otra,
+        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+      }));
   };
   return (
     <dialog id="my_modal_c_otras" className="modal">
@@ -86,11 +86,10 @@ function ModalC_Otras({
             <h3 className="font-bold text-lg">{titulo}</h3>
             <div className="flex space-x-2 items-center">
               <div
-                className={`tooltip tooltip-bottom ${
-                  accion === "Ver"
-                    ? "hover:cursor-not-allowed hidden"
-                    : "hover:cursor-pointer"
-                }`}
+                className={`tooltip tooltip-bottom ${accion === "Ver"
+                  ? "hover:cursor-not-allowed hidden"
+                  : "hover:cursor-pointer"
+                  }`}
                 data-tip="Guardar"
               >
                 <button
@@ -98,17 +97,14 @@ function ModalC_Otras({
                   id="btn_guardar"
                   className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
                 >
-                  <Image
-                    src={iconos.guardar}
-                    alt="Guardar"
-                    className="w-5 h-5 md:w-6 md:h-6 mr-1"
-                  />
+                  <Image src={iconos.guardar} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 block dark:hidden" />
+                  <Image src={iconos.guardar_w} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 hidden dark:block" />
                   <span className="hidden sm:inline">Guardar</span>
                 </button>
               </div>
               <button
                 type="button"
-                className="btn btn-sm btn-circle btn-ghost"
+                className="btn btn-sm btn-circle btn-ghost bg-base-200 dark:bg-[#1d232a] text-neutral-600 dark:text-white"
                 onClick={() => document.getElementById("my_modal_c_otras").close()}
               >
                 ✕
@@ -147,13 +143,13 @@ function ModalC_Otras({
                   errors={errors}
                   register={register}
                   message={"Asignatura requerida"}
-                  maxLenght={100} 
+                  maxLenght={100}
                   isDisabled={!isDisabled}
                   handleBlur={handleBlur}
                 />
               </div>
               <div className="flex flex-col w-full">
-              <Inputs
+                <Inputs
                   dataType={"int"}
                   name={"calificacion"}
                   tamañolabel={"w-2/4"}

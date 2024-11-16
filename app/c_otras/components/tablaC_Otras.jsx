@@ -7,6 +7,7 @@ import { formatNumber } from "@/app/utils/globalfn";
 import { showSwalAndWait } from "@/app/utils/alerts";
 
 function TablaC_Otras({
+  session,
   c_OtrasFiltrados,
   isLoading,
   setC_Otra,
@@ -74,7 +75,7 @@ function TablaC_Otras({
 
   return !isLoading ? (
     <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-full">
-      {c_OtrasFiltrados.length > 0 ? (
+      {c_OtrasFiltrados && c_OtrasFiltrados.length > 0 ? (
         <table className="table table-xs table-zebra w-full">
           <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
             <tr>
@@ -137,7 +138,8 @@ function TablaC_Otras({
                       data-tip={`Editar`}
                       onClick={(evt) => tableAction(evt, item, "Editar")}
                     >
-                      <Image src={iconos.editar} alt="Editar" />
+                      <Image src={iconos.editar} alt="Editar" className="block dark:hidden" />
+                      <Image src={iconos.editar_w} alt="Editar" className="hidden dark:block" />
                     </div>
                   )}
                 </th>
@@ -145,8 +147,12 @@ function TablaC_Otras({
             ))}
           </tbody>
         </table>
+      ) : c_OtrasFiltrados != null &&
+        session &&
+        c_OtrasFiltrados.length === 0 ? (
+        <NoData></NoData>
       ) : (
-        <NoData />
+        <Loading></Loading>
       )}
     </div>
   ) : (
