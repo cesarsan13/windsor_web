@@ -40,10 +40,12 @@ function Menu({ vertical, toogle }) {
   };
 
   const closeMenus = () => {
-    setIsOpen(Object.keys(isOpen).reduce((acc, category) => {
-      acc[category] = false;
-      return acc;
-    }, {}));
+    setIsOpen(
+      Object.keys(isOpen).reduce((acc, category) => {
+        acc[category] = false;
+        return acc;
+      }, {})
+    );
   };
 
   const handleClickOutside = (event) => {
@@ -97,9 +99,11 @@ function Menu({ vertical, toogle }) {
     ));
   };
 
-
   return vertical ? (
-    <ul ref={menuRef} className="menu menu-md dropdown-content bg-base-100 rounded-box text-black dark:text-white mt-3 w-52 p-2 shadow z-50">
+    <ul
+      ref={menuRef}
+      className="menu menu-md dropdown-content bg-base-100 rounded-box text-black dark:text-white mt-3 w-52 p-2 shadow z-50"
+    >
       {sortedCategories.map((category) => (
         <li key={category}>
           <details open={isOpen[category]} onClick={() => toggleMenu(category)}>
@@ -116,12 +120,16 @@ function Menu({ vertical, toogle }) {
           <div
             tabIndex={0}
             role="button"
-            className="btn m-1 bg-slate-100 dark:bg-slate-700 border-none text-black dark:text-white shadow-none"
+            className="btn m-1 bg-base-200 dark:bg-slate-700 border-none text-black dark:text-white shadow-none"
             onClick={() => toggleMenu(category)}
           >
             {category}
           </div>
-          <ul className={`dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow ${isOpen[category] ? '' : 'hidden'}`}>
+          <ul
+            className={`dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow ${
+              isOpen[category] ? "" : "hidden"
+            }`}
+          >
             {renderMenuItems(category)}
           </ul>
         </div>
