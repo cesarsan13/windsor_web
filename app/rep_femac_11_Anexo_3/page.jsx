@@ -195,6 +195,8 @@ function CobranzaPorAlumno() {
       body.forEach((reporte2) => {
         let tipoPago2 = " ";
         let nombre = " ";
+
+        console.log(body);
   
         if(reporte2.nombre === null){
           nombre = " ";
