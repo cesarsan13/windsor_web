@@ -69,7 +69,7 @@ function TablaCobranzaDiaria({
                                     <td>{item.referencia_2}</td>
                                     <td>{item.cue_banco}</td>
                                     <td>{item.referencia}</td>
-                                    <td className="text-right">{item.importe}</td>
+                                    <td className="text-right">{formatNumber(item.importe)}</td>
                                 </tr>
                             ))}
                         </tbody>

@@ -116,7 +116,7 @@ function ModalCobranzaDiaria({
                                     dataType={"float"}
                                     name={"importe"}
                                     tamañolabel={""}
-                                    className={"grow"}
+                                    className={"grow text-right"}
                                     Titulo={"Importe: "}
                                     type={"text"}
                                     requerido={false}
