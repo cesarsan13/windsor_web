@@ -603,13 +603,13 @@ function ModalAlumnos({
                     </>
                   )}
                   <div className="bottom-0 left-0 w-full flex justify-center mb-4">
-                    <button
+                    {/* <button
                       type="button"
                       onClick={toggleCamera}
                       className="btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white font-bold px-4 rounded"
                     >
                       {isCameraOn ? "Apagar cámara" : "Encender cámara"}
-                    </button>
+                    </button> */}
                     <button
                       type="button"
                       onClick={capture}
