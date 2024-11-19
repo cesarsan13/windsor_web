@@ -1614,8 +1614,8 @@ function CreacionBoletas3Bimestre() {
               <Inputs
                 dataType={"int"}
                 name={"bimestre"}
-                tamañolabel={"w-1/2"}
-                className={"w-2/3 text-right"}
+                tamañolabel={"w-1/3"}
+                className={"w-1/3 text-right"}
                 Titulo={"Bimestre: "}
                 type={"text"}
                 requerido={true}
@@ -1695,8 +1695,8 @@ function CreacionBoletas3Bimestre() {
                   errors={errors}
                   register={register}
                   options={[
-                    { value: "asig_español", label: "Asig. Español" },
                     { value: "asig_ingles", label: "Asig. Inglés" },
+                    { value: "asig_español", label: "Asig. Español" },
                   ]}
                 />
               </div>
@@ -1746,21 +1746,25 @@ function CreacionBoletas3Bimestre() {
               </div>
             </div>
 
-            <div className="flex flex-col items-center h-full">
-              <div className="w-full max-w-4xl">
-                <TablaPromedioEspañol
-                  session={session}
-                  isLoading={isLoading}
-                  promediosEsFiltrados={promediosEspañol}
-                  promediosEspañolAr2={promediosEspañolAr2}
-                  promediosEspañolAr3={promediosEspañolAr3}
-                />
-                <TablaPromedioIngles
-                  session={session}
-                  isLoading={isLoading}
-                  promediosEsFiltrados={promediosIngles}
-                  promediosInglesAr5={promediosInglesAr5}
-                />
+            <div className="flex flex-row items-center w-full">
+              <div className="w-full flex">
+                <div className="w-1/2 p-2">
+                  <TablaPromedioEspañol
+                    session={session}
+                    isLoading={isLoading}
+                    promediosEsFiltrados={promediosEspañol}
+                    promediosEspañolAr2={promediosEspañolAr2}
+                    promediosEspañolAr3={promediosEspañolAr3}
+                  />
+                </div>
+                <div className="w-1/2 p-2">
+                  <TablaPromedioIngles
+                    session={session}
+                    isLoading={isLoading}
+                    promediosEsFiltrados={promediosIngles}
+                    promediosInglesAr5={promediosInglesAr5}
+                  />
+                </div>
               </div>
             </div>
           </div>

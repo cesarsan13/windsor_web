@@ -28,12 +28,12 @@ function TablaPromedioEspañol({
                     <tbody>
                         {promediosEsFiltrados.map((item, index) => (
                             <tr key={`${item.numero}-${index}`} className="hover:cursor-pointer">
-                                <th className="w-[5%]">{item.numero}</th>
+                                <th className="w-[5%] text-right">{item.numero}</th>
                                 <th className="w-[45%]">{item.descripcion}</th>
-                                <td className="w-[5%]"> {item.bimestre1} </td>
-                                <td className="w-[5%]"> {item.bimestre2} </td>
-                                <td className="w-[5%]"> {item.bimestre3} </td>
-                                <td className="w-[5%]"> {item.promedio} </td>
+                                <td className="w-[5%] text-right"> {item.bimestre1} </td>
+                                <td className="w-[5%] text-right"> {item.bimestre2} </td>
+                                <td className="w-[5%] text-right"> {item.bimestre3} </td>
+                                <td className="w-[5%] text-right"> {item.promedio} </td>
                             </tr>
                         ))}
                     </tbody>
