@@ -10,7 +10,7 @@ function CardsView({ cumpleañeros }) {
     if (cumpleañeroRef.current) {
       cumpleañeroRef.current.scrollIntoView({
         behavior: "smooth",
-        inline: "center", // Centra el elemento horizontalmente
+        inline: "center",
         block: "nearest",
       });
     }
@@ -31,22 +31,22 @@ function CardsView({ cumpleañeros }) {
 
         return (
           <div
-            className="flex carousel-item bg-base-100 h-3/4 w-60 p-2 m-2 rounded-xl"
+            className="flex carousel-item bg-base-200 dark:bg-[#1d232a] h-3/4 w-60 p-2 m-2 rounded-xl"
             key={idx}
             ref={
               es_cumpleañero
                 ? (element) => {
-                    if (!primerCumpleañero.current) {
-                      cumpleañeroRef.current = element;
-                      primerCumpleañero.current = true;
-                    }
+                  if (!primerCumpleañero.current) {
+                    cumpleañeroRef.current = element;
+                    primerCumpleañero.current = true;
                   }
+                }
                 : null
             }
           >
-            <div className="h-full w-full flex flex-col justify-center items-center bg-base-100 ">
-              <div className="grid grid-flow-row place-items-center gap-2 pb-4 bg-base-100">
-                <h1 className="font-bold text-2xl font-mono">
+            <div className="h-full w-full flex flex-col justify-center items-center bg-base-200 dark:bg-[#1d232a] ">
+              <div className="grid grid-flow-row place-items-center gap-2 pb-4 bg-base-200 dark:bg-[#1d232a]">
+                <h1 className="font-bold text-2xl font-mono text-black dark:text-white">
                   {es_cumpleañero ? `¡Feliz Cumpleaños!` : fechaFormateada}
                 </h1>
                 {es_cumpleañero && (
@@ -59,11 +59,11 @@ function CardsView({ cumpleañeros }) {
                     ></Image>
                   </div>
                 )}
-                <p className="Cumpleañeros-box text-xs text-center ">
+                <p className="Cumpleañeros-box text-xs text-center text-black dark:text-white">
                   {alumno.nombre}
                 </p>
                 {es_cumpleañero && (
-                  <p className="font-bold text-md ">{fechaFormateada}</p>
+                  <p className="font-bold text-md text-black dark:text-white">{fechaFormateada}</p>
                 )}
               </div>
             </div>

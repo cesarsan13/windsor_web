@@ -31,41 +31,47 @@ function ListView({ cumpleañeros }) {
         let es_cumpleañero = numero_em_curso === numero_fecha_hoy;
         return (
           <div
-            className={`flex carousel-item ${
-              es_cumpleañero ? "bg-base-300 shadow-lg" : "bg-base-200"
-            }   rounded-box p-2 m-2 grid grid-rows-2 grid-cols-4 grid-flow-col `}
+            className={`flex carousel-item ${es_cumpleañero ? "bg-base-200 dark:bg-[#1d232a] shadow-lg" : "bg-base-200 dark:bg-[#1d232a]"
+              }   rounded-box p-2 m-2 grid grid-rows-2 grid-cols-4 grid-flow-col `}
             key={idx}
             ref={
               es_cumpleañero
                 ? (element) => {
-                    if (!primerCumpleañerol.current) {
-                      cumpleañeroRefl.current = element;
-                      primerCumpleañerol.current = true;
-                    }
+                  if (!primerCumpleañerol.current) {
+                    cumpleañeroRefl.current = element;
+                    primerCumpleañerol.current = true;
                   }
+                }
                 : null
             }
           >
-            <div className=" row-span-2 col-span-1 grid content-center justify-items-center w-16 ">
+            <div className="bg-base-200 dark:bg-[#1d232a] row-span-2 col-span-1 grid content-center justify-items-center w-16 ">
               {
-                <Image
-                  width={es_cumpleañero ? 50 : 26}
-                  alt={alumno.nombre}
-                  src={es_cumpleañero ? pastel : iconos.calendario_w}
-                ></Image>
+                <>
+                  <Image
+                    width={es_cumpleañero ? 50 : 26}
+                    alt={alumno.nombre}
+                    src={es_cumpleañero ? pastel : iconos.calendario}
+                    className="block dark:hidden "
+                  ></Image>
+                  <Image
+                    width={es_cumpleañero ? 50 : 26}
+                    alt={alumno.nombre}
+                    src={es_cumpleañero ? pastel : iconos.calendario_w}
+                    className="hidden dark:block"
+                  ></Image>
+                </>
               }
             </div>
             <div
-              className={`col-span-3 text-xs  content-center ${
-                es_cumpleañero ? "font-bold" : "font-thin"
-              }`}
+              className={`col-span-3 text-xs text-black dark:text-white content-center ${es_cumpleañero ? "font-bold" : "font-thin"
+                }`}
             >
               <p className="truncate">{alumno.nombre}</p>
             </div>
             <div
-              className={`col-span-3 text-xs  content-center ${
-                es_cumpleañero ? "font-bold" : "font-thin"
-              }`}
+              className={`col-span-3 text-xs text-black dark:text-white content-center ${es_cumpleañero ? "font-bold" : "font-thin"
+                }`}
             >
               <p>{fechaFormateada}</p>
             </div>

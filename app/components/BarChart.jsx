@@ -2,6 +2,7 @@
 import "chart.js/auto";
 import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 const Bar = dynamic(() => import("react-chartjs-2").then((mod) => mod.Bar), {
   ssr: false,
@@ -9,6 +10,21 @@ const Bar = dynamic(() => import("react-chartjs-2").then((mod) => mod.Bar), {
 
 const BarChart = ({ hData, isLoading }) => {
   const { data: session, status } = useSession();
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const checkDarkMode = () => {
+      const html = document.documentElement;
+      setIsDarkMode(html.classList.contains("dark"));
+    };
+    checkDarkMode();
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, []);
 
   const generateColors = (length) => {
     const colors = [];
@@ -36,33 +52,40 @@ const BarChart = ({ hData, isLoading }) => {
     plugins: {
       legend: {
         labels: {
-          color: "white",
+          color: isDarkMode ? "white" : "black",
         },
       },
     },
     scales: {
       x: {
         ticks: {
-          color: "white",
+          color: isDarkMode ? "white" : "black",
+        },
+        grid: {
+          color: isDarkMode ? "rgba(242, 242, 242, 0.2)" : "rgba(29, 35, 42, 0.1)",
         },
       },
       y: {
         ticks: {
-          color: "white",
+          color: isDarkMode ? "white" : "black",
+        },
+        grid: {
+          color: isDarkMode ? "rgba(242, 242, 242, 0.2)" : "rgba(29, 35, 42, 0.1)",
         },
       },
     },
   };
 
-  if (status === "loading" || isLoading === true) {
+
+  if (status === "loading" || isLoading) {
     return (
       <div className="container skeleton w-full max-w-screen-xl shadow-xl rounded-xl"></div>
     );
   }
 
   return (
-    <div className="w-full card shadow-md bg-base-100 items-center">
-      <h1 className="font-bold text-white">Alumnos por Horario</h1>
+    <div className="w-full card shadow-md items-center bg-base-200 dark:bg-[#1d232a]">
+      <h1 className="font-bold text-black dark:text-white">Alumnos por Horario</h1>
       <Bar data={data} options={options} />
     </div>
   );

@@ -12,7 +12,7 @@ function Cumpleañeros({ cumpleañeros, mesActual }) {
   const [cumpleView, setCumpleView] = useState(false);
   return (
     <div className="w-full card  bg-transparent  items-center p-5 mb-4">
-      <div className="w-full sticky top-0 flex justify-center my-4 bg-white">
+      <div className="w-full sticky top-0 flex justify-center my-4">
         <div className="grid grid-flow-row">
           <h1 className="font-bold text-black">Cumpleañeros del mes de {mesActual}</h1>
           <label className="swap swap-rotate">
