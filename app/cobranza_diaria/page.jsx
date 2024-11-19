@@ -81,7 +81,7 @@ function Cobranza_Diaria() {
         event.preventDefault;
         setRecibo(event.target.value)
     }
-    console.log("cheque", cheque)
+    // console.log("cheque", cheque)
     const buscar = async () => {
         setisLoading(true)
         const { token } = session.user
@@ -110,7 +110,7 @@ function Cobranza_Diaria() {
         data.recibo = currentID
         data.importe = Elimina_Comas(data.importe)
         const res = await guardarCobranzaDiaria(session.user.token, data)
-        data.importe = formatNumber(data.importe, 2)
+        // data.importe = formatNumber(data.importe)
         if (res.status) {
             if (accion === "Editar") {
                 const index = cobranzaDiaria.findIndex((fp) =>
@@ -134,9 +134,10 @@ function Cobranza_Diaria() {
         if ([2, 3, 4].includes(cobranza.tipo_pago_1) || [2, 3, 4].includes(cobranza.tipo_pago_2)) {
             const { token } = session.user
             const data = await getFormasPago(token, false)
-            console.log("data:", data)
             const cuenta = data.find(tp => tp.numero === tipoPago);
-            setValue("cue_banco", cuenta.cue_banco)
+            if (cuenta) {
+                setValue("cue_banco", cuenta.cue_banco)
+            }
         }
     }
     const obtenerImporte = async () => {
@@ -153,7 +154,7 @@ function Cobranza_Diaria() {
             const referencia = cobranza.referencia_2
             const tp = cobranza.tipo_pago_2
             setTipoPago(tp)
-            setValue("importe", importe)
+            setValue("importe", formatNumber(importe))
             setValue("referencia", referencia)
         }
     }
@@ -426,6 +427,7 @@ function Cobranza_Diaria() {
                             setCobranza={setCobranza}
                             setCurrentId={setCurrentID}
                             showModal={showModal}
+                            setTipoPago={setTipoPago}
                         />
                     </div>
                 </div>

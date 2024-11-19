@@ -1,5 +1,6 @@
 import Loading from '@/app/components/loading'
 import NoData from '@/app/components/NoData'
+import { formatNumber } from '@/app/utils/globalfn'
 import iconos from '@/app/utils/iconos'
 import Image from 'next/image'
 import React from 'react'
@@ -11,13 +12,15 @@ function TablaCobranzaDiaria({
     setCurrentId,
     setCobranza,
     setAccion,
+    setTipoPago,
 }) {
     const tableAction = (evt, cobranzaDiaria, accion) => {
         setCobranza(cobranzaDiaria);
         setAccion(accion);
         setCurrentId(cobranzaDiaria.recibo);
+        setTipoPago(cobranzaDiaria.tipo_pago_1);
         showModal(true);
-      };
+    };
     return !isLoading ? (
         <>
             <div className='overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-base-200 dark:bg-[#1d232a] dark:text-white  w-full lg:w-full'>
@@ -50,7 +53,8 @@ function TablaCobranzaDiaria({
                                             data-tip={`Editar`}
                                             onClick={(evt) => tableAction(evt, item, `Editar`)}
                                         >
-                                            <Image src={iconos.editar} alt="Editar" />
+                                            <Image src={iconos.editar} alt="Editar" className="block dark:hidden" />
+                                            <Image src={iconos.editar_w} alt="Editar" className="hidden dark:block" />
                                         </div>
                                     </th>
                                     <td>{item.recibo}</td>
@@ -58,10 +62,10 @@ function TablaCobranzaDiaria({
                                     <td>{item.alumno}</td>
                                     <td>{item.nombre}</td>
                                     <td className="text-right">{item.tipo_pago_1}</td>
-                                    <td className="text-right">{item.importe_pago_1}</td>
+                                    <td className="text-right">{formatNumber(item.importe_pago_1)}</td>
                                     <td>{item.referencia_1}</td>
                                     <td className="text-right">{item.tipo_pago_2}</td>
-                                    <td className="text-right">{item.importe_pago_2}</td>
+                                    <td className="text-right">{formatNumber(item.importe_pago_2)}</td>
                                     <td>{item.referencia_2}</td>
                                     <td>{item.cue_banco}</td>
                                     <td>{item.referencia}</td>
