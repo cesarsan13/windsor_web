@@ -52,7 +52,7 @@ function Cobranza_Diaria() {
             recibo: cobranza.recibo,
             cue_banco: cobranza.cue_banco,
             referencia: cobranza.referencia,
-            importe: cobranza.importe
+            importe: formatNumber(cobranza.importe)
         }
     })
     useEffect(() => {
@@ -60,7 +60,7 @@ function Cobranza_Diaria() {
             recibo: cobranza.recibo,
             cue_banco: cobranza.cue_banco,
             referencia: cobranza.referencia,
-            importe: cobranza.importe
+            importe: formatNumber(cobranza.importe)
         })
     }, [cobranza, reset])
     const showModal = (show) => {
@@ -146,7 +146,7 @@ function Cobranza_Diaria() {
             const referencia = cobranza.referencia_1
             const tp = cobranza.tipo_pago_1
             setTipoPago(tp)
-            setValue("importe", importe)
+            setValue("importe", formatNumber(importe));
             setValue("referencia", referencia)
         }
         if ([2, 3, 4].includes(cobranza.tipo_pago_2)) {
