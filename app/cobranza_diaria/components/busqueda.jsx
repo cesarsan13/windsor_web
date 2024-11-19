@@ -15,13 +15,13 @@ function Busqueda({
   return (
     <div className='flex flex-col space-y-4'>
       <div className='w-full flex flex-col md:flex-row gap-2 flex-wrap'>
-        <label className='input input-bordered input-sm md:input-md flex items-center gap-3 w-full md:w-1/6 text-black dark:text-white'>
+        <label className='input input-bordered input-sm md:input-md flex items-center gap-3 w-full md:w-1/5 text-black dark:text-white text-right'>
           Recibo
           <input
             type="text"
             name="recibo"
             id="recibo"
-            className='text-black dark:text-white border-b-2 border-slate-300 w-full md:w-2/6 dark:border-slate-700 input-xs md:input-sm'
+            className='text-black dark:text-white border-b-2 border-slate-300 w-full md:w-3/5 dark:border-slate-700 input-xs md:input-sm text-right'
             onKeyDown={soloEnteros}
             onChange={(event) => handleBusquedaChange(event)}
           />

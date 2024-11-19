@@ -57,15 +57,15 @@ function TablaCobranzaDiaria({
                                     <td>{item.fecha_cobro}</td>
                                     <td>{item.alumno}</td>
                                     <td>{item.nombre}</td>
-                                    <td>{item.tipo_pago_1}</td>
-                                    <td>{item.importe_pago_1}</td>
+                                    <td className="text-right">{item.tipo_pago_1}</td>
+                                    <td className="text-right">{item.importe_pago_1}</td>
                                     <td>{item.referencia_1}</td>
-                                    <td>{item.tipo_pago_2}</td>
-                                    <td>{item.importe_pago_2}</td>
+                                    <td className="text-right">{item.tipo_pago_2}</td>
+                                    <td className="text-right">{item.importe_pago_2}</td>
                                     <td>{item.referencia_2}</td>
                                     <td>{item.cue_banco}</td>
                                     <td>{item.referencia}</td>
-                                    <td>{item.importe}</td>
+                                    <td className="text-right">{item.importe}</td>
                                 </tr>
                             ))}
                         </tbody>
