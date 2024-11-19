@@ -34,6 +34,7 @@ function ConcentradoCalificaciones() {
     const [materiasEncabezado, setMateriasEncabezado] = useState({});
     const [calificacionesTodosAlumnos, setCalificacionesTodosAlumnos] = useState({});
     const [materiasReg, setMateriasReg] = useState({});
+    const [matActE, setMatActE] = useState({});
     const [actividadesReg, setActividadesReg] = useState({});
     const [alumnoReg, setAlumnoReg] = useState({});
     const [bimestre, setBimestre] = useState(0);
@@ -220,82 +221,59 @@ function ConcentradoCalificaciones() {
             return evaluaciones === 0 ? 0 : calMat;
 
         } else {
-            return(' ');
+            let cal = RegresaCalificacionRedondeo(Number(resActividadE[0].calificacion), "N");
+            return(cal.toFixed(1));
         }
         }
     };
 
         const ImprimeExcel = async () => {
             let fecha_hoy = new Date();
-    
             const dateStr = formatDate(fecha_hoy);
             const timeStr = formatTime(fecha_hoy);
-    
+            
+            try {
             const resultadoEnc = dataEncabezado.filter((item, pos, arr) => 
                 arr.findIndex(i => i.descripcion === item.descripcion) === pos
             );
             const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBodyEXCEL);
-            
-            let columns = [
-                { header: "Núm", dataKey: "0" },
-                { header: "Alumno", dataKey: "1" }
-                //...resultadoEnc.map((item, index) => ({
-                //    header: item.descripcion,
-                //    dataKey: (index + 2).toString(),
-                //})),
-            ];
-
-            resultadoEnc.forEach((item, index) => {
-                const materiaId = item.idMat; // ID de la materia actual
-                const actividades = matActE.filter(activ => activ.idMat === materiaId); // Filtrar actividades de la materia
-            
-                // Agregar columnas para cada actividad asociada a la materia
-                actividades.forEach((actividad, actIndex) => {
-                    columns.push({
-                        header: `${item.descripcion}`,
-                        dataKey: `${materiaId}_act${actIndex}`, // Llave única para la actividad
-                    });
-                });
-            
-                // Agregar la columna de la materia
-                columns.push({
-                    header: item.descripcion,
-                    dataKey: (index + 2).toString(), // Llave basada en el índice
-                });
-            });
-
-            console.log(columns)
-
             let dataCaliAlumnosBodyGeneral = [];
-            
-    
+            let dataCaliAlumnosEncabezadoGeneral = []; 
+            let contadorEnc = 0;
+
+            for (const itemE of resultadoEnc) {
+                let materiaD = itemE.idMat;
+                const { token } = session.user;
+                
+                    if(itemE.hasOwnProperty('idMat')){
+                        const resMatActE = await getActividadesDetalles(token, materiaD);
+                        for (const activ of resMatActE) {
+                            dataCaliAlumnosEncabezadoGeneral.push(activ.descripcion);
+                        }
+                    }
+                    if (resultadoEnc[contadorEnc]) {
+                        dataCaliAlumnosEncabezadoGeneral.push(resultadoEnc[contadorEnc].descripcion);
+                    }
+                    contadorEnc++;
+            }
+
             for (const itemB of resultadoBody) {
                 let dataCaliAlumnosBodyDetalles = [];
                 let contador = 2;
-
                 for (const itemE of resultadoEnc) {
-                    
                     let noAlumno = itemB[0];
                     let materiaD = itemE.idMat;
                     const { token } = session.user;
 
                     //If para separar de promedio español e ingles
                     if(itemE.hasOwnProperty('idMat')){
-
                         const [resActividadE, resMatActE] = await Promise.all([
                             getActividadesXHorarioXAlumnoXMateriaXBimestre(token, grupo.numero, Number(noAlumno), materiaD, bimestre),
                             getActividadesDetalles(token, materiaD)
                         ]);
-        
                         for (const activ of resMatActE) {
-                            
-    
                             let promedios = calcularCalificacionesMat(activ.secuencia, resActividadE, resMatActE);
-                            
                             dataCaliAlumnosBodyDetalles.push(promedios);
-                            
-                            //dataCaliAlumnosBodyDetalles.push((resMatActE.reduce((acc, activ) => acc + Number(calcularCalificacionesMat(activ.secuencia) || 0), 0) / matAct.length).toFixed(1));
-                            
                         }
                         let promedio = itemB[contador];
                         dataCaliAlumnosBodyDetalles.push(promedio);
@@ -305,15 +283,20 @@ function ConcentradoCalificaciones() {
                         let promedio = itemB[contador];
                         dataCaliAlumnosBodyDetalles.push(promedio);
                         contador++;
-                    } 
+                    }
                 }
-                dataCaliAlumnosBodyDetalles.unshift(itemB[1], itemB[0]);
-                dataCaliAlumnosBodyDetalles = dataCaliAlumnosBodyDetalles.filter(detalle => detalle !== ' ');
-                console.log(itemB[0], itemB[1]);
+                dataCaliAlumnosBodyDetalles.unshift(itemB[0], itemB[1]);
                 dataCaliAlumnosBodyGeneral.push(dataCaliAlumnosBodyDetalles);
             };
-            console.log(dataCaliAlumnosBodyGeneral);
-    
+            
+            let columns = [
+                { header: "Núm", dataKey: "0" },
+                { header: "Alumno", dataKey: "1" },
+                    ...dataCaliAlumnosEncabezadoGeneral.map((item, index) => ({
+                        header: item,
+                        dataKey: (index + 2).toString(),
+                    })),
+            ];
             const configuracion = {
                 Encabezado: {
                     Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -321,12 +304,14 @@ function ConcentradoCalificaciones() {
                     Nombre_Usuario: `Usuario: ${session.user.name}`,
                     Clase: `Grupo: ${grupo.horario}     Bimestre: ${bimestre}`
                 },
-    
-                body: resultadoBody,
+                body: dataCaliAlumnosBodyGeneral,
                 columns: columns,
                 nombre: `ConcentradoCalificaciones_${dateStr.replaceAll("/","")}${timeStr.replaceAll(":","")}`,
             };
             ImprimirExcel(configuracion);
+        } catch (error) {
+            showSwal("Error", "No se pudo crear el Excel, Intentalo de nuevo", "error", "modalVConCal");
+        }
         };
 
     const showModalVista = (show) => {
