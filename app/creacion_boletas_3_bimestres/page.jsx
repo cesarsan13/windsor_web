@@ -945,7 +945,7 @@ function CreacionBoletas3Bimestre() {
                   }
                 }
               }
-            } catch (error) { }
+            } catch (error) {}
           });
         }
       }
@@ -1500,7 +1500,7 @@ function CreacionBoletas3Bimestre() {
                   }
                 }
               }
-            } catch (error) { }
+            } catch (error) {}
           });
         }
       }
@@ -1588,10 +1588,10 @@ function CreacionBoletas3Bimestre() {
         PDF={ImprimePDF}
       />
 
-      <div className='container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y'>
-        <div className='flex flex-col justify-start p-3'>
-          <div className='flex flex-wrap md:flex-nowrap items-start md:items-center'>
-            <div className='order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0'>
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y">
+        <div className="flex flex-col justify-start p-3">
+          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
+            <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
               <Acciones
                 home={home}
                 Buscar={Buscar}
@@ -1608,14 +1608,14 @@ function CreacionBoletas3Bimestre() {
           </div>
         </div>
 
-        <div className='flex flex-col items-center h-full'>
-          <div className='w-full max-w-4xl'>
+        <div className="flex flex-col items-center h-full">
+          <div className="w-full max-w-4xl">
             <div className="w-full">
               <Inputs
                 dataType={"int"}
                 name={"bimestre"}
-                tamañolabel={"w-1/3"}
-                className={"w-1/4 text-right"}
+                tamañolabel={"w-1/2"}
+                className={"w-full text-right "}
                 Titulo={"Bimestre: "}
                 type={"text"}
                 requerido={true}
@@ -1623,7 +1623,7 @@ function CreacionBoletas3Bimestre() {
                 register={register}
                 message={"Bimestre Requerido"}
                 isDisabled={false}
-                maxLenght={3}
+                maxLenght={9}
               />
             </div>
             <div className="flex flex-col md:flex-row lg:flex-row ">

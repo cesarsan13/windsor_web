@@ -20,7 +20,7 @@ function Inputs({
   defaultValue,
   // setEvent,
 }) {
-  if (type === 'select') {
+  if (type === "select") {
     return (
       <div className="w-full md:w-1/2 px-0.5 py-2 mb-2 md:mb-0">
         <label
@@ -37,7 +37,10 @@ function Inputs({
             })}
             disabled={isDisabled}
           >
-            <option value="" className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]">
+            <option
+              value=""
+              className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]"
+            >
               Seleccione una opción
             </option>
             {arreglos.map((arreglo) => (
@@ -56,14 +59,16 @@ function Inputs({
         )}
       </div>
     );
-  } else if (type === 'checkbox') {
+  } else if (type === "checkbox") {
     return (
       <div className="w-full md:w-1/2 px-0.5 py-2 mb-2 md:mb-0 flex items-center">
         <input
           type="checkbox"
           id={name}
           name={name}
-          className={`form-checkbox h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 ${className} ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`form-checkbox h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 ${className} ${
+            isDisabled ? "opacity-50 cursor-not-allowed" : ""
+          }`}
           {...register(name, {
             ...(requerido && { required: message }),
           })}
@@ -71,17 +76,20 @@ function Inputs({
         />
         <label
           htmlFor={name}
-          className={`ml-2 text-black dark:text-white cursor-pointer ${isDisabled ? 'line-through' : ''}`}
+          className={`ml-2 text-black dark:text-white cursor-pointer ${
+            isDisabled ? "line-through" : ""
+          }`}
         >
           {Titulo}
         </label>
         {errors[name] && requerido && (
-          <span className="text-red-500 text-sm ml-2">{errors[name].message}</span>
+          <span className="text-red-500 text-sm ml-2">
+            {errors[name].message}
+          </span>
         )}
       </div>
     );
-
-  } else if (type === 'radio') {
+  } else if (type === "radio") {
     return (
       <div className="w-full md:w-1/2 px-0.5 py-2 mb-2 md:mb-0">
         <span className="text-black dark:text-white">{Titulo}</span>
@@ -113,7 +121,7 @@ function Inputs({
       <div className="w-full md:w-1/2 px-0.5 py-2 mb-2 md:mb-0">
         <label
           htmlFor={name}
-          className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
+          className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
         >
           {Titulo}
           <input
@@ -135,7 +143,9 @@ function Inputs({
           />
         </label>
         {errors[name] && (
-          <span className="text-red-500 text-sm mt-2">{errors[name].message}</span>
+          <span className="text-red-500 text-sm mt-2">
+            {errors[name].message}
+          </span>
         )}
       </div>
     );
