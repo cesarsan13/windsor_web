@@ -97,6 +97,7 @@ function Inputs({
                   ...(requerido && { required: message }),
                 })}
                 disabled={isDisabled}
+                defaultChecked={true}
               />
               {option.label}
             </label>
