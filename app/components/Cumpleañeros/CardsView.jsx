@@ -31,7 +31,7 @@ function CardsView({ cumpleañeros }) {
 
         return (
           <div
-            className="flex carousel-item bg-neutral-200 h-3/4 w-60 p-2 m-2 rounded-xl"
+            className="flex carousel-item bg-base-100 h-3/4 w-60 p-2 m-2 rounded-xl"
             key={idx}
             ref={
               es_cumpleañero
@@ -44,8 +44,8 @@ function CardsView({ cumpleañeros }) {
                 : null
             }
           >
-            <div className="h-full w-full flex flex-col justify-center items-center ">
-              <div className="grid grid-flow-row place-items-center gap-2 pb-4">
+            <div className="h-full w-full flex flex-col justify-center items-center bg-base-100 ">
+              <div className="grid grid-flow-row place-items-center gap-2 pb-4 bg-base-100">
                 <h1 className="font-bold text-2xl font-mono">
                   {es_cumpleañero ? `¡Feliz Cumpleaños!` : fechaFormateada}
                 </h1>

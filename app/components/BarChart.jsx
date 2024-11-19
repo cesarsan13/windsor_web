@@ -1,9 +1,7 @@
 "use client";
 import "chart.js/auto";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-
 
 const Bar = dynamic(() => import("react-chartjs-2").then((mod) => mod.Bar), {
   ssr: false,
@@ -11,22 +9,6 @@ const Bar = dynamic(() => import("react-chartjs-2").then((mod) => mod.Bar), {
 
 const BarChart = ({ hData, isLoading }) => {
   const { data: session, status } = useSession();
-  // const [hData, setHData] = useState([]);
-  // const [isLoading, setisLoading] = useState(false);
-
-  // useEffect(() => {
-  //   if (status === "loading" || !session) {
-  //     return;
-  //   }
-  //   const fetchData = async () => {
-  //     setisLoading(true);
-  //     const { token } = session.user;
-  //     const data = await getAlumnoXHorario(token);
-  //     setHData(data);
-  //     setisLoading(false);
-  //   };
-  //   fetchData();
-  // }, [session, status]);
 
   const generateColors = (length) => {
     const colors = [];
@@ -45,9 +27,31 @@ const BarChart = ({ hData, isLoading }) => {
       {
         label: "Total Alumnos",
         data: hData.map((item) => item.Tot_Alumnos),
-        backgroundColor: generateColors(hData.length), // Colores para cada barra
+        backgroundColor: generateColors(hData.length),
       },
     ],
+  };
+
+  const options = {
+    plugins: {
+      legend: {
+        labels: {
+          color: "white",
+        },
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: "white",
+        },
+      },
+      y: {
+        ticks: {
+          color: "white",
+        },
+      },
+    },
   };
 
   if (status === "loading" || isLoading === true) {
@@ -58,8 +62,8 @@ const BarChart = ({ hData, isLoading }) => {
 
   return (
     <div className="w-full card shadow-md bg-base-100 items-center">
-      <h1 className="font-bold">Alumnos por Horario</h1>
-      <Bar data={data} />
+      <h1 className="font-bold text-white">Alumnos por Horario</h1>
+      <Bar data={data} options={options} />
     </div>
   );
 };
