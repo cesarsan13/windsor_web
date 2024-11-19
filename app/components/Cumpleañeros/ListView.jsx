@@ -51,7 +51,7 @@ function ListView({ cumpleañeros }) {
                 <Image
                   width={es_cumpleañero ? 50 : 26}
                   alt={alumno.nombre}
-                  src={es_cumpleañero ? pastel : iconos.calendario}
+                  src={es_cumpleañero ? pastel : iconos.calendario_w}
                 ></Image>
               }
             </div>
