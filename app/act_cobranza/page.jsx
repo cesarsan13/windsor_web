@@ -18,15 +18,14 @@ import { getProductos } from '../utils/api/productos/productos';
 
 function Act_Cobranza() {
     const router = useRouter();
-    const { data: session, status } = useSession();
-    const [isLoading, setisLoading] = useState(false);
-    const [isLoadingDocumentos, setisLoadingDocumentos] = useState(false);
-    const [alumnos, setAlumnos] = useState([])
-    const [alumnosFiltrados, setAlumnosFiltrados] = useState([])
+    const { data: session, status } = useSession();    
+    const [isLoadingDocumentos, setisLoadingDocumentos] = useState(false);    
+    // const [alumnosFiltrados, setAlumnosFiltrados] = useState([])
     const [alumno, setAlumno] = useState({})
     const [productos,setProductos]=useState([])
     const [accion, setAccion] = useState("")
     const [documentos, setDocumentos] = useState([])
+    const [documentosFiltrados, setDocumentosFiltrados] = useState([])
     const [documento, setDocumento] = useState({})
     const [currentID, setCurrentId] = useState("")
     const [producto, setProducto] = useState({})
@@ -39,15 +38,10 @@ function Act_Cobranza() {
         if (status === "loading" || !session) {
             return;
         }
-        const fetchData = async () => {
-            setisLoading(true)
-            const { token } = session.user
-            const data = await getAlumnos(token, false)
+        const fetchData = async () => {            
+            const { token } = session.user            
             const dataProducto =await getProductos(token,true)
-            setProductos(dataProducto)
-            setAlumnos(data)
-            setAlumnosFiltrados(data)
-            setisLoading(false)
+            setProductos(dataProducto)            
         }
         fetchData();
     }, [session, status])
@@ -83,6 +77,18 @@ function Act_Cobranza() {
         setDocumentos(data)    
         setisLoadingDocumentos(false)
     }
+    useEffect(()=>{
+        const documentosAlumno = async (id) => {
+            setCurrentId(id)
+            setisLoadingDocumentos(true)
+            const { token } = session.user
+            const data = await getDocumentosAlumno(token, id)        
+            setDocumentos(data)
+            setDocumentosFiltrados(data)
+            setisLoadingDocumentos(false)
+        }
+        if(alumno.numero){ documentosAlumno(alumno.numero)}
+    },[alumno])
     const Alta = async (event) => {
         if (!currentID) {
             showSwal("INFO", "Debe seleccionar a un alumno", "info")
@@ -190,22 +196,22 @@ function Act_Cobranza() {
     const Buscar = () => {
         const { tb_id, tb_desc } = busqueda
         if (tb_id === "" && tb_desc === "") {
-            setAlumnosFiltrados(alumnos)
+            setDocumentosFiltrados(documentos)
             return
         }
-        const infoFiltrada = alumnos.filter((alumno) => {
+        const infoFiltrada = documentos.filter((documento) => {
             const coincideId = tb_id
-                ? alumno["numero"].toString().includes(tb_id)
+                ? documento["producto"].toString().includes(tb_id)
                 : true;
             const coincideDescripcion = tb_desc
-                ? alumno["nombre"]
+                ? documento["descripcion"]
                     .toString()
                     .toLowerCase()
                     .includes(tb_desc.toLowerCase())
                 : true;
             return coincideId && coincideDescripcion
         })
-        setAlumnosFiltrados(infoFiltrada)
+        setDocumentosFiltrados(infoFiltrada)
     }
     const handleBlur= (evt,datatype)=>{
         if (evt.target.value === "") return;
@@ -248,24 +254,18 @@ function Act_Cobranza() {
                     </div>
                 </div>
                 <div className='flex flex-col items-center w-full'>
-                    <div className='w-full max-w-4xl max-h-[60vh] overflow-y-scroll'>
+                    <div className='w-full max-w-4xl max-h-full overflow-y-scroll'>
                         <Busqueda
                             busqueda={busqueda}
                             Buscar={Buscar}
                             handleBusquedaChange={handleBusquedaChange}
                             limpiarBusqueda={limpiarBusqueda}
-                        />
-                        <TablaActCobranzaAlumnos
-                            alumnosFiltrados={alumnosFiltrados}
-                            isLoading={isLoading}
-                            setAccion={setAccion}
+                            session={session}
                             setAlumno={setAlumno}
-                            documentosAlumno={documentosAlumno}
-                            setCurrentId={setCurrentId}
-                        ></TablaActCobranzaAlumnos>
+                        />                        
                         <TablaDocumentosCobranza
                             isLoading={isLoadingDocumentos}
-                            documentos={documentos}
+                            documentos={documentosFiltrados}
                             setAccion={setAccion}
                             setCurrentId={setCurrentIdDocumento}
                             setDocumento={setDocumento}
