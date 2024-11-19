@@ -182,6 +182,10 @@ function C_Calificaciones() {
 
     const Buscar = handleSubmit(async (data) => {
         const { token } = session.user;
+        if(evaluacion.length===0){
+            showSwal('Error', 'La asignatura no tiene evaluacion', 'error');
+            return;
+        }
         if (!grupo) {
             showSwal('Error', 'Debe seleccionar un grupo', 'error');
             return;
