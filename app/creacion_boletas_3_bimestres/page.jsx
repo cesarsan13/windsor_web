@@ -1615,7 +1615,7 @@ function CreacionBoletas3Bimestre() {
                 dataType={"int"}
                 name={"bimestre"}
                 tamañolabel={"w-1/3"}
-                className={"w-1/3 text-right"}
+                className={"w-1/4 text-right"}
                 Titulo={"Bimestre: "}
                 type={"text"}
                 requerido={true}
