@@ -10,6 +10,21 @@ const Pie = dynamic(() => import("react-chartjs-2").then((mod) => mod.Pie), {
 
 const PieChart = ({ sexData, isLoading }) => {
   const { data: session, status } = useSession();
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const checkDarkMode = () => {
+      const html = document.documentElement;
+      setIsDarkMode(html.classList.contains("dark"));
+    };
+    checkDarkMode();
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, []);
 
   const data = {
     labels: sexData.map((row) => row.categoria),
@@ -31,7 +46,7 @@ const PieChart = ({ sexData, isLoading }) => {
     plugins: {
       legend: {
         labels: {
-          color: "white",
+          color: isDarkMode ? "white" : "black",
         },
       },
     },
@@ -44,8 +59,8 @@ const PieChart = ({ sexData, isLoading }) => {
   }
 
   return (
-    <div className="w-80 h-25 card shadow items-center py-2 bg-base-100">
-      <h1 className="font-bold text-white">Diversidad de Alumnos</h1>
+    <div className="w-80 h-25 card shadow items-center py-2 bg-base-200 dark:bg-[#1d232a]">
+      <h1 className="font-bold text-black dark:text-white">Diversidad de Alumnos</h1>
       <Pie data={data} options={options} />
     </div>
   );
