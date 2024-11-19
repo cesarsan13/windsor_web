@@ -106,7 +106,7 @@ function NavBar() {
               <i className="fas fa-x"></i>
             </button>
           </div>
-          <label className="btn btn-circle swap swap-rotate ml-2">
+          <label className="btn btn-circle btn-sm swap swap-rotate ml-2">
             <input
               type="checkbox"
               onClick={handleChangeTheme}
