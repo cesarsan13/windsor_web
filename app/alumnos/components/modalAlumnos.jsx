@@ -610,14 +610,14 @@ function ModalAlumnos({
                     >
                       {isCameraOn ? "Apagar cámara" : "Encender cámara"}
                     </button> */}
-                    <button
+                    {/* <button
                       type="button"
                       onClick={capture}
                       disabled={!isCameraOn}
                       className="ml-4 btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white font-bold px-4 rounded"
                     >
                       Capturar Foto
-                    </button>
+                    </button> */}
                     <button
                       type="button"
                       onClick={openFileSelector}
@@ -639,7 +639,7 @@ function ModalAlumnos({
                   {(capturedImage || files) && (
                     <div className="bottom-0 left-0 w-full">
                       <h2 className="text-center text-xl mb-2">
-                        {condicion ? "Imagen Seleccionada:" : "Foto Capturada:"}
+                        {condicion ? "Imagen Seleccionada:" : "Foto Seleccionada:"}
                       </h2>
                       <Image
                         src={
