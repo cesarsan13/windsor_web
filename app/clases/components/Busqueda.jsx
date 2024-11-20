@@ -24,7 +24,7 @@ function Busqueda({
           placeholder="Grupo..."
           onChange={(event) => handleBusquedaChange(event)}
           onKeyDown={(evt) => {
-            soloEnteros(evt);
+            // soloEnteros(evt);
             handleKeyDown(evt);
           }}
           value={busqueda.tb_grupo}

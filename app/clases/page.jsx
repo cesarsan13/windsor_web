@@ -75,10 +75,10 @@ function Clases() {
     }
     const infoFiltrada = clasesRef.current.filter((clase) => {
       const coincideGrupo = tb_grupo
-        ? clase["grupo_descripcion"]?.toString().includes(tb_grupo)
+        ? clase["grupo_descripcion"]?.toString().toLowerCase().includes(tb_grupo.toLowerCase())
         : true;
       const coincideMateria = tb_materia
-        ? clase["materia_descripcion"]?.toString().includes(tb_materia)
+        ? clase["materia_descripcion"]?.toString().toLowerCase().includes(tb_materia.toLowerCase())
         : true;
       const coincideProfesor = tb_profesor
         ? clase["profesor_nombre"]?.toString().toLowerCase().includes(tb_profesor.toLowerCase())
