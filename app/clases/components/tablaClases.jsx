@@ -27,8 +27,8 @@ function TablaClases({
           <table className="table table-xs table-zebra w-full">
             <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
               <tr>
-                <td className="sm:w-[20%]">Asignatura</td>
                 <td className="w-[20%]">Grupo</td>
+                <td className="sm:w-[20%]">Materia</td>
                 <td className="w-[50%]">Profesor</td>
                 <td className="w-[10%]">Lunes</td>
                 <td className="w-[10%]">Martes</td>
