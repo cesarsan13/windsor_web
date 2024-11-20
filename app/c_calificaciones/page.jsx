@@ -44,6 +44,14 @@ function C_Calificaciones() {
     const [isDisabled3, setIsDisabled3] = useState(false);
     const [actividades, setActividades] = useState([]);
     const [evaluacion, setEvaluacion] = useState([]);
+
+    const [bimestreSelected, setBimestreSelected] = useState([]);
+    const [actividadSelected, setActividadesSelected] = useState([]);
+    const [evaluacionSelected, setEvaluacionSelected] = useState([]);
+    const [asignaturaSelected, setAsignaturaSelected] = useState([]);
+
+    const [isLoadingPDF, setisLoadingPDF] = useState(false);
+
     const [pdfPreview, setPdfPreview] = useState(false);
     const [pdfData, setPdfData] = useState("");
     const {
@@ -55,6 +63,29 @@ function C_Calificaciones() {
     let materia = watch('materia');
 
     useEffect(() => {
+        setCalificaciones([]);
+        setCalificacionesFiltrados([]);
+    },[bimestreSelected,grupo,asignaturaSelected,evaluacionSelected,actividadSelected]);
+
+    const handlBimestreChange = (event) => {
+        setBimestreSelected(event.target.value); 
+        // console.log("Nuevo valor de bimestre:", event.target.value);
+    };
+    const handlEvalChange = (event) => {
+        setEvaluacionSelected(event.target.value); 
+        // console.log("Nuevo valor de eval:", event.target.value);
+    };
+    const handlActividadesChange = (event) => {
+        setActividadesSelected(event.target.value); 
+        // console.log("Nuevo valor de actividad:", event.target.value);
+    };
+    const handlAsignaturaChange = (event) => {
+        setAsignaturaSelected(event.target.value); 
+        // console.log("Nuevo valor de asignatura:", event.target.value);
+    };
+
+
+    useEffect(() => {
         if (status === "loading" || !session) {
             return;
         }
@@ -62,53 +93,56 @@ function C_Calificaciones() {
             let res = null, res2 = null, res3 = null;
             // let vg_area = '', vg_actividad = '', vg_caso_evaluar = '';
             const { token } = session.user;
-            res = await getMateriaBuscar(token, materia)
-            if (res.data) {
-                res.data.forEach(element => {
-                    setGlobalVariable('vg_area', element.area)
-                    setGlobalVariable('vg_actividad', element.actividad)
-                    setGlobalVariable('vg_caso_evaluar', element.caso_evaluar)
-                });
-            };
-            loadGlobalVariables();
-            if (globalVariables.vg_actividad === 'No') {
-                setIsDisabled2(false);
-            } else {
-                setIsDisabled2(true);
-            }
-
-            if (globalVariables.vg_area === 1 || globalVariables.vg_area == 4) {
-                setIsDisabled3(true);
-            } else {
-                setIsDisabled3(false);
-            }
-
-            // if (vg_actividad === 'Si') {
-            res2 = await getActividadSecuencia(token, materia);
-            if (res2.status) {
-                setIsDisabled2(true);
-                setActividades(res2.data);
-            }
-            // else {
-            //     showSwal('Error', 'No hay actividades para esta materia', 'error');
-            // }
-            // } else {
-            res3 = await getMateriaEvaluacion(token, materia);
-            if (res3.status) {
-                const Cb_Evaluacion = [];
-                const evaluaciones = res3.data[0].evaluaciones;
-                let numeroValuaciones = 0;
-                for (let i = 1; i <= evaluaciones; i++) {
-                    Cb_Evaluacion.push({ id: i, descripcion: i });
-                    numeroValuaciones += 1;
+            if(materia !== ""){
+                res = await getMateriaBuscar(token, materia)
+                if (res.data) {
+                    res.data.forEach(element => {
+                        setGlobalVariable('vg_area', element.area)
+                        setGlobalVariable('vg_actividad', element.actividad)
+                        setGlobalVariable('vg_caso_evaluar', element.caso_evaluar)
+                    });
+                };
+                loadGlobalVariables();
+                if (globalVariables.vg_actividad === 'No') {
+                    setIsDisabled2(false);
+                } else {
+                    setIsDisabled2(true);
                 }
-                setIsDisabled3(true)
-                setEvaluacion(Cb_Evaluacion);
+
+                if (globalVariables.vg_area === 1 || globalVariables.vg_area == 4) {
+                    setIsDisabled3(true);
+                } else {
+                    setIsDisabled3(false);
+                }
+
+                // if (vg_actividad === 'Si') {
+                res2 = await getActividadSecuencia(token, materia);
+                if (res2.status) {
+                    setIsDisabled2(true);
+                    setActividades(res2.data);
+                }
+                // else {
+                //     showSwal('Error', 'No hay actividades para esta materia', 'error');
+                // }
+                // } else {
+                res3 = await getMateriaEvaluacion(token, materia);
+                if (res3.status) {
+                    const Cb_Evaluacion = [];
+                    const evaluaciones = res3.data[0].evaluaciones;
+                    let numeroValuaciones = 0;
+                    for (let i = 1; i <= evaluaciones; i++) {
+                        Cb_Evaluacion.push({ id: i, descripcion: i });
+                        numeroValuaciones += 1;
+                    }
+                    setIsDisabled3(true)
+                    setEvaluacion(Cb_Evaluacion);
+                }
+                // else {
+                //     showSwal('Error', 'No hay evaluación para esta materia', 'error');
+                // }
+                // }
             }
-            // else {
-            //     showSwal('Error', 'No hay evaluación para esta materia', 'error');
-            // }
-            // }
+            
         }
         fetchData();
     }, [materia]);
@@ -253,6 +287,7 @@ function C_Calificaciones() {
     };
 
     const handleVerClick = () => {
+        setisLoadingPDF(true);
         const configuracion = {
             Encabezado: {
                 Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -293,10 +328,17 @@ function C_Calificaciones() {
                 Enca1(reporte);
             }
         });
-        const pdfData = reporte.doc.output("datauristring");
-        setPdfData(pdfData);
-        setPdfPreview(true);
-        showModalVista(true);
+        setTimeout(() => {
+            const pdfData = reporte.doc.output("datauristring");
+            setPdfData(pdfData);
+            setPdfPreview(true);
+            showModalVista(true);
+            setisLoadingPDF(false);
+          }, 500);
+        // const pdfData = reporte.doc.output("datauristring");
+        // setPdfData(pdfData);
+        // setPdfPreview(true);
+        // showModalVista(true);
     };
 
     const showModalVista = (show) => {
@@ -363,6 +405,7 @@ function C_Calificaciones() {
                                 Ver={handleVerClick}
                                 isLoading={isLoading2}
                                 isDisabledSave={isDisabledSave}
+                                isLoadingPDF={isLoadingPDF}
                             />
                         </div>
                         <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
@@ -393,6 +436,7 @@ function C_Calificaciones() {
                                     { id: 4, descripcion: "4" },
                                     { id: 5, descripcion: "5" },
                                 ]}
+                                onChange={handlBimestreChange}
                             />
 
                             <BuscarCat
@@ -423,6 +467,7 @@ function C_Calificaciones() {
                                     isDisabled={false}
                                     maxLenght={5}
                                     arreglos={asignatura}
+                                    onChange={handlAsignaturaChange}
                                 />
                             )}
 
@@ -441,6 +486,7 @@ function C_Calificaciones() {
                                     isDisabled={false}
                                     maxLenght={5}
                                     arreglos={actividades}
+                                    onChange={handlActividadesChange}
                                 />
                             )}
 
@@ -459,6 +505,7 @@ function C_Calificaciones() {
                                     isDisabled={false}
                                     maxLenght={5}
                                     arreglos={evaluacion}
+                                    onChange={handlEvalChange}
                                 /> 
                             )}
  

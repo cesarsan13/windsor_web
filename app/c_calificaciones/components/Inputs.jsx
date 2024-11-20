@@ -16,6 +16,7 @@ function Inputs({
   handleBlur,
   register,
   arreglos,
+  onChange,
 }) {
   if (type === 'select') {
     return (
@@ -33,6 +34,7 @@ function Inputs({
               ...(requerido && { required: message }),
             })}
             disabled={isDisabled}
+            onChange={(e) => onChange && onChange(e)}
           >
             <option value="" className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]">
               Seleccione una opción
@@ -67,8 +69,12 @@ function Inputs({
             id={name}
             {...register(name, {
               ...(requerido && { required: message }),
+              onChange: (e) => {
+                onChange && onChange(e);
+              }
             })}
             disabled={isDisabled}
+            // onChange={(e) => onChange && onChange(e)}
           >
             <option value="" className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]">
               Seleccione una opción
