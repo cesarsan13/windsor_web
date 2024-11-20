@@ -94,6 +94,7 @@ function Act_Cobranza() {
             showSwal("INFO", "Debe seleccionar a un alumno", "info")
             return
         }
+        setDocumento({})
         reset({
             producto: "",
             numero_doc: "",
@@ -144,6 +145,7 @@ function Act_Cobranza() {
             if (accion === "Alta") {
                 const nuevaActividad = { currentIDDocumento, ...data };
                 setDocumentos([...documentos, nuevaActividad]);
+                setDocumentosFiltrados([...documentos, nuevaActividad])
             }
 
             if (accion === "Eliminar" || accion === "Editar") {
@@ -160,6 +162,7 @@ function Act_Cobranza() {
                             fp.fecha !== data.fecha
                         );
                         setDocumentos(actDocFiltrados);
+                        setDocumentosFiltrados(actDocFiltrados)
                     } else {
                         const actDocActualizadas = documentos.map((fp) =>
                             fp.numero_doc === data.numero_doc &&
@@ -169,6 +172,7 @@ function Act_Cobranza() {
                                 : fp
                         );
                         setDocumentos(actDocActualizadas);
+                        setDocumentosFiltrados(actDocActualizadas)
                     }
                 }
             }
@@ -215,10 +219,10 @@ function Act_Cobranza() {
     }
     const handleBlur= (evt,datatype)=>{
         if (evt.target.value === "") return;
-        setDocumento((documento)=>({
-            ...documento,
-            [evt.target.name]:formatNumber(evt.target.value, 2)
-        }))
+        // setDocumento((documento)=>({
+        //     ...documento,
+        //     [evt.target.name]:formatNumber(evt.target.value, 2)
+        // }))
         setValue(evt.target.name,formatNumber(evt.target.value, 2))
     }
     const handleInputClick = (evt) => {
