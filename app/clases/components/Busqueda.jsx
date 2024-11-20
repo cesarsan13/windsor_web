@@ -20,7 +20,7 @@ function Busqueda({
       <div className="col-span-1 md:col-span-2 ">
         <input
           id="tb_grupo"
-          className="input input-bordered input-sm md:input-md w-full sm:w-full dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 text-right"
+          className="input input-bordered input-sm md:input-md w-full sm:w-full dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 text-left"
           placeholder="Grupo..."
           onChange={(event) => handleBusquedaChange(event)}
           onKeyDown={(evt) => {
@@ -33,7 +33,7 @@ function Busqueda({
       <div className="col-span-1 md:col-span-2">
         <input
           id="tb_materia"
-          className="input input-bordered input-sm md:input-md join-item w-full max-w-lg dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 text-right"
+          className="input input-bordered input-sm md:input-md join-item w-full max-w-lg dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 text-left"
           placeholder="Materia..."
           onChange={(event) => handleBusquedaChange(event)}
           onKeyDown={(evt) => handleKeyDown(evt)}
