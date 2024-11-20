@@ -1,6 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import { calculaDigitoBvba } from "@/app/utils/globalfn";
+import { calculaDigitoBvba, Elimina_Comas } from "@/app/utils/globalfn";
 import { obtenerFechaYHoraActual } from "@/app/utils/globalfn";
 
 export const validarClaveCajero = async (token, data) => {
@@ -254,6 +254,51 @@ const Enca1 = (doc, body) => {
   }
 };
 
+function numeroALetras(num) {
+  const unidades = [
+    "", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez",
+    "once", "doce", "trece", "catorce", "quince", "dieciséis", "diecisiete", "dieciocho", "diecinueve"
+  ];
+  const decenas = [
+    "", "", "veinte", "treinta", "cuarenta", "cincuenta", "sesenta", "setenta", "ochenta", "noventa"
+  ];
+  const centenas = [
+    "", "ciento", "doscientos", "trescientos", "cuatrocientos", "quinientos", "seiscientos", "setecientos", "ochocientos", "novecientos"
+  ];
+  const miles = [
+    "", "mil"
+  ];
+  if (num === 0) return "cero";
+  let letras = "";
+  let decimales = 0;
+  if (num >= 1000) {
+    const mil = Math.floor(num / 1000);
+    letras += mil === 1 ? "mil " : `${numeroALetras(mil)} mil `;
+    num %= 1000;
+  }
+  if (num >= 100) {
+    const centena = Math.floor(num / 100);
+    letras += centenas[centena] + " ";
+    num %= 100;
+  }
+  if (num >= 20) {
+    const decena = Math.floor(num / 10);
+    letras += decenas[decena] + " ";
+    num %= 10;
+  }
+  if (num > 0) {
+    letras += unidades[num];
+  }
+  if (num % 1 !== 0) {
+    decimales = (num % 1).toFixed(2).split('.')[1];
+
+    if (decimales) {
+      letras += " con " + decimales + " centavos";
+    }
+  }
+  return letras.trim();
+}
+
 export const Imprimir = (configuracion) => {
   const orientacion = "Landscape";
   const newPDF = new ReportePDF(configuracion, orientacion);
@@ -285,7 +330,11 @@ export const Imprimir = (configuracion) => {
     }
   });
   newPDF.nextRow(4);
-  newPDF.ImpPosX(`Importe con Letras`, 15, newPDF.tw_ren);
+  const num = Elimina_Comas(encaBody.tota_general);
+  // console.log('num', num);
+  const totalConLetras = numeroALetras(parseFloat(num));
+  // console.log('letras', totalConLetras)
+  newPDF.ImpPosX(`Importe con Letras: ${totalConLetras}`, 15, newPDF.tw_ren);
   newPDF.ImpPosX(`Total: ${encaBody.tota_general}`, 240, newPDF.tw_ren);
   newPDF.nextRow(4);
   newPDF.ImpPosX(
