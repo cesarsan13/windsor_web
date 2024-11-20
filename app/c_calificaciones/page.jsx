@@ -50,6 +50,8 @@ function C_Calificaciones() {
     const [evaluacionSelected, setEvaluacionSelected] = useState([]);
     const [asignaturaSelected, setAsignaturaSelected] = useState([]);
 
+    const [isLoadingPDF, setisLoadingPDF] = useState(false);
+
     const [pdfPreview, setPdfPreview] = useState(false);
     const [pdfData, setPdfData] = useState("");
     const {
@@ -285,6 +287,7 @@ function C_Calificaciones() {
     };
 
     const handleVerClick = () => {
+        setisLoadingPDF(true);
         const configuracion = {
             Encabezado: {
                 Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -325,10 +328,17 @@ function C_Calificaciones() {
                 Enca1(reporte);
             }
         });
-        const pdfData = reporte.doc.output("datauristring");
-        setPdfData(pdfData);
-        setPdfPreview(true);
-        showModalVista(true);
+        setTimeout(() => {
+            const pdfData = reporte.doc.output("datauristring");
+            setPdfData(pdfData);
+            setPdfPreview(true);
+            showModalVista(true);
+            setisLoadingPDF(false);
+          }, 500);
+        // const pdfData = reporte.doc.output("datauristring");
+        // setPdfData(pdfData);
+        // setPdfPreview(true);
+        // showModalVista(true);
     };
 
     const showModalVista = (show) => {
@@ -395,6 +405,7 @@ function C_Calificaciones() {
                                 Ver={handleVerClick}
                                 isLoading={isLoading2}
                                 isDisabledSave={isDisabledSave}
+                                isLoadingPDF={isLoadingPDF}
                             />
                         </div>
                         <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
