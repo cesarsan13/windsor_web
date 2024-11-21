@@ -19,6 +19,8 @@ const iconos = {
   lista: require("@/public/Iconos/lista.png"),
   tarjetas: require("@/public/Iconos/tarjetas.png"),
   procesa: require("@/public/Iconos/Btn_Procesa_Negro.png"),
+  ojo_abierto: require("@/public/Iconos/eye_open.png"),
+  ojo_cerrado: require("@/public/Iconos/eye_close.png"),
 
   //iconos blancos
   alta_w: require("@/public/Iconos/Btn_Alta_32x32_w.png"),
