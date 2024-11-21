@@ -319,7 +319,8 @@ function Alumnos() {
       referencia: alumno.referencia,
       horario_1_nombre: alumno.horario_1_nombre,
     });
-  }, [alumno, reset]);
+  }, [alumno, reset]); 
+  
 
   const formatNumber = (num) => {
     if (!num) return "";
