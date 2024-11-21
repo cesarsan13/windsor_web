@@ -50,6 +50,7 @@ function ConcentradoCalificaciones() {
     const [alumnosCalificaciones, setalumnosCalificaciones] = useState([]);
     const [isLoadingFind, setisLoadingFind] = useState(false);
     const [isLoadingPDF, setisLoadingPDF] = useState(false);
+    const [activeTab, setActiveTab] = useState(1);
     
 
   let dataCaliAlumnosBody = [];
@@ -333,28 +334,29 @@ function ConcentradoCalificaciones() {
     router.push("/");
   };
 
-  if (status === "loading") {
-    return (
-      <div className="container skeleton w-full max-w-screen-xl shadow-xl rounded-xl"></div>
-    );
-  }
-  return (
-    <>
-      <Modal_Detalles_Actividades
-        alumnoData={alumnoData}
-        materiasReg={materiasReg}
-        grupo={grupo.numero}
-        bimestre={bimestre}
-      />
-      <VistaPrevia
-        pdfPreview={pdfPreview}
-        pdfData={pdfData}
-        PDF={ImprimePDF}
-        Excel={ImprimeExcel}
-        id="modalVConCal"
-        titulo="Vista Previa Concentrado Calificaciones"
-        CerrarView={cerrarModalVista}
-      />
+    if (status === "loading") {
+        return (
+            <div className="container skeleton w-full max-w-screen-xl shadow-xl rounded-xl"></div>
+        );
+    }
+    return(
+        <>
+           <Modal_Detalles_Actividades
+                alumnoData = {alumnoData}
+                materiasReg = {materiasReg}
+                grupo = {grupo.numero}
+                bimestre = {bimestre}
+                accion ={accion}
+            />
+            <VistaPrevia
+                pdfPreview={pdfPreview}
+                pdfData={pdfData}
+                PDF={ImprimePDF}
+                Excel={ImprimeExcel}
+                id="modalVConCal"
+                titulo="Vista Previa Concentrado Calificaciones"
+                CerrarView={cerrarModalVista}
+            />
 
       <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
