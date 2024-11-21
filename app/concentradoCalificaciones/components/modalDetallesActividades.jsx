@@ -38,6 +38,25 @@ function Modal_Detalles_Actividades({
 
     let M = 0;
 
+    const Buscar = async (materiaid) => {
+        setMateria(materiaid);
+        console.log(materia, materiaid);
+        setisLoading(true);
+        setisLoadingFind(true);
+        M = Number(materiaid);
+        try{
+            const { token } = session.user;
+            const res = await getActividadesXHorarioXAlumnoXMateriaXBimestre(token, grupo, alumnoData.numero, M, bimestre);
+            const acres = await getActividadesDetalles(token, M);
+            setActividades(res);
+            setMatAct(acres);
+        } catch (error) { }
+        setisLoading(false);
+        setisLoadingFind(false);
+    };
+
+    
+
     const calcularCalificacionesMat = (secuencia) => {
         let sumatoria = 0;
         let evaluaciones = 0;
@@ -73,22 +92,7 @@ function Modal_Detalles_Actividades({
         }
     }
 
-    const Buscar = async (materiaid) => {
-        setMateria(materiaid);
-        console.log(materia, materiaid);
-        setisLoading(true);
-        setisLoadingFind(true);
-        M = Number(materiaid);
-        try{
-            const { token } = session.user;
-            const res = await getActividadesXHorarioXAlumnoXMateriaXBimestre(token, grupo, alumnoData.numero, M, bimestre);
-            const acres = await getActividadesDetalles(token, M);
-            setActividades(res);
-            setMatAct(acres);
-        } catch (error) { }
-        setisLoading(false);
-        setisLoadingFind(false);
-    };
+
 
     const eliminarArreglosDuplicados = (arr) => {
         const arreglosUnicos = [];
@@ -288,57 +292,53 @@ function Modal_Detalles_Actividades({
                             </button>
                             </div>
                         </div>
-                        <fieldset>
-                        <div>
-                            {accion === `Ver` &&
-                                materiasReg.map((mat) => (
-                                  <div className="collapse collapse-plus bg-base-200">
-                                    <input
-                                      type="radio"
-                                      name="materia"
-                                      onClick={() => {
-                                        Buscar(mat.numero)}}
-                                    />
-                                    <div class="collapse-title text-xl font-medium  text-neutral-600 dark:text-white"> {mat.descripcion} </div>
-                                      <div className="collapse-content flex">
-                                        <div className="md:w-2/6 sm:w-5/6">
-                                        {matAct.length > 0 &&
-                                        matAct.map((item, index) => {
-                                            dataEncabezadoDetalles.push({
-                                                descripcion: item.descripcion,
-                                                index: index
-                                        });
-                                        return(
-                                            <h4 className="font-semibold text-black dark:text-white">
-                                                {item.descripcion}
-                                            </h4>
-                                        )
-                                        })}
-                                        <h4 className="font-bold text-black dark:text-white">PROMEDIO</h4>
-                                        </div>
-                                        <div className="md:w-1/6 sm:w-1/6">
-                                        {matAct.length > 0 &&
-                                        matAct.map((activ) => {
-                                            dataCaliAlumnosBodyDetalles.push(calcularCalificacionesMat(activ.secuencia))
-                                            return(
-                                                <h4 className="text-black dark:text-white"> {calcularCalificacionesMat(activ.secuencia)}</h4>
-                                            )
-                                        })}
-                                        <h4 className="text-black dark:text-white">
+                            <fieldset>
+                            <div>
+                                {accion === `Ver` &&
+                                    materiasReg.map((mat) => (
+                                    <div key={mat.numero} className="collapse collapse-plus bg-base-200">
+                                        <input type="radio" name="materia"   onClick={() => {Buscar(mat.numero)}}/>
+                                        <div class="collapse-title text-xl font-medium  text-neutral-600 dark:text-white"> {mat.descripcion} </div>
+                                        <div className="collapse-content flex">
+                                            <div className="md:w-2/6 sm:w-5/6">
+                                            
                                             {matAct.length > 0 &&
-                                                (() => {
-                                                    const promedio = (matAct.reduce((acc, activ) => acc + Number(calcularCalificacionesMat(activ.secuencia) || 0), 0) / matAct.length).toFixed(1);
-                                                    dataCaliAlumnosBodyDetalles.push(promedio); 
-                                                    return promedio;
-                                                })()
-                                            }
-                                        </h4>
+                                            matAct.map((item, index) => {
+                                                dataEncabezadoDetalles.push({
+                                                    descripcion: item.descripcion,
+                                                    index: index
+                                            });
+                                            return(
+                                                <h4 className="font-semibold text-black dark:text-white">
+                                                    {item.descripcion}
+                                                </h4>
+                                            )
+                                            })}
+                                            <h4 className="font-bold text-black dark:text-white">PROMEDIO</h4>
+                                            </div>
+                                            <div className="md:w-1/6 sm:w-1/6">
+                                            {matAct.length > 0 &&
+                                            matAct.map((activ) => {
+                                                dataCaliAlumnosBodyDetalles.push(calcularCalificacionesMat(activ.secuencia))
+                                                return(
+                                                    <h4 className="text-black dark:text-white"> {calcularCalificacionesMat(activ.secuencia)}</h4>
+                                                )
+                                            })}
+                                            <h4 className="text-black dark:text-white">
+                                                {matAct.length > 0 &&
+                                                    (() => {
+                                                        const promedio = (matAct.reduce((acc, activ) => acc + Number(calcularCalificacionesMat(activ.secuencia) || 0), 0) / matAct.length).toFixed(1);
+                                                        dataCaliAlumnosBodyDetalles.push(promedio); 
+                                                        return promedio;
+                                                    })()
+                                                }
+                                            </h4>
+                                            </div>
                                         </div>
-                                      </div>
-                                  </div>
-                                ))}
-                            </div>
-                        </fieldset>
+                                    </div>
+                                    ))}
+                                </div>
+                            </fieldset>
                     </form>
                 </div>
             </dialog>
