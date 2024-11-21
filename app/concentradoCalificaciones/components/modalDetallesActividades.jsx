@@ -309,7 +309,7 @@ function Modal_Detalles_Actividades({
                                                     index: index
                                             });
                                             return(
-                                                <h4 className="font-semibold text-black dark:text-white">
+                                                <h4 key={matAct.index} className="font-semibold text-black dark:text-white">
                                                     {item.descripcion}
                                                 </h4>
                                             )
@@ -321,7 +321,7 @@ function Modal_Detalles_Actividades({
                                             matAct.map((activ) => {
                                                 dataCaliAlumnosBodyDetalles.push(calcularCalificacionesMat(activ.secuencia))
                                                 return(
-                                                    <h4 className="text-black dark:text-white"> {calcularCalificacionesMat(activ.secuencia)}</h4>
+                                                    <h4 key={activ.secuencia} className="text-black dark:text-white"> {calcularCalificacionesMat(activ.secuencia)}</h4>
                                                 )
                                             })}
                                             <h4 className="text-black dark:text-white">
