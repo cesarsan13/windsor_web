@@ -45,6 +45,7 @@ function ConcentradoCalificaciones() {
     const [alumnosCalificaciones, setalumnosCalificaciones] = useState([]);
     const [isLoadingFind, setisLoadingFind] = useState(false);
     const [isLoadingPDF, setisLoadingPDF] = useState(false);
+    const [activeTab, setActiveTab] = useState(1);
     
 
     let dataCaliAlumnosBody = [];
@@ -341,6 +342,7 @@ function ConcentradoCalificaciones() {
                 materiasReg = {materiasReg}
                 grupo = {grupo.numero}
                 bimestre = {bimestre}
+                accion ={accion}
             />
             <VistaPrevia
                 pdfPreview={pdfPreview}

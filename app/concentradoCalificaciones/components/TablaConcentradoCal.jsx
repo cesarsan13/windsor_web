@@ -184,11 +184,11 @@ function TablaConcentradoCal({
                                     <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                                         <div
                                             className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
-                                            data-tip={`Editar`}
-                                            onClick={(evt) => tableAction(evt, alumno, `Editar`)}
+                                            data-tip={`Ver`}
+                                            onClick={(evt) => tableAction(evt, alumno, `Ver`)}
                                         >
-                                            <Image src={iconos.editar} alt="Editar" className="block dark:hidden" />
-                                            <Image src={iconos.editar_w} alt="Editar" className="hidden dark:block" />
+                                            <Image src={iconos.ver} alt="Ver" className="block dark:hidden" />
+                                            <Image src={iconos.ver_w} alt="Ver" className="hidden dark:block" />
                                         </div>
                                     </th>
                                 </tr>
