@@ -14,14 +14,14 @@ export default function Inputs({
     type === "time" ||
     type === "password" ||
     type === "datetime-local" ? (
-    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+    <div className="w-full px-3 mb-6 md:mb-0">
       <label htmlFor={name} className="text-slate-500 mb-2 block">
         {titulo}
       </label>
       <input
         type={type}
         name={name}
-        className="input input-bordered w-full "
+        className="p-3 rounded block text-slate-400 w-full"
         placeholder={titulo}
         {...register(name, {
           ...(requerido && { required: message }),

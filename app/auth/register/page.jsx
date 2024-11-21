@@ -5,7 +5,9 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { showSwal } from "@/app/utils/alerts";
 import Inputs from "@/app/auth/register/component/Inputs";
-import {guardaRegistro} from "@/app/utils/api/register/register";
+import { guardaRegistro } from "@/app/utils/api/register/register";
+import Image from "next/image";
+import iconos from "@/app/utils/iconos";
 
 function Register() {
   const router = useRouter();
@@ -35,11 +37,23 @@ function Register() {
 
 
   return (
-    <div className="w-full flex justify-center items-center bg-white">
-      { }
+    <div className="h-screen w-full flex justify-center items-center bg-white overflow-hidden">
+      <Image
+        src={iconos.fondoLogin}
+        alt="Background"
+        layout="fill"
+        objectPosition="center"
+        className="pointer-events-non hidden md:block bg-cover bg-center h-full w-full" // Agregado pointer-events-none
+      />
+      <Image
+        src={iconos.fondoLoginMovil}
+        alt="Background"
+        layout="fill"
+        objectPosition="center"
+        className="absolute  pointer-events-none block md:hidden bg-cover bg-center h-full w-full" // Agregado para moviles
+      />
       <form
-        action=""
-        className="w-5/6 md:w-1/4 lg:w-2/4  rounded-xl border shadow-xl p-6 bg-slate-200"
+        className="relative z-10 w-5/6 md:w-1/4 rounded-xl border shadow-xl p-6 bg-slate-200 bg-opacity-80"
         onSubmit={onSubmit}
       >
         {error && (
@@ -47,55 +61,50 @@ function Register() {
             {error}
           </p>
         )}
-        <h1 className="text-slate-900 text-2xl block mb-6 mt-4 text-center ">
+
+        <h1 className="text-slate-900 text-2xl block mb-6 mt-4 text-center">
           Registro
         </h1>
-        <div className="flex flex-wrap -mx-3 mb-6">
-          <Inputs
-            titulo={"Nombre Completo"}
-            name={"nombre"}
-            id={"nombre"}
-            message={"Nombre Completo requerido"}
-            errors={errors}
-            requerido={true}
-            register={register}
-            type={"text"}
-          />
-
-          <Inputs
-            titulo={"Correo"}
-            name={"email"}
-            id={"email"}
-            message={"Correo requerido"}
-            errors={errors}
-            requerido={true}
-            register={register}
-            type={"email"}
-          />
-
-          <Inputs
-            titulo={"Usuario"}
-            name={"name"}
-            id={"name"}
-            message={"Usuario requerido"}
-            errors={errors}
-            requerido={true}
-            register={register}
-            type={"text"}
-          />
-
-        </div>
-        <div className="flex flex-row justify-between gap-6">
-          <button className="w-full max-w-md bg-blue-700 text-white p-3 rounded-lg-3 mt-6 hover:bg-blue-900">
-            Crear cuenta
-          </button>
-          <button
-            className="w-full max-w-md bg-red-700 text-white p-3 rounded-lg-3 mt-6 hover:bg-red-900 "
-            onClick={() => router.push("./login")}
-          >
-            Regresar
-          </button>
-        </div>
+        <Inputs
+          titulo={"Nombre Completo"}
+          name={"nombre"}
+          id={"nombre"}
+          message={"Nombre Completo requerido"}
+          errors={errors}
+          requerido={true}
+          register={register}
+          type={"text"}
+        />
+        <Inputs
+          titulo={"Correo"}
+          name={"email"}
+          id={"email"}
+          message={"Correo requerido"}
+          errors={errors}
+          requerido={true}
+          register={register}
+          type={"email"}
+        />
+        <Inputs
+          titulo={"Usuario"}
+          name={"name"}
+          id={"name"}
+          message={"Usuario requerido"}
+          errors={errors}
+          requerido={true}
+          register={register}
+          type={"text"}
+        />
+        <button className="w-full max-w-md bg-blue-700 text-white p-3 rounded-lg mt-6 hover:bg-blue-900">
+          Crear cuenta
+        </button>
+        <button
+          type="button"
+          className="w-full max-w-md bg-red-700 text-white p-3 rounded-lg mt-6 hover:bg-red-900"
+          onClick={() => router.push("./login")}
+        >
+          Regresar
+        </button>
       </form>
     </div>
   );
