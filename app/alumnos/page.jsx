@@ -69,6 +69,7 @@ function Alumnos() {
   }, [alumnos]);
   //  Memorizar la funcion
   const Buscar = useCallback(() => {
+    // console.log("alumnosRef.current => ",alumnosRef.current);
     const { tb_id, tb_desc, tb_grado } = busqueda;
     if (tb_id === "" && tb_desc === "" && tb_grado === "") {
       setAlumnosFiltrados(alumnosRef.current);
@@ -92,6 +93,7 @@ function Alumnos() {
         : true;
       return coincideId && coincideDescripcion && coincideGrado;
     });
+    // console.log("Info filtrada: ",infoFiltrada);
     setAlumnosFiltrados(infoFiltrada);
   }, [busqueda]);
 
@@ -109,6 +111,7 @@ function Alumnos() {
       setisLoading(true);
       const { token } = session.user;
       const data = await getAlumnos(token, bajas);
+      // console.log("Data => ",data);
       setAlumnos(data);
       setAlumnosFiltrados(data);
       setisLoading(false);
@@ -557,7 +560,7 @@ function Alumnos() {
     formData.append("rfc_factura", data.rfc_factura || "");
     formData.append("estatus", data.estatus || "");
     formData.append("escuela", data.escuela || "");
-    formData.append("grupo", grado.numero || "");
+    formData.append("grupo", grado.numero || alumno.grupo);
     if (condicion === true) {
       const blob = dataURLtoBlob(capturedImage);
       formData.append(
@@ -567,6 +570,7 @@ function Alumnos() {
       );
     }
     data.horario_1_nombre = grado.horario;
+    // console.log("FormData => ",formData);
     res = await guardarAlumnos(
       session.user.token,
       formData,
@@ -616,7 +620,7 @@ function Alumnos() {
 
       // Buscar();
     } else {
-      console.log(res);
+      // console.log(res);
       if (Object.keys(res.errors).length > 0) {
         const primerError = Object.keys(res.errors)[0];
         document.getElementById(primerError).focus();
