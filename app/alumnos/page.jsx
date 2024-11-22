@@ -19,6 +19,7 @@ import {
   ImprimirExcel,
   getTab,
 } from "@/app/utils/api/alumnos/alumnos";
+import { getHorarios } from "@/app/utils/api/horarios/horarios";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import jsPDF from "jspdf";
@@ -37,6 +38,7 @@ function Alumnos() {
   const [alumnos, setAlumnos] = useState([]);
   const [alumno, setAlumno] = useState({});
   const [alumnosFiltrados, setAlumnosFiltrados] = useState(null);
+  const [horarios, setHorarios] = useState(null);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
@@ -111,7 +113,10 @@ function Alumnos() {
       setisLoading(true);
       const { token } = session.user;
       const data = await getAlumnos(token, bajas);
+      const horarios = await getHorarios(token, bajas);
       // console.log("Data => ",data);
+      // console.log("Horarios => ",horarios);
+      setHorarios(horarios);
       setAlumnos(data);
       setAlumnosFiltrados(data);
       setisLoading(false);
@@ -320,7 +325,7 @@ function Alumnos() {
       horario_1_nombre: alumno.horario_1_nombre,
     });
   }, [alumno, reset]); 
-  
+
 
   const formatNumber = (num) => {
     if (!num) return "";
@@ -447,6 +452,7 @@ function Alumnos() {
     document.getElementById("a_paterno").focus();
   };
   const onSubmitModal = handleSubmit(async (data) => {
+    // console.log("Data de onSubmitModal => ",data);
     event.preventDefault();
     setisLoadingButton(true);
     accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
@@ -505,7 +511,7 @@ function Alumnos() {
     formData.append("cancha_2", data.cancha_2 || "");
     formData.append("cancha_3", data.cancha_3 || "");
     formData.append("cancha_4", data.cancha_4 || "");
-    formData.append("horario_1", grado.numero || "");
+    formData.append("horario_1", grado.numero || alumno.grupo);
     formData.append("horario_2", grado2.numero || "");
     formData.append("horario_3", data.horario_3 || "");
     formData.append("horario_4", data.horario_4 || "");
@@ -570,8 +576,24 @@ function Alumnos() {
         `${data.nombre}_${data.a_paterno}_${data.a_materno}.jpg`
       );
     }
-    data.horario_1_nombre = grado.horario;
+    // console.log(`grado.horario = ${grado.horario}/data.horario = ${data.horario}`);
+    // console.log("Horarios => ",horarios);
+    let horario_1_nombre = horarios.find((item) =>{
+      // console.log(`${item.numero} == ${alumno.grupo}`)
+      return item.numero == alumno.grupo
+      }
+    );
+    if(typeof horario_1_nombre === "undefined"){
+      horario_1_nombre = {
+        numero:0,
+        horario:""
+      }
+    }
+    // console.log("horario_1_nombre => ",horario_1_nombre.horario);
+    data.horario_1_nombre = grado.horario || horario_1_nombre.horario;
+    // console.log("data.horario_1_nombre => ",data.horario_1_nombre)
     // console.log("FormData => ",formData);
+    // console.log("Alumnos=>",alumnos);
     res = await guardarAlumnos(
       session.user.token,
       formData,
