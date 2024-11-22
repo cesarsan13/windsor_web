@@ -624,9 +624,12 @@ function Alumnos() {
               setAlumnos(aFiltrados);
               setAlumnosFiltrados(aFiltrados);
             } else {
+              // console.log("Alumnos viejos => ",alumnos);
+              // console.log("Data viejos => ",data);
               const aLactualizadas = alumnos.map((p) =>
-                p.numero === currentID ? { ...p, ...data } : p
+                p.numero === currentID ? { ...p, ...res.data } : p
               );
+              // console.log("Alumnos actualizados => ",aLactualizadas);
               setAlumnos(aLactualizadas);
               setAlumnosFiltrados(aLactualizadas);
             }
