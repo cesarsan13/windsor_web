@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Inputs from "@/app/concentradoCalificaciones/components/InputMateria";
@@ -26,7 +27,7 @@ function Modal_Detalles_Actividades({
     const [isLoading, setisLoading] = useState(false);
     const { data: session, status } = useSession();
     const [Actividades, setActividades] = useState({});
-    const [matAct, setMatAct] = useState({});
+    const [matAct, setMatAct] = useState([]);
     const [pdfData, setPdfData] = useState("");
     const [materia, setMateria] = useState("");
     const [pdfPreview, setPdfPreview] = useState(false);
@@ -35,10 +36,10 @@ function Modal_Detalles_Actividades({
     const [selected, setSelected] = useState(1);
     const [dataEncabezadoDetalles, setdataEncabezadoDetalles] = useState([]);
     const [dataCaliAlumnosBodyDetalles, setdataCaliAlumnosBodyDetalles] = useState([]);
-
+    const [resultadoImpresion, setresultadoImpresion] = useState({});
     let M = 0;
 
-    const Buscar = async (materiaid) => {
+    const Buscar2 = async (materiaid) => {
         setMateria(materiaid);
         console.log(materia, materiaid);
         setisLoading(true);
@@ -55,44 +56,79 @@ function Modal_Detalles_Actividades({
         setisLoadingFind(false);
     };
 
+    const BuscarCalificaciones = async () => {
+        setisLoadingFind(true);
+        setisLoading(true);
+        console.log(grupo, alumnoData.numero, bimestre);
+        const { token } = session.user;
     
+        const resultData = {};
+        
+        if (accion === `Ver`) {
+            await Promise.all(
+                materiasReg.map(async (mat) => {
+                    let index = 0;
+                    let M = Number(mat.numero);
+                    const Actividades = await getActividadesXHorarioXAlumnoXMateriaXBimestre(token, grupo, alumnoData.numero, M, bimestre);
+                    const matAct = await getActividadesDetalles(token, M);
+    
+                    let dataEncabezadoDetalles = matAct.map(item => ({
+                        descripcion: item.descripcion,
+                        index: index++,
+                    }));
+    
+                    let dataCaliAlumnosBodyDetalles = await Promise.all(
+                        matAct.map(async (item) => {
+                            const cal = await calcularCalificacionesMat(item.secuencia, Actividades, matAct);
+                            return cal;
+                        })
+                    );
+                    console.log("info",dataCaliAlumnosBodyDetalles);
+    
+                    const promedio = dataCaliAlumnosBodyDetalles.reduce((acc, num) => Number(acc) + Number(num), 0) / dataCaliAlumnosBodyDetalles.length;
+                    dataCaliAlumnosBodyDetalles.push((promedio).toFixed(1));
+    
+                    resultData[mat.descripcion] = [dataEncabezadoDetalles, dataCaliAlumnosBodyDetalles];
+                })
+            );
+        }
+        setresultadoImpresion(resultData);
+        console.log("estomanda", resultadoImpresion, resultData);
+        setisLoading(false);
+        setisLoadingFind(false);
+        //return resultData;
+    }; 
 
-    const calcularCalificacionesMat = (secuencia) => {
-        let sumatoria = 0;
-        let evaluaciones = 0;
-        const actividades = matAct.filter(act => act.secuencia === secuencia);
-        if (actividades.length === 0) {
-            return 0;
-        } else {
-            if (Actividades.length === 1) {
-                
-                actividades.forEach(actividad => {
-                    const filtroActividad = Actividades.filter(cal => 
-                        cal.actividad === 0 && 
+    const calcularCalificacionesMat = async (secuencia, Actividades, matAct) => {
+            let sumatoria = 0;
+            let evaluaciones = 0;
+    
+            const actividades = matAct.filter(act => act.secuencia === secuencia);
+            console.log("act", actividades);
+            if (actividades.length === 0){
+                return 0.0;
+            } else {
+            if (Actividades.length > 1) {
+                for (const actividad of actividades) {
+                    const filtroActividad = Actividades.filter(cal =>
+                        cal.actividad === secuencia &&
                         cal.unidad <= actividad[`EB${bimestre}`]
                     );
-                    sumatoria = aDec(Number(filtroActividad[0]?.calificacion || 0));                    
-                    evaluaciones = 1;
+                    if (filtroActividad.length > 0) {
+                        const califSum = filtroActividad.reduce((acc, cal) => acc + Number(cal.calificacion), 0);
+                        sumatoria += RegresaCalificacionRedondeo(califSum / filtroActividad.length, "N");
+                        evaluaciones++;
+                    }
+                }
+                return evaluaciones === 0 ? 0 : (sumatoria / evaluaciones).toFixed(1);
                 
-                });
-
-            } else {
-            actividades.forEach(actividad => {
-                const filtroActividad = Actividades.filter(cal => 
-                    cal.actividad === secuencia && 
-                    cal.unidad <= actividad[`EB${bimestre}`]
-                );
-                const califSum = filtroActividad.reduce((acc, cal) => acc + Number(cal.calificacion), 0);
-                sumatoria += filtroActividad.length > 0 ? RegresaCalificacionRedondeo(califSum / filtroActividad.length, "N") : 0;
-                evaluaciones++; 
-            });
-            }
-            const calMat = (sumatoria / evaluaciones).toFixed(1);
-            return evaluaciones === 0 ? 0 : calMat;
+            }else{
+                let cal = RegresaCalificacionRedondeo(Number(Actividades[0].calificacion), "N");
+                 return(cal.toFixed(1));
+            }   
         }
-    }
-
-
+    };
+    
 
     const eliminarArreglosDuplicados = (arr) => {
         const arreglosUnicos = [];
@@ -109,10 +145,12 @@ function Modal_Detalles_Actividades({
 
     const handleVerClick = () => {
         setisLoadingPDF(true);
+        
         if(materia === '0' && Actividades.length == undefined && matAct.length == undefined){
             showSwal("Error", "Debes de realizar la Busqueda", "error", "DetallesActividades");
         } else {
-        const MateriaNombre = materiasReg.filter((c) => c.numero === Number(materia));
+        //const MateriaNombre = materiasReg.filter((c) => c.numero === Number(materia));
+        //Materia:${MateriaNombre[0].descripcion}
         console.log(dataEncabezadoDetalles, dataCaliAlumnosBodyDetalles);
         cerrarModalVista();
         if ( grupo.numero === 0 && bimestre === 0 )
@@ -132,7 +170,7 @@ function Modal_Detalles_Actividades({
                 Nombre_Aplicacion: "Sistema de Control Escolar",
                 Nombre_Reporte: "Reporte de Concentrado de Calificaciones",
                 Nombre_Usuario: `Usuario: ${session.user.name}`,
-                Datos_Grupo:  `Alumno: ${alumnoData.nombre}   Bimestre: ${bimestre}   Materia:${MateriaNombre[0].descripcion}`,
+                Datos_Grupo:  `Alumno: ${alumnoData.nombre}   Bimestre: ${bimestre} `,
               },
               body: dataCaliAlumnosBodyDetalles
             };
@@ -181,6 +219,7 @@ function Modal_Detalles_Actividades({
         }
     };
     const ImprimePDF = async () => {
+        
         let fecha_hoy = new Date();
         console.log(dataEncabezadoDetalles, dataCaliAlumnosBodyDetalles);
         //const resultadoEnc = dataEncabezadoDetalles.filter((item, pos, arr) => 
@@ -251,7 +290,44 @@ function Modal_Detalles_Actividades({
       : document.getElementById("modalVDetCal").close();
     };
 
-    console.log(materiasReg);
+
+    const calcularCalificacionesMat1 = (secuencia) => {
+        let sumatoria = 0;
+        let evaluaciones = 0;
+        const actividades = matAct.filter(act => act.secuencia === secuencia);
+        if (actividades.length === 0) {
+            return 0;
+        } else {
+            if (Actividades.length === 1) {
+                
+                actividades.forEach(actividad => {
+                    const filtroActividad = Actividades.filter(cal => 
+                        cal.actividad === 0 && 
+                        cal.unidad <= actividad[`EB${bimestre}`]
+                    );
+                    sumatoria = aDec(Number(filtroActividad[0]?.calificacion || 0));                    
+                    evaluaciones = 1;
+                
+                });
+                //const calMat = (sumatoria / evaluaciones).toFixed(1);
+                //return evaluaciones === 0 ? 0 : calMat;
+
+            } else {
+            actividades.forEach(actividad => {
+                const filtroActividad = Actividades.filter(cal => 
+                    cal.actividad === secuencia && 
+                    cal.unidad <= actividad[`EB${bimestre}`]
+                );
+                const califSum = filtroActividad.reduce((acc, cal) => acc + Number(cal.calificacion), 0);
+                sumatoria += filtroActividad.length > 0 ? RegresaCalificacionRedondeo(califSum / filtroActividad.length, "N") : 0;
+                evaluaciones++; 
+            });
+            }
+            const calMat = (sumatoria / evaluaciones).toFixed(1);
+            return evaluaciones === 0 ? 0 : calMat;
+        }
+    }
+    console.log(resultadoImpresion);
 
     return(
         <>
@@ -273,8 +349,10 @@ function Modal_Detalles_Actividades({
                             
                             <div className=" tooltip flex space-x-2 items-center">
                             <Acciones
+                                Buscar={BuscarCalificaciones}
                                 Ver={handleVerClick}
                                 isLoadingPDF={isLoadingPDF}
+                                isLoadingFind={isLoadingFind}
                             />
                             <button
                               className="btn btn-sm btn-circle btn-ghost bg-base-200 dark:bg-[#1d232a] text-neutral-600 dark:text-white"
@@ -293,50 +371,34 @@ function Modal_Detalles_Actividades({
                             </div>
                         </div>
                             <fieldset>
-                            <div>
-                                {accion === `Ver` &&
-                                    materiasReg.map((mat) => (
-                                    <div key={mat.numero} className="collapse collapse-plus bg-base-200">
-                                        <input type="radio" name="materia"   onClick={() => {Buscar(mat.numero)}}/>
-                                        <div class="collapse-title text-xl font-medium  text-neutral-600 dark:text-white"> {mat.descripcion} </div>
-                                        <div className="collapse-content flex">
-                                            <div className="md:w-2/6 sm:w-5/6">
-                                            
-                                            {matAct.length > 0 &&
-                                            matAct.map((item, index) => {
-                                                dataEncabezadoDetalles.push({
-                                                    descripcion: item.descripcion,
-                                                    index: index
-                                            });
-                                            return(
-                                                <h4 key={matAct.index} className="font-semibold text-black dark:text-white">
-                                                    {item.descripcion}
-                                                </h4>
-                                            )
-                                            })}
-                                            <h4 className="font-bold text-black dark:text-white">PROMEDIO</h4>
-                                            </div>
-                                            <div className="md:w-1/6 sm:w-1/6">
-                                            {matAct.length > 0 &&
-                                            matAct.map((activ) => {
-                                                dataCaliAlumnosBodyDetalles.push(calcularCalificacionesMat(activ.secuencia))
-                                                return(
-                                                    <h4 key={activ.secuencia} className="text-black dark:text-white"> {calcularCalificacionesMat(activ.secuencia)}</h4>
-                                                )
-                                            })}
-                                            <h4 className="text-black dark:text-white">
-                                                {matAct.length > 0 &&
-                                                    (() => {
-                                                        const promedio = (matAct.reduce((acc, activ) => acc + Number(calcularCalificacionesMat(activ.secuencia) || 0), 0) / matAct.length).toFixed(1);
-                                                        dataCaliAlumnosBodyDetalles.push(promedio); 
-                                                        return promedio;
-                                                    })()
-                                                }
-                                            </h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    ))}
+                                <div> 
+                                { accion === `Ver` && (Array.isArray(resultadoImpresion)) && resultadoImpresion.length !== 0 ?(
+                                    resultadoImpresion.map((grupo, index) => {
+                                        //const [materias, promedios] = grupo;
+                                        return(
+                                            <div key={`mat_${index}`} className="collapse collapse-plus bg-base-200">
+                                                <input type="radio" name="materia"/>
+                                                <div className="collapse-title text-xl font-medium  text-neutral-600 dark:text-white"> {index} </div>
+                                                <div className="collapse-content flex">
+                                                <div className="md:w-2/6 sm:w-5/6">
+                                                    {grupo[0].map((mat) => {
+                                                        
+                                                            <h4 key={`desc_${mat}`} className="font-semibold text-black dark:text-white">{mat}</h4> 
+                                                    })}
+                                                <h4 className="font-bold text-black dark:text-white">PROMEDIO</h4>
+                                                </div>
+                                                <div className="md:w-1/6 sm:w-1/6">
+                                                {grupo[1].map((mat) => { 
+                                                    <h4 key={`cal_`} className="text-black dark:text-white"> {mat}</h4>
+                                                })}
+                                                </div>
+                                            </div> 
+                                          </div>
+                                        )
+                                    })
+                                ): (
+                                    <div/>
+                                )}
                                 </div>
                             </fieldset>
                     </form>
