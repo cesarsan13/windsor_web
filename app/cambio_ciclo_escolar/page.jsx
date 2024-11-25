@@ -92,14 +92,14 @@ function Cambio_Ciclo_Escolar() {
                     </div>
                 </div>
                 <div className="flex flex-col items-center h-full">
-                    <div className="max-w-4xl w-full">
-                        <form onSubmit={onSubmit}>
-                            <div className="w-full max-w-4xl">
+                    <div className="w-full max-w-4xl">
+                    <form onSubmit={onSubmit}>
+                            <div className="flex flex-col h-[calc(100%)] md:w-1/3 md:-ml-20">
                                 <Inputs
                                     dataType={"int"}
                                     name={"nuevo_ciclo"}
-                                    tamañolabel={"md:w-1/3 md:-ml-20"}
-                                    className={"text-right"}
+                                    tamañolabel={""}
+                                    className={"text-right w-1/3"}
                                     Titulo={"Nuevo Ciclo: "}
                                     type={"text"}
                                     requerido={true}
