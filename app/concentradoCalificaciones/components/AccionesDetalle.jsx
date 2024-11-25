@@ -4,8 +4,16 @@ import Button from "@/app/components/button";
 import { TbLoader3 } from "react-icons/tb";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
-function Acciones({ Ver, isLoadingPDF }) { 
+function Acciones({ Ver, isLoadingPDF, isLoadingFind, Buscar }) { 
   const images = [
+    { 
+      srcLight: iconos.buscar_w,
+      srcDark: iconos.buscar,
+      alt: "Buscar", 
+      tooltipTitle: "Buscar", 
+      onClick: Buscar,
+      isLoading: isLoadingFind
+    },
     { 
       srcLight: iconos.vistaPrevia_w,
       srcDark: iconos.vistaPrevia, 

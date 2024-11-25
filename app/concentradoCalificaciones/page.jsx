@@ -209,7 +209,7 @@ function ConcentradoCalificaciones() {
         let evaluaciones = 0;
         const actividades = resMatActE.filter(act => act.secuencia === secuencia);
         if (actividades.length === 0) {
-            return 0;
+            return 0.0;
         } else {
             if (resActividadE.length > 1) {
             actividades.forEach(actividad => {
