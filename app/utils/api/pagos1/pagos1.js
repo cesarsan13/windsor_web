@@ -331,10 +331,8 @@ export const Imprimir = (configuracion) => {
   });
   newPDF.nextRow(4);
   const num = Elimina_Comas(encaBody.tota_general);
-  // console.log('num', num);
   const totalConLetras = numeroALetras(parseFloat(num));
-  // console.log('letras', totalConLetras)
-  newPDF.ImpPosX(`Importe con Letras: ${totalConLetras}`, 15, newPDF.tw_ren);
+  newPDF.ImpPosX(`Importe con Letras: ${totalConLetras.toString().toUpperCase()} PESOS`, 15, newPDF.tw_ren);
   newPDF.ImpPosX(`Total: ${encaBody.tota_general}`, 240, newPDF.tw_ren);
   newPDF.nextRow(4);
   newPDF.ImpPosX(
