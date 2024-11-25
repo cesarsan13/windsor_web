@@ -12,6 +12,7 @@ import {
   siguiente,
   guardaMenu,
 } from "@/app/utils/api/accesos_menu/accesos_menu";
+import {getMenus as getmenu} from "@/app/utils/api/menus/menus"
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { debounce } from "@/app/utils/globalfn";
@@ -29,6 +30,7 @@ function Accesos_Menu() {
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState("");
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
+  const [menussel,setMenusSel] = useState([])
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -38,6 +40,8 @@ function Accesos_Menu() {
       setisLoading(true);
       const { token } = session.user;
       const data = await getMenus(token, bajas);
+      const dataMenu = await getmenu(token,false)
+      setMenusSel(dataMenu)
       setMenus(data);
       setMenusFiltrados(data);
       setisLoading(false);
@@ -231,6 +235,7 @@ function Accesos_Menu() {
         errors={errors}
         register={register}
         setMenu={setMenu}
+        menusSel={menussel}
       />
       <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">

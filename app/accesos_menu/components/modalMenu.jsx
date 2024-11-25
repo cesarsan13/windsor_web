@@ -13,6 +13,7 @@ function ModalMenu({
   register,
   errors,
   setMenu,
+  menusSel,
 }) {
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
@@ -143,16 +144,22 @@ function ModalMenu({
                 dataType={"string"}
                 name={"menu"}
                 tamañolabel={""}
-                className={"grow"}
+                className={"w-5/6"}
                 Titulo={"Menu: "}
-                type={"text"}
+                type={"select"}
                 requerido={true}
                 isNumero={false}
                 errors={errors}
                 register={register}
                 message={"Menu requerido"}
                 maxLenght={100}
-                isDisabled={isDisabled}
+                arreglos={
+                  menusSel.map((menu) => ({
+                    id: menu.id,
+                    descripcion: menu.nombre,
+                  }))
+                }
+              isDisabled={isDisabled}
               />
             </div>
           </fieldset>
