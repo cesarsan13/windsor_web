@@ -71,7 +71,6 @@ function Alumnos() {
   }, [alumnos]);
   //  Memorizar la funcion
   const Buscar = useCallback(() => {
-    // console.log("alumnosRef.current => ",alumnosRef.current);
     const { tb_id, tb_desc, tb_grado } = busqueda;
     if (tb_id === "" && tb_desc === "" && tb_grado === "") {
       setAlumnosFiltrados(alumnosRef.current);
@@ -95,7 +94,6 @@ function Alumnos() {
         : true;
       return coincideId && coincideDescripcion && coincideGrado;
     });
-    // console.log("Info filtrada: ",infoFiltrada);
     setAlumnosFiltrados(infoFiltrada);
   }, [busqueda]);
 
@@ -114,8 +112,6 @@ function Alumnos() {
       const { token } = session.user;
       const data = await getAlumnos(token, bajas);
       const horarios = await getHorarios(token, bajas);
-      // console.log("Data => ",data);
-      // console.log("Horarios => ",horarios);
       setHorarios(horarios);
       setAlumnos(data);
       setAlumnosFiltrados(data);
@@ -452,7 +448,6 @@ function Alumnos() {
     document.getElementById("a_paterno").focus();
   };
   const onSubmitModal = handleSubmit(async (data) => {
-    // console.log("Data de onSubmitModal => ",data);
     event.preventDefault();
     setisLoadingButton(true);
     accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
@@ -511,7 +506,13 @@ function Alumnos() {
     formData.append("cancha_2", data.cancha_2 || "");
     formData.append("cancha_3", data.cancha_3 || "");
     formData.append("cancha_4", data.cancha_4 || "");
-    formData.append("horario_1", grado.numero || alumno.grupo);
+    if(grado.numuero !== null && grado.numero !== undefined ){
+      formData.append("horario_1", grado.numero || "");
+    }
+    else{
+      formData.append("horario_1", alumno.grupo || "");
+    }
+    // formData.append("horario_1", grado.numero || alumno.grupo || "" );
     formData.append("horario_2", grado2.numero || "");
     formData.append("horario_3", data.horario_3 || "");
     formData.append("horario_4", data.horario_4 || "");
@@ -567,7 +568,14 @@ function Alumnos() {
     formData.append("rfc_factura", data.rfc_factura || "");
     formData.append("estatus", data.estatus || "");
     formData.append("escuela", data.escuela || "");
-    formData.append("grupo", grado.numero || alumno.grupo);
+    if(grado.numuero !== null && grado.numero !== undefined ){
+      formData.append("grupo", grado.numero || "");
+    }
+    else{
+      formData.append("grupo", alumno.grupo || "");
+    }
+
+    // formData.append("grupo", grado.numero || alumno.grupo || "");
     if (condicion === true) {
       const blob = dataURLtoBlob(capturedImage);
       formData.append(
@@ -576,11 +584,12 @@ function Alumnos() {
         `${data.nombre}_${data.a_paterno}_${data.a_materno}.jpg`
       );
     }
-    // console.log(`grado.horario = ${grado.horario}/data.horario = ${data.horario}`);
-    // console.log("Horarios => ",horarios);
     let horario_1_nombre = horarios.find((item) =>{
-      // console.log(`${item.numero} == ${alumno.grupo}`)
-      return item.numero == alumno.grupo
+      if(grado.numuero !== null && grado.numero !== undefined ){
+        return item.numero === grado.numero
+      }else{
+        return item.numero === alumno.grupo
+      }
       }
     );
     if(typeof horario_1_nombre === "undefined"){
@@ -589,11 +598,7 @@ function Alumnos() {
         horario:""
       }
     }
-    // console.log("horario_1_nombre => ",horario_1_nombre.horario);
     data.horario_1_nombre = grado.horario || horario_1_nombre.horario;
-    // console.log("data.horario_1_nombre => ",data.horario_1_nombre)
-    // console.log("FormData => ",formData);
-    // console.log("Alumnos=>",alumnos);
     res = await guardarAlumnos(
       session.user.token,
       formData,
@@ -624,12 +629,14 @@ function Alumnos() {
               setAlumnos(aFiltrados);
               setAlumnosFiltrados(aFiltrados);
             } else {
-              // console.log("Alumnos viejos => ",alumnos);
-              // console.log("Data viejos => ",data);
               const aLactualizadas = alumnos.map((p) =>
                 p.numero === currentID ? { ...p, ...res.data } : p
               );
-              // console.log("Alumnos actualizados => ",aLactualizadas);
+              aLactualizadas.find((item) =>{
+                if(item.numero === res.data.numero){
+                  item.horario_1_nombre = data.horario_1_nombre;
+                }
+              });
               setAlumnos(aLactualizadas);
               setAlumnosFiltrados(aLactualizadas);
             }
