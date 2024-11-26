@@ -24,7 +24,6 @@ function Register() {
 
     event.preventDefault();
 
-    console.log("data", data);
     const res = await guardaRegistro(data);
 
     showSwal(res.alert_title, res.alert_text, res.alert_icon);

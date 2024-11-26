@@ -39,7 +39,6 @@ function ConcentradoCalificaciones() {
     const [materiasEncabezado, setMateriasEncabezado] = useState({});
     const [calificacionesTodosAlumnos, setCalificacionesTodosAlumnos] = useState({});
     const [materiasReg, setMateriasReg] = useState({});
-    const [matActE, setMatActE] = useState({});
     const [actividadesReg, setActividadesReg] = useState({});
     const [alumnoReg, setAlumnoReg] = useState({});
     const [bimestre, setBimestre] = useState(0);
@@ -50,8 +49,6 @@ function ConcentradoCalificaciones() {
     const [alumnosCalificaciones, setalumnosCalificaciones] = useState([]);
     const [isLoadingFind, setisLoadingFind] = useState(false);
     const [isLoadingPDF, setisLoadingPDF] = useState(false);
-    const [activeTab, setActiveTab] = useState(1);
-    
 
   let dataCaliAlumnosBody = [];
   let dataCaliAlumnosBodyEXCEL = [];
@@ -69,34 +66,34 @@ function ConcentradoCalificaciones() {
       : document.getElementById("DetallesActividades").close();
   };
 
-  const Buscar = handleSubmit(async (data) => {
-    if (grupo.numero === 0 && data.bimestre === "0") {
-      showSwal("Error", "Debes de seleccionar el Grupo y el Bimestre", "error");
-    } else {
-      setisLoadingFind(true);
-      setisLoading(true);
-      const { token } = session.user;
-      let b = data.bimestre;
-      setBimestre(Number(b));
-      try {
-        const [materiasEncabezado, matAlumnos, alumno, materias, actividades] =
-          await Promise.all([
-            getMateriasPorGrupo(token, grupo.numero),
-            getInfoActividadesXGrupo(token, grupo.numero, b),
-            getAlumno(token, grupo.numero),
-            getMateriasReg(token, grupo.numero),
-            getActividadesReg(token),
-          ]);
-        setMateriasEncabezado(materiasEncabezado);
-        setCalificacionesTodosAlumnos(matAlumnos);
-        setAlumnoReg(alumno);
-        setMateriasReg(materias);
-        setActividadesReg(actividades);
-      } catch (error) {}
-      setisLoading(false);
-      setisLoadingFind(false);
-    }
-  });
+    const Buscar = handleSubmit(async (data) => {
+        if (grupo.numero === 0 && data.bimestre === '0'){
+            showSwal('Error', 'Debes de seleccionar el Grupo y el Bimestre', 'error');
+        } else {
+            setisLoadingFind(true);
+            setisLoading(true);
+            const {token} = session.user; 
+            let b = data.bimestre;
+            setBimestre(Number(b));
+            try{
+                const [materiasEncabezado, matAlumnos, alumno, materias, actividades] = 
+                  await Promise.all([
+                    getMateriasPorGrupo(token, grupo.numero),
+                    getInfoActividadesXGrupo(token, grupo.numero, b),
+                    getAlumno(token, grupo.numero),
+                    getMateriasReg(token, grupo.numero),
+                    getActividadesReg(token),
+                ]);
+                    setMateriasEncabezado(materiasEncabezado);
+                    setCalificacionesTodosAlumnos(matAlumnos);
+                    setAlumnoReg(alumno);
+                    setMateriasReg(materias);
+                    setActividadesReg(actividades);
+            } catch (error) { }
+            setisLoading(false);
+            setisLoadingFind(false);
+        }
+    });
 
   const eliminarArreglosDuplicados = (arr) => {
     const arreglosUnicos = [];
@@ -111,79 +108,78 @@ function ConcentradoCalificaciones() {
     return arreglosUnicos;
   };
 
-  const handleVerClick = () => {
-    setisLoadingPDF(true);
-    const resultadoEnc = dataEncabezado.filter(
-      (item, pos, arr) =>
-        arr.findIndex((i) => i.descripcion === item.descripcion) === pos
-    );
-    const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBody);
-    cerrarModalVista();
-    if (grupo.numero === 0 && bimestre === 0) {
-      showSwal("Error", "Debes de realizar la Busqueda", "error");
-      setTimeout(() => {
-        setPdfPreview(false);
-        setPdfData("");
-        setisLoadingPDF(false);
-        document.getElementById("modalVConCal").close();
-      }, 500);
-    } else {
-      let posicionX = 23;
-      const incrementoX = 9;
-      const configuracion = {
-        Encabezado: {
-          Nombre_Aplicacion: "Sistema de Control Escolar",
-          Nombre_Reporte: "Reporte de Concentrado de Calificaciones",
-          Nombre_Usuario: `Usuario: ${session.user.name}`,
-          Datos_Grupo: `Grupo: ${grupo.horario}     Bimestre: ${bimestre}`,
-        },
-        body: resultadoBody,
-      };
-
-      const reporte = new ReportePDF(configuracion, "Landscape");
-      const { body } = configuracion;
-      const Enca1 = (doc) => {
-        if (!doc.tiene_encabezado) {
-          doc.imprimeEncabezadoPrincipalHConcentradoCal();
-          doc.nextRow(12);
-          doc.ImpPosX("Num.", 14, doc.tw_ren);
-          //doc.ImpPosX('Alumno', 14, doc.tw_ren);
-          resultadoEnc.forEach((desc) => {
-            doc.ImpPosX(desc.descripcion, posicionX, doc.tw_ren, 3);
-            posicionX += incrementoX;
-          });
-          doc.nextRow(4);
-          doc.printLineH();
-          doc.nextRow(4);
-          doc.tiene_encabezado = true;
+    const handleVerClick = () => {
+        setisLoadingPDF(true);
+        const resultadoEnc = dataEncabezado.filter((item, pos, arr) => 
+            arr.findIndex(i => i.descripcion === item.descripcion) === pos
+        );
+        const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBody);
+        cerrarModalVista();
+        if ( grupo.numero === 0 || bimestre === 0 || Object.keys(calificacionesTodosAlumnos).length === 0)
+        {
+            showSwal('Error', 'Debes de realizar la Busqueda', 'error');
+            setTimeout(() => {
+              setPdfPreview(false);
+              setPdfData("");
+              setisLoadingPDF(false);
+              document.getElementById("modalVConCal").close();
+            }, 500);
         } else {
-          doc.nextRow(6);
-          doc.tiene_encabezado = true;
-        }
-      };
-      Enca1(reporte);
-      body.forEach((arreglo2, index) => {
-        let posicionBody = 14;
-        arreglo2.forEach((valor, idx) => {
-          reporte.ImpPosX(valor, posicionBody, reporte.tw_ren, 4);
-          posicionBody += incrementoX;
-        });
-        Enca1(reporte);
-        if (reporte.tw_ren >= reporte.tw_endRenH) {
-          reporte.pageBreakH();
-          Enca1(reporte);
-        }
-      });
+            let posicionX = 23; 
+            const incrementoX = 9;
+            const configuracion = {
+              Encabezado: {
+                Nombre_Aplicacion: "Sistema de Control Escolar",
+                Nombre_Reporte: "Reporte de Concentrado de Calificaciones",
+                Nombre_Usuario: `Usuario: ${session.user.name}`,
+                Datos_Grupo:  `Grupo: ${grupo.horario}     Bimestre: ${bimestre}`,
+              },
+              body: resultadoBody
+            };
 
-      setTimeout(() => {
-        const pdfData = reporte.doc.output("datauristring");
-        setPdfData(pdfData);
-        setPdfPreview(true);
-        showModalVista(true);
-        setisLoadingPDF(false);
-      }, 500);
-    }
-  };
+            const reporte = new ReportePDF(configuracion, "Landscape");
+            const {body} = configuracion;
+            const Enca1 = (doc) => {
+                if (!doc.tiene_encabezado) {
+                  doc.imprimeEncabezadoPrincipalHConcentradoCal();
+                  doc.nextRow(12);
+                  doc.ImpPosX('Num.', 14, doc.tw_ren);
+                  resultadoEnc.forEach((desc) => {
+                      doc.ImpPosX(desc.descripcion, posicionX, doc.tw_ren, 3);
+                      posicionX += incrementoX;
+                  });
+                  doc.nextRow(4);
+                  doc.printLineH();
+                  doc.nextRow(4);
+                  doc.tiene_encabezado = true;
+                } else {
+                  doc.nextRow(6);
+                  doc.tiene_encabezado = true;
+                }
+              };
+            Enca1(reporte);
+            body.forEach((arreglo2, index) => {
+                let posicionBody = 14;
+              arreglo2.forEach((valor, idx) => {
+                  reporte.ImpPosX(valor, posicionBody, reporte.tw_ren, 4);
+                  posicionBody+= incrementoX;
+              })
+              Enca1(reporte);
+              if (reporte.tw_ren >= reporte.tw_endRenH) {
+                  reporte.pageBreakH();
+                  Enca1(reporte);
+              }
+            })
+            
+            setTimeout(() => {
+              const pdfData = reporte.doc.output("datauristring");
+              setPdfData(pdfData);
+              setPdfPreview(true);
+              showModalVista(true);
+              setisLoadingPDF(false);
+            }, 500);
+        }
+    };
 
   const ImprimePDF = async () => {
     let fecha_hoy = new Date();
@@ -221,124 +217,117 @@ function ConcentradoCalificaciones() {
                 sumatoria += filtroActividad.length > 0 ? RegresaCalificacionRedondeo(califSum / filtroActividad.length, "N") : 0;
                 evaluaciones++; 
             });
-            
             const calMat = (sumatoria / evaluaciones).toFixed(1);
             return evaluaciones === 0 ? 0 : calMat;
-
         } else {
-            let cal = RegresaCalificacionRedondeo(Number(resActividadE[0].calificacion), "N");
+            //let cal = RegresaCalificacionRedondeo(Number(resActividadE[0].calificacion), "N");
+            let cal = RegresaCalificacionRedondeo(Number(0), "N");
             return(cal.toFixed(1));
         }
         }
     };
 
-        const ImprimeExcel = async () => {
+        const ImprimeExcel = async () => {   
             let fecha_hoy = new Date();
             const dateStr = formatDate(fecha_hoy);
             const timeStr = formatTime(fecha_hoy);
-            
             try {
-            const resultadoEnc = dataEncabezado.filter((item, pos, arr) => 
-                arr.findIndex(i => i.descripcion === item.descripcion) === pos
-            );
-            const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBodyEXCEL);
-            let dataCaliAlumnosBodyGeneral = [];
-            let dataCaliAlumnosEncabezadoGeneral = []; 
-            let contadorEnc = 0;
-
-            for (const itemE of resultadoEnc) {
-                let materiaD = itemE.idMat;
-                const { token } = session.user;
-                
-                    if(itemE.hasOwnProperty('idMat')){
-                        const resMatActE = await getActividadesDetalles(token, materiaD);
-                        for (const activ of resMatActE) {
-                            dataCaliAlumnosEncabezadoGeneral.push(activ.descripcion);
-                        }
-                    }
-                    if (resultadoEnc[contadorEnc]) {
-                        dataCaliAlumnosEncabezadoGeneral.push(resultadoEnc[contadorEnc].descripcion);
-                    }
-                    contadorEnc++;
-            }
-
-            for (const itemB of resultadoBody) {
-                let dataCaliAlumnosBodyDetalles = [];
-                let contador = 2;
+                const resultadoEnc = dataEncabezado.filter((item, pos, arr) => 
+                    arr.findIndex(i => i.descripcion === item.descripcion) === pos
+                );
+                const resultadoBody = eliminarArreglosDuplicados(dataCaliAlumnosBodyEXCEL);
+                let dataCaliAlumnosBodyGeneral = [];
+                let dataCaliAlumnosEncabezadoGeneral = []; 
+                let contadorEnc = 0;
                 for (const itemE of resultadoEnc) {
-                    let noAlumno = itemB[0];
                     let materiaD = itemE.idMat;
                     const { token } = session.user;
-
-                    //If para separar de promedio español e ingles
-                    if(itemE.hasOwnProperty('idMat')){
-                        const [resActividadE, resMatActE] = await Promise.all([
-                            getActividadesXHorarioXAlumnoXMateriaXBimestre(token, grupo.numero, Number(noAlumno), materiaD, bimestre),
-                            getActividadesDetalles(token, materiaD)
-                        ]);
-                        for (const activ of resMatActE) {
-                            let promedios = calcularCalificacionesMat(activ.secuencia, resActividadE, resMatActE);
-                            dataCaliAlumnosBodyDetalles.push(promedios);
+                        if(itemE.hasOwnProperty('idMat')){
+                            const resMatActE = await getActividadesDetalles(token, materiaD);
+                            for (const activ of resMatActE) {
+                                dataCaliAlumnosEncabezadoGeneral.push(activ.descripcion);
+                            }
                         }
-                        let promedio = itemB[contador];
-                        dataCaliAlumnosBodyDetalles.push(promedio);
-                        contador++;
-                    }
-                    else{
-                        let promedio = itemB[contador];
-                        dataCaliAlumnosBodyDetalles.push(promedio);
-                        contador++;
-                    }
+                        if (resultadoEnc[contadorEnc]) {
+                            dataCaliAlumnosEncabezadoGeneral.push(resultadoEnc[contadorEnc].descripcion);
+                        }
+                        contadorEnc++;
                 }
-                dataCaliAlumnosBodyDetalles.unshift(itemB[0], itemB[1]);
-                dataCaliAlumnosBodyGeneral.push(dataCaliAlumnosBodyDetalles);
-            };
-            
-            let columns = [
-                { header: "Núm", dataKey: "0" },
-                { header: "Alumno", dataKey: "1" },
-                    ...dataCaliAlumnosEncabezadoGeneral.map((item, index) => ({
-                        header: item,
-                        dataKey: (index + 2).toString(),
-                    })),
-            ];
-            const configuracion = {
-                Encabezado: {
-                    Nombre_Aplicacion: "Sistema de Control Escolar",
-                    Nombre_Reporte: "Reporte de Comentarios",
-                    Nombre_Usuario: `Usuario: ${session.user.name}`,
-                    Clase: `Grupo: ${grupo.horario}     Bimestre: ${bimestre}`
-                },
-                body: dataCaliAlumnosBodyGeneral,
-                columns: columns,
-                nombre: `ConcentradoCalificaciones_${dateStr.replaceAll("/","")}${timeStr.replaceAll(":","")}`,
-            };
-            ImprimirExcel(configuracion);
-        } catch (error) {
-            showSwal("Error", "No se pudo crear el Excel, Intentalo de nuevo", "error", "modalVConCal");
-        }
+                for (const itemB of resultadoBody) {
+                    let dataCaliAlumnosBodyDetalles = [];
+                    let contador = 2;
+                    for (const itemE of resultadoEnc) {
+                        let noAlumno = itemB[0];
+                        let materiaD = itemE.idMat;
+                        const { token } = session.user;
+                        //If para separar de promedio español e ingles
+                        if(itemE.hasOwnProperty('idMat')){
+                            const [resActividadE, resMatActE] = await Promise.all([
+                                getActividadesXHorarioXAlumnoXMateriaXBimestre(token, grupo.numero, Number(noAlumno), materiaD, bimestre),
+                                getActividadesDetalles(token, materiaD)
+                            ]);
+                            for (const activ of resMatActE) {
+                                let promedios = calcularCalificacionesMat(activ.secuencia, resActividadE, resMatActE);
+                                dataCaliAlumnosBodyDetalles.push(promedios);
+                            }
+                            let promedio = itemB[contador];
+                            dataCaliAlumnosBodyDetalles.push(promedio);
+                            contador++;
+                        }
+                        else{
+                            let promedio = itemB[contador];
+                            dataCaliAlumnosBodyDetalles.push(promedio);
+                            contador++;
+                        }
+                    }
+                    dataCaliAlumnosBodyDetalles.unshift(itemB[0], itemB[1]);
+                    dataCaliAlumnosBodyGeneral.push(dataCaliAlumnosBodyDetalles);
+                };
+                let columns = [
+                    { header: "Núm", dataKey: "0" },
+                    { header: "Alumno", dataKey: "1" },
+                        ...dataCaliAlumnosEncabezadoGeneral.map((item, index) => ({
+                            header: item,
+                            dataKey: (index + 2).toString(),
+                        })),
+                ];
+                const configuracion = {
+                    Encabezado: {
+                        Nombre_Aplicacion: "Sistema de Control Escolar",
+                        Nombre_Reporte: "Reporte de Comentarios",
+                        Nombre_Usuario: `Usuario: ${session.user.name}`,
+                        Clase: `Grupo: ${grupo.horario}     Bimestre: ${bimestre}`
+                    },
+                    body: dataCaliAlumnosBodyGeneral,
+                    columns: columns,
+                    nombre: `ConcentradoCalificaciones_${dateStr.replaceAll("/","")}${timeStr.replaceAll(":","")}`,
+                };
+                ImprimirExcel(configuracion);
+            } catch (error) {
+                showSwal("Error", "No se pudo crear el Excel, Intentalo de nuevo", "error", "modalVConCal");
+            }  
         };
 
-  const showModalVista = (show) => {
-    show
-      ? document.getElementById("modalVConCal").showModal()
-      : document.getElementById("modalVConCal").close();
-  };
-  const cerrarModalVista = () => {
-    setPdfPreview(false);
-    setPdfData("");
-    document.getElementById("modalVConCal").close();
-  };
+        const showModalVista = (show) => {
+        show
+          ? document.getElementById("modalVConCal").showModal()
+          : document.getElementById("modalVConCal").close();
+        };
+        const cerrarModalVista = () => {
+          setPdfPreview(false);
+          setPdfData("");
+          document.getElementById("modalVConCal").close();
+        };
 
-  const home = () => {
-    router.push("/");
-  };
+        const home = () => {
+            router.push("/");
+        };
 
-    if (status === "loading") {
-        return (
-            <div className="container skeleton w-full max-w-screen-xl shadow-xl rounded-xl"></div>
-        );
-    }
+        if (status === "loading") {
+            return (
+                <div className="container skeleton w-full max-w-screen-xl shadow-xl rounded-xl"></div>
+            );
+        }
     return(
         <>
            <Modal_Detalles_Actividades
