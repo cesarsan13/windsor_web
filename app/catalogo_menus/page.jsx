@@ -13,13 +13,7 @@ import TablaMenus from "@/app/catalogo_menus/components/tablaMenus";
 import Busqueda from "@/app/catalogo_menus/components/Busqueda";
 import Acciones from "@/app/catalogo_menus/components/Acciones";
 import { useForm } from "react-hook-form";
-import {
-  getMenus,
-  guardarMenus,
-  siguiente,
-  Imprimir,
-  ImprimirExcel,
-} from "@/app/utils/api/menus/menus";
+import { getMenus, guardarMenus, siguiente } from "@/app/utils/api/menus/menus";
 import { useSession } from "next-auth/react";
 import "jspdf-autotable";
 import VistaPrevia from "@/app/components/VistaPrevia";
