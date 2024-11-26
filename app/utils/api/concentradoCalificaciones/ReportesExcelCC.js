@@ -6,7 +6,7 @@ import {
   format_Fecha_String,
 } from "@/app/utils/globalfn";
 
-export class ReporteExcel {
+export class ReporteExcelCC {
   constructor(configuracion) {
     this.configuracion = configuracion;
     this.worksheetData = [];
@@ -44,29 +44,26 @@ export class ReporteExcel {
     this.worksheetData = this.worksheetData.concat(rowsData);
   }
 
-  setColumnas(columnas) {
-    this.columns = columnas;
-    const headerRow = columnas.map((col) => col);
-    this.addRow(headerRow);
-  }
-
   addData(data) {
-    data.forEach((row) => {
-      let rowData = this.columns.map((col) => {
-        if (col.dataKey === this.conditionColumn && this.condition) {
-          return this.condition(row[col.dataKey]) ? "Si" : "No";
-        }
-        return row[col.dataKey] || "";
+    Object.keys(data).forEach((materia) => {
+      this.addRow([materia]);
+      const [headers, calificaciones] = data[materia];
+      const headerRow = headers.map((item) => item.descripcion || "");
+      this.addRow(headerRow);
+      let provisionalcal = [];
+      calificaciones.forEach((calificacion) => {
+        provisionalcal.push(calificacion);
       });
-      this.addRow(rowData);
+      this.addRow(provisionalcal);
+      this.addRow([]);
     });
   }
 
   calculaAnchos() {
     const maxColumnWidths = [];
-    this.worksheetData.forEach((row) => {
+    this.worksheetData.forEach((row, rowIndex) => {
       row.forEach((cell, index) => {
-        const cellLength = cell ? cell.toString().length : 0;
+        const cellLength = cell != null ? cell.toString().length : 0;
         maxColumnWidths[index] = Math.max(
           maxColumnWidths[index] || 0,
           cellLength

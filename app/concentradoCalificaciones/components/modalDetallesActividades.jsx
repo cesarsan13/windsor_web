@@ -11,7 +11,7 @@ import {
     getActividadesXHorarioXAlumnoXMateriaXBimestre,
     getActividadesDetalles,
     ImprimirPDFDetalle,
-    ImprimirExcel
+    ImprimirExcelCC
 } from "@/app/utils/api/concentradoCalificaciones/concentradoCalificaciones";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { showSwal } from "@/app/utils/alerts";
@@ -26,19 +26,15 @@ function Modal_Detalles_Actividades({
     accion
 }){
     const [isLoading, setisLoading] = useState(false);
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
     const [Actividades, setActividades] = useState({});
     const [matAct, setMatAct] = useState([]);
     const [pdfData, setPdfData] = useState("");
-    const [materia, setMateria] = useState("");
     const [pdfPreview, setPdfPreview] = useState(false);
     const [isLoadingFind, setisLoadingFind] = useState(false);
     const [isLoadingPDF, setisLoadingPDF] = useState(false);
-    const [selected, setSelected] = useState(1);
     const [dataEncabezadoDetalles, setdataEncabezadoDetalles] = useState([]);
-    const [dataCaliAlumnosBodyDetalles, setdataCaliAlumnosBodyDetalles] = useState([]);
     const [resultadoImpresion, setresultadoImpresion] = useState({});
-    let M = 0;
 
     const BuscarCalificaciones = async () => {
         setisLoadingFind(true);
@@ -71,7 +67,6 @@ function Modal_Detalles_Actividades({
             );
         }
         setresultadoImpresion(resultData);
-        console.log("estomanda", resultadoImpresion, resultData);
         setisLoading(false);
         setisLoadingFind(false);
     }; 
@@ -79,7 +74,6 @@ function Modal_Detalles_Actividades({
     const calcularCalificacionesMat = async (secuencia, Actividades, matAct) => {
             let sumatoria = 0;
             let evaluaciones = 0;
-    
             const actividades = matAct.filter(act => act.secuencia === secuencia);
             if (actividades.length === 0){
                 return 0.0;
@@ -97,19 +91,21 @@ function Modal_Detalles_Actividades({
                     }
                 }
                 return evaluaciones === 0 ? 0 : (sumatoria / evaluaciones).toFixed(1);
-            }else{
+            }else if (Actividades.length === 1){
                 let cal = RegresaCalificacionRedondeo(Number(Actividades[0].calificacion), "N");
+                return(cal.toFixed(1));
+            } else {
+                let cal = RegresaCalificacionRedondeo(Number(0), "N");
                  return(cal.toFixed(1));
             }   
         }
     };
 
     const handleVerClick = () => {
-        setisLoadingPDF(true);
-        
-        if(accion !== `Ver` && resultadoImpresion.length === 0){
+        if(accion !== "Ver" || Object.keys(resultadoImpresion).length === 0 || Array.isArray(resultadoImpresion)){
             showSwal("Error", "Debes de realizar la Busqueda", "error", "DetallesActividades");
         } else {
+            setisLoadingPDF(true);
             const incrementoX = 27;
             const configuracion = {
               Encabezado: {
@@ -141,7 +137,6 @@ function Modal_Detalles_Actividades({
             
             Object.entries(body).forEach(([materia, mat], index) => {
                 reporte.ImpPosX(materia.toString(),14, reporte.tw_ren,0);
-
                 let posicionBodyMat = 14;
                 let posicionBodyCal = 34;
                 Enca1(reporte);
@@ -154,21 +149,19 @@ function Modal_Detalles_Actividades({
                     posicionBodyMat+= incrementoX;
                 });
                 Enca1(reporte);
-              if (reporte.tw_ren >= reporte.tw_endRen) {
-                  reporte.pageBreak();
-                  Enca1(reporte);
-              }
-
+                if (reporte.tw_ren >= reporte.tw_endRen) {
+                    reporte.pageBreak();
+                    Enca1(reporte);
+                }
                 mat[1].forEach((mat1) => {
                     reporte.ImpPosX(mat1.toString(),posicionBodyCal, reporte.tw_ren,0, "R");
                     posicionBodyCal+= incrementoX; 
                 });
                 Enca1(reporte);
-              if (reporte.tw_ren >= reporte.tw_endRen) {
-                  reporte.pageBreak();
-                  Enca1(reporte);
-              }
-                
+                if (reporte.tw_ren >= reporte.tw_endRen) {
+                    reporte.pageBreak();
+                    Enca1(reporte);
+                }  
             });
             
             setTimeout(() => {
@@ -198,18 +191,18 @@ function Modal_Detalles_Actividades({
         let fecha_hoy = new Date();
         const dateStr = formatDate(fecha_hoy);
         const timeStr = formatTime(fecha_hoy);
-        
+
         const configuracion = {
             Encabezado: {
                 Nombre_Aplicacion: "Sistema de Control Escolar",
-                Nombre_Reporte: "Reporte de Comentarios",
+                Nombre_Reporte: "Reporte de Concentrado de Calificaciones",
                 Nombre_Usuario: `Usuario: ${session.user.name}`,
                 Clase: `Alumno: ${alumnoData.nombre}   Bimestre: ${bimestre}`
             },
             body: resultadoImpresion,
             nombre: `ConcentradoCalificaciones_${alumnoData.nombre}_${dateStr.replaceAll("/","")}${timeStr.replaceAll(":","")}`,
         };
-        ImprimirExcel(configuracion);
+        ImprimirExcelCC(configuracion);
     };
 
     const cerrarModalVista = () => {
@@ -256,6 +249,7 @@ function Modal_Detalles_Actividades({
                                 document.getElementById("DetallesActividades").close();
                                 setActividades({});
                                 setMatAct({});
+                                setresultadoImpresion({});
                               }}
                             >
                               ✕

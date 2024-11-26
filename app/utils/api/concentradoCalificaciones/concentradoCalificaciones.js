@@ -1,4 +1,5 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
+import { ReporteExcelCC } from "./ReportesExcelCC";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import {formatDate, formatTime} from "@/app/utils/globalfn"
 
@@ -116,7 +117,6 @@ export const ImprimirPDF = (configuracion, resultadoEnc, fecha_hoy) => {
           newPDF.imprimeEncabezadoPrincipalHConcentradoCal();
           newPDF.nextRow(12);
           newPDF.ImpPosX('Num.', 14, newPDF.tw_ren);
-          //newPDF.ImpPosX('Alumno', 14, newPDF.tw_ren);
           resultadoEnc.forEach((desc) => {
               newPDF.ImpPosX(desc.descripcion, posicionX, newPDF.tw_ren, 3);
               posicionX += incrementoX;
@@ -129,7 +129,7 @@ export const ImprimirPDF = (configuracion, resultadoEnc, fecha_hoy) => {
           newPDF.nextRow(6);
           newPDF.tiene_encabezado = true;
         }
-      };
+    };
     Enca1(newPDF);
     body.forEach((arreglo2, index) => {
         let posicionBody = 14;
@@ -143,7 +143,6 @@ export const ImprimirPDF = (configuracion, resultadoEnc, fecha_hoy) => {
           Enca1(newPDF);
       }
     })
-
     const dateStr = formatDate(fecha_hoy)
     const timeStr = formatTime(fecha_hoy)
     newPDF.guardaReporte(`ConcentradoCalificaciones_${dateStr.replaceAll("/","")}${timeStr.replaceAll(":","")}`);
@@ -172,7 +171,6 @@ export const ImprimirPDF = (configuracion, resultadoEnc, fecha_hoy) => {
     
     Object.entries(body).forEach(([materia, mat], index) => {
         newPDF.ImpPosX(materia.toString(),14, newPDF.tw_ren,0);
-
         let posicionBodyMat = 14;
         let posicionBodyCal = 34;
         Enca1(newPDF);
@@ -180,35 +178,26 @@ export const ImprimirPDF = (configuracion, resultadoEnc, fecha_hoy) => {
             newPDF.pageBreak();
             Enca1(newPDF);
         }
-
         //Object.entries(mat).forEach(([materia, mat], index) => {
         mat[0].forEach((mat) => {
-
-            console.log("mat mat", mat);
             newPDF.ImpPosX(mat.descripcion.toString(),posicionBodyMat, newPDF.tw_ren, 10);
             posicionBodyMat+= incrementoX;
-            
         });
         Enca1(newPDF);
-      if (newPDF.tw_ren >= newPDF.tw_endRen) {
-          newPDF.pageBreak();
-          Enca1(newPDF);
-      }
-
+        if (newPDF.tw_ren >= newPDF.tw_endRen) {
+            newPDF.pageBreak();
+            Enca1(newPDF);
+        }
         mat[1].forEach((mat1) => {
-            console.log("mat cal", mat);
             newPDF.ImpPosX(mat1.toString(),posicionBodyCal, newPDF.tw_ren,0, "R");
             posicionBodyCal+= incrementoX;
-           
         });
         Enca1(newPDF);
-      if (newPDF.tw_ren >= newPDF.tw_endRen) {
-          newPDF.pageBreak();
-          Enca1(newPDF);
-      }
-        
+        if (newPDF.tw_ren >= newPDF.tw_endRen) {
+            newPDF.pageBreak();
+            Enca1(newPDF);
+        }
     });
-
       const dateStr = formatDate(fecha_hoy)
       const timeStr = formatTime(fecha_hoy)
       newPDF.guardaReporte(`ConcentradoCalificaciones_${alumno}_${dateStr.replaceAll("/","")}${timeStr.replaceAll(":","")}`);
@@ -220,6 +209,14 @@ export const ImprimirPDF = (configuracion, resultadoEnc, fecha_hoy) => {
     const { body } = configuracion;
     const { nombre } = configuracion;
     newExcel.setColumnas(columns);
+    newExcel.addData(body);
+    newExcel.guardaReporte(nombre);
+  };
+
+  export const ImprimirExcelCC = (configuracion) => {
+    const newExcel = new ReporteExcelCC(configuracion);
+    const { body } = configuracion;
+    const { nombre } = configuracion;
     newExcel.addData(body);
     newExcel.guardaReporte(nombre);
   };
