@@ -18,12 +18,12 @@ function VistaPrevia({
     <dialog id={id} className="modal">
       <div className="modal-box w-full max-w-4xl h-full  bg-base-200">
         <button
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black"
+          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black" 
           onClick={(evt) => CerrarView(evt)}
         >
           ✕
         </button>
-        <h3 className="font-bold text-lg mb-5 dark:text-white text-black">
+        <h3 className="font-bold text-lg mb-5 dark:text-white text-black"> 
           {titulo}
         </h3>
         <div className="flex flex-row space-x-4">

@@ -51,20 +51,20 @@ function Busqueda({
         </div>
       </div>
       <div className="md:col-span-1">
-        <div className="form-control tooltip " data-tip="Ver Bajas">
-          <label htmlFor="ch_bajas" className="label cursor-pointer">
+        <div className="form-control tooltip dark:text-neutral-200 text-neutral-600" data-tip="Ver Bajas">
+          <label htmlFor="ch_bajas" className="label cursor-pointer dark:text-neutral-200 text-neutral-600">
             <input
               id="ch_bajas"
               type="checkbox"
-              className=" checkbox mx-2 checkbox-md"
+              className=" checkbox mx-2 checkbox-md "
               onClick={(evt) => setBajas(evt.target.checked)}
             />
 
-            <button className=" join-item  dark:text-neutral-200 text-neutral-600 border-none shadow-none w-5 h-5 md:w-6 md:h-6 mt-1">
+            <button className=" join-item  border-none shadow-none w-5 h-5 md:w-6 md:h-6 mt-1">
             <Image src={iconos.eliminar} alt="Bajas" className="block dark:hidden"></Image>
             <Image src={iconos.eliminar_w} alt="Bajas" className="hidden dark:block"></Image>
             </button>
-            <span className=" text-lg font-xthin text-black hidden sm:inline">
+            <span className=" text-lg font-xthin dark:text-neutral-200 text-neutral-600 hidden sm:inline">
               Bajas
             </span>
           </label>
