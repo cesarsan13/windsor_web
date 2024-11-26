@@ -50,8 +50,10 @@ function TablaConcentradoCal({
                     cal.bimestre === bimestre
                 );
                 const calificacion = aDec(Number(filtro[0]?.calificacion || 0));
-                sumatoria = calificacion;
+                
+                sumatoria = (calificacion).toFixed(1);
                 evaluaciones = materia ? filtro.length : 0;
+
             } else {
                 const actividades = actividadesReg.filter(act => act.materia === materianumero);
                 if (actividades.length === 0) {
@@ -76,7 +78,6 @@ function TablaConcentradoCal({
             }
             const sum = isNaN(sumatoria) ? 0 : sumatoria;
             const calMat = (sum / evaluaciones).toFixed(1);
-
             if (materia.area === 1) {
                 a += calMat;
                 datosEspanol += Number(calMat);

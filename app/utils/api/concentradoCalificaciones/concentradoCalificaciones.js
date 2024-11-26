@@ -153,39 +153,61 @@ export const ImprimirPDF = (configuracion, resultadoEnc, fecha_hoy) => {
   export const ImprimirPDFDetalle = (configuracion, resultadoEnc, fecha_hoy, alumno) => {
     const newPDF = new ReportePDF(configuracion, "Portrait");
     const {body} = configuracion;
-    let posicionX = 14; 
     const incrementoX = 27;
-    const Enca1 = (newPDF) => {
-        if (!newPDF.tiene_encabezado) {
-          newPDF.imprimeEncabezadoPrincipalVConcentradoCal();
-          newPDF.nextRow(12);
-          
-          resultadoEnc.forEach((desc) => {
-              newPDF.ImpPosX(desc.descripcion, posicionX, newPDF.tw_ren, 10);
-              posicionX += incrementoX;
-          });
-          newPDF.ImpPosX("Promedio", posicionX, newPDF.tw_ren, 25);
-          newPDF.nextRow(4);
-          newPDF.printLineV();
-          newPDF.nextRow(4);
-          newPDF.tiene_encabezado = true;
+    const Enca1 = (doc) => {
+        if (!doc.tiene_encabezado) {
+            doc.imprimeEncabezadoPrincipalVConcentradoCal();
+            doc.nextRow(12);
+            doc.ImpPosX("Materias", 14, doc.tw_ren, 10);
+            doc.nextRow(4);
+            doc.printLineV();
+            doc.nextRow(4);
+          doc.tiene_encabezado = true;
         } else {
-          newPDF.nextRow(6);
-          newPDF.tiene_encabezado = true;
+          doc.nextRow(6);
+          doc.tiene_encabezado = true;
         }
       };
     Enca1(newPDF);
+    
+    Object.entries(body).forEach(([materia, mat], index) => {
+        newPDF.ImpPosX(materia.toString(),14, newPDF.tw_ren,0);
 
-    let posicionBody = 34;
-    body.forEach((valor, idx) => {
-          newPDF.ImpPosX(valor, posicionBody, newPDF.tw_ren, 0, "R");
-          posicionBody+= incrementoX;
-    })
-    Enca1(newPDF);
-      if (newPDF.tw_ren >= newPDF.tw_endRenH) {
-          newPDF.pageBreakH();
+        let posicionBodyMat = 14;
+        let posicionBodyCal = 34;
+        Enca1(newPDF);
+        if (newPDF.tw_ren >= newPDF.tw_endRen) {
+            newPDF.pageBreak();
+            Enca1(newPDF);
+        }
+
+        //Object.entries(mat).forEach(([materia, mat], index) => {
+        mat[0].forEach((mat) => {
+
+            console.log("mat mat", mat);
+            newPDF.ImpPosX(mat.descripcion.toString(),posicionBodyMat, newPDF.tw_ren, 10);
+            posicionBodyMat+= incrementoX;
+            
+        });
+        Enca1(newPDF);
+      if (newPDF.tw_ren >= newPDF.tw_endRen) {
+          newPDF.pageBreak();
           Enca1(newPDF);
       }
+
+        mat[1].forEach((mat1) => {
+            console.log("mat cal", mat);
+            newPDF.ImpPosX(mat1.toString(),posicionBodyCal, newPDF.tw_ren,0, "R");
+            posicionBodyCal+= incrementoX;
+           
+        });
+        Enca1(newPDF);
+      if (newPDF.tw_ren >= newPDF.tw_endRen) {
+          newPDF.pageBreak();
+          Enca1(newPDF);
+      }
+        
+    });
 
       const dateStr = formatDate(fecha_hoy)
       const timeStr = formatTime(fecha_hoy)
@@ -201,3 +223,4 @@ export const ImprimirPDF = (configuracion, resultadoEnc, fecha_hoy) => {
     newExcel.addData(body);
     newExcel.guardaReporte(nombre);
   };
+
