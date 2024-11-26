@@ -1,9 +1,15 @@
 "use client";
-import React, { useCallback, useRef, useMemo, useState, useEffect } from "react";
+import React, {
+  useCallback,
+  useRef,
+  useMemo,
+  useState,
+  useEffect,
+} from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import ModalMenus from "@/app/catalogo_menus/components/modalMenus";
-import TablaMenus from "@/app/catalogo_menus/components/TablaMenus";
+import TablaMenus from "@/app/catalogo_menus/components/tablaMenus";
 import Busqueda from "@/app/catalogo_menus/components/Busqueda";
 import Acciones from "@/app/catalogo_menus/components/Acciones";
 import { useForm } from "react-hook-form";
@@ -91,13 +97,11 @@ function Menus() {
         : true;
       const coincideNombre = tb_desc
         ? menu["nombre"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_desc.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
         : true;
-      return (
-        coincideNumero && coincideNombre
-      );
+      return coincideNumero && coincideNombre;
     });
     setMenusFiltrados(infoFiltrada);
   }, [busqueda]);
@@ -150,11 +154,11 @@ function Menus() {
         setisLoadingButton(false);
         return;
       }
-    };
+    }
     res = await guardarMenus(session.user.token, accion, data);
     if (res.status) {
       if (accion === "Alta") {
-        console.log('menus alaverga', data);
+        console.log("menus alaverga", data);
         const nuevoMenu = { currentID, ...data };
         setMenus([...menus, nuevoMenu]);
         if (!bajas) {
@@ -170,9 +174,7 @@ function Menus() {
             setMenusFiltrados(cFiltrados);
           } else {
             if (bajas) {
-              const cFiltrados = menus.filter(
-                (c) => c.numero !== data.numero
-              );
+              const cFiltrados = menus.filter((c) => c.numero !== data.numero);
               setMenus(cFiltrados);
               setMenusFiltrados(cFiltrados);
             } else {
@@ -301,7 +303,6 @@ function Menus() {
     setCurrentId(menu.numero);
     showModal(true);
   };
-
 
   if (status === "loading") {
     return (
