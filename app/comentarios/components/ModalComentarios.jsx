@@ -61,7 +61,7 @@ function ModalComentarios({
       <div className="modal-box bg-base-200">
         <form onSubmit={onSubmit}>
           <div className="sticky -top-6 flex justify-between items-center bg-base-200  dark:bg-[#1d232a] w-full h-10 z-10 mb-5">{/* bg-white */}
-            <h3 className="font-bold text-lg">{titulo}</h3>
+            <h3 className="font-bold text-lg text-neutral-600 dark:text-white">{titulo}</h3>
             <div className="flex space-x-2 items-center">
               <div
                 className={`tooltip tooltip-bottom ${

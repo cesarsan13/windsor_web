@@ -145,7 +145,7 @@ function ModalAlumnos({
           encType="multipart/form-data"
         >
           <div className="sticky -top-6 flex justify-between items-center bg-base-200  w-full h-10 z-10 mb-5">
-            <h3 className="font-bold text-lg">{titulo}</h3>
+            <h3 className="font-bold text-lg text-neutral-600 dark:text-white">{titulo}</h3>
             <div className="flex space-x-2 items-center">
               <div
                 className={`tooltip tooltip-bottom ${
@@ -213,7 +213,7 @@ function ModalAlumnos({
                     errors={errors}
                     register={register}
                     message={"id Requerido"}
-                    isDisabled={!isDisabled}
+                    isDisabled={isDisabled}
                     handleBlur={handleBlur}
                   />
 
