@@ -38,7 +38,7 @@ function TablaConcentradoCal({
         let evaluaciones = 0;
         let a = 0;
         let aa = 0;
-
+        
         if (materiasEncabezado.length > 0){
             const materia = materiasReg.find(m => m.numero === materianumero);
             if (materia.actividad === "No") {
@@ -76,7 +76,6 @@ function TablaConcentradoCal({
             //const calMat = (sum / evaluaciones).toFixed(1);
             const sum = isNaN(sumatoria) || sumatoria === null ? 0 : sumatoria;
             const calMat = (isNaN(sum) || evaluaciones === 0 || evaluaciones === null || isNaN(evaluaciones)) ? (0).toFixed(1) : (sum / evaluaciones).toFixed(1);
-
             if (materia.area === 1) {
                 a += calMat;
                 datosEspanol += Number(calMat);
@@ -154,28 +153,47 @@ function TablaConcentradoCal({
                                     <td className="text-left">{alumno.nombre}</td>
                                     {materiasReg.map((materia, idx) => {
                                         if (idx === indexEspañol) {
-                                            alumnoData.push((datosEspanol / contadorEspanol).toFixed(1));
-                                            alumnoDataExcel.push((datosEspanol / contadorEspanol).toFixed(1));
+                                            //alumnoData.push((datosEspanol / contadorEspanol).toFixed(1));
+                                            //alumnoDataExcel.push((datosEspanol / contadorEspanol).toFixed(1));
+                                            const promedioEspanol = datosEspanol / contadorEspanol;
+                                            if (!isNaN(promedioEspanol)) {
+                                                alumnoData.push(promedioEspanol.toFixed(1));
+                                                alumnoDataExcel.push(promedioEspanol.toFixed(1));
+                                            }
+
                                         }
                                         if (idx === indexIngles) {
-                                            alumnoData.push((datosIngles / contadorIngles).toFixed(1));
-                                            alumnoDataExcel.push((datosIngles / contadorIngles).toFixed(1));
+                                            //alumnoData.push((datosIngles / contadorIngles).toFixed(1));
+                                            //alumnoDataExcel.push((datosIngles / contadorIngles).toFixed(1));
+                                            const promedioIngles = datosIngles / contadorIngles;
+                                            if (!isNaN(promedioIngles)) {
+                                                alumnoData.push(promedioIngles.toFixed(1));
+                                                alumnoDataExcel.push(promedioIngles.toFixed(1));
+                                            }
                                         }
-                                        alumnoData.push(calcularCalificaciones(alumno.numero, materia.numero));
-                                        alumnoDataExcel.push(calcularCalificaciones(alumno.numero, materia.numero));
+                                        //alumnoData.push(calcularCalificaciones(alumno.numero, materia.numero));
+                                        //alumnoDataExcel.push(calcularCalificaciones(alumno.numero, materia.numero));
+                                        const calificacion = calcularCalificaciones(alumno.numero, materia.numero);
+                                        if (!isNaN(calificacion)) {
+                                            alumnoData.push(calificacion);
+                                            alumnoDataExcel.push(calificacion);
+                                        }
                                         return (
                                             <React.Fragment key={materia.numero}>
-                                                {idx === indexEspañol && (
+                                                {idx === indexEspañol && !isNaN((datosEspanol / contadorEspanol).toFixed(1)) && (
                                                     <td className="text-right font-semibold">
-                                                        {(datosEspanol / contadorEspanol).toFixed(1)}
+                                                        {(datosEspanol / contadorEspanol).toFixed(1)} 
                                                     </td>
                                                 )}
-                                                {idx === indexIngles && (
+                                               {idx === indexIngles && !isNaN((datosIngles / contadorIngles).toFixed(1)) && (
                                                     <td className="text-right font-semibold">
-                                                        {(datosIngles / contadorIngles).toFixed(1)}
+                                                        {(datosIngles / contadorIngles).toFixed(1)} 
                                                     </td>
                                                 )}
-                                                <td className="text-right">{calcularCalificaciones(alumno.numero, materia.numero)}</td>
+                                                {!isNaN(calcularCalificaciones(alumno.numero, materia.numero)) && (
+                                                    <td className="text-right">{calcularCalificaciones(alumno.numero, materia.numero)}</td>
+                                                )}
+                                                
                                             </React.Fragment>
                                         );
                                     })}

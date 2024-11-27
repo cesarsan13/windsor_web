@@ -245,7 +245,7 @@ function Accesos_Menu() {
                 Buscar={Buscar}
                 Alta={Alta}
                 home={home}
-                isLoading={animateLoading}
+                animateLoading={animateLoading}
               />
             </div>
 
