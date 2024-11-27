@@ -46,7 +46,7 @@ function Check_identity() {
         const res = await recuperaContra(formData);
         if (res.status) {
           showSwal(res.alert_title, res.alert_text, res.alert_icon);
-          // router.push("/");
+          router.push("/");
         }else{
           showSwal(res.alert_title, res.alert_text, res.alert_icon);
         }
@@ -164,6 +164,13 @@ function Check_identity() {
             </button>
     
             <div className="border-t border-gray-400 mt-4">
+            <button
+              type="button"
+              className="w-full max-w-md bg-red-700 text-white p-3 rounded-lg mt-6 hover:bg-red-900"
+              onClick={() => router.push("./")}
+            >
+              Regresar
+            </button>
               {/* <p className="text-slate-500 mt-2 mb-2 text-center">
                 ¿No tienes una cuenta?
               </p>
