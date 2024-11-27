@@ -19,6 +19,7 @@ import { getGrupos } from "@/app/utils/api/grupos/grupos";
 import { getClasesBuscaCat } from "@/app/utils/api/clases/clases";
 import { loadGlobalVariables, globalVariables } from "@/app/utils/globalfn";
 import { getProfesores } from "../utils/api/profesores/profesores";
+import { getUsuarios } from "../utils/api/usuarios/usuarios";
 
 function BuscarCat({
   deshabilitado = false,
@@ -126,6 +127,10 @@ function BuscarCat({
           case "materias":
             fetchedData = await getAsignaturas(token, false);
             setTiutloInput(["numero", "descripcion"]);
+            break;
+          case "usuarios":
+            fetchedData= await getUsuarios(token,false)
+            setTiutloInput(["numero", "nombre"]);
             break;
         }
         setData(fetchedData);
