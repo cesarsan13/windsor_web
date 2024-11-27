@@ -16,8 +16,8 @@ function TablaAccesosUsuario({
                     <table className='table table-xs table-zebra w-full'>
                         <thead className='sticky top-0 bg-white dark:bg-[#1d232a] z-[2]'>
                             <tr>
-                                <th className='sm:w-[5%] pt-[.5rem] pb-[.5rem]'>punto menu</th>
                                 <th className='sm:w-[10%]'>Menu</th>
+                                <th className='sm:w-[5%] pt-[.5rem] pb-[.5rem]'>punto menu</th>
                                 <th className='sm:w-[5%]'>T A</th>
                                 <th className='w-[5%]'>Altas</th>
                                 <th className='w-[5%]'>Bajas</th>
