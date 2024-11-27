@@ -23,12 +23,12 @@ function ModalAccesosUsuarios({
         }
         setTitulo(
             accion === "Alta"
-                ? `Nueva Cobranza`
+                ? `Nueva Accesos Usuarios`
                 : accion === "Editar"
-                    ? `Editar Cobranza`
+                    ? `Editar Accesos Usuarios`
                     : accion === "Eliminar"
-                        ? `Eliminar Cobranza`
-                        : `Ver Cobranza`
+                        ? `Eliminar Accesos Usuarios`
+                        : `Ver Accesos Usuarios`
         );
     }, [accion])
     return (
