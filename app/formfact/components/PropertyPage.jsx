@@ -115,7 +115,7 @@ function PropertyPage({
     ) {
       return evt.target.checked ? Number(1) : Number(0);
     } else {
-      return Number(value);
+      return value;
     }
   };
   const roundToNearest = (value, threshold) => {
