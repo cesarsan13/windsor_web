@@ -81,22 +81,45 @@ function Menu({ vertical, toogle }) {
   const sortedCategories = Object.keys(groupedMenus).sort();
 
   const renderMenuItems = (category) => {
-    return (groupedMenus[category] || []).map((menuItem) => (
-      <li key={menuItem.ruta}>
-        <Link
-          href={menuItem.ruta}
-          onClick={() => {
-            closeMenus();
-            console.log(isMobile);
-            if (isMobile) {
-              toogle();
-            }
-          }}
-        >
-          {menuItem.descripcion}
-        </Link>
-      </li>
-    ));
+    const { permissions } = session.user;
+    return (groupedMenus[category] || []).map((menuItem) => {
+      const permission = permissions.find(
+        (perm) => perm.id_punto_menu === menuItem.numero
+      );
+      const hasPermission = permission && permission.t_a;
+      if (!hasPermission) {
+        return (
+          <li key={menuItem.numero}>
+            <Link
+              href={`/acceso_denegado?menu=true`}
+              onClick={() => {
+                closeMenus();
+                if (isMobile) {
+                  toogle();
+                }
+              }}
+            >
+              {menuItem.descripcion}
+            </Link>
+          </li>
+        );
+      }
+      return (
+        <li key={menuItem.ruta}>
+          <Link
+            href={menuItem.ruta}
+            onClick={() => {
+              closeMenus();
+              if (isMobile) {
+                toogle();
+              }
+            }}
+          >
+            {menuItem.descripcion}
+          </Link>
+        </li>
+      );
+    });
   };
 
   return vertical ? (
@@ -126,9 +149,8 @@ function Menu({ vertical, toogle }) {
             {category}
           </div>
           <ul
-            className={`dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow ${
-              isOpen[category] ? "" : "hidden"
-            }`}
+            className={`dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow ${isOpen[category] ? "" : "hidden"
+              }`}
           >
             {renderMenuItems(category)}
           </ul>
