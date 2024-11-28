@@ -5,15 +5,16 @@ import { useSession } from "next-auth/react";
 import { getMenus } from "@/app/utils/api/accesos_menu/accesos_menu";
 
 function Menu({ vertical, toogle }) {
-  const { data: session, status } = useSession();   
+  const { data: session, status } = useSession();
   const [isOpen, setIsOpen] = useState({});
   const [menus, setMenus] = useState([]);
   const menuRef = useRef(null);
-  const [isMobile, setIsMobile] = useState(false); 
+  const [isMobile, setIsMobile] = useState(false);
+  console.log(session);
 
   useEffect(() => {
     if (status === "loading" || !session) return;
-    const fetchMenus = async () => {                
+    const fetchMenus = async () => {
       const { token } = session.user;
       const fetchedMenus = await getMenus(token, false);
       setMenus(fetchedMenus);
@@ -82,32 +83,18 @@ function Menu({ vertical, toogle }) {
 
   const renderMenuItems = (category) => {
     const { permissions } = session.user;
+    const { user } = session;
+
     return (groupedMenus[category] || []).map((menuItem) => {
-      const permission = permissions.find(
-        (perm) => perm.id_punto_menu === menuItem.numero
+      const is_admin = user.es_admin;
+      const hasPermission = is_admin || permissions.some(
+        (perm) => perm.id_punto_menu === menuItem.numero && perm.t_a
       );
-      const hasPermission = permission && permission.t_a;
-      if (!hasPermission) {
-        return (
-          <li key={menuItem.numero}>
-            <Link
-              href={`/acceso_denegado?menu=true`}
-              onClick={() => {
-                closeMenus();
-                if (isMobile) {
-                  toogle();
-                }
-              }}
-            >
-              {menuItem.descripcion}
-            </Link>
-          </li>
-        );
-      }
+      const linkTo = hasPermission ? menuItem.ruta : `/acceso_denegado?menu=true`;
       return (
-        <li key={menuItem.ruta}>
+        <li key={menuItem.numero}>
           <Link
-            href={menuItem.ruta}
+            href={linkTo}
             onClick={() => {
               closeMenus();
               if (isMobile) {
@@ -121,6 +108,8 @@ function Menu({ vertical, toogle }) {
       );
     });
   };
+
+
 
   return vertical ? (
     <ul
