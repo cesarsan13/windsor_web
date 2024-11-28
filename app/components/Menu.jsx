@@ -13,7 +13,7 @@ function Menu({ vertical, toogle }) {
 
   useEffect(() => {
     if (status === "loading" || !session) return;
-    const fetchMenus = async () => {
+    const fetchMenus = async () => {                
       const { token } = session.user;
       const fetchedMenus = await getMenus(token, false);
       setMenus(fetchedMenus);

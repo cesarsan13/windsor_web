@@ -12,7 +12,7 @@ export default function Acceso_Denegado() {
         if (!menu) {
             router.push("/");
         }
-    }, [menu, router]);
+    }, [menu, router]);    
 
     if (!menu) {
         return null;

@@ -16,7 +16,7 @@ function AccessDenied() {
             <div
                 className="flex flex-col text-black dark:text-white items-center text-2xl font-bold px-4 py-3"
                 role="alert"
-            >
+            >                
                 <div className="flex justify-center items-center text-8xl mb-4">
                     <i className="fa-solid fa-circle-info"></i>
                 </div>
