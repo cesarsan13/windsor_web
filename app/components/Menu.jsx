@@ -5,11 +5,11 @@ import { useSession } from "next-auth/react";
 import { getMenus } from "@/app/utils/api/accesos_menu/accesos_menu";
 
 function Menu({ vertical, toogle }) {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession();   
   const [isOpen, setIsOpen] = useState({});
   const [menus, setMenus] = useState([]);
   const menuRef = useRef(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(false); 
 
   useEffect(() => {
     if (status === "loading" || !session) return;

@@ -5,7 +5,7 @@ import React from 'react'
 
 function AccessDenied() {
     const router = useRouter();
-    const home = () => {
+    const home = () => { 
         router.push("/");
     };
     const handleSingOut = async () => {

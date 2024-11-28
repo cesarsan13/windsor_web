@@ -6,7 +6,7 @@ import AccessDenied from "@/app/components/AccessDenied";
 export default function Acceso_Denegado() {
     const searchParams = useSearchParams();
     const menu = searchParams.get("menu") === "true";
-    const router = useRouter();
+    const router = useRouter(); 
 
     useEffect(() => {
         if (!menu) {
