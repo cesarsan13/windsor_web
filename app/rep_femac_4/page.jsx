@@ -44,9 +44,12 @@ function rep_femac_4() {
             const formData = new FormData();
             formData.append("numero", alumno.numero || "");
             const { token } = session.user;
-            const data = await getCredencialAlumno(token,formData)
-            console.log("Credencial del alumno => ",data);
-            setCredencial(data);
+            if(alumno && Object.keys(alumno).length > 0){
+                const data = await getCredencialAlumno(token,formData)
+                // console.log("Credencial del alumno => ",data);
+                setCredencial(data);
+            }
+            
 
         }
         if (status === "loading" || !session) {
