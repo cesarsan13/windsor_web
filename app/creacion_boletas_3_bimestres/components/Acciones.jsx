@@ -4,7 +4,7 @@ import Button from "@/app/components/button";
 import { TbLoader3 } from "react-icons/tb";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
-function Acciones({ home, Alta, Buscar, Ver, isLoadingFind, isLoadingPDF, BoletasGrupo, isLoadingImprime }) {
+function Acciones({ home, Alta, Buscar, Ver, isLoadingFind, isLoadingPDF, BoletasGrupo, isLoadingImprime, permiso_imprime }) {
   const images = [
     {
       srcLight: iconos.buscar_w,
@@ -20,7 +20,8 @@ function Acciones({ home, Alta, Buscar, Ver, isLoadingFind, isLoadingPDF, Boleta
       alt: 'Imprimir Boletas por Grupo',
       tooltipTitle: 'Imprimir Boletas por Grupo',
       onClick: BoletasGrupo,
-      isLoading: isLoadingImprime
+      isLoading: isLoadingImprime,
+      permission: permiso_imprime
     },
     {
       srcLight: iconos.vistaPrevia_w,
@@ -28,7 +29,8 @@ function Acciones({ home, Alta, Buscar, Ver, isLoadingFind, isLoadingPDF, Boleta
       alt: 'Vista previa',
       tooltipTitle: 'Vista previa',
       onClick: Ver,
-      isLoading: isLoadingPDF
+      isLoading: isLoadingPDF,
+      permission: permiso_imprime
     },
     {
       srcLight: iconos.salir_w,
@@ -40,7 +42,8 @@ function Acciones({ home, Alta, Buscar, Ver, isLoadingFind, isLoadingPDF, Boleta
     },
   ];
 
-  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading }) => {
+  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading, permission }) => {
+    if (!permission) return null;
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
@@ -78,6 +81,7 @@ function Acciones({ home, Alta, Buscar, Ver, isLoadingFind, isLoadingPDF, Boleta
           tooltipTitle={image.tooltipTitle}
           onClick={image.onClick}
           isLoading={image.isLoading}
+          permission={image.permission}
         />
       ))}
     </div>

@@ -29,6 +29,7 @@ import {
 import ModalVistaPreviaBoleta3 from "@/app/creacion_boletas_3_bimestres/components/ModalVistaPreviaBoletas3";
 import TablaPromedioIngles from "@/app/creacion_boletas_3_bimestres/components/tablaPromedioIngles";
 import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
+import { permissionsComponents } from "@/app/utils/globalfn";
 function CreacionBoletas3Bimestre() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -48,6 +49,7 @@ function CreacionBoletas3Bimestre() {
   const [lugaresEspañol, setLugaresEspañol] = useState([]);
   const [lugaresIngles, setLugaresIngles] = useState([]);
   const [animateLoading, setAnimateLoading] = useState(false);
+  const [permissions, setPermissions] = useState({});
   const {
     register,
     handleSubmit,
@@ -73,6 +75,7 @@ function CreacionBoletas3Bimestre() {
     }
     const fetchData = async () => {
       let newCombo = [];
+      
       for (let i = 2050; i >= 1970; i--) {
         const fechasRango = `${i}-${i + 1}`;
         newCombo.push({
@@ -80,6 +83,7 @@ function CreacionBoletas3Bimestre() {
           descripcion: fechasRango,
         });
       }
+      
       setCiclo(newCombo);
     };
     fetchData();
@@ -90,6 +94,11 @@ function CreacionBoletas3Bimestre() {
       return;
     }
     const fetchData = async () => {
+      let {token, permissions} = session.user;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+      const es_admin = session.user.es_admin;
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
+      setPermissions(permisos)
       let x;
       const datos = await getDatosPorGrupo(
         session.user.token,
@@ -1600,6 +1609,7 @@ function CreacionBoletas3Bimestre() {
                 isLoadingFind={isLoadingFind}
                 isLoadingPDF={animateLoading}
                 isLoadingImprime={isLoadingImprime}
+                permiso_imprime={permissions.impresion}
               />
             </div>
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
