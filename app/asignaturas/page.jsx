@@ -25,7 +25,7 @@ import * as XLSX from "xlsx";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import { debounce } from "../utils/globalfn";
+import { debounce, permissionsComponents } from "@/app/utils/globalfn";
 
 function Asignaturas() {
   const router = useRouter();
@@ -48,15 +48,19 @@ function Asignaturas() {
   const [num, setNum] = useState("");
   const asignaturasRef = useRef(asignaturas)
   const [isLoadingButton, setisLoadingButton] = useState(false);
+  const [permissions, setPermissions] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
-      const { token } = session.user;
-      // console.log(token);
+      const { token, permissions } = session.user;
+      const es_admin = session.user.es_admin;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const data = await getAsignaturas(token, bajas);
       setAsignaturas(data);
       setAsignaturasFiltrados(data);
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
+      setPermissions(permisos);
       setisLoading(false);
     };
     if (status === "loading" || !session) {
@@ -431,6 +435,8 @@ function Asignaturas() {
                 home={home}
                 Ver={handleVerClick}
                 isLoading={animateLoading}
+                permiso_alta={permissions.altas}
+                permiso_imprime={permissions.impresion}
               />
             </div>
 
@@ -462,6 +468,8 @@ function Asignaturas() {
                   setCurrentId={setCurrentId}
                   formatNumber={formatNumber}
                   tableAction={tableAction}
+                  permiso_cambio={permissions.cambios}
+                  permiso_baja={permissions.bajas}
                 />
               ))}
           </div>
