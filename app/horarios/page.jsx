@@ -19,7 +19,7 @@ import { getUltimoHorario } from "@/app/utils/api/horarios/horarios";
 import { getProductos } from "../utils/api/productos/productos";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { ReportePDF } from "../utils/ReportesPDF";
-import { debounce } from "../utils/globalfn";
+import { debounce, permissionsComponents } from "../utils/globalfn";
 
 function Horarios() {
   const router = useRouter();
@@ -41,6 +41,7 @@ function Horarios() {
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
   const horariosRef = useRef(horarios)
   const [isLoadingButton, setisLoadingButton] = useState(false);
+  const [permissions, setPermissions] = useState({});
 
   useEffect(() => {
     horariosRef.current = horarios
@@ -78,10 +79,13 @@ function Horarios() {
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
-      const { token } = session.user;
+      let { token, permissions } = session.user;
+      const es_admin = session.user.es_admin;
       const data = await getHorarios(token, bajas);
       setHorarios(data);
       setHorariosFiltrados(data);
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, 7);
+      setPermissions(permisos);
       setisLoading(false);
     };
     if (status === "loading" || !session) {
@@ -383,6 +387,8 @@ function Horarios() {
                 home={home}
                 animateLoading={animateLoading}
                 Ver={handleVerClick}
+                permiso_alta={permissions.altas}
+                permiso_imprime={permissions.impresion}
               />
             </div>
 
@@ -409,6 +415,8 @@ function Horarios() {
                 setAccion={setAccion}
                 setCurrentId={setCurrentId}
                 session={session}
+                permiso_cambio={permissions.cambios}
+                permiso_baja={permissions.bajas}
               />)}
           </div>
         </div>
