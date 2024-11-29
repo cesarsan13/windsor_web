@@ -19,7 +19,7 @@ import { siguiente } from "@/app/utils/api/cajeros/cajeros";
 import "jspdf-autotable";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { ReportePDF } from "../utils/ReportesPDF";
-import { debounce } from "../utils/globalfn";
+import { debounce, permissionsComponents } from "../utils/globalfn";
 
 function Cajeros() {
   const router = useRouter();
@@ -43,15 +43,25 @@ function Cajeros() {
     tb_correo: "",
     tb_tel: "",
   });
+  const [permissions, setPermissions] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
-      const { token } = session.user;
+      const { token, permissions } = session.user;
+      const es_admin = session.user.es_admin;
+
       const data = await getCajeros(token, bajas);
       setCajeros(data);
       setCajerosFiltrados(data);
       setisLoading(false);
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        1
+      );
+      setPermissions(permisos);
     };
     if (status === "loading" || !session) {
       return;
@@ -376,6 +386,8 @@ function Cajeros() {
                 home={home}
                 Ver={handleVerClick}
                 animateLoading={animateLoading}
+                permiso_alta={permissions.altas}
+                permiso_imprime={permissions.impresion}
               />
             </div>
 
@@ -406,6 +418,8 @@ function Cajeros() {
                   setCajero={setCajero}
                   setAccion={setAccion}
                   setCurrentId={setCurrentId}
+                  permiso_cambio={permissions.cambios}
+                  permiso_baja={permissions.bajas}
                 />
               ))}
           </div>
