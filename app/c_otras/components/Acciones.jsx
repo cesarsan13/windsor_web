@@ -4,7 +4,7 @@ import Button from "@/app/components/button";
 import { TbLoader3 } from "react-icons/tb";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
-function Acciones({ home, Alta, Buscar, isLoading, isDisabledSave, Ver }) {
+function Acciones({ home, Alta, Buscar, isLoading, isDisabledSave, Ver, permiso_alta, permiso_imprime }) {
   const isAnyLoading = isLoading || isDisabledSave;
   const images = [
     {
@@ -13,7 +13,8 @@ function Acciones({ home, Alta, Buscar, isLoading, isDisabledSave, Ver }) {
       alt: "Buscar",
       tooltipTitle: "Buscar",
       onClick: Buscar,
-      isLoading: isLoading
+      isLoading: isLoading,
+      permission: true,
     },
     {
       srcLight: iconos.guardar_w,
@@ -21,14 +22,16 @@ function Acciones({ home, Alta, Buscar, isLoading, isDisabledSave, Ver }) {
       alt: "Guardar",
       tooltipTitle: "Guardar",
       onClick: Alta,
-      isLoading: isDisabledSave
+      isLoading: isDisabledSave,
+      permission: permiso_alta,
     },
     {
       srcLight: iconos.vistaPrevia_w,
       srcDark: iconos.vistaPrevia,
       alt: 'Vista previa',
       tooltipTitle: 'Vista previa',
-      onClick: Ver
+      onClick: Ver,
+      permission: permiso_imprime,
     },
     {
       srcLight: iconos.salir_w,
@@ -36,11 +39,13 @@ function Acciones({ home, Alta, Buscar, isLoading, isDisabledSave, Ver }) {
       alt: 'Salir',
       tooltipTitle: 'Salir',
       onClick: home,
-      isLoading: false
+      isLoading: false,
+      permission: true,
     },
   ];
 
-  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading, disabled }) => {
+  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading, disabled,permission }) => {
+    if (!permission) return null;
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
@@ -80,6 +85,7 @@ function Acciones({ home, Alta, Buscar, isLoading, isDisabledSave, Ver }) {
           onClick={image.onClick}
           isLoading={image.isLoading}
           disabled={isAnyLoading}
+          permission={image.permission}
         />
       ))}
     </div>

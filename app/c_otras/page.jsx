@@ -19,6 +19,9 @@ import { showSwal } from "@/app/utils/alerts";
 import ModalVistaPreviaC_Otras from "@/app/c_otras/components/modalVistaPreviaC_Otras";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
+import {
+  permissionsComponents,
+} from "../utils/globalfn";
 import "jspdf-autotable";
 
 function C_Otras() {
@@ -36,6 +39,8 @@ function C_Otras() {
   const [isDisabledSave, setIsDisabledSave] = useState(false);
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const [permissions, setPermissions] = useState({});
+
   const {
     register,
     handleSubmit,
@@ -65,7 +70,8 @@ function C_Otras() {
   });
 
   const Buscar = handleSubmit(async (data) => {
-    const { token } = session.user;
+    const { token,permissions } = session.user;
+    const es_admin = session.user.es_admin;
     if (!grupo) {
       showSwal("Error", "Debe seleccionar un grupo", "error");
       return;
@@ -119,6 +125,8 @@ function C_Otras() {
       setAnimateLoading(false);
       return;
     }
+    const permisos = permissionsComponents(es_admin, permissions, session.user.id, 1);
+    setPermissions(permisos);
   });
 
   const validar = async (grupo, materia, contraseña) => {
@@ -254,6 +262,8 @@ function C_Otras() {
                 Ver={handleVerClick}
                 isLoading={animateLoading}
                 isDisabledSave={isDisabledSave}
+                permiso_alta={permissions.altas}
+                permiso_imprime={permissions.impresion}
               />
             </div>
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
@@ -348,6 +358,7 @@ function C_Otras() {
                     setAccion={setAccion}
                     setCurrentId={setCurrentId}
                     aignatura_nombre={b_asignatura.descripcion || "Sin Asignatura"}
+                    permiso_cambio={permissions.cambios}
                   />
                 </div>
               </div>
