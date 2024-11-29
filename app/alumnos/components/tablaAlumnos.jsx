@@ -42,7 +42,7 @@ function TablaAlumnos({
     return (
       <th>
         <div
-          className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent text-black dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem]"
+          className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
           data-tip={tooltip}
           onClick={onClick}
         >
