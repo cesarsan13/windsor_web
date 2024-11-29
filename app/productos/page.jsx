@@ -8,7 +8,7 @@ import Busqueda from "@/app/productos/components/Busqueda";
 import Acciones from "@/app/productos/components/Acciones";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { useForm } from "react-hook-form";
-import { debounce } from "@/app/utils/globalfn";
+import { debounce, permissionsComponents } from "@/app/utils/globalfn";
 import {
   getProductos,
   guardarProductos,
@@ -44,6 +44,7 @@ function Productos() {
   const [disabledNum, setDisableNum] = useState(false);
   const [num, setNum] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
+  const [permissions, setPermissions] = useState({});
   const productosRef = useRef(productos)
 
   useEffect(() => {
@@ -82,11 +83,14 @@ function Productos() {
   useEffect(() => {    
     const fetchData = async () => {
       setisLoading(true);
-      const { token } = session.user;
+      let {token, permissions} = session.user;
+      const es_admin = session.user.es_admin;
       const data = await getProductos(token, bajas);
       setProductos(data);
       setProductosFiltrados(data);
       setisLoading(false);
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, 5);
+      setPermissions(permisos)
     };
     if (status === "loading" || !session) {
       return;
@@ -472,6 +476,8 @@ function Productos() {
                 home={home}
                 Ver={handleVerClick}
                 animateLoading={animateLoading}
+                permiso_alta={permissions.altas}
+                permiso_imprime={permissions.impresion}
               />
             </div>
 
@@ -502,6 +508,8 @@ function Productos() {
                   formatNumber={formatNumber}
                   tableAction={tableAction}
                   session={session}
+                  permiso_cambio={permissions.cambios}
+                  permiso_baja={permissions.bajas}
                 />
               )}
           </div>
