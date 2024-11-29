@@ -6,26 +6,38 @@ import { useForm } from "react-hook-form";
 import { showSwal } from "@/app/utils/alerts";
 import Acciones from "@/app/propietario/components/Acciones";
 import Inputs from "./components/Inputs";
-import { getPropietario } from "../utils/api/propietario/propietario";
-import ModalConfiguracion from "./components/modalConfiguracion";
+import { getPropietario, updatePropietario } from "../utils/api/propietario/propietario";
+import ModalTablaConfiguracion from "./components/modalTablaConfiguracion";
+import Loading from "../components/loading";
 
 function Propietario() {
     const router = useRouter();
     const { data: session, status } = useSession();
 
     const [propietarioInfo, setPropietarioInfo] = useState([]);
+    const [isLoading, setisLoading] = useState(false);
 
-    console.log(propietarioInfo);
 
     useEffect(() => {
         if (status === "loading" || !session) {
             return;
         }
+        setisLoading(true);
         const fetchData = async () => {
             const {token} = session.user;
             const data = await getPropietario(token);
             setPropietarioInfo(data[0]);
+        reset({
+            nombre_I: data[0].nombre,
+            cve_Seguridad_I: data[0].clave_seguridad,
+            max_Busqueda_I: data[0].busqueda_max,
+            numero_Recibo_I: data[0].con_recibos,
+            numero_Factura_I: data[0].con_facturas,
+            cve_Bonificacion_I: data[0].clave_bonificacion,
+        });
+        setisLoading(false);
         };
+        
         fetchData();
     },[session, status]);
 
@@ -36,28 +48,30 @@ function Propietario() {
         formState: { errors },
       } = useForm({
         defaultValues: {
-            nombre_I: propietarioInfo.nombre,
-            cve_Seguridad_I: propietarioInfo.clave_seguridad,
-            max_Busqueda_I: propietarioInfo.busqueda_max,
-            numero_Recibo_I: propietarioInfo.con_recibos,
-            numero_Factura_I: propietarioInfo.con_facturas,
-            cve_Bonificacion_I: propietarioInfo.clave_bonificacion,
+            nombre_I: propietarioInfo.nombre_I,
+            cve_Seguridad_I: propietarioInfo.cve_Seguridad_I,
+            max_Busqueda_I: propietarioInfo.max_Busqueda_I,
+            numero_Recibo_I: propietarioInfo.numero_Recibo_I,
+            numero_Factura_I: propietarioInfo.numero_Factura_I,
+            cve_Bonificacion_I: propietarioInfo.cve_Bonificacion_I,
         },
     });
 
-
-    const Guardar = () => {
-
-    };
-
-    const Buscar = () => {
+    const Guardar = handleSubmit(async (data) => {
+        let res = null;
+        res = await updatePropietario(session.user.token, data);
+        if(res.status){
+            showSwal(res.alert_title, res.alert_text, res.alert_icon);
+        } else {
+            showSwal(res.alert_title, res.alert_text, res.alert_icon);
+        }
         
-    };
+    });
 
     const Configuracion = (show) => {
         show
-          ? document.getElementById("modal_Configuracion").showModal()
-          : document.getElementById("modal_Configuracion").close();
+          ? document.getElementById("modal_Tabla_Configuracion").showModal()
+          : document.getElementById("modal_Tabla_Configuracion").close();
         };
     
     const home = () => {
@@ -70,9 +84,9 @@ function Propietario() {
         );
     }
 
-    return(
+    return (
         <>
-            <ModalConfiguracion/>
+            <ModalTablaConfiguracion/>
             
             <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
                 <div className="w-full py-3">
@@ -95,6 +109,7 @@ function Propietario() {
                 </div>
                 <div className="w-full py-3 flex flex-col gap-y-4">
                     <div className="flex flex-col items-center h-full">
+                        {!isLoading ? (
                         <div className="w-full max-w-xl">
                             <div className="lg:w-6/6 md:w-6/6 xs:w-4/6">
                                 <Inputs
@@ -133,7 +148,7 @@ function Propietario() {
                                     dataType={"int"}
                                     name={"max_Busqueda_I"}
                                     tamañolabel={""}
-                                    className={"rounded grow w-full md:w-1/2"}
+                                    className={"rounded grow w-full md:w-1/2 text-right"}
                                     Titulo={"Máximo Búsqueda: "}
                                     type={"text"}
                                     requerido={true}
@@ -149,7 +164,7 @@ function Propietario() {
                                     dataType={"int"}
                                     name={"numero_Recibo_I"}
                                     tamañolabel={""}
-                                    className={"rounded grow w-full md:w-1/2"}
+                                    className={"rounded grow w-full md:w-1/2 text-right"}
                                     Titulo={"Número Recibo: "}
                                     type={"text"}
                                     requerido={true}
@@ -165,7 +180,7 @@ function Propietario() {
                                     dataType={"int"}
                                     name={"numero_Factura_I"}
                                     tamañolabel={""}
-                                    className={"rounded grow w-full md:w-1/2"}
+                                    className={"rounded grow w-full md:w-1/2 text-right"}
                                     Titulo={"Número Factura: "}
                                     type={"text"}
                                     requerido={true}
@@ -181,7 +196,7 @@ function Propietario() {
                                     dataType={"int"}
                                     name={"cve_Bonificacion_I"}
                                     tamañolabel={""}
-                                    className={"rounded grow w-full md:w-1/2 xs:w-2/3"}
+                                    className={"rounded grow w-full md:w-1/2 xs:w-2/3 text-right"}
                                     Titulo={"Cve Bonificacion: "}
                                     type={"text"}
                                     requerido={true}
@@ -193,11 +208,13 @@ function Propietario() {
                                 />
                             </div>
                         </div>
+                        ):(
+                            <Loading></Loading>
+                        )}
                     </div>
                 </div>
             </div> 
-        </>  
-    );
-
+        </>
+    )
 }
 export default Propietario;
