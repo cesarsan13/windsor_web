@@ -17,7 +17,7 @@ import Busqueda from "@/app/clases/components/Busqueda";
 import ModalClases from "@/app/clases/components/modalClases";
 import { ReportePDF } from "../utils/ReportesPDF";
 import { showSwal, confirmSwal, showSwalAndWait } from "../utils/alerts";
-import { debounce, obtenerFechaYHoraActual } from "../utils/globalfn";
+import { debounce, obtenerFechaYHoraActual, permissionsComponents } from "../utils/globalfn";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 
 function Clases() {
@@ -42,6 +42,7 @@ function Clases() {
     materia: "",
   });
   const [contador, setContador] = useState(0);
+  const [permissions, setPermissions] = useState({});
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [busqueda, setBusqueda] = useState({
@@ -55,11 +56,15 @@ function Clases() {
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
-      const { token } = session.user;
+      let {token, permissions} = session.user;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+      const es_admin = session.user.es_admin;
       const data = await getClases(token, bajas);
       setClases(data);
       setClasesFiltrados(data);
       setisLoading(false);
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
+      setPermissions(permisos)
     };
     if (status === "loading" || !session) {
       return;
@@ -444,6 +449,8 @@ function Clases() {
                 Ver={handleVerClick}
                 animateLoading={animateLoading}
                 contador={contador}
+                permiso_alta={permissions.altas}
+                permiso_imprime={permissions.impresion}
               />
             </div>
 
@@ -473,6 +480,8 @@ function Clases() {
                   setClase={setClase}
                   setAccion={setAccion}
                   setCurrentId={setCurrentId}
+                  permiso_cambio={permissions.cambios}
+                  permiso_baja={permissions.bajas}
                 />
               ))}
           </div>
