@@ -84,15 +84,15 @@ function Alumnos() {
         : true;
       const coincideDescripcion = tb_desc
         ? alumno["nombre"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_desc.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
         : true;
       const coincideGrado = tb_grado
         ? (alumno["horario_1_nombre"] || "")
-          .toString()
-          .toLowerCase()
-          .includes(tb_grado.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_grado.toLowerCase())
         : true;
       return coincideId && coincideDescripcion && coincideGrado;
     });
@@ -113,6 +113,8 @@ function Alumnos() {
       setisLoading(true);
       let { token, permissions } = session.user;
       const es_admin = session.user.es_admin;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+
       const data = await getAlumnos(token, bajas);
       const horarios = await getHorarios(token, bajas);
       setHorarios(horarios);
@@ -122,7 +124,12 @@ function Alumnos() {
       let fecha_hoy = new Date();
       const fechaFormateada = fecha_hoy.toISOString().split("T")[0];
       setFechaHoy(fechaFormateada);
-      const permisos = permissionsComponents(es_admin, permissions, session.user.id, 1);
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menuSeleccionado
+      );
       setPermissions(permisos);
     };
     if (status === "loading" || !session) {
@@ -327,7 +334,6 @@ function Alumnos() {
     });
   }, [alumno, reset]);
 
-
   const formatNumber = (num) => {
     if (!num) return "";
     const numStr = typeof num === "string" ? num : num.toString();
@@ -472,8 +478,9 @@ function Alumnos() {
         return;
       }
     }
-    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${data.a_nombre || ""
-      }`.trim();
+    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${
+      data.a_nombre || ""
+    }`.trim();
     data.nombre = nombreCompleto;
     const formData = new FormData();
     formData.append("numero", data.numero || "");
@@ -512,8 +519,7 @@ function Alumnos() {
     formData.append("cancha_4", data.cancha_4 || "");
     if (grado.numuero !== null && grado.numero !== undefined) {
       formData.append("horario_1", grado.numero || "");
-    }
-    else {
+    } else {
       formData.append("horario_1", alumno.grupo || "");
     }
     // formData.append("horario_1", grado.numero || alumno.grupo || "" );
@@ -574,8 +580,7 @@ function Alumnos() {
     formData.append("escuela", data.escuela || "");
     if (grado.numuero !== null && grado.numero !== undefined) {
       formData.append("grupo", grado.numero || "");
-    }
-    else {
+    } else {
       formData.append("grupo", alumno.grupo || "");
     }
 
@@ -590,17 +595,16 @@ function Alumnos() {
     }
     let horario_1_nombre = horarios.find((item) => {
       if (grado.numuero !== null && grado.numero !== undefined) {
-        return item.numero === grado.numero
+        return item.numero === grado.numero;
       } else {
-        return item.numero === alumno.grupo
+        return item.numero === alumno.grupo;
       }
-    }
-    );
+    });
     if (typeof horario_1_nombre === "undefined") {
       horario_1_nombre = {
         numero: 0,
-        horario: ""
-      }
+        horario: "",
+      };
     }
     data.horario_1_nombre = grado.horario || horario_1_nombre.horario;
     res = await guardarAlumnos(

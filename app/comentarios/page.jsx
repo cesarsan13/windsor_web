@@ -27,7 +27,8 @@ function Comentarios() {
   const { data: session, status } = useSession();
   const [formasComentarios, setFormasComentarios] = useState([]);
   const [formaComentarios, setFormaComentarios] = useState({});
-  const [formaComentariosFiltrados, setFormaComentariosFiltrados] = useState(null);
+  const [formaComentariosFiltrados, setFormaComentariosFiltrados] =
+    useState(null);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
@@ -59,9 +60,9 @@ function Comentarios() {
         : true;
       const coincideComentario1 = tb_comentario1
         ? formaComentarios["comentario_1"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_comentario1.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_comentario1.toLowerCase())
         : true;
       return coincideID && coincideComentario1;
     });
@@ -86,15 +87,20 @@ function Comentarios() {
   }, [busqueda, Buscar]);
 
   useEffect(() => {
-
     const fetchData = async () => {
       setisLoading(true);
       let { token, permissions } = session.user;
       const es_admin = session.user.es_admin;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const data = await getComentarios(token, bajas);
       setFormasComentarios(data);
       setFormaComentariosFiltrados(data);
-      const permisos = permissionsComponents(es_admin, permissions, session.user.id, 2);
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menuSeleccionado
+      );
       setPermissions(permisos);
       setisLoading(false);
     };
@@ -127,10 +133,6 @@ function Comentarios() {
       generales: formaComentarios.generales,
     });
   }, [formaComentarios, reset]);
-
-
-
-
 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault();
@@ -205,8 +207,8 @@ function Comentarios() {
         comentarios.generales == 1
           ? "Si"
           : comentarios.generales == 0
-            ? "No"
-            : "No valido";
+          ? "No"
+          : "No valido";
       reporte.ImpPosX(resultado.toString(), 270, reporte.tw_ren, 0, "L");
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRenH) {
@@ -451,7 +453,6 @@ function Comentarios() {
                   permiso_baja={permissions.bajas}
                 />
               ))}
-
           </div>
         </div>
       </div>

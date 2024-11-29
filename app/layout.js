@@ -2,12 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import SessionAuthProvider from "@/context/SessionAuthProvider";
 import NavBar from "@/app/components/NavBar";
-import Script from "next/script";
-const inter = Inter({ subsets: ["latin"] });
-import Link from "next/link";
 import Menu from "./components/Menu";
-import Image from "next/image";
-import iconos from "@/app/utils/iconos";
 export const metadata = {
   title: "Sistema de Control Escolar",
   description: "Desarrollado por Interaccion Operativa S.A. de C.V.",
