@@ -4,7 +4,7 @@ import Button from "@/app/components/button";
 import { TbLoader3 } from "react-icons/tb";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
-function Acciones({ home, Buscar, Ver, isLoadingFind, isLoadingPDF}) { 
+function Acciones({ home, Buscar, Ver, isLoadingFind, isLoadingPDF, permiso_imprime}) { 
   const images = [
     { 
       srcLight: iconos.buscar_w,
@@ -12,7 +12,8 @@ function Acciones({ home, Buscar, Ver, isLoadingFind, isLoadingPDF}) {
       alt: "Buscar", 
       tooltipTitle: "Buscar", 
       onClick: Buscar,
-      isLoading: isLoadingFind
+      isLoading: isLoadingFind,
+      permission: true
     },
     { 
       srcLight: iconos.vistaPrevia_w,
@@ -20,7 +21,8 @@ function Acciones({ home, Buscar, Ver, isLoadingFind, isLoadingPDF}) {
       alt: 'Vista previa', 
       tooltipTitle: 'Vista previa', 
       onClick: Ver,
-      isLoading: isLoadingPDF
+      isLoading: isLoadingPDF,
+      permission: permiso_imprime
     },
     { 
       srcLight: iconos.salir_w,
@@ -28,11 +30,13 @@ function Acciones({ home, Buscar, Ver, isLoadingFind, isLoadingPDF}) {
       alt: 'Salir', 
       tooltipTitle: 'Salir', 
       onClick: home,
-      isLoading: false
+      isLoading: false,
+      permission: true
     }
   ];
 
-  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading}) => { 
+  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading, permission}) => { 
+    if(!permission) return null;
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
@@ -71,6 +75,7 @@ function Acciones({ home, Buscar, Ver, isLoadingFind, isLoadingPDF}) {
         tooltipTitle={image.tooltipTitle}
         onClick={image.onClick}
         isLoading={image.isLoading}
+        permission={image.permission}
         />
       ))}
     </div>

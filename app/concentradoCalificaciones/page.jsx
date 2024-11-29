@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -10,6 +10,7 @@ import {
   formatTime,
   RegresaCalificacionRedondeo,
   aDec,
+  permissionsComponents
 } from "@/app/utils/globalfn";
 import {
   getMateriasPorGrupo,
@@ -49,10 +50,25 @@ function ConcentradoCalificaciones() {
     const [alumnosCalificaciones, setalumnosCalificaciones] = useState([]);
     const [isLoadingFind, setisLoadingFind] = useState(false);
     const [isLoadingPDF, setisLoadingPDF] = useState(false);
+    const [permissions, setPermissions] = useState({});
 
   let dataCaliAlumnosBody = [];
   let dataCaliAlumnosBodyEXCEL = [];
   let dataEncabezado = [];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { permissions } = session.user;
+      const es_admin = session.user.es_admin;
+      const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado)
+      setPermissions(permisos);
+    };
+    if (status === "loading" || !session) {
+      return;
+    }
+    fetchData();
+  }, [session, status]);
 
   const {
     register,
@@ -336,6 +352,7 @@ function ConcentradoCalificaciones() {
                 grupo = {grupo.numero}
                 bimestre = {bimestre}
                 accion ={accion}
+                permiso_imprime = {permissions.impresion}
             />
             <VistaPrevia
                 pdfPreview={pdfPreview}
@@ -357,6 +374,7 @@ function ConcentradoCalificaciones() {
                 Ver={handleVerClick}
                 isLoadingFind={isLoadingFind}
                 isLoadingPDF={isLoadingPDF}
+                permiso_imprime = {permissions.impresion}
               />
             </div>
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
