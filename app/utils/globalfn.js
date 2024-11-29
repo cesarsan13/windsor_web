@@ -355,3 +355,19 @@ export const obtenerFechaYHoraActual = () => {
 export const aDec = (value) => {
   return isNaN(value) ? 0 : Number(value);
 }
+
+export const permissionsComponents = (es_admin, permissions, id_usuario, id_punto_menu) => {
+  const permisos = es_admin
+    ? {
+      id_punto_menu: id_punto_menu,
+      id_usuario: id_usuario,
+      altas: true,
+      bajas: true,
+      cambios: true,
+      impresion: true,
+    }
+    : permissions.find(
+      (per) => per.id_punto_menu === id_punto_menu && per.id_usuario === id_usuario
+    );
+  return permisos;
+}

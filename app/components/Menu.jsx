@@ -10,7 +10,6 @@ function Menu({ vertical, toogle }) {
   const [menus, setMenus] = useState([]);
   const menuRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
-  console.log(session);
 
   useEffect(() => {
     if (status === "loading" || !session) return;
