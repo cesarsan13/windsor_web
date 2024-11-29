@@ -31,6 +31,7 @@ import {
   format_Fecha_String,
   debounce,
   formatTime,
+  permissionsComponents,
 } from "../utils/globalfn";
 function Alumnos() {
   const router = useRouter();
@@ -59,7 +60,8 @@ function Alumnos() {
   const [animateLoading, setAnimateLoading] = useState(false);
   const [files, setFile] = useState(null);
   const [activeTab, setActiveTab] = useState(1);
-  
+  const [permissions, setPermissions] = useState({});
+
   const alumnosRef = useRef(alumnos);
   const [busqueda, setBusqueda] = useState({
     tb_id: "",
@@ -82,15 +84,15 @@ function Alumnos() {
         : true;
       const coincideDescripcion = tb_desc
         ? alumno["nombre"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_desc.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_desc.toLowerCase())
         : true;
       const coincideGrado = tb_grado
         ? (alumno["horario_1_nombre"] || "")
-            .toString()
-            .toLowerCase()
-            .includes(tb_grado.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_grado.toLowerCase())
         : true;
       return coincideId && coincideDescripcion && coincideGrado;
     });
@@ -109,7 +111,8 @@ function Alumnos() {
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
-      const { token } = session.user;
+      let { token, permissions } = session.user;
+      const es_admin = session.user.es_admin;
       const data = await getAlumnos(token, bajas);
       const horarios = await getHorarios(token, bajas);
       setHorarios(horarios);
@@ -119,6 +122,9 @@ function Alumnos() {
       let fecha_hoy = new Date();
       const fechaFormateada = fecha_hoy.toISOString().split("T")[0];
       setFechaHoy(fechaFormateada);
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, 1);
+      console.log(permisos);
+      setPermissions(permisos);
     };
     if (status === "loading" || !session) {
       return;
@@ -320,7 +326,7 @@ function Alumnos() {
       referencia: alumno.referencia,
       horario_1_nombre: alumno.horario_1_nombre,
     });
-  }, [alumno, reset]); 
+  }, [alumno, reset]);
 
 
   const formatNumber = (num) => {
@@ -467,9 +473,8 @@ function Alumnos() {
         return;
       }
     }
-    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${
-      data.a_nombre || ""
-    }`.trim();
+    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${data.a_nombre || ""
+      }`.trim();
     data.nombre = nombreCompleto;
     const formData = new FormData();
     formData.append("numero", data.numero || "");
@@ -506,10 +511,10 @@ function Alumnos() {
     formData.append("cancha_2", data.cancha_2 || "");
     formData.append("cancha_3", data.cancha_3 || "");
     formData.append("cancha_4", data.cancha_4 || "");
-    if(grado.numuero !== null && grado.numero !== undefined ){
+    if (grado.numuero !== null && grado.numero !== undefined) {
       formData.append("horario_1", grado.numero || "");
     }
-    else{
+    else {
       formData.append("horario_1", alumno.grupo || "");
     }
     // formData.append("horario_1", grado.numero || alumno.grupo || "" );
@@ -568,10 +573,10 @@ function Alumnos() {
     formData.append("rfc_factura", data.rfc_factura || "");
     formData.append("estatus", data.estatus || "");
     formData.append("escuela", data.escuela || "");
-    if(grado.numuero !== null && grado.numero !== undefined ){
+    if (grado.numuero !== null && grado.numero !== undefined) {
       formData.append("grupo", grado.numero || "");
     }
-    else{
+    else {
       formData.append("grupo", alumno.grupo || "");
     }
 
@@ -584,18 +589,18 @@ function Alumnos() {
         `${data.nombre}_${data.a_paterno}_${data.a_materno}.jpg`
       );
     }
-    let horario_1_nombre = horarios.find((item) =>{
-      if(grado.numuero !== null && grado.numero !== undefined ){
+    let horario_1_nombre = horarios.find((item) => {
+      if (grado.numuero !== null && grado.numero !== undefined) {
         return item.numero === grado.numero
-      }else{
+      } else {
         return item.numero === alumno.grupo
       }
-      }
+    }
     );
-    if(typeof horario_1_nombre === "undefined"){
+    if (typeof horario_1_nombre === "undefined") {
       horario_1_nombre = {
-        numero:0,
-        horario:""
+        numero: 0,
+        horario: ""
       }
     }
     data.horario_1_nombre = grado.horario || horario_1_nombre.horario;
@@ -632,8 +637,8 @@ function Alumnos() {
               const aLactualizadas = alumnos.map((p) =>
                 p.numero === currentID ? { ...p, ...res.data } : p
               );
-              aLactualizadas.find((item) =>{
-                if(item.numero === res.data.numero){
+              aLactualizadas.find((item) => {
+                if (item.numero === res.data.numero) {
                   item.horario_1_nombre = data.horario_1_nombre;
                 }
               });
@@ -889,6 +894,8 @@ function Alumnos() {
                 Excel={ImprimeExcel}
                 Ver={handleVerClick}
                 animateLoading={animateLoading}
+                permiso_alta={permissions.altas}
+                permiso_imprime={permissions.impresion}
               />
             </div>
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
@@ -920,6 +927,8 @@ function Alumnos() {
                   formatNumber={formatNumber}
                   setCapturedImage={setCapturedImage}
                   setcondicion={setcondicion}
+                  permiso_cambio={permissions.cambios}
+                  permiso_baja={permissions.bajas}
                 />
               ))}
           </div>
