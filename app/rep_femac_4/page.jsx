@@ -194,6 +194,7 @@ function rep_femac_4() {
           }, 500);
         } else {
             // const imagenUrl = await getFotoAlumno(session.user.token, credencial.alumno.ruta_foto);
+             
             const configuracion = {
                 Encabezado: {
                 Nombre_Aplicacion: "Sistema de Control Escolas",
@@ -206,6 +207,8 @@ function rep_femac_4() {
             const conX = 0.4;
             const conY = 0.4;
             const reporte = new ReportePDF(configuracion,"landscape");
+            let doc = reporte.getDoc();
+            doc.addImage(capturedImage, "PNG", 10, 10, 80, 80);
             formato.forEach((formato) => {
                 switch (formato.descripcion_campo) {
                     case "No. Alumno":
@@ -246,7 +249,8 @@ function rep_femac_4() {
                 Nombre_Usuario: `Usuario: ${session.user.name}`,
               },
               body: credencial,
-              formato: formato
+              formato: formato,
+              imagen: capturedImage
             };
             Imprimir(configuracion);
           };

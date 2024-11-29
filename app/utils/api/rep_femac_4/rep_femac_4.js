@@ -63,7 +63,9 @@ export const getCredencialFormato = async (token, id) => {
   
   export const Imprimir = (configuracion) => {
     const reporte = new ReportePDF(configuracion,"landscape");
-    const { body,formato } = configuracion;
+    let doc = reporte.getDoc();
+    const { body,formato,imagen } = configuracion;
+    doc.addImage(imagen, "PNG", 10, 10, 80, 80);
     const conX = 0.4;
     const conY = 0.4;
     formato.forEach((formato) => {
