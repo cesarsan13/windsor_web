@@ -8,6 +8,9 @@ import BuscarCat from "../components/BuscarCat";
 import Inputs from "@/app/cambio_ciclo_escolar/components/Inputs";
 import { cambiarCicloEscolar,getCicloEscolar } from "@/app/utils/api/cambio_ciclo_escolar/cambio_ciclo_escolar";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
+import {
+    permissionsComponents,
+  } from "../utils/globalfn";
 
 function Cambio_Ciclo_Escolar() {
     const router = useRouter();
@@ -15,15 +18,20 @@ function Cambio_Ciclo_Escolar() {
     const date = new Date();
     const year = date.getFullYear();
     const [cicloEscolar,setCicloEscolar]= useState("")
+    const [permissions, setPermissions] = useState({});
+
 
     useEffect(() => {
         if (status === "loading" || !session) {
             return;
         }
         const fetchData = async () => {
-            const { token } = session.user;
+            const { token, permissions } = session.user;
+            const es_admin = session.user.es_admin;
             const data= await getCicloEscolar(token)
             setCicloEscolar(data.ciclo_escolar)
+            const permisos = permissionsComponents(es_admin, permissions, session.user.id, 1);
+            setPermissions(permisos);
             console.log(data)
         }
         fetchData()
@@ -83,6 +91,7 @@ function Cambio_Ciclo_Escolar() {
                             <Acciones
                                 Alta={onSubmit}
                                 home={home}
+                                permiso_alta={permissions.altas}
                             />
                         </div>
 
