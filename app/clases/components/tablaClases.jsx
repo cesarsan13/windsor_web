@@ -12,6 +12,8 @@ function TablaClases({
   setClase,
   setAccion,
   setCurrentId,
+  permiso_cambio,
+  permiso_baja,
 }) {
   const tableAction = (evt, clase, accion) => {
     setClase(clase);
@@ -19,6 +21,29 @@ function TablaClases({
     setCurrentId({ id_grupo: clase.id_grupo, id_materia: clase.id_materia });
     showModal(true);
   };
+  const ActionButton = ({ tooltip, iconDark, iconLight, onClick, permission }) => {
+    if (!permission) return null;
+    return (
+      <th>
+        <div
+          className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
+          data-tip={tooltip}
+          onClick={onClick}
+        >
+          <Image src={iconDark} alt={tooltip} className="block dark:hidden" />
+          <Image src={iconLight} alt={tooltip} className="hidden dark:block" />
+        </div>
+      </th>
+    );
+  };
+  const ActionColumn = ({ description, permission }) => {
+    if (!permission) return null;
+    return (
+      <>
+        <th className="w-[5%] pt-[.10rem] pb-[.10rem]">{description}</th>
+      </>
+    )
+  }
 
   return !isLoading ? (
     <>
@@ -37,9 +62,18 @@ function TablaClases({
                 <td className="w-[10%]">Viernes</td>
                 <td className="w-[10%]">Sabado</td>
                 <td className="w-[10%]">Domingo</td>
-                <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Ver</th>
-                <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Editar</th>
-                <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Eliminar</th>
+                < ActionColumn
+                description={"Ver"}
+                permission={true}
+              />
+              < ActionColumn
+                description={"Editar"}
+                permission={permiso_cambio}
+              />
+              < ActionColumn
+                description={"Eliminar"}
+                permission={permiso_baja}
+              />
               </tr>
             </thead>
             <tbody>
@@ -60,36 +94,27 @@ function TablaClases({
                   <td className="w-[10%]">{item.sabado}</td>
                   <td className="w-[10%]">{item.domingo}</td>
 
-                  <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
-                    <div
-                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
-                      data-tip={`Ver`}
-                      onClick={(evt) => tableAction(evt, item, `Ver`)}
-                    >
-                      <Image src={iconos.ver}  className="block dark:hidden" alt="Ver" />
-                      <Image src={iconos.ver_w} className="hidden dark:block"  alt="Ver" />
-                    </div>
-                  </th>
-                  <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
-                    <div
-                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
-                      data-tip={`Editar`}
-                      onClick={(evt) => tableAction(evt, item, `Editar`)}
-                    >                      
-                      <Image src={iconos.editar}  className="block dark:hidden" alt="Editar" />
-                      <Image src={iconos.editar_w} className="hidden dark:block"  alt="Editar" />
-                    </div>
-                  </th>
-                  <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
-                    <div
-                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
-                      data-tip={`Eliminar`}
-                      onClick={(evt) => tableAction(evt, item, "Eliminar")}
-                    >                      
-                      <Image src={iconos.eliminar}  className="block dark:hidden" alt="Eliminar" />
-                      <Image src={iconos.eliminar_w} className="hidden dark:block"  alt="Eliminar" />
-                    </div>
-                  </th>
+                  <ActionButton
+                  tooltip="Ver"
+                  iconDark={iconos.ver}
+                  iconLight={iconos.ver_w}
+                  onClick={(evt) => tableAction(evt, item, "Ver")}
+                  permission={true}
+                />
+                <ActionButton
+                  tooltip="Editar"
+                  iconDark={iconos.editar}
+                  iconLight={iconos.editar_w}
+                  onClick={(evt) => tableAction(evt, item, "Editar")}
+                  permission={permiso_cambio}
+                />
+                <ActionButton
+                  tooltip="Eliminar"
+                  iconDark={iconos.eliminar}
+                  iconLight={iconos.eliminar_w}
+                  onClick={(evt) => tableAction(evt, item, "Eliminar")}
+                  permission={permiso_baja}
+                />
                 </tr>
               ))}
             </tbody>

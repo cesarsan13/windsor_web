@@ -1,11 +1,10 @@
 import React from "react";
 import Tooltip from "@/app/components/tooltip";
-import Button from "@/app/components/button";
 import Image from "next/image";
+import { TbLoader3 } from "react-icons/tb";
 import iconos from "@/app/utils/iconos";
-import { TbLoader3 } from "react-icons/tb"; // Icono de carga
 
-function Acciones({ Buscar, Alta, home, Ver, animateLoading, contador }) {
+function Acciones({ Buscar, Alta, home, Ver, animateLoading, permiso_alta, permiso_imprime }) {
   const images = [
     {
       srcLight: iconos.buscar_w,
@@ -13,19 +12,36 @@ function Acciones({ Buscar, Alta, home, Ver, animateLoading, contador }) {
       alt: "Buscar",
       tooltipTitle: "Buscar",
       onClick: Buscar,
+      permission: true,
     },
-    { srcLight:iconos.alta_w, srcDark: iconos.alta, alt: "Alta", tooltipTitle: "Alta", onClick: Alta },
     {
+      srcLight: iconos.alta_w,
+      srcDark: iconos.alta,
+      alt: "Alta",
+      tooltipTitle: "Alta",
+      onClick: Alta,
+      permission: permiso_alta,
+    },
+    {
+      srcLight: iconos.vistaPrevia_w,
       srcDark: iconos.vistaPrevia,
-      srcLight:iconos.vistaPrevia_w,
       alt: "Vista previa",
       tooltipTitle: "Vista previa",
       onClick: Ver,
+      permission: permiso_imprime,
     },
-    { srcLight:iconos.salir_w, srcDark: iconos.salir, alt: "Salir", tooltipTitle: "Salir", onClick: home },
+    {
+      srcLight: iconos.salir_w,
+      srcDark: iconos.salir,
+      alt: "Salir",
+      tooltipTitle: "Salir",
+      onClick: home,
+      permission: true,
+    },
   ];
 
-  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, animateLoading }) => {
+  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, animateLoading, permission }) => {
+    if (!permission) return null;
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
@@ -58,9 +74,12 @@ function Acciones({ Buscar, Alta, home, Ver, animateLoading, contador }) {
       {images.map((image, idx) => (
         <ImageTooltip
           key={idx}
-          src={image.src}
-          {...image}
-          animateLoading={idx === 2 && animateLoading}
+          srcLight={image.srcLight}
+          srcDark={image.srcDark}
+          tooltipTitle={image.tooltipTitle}
+          onClick={image.onClick}
+          animateLoading={animateLoading && idx === 2}
+          permission={image.permission}
         />
       ))}
     </div>
