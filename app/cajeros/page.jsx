@@ -59,7 +59,7 @@ function Cajeros() {
         es_admin,
         permissions,
         session.user.id,
-        1
+        6
       );
       setPermissions(permisos);
     };
