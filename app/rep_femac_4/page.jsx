@@ -7,6 +7,7 @@ import {
   calculaDigitoBvba,
   formatFecha,
   format_Fecha_String,
+  permissionsComponents
 } from "@/app/utils/globalfn";
 import { useForm } from "react-hook-form";
 import {
@@ -42,6 +43,8 @@ function Rep_femac_4() {
   const [pdfData, setPdfData] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
 
+  const [permissions, setPermissions] = useState({});
+
   const fetchFacturasFormato = async (id) => {
     const { token } = session.user;
     const facturas = await getCredencialFormato(token, id);
@@ -51,7 +54,8 @@ function Rep_femac_4() {
     const fetchData = async () => {
       const formData = new FormData();
       formData.append("numero", alumno.numero || "");
-      const { token } = session.user;
+      const { token,permissions } = session.user;
+      const es_admin = session.user.es_admin;
       if (alumno && Object.keys(alumno).length > 0) {
         const data = await getCredencialAlumno(token, formData);
         // console.log("Credencial del alumno => ",data);
@@ -64,6 +68,8 @@ function Rep_femac_4() {
           setCapturedImage(imagenUrl);
         }
       }
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, 1);
+      setPermissions(permisos);
     };
     if (status === "loading" || !session) {
       return;
@@ -338,6 +344,7 @@ function Rep_femac_4() {
                   home={home}
                   Ver={handleVerClick}
                   isLoading={animateLoading}
+                  permiso_imprime={permissions.impresion}
                 />
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
