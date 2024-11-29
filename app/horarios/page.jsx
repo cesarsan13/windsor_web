@@ -81,10 +81,12 @@ function Horarios() {
       setisLoading(true);
       let { token, permissions } = session.user;
       const es_admin = session.user.es_admin;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const data = await getHorarios(token, bajas);
       setHorarios(data);
       setHorariosFiltrados(data);
-      const permisos = permissionsComponents(es_admin, permissions, session.user.id, 7);
+      console.log("permisos:",permissions)
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
       setPermissions(permisos);
       setisLoading(false);
     };
