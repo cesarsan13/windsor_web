@@ -59,3 +59,43 @@ export const siguienteConfiguracion = async (token) => {
     return resJson.data;
 };
 
+export const updateConfiguracion = async (token, data) => {
+    let url = `${process.env.DOMAIN_API}api/propietario/configuracion/update`;
+    const res = await fetch(url, {
+        method: "put", 
+        body: JSON.stringify({
+            numero_configuracion: data.numero_configuracion,
+            descripcion_configuracion: data.descripcion_configuracion,
+            valor_configuracion: data.valor_configuracion,
+            texto_configuracion: data.texto_configuracion,
+        }),
+        headers:{
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': "application/json",
+        },
+    });
+    const resJson = await res.json();
+    return resJson;
+};
+
+export const createConfiguracion = async (token, data) => {
+    let url = `${process.env.DOMAIN_API}api/propietario/configuracion/create`;
+    const res = await fetch(url, {
+        method: "post", 
+        body: JSON.stringify({
+            numero_configuracion: data.numero_configuracion,
+            descripcion_configuracion: data.descripcion_configuracion,
+            valor_configuracion: data.valor_configuracion,
+            texto_configuracion: data.texto_configuracion,
+        }),
+        headers:{
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': "application/json",
+        },
+    });
+    const resJson = await res.json();
+    return resJson;
+};
+
+
+

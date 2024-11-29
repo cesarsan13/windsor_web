@@ -15,7 +15,6 @@ function TablaConfiguracion({
   setCurrentId
 }) {
   const tableAction = async (evt, formaConfiguracion, accion) => {
-    console.log("aaaa", formaConfiguracion)
     setDataConfiguracion(formaConfiguracion);
     setAccion(accion);
     setCurrentId(formaConfiguracion.numero_configuracion);

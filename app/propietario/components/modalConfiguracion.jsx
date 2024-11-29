@@ -137,7 +137,7 @@ function ModalConfiguracion({
                 tamañolabel={"w-4/6"}
                 className={"rounded block grow text-right"}
                 Titulo={"Valor Configuracion: "}
-                type={"text"}
+                type={"int"}
                 requerido={true}
                 isNumero={true}
                 errors={errors}
@@ -154,7 +154,7 @@ function ModalConfiguracion({
                 className={"rounded block grow"}
                 Titulo={"Texto Configuracion: "}
                 type={"text"}
-                requerido={true}
+                requerido={false}
                 isNumero={false}
                 errors={errors}
                 register={register}
