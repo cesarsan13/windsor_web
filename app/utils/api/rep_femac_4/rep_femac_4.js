@@ -3,6 +3,17 @@ import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { calculaDigitoBvba } from "@/app/utils/globalfn";
 import { formatDate, formatTime, formatFecha, format_Fecha_String } from "../../globalfn";
 
+export const getFotoAlumno = async (token, imagen) => {
+  let url = `${process.env.DOMAIN_API}api/students/imagen/${imagen}`;
+  const res = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const blob = await res.blob();
+  return URL.createObjectURL(blob);
+};
+
 export const getCredencialFormato = async (token, id) => {
     let url = "";
     url = `${process.env.DOMAIN_API}api/facturasformato/${id}`;

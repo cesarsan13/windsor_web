@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import { React, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Acciones from "@/app/rep_femac_4/components/Acciones";
 import Inputs from "@/app/rep_femac_4/components/Inputs";
@@ -8,10 +8,10 @@ import { calculaDigitoBvba,formatFecha,
 import { useForm } from "react-hook-form";
 import {
     getCredencialFormato,
+    getFotoAlumno,
     getCredencialAlumno,
     Imprimir,
   } from "@/app/utils/api/rep_femac_4/rep_femac_4";
-import { getFotoAlumno } from "@/app/utils/api/alumnos/alumnos";
 import BuscarCat from "@/app/components/BuscarCat";
 import VistaPrevia from "@/app/rep_femac_4/components/VistaPrevia";
 import { useState, useEffect } from "react";
@@ -20,6 +20,7 @@ import { showSwal } from "@/app/utils/alerts";
 import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
+import Image from "next/image";
 
 function rep_femac_4() {
     const router = useRouter();
@@ -29,6 +30,10 @@ function rep_femac_4() {
     const [telefonos, setTelefonos] = useState("");
     const [credencial, setCredencial] = useState(null);
     const [fecha_hoy, setFechaHoy] = useState("");
+    const [capturedImage, setCapturedImage] = useState(null);
+    const inputfileref = useRef(null);
+    const [files, setFile] = useState(null);
+    const [condicion, setcondicion] = useState(false);
 
     const [pdfPreview, setPdfPreview] = useState(false);
     const [pdfData, setPdfData] = useState("");
@@ -48,6 +53,10 @@ function rep_femac_4() {
                 const data = await getCredencialAlumno(token,formData)
                 // console.log("Credencial del alumno => ",data);
                 setCredencial(data);
+                const imagenUrl = await getFotoAlumno(session.user.token, alumno.ruta_foto);
+                if (imagenUrl) {
+                    setCapturedImage(imagenUrl);
+                }
             }
             
 
@@ -146,6 +155,23 @@ function rep_femac_4() {
         ImprimirExcel(configuracion);
       };
     
+      const handleFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        if (selectedFile) {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            setFile(selectedFile);
+            setcondicion(true);
+            setCapturedImage(reader.result); // La imagen en formato Base64
+          };
+          reader.readAsDataURL(selectedFile); // Convierte el archivo a Base64
+        }
+      };
+      const openFileSelector = () => {
+        if (inputfileref.current) {
+          inputfileref.current.click(); // Simula el clic en el input
+        }
+      };
       const home = () => {
         router.push("/");
       };
@@ -273,6 +299,36 @@ function rep_femac_4() {
                 
                 {/* Fila del formulario de la pagina */}
                 <div className="w-full py-3 flex flex-col gap-y-2">
+                    <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
+                        <div className="col-span-full md:col-span-full lg:col-span-full">
+                            <div className="w-full">
+                            <input
+                                type="file"
+                                name="imagen"
+                                onChange={handleFileChange}
+                                ref={inputfileref}
+                                style={{ display: "none" }}
+                                className="ml-4 btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white font-bold px-4 rounded"
+                            />
+                            {(capturedImage || files) && (
+                            <div className="bottom-0 left-0 w-full">
+                                <h2 className="text-center text-xl mb-2">
+                                    {condicion ? "Imagen Seleccionada:" : "Foto Seleccionada:"}
+                                </h2>
+                                <Image
+                                    src={
+                                    condicion ? URL.createObjectURL(files) : capturedImage
+                                    }
+                                    alt="Imagen"
+                                    width={80}
+                                    height={80}
+                                    className="w-full object-contain mx-auto my-4"
+                                />
+                                </div>
+                            )}
+                            </div>
+                        </div>
+                    </div>
                     <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
                         <div className="col-span-full md:col-span-full lg:col-span-full">
                             <div className="w-full">
