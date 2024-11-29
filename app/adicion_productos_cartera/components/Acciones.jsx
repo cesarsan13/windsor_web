@@ -4,16 +4,40 @@ import { TbLoader3 } from "react-icons/tb"; // Icono de carga
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 
-function Acciones({ home, BRef, Bproceso, isLoadingRef, isLoadingProc }) {
+function Acciones({ home, BRef, Bproceso, isLoadingRef, isLoadingProc, permiso_alta }) {
   const isAnyLoading = isLoadingRef || isLoadingProc;
 
   const images = [
-    { srcDark: iconos.editar, srcLight: iconos.editar_w, alt: "Act. Ref.", tooltipTitle: "Act. Ref.", onClick: BRef, isLoading: isLoadingRef },
-    { srcDark: iconos.procesa, srcLight:iconos.procesa_w, alt: "Proceso", tooltipTitle: "Proceso", onClick: Bproceso, isLoading: isLoadingProc },
-    { srcDark: iconos.salir, srcLight:iconos.salir_w, alt: 'Salir', tooltipTitle: 'Salir', onClick: home, isLoading: false },
+    { 
+      srcDark: iconos.editar, 
+      srcLight: iconos.editar_w, 
+      alt: "Act. Ref.", 
+      tooltipTitle: "Act. Ref.", 
+      onClick: BRef, 
+      isLoading: isLoadingRef,
+      permission: permiso_alta
+    },
+    { srcDark: iconos.procesa, 
+      srcLight:iconos.procesa_w, 
+      alt: "Proceso", 
+      tooltipTitle: "Proceso", 
+      onClick: Bproceso, 
+      isLoading: isLoadingProc,
+      permission: permiso_alta
+    },
+    { 
+      srcDark: iconos.salir, 
+      srcLight:iconos.salir_w, 
+      alt: 'Salir', 
+      tooltipTitle: 'Salir', 
+      onClick: home, 
+      isLoading: false,
+      permission: true,
+    },
   ];
 
-  const ImageTooltip = ({ srcDark, srcLight, tooltipTitle, onClick, isLoading, disabled }) => {
+  const ImageTooltip = ({ srcDark, srcLight, tooltipTitle, onClick, isLoading, disabled, permission }) => {
+    if(!permission) return null;
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
@@ -46,6 +70,7 @@ function Acciones({ home, BRef, Bproceso, isLoadingRef, isLoadingProc }) {
           onClick={image.onClick}
           isLoading={image.isLoading}
           disabled={isAnyLoading}
+          permission={image.permission}
         />
       ))}
     </div>
