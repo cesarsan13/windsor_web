@@ -7,7 +7,7 @@ import AccessDenied from "@/app/components/AccessDenied";
 export default function Acceso_Denegado() {
   return (
     <Suspense fallback={<div>Cargando...</div>}>
-      <Acceso_Denegado />
+      <AccessDenied />
     </Suspense>
   );
 }
