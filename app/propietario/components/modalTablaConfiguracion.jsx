@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import TablaConfiguracion from "./TablaConfiguracion";
 import Acciones from "./AccionesConfig";
-import ModalConfiguracion from "@/app/propietario/components/ModalConfiguracion";
+import ModalConfiguracion from "@/app/propietario/components/modalConfiguracion";
 import { useForm } from "react-hook-form";
 
 function ModalTablaConfiguracion({
