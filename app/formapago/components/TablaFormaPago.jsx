@@ -4,6 +4,7 @@ import NoData from "@/app/components/NoData";
 import React from "react";
 import iconos from "@/app/utils/iconos";
 import Image from "next/image";
+import { permission } from "process";
 function TablaFormaPago({
   formaPagosFiltrados,
   session,
@@ -12,6 +13,8 @@ function TablaFormaPago({
   setFormaPago,
   setAccion,
   setCurrentId,
+  permiso_cambio,
+  permiso_baja,
 }) {
   const tableAction = (evt, formaPago, accion) => {
     setFormaPago(formaPago);
@@ -19,6 +22,31 @@ function TablaFormaPago({
     setCurrentId(formaPago.numero);
     showModal(true);
   };
+
+  const ActionButton = ({ tooltip, iconDark, iconLight, onClick, permission }) => {
+    if (!permission) return null;
+    return (
+      <th>
+        <div
+          className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
+          data-tip={tooltip}
+          onClick={onClick}
+        >
+          <Image src={iconDark} alt={tooltip} className="block dark:hidden" />
+          <Image src={iconLight} alt={tooltip} className="hidden dark:block" />
+        </div>
+      </th>
+    );
+  };
+
+  const ActionColumn = ({ description, permission }) => {
+    if (!permission) return null;
+    return (
+      <>
+        <th className="w-[5%] pt-[.10rem] pb-[.10rem]">{description}</th>
+      </>
+    )
+  }
 
   return !isLoading ? (
     <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-full">
@@ -31,9 +59,18 @@ function TablaFormaPago({
               <td className="w-[8%]">Comision</td>
               <td className="w-[15%]">Aplicacion</td>
               <td className="w-[20%]">Cuenta Banco</td>
-              <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Ver</th>
-              <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Editar</th>
-              <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Eliminar</th>
+              < ActionColumn
+                description={"Ver"}
+                permission={true}
+              />
+              < ActionColumn
+                description={"Editar"}
+                permission={permiso_cambio}
+              />
+              < ActionColumn
+                description={"Eliminar"}
+                permission={permiso_baja}
+              />
             </tr>
           </thead>
           <tbody>
@@ -44,36 +81,27 @@ function TablaFormaPago({
                 <td className={`text-right w-11`}>{item.comision}</td>
                 <td>{item.aplicacion}</td>
                 <td>{item.cue_banco}</td>
-                <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
-                  <div
-                    className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
-                    data-tip={`Ver`}
-                    onClick={(evt) => tableAction(evt, item, `Ver`)}
-                  >
-                    <Image src={iconos.ver} alt="Ver" className="block dark:hidden" />
-                    <Image src={iconos.ver_w} alt="Ver" className="hidden dark:block" />
-                  </div>
-                </th>
-                <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
-                  <div
-                    className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
-                    data-tip={`Editar`}
-                    onClick={(evt) => tableAction(evt, item, `Editar`)}
-                  >
-                    <Image src={iconos.editar} alt="Editar" className="block dark:hidden" />
-                    <Image src={iconos.editar_w} alt="Editar" className="hidden dark:block" />
-                  </div>
-                </th>
-                <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
-                  <div
-                    className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
-                    data-tip={`Eliminar`}
-                    onClick={(evt) => tableAction(evt, item, "Eliminar")}
-                  >
-                    <Image src={iconos.eliminar} alt="Eliminar" className="block dark:hidden" />
-                    <Image src={iconos.eliminar_w} alt="Eliminar" className="hidden dark:block" />
-                  </div>
-                </th>
+                <ActionButton
+                  tooltip="Ver"
+                  iconDark={iconos.ver}
+                  iconLight={iconos.ver_w}
+                  onClick={(evt) => tableAction(evt, item, "Ver")}
+                  permission={true}
+                />
+                <ActionButton
+                  tooltip="Editar"
+                  iconDark={iconos.editar}
+                  iconLight={iconos.editar_w}
+                  onClick={(evt) => tableAction(evt, item, "Editar")}
+                  permission={permiso_cambio}
+                />
+                <ActionButton
+                  tooltip="Eliminar"
+                  iconDark={iconos.eliminar}
+                  iconLight={iconos.eliminar_w}
+                  onClick={(evt) => tableAction(evt, item, "Eliminar")}
+                  permission={permiso_baja}
+                />
               </tr>
             ))}
           </tbody>
