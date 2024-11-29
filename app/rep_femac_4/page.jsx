@@ -302,7 +302,7 @@ function rep_femac_4() {
                 </div>
                 
                 {/* Fila del formulario de la pagina */}
-                <div className="w-full py-3 flex flex-col gap-y-2">
+                <div className="w-full py-3 flex flex-col gap-y-2 overflow-y-auto">
                     <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
                         <div className="col-span-full md:col-span-full lg:col-span-full">
                             {/* <div className="w-full"> */}
