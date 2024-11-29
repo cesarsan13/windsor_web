@@ -50,6 +50,7 @@ function Cajeros() {
       setisLoading(true);
       const { token, permissions } = session.user;
       const es_admin = session.user.es_admin;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
 
       const data = await getCajeros(token, bajas);
       setCajeros(data);
@@ -59,7 +60,7 @@ function Cajeros() {
         es_admin,
         permissions,
         session.user.id,
-        6
+        menuSeleccionado
       );
       setPermissions(permisos);
     };

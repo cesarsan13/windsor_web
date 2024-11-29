@@ -19,7 +19,7 @@ import { siguiente } from "@/app/utils/api/formfact/formfact";
 import "jspdf-autotable";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import ConfigReporte from "./components/configReporte";
-import { debounce } from "../utils/globalfn";
+import { debounce, permissionsComponents } from "../utils/globalfn";
 function FormFact() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -41,6 +41,7 @@ function FormFact() {
   const formFactsRef = useRef(formFacts)
   const [isLoadingButton, setisLoadingButton] = useState(false);
   const [animateLoading, setAnimateLoading] = useState(false);
+  const [permissions, setPermissions] = useState({});
 
   const [configuracion, setConfiguracion] = useState({
     Encabezado: {
@@ -64,11 +65,15 @@ function FormFact() {
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
-      const { token } = session.user;
+      let { token, permissions } = session.user;
+      const es_admin = session.user.es_admin;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const data = await getFormFact(token, bajas);
       setFormFacts(data);
       setFormFactsFiltrados(data);
       setisLoading(false);
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
+      setPermissions(permisos)
     };
     if (status === "loading" || !session) {
       return;
@@ -261,7 +266,12 @@ function FormFact() {
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
-              <Acciones Buscar={Buscar} Alta={Alta} home={home} ></Acciones>
+              <Acciones 
+              Buscar={Buscar}
+              Alta={Alta}
+              home={home}
+              permiso_alta={permissions.altas}
+              />
             </div>
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-16">
               Formas Facturas
@@ -303,6 +313,8 @@ function FormFact() {
                     fetchFacturasFormato={fetchFacturasFormato}
                     formato={formato}
                     session={session}
+                    permiso_cambio={permissions.cambios}
+                    permiso_baja={permissions.bajas}
                   />
                 )
 
