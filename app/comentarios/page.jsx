@@ -20,7 +20,7 @@ import "jspdf-autotable";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import VistaPrevia from "@/app/components/VistaPrevia";
-import { debounce } from "@/app/utils/globalfn";
+import { debounce, permissionsComponents } from "@/app/utils/globalfn";
 
 function Comentarios() {
   const router = useRouter();
@@ -38,6 +38,7 @@ function Comentarios() {
   const [pdfData, setPdfData] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
   const comentariosRef = useRef(formasComentarios);
+  const [permissions, setPermissions] = useState({});
   const [busqueda, setBusqueda] = useState({
     tb_numero: "",
     tb_comentario1: "",
@@ -58,9 +59,9 @@ function Comentarios() {
         : true;
       const coincideComentario1 = tb_comentario1
         ? formaComentarios["comentario_1"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_comentario1.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_comentario1.toLowerCase())
         : true;
       return coincideID && coincideComentario1;
     });
@@ -85,13 +86,16 @@ function Comentarios() {
   }, [busqueda, Buscar]);
 
   useEffect(() => {
-    
+
     const fetchData = async () => {
       setisLoading(true);
-      const { token } = session.user;
+      let { token, permissions } = session.user;
+      const es_admin = session.user.es_admin;
       const data = await getComentarios(token, bajas);
       setFormasComentarios(data);
       setFormaComentariosFiltrados(data);
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, 2);
+      setPermissions(permisos);
       setisLoading(false);
     };
     if (status === "loading" || !session) {
@@ -125,7 +129,7 @@ function Comentarios() {
   }, [formaComentarios, reset]);
 
 
-  
+
 
 
   const limpiarBusqueda = (evt) => {
@@ -201,8 +205,8 @@ function Comentarios() {
         comentarios.generales == 1
           ? "Si"
           : comentarios.generales == 0
-          ? "No"
-          : "No valido";
+            ? "No"
+            : "No valido";
       reporte.ImpPosX(resultado.toString(), 270, reporte.tw_ren, 0, "L");
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRenH) {
@@ -219,11 +223,11 @@ function Comentarios() {
     }, 500);
   };
 
-    const showModalVista = (show) => {
-      show
-        ? document.getElementById("modalVPComentario").showModal()
-        : document.getElementById("modalVPComentario").close();
-    };
+  const showModalVista = (show) => {
+    show
+      ? document.getElementById("modalVPComentario").showModal()
+      : document.getElementById("modalVPComentario").close();
+  };
 
   const CerrarView = () => {
     setPdfPreview(false);
@@ -305,7 +309,7 @@ function Comentarios() {
       }
     }
     res = await guardaComentarios(session.user.token, data, accion);
-    console.log("Res => ",res);
+    console.log("Res => ", res);
     if (res.status) {
       if (accion === "Alta") {
         data.numero = res.data;
@@ -349,8 +353,8 @@ function Comentarios() {
       }
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
-    }else{
-      showSwal(res.alert_title, res.alert_text, res.alert_icon,"my_modal_3");
+    } else {
+      showSwal(res.alert_title, res.alert_text, res.alert_icon, "my_modal_3");
     }
     setisLoadingButton(false);
   });
@@ -411,6 +415,8 @@ function Comentarios() {
                 Ver={handleVerClick}
                 // CerrarView={CerrarView}
                 animateLoading={animateLoading}
+                permiso_alta={permissions.altas}
+                permiso_imprime={permissions.impresion}
               ></Acciones>
             </div>
 
@@ -441,10 +447,11 @@ function Comentarios() {
                   setFormaComentarios={setFormaComentarios}
                   setAccion={setAccion}
                   setCurrentId={setCurrentId}
-                  
+                  permiso_cambio={permissions.cambios}
+                  permiso_baja={permissions.bajas}
                 />
               ))}
-            
+
           </div>
         </div>
       </div>

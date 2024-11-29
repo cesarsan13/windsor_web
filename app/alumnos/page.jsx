@@ -123,7 +123,6 @@ function Alumnos() {
       const fechaFormateada = fecha_hoy.toISOString().split("T")[0];
       setFechaHoy(fechaFormateada);
       const permisos = permissionsComponents(es_admin, permissions, session.user.id, 1);
-      console.log(permisos);
       setPermissions(permisos);
     };
     if (status === "loading" || !session) {
