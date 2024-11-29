@@ -317,4 +317,8 @@ export class ReportePDF {
   guardaReporte(Nombre) {
     this.doc.save(`${Nombre}.pdf`);
   }
+
+  getDoc(){
+    return this.doc;
+  }
 }
