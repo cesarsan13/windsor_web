@@ -4,7 +4,7 @@ import Button from "@/app/components/button";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 import { TbLoader3 } from "react-icons/tb";
-function Acciones({ home, Alta, animateLoading }) {
+function Acciones({ home, Alta, animateLoading, permiso_alta }) {
   const images = [
     {
       srcLight: iconos.procesa_w,
@@ -12,7 +12,8 @@ function Acciones({ home, Alta, animateLoading }) {
       alt: "Guardar",
       tooltipTitle: "Cambiar Número",
       onClick: Alta,
-      isLoading: animateLoading
+      isLoading: animateLoading,
+      permission: permiso_alta,
     },
     {
       srcLight: iconos.salir_w,
@@ -24,7 +25,8 @@ function Acciones({ home, Alta, animateLoading }) {
     },
   ];
 
-  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading }) => {
+  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading, permission }) => {
+    if (!permission) return null;
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
@@ -62,6 +64,7 @@ function Acciones({ home, Alta, animateLoading }) {
           tooltipTitle={image.tooltipTitle}
           onClick={image.onClick}
           isLoading={image.isLoading}
+          permission={image.permission}
         />
       ))}
     </div>

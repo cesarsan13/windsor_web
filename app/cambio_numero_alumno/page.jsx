@@ -8,11 +8,12 @@ import BuscarCat from "../components/BuscarCat";
 import Inputs from "@/app/cambio_numero_alumno/components/Inputs";
 import { cambiarIdAlumno } from "@/app/utils/api/cambio_numero_alumno/cambio_numero_alumno";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
-
+import { permissionsComponents } from "../utils/globalfn";
 function Cambio_Numero_Alumno() {
     const router = useRouter();
     const { data: session, status } = useSession();
     const [isLoading, setisLoading] = useState(false);
+    const [permissions, setPermissions] = useState({});
     let [alumno, setAlumnoIni] = useState("");
     const {
         register,
@@ -25,7 +26,11 @@ function Cambio_Numero_Alumno() {
     });
 
     const onSubmit = handleSubmit(async (data) => {
-        const { token } = session.user;
+        let { token, permissions } = session.user;
+        const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+        const es_admin = session.user.es_admin;
+        const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
+        setPermissions(permisos)
         if (!alumno.numero) {
             showSwal("Error", "Debe seleccionar un alumno para continuar.", "error");
             return;
@@ -77,6 +82,7 @@ function Cambio_Numero_Alumno() {
                                 Alta={onSubmit}
                                 home={home}
                                 animateLoading={isLoading}
+                                permiso_alta={permissions.altas}
                             />
                         </div>
 
