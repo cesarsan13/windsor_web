@@ -1,26 +1,29 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import AccessDenied from "@/app/components/AccessDenied";
 
 export default function Acceso_Denegado() {
-    const searchParams = useSearchParams();
-    const menu = searchParams.get("menu") === "true";
-    const router = useRouter(); 
+  const searchParams = useSearchParams();
+  const [menu, setMenu] = useState(false);
+  const router = useRouter();
 
-    useEffect(() => {
-        if (!menu) {
-            router.push("/");
-        }
-    }, [menu, router]);    
+  useEffect(() => {
+    const isMenu = searchParams.get("menu") === "true";
+    setMenu(isMenu);
 
-    if (!menu) {
-        return null;
+    if (!isMenu) {
+      router.push("/");
     }
+  }, [searchParams, router]);
 
-    return (
-        <div>
-            <AccessDenied />
-        </div>
-    );
+  if (!menu) {
+    return null;
+  }
+
+  return (
+    <div>
+      <AccessDenied />
+    </div>
+  );
 }
