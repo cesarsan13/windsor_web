@@ -22,6 +22,7 @@ function ModalTablaConfiguracion({
   const [currentID, setCurrentId] = useState("");
   const [isLoadingButton, setisLoadingButton] = useState(false);
   const [openModal, setModal] = useState(false);
+  const [visible, setVisible] = useState(false);
 
 
   useEffect(() => {
@@ -136,10 +137,12 @@ function ModalTablaConfiguracion({
             <div className="modal-box w-full max-w-7xl bg-base-200">
               <div className="sticky -top-6 flex justify-between items-center bg-base-200 w-full h-10 z-10 mb-5">
                 <h2 className="font-bold text-lg text-neutral-600 dark:text-white"> Configuracion </h2>
-                  <div className=" tooltip flex space-x-2 items-center">
-                    <Acciones
-                      Alta = {Alta}
-                    />
+                  <div className=" tooltip flex space-x-2 items-center" >
+                    { visible &&  
+                      <Acciones
+                        Alta = {Alta}
+                      />
+                      }
                     <button
                       className="btn btn-sm btn-circle btn-ghost bg-base-200 dark:bg-[#1d232a] text-neutral-600 dark:text-white"
                       onClick={(event) => {
