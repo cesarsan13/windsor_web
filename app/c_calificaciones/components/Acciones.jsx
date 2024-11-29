@@ -4,15 +4,16 @@ import Button from "@/app/components/button";
 import { TbLoader3 } from "react-icons/tb";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
-function Acciones({ home, Alta, Buscar, isLoading, isDisabledSave, isLoadingPDF, Ver }) {
+function Acciones({ home, Alta, Buscar, isLoading, isDisabledSave, isLoadingPDF, Ver , permiso_alta, permiso_imprime}) {
   const images = [
-    { srcDark: iconos.buscar, srcLigth:iconos.buscar_w, alt: "Buscar", tooltipTitle: "Buscar", onClick: Buscar, isLoading: isLoading },
-    { srcDark: iconos.guardar,srcLigth:iconos.guardar_w, alt: "Guardar", tooltipTitle: "Guardar", onClick: Alta, isLoading: isDisabledSave },
-    { srcDark: iconos.vistaPrevia,srcLigth:iconos.vistaPrevia_w, alt: 'Vista previa', tooltipTitle: 'Vista previa', onClick: Ver, isLoading: isLoadingPDF },
-    { srcDark: iconos.salir, alt: 'Salir', srcLigth:iconos.salir_w, tooltipTitle: 'Salir', onClick: home, isLoading: false },
+    { srcDark: iconos.buscar, srcLigth:iconos.buscar_w, alt: "Buscar", tooltipTitle: "Buscar", onClick: Buscar, isLoading: isLoading ,permission: true,},
+    { srcDark: iconos.guardar,srcLigth:iconos.guardar_w, alt: "Guardar", tooltipTitle: "Guardar", onClick: Alta, isLoading: isDisabledSave,permission: permiso_alta,},
+    { srcDark: iconos.vistaPrevia,srcLigth:iconos.vistaPrevia_w, alt: 'Vista previa', tooltipTitle: 'Vista previa', onClick: Ver, isLoading: isLoadingPDF,permission: permiso_imprime,},
+    { srcDark: iconos.salir, alt: 'Salir', srcLigth:iconos.salir_w, tooltipTitle: 'Salir', onClick: home, isLoading: false,permission: true, },
   ];
 
-  const ImageTooltip = ({ srcDark,srcLigth, tooltipTitle, onClick, isLoading }) => {
+  const ImageTooltip = ({ srcDark,srcLigth, tooltipTitle, onClick, isLoading,permission }) => {
+    if (!permission) return null;
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
@@ -42,6 +43,7 @@ function Acciones({ home, Alta, Buscar, isLoading, isDisabledSave, isLoadingPDF,
           tooltipTitle={image.tooltipTitle}
           onClick={image.onClick}
           isLoading={image.isLoading}
+          permission={image.permission}
         />
       ))}
     </div>
