@@ -4,7 +4,7 @@ import Image from 'next/image';
 import React from 'react'
 import { TbLoader3 } from 'react-icons/tb';
 
-function Acciones({ Buscar, home, Ver, BoletasGrupo, isLoadingBoletasGrupo, isLoadingVistaPrevia }) {
+function Acciones({ Buscar, home, Ver, BoletasGrupo, isLoadingBoletasGrupo, isLoadingVistaPrevia, permiso_imprime }) {
     const images = [
         {
             srcLight: iconos.buscar_w,
@@ -12,7 +12,8 @@ function Acciones({ Buscar, home, Ver, BoletasGrupo, isLoadingBoletasGrupo, isLo
             alt: 'Buscar',
             tooltipTitle: 'Buscar',
             onClick: Buscar,
-            isLoading: false
+            isLoading: false,
+            permission: true
         },
         {
             srcLight: iconos.vistaPrevia_w,
@@ -20,7 +21,8 @@ function Acciones({ Buscar, home, Ver, BoletasGrupo, isLoadingBoletasGrupo, isLo
             alt: 'Vista previa',
             tooltipTitle: 'Vista previa',
             onClick: Ver,
-            isLoading: isLoadingVistaPrevia
+            isLoading: isLoadingVistaPrevia,
+            permission: permiso_imprime
         },
         {
             srcLight: iconos.imprimir_w,
@@ -28,7 +30,8 @@ function Acciones({ Buscar, home, Ver, BoletasGrupo, isLoadingBoletasGrupo, isLo
             alt: 'Imprimir Boletas de Grupo',
             tooltipTitle: 'Imprimir Boletas de Grupo',
             onClick: BoletasGrupo,
-            isLoading: isLoadingBoletasGrupo
+            isLoading: isLoadingBoletasGrupo,
+            permission: permiso_imprime
         },
         {
             srcLight: iconos.salir_w,
@@ -36,10 +39,12 @@ function Acciones({ Buscar, home, Ver, BoletasGrupo, isLoadingBoletasGrupo, isLo
             alt: 'Salir',
             tooltipTitle: 'Salir',
             onClick: home,
-            isLoading: false
+            isLoading: false,
+            permission: true
         },
     ];
-    const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading }) => {
+    const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading, permission }) => {
+        if(!permission) return null;
         return (
             <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
                 <button
@@ -77,6 +82,7 @@ function Acciones({ Buscar, home, Ver, BoletasGrupo, isLoadingBoletasGrupo, isLo
                     tooltipTitle={image.tooltipTitle}
                     onClick={image.onClick}
                     isLoading={image.isLoading}
+                    permission={image.permission}
                 />
             ))}
         </div>

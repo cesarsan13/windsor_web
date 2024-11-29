@@ -10,6 +10,7 @@ import { showSwal } from '../utils/alerts';
 import { useRouter } from 'next/navigation';
 import { ReportePDF } from '../utils/ReportesPDF';
 import ModalVistaPreviaPBoletas from './components/modalVistaPreviaPBoletas';
+import { permissionsComponents } from '../utils/globalfn';
 
 function P_Boletas() {
     const currentYear = new Date().getFullYear();
@@ -33,15 +34,19 @@ function P_Boletas() {
     const [cicloFechas, setCicloFechas] = useState(`${currentYear} - ${currentYear + 1}`)
     const [selectedOption, setSelectedOption] = useState("español");
     const [isLoadingGrupos, setisLoadingGrupos] = useState(false);
+    const [permissions, setPermissions] = useState({});
     useEffect(() => {
         if (status === "loading" || !session) {
             return;
         }
         const fetchData = async () => {
             setisLoadingGrupos(true)
-            const { token } = session.user;
+            const { token, permissions } = session.user;
+            const es_admin = session.user.es_admin;
+            const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
+            const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado)
+            setPermissions(permisos);
             const datos = await getCalificacionesAlumnos(token, grupo)
-            console.log(datos)
             if (datos.length===0) { 
                 setisLoadingGrupos(false)
                 return 
@@ -74,14 +79,13 @@ function P_Boletas() {
             const materiasArea4 = datos.materiasArea4
             const lugaresArea1 = getLugaresArea1(calificaciones, actividades, materiasArea1, alumnosArea1)
             const lugaresArea4 = getLugaresArea1(calificaciones, actividades, materiasArea4, alumnosArea4)
-            console.log("Lugares Area 1:", lugaresArea1)
-            console.log("Lugares Area 4:", lugaresArea4)
             setLugaresArea1(lugaresArea1)
             setLugaresArea4(lugaresArea4)
             setisLoadingGrupos(false)
         }
         fetchData()
-    }, [grupo])
+    }, [session, grupo]);
+
     useEffect(() => {
         if (Number(bimestre) > 5) {
             setBimestre("5");
@@ -320,7 +324,6 @@ function P_Boletas() {
             setCalificaciones(calificaciones);
         }
         if (checkCaliLetra) {
-            console.log("calificaciones caliLetra: ", calificaciones)
             calificaciones.map((calificacion) => {
                 const tipo = calificacion.area <= 3 ? 'español' : 'ingles'; // Español si área es 1, 2 o 3; inglés si es 4 o 5
                 if (calificacion.materia === "LUGAR") { return calificacion; }
@@ -345,7 +348,7 @@ function P_Boletas() {
         event.preventDefault;
         setBimestre(event.target.value);
     }
-    console.log(checkPromedio)
+
     const home = () => {
         router.push("/");
     };
@@ -378,16 +381,13 @@ function P_Boletas() {
         if (selectedOption === "español") {
             const body = calificaciones.filter(cal => cal.area !== 4 && cal.area !== 5)
             configuracion = { ...configuracion, body: body }
-            console.log(configuracion)
             header = ['ASIGNATURAS', '1ER BIMESTRE', '2DO BIMESTRE', '3ER BIMESTRE', '4TO BIMESTRE', '5TO BIMESTRE', 'PROMEDIO FINAL']
         } else if (selectedOption === "ingles") {
             const body = calificaciones.filter(cal => cal.area !== 1 && cal.area !== 2 && cal.area !== 3)
             configuracion = { ...configuracion, body: body }
-            console.log(configuracion)
             header = ['SUBJECTS', '1ST TERM', '2ND TERM', '3RD TERM', '4TH TERM', '5TH TERM', 'FINAL AVERAGE'];
         } else {
             configuracion = { ...configuracion, body: calificaciones }
-            console.log(configuracion)
             header = ['ASIGNATURAS', '1ER BIMESTRE', '2DO BIMESTRE', '3ER BIMESTRE', '4TO BIMESTRE', '5TO BIMESTRE', 'PROMEDIO FINAL']
             header2 = ['SUBJECTS', '1ST TERM', '2ND TERM', '3RD TERM', '4TH TERM', '5TH TERM', 'FINAL AVERAGE'];
         }
@@ -500,7 +500,6 @@ function P_Boletas() {
     const PDF = async () => {
         setisLoadingGrupos(true)
         setCaliAlum(false)
-        console.log("grupo", grupo)
         if (!grupo.numero) {
             showSwal("Error", "Debe seleccionar un grupo.", "error");
             return;
@@ -526,9 +525,7 @@ function P_Boletas() {
         let evaluaciones = 0
         let calificaciones = []
         const alumnos = data.alumnos
-        console.log("alumnos:", alumnos)
         alumnos.map((alumno) => {
-            console.log("voy en el alumno :", alumno.numero)
             dataMaterias.map((materia) => {
                 for (let bi = 1; bi <= bimestre; bi++) {
                     sumatoria = 0
@@ -612,7 +609,6 @@ function P_Boletas() {
                 }
             })
         })
-        console.log("calificaciones:", calificaciones)
         for (let i = 1; i <= bimestre; i++) {
             let sumaPromedioArea1 = 0
             let sumaPromedioArea4 = 0
@@ -639,7 +635,6 @@ function P_Boletas() {
                             }
                         }
                     }
-                    console.log("Suma Promedio:", sumaPromedioArea1, " cont Area 1:", contArea1, " EB", i)
                 })
                 let promedioArea1 = contArea1 > 0 ? (sumaPromedioArea1 / contArea1).toFixed(1) : 0;
                 if (promedioArea1 < 5.0) promedioArea1 = 5.0
@@ -680,9 +675,7 @@ function P_Boletas() {
                         [`EB${i}`]: lugaraArea1[i]
                     })
                 }
-                console.log("calificaciones area 1:", calificacionesArea1)
                 let calificacionesArea4 = calificaciones.filter(alum => alum.alumnos === alumno.numero && alum.area === 4)
-                console.log("calificaciones area4:", calificacionesArea4)
                 calificacionesArea4.map((calificacion) => {
                     if (calificacion.area === 4 && (calificacion.materia !== "PLACE" && calificacion.materia !== "AVERAGE")) {
                         sumaPromedioArea4 += calificacion[`EB${i}`]
@@ -756,7 +749,6 @@ function P_Boletas() {
             })
         }
         if (checkCaliLetra) {
-            console.log("calificaciones caliLetra: ", calificaciones)
             calificaciones.map((calificacion) => {
                 const tipo = calificacion.area <= 3 ? 'español' : 'ingles'; // Español si área es 1, 2 o 3; inglés si es 4 o 5
                 if (calificacion.materia === "LUGAR") { return calificacion; }
@@ -783,16 +775,13 @@ function P_Boletas() {
         if (selectedOption === "español") {
             const body = calificaciones.filter(cal => cal.area !== 4 && cal.area !== 5)
             configuracion = { ...configuracion, body: body }
-            console.log(configuracion)
             header = ['ASIGNATURAS', '1ER BIMESTRE', '2DO BIMESTRE', '3ER BIMESTRE', '4TO BIMESTRE', '5TO BIMESTRE', 'PROMEDIO FINAL']
         } else if (selectedOption === "ingles") {
             const body = calificaciones.filter(cal => cal.area !== 1 && cal.area !== 2 && cal.area !== 3)
             configuracion = { ...configuracion, body: body }
-            console.log(configuracion)
             header = ['SUBJECTS', '1ST TERM', '2ND TERM', '3RD TERM', '4TH TERM', '5TH TERM', 'FINAL AVERAGE'];
         } else {
             configuracion = { ...configuracion, body: calificaciones }
-            console.log(configuracion)
             header = ['ASIGNATURAS', '1ER BIMESTRE', '2DO BIMESTRE', '3ER BIMESTRE', '4TO BIMESTRE', '5TO BIMESTRE', 'PROMEDIO FINAL']
             header2 = ['SUBJECTS', '1ST TERM', '2ND TERM', '3RD TERM', '4TH TERM', '5TH TERM', 'FINAL AVERAGE'];
         }
@@ -828,7 +817,6 @@ function P_Boletas() {
         }
         let alumAnt = 0
         let alumAct = 0
-        console.log("contenido:", body)
         body.map((cal, index) => {
             alumAct = cal.alumnos
             if (alumAnt !== alumAct) {
@@ -905,7 +893,6 @@ function P_Boletas() {
     }
     const PDFAlumno = () => {
         if (caliAlum) {
-            console.log("Solo un Alumno")
             let configuracion = {
                 Encabezado: {
                     Nombre_Aplicacion: "Lista de Alumnos por clase",
@@ -918,16 +905,13 @@ function P_Boletas() {
             if (selectedOption === "español") {
                 const body = calificaciones.filter(cal => cal.area !== 4 && cal.area !== 5)
                 configuracion = { ...configuracion, body: body }
-                console.log(configuracion)
                 header = ['ASIGNATURAS', '1ER BIMESTRE', '2DO BIMESTRE', '3ER BIMESTRE', '4TO BIMESTRE', '5TO BIMESTRE', 'PROMEDIO FINAL']
                 configuracion = { ...configuracion, body: body, header: header }
             } else if (selectedOption === "ingles") {
                 const body = calificaciones.filter(cal => cal.area !== 1 && cal.area !== 2 && cal.area !== 3)
-                console.log(configuracion)
                 header = ['SUBJECTS', '1ST TERM', '2ND TERM', '3RD TERM', '4TH TERM', '5TH TERM', 'FINAL AVERAGE'];
                 configuracion = { ...configuracion, body: body, header: header }
             } else {
-                console.log(configuracion)
                 header = ['ASIGNATURAS', '1ER BIMESTRE', '2DO BIMESTRE', '3ER BIMESTRE', '4TO BIMESTRE', '5TO BIMESTRE', 'PROMEDIO FINAL']
                 header2 = ['SUBJECTS', '1ST TERM', '2ND TERM', '3RD TERM', '4TH TERM', '5TH TERM', 'FINAL AVERAGE'];
                 configuracion = { ...configuracion, body: calificaciones, header: header, header2: header2 }
@@ -951,16 +935,13 @@ function P_Boletas() {
             if (selectedOption === "español") {
                 const body = calificacionesAlumnos.filter(cal => cal.area !== 4 && cal.area !== 5)
                 configuracion = { ...configuracion, body: body }
-                console.log(configuracion)
                 header = ['ASIGNATURAS', '1ER BIMESTRE', '2DO BIMESTRE', '3ER BIMESTRE', '4TO BIMESTRE', '5TO BIMESTRE', 'PROMEDIO FINAL']
                 configuracion = { ...configuracion, body: body, header: header }
             } else if (selectedOption === "ingles") {
                 const body = calificacionesAlumnos.filter(cal => cal.area !== 1 && cal.area !== 2 && cal.area !== 3)
-                console.log(configuracion)
                 header = ['SUBJECTS', '1ST TERM', '2ND TERM', '3RD TERM', '4TH TERM', '5TH TERM', 'FINAL AVERAGE'];
                 configuracion = { ...configuracion, body: body, header: header }
             } else {
-                console.log(configuracion)
                 header = ['ASIGNATURAS', '1ER BIMESTRE', '2DO BIMESTRE', '3ER BIMESTRE', '4TO BIMESTRE', '5TO BIMESTRE', 'PROMEDIO FINAL']
                 header2 = ['SUBJECTS', '1ST TERM', '2ND TERM', '3RD TERM', '4TH TERM', '5TH TERM', 'FINAL AVERAGE'];
                 configuracion = { ...configuracion, body: calificacionesAlumnos, header: header, header2: header2 }
@@ -998,6 +979,7 @@ function P_Boletas() {
                                 BoletasGrupo={PDF}
                                 isLoadingBoletasGrupo={isLoadingGrupos}
                                 isLoadingVistaPrevia={isLoading}
+                                permiso_imprime = {permissions.impresion}
                             />
                         </div>
                         <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
