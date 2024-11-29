@@ -1,5 +1,5 @@
 "use client";
-import { getConfiguracion, siguienteConfiguracion } from "@/app/utils/api/propietario/propietario";
+import { getConfiguracion, siguienteConfiguracion, createConfiguracion, updateConfiguracion } from "@/app/utils/api/propietario/propietario";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -7,6 +7,7 @@ import TablaConfiguracion from "./TablaConfiguracion";
 import Acciones from "./AccionesConfig";
 import ModalConfiguracion from "@/app/propietario/components/modalConfiguracion";
 import { useForm } from "react-hook-form";
+import { showSwal } from "@/app/utils/alerts";
 
 function ModalTablaConfiguracion({
 }){
@@ -31,13 +32,37 @@ function ModalTablaConfiguracion({
     const fetchData = async () => {
       const {token} = session.user;
       const data = await getConfiguracion(token);
-      setDataConfiguracion(data);
+      setDatasConfiguracion(data);
+      //setDataConfiguracion(data);
       setDataConfiguracionFiltrados(data);
       setisLoading(false);
     };
     fetchData();
     
   },[session, status])
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: {errors},
+  }= useForm({
+    defaultValues: {
+      numero_configuracion: dataConfiguracion.numero_configuracion,
+      descripcion_configuracion: dataConfiguracion.descripcion_configuracion,
+      valor_configuracion: dataConfiguracion.valor_configuracion,
+      texto_configuracion: dataConfiguracion.texto_configuracion,
+    },
+  });
+
+  useEffect(() => {
+   reset({
+     numero_configuracion: dataConfiguracion.numero_configuracion,
+     descripcion_configuracion: dataConfiguracion.descripcion_configuracion,
+     valor_configuracion: dataConfiguracion.valor_configuracion,
+     texto_configuracion: dataConfiguracion.texto_configuracion,
+   });
+  }, [dataConfiguracion, reset]);
 
   const Alta = async (event) => {
     setCurrentId("");
@@ -62,32 +87,37 @@ function ModalTablaConfiguracion({
       : document.getElementById("modal_Configuracion").close();
   };
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: {errors},
-  }= useForm({
-    defaultValues: {
-      numero_configuracion: dataConfiguracion.numero_configuracion,
-      descripcion_configuracion: dataConfiguracion.descripcion_configuracion,
-      valor_configuracion: dataConfiguracion.valor_configuracion,
-      texto_configuracion: dataConfiguracion.texto_configuracion,
-    },
-  });
-
- useEffect(() => {
-  reset({
-    numero_configuracion: dataConfiguracion.numero_configuracion,
-    descripcion_configuracion: dataConfiguracion.descripcion_configuracion,
-    valor_configuracion: dataConfiguracion.valor_configuracion,
-    texto_configuracion: dataConfiguracion.texto_configuracion,
-  });
- }, [dataConfiguracion, reset]);
+  
 
   const onSubmitModal = handleSubmit(async (data) => {
-    
-
+    setisLoadingButton(true);
+    data.id = currentID;
+    const {token} = session.user;
+    let res = null;
+    if(accion === "Alta"){
+      res = await createConfiguracion(token, data);
+    } else if (accion === "Editar"){
+      res = await updateConfiguracion(token, data);
+    }
+    if(res.status){
+      if (accion === "Alta") {
+        const nuevaConfiguracion = {...data };
+        setDatasConfiguracion([...datasConfiguracion, nuevaConfiguracion]);
+        setDataConfiguracionFiltrados([...dataConfiguracionFiltrados, nuevaConfiguracion]);
+      } else 
+        if (accion === "Editar") {
+          const cActualizadas = datasConfiguracion.map((c) =>
+            c.numero_configuracion === currentID ? { ...c, ...data } : c
+          );
+          setDatasConfiguracion(cActualizadas);
+          setDataConfiguracionFiltrados(cActualizadas);
+        }
+      showSwal(res.alert_title, res.alert_text, res.alert_icon, "modal_Tabla_Configuracion");
+      showModal(false);
+    } else {
+      showSwal(res.alert_title, res.alert_text, "error", "modal_Configuracion");
+    }
+      setisLoadingButton(false);
   });
 
     return(
