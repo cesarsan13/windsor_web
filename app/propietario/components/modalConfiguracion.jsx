@@ -27,12 +27,10 @@ function ModalConfiguracion({
     }
     setTitulo(
       accion === "Alta"
-      ? `Nuevo Comentario`
+      ? `Nueva Configuracion`
       : accion === "Editar"
-      ? `Editar Comentario: ${currentID}`
-      : accion === "Eliminar"
-      ? `Eliminar Comentario: ${currentID}`
-      : `Ver Comentario: ${currentID}`
+      ? `Editar Configuracion: ${currentID}`
+      : `Ver Configuracion: ${currentID}`
     );
   }, [accion, currentID]);
 
@@ -52,7 +50,7 @@ function ModalConfiguracion({
 
   return (
     <dialog id="modal_Configuracion" className="modal">
-      <div className="modal-box bg-base-200">
+      <div className="modal-box bg-base-200 max-w-2xl">
         <form onSubmit={onSubmit}>
           <div className="sticky -top-6 flex justify-between items-center bg-base-200  dark:bg-[#1d232a] w-full h-10 z-10 mb-5">{/* bg-white */}
             <h3 className="font-bold text-lg text-neutral-600 dark:text-white">{titulo}</h3>
@@ -93,7 +91,7 @@ function ModalConfiguracion({
             </div>
           </div>
 
-          <fieldset id="fs_comnfiguracion">
+          <fieldset id="fs_configuracion">
             <div className="container flex flex-col space-y-5">
               <fieldset
                 disabled={
@@ -124,7 +122,7 @@ function ModalConfiguracion({
                 className={"rounded block grow"}
                 Titulo={"Descripcion Configuracion: "}
                 type={"text"}
-                requerido={false}
+                requerido={true}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -134,14 +132,14 @@ function ModalConfiguracion({
               />
 
               <Inputs
-                dataType={"string"}
+                dataType={"int"}
                 name={"valor_configuracion"}
-                tamañolabel={""}
-                className={"rounded block grow"}
+                tamañolabel={"w-4/6"}
+                className={"rounded block grow text-right"}
                 Titulo={"Valor Configuracion: "}
                 type={"text"}
-                requerido={false}
-                isNumero={false}
+                requerido={true}
+                isNumero={true}
                 errors={errors}
                 register={register}
                 message={"valor Configuracion requerido"}
@@ -156,7 +154,7 @@ function ModalConfiguracion({
                 className={"rounded block grow"}
                 Titulo={"Texto Configuracion: "}
                 type={"text"}
-                requerido={false}
+                requerido={true}
                 isNumero={false}
                 errors={errors}
                 register={register}

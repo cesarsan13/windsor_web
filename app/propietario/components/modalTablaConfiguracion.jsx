@@ -1,11 +1,11 @@
 "use client";
-import { getConfiguracion } from "@/app/utils/api/propietario/propietario";
+import { getConfiguracion, siguienteConfiguracion } from "@/app/utils/api/propietario/propietario";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import TablaConfiguracion from "./TablaConfiguracion";
 import Acciones from "./AccionesConfig";
-import ModalConfiguracion from "./ModalConfiguracion";
+import ModalConfiguracion from "@/app/propietario/components/ModalConfiguracion";
 import { useForm } from "react-hook-form";
 
 function ModalTablaConfiguracion({
@@ -39,15 +39,18 @@ function ModalTablaConfiguracion({
     
   },[session, status])
 
-  const Alta = () => {
+  const Alta = async (event) => {
     setCurrentId("");
     reset({
-      numero_configuracion: dataConfiguracion.numero_configuracion,
-      descripcion_configuracion: dataConfiguracion.descripcion_configuracion,
-      valor_configuracion: dataConfiguracion.valor_configuracion,
-      texto_configuracion: dataConfiguracion.texto_configuracion,
+      numero_configuracion: "",
+      descripcion_configuracion: "",
+      valor_configuracion: "",
+      texto_configuracion: "",
     });
-    setDataConfiguracion({numero_configuracion: ""});
+    let idSig = await siguienteConfiguracion(session.user.token);
+    idSig = Number(idSig) + 1;
+    setCurrentId(idSig);
+    setDataConfiguracion({numero_configuracion: idSig});
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);
@@ -83,6 +86,7 @@ function ModalTablaConfiguracion({
  }, [dataConfiguracion, reset]);
 
   const onSubmitModal = handleSubmit(async (data) => {
+    
 
   });
 
@@ -99,7 +103,7 @@ function ModalTablaConfiguracion({
         />
 
           <dialog id="modal_Tabla_Configuracion" className="modal">
-            <div className="modal-box w-full max-w-7xl h-full bg-base-200">
+            <div className="modal-box w-full max-w-7xl bg-base-200">
               <div className="sticky -top-6 flex justify-between items-center bg-base-200 w-full h-10 z-10 mb-5">
                 <h2 className="font-bold text-lg text-neutral-600 dark:text-white"> Configuracion </h2>
                   <div className=" tooltip flex space-x-2 items-center">

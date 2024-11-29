@@ -17,6 +17,21 @@ function Propietario() {
     const [propietarioInfo, setPropietarioInfo] = useState([]);
     const [isLoading, setisLoading] = useState(false);
 
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+      } = useForm({
+        defaultValues: {
+            nombre_I: propietarioInfo.nombre_I,
+            cve_Seguridad_I: propietarioInfo.cve_Seguridad_I,
+            max_Busqueda_I: propietarioInfo.max_Busqueda_I,
+            numero_Recibo_I: propietarioInfo.numero_Recibo_I,
+            numero_Factura_I: propietarioInfo.numero_Factura_I,
+            cve_Bonificacion_I: propietarioInfo.cve_Bonificacion_I,
+        },
+    });
 
     useEffect(() => {
         if (status === "loading" || !session) {
@@ -39,23 +54,9 @@ function Propietario() {
         };
         
         fetchData();
-    },[session, status]);
+    },[reset, session, status]);
 
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: { errors },
-      } = useForm({
-        defaultValues: {
-            nombre_I: propietarioInfo.nombre_I,
-            cve_Seguridad_I: propietarioInfo.cve_Seguridad_I,
-            max_Busqueda_I: propietarioInfo.max_Busqueda_I,
-            numero_Recibo_I: propietarioInfo.numero_Recibo_I,
-            numero_Factura_I: propietarioInfo.numero_Factura_I,
-            cve_Bonificacion_I: propietarioInfo.cve_Bonificacion_I,
-        },
-    });
+    
 
     const Guardar = handleSubmit(async (data) => {
         let res = null;

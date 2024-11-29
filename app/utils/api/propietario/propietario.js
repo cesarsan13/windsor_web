@@ -1,3 +1,4 @@
+import { siguiente } from "../accesos_menu/accesos_menu";
 
 export const getPropietario = async (token) => {
     let url = `${process.env.DOMAIN_API}api/propietario`;
@@ -45,3 +46,16 @@ export const updatePropietario = async (token, data) => {
     const resJson = await res.json();
     return resJson;
 };
+
+
+export const siguienteConfiguracion = async (token) => {
+    let url = `${process.env.DOMAIN_API}api/propietario/configuracion/siguiente`;
+    const res = await fetch(url, {
+        headers:{
+            'Authorization': `Bearer ${token}`,
+        },
+    });
+    const resJson = await res.json();
+    return resJson.data;
+};
+
