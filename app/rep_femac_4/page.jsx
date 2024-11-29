@@ -301,7 +301,8 @@ function rep_femac_4() {
                 <div className="w-full py-3 flex flex-col gap-y-2">
                     <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
                         <div className="col-span-full md:col-span-full lg:col-span-full">
-                            <div className="w-full">
+                            {/* <div className="w-full"> */}
+                            <div className="w-2/6 max-[600px]:w-full max-[768px]:w-full">
                             <input
                                 type="file"
                                 name="imagen"
@@ -313,7 +314,7 @@ function rep_femac_4() {
                             {(capturedImage || files) && (
                             <div className="bottom-0 left-0 w-full">
                                 <h2 className="text-center text-xl mb-2">
-                                    {condicion ? "Imagen Seleccionada:" : "Foto Seleccionada:"}
+                                    {condicion ? "Imagen Seleccionada:" : "Foto del Alumno:"}
                                 </h2>
                                 <Image
                                     src={
