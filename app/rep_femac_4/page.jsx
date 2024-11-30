@@ -7,6 +7,7 @@ import {
   calculaDigitoBvba,
   formatFecha,
   format_Fecha_String,
+  permissionsComponents,
 } from "@/app/utils/globalfn";
 import { useForm } from "react-hook-form";
 import {
@@ -41,6 +42,7 @@ function Rep_femac_4() {
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
+  const [permissions, setPermissions] = useState({});
 
   const fetchFacturasFormato = async (id) => {
     const { token } = session.user;
@@ -78,6 +80,11 @@ function Rep_femac_4() {
   useEffect(() => {
     const fetchData = async () => {
       const { token } = session.user;
+      let {permissions}=session.user;
+      const es_admin = session.user.es_admin
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+      const permisos = permissionsComponents(es_admin,permissions,session.user.id,menuSeleccionado)
+      setPermissions(permisos)
       const formato = await getCredencialFormato(token, 3);
       // console.log("formato => ",formato);
       setFormato(formato);

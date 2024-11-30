@@ -10,7 +10,7 @@ import {
   ImprimirExcel,
   verImprimir,
 } from "@/app/utils/api/rep_inscritos/rep_inscritos";
-import { formatDate } from "@/app/utils/globalfn";
+import { formatDate, permissionsComponents } from "@/app/utils/globalfn";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { showSwal } from "@/app/utils/alerts";
@@ -30,6 +30,7 @@ function AltasBajasAlumnos() {
   const [pdfData, setPdfData] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const [animateLoading, setAnimateLoading] = useState(false);
+  const [permissions, setPermissions] = useState({});
 
   const {
     formState: { errors },
@@ -55,6 +56,17 @@ function AltasBajasAlumnos() {
     // setFecha_ini(fecha_ini);
     // setFecha_fin(fecha_fin);
   }, []);
+
+  useEffect(()=>{
+    if (status === "loading" || !session) {
+      return;
+    }
+    let {permissions}=session.user
+    const es_admin = session.user.es_admin
+    const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+    const permisos = permissionsComponents(es_admin,permissions,session.user.id,menuSeleccionado)
+    setPermissions(permisos)
+  },[session,status])
 
   // const formaImprime = async () => {
   //     let res;

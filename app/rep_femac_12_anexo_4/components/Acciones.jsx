@@ -5,25 +5,28 @@ import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 import { TbLoader3 } from "react-icons/tb"; // Icono de carga
 
-function Acciones({ home, Ver, isLoading}) {
+function Acciones({ home, Ver, isLoading,permiso_imprime}) {
     const images = [
         { 
             srcLight: iconos.vistaPrevia_w,
             srcDark: iconos.vistaPrevia, 
             alt: 'Vista previa', 
             tooltipTitle: 'Vista previa', 
-            onClick: Ver 
+            onClick: Ver,
+            permission: permiso_imprime
         },
         { 
             srcLight: iconos.salir_w,
             srcDark: iconos.salir,
             alt: 'Salir', 
             tooltipTitle: 'Salir', 
-            onClick: home 
+            onClick: home,
+            permission:true
         },
     ];
 
-    const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading }) => {
+    const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading,permission }) => {
+        if(!permission) return null
         return (
             <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
                 <button
@@ -61,7 +64,8 @@ function Acciones({ home, Ver, isLoading}) {
                 srcDark={image.srcDark}
                 tooltipTitle={image.tooltipTitle}
                 onClick={image.onClick}
-                isLoading={idx === 0 && isLoading} />
+                isLoading={idx === 0 && isLoading} 
+                permission={image.permission}/>
             ))}
         </div>
     );

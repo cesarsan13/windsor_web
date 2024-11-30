@@ -6,6 +6,7 @@ import {
   formatDate,
   formatDate_NewDate,
   format_Fecha_String,
+  permissionsComponents,
 } from "../utils/globalfn";
 import BuscarCat from "../components/BuscarCat";
 import { useSession } from "next-auth/react";
@@ -39,6 +40,7 @@ function RepFemac12Anexo() {
   const [pdfData, setPdfData] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const [animateLoading, setAnimateLoading] = useState(false);
+  const [permissions, setPermissions] = useState({});
 
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
@@ -53,6 +55,17 @@ function RepFemac12Anexo() {
       .toISOString()
       .split("T")[0];
   };
+
+  useEffect(()=>{
+    if (status === "loading" || !session) {
+      return;
+    }
+    let {permissions}=session.user
+    const es_admin = session.user.es_admin
+    const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+    const permisos = permissionsComponents(es_admin,permissions,session.user.id,menuSeleccionado)
+    setPermissions(permisos)
+  },[session,status])
 
   useEffect(() => {
     setFecha1(getPrimerDiaDelMes());
@@ -292,7 +305,7 @@ function RepFemac12Anexo() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading}/>
+                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading} permiso_imprime={permissions.impresion}/>
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Reporte de Cobranza por Productos

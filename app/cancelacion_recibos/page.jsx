@@ -7,12 +7,13 @@ import { useSession } from "next-auth/react";
 import Inputs from "@/app/cancelacion_recibos/components/Inputs";
 import { procesoCartera } from "@/app/utils/api/cancelacion_recibo/cancelacion_recibo";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
-import { format_Fecha_String } from "../utils/globalfn";
+import { format_Fecha_String, permissionsComponents } from "../utils/globalfn";
 
 function Cancelacion_Recibo() {
     const router = useRouter();
     const { data: session, status } = useSession();
     const [isLoading, setisLoading] = useState(false);
+    const [permissions, setPermissions] = useState({});
     const today = new Date();
     const yyyy = today.getFullYear();
     const mm = String(today.getMonth() + 1).padStart(2, "0");
@@ -28,6 +29,17 @@ function Cancelacion_Recibo() {
             recibo: 0,
         },
     });
+
+    useEffect(()=>{
+        if (status === "loading" || !session) {
+            return;
+          }
+        let {permissions}=session.user
+        const es_admin = session.user.es_admin;
+        const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+        const permisos = permissionsComponents(es_admin,permissions,session.user.id,menuSeleccionado)
+        setPermissions(permisos)
+    },[session])
 
     const Proceso = handleSubmit(async (data) => {
         const { token } = session.user;
@@ -75,6 +87,7 @@ function Cancelacion_Recibo() {
                                 isLoading={isLoading}
                                 Bproceso={Proceso}
                                 home={home}
+                                permiso_alta={permissions.altas}
                             />
                         </div>
 
