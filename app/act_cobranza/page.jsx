@@ -10,7 +10,7 @@ import { getDocumentosAlumno, guardarActCobranza } from '../utils/api/act_cobran
 import { confirmSwal, showSwal, showSwalAndWait } from '../utils/alerts';
 import ModalActCobranza from './components/ModalActCobranza';
 import { useForm } from 'react-hook-form';
-import { Elimina_Comas, formatFecha, formatNumber, poneCeros } from '../utils/globalfn';
+import { Elimina_Comas, formatFecha, formatNumber, poneCeros, permissionsComponents } from '../utils/globalfn';
 import { useRouter } from 'next/navigation';
 import Busqueda from './components/Busqueda';
 import { getProductos } from '../utils/api/productos/productos';
@@ -30,6 +30,7 @@ function Act_Cobranza() {
     const [currentID, setCurrentId] = useState("")
     const [producto, setProducto] = useState({})
     const [currentIDDocumento, setCurrentIdDocumento] = useState("")
+    const [permissions, setPermissions] = useState({});
     const [busqueda, setBusqueda] = useState({
         tb_id: "",
         tb_desc: "",
@@ -39,9 +40,13 @@ function Act_Cobranza() {
             return;
         }
         const fetchData = async () => {            
-            const { token } = session.user            
+            const { token, permissions } = session.user;
+            const es_admin = session.user.es_admin;
+            const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
             const dataProducto =await getProductos(token,true)
-            setProductos(dataProducto)            
+            setProductos(dataProducto)
+            const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado)
+            setPermissions(permisos);  
         }
         fetchData();
     }, [session, status])
@@ -250,6 +255,7 @@ function Act_Cobranza() {
                                 Alta={Alta}
                                 home={home}
                                 Buscar={Buscar}
+                                permiso_alta={permissions.alta}
                             />
                         </div>
                         <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
@@ -275,6 +281,8 @@ function Act_Cobranza() {
                             setDocumento={setDocumento}
                             showModal={showModal}
                             productos={productos}
+                            permiso_cambio = {permissions.cambios}
+                            permiso_baja = {permissions.bajas}
                         ></TablaDocumentosCobranza>
                     </div>
                 </div>

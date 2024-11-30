@@ -8,7 +8,7 @@ import BuscarCat from "../components/BuscarCat";
 import Inputs from "@/app/adicion_productos_cartera/components/Inputs";
 import { actualizarCartera, procesoCartera } from "@/app/utils/api/adicion_productos_cartera/adicion_productos_cartera";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
-import { formatDate } from "../utils/globalfn";
+import { formatDate, permissionsComponents } from "../utils/globalfn";
 
 function Adicion_Productos_Cartera() {
     const router = useRouter();
@@ -17,11 +17,24 @@ function Adicion_Productos_Cartera() {
     const [cond_ant, setCondAnt] = useState("");
     const [isLoading, setisLoading] = useState(false);
     const [isLoading2, setisLoading2] = useState(false);
+    const [permissions, setPermissions] = useState({});
     const today = new Date();
     const yyyy = today.getFullYear();
     const mm = String(today.getMonth() + 1).padStart(2, "0");
     const dd = String(today.getDate()).padStart(2, "0");
     const date = `${yyyy}-${mm}-${dd}`;
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            const {permissions} = session.user;
+            const es_admin = session.user.es_admin;
+            const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
+            const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado)
+            setPermissions(permisos);
+        }
+        fetchData();
+    }, [session]);
+    
     const {
         register,
         handleSubmit,
@@ -132,6 +145,7 @@ function Adicion_Productos_Cartera() {
                                 BRef={ActRef}
                                 Bproceso={onSubmitProceso}
                                 home={home}
+                                permiso_alta={permissions.alta}
                             />
                         </div>
 

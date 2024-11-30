@@ -10,7 +10,7 @@ import {
   Imprimir,
   ImprimirExcel,
 } from "../utils/api/Rep_Femac_6/Rep_Femac_6";
-import { formatDate, formatNumber } from "../utils/globalfn";
+import { formatDate, formatNumber, permissionsComponents } from "../utils/globalfn";
 import { ReportePDF } from "../utils/ReportesPDF";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import VistaPrevia from "../components/VistaPrevia";
@@ -29,6 +29,8 @@ function Rep_Femac_6() {
   const [animateLoading, setAnimateLoading] = useState(false);
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const [permissions, setPermissions] = useState({});
+
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
     return new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1)
@@ -53,11 +55,14 @@ function Rep_Femac_6() {
     }
     const fetchData = async () => {
       setisLoading(true);
-      const { token } = session.user;
+      const { token, permissions } = session.user;
+      const es_admin = session.user.es_admin;
       const id = cajero.numero;
       const data = await Cobranza(token, fechaIni, fechaFin, id);
       setDataCobranza(data);
       setisLoading(false);
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, 1);
+      setPermissions(permisos);
     };
     fetchData();
   }, [session, status, cajero, fechaFin, fechaIni]);
@@ -417,7 +422,7 @@ function Rep_Femac_6() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading}/>
+                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading} permiso_imprime={permissions.impresion}/>
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Reporte Resumen de Cobranza

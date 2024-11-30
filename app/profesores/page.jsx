@@ -20,7 +20,7 @@ import { useSession } from "next-auth/react";
 import "jspdf-autotable";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import { debounce } from "../utils/globalfn";
+import { debounce,permissionsComponents } from "../utils/globalfn";
 function Profesores() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -41,6 +41,8 @@ function Profesores() {
     tb_nombre: "",
   });
   const [animateLoading, setAnimateLoading] = useState(false);
+
+  const [permissions, setPermissions] = useState({});
 
   useEffect(() => {
     profesoresRef.current = profesores; // Actualiza el ref cuando profesores cambia
@@ -81,11 +83,21 @@ function Profesores() {
     
     const fetchData = async () => {
       setisLoading(true);
-      const { token } = session.user;
+      const { token, permissions } = session.user;
+      const es_admin = session.user.es_admin;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+
       const data = await getProfesores(token, bajas);
       setProfesores(data);
       setProfesoresFiltrados(data);
       setisLoading(false);
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menuSeleccionado
+      );
+      setPermissions(permisos);
     };
     if (status === "loading" || !session) {
       return;
@@ -472,6 +484,8 @@ function Profesores() {
                 home={home}
                 Ver={handleVerClick}
                 animateLoading={animateLoading}
+                permiso_alta={permissions.altas}
+                permiso_imprime={permissions.impresion}
               ></Acciones>
             </div>
 
@@ -498,6 +512,8 @@ function Profesores() {
               setProfesor={setProfesor}
               setAccion={setAccion}
               setCurrentId={setCurrentId}
+              permiso_cambio={permissions.cambios}
+              permiso_baja={permissions.bajas}
             />
           </div>
         </div>

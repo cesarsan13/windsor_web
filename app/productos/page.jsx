@@ -45,11 +45,11 @@ function Productos() {
   const [num, setNum] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
   const [permissions, setPermissions] = useState({});
-  const productosRef = useRef(productos)
+  const productosRef = useRef(productos);
 
   useEffect(() => {
-    productosRef.current = productos
-  }, [productos])
+    productosRef.current = productos;
+  }, [productos]);
   const Buscar = useCallback(() => {
     const { tb_id, tb_desc } = busqueda;
     if (tb_id === "" && tb_desc === "") {
@@ -62,35 +62,42 @@ function Productos() {
         : true;
       const coincideDescripcion = tb_desc
         ? producto["descripcion"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_desc.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
         : true;
       return coincideId && coincideDescripcion;
     });
     setProductosFiltrados(infoFiltrada);
-  }, [busqueda])
+  }, [busqueda]);
 
-  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar])
+  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
   useEffect(() => {
     debouncedBuscar();
     return () => {
-      clearTimeout(debouncedBuscar)
+      clearTimeout(debouncedBuscar);
     };
   }, [busqueda, debouncedBuscar]);
 
-  useEffect(() => {    
+  useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
-      let {token, permissions} = session.user;
+      let { token, permissions } = session.user;
       const es_admin = session.user.es_admin;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+
       const data = await getProductos(token, bajas);
       setProductos(data);
       setProductosFiltrados(data);
       setisLoading(false);
-      const permisos = permissionsComponents(es_admin, permissions, session.user.id, 5);
-      setPermissions(permisos)
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menuSeleccionado
+      );
+      setPermissions(permisos);
     };
     if (status === "loading" || !session) {
       return;
@@ -160,7 +167,7 @@ function Productos() {
       cam_precio: false,
       ref: "",
     });
-    setProducto({})
+    setProducto({});
     setNum("");
     setCurrentId("");
     setDisableNum(false);
@@ -212,7 +219,7 @@ function Productos() {
       );
       if (!confirmed) {
         showModal(true);
-        setisLoadingButton(false)
+        setisLoadingButton(false);
         return;
       }
     }
@@ -256,7 +263,7 @@ function Productos() {
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
     } else {
-     showSwal(res.alert_title, res.alert_text, "error", "my_modal_3")
+      showSwal(res.alert_title, res.alert_text, "error", "my_modal_3");
     }
     setisLoadingButton(false);
   });
@@ -403,7 +410,7 @@ function Productos() {
       const cam_precio = producto.cam_precio ? "Si" : "No";
       reporte.ImpPosX(cam_precio.toString(), 215, reporte.tw_ren, 0, "L");
       reporte.ImpPosX(producto.ref.toString(), 250, reporte.tw_ren, 0, "L");
-      Enca1(reporte); 
+      Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRenH) {
         reporte.pageBreakH();
         Enca1(reporte);
@@ -495,23 +502,23 @@ function Productos() {
               handleBusquedaChange={handleBusquedaChange}
               busqueda={busqueda}
             />
-            {status === "loading" || (!session) ?
-              (<></>) :
-              (
-                <TablaProductos
-                  isLoading={isLoading}
-                  productosFiltrados={productosFiltrados}
-                  showModal={showModal}
-                  setProducto={setProducto}
-                  setAccion={setAccion}
-                  setCurrentId={setCurrentId}
-                  formatNumber={formatNumber}
-                  tableAction={tableAction}
-                  session={session}
-                  permiso_cambio={permissions.cambios}
-                  permiso_baja={permissions.bajas}
-                />
-              )}
+            {status === "loading" || !session ? (
+              <></>
+            ) : (
+              <TablaProductos
+                isLoading={isLoading}
+                productosFiltrados={productosFiltrados}
+                showModal={showModal}
+                setProducto={setProducto}
+                setAccion={setAccion}
+                setCurrentId={setCurrentId}
+                formatNumber={formatNumber}
+                tableAction={tableAction}
+                session={session}
+                permiso_cambio={permissions.cambios}
+                permiso_baja={permissions.bajas}
+              />
+            )}
           </div>
         </div>
       </div>

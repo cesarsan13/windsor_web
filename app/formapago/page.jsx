@@ -17,8 +17,9 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/formapago/formapago";
 import { ReportePDF } from "../utils/ReportesPDF";
-import { debounce } from "../utils/globalfn";
+import { debounce, permissionsComponents } from "../utils/globalfn";
 import VistaPrevia from "@/app/components/VistaPrevia";
+import { permission } from "process";
 function FormaPago() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -36,6 +37,7 @@ function FormaPago() {
   const [animateLoading, setAnimateLoading] = useState(false);
   const formasPagoRef = useRef(formasPago);
   const [isLoadingButton, setisLoadingButton] = useState(false);
+  const [permissions, setPermissions] = useState({});
 
   useEffect(() => {
     formasPagoRef.current = formasPago; // Actualiza el ref cuando alumnos cambia
@@ -79,11 +81,15 @@ function FormaPago() {
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
-      const { token } = session.user;
+      const { token, permissions } = session.user;
+      const es_admin = session.user.es_admin;
+      const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
       const data = await getFormasPago(token, bajas);
       setFormasPago(data);
       setFormaPagosFiltrados(data);
       setisLoading(false);
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado)
+      setPermissions(permisos);
     };
     if (status === "loading" || !session) {
       return;
@@ -368,6 +374,8 @@ function FormaPago() {
                 home={home}
                 Ver={handleVerClick}
                 animateLoading={animateLoading}
+                permiso_alta={permissions.alta}
+                permiso_imprime = {permissions.impresion}
               />
             </div>
 
@@ -398,6 +406,8 @@ function FormaPago() {
                 setFormaPago={setFormaPago}
                 setAccion={setAccion}
                 setCurrentId={setCurrentId}
+                permiso_cambio = {permissions.cambios}
+                permiso_baja = {permissions.bajas}
               />
             ))}
           </div>

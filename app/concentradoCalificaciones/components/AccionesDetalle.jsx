@@ -4,7 +4,7 @@ import Button from "@/app/components/button";
 import { TbLoader3 } from "react-icons/tb";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
-function Acciones({ Ver, isLoadingPDF, isLoadingFind, Buscar }) { 
+function Acciones({ Ver, isLoadingPDF, isLoadingFind, Buscar, permiso_imprime }) { 
   const images = [
     { 
       srcLight: iconos.buscar_w,
@@ -12,7 +12,8 @@ function Acciones({ Ver, isLoadingPDF, isLoadingFind, Buscar }) {
       alt: "Buscar", 
       tooltipTitle: "Buscar", 
       onClick: Buscar,
-      isLoading: isLoadingFind
+      isLoading: isLoadingFind,
+      permission: true
     },
     { 
       srcLight: iconos.vistaPrevia_w,
@@ -20,11 +21,13 @@ function Acciones({ Ver, isLoadingPDF, isLoadingFind, Buscar }) {
       alt: 'Vista previa', 
       tooltipTitle: 'Vista previa', 
       onClick: Ver,
-      isLoading: isLoadingPDF
+      isLoading: isLoadingPDF,
+      permission: permiso_imprime
     }
   ];
 
-  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading }) => {
+  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading, permission }) => {
+    if(!permission) return null;
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
@@ -58,12 +61,13 @@ function Acciones({ Ver, isLoadingPDF, isLoadingFind, Buscar }) {
     <div className="grid grid-flow-col gap-5 justify-around w-full">
       {images.map((image, idx) => (
         <ImageTooltip
-        key={idx}
-        srcLight={image.srcLight}
+          key={idx}
+          srcLight={image.srcLight}
           srcDark={image.srcDark}
-        tooltipTitle={image.tooltipTitle}
-         onClick={image.onClick}
-        isLoading={image.isLoading}
+          tooltipTitle={image.tooltipTitle}
+          onClick={image.onClick}
+          isLoading={image.isLoading}
+          permission={image.permission}
         />
       ))}
     </div>

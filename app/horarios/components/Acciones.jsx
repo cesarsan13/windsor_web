@@ -5,7 +5,7 @@ import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 import { TbLoader3 } from "react-icons/tb"; // Icono de carga
 
-function Acciones({ Buscar, Alta, home, Ver, animateLoading, permiso_alta, permiso_imprime }) {
+function Acciones({ Buscar, Alta, home, Ver, animateLoading, permiso_alta, permiso_imprime }) {  
   const images = [
     {
       srcLight: iconos.buscar_w,

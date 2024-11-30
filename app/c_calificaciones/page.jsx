@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import BuscarCat from "@/app/components/BuscarCat";
 import Inputs from "@/app/c_calificaciones/components/Inputs";
 import TablaCalificaciones from "@/app/c_calificaciones/components/tablaCalificaciones";
-import { setGlobalVariable, globalVariables, loadGlobalVariables } from "@/app/utils/globalfn";
+import { setGlobalVariable, globalVariables, loadGlobalVariables,permissionsComponents, } from "@/app/utils/globalfn";
 import { getMateriaEvaluacion, getMateriaBuscar } from "@/app/utils/api/materias/materias";
 import { getActividadSecuencia } from "@/app/utils/api/actividades/actividades";
 import { getContraseñaProfe } from "@/app/utils/api/profesores/profesores"
@@ -52,6 +52,8 @@ function C_Calificaciones() {
 
     const [isLoadingPDF, setisLoadingPDF] = useState(false);
 
+    const [permissions, setPermissions] = useState({});
+
     const [pdfPreview, setPdfPreview] = useState(false);
     const [pdfData, setPdfData] = useState("");
     const {
@@ -92,7 +94,8 @@ function C_Calificaciones() {
         const fetchData = async () => {
             let res = null, res2 = null, res3 = null;
             // let vg_area = '', vg_actividad = '', vg_caso_evaluar = '';
-            const { token } = session.user;
+            const { token,permissions } = session.user;
+            const es_admin = session.user.es_admin;
             if(materia !== ""){
                 res = await getMateriaBuscar(token, materia)
                 if (res.data) {
@@ -141,6 +144,8 @@ function C_Calificaciones() {
                 //     showSwal('Error', 'No hay evaluación para esta materia', 'error');
                 // }
                 // }
+                const permisos = permissionsComponents(es_admin, permissions, session.user.id, 1);
+                setPermissions(permisos);
             }
             
         }
@@ -406,6 +411,8 @@ function C_Calificaciones() {
                                 isLoading={isLoading2}
                                 isDisabledSave={isDisabledSave}
                                 isLoadingPDF={isLoadingPDF}
+                                permiso_alta={permissions.altas}
+                                permiso_imprime={permissions.impresion}
                             />
                         </div>
                         <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
@@ -551,6 +558,8 @@ function C_Calificaciones() {
                                         setCalificacion={setCalificacion}
                                         setAccion={setAccion}
                                         setCurrentId={setCurrentId}
+                                        permiso_cambio={permissions.cambios}
+                                        permiso_baja={permissions.bajas}
                                     />
                                 </div>
                             </div>

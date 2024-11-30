@@ -4,7 +4,7 @@ import Image from 'next/image'
 import React from 'react'
 import { TbLoader3 } from 'react-icons/tb'
 
-function Acciones({ Buscar, home, imprimir, actPol }) {
+function Acciones({ Buscar, home, imprimir, actPol, permiso_alta, permiso_imprime }) {
     const images = [
         {
             srcLight: iconos.buscar_w,
@@ -13,6 +13,7 @@ function Acciones({ Buscar, home, imprimir, actPol }) {
             tooltipTitle: "Buscar",
             onClick: Buscar,
             isLoading: false,
+            permission: true,
         },
         {
             srcLight: iconos.procesa_w,
@@ -21,6 +22,7 @@ function Acciones({ Buscar, home, imprimir, actPol }) {
             tooltipTitle: "Act. Pol.",
             onClick: actPol,
             isLoading: false,
+            permission: permiso_alta,
         },
         {
             srcLight: iconos.vistaPrevia_w,
@@ -29,6 +31,7 @@ function Acciones({ Buscar, home, imprimir, actPol }) {
             tooltipTitle: "Imprimir",
             onClick: imprimir,
             isLoading: false,
+            permission: permiso_imprime,
         },
         {
             srcLight: iconos.salir_w,
@@ -37,9 +40,11 @@ function Acciones({ Buscar, home, imprimir, actPol }) {
             tooltipTitle: "Salir",
             onClick: home,
             isLoading: false,
+            permission: true,
         }
     ]
-    const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading }) => {
+    const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading, permission }) => {
+        if (!permission) return null;
         return (
             <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
                 <button
@@ -77,6 +82,7 @@ function Acciones({ Buscar, home, imprimir, actPol }) {
                     tooltipTitle={image.tooltipTitle}
                     onClick={image.onClick}
                     isLoading={image.isLoading}
+                    permission={image.permission}
                 />
             ))}
         </div>

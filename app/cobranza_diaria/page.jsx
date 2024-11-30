@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import Acciones from './components/acciones'
 import Busqueda from './components/busqueda'
-import { Elimina_Comas, format_Fecha_String, formatDate, formatNumber } from '../utils/globalfn'
+import { Elimina_Comas, format_Fecha_String, formatDate, formatNumber, permissionsComponents } from '../utils/globalfn'
 import { getCobranzaDiaria, guardarCobranzaDiaria, Imprimir, ImprimirExcel } from '../utils/api/cobranzaDiaria/cobranzaDiaria'
 import ModalCobranzaDiaria from './components/modalCobranzaDiaria'
 import { useForm } from 'react-hook-form'
@@ -31,6 +31,8 @@ function Cobranza_Diaria() {
     const [tipoPago, setTipoPago] = useState("")
     const [pdfData, setPdfData] = useState("");
     const [pdfPreview, setPdfPreview] = useState(false);
+    const [permissions, setPermissions] = useState({});
+
     useEffect(() => {
         if (status === "loading" || !session) {
             return;
@@ -84,11 +86,14 @@ function Cobranza_Diaria() {
     // console.log("cheque", cheque)
     const buscar = async () => {
         setisLoading(true)
-        const { token } = session.user
+        const { token, permissions} = session.user
+        const es_admin = session.user.es_admin;
         const fechaformat = format_Fecha_String(fecha)
         const data = await getCobranzaDiaria(token, fechaformat, cheque, recibo, alumno.numero)
         setCobranzaDiaria(data)
         setisLoading(false)
+        const permisos = permissionsComponents(es_admin, permissions, session.user.id, 1);
+        setPermissions(permisos);
     }
     const handleBlur = (evt) => {
         if (evt.target.value === "") {
@@ -403,6 +408,8 @@ function Cobranza_Diaria() {
                                 actPol={act_aplica}
                                 home={home}
                                 imprimir={handleVerClick}
+                                permiso_alta={permissions.altas}
+                                permiso_imprime={permissions.impresion}
                             />
                         </div>
                         <h1 className='order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5'>
@@ -428,6 +435,7 @@ function Cobranza_Diaria() {
                             setCurrentId={setCurrentID}
                             showModal={showModal}
                             setTipoPago={setTipoPago}
+                            permiso_cambio={permissions.cambios}
                         />
                     </div>
                 </div>
