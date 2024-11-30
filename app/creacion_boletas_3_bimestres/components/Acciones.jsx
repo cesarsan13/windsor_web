@@ -42,7 +42,6 @@ function Acciones({ home, Alta, Buscar, Ver, isLoadingFind, isLoadingPDF, Boleta
       onClick: home,
       isLoading: false,
       permission: true,
-
     },
   ];
 

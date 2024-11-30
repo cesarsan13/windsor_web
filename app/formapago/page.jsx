@@ -19,7 +19,6 @@ import { siguiente } from "@/app/utils/api/formapago/formapago";
 import { ReportePDF } from "../utils/ReportesPDF";
 import { debounce, permissionsComponents } from "../utils/globalfn";
 import VistaPrevia from "@/app/components/VistaPrevia";
-import { permission } from "process";
 function FormaPago() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -374,7 +373,7 @@ function FormaPago() {
                 home={home}
                 Ver={handleVerClick}
                 animateLoading={animateLoading}
-                permiso_alta={permissions.alta}
+                permiso_alta={permissions.altas}
                 permiso_imprime = {permissions.impresion}
               />
             </div>
