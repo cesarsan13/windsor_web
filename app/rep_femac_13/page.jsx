@@ -13,7 +13,7 @@ import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import BuscarCat from "../components/BuscarCat";
-import { formatDate } from "../utils/globalfn";
+import { formatDate, permissionsComponents } from "../utils/globalfn";
 import { showSwal } from "@/app/utils/alerts";
 
 function Rep_Femac_13() {
@@ -29,6 +29,7 @@ function Rep_Femac_13() {
   const [horario, setHorario] = useState({});
   const [sOrdenar, ssetordenar] = useState("nombre");
   const [animateLoading, setAnimateLoading] = useState(false);
+  const [permissions, setPermissions] = useState({});
 
 
   useEffect(() => {
@@ -36,9 +37,12 @@ function Rep_Femac_13() {
       return;
     }
     const fetchData = async () => {
-      const { token } = session.user;
+      const { token, permissions } = session.user;
+      const es_admin = session.user.es_admin;
       const data = await getRepASem(token, horario, sOrdenar);
       setFormaRepASem(data.data);
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, 1);
+      setPermissions(permisos);
     };
     fetchData();
   }, [session, status, horario, sOrdenar]);
@@ -326,7 +330,7 @@ function Rep_Femac_13() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleClickVer} isLoading={animateLoading}/>
+                <Acciones home={home} Ver={handleClickVer} isLoading={animateLoading} permiso_imprime={permissions.impresion}/>
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Reporte de Alumnos por Clase Semanal
