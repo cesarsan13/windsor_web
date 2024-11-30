@@ -4,6 +4,7 @@ import Button from "@/app/components/button";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 import { TbLoader3 } from "react-icons/tb";
+import { permission } from 'process';
 function Acciones({ home, Alta, animateLoading, permiso_alta }) {
   const images = [
     {
@@ -21,7 +22,8 @@ function Acciones({ home, Alta, animateLoading, permiso_alta }) {
       alt: 'Salir',
       tooltipTitle: 'Salir',
       onClick: home,
-      isLoading: false
+      isLoading: false,
+      permission: true,
     },
   ];
 

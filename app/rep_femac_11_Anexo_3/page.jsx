@@ -19,7 +19,7 @@ import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import VistaPrevia from "../components/VistaPrevia";
-
+import { permissionsComponents } from "../utils/globalfn";
 function CobranzaPorAlumno() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -34,6 +34,7 @@ function CobranzaPorAlumno() {
   const [pdfData, setPdfData] = useState("");
   const [FormaRepCobranzaporAlumno, setFormaReporteCobranzaporAlumno] = useState([]);
   const [animateLoading, setAnimateLoading] = useState(false);
+  const [permissions, setPermissions] = useState({});
 
 
   const getPrimerDiaDelMes = () => {
@@ -60,8 +61,9 @@ function CobranzaPorAlumno() {
       return;
     }
     const fetchData = async () => {
-      const { token } = session.user;
-
+      let { token, permissions } = session.user;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+      const es_admin = session.user.es_admin;
       const data = await getReporteCobranzaporAlumno(
         token,
         fecha_ini,
@@ -73,6 +75,8 @@ function CobranzaPorAlumno() {
         tomaFechas
       );
       setFormaReporteCobranzaporAlumno(data);
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
+      setPermissions(permisos)
     };
     fetchData();
   }, [
@@ -386,7 +390,7 @@ function CobranzaPorAlumno() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading}/>
+                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading} permiso_imprime={permissions.impresion}/>
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Reporte Cobranza por Alumno
