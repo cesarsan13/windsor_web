@@ -15,6 +15,7 @@ import "jspdf-autotable";
 import BuscarCat from "../components/BuscarCat";
 import { showSwal } from "@/app/utils/alerts";
 import { animator } from "chart.js";
+import { permissionsComponents } from "../utils/globalfn";
 
 function Rep_Femac_3() {
   const router = useRouter();
@@ -27,6 +28,7 @@ function Rep_Femac_3() {
   const [animateLoading, setAnimateLoading] = useState(false);
   const [horario, setHorario] = useState({});
   const [token, setToken] = useState("");
+  const [permissions, setPermissions] = useState({});
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -34,7 +36,11 @@ function Rep_Femac_3() {
     }
     const fetchData = async () => {
       setisLoading(true);
-      const { token } = session.user;
+      const { token, permissions } = session.user;
+      const es_admin = session.user.es_admin;
+      const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado)
+      setPermissions(permisos);
       setToken(token);
       const data = await getAlumnosPorMes(token, horario, sOrdenar);
       setFormaRepDosSel(data.data);
@@ -227,7 +233,7 @@ function Rep_Femac_3() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading}/>
+                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading} permiso_imprime = {permissions.impresion}/>
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Reporte Lista de Alumnos por Clase Mensual

@@ -15,7 +15,7 @@ import { showSwal } from "@/app/utils/alerts";
 import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import { calculaDigitoBvba } from "@/app/utils/globalfn";
+import { calculaDigitoBvba, permissionsComponents } from "@/app/utils/globalfn";
 import VistaPrevia from "../components/VistaPrevia";
 
 function AlumnosPorClase() {
@@ -29,6 +29,7 @@ function AlumnosPorClase() {
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
+  const [permissions, setPermissions] = useState({});
 
   const handleCheckChange = (event) => {
     setSelectedOption(event.target.value);
@@ -42,7 +43,11 @@ function AlumnosPorClase() {
       return;
     }
     const fetchData = async () => {
-      const { token } = session.user;
+      const { token, permissions } = session.user;
+      const es_admin = session.user.es_admin;
+      const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado)
+      setPermissions(permisos);
       const data = await getreportAlumn(
         token,
         bajas,
@@ -212,7 +217,7 @@ function AlumnosPorClase() {
     <>
       <VistaPrevia
         id={"modalVPRelacionGeneralAlumnos"}
-        titulo={"Vista Prevoa Relacion General de Alumnos"}
+        titulo={"Vista Previa Relacion General de Alumnos"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
@@ -225,7 +230,7 @@ function AlumnosPorClase() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading}/>
+                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading} permiso_imprime = {permissions.impresion}/>
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Relación General de Alumnos
