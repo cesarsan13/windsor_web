@@ -1,8 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Acciones from "./components/Acciones";
-import { formatDate } from "../utils/globalfn";
+import { formatDate, permissionsComponents } from "../utils/globalfn";
 import {
   Documentos,
   grupo_cobranza,
@@ -26,6 +26,26 @@ function Repo_Femac_7() {
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
+  const [permissions, setPermissions] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let { permissions } = session.user;
+      const es_admin = session.user.es_admin;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menuSeleccionado
+      );
+      setPermissions(permisos);
+    };
+    if (status === "loading" || !session) {
+      return;
+    }
+    fetchData();
+  }, [session, status]);
 
   const home = () => {
     router.push("/");
@@ -264,7 +284,7 @@ function Repo_Femac_7() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading}/>
+                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading} permiso_imprime={permissions.impresion} />
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Reporte Adeudos Pendientes
@@ -273,14 +293,14 @@ function Repo_Femac_7() {
           </div>
         </div>
         <div className="w-full py-3 flex flex-col gap-y-4">
-          {/* Fila del formulario de la pagina */} 
+          {/* Fila del formulario de la pagina */}
           <div className=" max-[600px]:w-full max-[768px]:w-full max-[1699px]:w-9/12 min-[1920px]:w-1/4 mx-auto ">
             <div className="flex max-[499px]:flex-col flex-row max-[499px]:gap-1 max-[500px]:gap-1 gap-4">
               <div className="lg:w-fit md:w-fit">
                 <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full">
                   Fecha Ini.
                   <input
-                    type="date" 
+                    type="date"
                     value={fecha}
                     onChange={(e) => setFecha(e.target.value)}
                     className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "

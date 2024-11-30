@@ -14,6 +14,8 @@ function Acciones({
   muestraParciales,
   muestraImpresion,
   muestraDocumento,
+  permiso_alta,
+  permiso_imprime
 }) {
   const isAnyLoading = muestraRecargos || muestraParciales || muestraImpresion || muestraDocumento;
   const images = [
@@ -24,6 +26,7 @@ function Acciones({
       tooltipTitle: "Nuevo Pago",
       onClick: Alta,
       isLoading: false,
+      permission: permiso_alta,
     },
     {
       srcLight: iconos.documento_w,
@@ -32,6 +35,7 @@ function Acciones({
       tooltipTitle: "Documento",
       onClick: Documento,
       isLoading: muestraDocumento,
+      permission: permiso_alta,
     },
     {
       srcLight: iconos.recargo_w,
@@ -40,6 +44,7 @@ function Acciones({
       tooltipTitle: "Recargos",
       onClick: Recargos,
       isLoading: muestraRecargos,
+      permission: permiso_alta,
     },
     {
       srcLight: iconos.actualizar_formato_w,
@@ -48,6 +53,7 @@ function Acciones({
       tooltipTitle: "Parciales",
       onClick: Parciales,
       isLoading: muestraParciales,
+      permission: permiso_alta,
     },
     {
       srcLight: iconos.vistaPrevia_w,
@@ -55,12 +61,14 @@ function Acciones({
       alt: "Imprimir",
       tooltipTitle: "Imprimir",
       onClick: ImprimePDF,
-      isLoading: muestraImpresion
+      isLoading: muestraImpresion,
+      permission: permiso_imprime,
     },
-    { srcLight: iconos.salir_w, srcDark:iconos.salir, alt: "Salir", tooltipTitle: "Salir", onClick: home },
+    { srcLight: iconos.salir_w, srcDark: iconos.salir, alt: "Salir", tooltipTitle: "Salir", onClick: home, permission: true },
   ];
 
-  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading, disabled }) => {
+  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading, disabled, permission }) => {
+    if (!permission) return null;
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
@@ -75,7 +83,7 @@ function Acciones({
               <Image
                 src={srcDark}
                 alt={tooltipTitle}
-                className="w-5 h-5 md:w-6 md:h-6 block dark:hidden"/>
+                className="w-5 h-5 md:w-6 md:h-6 block dark:hidden" />
               <Image
                 src={srcLight}
                 alt={tooltipTitle}
@@ -98,6 +106,7 @@ function Acciones({
           onClick={image.onClick}
           isLoading={image.isLoading}
           disabled={isAnyLoading}
+          permission={image.permission}
         />
       ))}
     </div>
