@@ -84,6 +84,11 @@ function Rep_femac_4() {
   useEffect(() => {
     const fetchData = async () => {
       const { token } = session.user;
+      let {permissions}=session.user;
+      const es_admin = session.user.es_admin
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+      const permisos = permissionsComponents(es_admin,permissions,session.user.id,menuSeleccionado)
+      setPermissions(permisos)
       const formato = await getCredencialFormato(token, 3);
       // console.log("formato => ",formato);
       setFormato(formato);

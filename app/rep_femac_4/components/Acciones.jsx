@@ -6,6 +6,7 @@ import iconos from "@/app/utils/iconos";
 import { TbLoader3 } from "react-icons/tb"; // Icono de carga
 
 function Acciones({ home, Ver, isLoading,permiso_imprime}) {
+function Acciones({ home, Ver, isLoading,permiso_imprime}) {
     const images = [
         { 
             srcLight: iconos.vistaPrevia_w,
@@ -64,6 +65,8 @@ function Acciones({ home, Ver, isLoading,permiso_imprime}) {
                 srcDark={image.srcDark}
                 tooltipTitle={image.tooltipTitle}
                 onClick={image.onClick}
+                isLoading={idx === 0 && isLoading} 
+                permission={image.permission}/>
                 isLoading={idx === 0 && isLoading} 
                 permission={image.permission}/>
             ))}

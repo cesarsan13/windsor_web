@@ -5,11 +5,11 @@ import { TbLoader3 } from "react-icons/tb";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 
-function Acciones({ home, Bproceso, isLoading }) {
+function Acciones({ home, Bproceso, isLoading,permiso_alta }) {
   const isAnyLoading = isLoading;
   const images = [
-    { srcDark: iconos.procesa, srcLight:iconos.procesa_w, alt: "Proceso", tooltipTitle: "Proceso", onClick: Bproceso, isLoading: isLoading },
-    { srcDark: iconos.salir, srcLight:iconos.salir_w, alt: 'Salir', tooltipTitle: 'Salir', onClick: home, isLoading: false },
+    { srcDark: iconos.procesa, srcLight:iconos.procesa_w, alt: "Proceso", tooltipTitle: "Proceso", onClick: Bproceso, isLoading: isLoading,permission: permiso_alta, },
+    { srcDark: iconos.salir, srcLight:iconos.salir_w, alt: 'Salir', tooltipTitle: 'Salir', onClick: home, isLoading: false,permission: true, },
   ];
 
   const ImageTooltip = ({
@@ -19,7 +19,9 @@ function Acciones({ home, Bproceso, isLoading }) {
     onClick,
     isLoading,
     disabled,
+    permission,
   }) => {
+    if (!permission) return null;
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
@@ -59,6 +61,7 @@ function Acciones({ home, Bproceso, isLoading }) {
           onClick={image.onClick}
           isLoading={image.isLoading}
           disabled={isAnyLoading}
+          permission={image.permission}
         />
       ))}
     </div>
