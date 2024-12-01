@@ -83,9 +83,9 @@ function Accesos_Usuarios() {
     showModal(true);
   };
   const onSubmitModal = handleSubmit(async (data) => {
-    event.preventDefault();
     data.id_punto_menu = currentID;
     data.id_usuario = usuario.id;
+    // console.log("qe pedo", data);
     let res = null;
     res = await guardaAccesosUsuarios(session.user.token, data);
     if (res.status) {
@@ -98,6 +98,22 @@ function Accesos_Usuarios() {
       showModal(false);
     }
   });
+  const TodosSiNo = async (event) => {
+    event.preventDefault();
+    const { name } = event.target;
+    let res = null;
+    res = await actualizaTodos(session.user.token, name);
+    if (res.status) {
+      const accUsuarioActualizados = accesosUsuarios.map((c) =>
+        c.id_punto_menu === currentID ? { ...c, ...data } : c
+      );
+      setAccesosUsuarios(accUsuarioActualizados);
+      setAccesosUsuariosFiltrados(accUsuarioActualizados);
+      showSwal(res.alert_title, res.alert_text, res.alert_icon);
+      showModal(false);
+    }
+    console.log(name);
+  };
   return (
     <>
       <ModalAccesosUsuarios
@@ -131,6 +147,22 @@ function Accesos_Usuarios() {
               titulo={"Usuarios"}
               alignRight
             />
+            <div className="flex flex-row space-x-4 mt-4">
+              <button
+                className="btn btn-sm btn-success w-24"
+                name="si"
+                onClick={(evt) => TodosSiNo(evt)}
+              >
+                Todos Si
+              </button>
+              <button
+                className="btn btn-sm btn-error w-24"
+                name="no"
+                onClick={(evt) => TodosSiNo(evt)}
+              >
+                Todos No
+              </button>
+            </div>
             <TablaAccesosUsuario
               accesosUsuarioFiltrados={accesosUsuariosFiltrados}
               isLoading={isLoading}
