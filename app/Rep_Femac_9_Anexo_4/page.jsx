@@ -16,6 +16,7 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { formatNumber } from "../utils/globalfn";
 import VistaPrevia from "../components/VistaPrevia";
+import { permissionsComponents } from "../utils/globalfn";
 
 function RelaciondeFacturas() {
   const router = useRouter();
@@ -30,9 +31,8 @@ function RelaciondeFacturas() {
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [FormaRepRelaciondeFacturas, setFormaRelaciondeFacturas] = useState([]);
-
   const [animateLoading, setAnimateLoading] = useState(false);
-
+  const [permissions, setPermissions] = useState({});
 
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
@@ -58,7 +58,9 @@ function RelaciondeFacturas() {
       return;
     }
     const fetchData = async () => {
-      const { token } = session.user;
+      let { token, permissions } = session.user;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+      const es_admin = session.user.es_admin;
       const data = await getRelaciondeFacturas(
         token,
         tomaFechas,
@@ -69,7 +71,8 @@ function RelaciondeFacturas() {
         factura_fin
       );
       setFormaRelaciondeFacturas(data);
-      console.log(data);
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
+      setPermissions(permisos)
     };
     fetchData();
   }, [
@@ -320,7 +323,7 @@ function RelaciondeFacturas() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading}/>
+                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading} permiso_imprime={permissions.impresion}/>
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Relación de Facturas

@@ -4,6 +4,7 @@ import Button from "@/app/components/button";
 import { TbLoader3 } from "react-icons/tb";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
+import { permission } from 'process';
 function Acciones({ home, Alta, Buscar, Ver, isLoadingFind, isLoadingPDF, BoletasGrupo, isLoadingImprime, permiso_imprime }) {
   const images = [
     {
@@ -12,7 +13,8 @@ function Acciones({ home, Alta, Buscar, Ver, isLoadingFind, isLoadingPDF, Boleta
       alt: "Buscar",
       tooltipTitle: "Buscar",
       onClick: Buscar,
-      isLoading: isLoadingFind
+      isLoading: isLoadingFind,
+      permission: true,
     },
     {
       srcLight: iconos.imprimir_w,
@@ -38,7 +40,8 @@ function Acciones({ home, Alta, Buscar, Ver, isLoadingFind, isLoadingPDF, Boleta
       alt: 'Salir',
       tooltipTitle: 'Salir',
       onClick: home,
-      isLoading: false
+      isLoading: false,
+      permission: true,
     },
   ];
 
