@@ -3,7 +3,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import Acciones from "@/app/rep_femac_5/components/Acciones";
 import Inputs from "@/app/rep_femac_5/components/Inputs";
-import { calculaDigitoBvba } from "@/app/utils/globalfn";
+import { calculaDigitoBvba, permissionsComponents } from "@/app/utils/globalfn";
 import { useForm } from "react-hook-form";
 import {
   getReportAltaBajaAlumno,
@@ -29,6 +29,26 @@ function AltasBajasAlumnos() {
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
+  const [permissions, setPermissions] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let { permissions } = session.user;
+      const es_admin = session.user.es_admin;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menuSeleccionado
+      );
+      setPermissions(permisos);
+    };
+    if (status === "loading" || !session) {
+      return;
+    }
+    fetchData();
+  }, [session, status]);
 
   const {
     formState: { errors },
@@ -173,9 +193,8 @@ function AltasBajasAlumnos() {
 
       Enca2(newPDF);
       body.forEach((alumno) => {
-        const nombre = `${alumno.a_nombre || ""} ${alumno.a_paterno || ""} ${
-          alumno.a_materno || ""
-        }`;
+        const nombre = `${alumno.a_nombre || ""} ${alumno.a_paterno || ""} ${alumno.a_materno || ""
+          }`;
         const id = calculaDigitoBvba((alumno.numero || "").toString() || "");
         let fecha;
         fecha = new Date(alumno.fecha_nac);
@@ -240,7 +259,7 @@ function AltasBajasAlumnos() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading}/>
+                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading} permiso_imprime={permissions.impresion} />
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Altas y Bajas de Alumnos

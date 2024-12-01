@@ -22,6 +22,7 @@ import {
   formatNumber,
   pone_ceros,
   format_Fecha_String,
+  permissionsComponents,
 } from "@/app/utils/globalfn";
 import Button from "@/app/components/button";
 import Tooltip from "@/app/components/tooltip";
@@ -70,6 +71,7 @@ function Pagos_1() {
   const columnasBuscaCat = ["numero", "nombre_completo"];
   const nameInputs2 = ["numero", "comentario_1"];
   const columnasBuscaCat2 = ["numero", "comentario_1"];
+  const [permissions, setPermissions] = useState({});
 
   const {
     register,
@@ -164,6 +166,9 @@ function Pagos_1() {
     }
     const fetchData = async () => {
       setisLoading(true);
+      let { token, permissions } = session.user;
+      const es_admin = session.user.es_admin;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       if (!validar) {
         showModal("my_modal_3", true);
         setValue("cantidad_producto", formatNumber(1));
@@ -178,13 +183,20 @@ function Pagos_1() {
       setValue("fecha", formattedToday);
       if (cargado === false) {
         const [dataF, dataA] = await Promise.all([
-          getFormasPago(session.user.token, false),
-          getAlumnos(session.user.token, false),
+          getFormasPago(token, false),
+          getAlumnos(token, false),
         ]);
         setAlumnos(dataA);
         setFormaPago(dataF);
         setCargado(true);
       }
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menuSeleccionado
+      );
+      setPermissions(permisos);
       setisLoading(false);
     };
     fetchData();
@@ -845,6 +857,8 @@ function Pagos_1() {
                 muestraParciales={muestraParciales}
                 muestraImpresion={muestraImpresion}
                 muestraDocumento={muestraDocumento}
+                permiso_alta={permissions.altas}
+                permiso_imprime={permissions.impresion}
               />
               <h1 className="text-4xl font-xthin text-black dark:text-white">
                 Pagos
@@ -938,6 +952,7 @@ function Pagos_1() {
                 deleteRow={EliminarCampo}
                 selectedRow={selectedRow}
                 setSelectedRow={setSelectedRow}
+                permiso_baja={permissions.bajas}
               />
             </div>
           </div>

@@ -16,8 +16,8 @@ function TablaPagos1({
   deleteRow,
   selectedRow,
   setSelectedRow,
+  permiso_baja,
 }) {
-  // const [selectedRow, setSelectedRow] = useState(null);
 
   const tableAction = (evt, pago, accion) => {
     setPago(pago);
@@ -31,6 +31,31 @@ function TablaPagos1({
       setSelectedRow(null)
       deleteRow(pago);
     }
+  };
+
+  const ActionButton = ({ tooltip, iconDark, iconLight, onClick, permission }) => {
+    if (!permission) return null;
+    return (
+      <th>
+        <div
+          className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
+          data-tip={tooltip}
+          onClick={onClick}
+        >
+          <Image src={iconDark} alt={tooltip} className="block dark:hidden" />
+          <Image src={iconLight} alt={tooltip} className="hidden dark:block" />
+        </div>
+      </th>
+    );
+  };
+
+  const ActionColumn = ({ description, permission }) => {
+    if (!permission) return null;
+    return (
+      <>
+        <th className="w-[5%] pt-[.10rem] pb-[.10rem]">{description}</th>
+      </>
+    )
   };
 
   return !isLoading ? (
@@ -53,8 +78,14 @@ function TablaPagos1({
                 <td className="w-[6%] text-right">Neto</td>
                 <td className="w-[6%] text-right">Total</td>
                 <td className="w-[5%] text-right">Alumno</td>
-                <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Eliminar</th>
-                <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Seleccionar</th>
+                < ActionColumn
+                  description={"Eliminar"}
+                  permission={permiso_baja}
+                />
+                < ActionColumn
+                  description={"Seleccionar"}
+                  permission={true}
+                />
               </tr>
             </thead>
             <tbody>
@@ -65,8 +96,6 @@ function TablaPagos1({
                     ? "dark:bg-[#334155] bg-[#f1f5f9]"
                     : ""
                     }`}
-                // className={`hover:cursor-pointer ${selectedRow === item.numero ? 'selected-row' : ''}`}
-                // onClick={() => setSelectedRow(item.numero)}
                 >
                   <th className="text-right">{item.numero_producto}</th>
                   <td className="hidden">{item.numero_producto}</td>
@@ -80,27 +109,20 @@ function TablaPagos1({
                   <td className="text-right">{formatNumber(item.neto)}</td>
                   <td className="text-right">{formatNumber(item.total)}</td>
                   <td className="text-right">{item.alumno}</td>
-
-                  <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
-                    <div
-                      className="hidden sm:hidden md:block lg:block kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[2rem] md:h-[2rem] content-center"
-                      data-tip={`Eliminar`}
-                      onClick={(evt) => tableAction(evt, item, "Eliminar")}
-                    >
-                      <Image src={iconos.eliminar}  className="block dark:hidden" alt="Eliminar" />
-                      <Image src={iconos.eliminar_w} className="hidden dark:block"  alt="Eliminar" />
-                    </div>
-                  </th>
-                  <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
-                    <div
-                      className="hidden sm:hidden md:block lg:block kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[2rem] md:h-[2rem] content-center"
-                      data-tip={`Seleccionar`}
-                      onClick={(evt) => tableAction(evt, item, "Seleccionar")}
-                    >                      
-                      <Image src={iconos.documento}  className="block dark:hidden" alt="Seleccionar" />
-                      <Image src={iconos.documento_w} className="hidden dark:block"  alt="Seleccionar" />
-                    </div>
-                  </th>
+                  <ActionButton
+                    tooltip="Eliminar"
+                    iconDark={iconos.eliminar}
+                    iconLight={iconos.eliminar_w}
+                    onClick={(evt) => tableAction(evt, item, "Eliminar")}
+                    permission={permiso_baja}
+                  />
+                  <ActionButton
+                    tooltip="Editar"
+                    iconDark={iconos.documento}
+                    iconLight={iconos.documento_w}
+                    onClick={(evt) => tableAction(evt, item, "Seleccionar")}
+                    permission={permiso_cambio}
+                  />
                 </tr>
               ))}
             </tbody>

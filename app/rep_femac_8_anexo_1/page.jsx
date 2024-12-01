@@ -15,6 +15,7 @@ import { useSession } from "next-auth/react";
 import BuscarCat from "@/app/components/BuscarCat";
 import "jspdf-autotable";
 import VistaPrevia from "../components/VistaPrevia";
+import { permissionsComponents } from "../utils/globalfn";
 
 function RelacionDeRecivos() {
   const router = useRouter();
@@ -32,10 +33,30 @@ function RelacionDeRecivos() {
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
+  const [permissions, setPermissions] = useState({});
 
   const {
     formState: { errors },
   } = useForm({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let { permissions } = session.user;
+      const es_admin = session.user.es_admin;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menuSeleccionado
+      );
+      setPermissions(permisos);
+    };
+    if (status === "loading" || !session) {
+      return;
+    }
+    fetchData();
+  }, [session, status]);
 
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
@@ -126,7 +147,7 @@ function RelacionDeRecivos() {
       },
       body: alumnosFiltrados,
     };
-    setTimeout(async() => {
+    setTimeout(async () => {
       const pdfData = await verImprimir(configuracion);
       setPdfData(pdfData);
       setPdfPreview(true);
@@ -178,7 +199,7 @@ function RelacionDeRecivos() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading}/>
+                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading} permiso_imprime={permissions.impresion} />
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Relación de Recibos
@@ -273,7 +294,7 @@ function RelacionDeRecivos() {
                   isDisabled={false}
                   setValue={setFacturaIni}
                 />
-                
+
               </div>
               <div className="lg:w-fit md:w-fit">
                 <Inputs
@@ -327,8 +348,8 @@ function RelacionDeRecivos() {
               </div>
               <div className="flex flex-row max-[499px]:gap-1 gap-4">
                 <div className="lg:w-fit md:w-fit">
-                <div className="tooltip " data-tip="Tomar Fechas">
-                  <label htmlFor="ch_tomaFechas"
+                  <div className="tooltip " data-tip="Tomar Fechas">
+                    <label htmlFor="ch_tomaFechas"
                       className="label cursor-pointer flex justify-start space-x-2">
                       <input
                         id="ch_tomaFechas"
