@@ -9,9 +9,10 @@ import TablaAccesosUsuario from "./components/TablaAccesosUsuario";
 import {
   getAccesosUsuarios,
   guardaAccesosUsuarios,
+  actualizaTodos,
 } from "../utils/api/accesos_usuarios/accesos_usuarios";
 import ModalAccesosUsuarios from "./components/ModalAccesosUsuarios";
-import { showSwal } from "../utils/alerts";
+import { confirmSwal, showSwal } from "../utils/alerts";
 
 function Accesos_Usuarios() {
   const router = useRouter();
@@ -100,19 +101,44 @@ function Accesos_Usuarios() {
   });
   const TodosSiNo = async (event) => {
     event.preventDefault();
+    if (!usuario.id) {
+      showSwal("Error", "Seleccione un Usuario", "error");
+      return;
+    }
     const { name } = event.target;
+    const confirmed = await confirmSwal(
+      "¿Desea continuar?",
+      `se ${
+        name === "si" ? " habilitaran " : " deshabilitaran "
+      } todos los permisos`,
+      "info",
+      "Continuar",
+      "Cancelar"
+    );
+    if (!confirmed) {
+      return;
+    }
     let res = null;
-    res = await actualizaTodos(session.user.token, name);
+    const data = {};
+    data.name = name;
+    data.id_usuario = usuario.id;
+    res = await actualizaTodos(session.user.token, data);
     if (res.status) {
-      const accUsuarioActualizados = accesosUsuarios.map((c) =>
-        c.id_punto_menu === currentID ? { ...c, ...data } : c
-      );
+      const flag = name === "si" ? true : false;
+      const accUsuarioActualizados = accesosUsuarios.map((c) => ({
+        ...c,
+        t_a: flag ? 1 : 0,
+        altas: flag ? 1 : 0,
+        bajas: flag ? 1 : 0,
+        cambios: flag ? 1 : 0,
+        impresion: flag ? 1 : 0,
+      }));
       setAccesosUsuarios(accUsuarioActualizados);
       setAccesosUsuariosFiltrados(accUsuarioActualizados);
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
     }
-    console.log(name);
+    // console.log(name);
   };
   return (
     <>
