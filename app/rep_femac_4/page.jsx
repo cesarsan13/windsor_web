@@ -7,7 +7,7 @@ import {
   calculaDigitoBvba,
   formatFecha,
   format_Fecha_String,
-  permissionsComponents
+  permissionsComponents,
 } from "@/app/utils/globalfn";
 import { useForm } from "react-hook-form";
 import {
@@ -54,7 +54,7 @@ function Rep_femac_4() {
     const fetchData = async () => {
       const formData = new FormData();
       formData.append("numero", alumno.numero || "");
-      const { token,permissions } = session.user;
+      const { token, permissions } = session.user;
       const es_admin = session.user.es_admin;
       if (alumno && Object.keys(alumno).length > 0) {
         const data = await getCredencialAlumno(token, formData);
@@ -68,7 +68,14 @@ function Rep_femac_4() {
           setCapturedImage(imagenUrl);
         }
       }
-      const permisos = permissionsComponents(es_admin, permissions, session.user.id, 1);
+      const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
+
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menu_seleccionado
+      );
       setPermissions(permisos);
     };
     if (status === "loading" || !session) {
@@ -84,11 +91,16 @@ function Rep_femac_4() {
   useEffect(() => {
     const fetchData = async () => {
       const { token } = session.user;
-      let {permissions}=session.user;
-      const es_admin = session.user.es_admin
+      let { permissions } = session.user;
+      const es_admin = session.user.es_admin;
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-      const permisos = permissionsComponents(es_admin,permissions,session.user.id,menuSeleccionado)
-      setPermissions(permisos)
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menuSeleccionado
+      );
+      setPermissions(permisos);
       const formato = await getCredencialFormato(token, 3);
       // console.log("formato => ",formato);
       setFormato(formato);

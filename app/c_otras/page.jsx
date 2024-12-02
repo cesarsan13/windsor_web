@@ -19,9 +19,7 @@ import { showSwal } from "@/app/utils/alerts";
 import ModalVistaPreviaC_Otras from "@/app/c_otras/components/modalVistaPreviaC_Otras";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import {
-  permissionsComponents,
-} from "../utils/globalfn";
+import { permissionsComponents } from "../utils/globalfn";
 import "jspdf-autotable";
 
 function C_Otras() {
@@ -54,7 +52,7 @@ function C_Otras() {
       return;
     }
     if (c_Otras.length <= 0) {
-      return
+      return;
     }
     setIsDisabledSave(true);
     data.grupo = grupo.horario;
@@ -62,16 +60,21 @@ function C_Otras() {
     const promises = c_Otras.map(async (otras) => {
       try {
         return await guardarC_Otras(token, otras, data);
-      } catch (error) { }
+      } catch (error) {}
     });
     const results = await Promise.all(promises);
-    showSwal('ÉXITO', 'Las calificaciones se han registrado correctamente.', 'success');
+    showSwal(
+      "ÉXITO",
+      "Las calificaciones se han registrado correctamente.",
+      "success"
+    );
     setIsDisabledSave(false);
   });
 
   const Buscar = handleSubmit(async (data) => {
-    const { token,permissions } = session.user;
+    const { token, permissions } = session.user;
     const es_admin = session.user.es_admin;
+
     if (!grupo) {
       showSwal("Error", "Debe seleccionar un grupo", "error");
       return;
@@ -83,8 +86,15 @@ function C_Otras() {
     setAnimateLoading(true);
     setC_OtrasFiltrados([]);
     setC_Otras([]);
-    const validacion = await validar(grupo.numero, b_asignatura.numero, data.contraseña_profesor || '');
-    if (!validacion) { setAnimateLoading(false); return }
+    const validacion = await validar(
+      grupo.numero,
+      b_asignatura.numero,
+      data.contraseña_profesor || ""
+    );
+    if (!validacion) {
+      setAnimateLoading(false);
+      return;
+    }
     data.grupo = grupo.numero;
     data.grupo_nombre = grupo.horario;
     data.materia = b_asignatura.numero;
@@ -108,8 +118,7 @@ function C_Otras() {
                 calificacion: datosos[0].calificacion,
               });
             }
-          } catch (error) {
-          }
+          } catch (error) {}
         });
         await Promise.all(promises);
       }
@@ -125,7 +134,13 @@ function C_Otras() {
       setAnimateLoading(false);
       return;
     }
-    const permisos = permissionsComponents(es_admin, permissions, session.user.id, 1);
+    const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
+    const permisos = permissionsComponents(
+      es_admin,
+      permissions,
+      session.user.id,
+      menu_seleccionado
+    );
     setPermissions(permisos);
   });
 
@@ -135,17 +150,17 @@ function C_Otras() {
     let res = await getContraseñaProfe(token, grupo, materia);
     const data = res.data;
     if (!data || data.contraseña == null || data.contraseña === "") {
-      showSwal('Error', 'Grupo no asignado a profesor.', 'error');
+      showSwal("Error", "Grupo no asignado a profesor.", "error");
       return false;
     }
     if (contraseña.toLowerCase() === data.contraseña.toLowerCase()) {
       validar = true;
     } else {
       validar = false;
-      showSwal('Error', 'Grupo no asignado a profesor.', 'error');
+      showSwal("Error", "Grupo no asignado a profesor.", "error");
     }
     return validar;
-  }
+  };
 
   const cerrarModalVista = () => {
     setPdfPreview(false);
@@ -189,7 +204,13 @@ function C_Otras() {
     body.forEach((otra) => {
       reporte.ImpPosX(otra.numero.toString(), 25, reporte.tw_ren, 0, "R");
       reporte.ImpPosX(otra.nombre.toString(), 30, reporte.tw_ren, 35, "L");
-      reporte.ImpPosX(otra.calificacion.toString(), 153, reporte.tw_ren, 35, "R");
+      reporte.ImpPosX(
+        otra.calificacion.toString(),
+        153,
+        reporte.tw_ren,
+        35,
+        "R"
+      );
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRenH) {
         reporte.pageBreakH();
@@ -251,10 +272,10 @@ function C_Otras() {
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
       />
-      <div className='container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y'>
-        <div className='flex flex-col justify-start p-3'>
-          <div className='flex flex-wrap md:flex-nowrap items-start md:items-center'>
-            <div className='order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0'>
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y">
+        <div className="flex flex-col justify-start p-3">
+          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
+            <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
               <Acciones
                 Alta={Guardar}
                 home={home}
@@ -271,8 +292,8 @@ function C_Otras() {
             </h1>
           </div>
         </div>
-        <div className='flex flex-col items-center h-full'>
-          <div className='w-full max-w-4xl'>
+        <div className="flex flex-col items-center h-full">
+          <div className="w-full max-w-4xl">
             <div className="flex flex-col h-[calc(100%)] space-y-4">
               <Inputs
                 dataType={"int"}
@@ -357,7 +378,9 @@ function C_Otras() {
                     setC_OtrasFiltrados={setC_OtrasFiltrados}
                     setAccion={setAccion}
                     setCurrentId={setCurrentId}
-                    aignatura_nombre={b_asignatura.descripcion || "Sin Asignatura"}
+                    aignatura_nombre={
+                      b_asignatura.descripcion || "Sin Asignatura"
+                    }
                     permiso_cambio={permissions.cambios}
                   />
                 </div>
