@@ -250,6 +250,7 @@ function AltasBajasAlumnos() {
                   home={home}
                   Ver={handleVerClick}
                   isLoading={animateLoading}
+                  permiso_imprime={permissions.impresion}
                 />
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
