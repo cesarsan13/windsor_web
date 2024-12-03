@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import Inputs from "@/app/accesos_menu/components/Inputs";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
+import { FaSpinner } from "react-icons/fa";
 
 function ModalMenu({
   accion,
@@ -14,6 +15,7 @@ function ModalMenu({
   errors,
   setMenu,
   menusSel,
+  isLoadingButton,
 }) {
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
@@ -49,10 +51,10 @@ function ModalMenu({
   };
   return (
     <dialog id="my_modal_3" className="modal">
-      <div className="modal-box">
+      <div className="modal-box bg-base-200">
         <form onSubmit={onSubmit}>
-          <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
-            <h3 className="font-bold text-lg">{titulo}</h3>
+          <div className="sticky -top-6 flex justify-between items-center bg-base-200 dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
+            <h3 className="font-bold text-lg text-neutral-600 dark:text-white">{titulo}</h3>
             <div className="flex space-x-2 items-center">
               <div
                 className={`tooltip tooltip-bottom ${accion === "Ver"
@@ -65,9 +67,18 @@ function ModalMenu({
                   type="submit"
                   id="btn_guardar"
                   className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
+                  onClick={onsubmit}
+                  disabled={isLoadingButton}
                 >
-                  <Image src={iconos.guardar} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 mr-1" />
-                  <span className="hidden sm:inline">Guardar</span>
+                  {isLoadingButton ? (
+                    <FaSpinner className="animate-spin mx-2" />
+                  ) : (
+                    <>
+                      <Image src={iconos.guardar} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 block dark:hidden" />
+                      <Image src={iconos.guardar_w} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 hidden dark:block" />
+                    </>
+                  )}
+                  {isLoadingButton ? " Cargando..." : " Guardar"}
                 </button>
               </div>
               <button
