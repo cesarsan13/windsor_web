@@ -17,6 +17,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useMemo } from "react";
 import { debounce } from "@/app/utils/globalfn";
+import { useRef } from "react";
 
 function Accesos_Menu() {
   const router = useRouter();
@@ -32,11 +33,9 @@ function Accesos_Menu() {
   const [currentID, setCurrentId] = useState("");
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
   const [menussel,setMenusSel] = useState([])
+  const menuRef = useRef(menus);
 
   useEffect(() => {
-    if (status === "loading" || !session) {
-      return;
-    }
     const fetchData = async () => {
       setisLoading(true);
       const { token } = session.user;
@@ -47,6 +46,9 @@ function Accesos_Menu() {
       setMenusFiltrados(data);
       setisLoading(false);
     };
+    if (status === "loading" || !session) {
+      return;
+    }
     fetchData();
   }, [session, status, bajas]);
 
@@ -73,14 +75,16 @@ function Accesos_Menu() {
       menu: menu.menu,
     });
   }, [menu, reset]);
-
+  useEffect(() => {
+    menuRef.current = menus;
+  }, [menus]);
   const Buscar = useCallback(() => {
     const { tb_id, tb_desc } = busqueda;
     if (tb_id === "" && tb_desc === "") {
-      setMenusFiltrados(menus);
+      setMenusFiltrados(menuRef.current);
       return;
     }
-    const infoFiltrada = menus.filter((menu) => {
+    const infoFiltrada = menuRef.current.filter((menu) => {
       const coincideNumero = tb_id
         ? menu["numero"].toString().includes(tb_id)
         : true;
@@ -96,7 +100,7 @@ function Accesos_Menu() {
       );
     });
     setMenusFiltrados(infoFiltrada);
-  }, [busqueda, menus]);
+  }, [busqueda]);
 
   const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
   useEffect(() => {
