@@ -15,6 +15,7 @@ import {
 import { getMenus as getmenu } from "@/app/utils/api/menus/menus";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { useMemo } from "react";
 import { debounce } from "@/app/utils/globalfn";
 
 function Accesos_Menu() {
@@ -94,13 +95,13 @@ function Accesos_Menu() {
     setMenusFiltrados(infoFiltrada);
   }, [busqueda, menus]);
 
+  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
   useEffect(() => {
-    const debouncedBuscar = debounce(Buscar, 500);
     debouncedBuscar();
     return () => {
       clearTimeout(debouncedBuscar);
     };
-  }, [busqueda, Buscar]);
+  }, [busqueda, debouncedBuscar]);
 
   const Alta = async (event) => {
     setCurrentId("");
