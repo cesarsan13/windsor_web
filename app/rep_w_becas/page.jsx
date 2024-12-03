@@ -100,7 +100,7 @@ function RepBecas() {
     setAnimateLoading(true)
     console.log(formaBecas);
     if (horario1.numero === undefined && horario2.numero == undefined) {
-      showSwal("Oppss!", "Para imprimir, mínimo debe estar seleccionado un Horario", "error");
+      showSwal("Oppss!", "Para imprimir, mínimo debe estar seleccionado un Alumno", "error");
       setAnimateLoading(false)
     } else {
 
@@ -149,11 +149,13 @@ function RepBecas() {
           Enca1(reporte);
         }
       });
-      const pdfData = reporte.doc.output("datauristring");
-      setPdfData(pdfData);
-      setPdfPreview(true);
-      showModalVista(true);
-      setAnimateLoading(false)
+      setTimeout(() => {
+        const pdfData = reporte.doc.output("datauristring");
+        setPdfData(pdfData);
+        setPdfPreview(true);
+        showModalVista(true);
+        setAnimateLoading(false)
+      }, 500)
     }
   };
   const showModalVista = (show) => {
@@ -179,7 +181,58 @@ function RepBecas() {
         CerrarView={CerrarView}
       />
 
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+        <div className="w-full py-3">
+          <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
+            <div className="flex flex-wrap items-start md:items-center mx-auto">
+              <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
+                <Acciones
+                  Ver={handleVerClick}
+                  ImprimePDF={ImprimePDF}
+                  ImprimeExcel={ImprimeExcel}
+                  home={home}
+                  isLoading={animateLoading}
+                  permiso_imprime={permissions.impresion}
+                  CerrarView={CerrarView}>
+                </Acciones>
+              </div>
+              <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
+                Reporte de Becas.
+              </h1>
+            </div>
+          </div>
+        </div>
+        <div className="w-full py-3 flex flex-col gap-y-4">
+          <div className="max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
+            <div className="flex flex-col max-[499px]:gap-1 gap-4">
+              <div className="lg:w-fit md:w-fit">
+                <BuscarCat
+                  table="alumnos"
+                  token={session.user.token}
+                  nameInput={["numero", "nombre"]}
+                  fieldsToShow={["numero", "nombre"]}
+                  setItem={setHorario1}
+                  modalId="modal_horarios"
+                  titulo={"Alumno 1"}
+                />
+              </div>
+              <div className="">
+                <BuscarCat
+                  table="alumnos"
+                  token={session.user.token}
+                  nameInput={["numero_2", "nombre_2"]}
+                  fieldsToShow={["numero", "nombre"]}
+                  setItem={setHorario2}
+                  modalId="modal_horarios2"
+                  titulo={"Alumno 2"}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
@@ -249,7 +302,7 @@ function RepBecas() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* <div className="container w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3">
         <div className="flex justify-start p-3">
