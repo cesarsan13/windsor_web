@@ -29,36 +29,37 @@ function ModalMenu({
       accion === "Alta"
         ? `Nuevo Menu: ${currentID}`
         : accion === "Editar"
-          ? `Editar Menu: ${currentID}`
-          : accion === "Eliminar"
-            ? `Eliminar Menu: ${currentID}`
-            : `Ver Menu: ${currentID}`
+        ? `Editar Menu: ${currentID}`
+        : accion === "Eliminar"
+        ? `Eliminar Menu: ${currentID}`
+        : `Ver Menu: ${currentID}`
     );
   }, [accion]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
       ? setMenu((menu) => ({
-        ...menu,
-        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-      }))
+          ...menu,
+          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+        }))
       : setMenu((menu) => ({
-        ...menu,
-        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-      }));
+          ...menu,
+          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+        }));
   };
   return (
     <dialog id="my_modal_3" className="modal">
-      <div className="modal-box">
+      <div className="modal-box  bg-base-200">
         <form onSubmit={onSubmit}>
-          <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
-            <h3 className="font-bold text-lg">{titulo}</h3>
+          <div className="sticky -top-6 flex justify-between items-center bg-transparent w-full h-10 z-10 mb-5">
+            <h3 className="font-bold text-lg dark:text-white">{titulo}</h3>
             <div className="flex space-x-2 items-center">
               <div
-                className={`tooltip tooltip-bottom ${accion === "Ver"
-                  ? "hover:cursor-not-allowed hidden"
-                  : "hover:cursor-pointer"
-                  }`}
+                className={`tooltip tooltip-bottom ${
+                  accion === "Ver"
+                    ? "hover:cursor-not-allowed hidden"
+                    : "hover:cursor-pointer"
+                }`}
                 data-tip="Guardar"
               >
                 <button
@@ -66,7 +67,16 @@ function ModalMenu({
                   id="btn_guardar"
                   className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
                 >
-                  <Image src={iconos.guardar} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 mr-1" />
+                  <Image
+                    src={iconos.guardar_w}
+                    alt="Guardar"
+                    className="w-5 h-5 md:w-6 md:h-6 mr-1 hidden dark:block"
+                  />
+                  <Image
+                    src={iconos.guardar}
+                    alt="Guardar"
+                    className="w-5 h-5 md:w-6 md:h-6 mr-1 block dark:hidden"
+                  />
                   <span className="hidden sm:inline">Guardar</span>
                 </button>
               </div>
@@ -153,13 +163,11 @@ function ModalMenu({
                 register={register}
                 message={"Menu requerido"}
                 maxLenght={100}
-                arreglos={
-                  menusSel.map((menu) => ({
-                    id: menu.id,
-                    descripcion: menu.nombre,
-                  }))
-                }
-              isDisabled={isDisabled}
+                arreglos={menusSel.map((menu) => ({
+                  id: menu.id,
+                  descripcion: menu.nombre,
+                }))}
+                isDisabled={isDisabled}
               />
             </div>
           </fieldset>
@@ -167,7 +175,6 @@ function ModalMenu({
       </div>
     </dialog>
   );
-
 }
 
 export default ModalMenu;

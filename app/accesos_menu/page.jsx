@@ -12,7 +12,7 @@ import {
   siguiente,
   guardaMenu,
 } from "@/app/utils/api/accesos_menu/accesos_menu";
-import {getMenus as getmenu} from "@/app/utils/api/menus/menus"
+import { getMenus as getmenu } from "@/app/utils/api/menus/menus";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { debounce } from "@/app/utils/globalfn";
@@ -30,7 +30,7 @@ function Accesos_Menu() {
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState("");
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
-  const [menussel,setMenusSel] = useState([])
+  const [menussel, setMenusSel] = useState([]);
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -40,8 +40,8 @@ function Accesos_Menu() {
       setisLoading(true);
       const { token } = session.user;
       const data = await getMenus(token, bajas);
-      const dataMenu = await getmenu(token,false)
-      setMenusSel(dataMenu)
+      const dataMenu = await getmenu(token, false);
+      setMenusSel(dataMenu);
       setMenus(data);
       setMenusFiltrados(data);
       setisLoading(false);
@@ -85,14 +85,11 @@ function Accesos_Menu() {
         : true;
       const coincideNombre = tb_desc
         ? menu["descripcion"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_desc.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
         : true;
-      return (
-        coincideNumero &&
-        coincideNombre
-      );
+      return coincideNumero && coincideNombre;
     });
     setMenusFiltrados(infoFiltrada);
   }, [busqueda, menus]);
@@ -161,9 +158,7 @@ function Accesos_Menu() {
             setMenusFiltrados(cFiltrados);
           } else {
             if (bajas) {
-              const cFiltrados = menus.filter(
-                (c) => c.numero !== data.numero
-              );
+              const cFiltrados = menus.filter((c) => c.numero !== data.numero);
               setMenus(cFiltrados);
               setMenusFiltrados(cFiltrados);
             } else {
@@ -237,7 +232,7 @@ function Accesos_Menu() {
         setMenu={setMenu}
         menusSel={menussel}
       />
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">

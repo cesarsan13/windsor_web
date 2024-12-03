@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal, showSwalTarget } from "@/app/utils/alerts";
 import ModalUsuarios from "./components/ModalUsuario";
@@ -19,7 +19,7 @@ import "jspdf-autotable";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import TablaUsuarios from "./components/TablaUsuarios";
-import { debounce } from "../utils/globalfn";
+import { debounce, permissionsComponents } from "../utils/globalfn";
 import VistaPrevia from "../components/VistaPrevia";
 function Usuarios() {
   const router = useRouter();
@@ -36,33 +36,48 @@ function Usuarios() {
   const [currentID, setCurrentId] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const usuariosRef = useRef(usuarios);
   const [busqueda, setBusqueda] = useState({
     tb_id: "",
     tb_name: "",
   });
+  const [permissions, setPermissions] = useState({});
+
   useEffect(() => {
-    if (status === "loading" || !session) {
-      return;
-    }
     const fetchData = async () => {
       setisLoading(true);
-      const { token } = session.user;
+      const { token, permissions } = session.user;
+      const es_admin = session.user.es_admin;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+
       const data = await getUsuarios(token, bajas);
       setUsuarios(data);
       setUsuariosFiltrados(data);
       setisLoading(false);
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menuSeleccionado
+      );
+      setPermissions(permisos);
     };
+    if (status === "loading" || !session) {
+      return;
+    }
     fetchData();
   }, [session, status, bajas]);
-
+  useEffect(() => {
+    usuariosRef.current = usuarios;
+  }, [usuarios]);
   const Buscar = useCallback(() => {
     const { tb_id, tb_name } = busqueda;
 
     if (tb_id === "" && tb_name === "") {
-      setUsuariosFiltrados(usuarios);
+      setUsuariosFiltrados(usuariosRef.current);
       return;
     }
-    const infoFiltrada = usuarios.filter((fusuarios) => {
+    const infoFiltrada = usuariosRef.current.filter((fusuarios) => {
       const coincideID = tb_id
         ? fusuarios["id"].toString().includes(tb_id)
         : true;
@@ -75,15 +90,15 @@ function Usuarios() {
       return coincideID && coincideusuario;
     });
     setUsuariosFiltrados(infoFiltrada);
-  }, [busqueda, usuarios]);
+  }, [busqueda]);
 
+  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
   useEffect(() => {
-    const debouncedBuscar = debounce(Buscar, 500);
     debouncedBuscar();
     return () => {
       clearTimeout(debouncedBuscar);
     };
-  }, [busqueda, Buscar]);
+  }, [busqueda, debouncedBuscar]);
 
   const {
     register,
@@ -113,7 +128,7 @@ function Usuarios() {
   }, [usuario, reset]);
 
   const limpiarBusqueda = (evt) => {
-    evt.preventDefault;
+    evt.preventDefault();
     setBusqueda({ tb_id: "", tb_name: "" });
   };
 
@@ -365,7 +380,7 @@ function Usuarios() {
         CerrarView={CerrarView}
       />
 
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
@@ -375,6 +390,8 @@ function Usuarios() {
                 home={home}
                 Ver={handleVerClick}
                 animateLoading={animateLoading}
+                permiso_alta={permissions.altas}
+                permiso_imprime={permissions.impresion}
               ></Acciones>
             </div>
 
@@ -400,6 +417,8 @@ function Usuarios() {
               setUsuario={setUsuario}
               setAccion={setAccion}
               setCurrentId={setCurrentId}
+              permiso_cambio={permissions.cambios}
+              permiso_baja={permissions.bajas}
             />
           </div>
         </div>

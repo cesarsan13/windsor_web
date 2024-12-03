@@ -12,7 +12,7 @@ function ModalUsuarios({
   currentID,
   register,
   errors,
-  watch
+  watch,
 }) {
   const [titulo, setTitulo] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
@@ -34,18 +34,12 @@ function ModalUsuarios({
     );
   }, [accion]);
 
- 
-
-  
-
-  
-
   return (
     <dialog id="modal_usuarios" className="modal">
-      <div className="modal-box">
+      <div className="modal-box bg-base-200">
         <form onSubmit={onSubmit}>
-          <div className="sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
-            <h3 className="font-bold text-lg">{titulo}</h3>
+          <div className="sticky -top-6 flex justify-between items-center bg-transparent w-full h-10 z-10 mb-5">
+            <h3 className="font-bold text-lg dark:text-white">{titulo}</h3>
             <div className="flex space-x-2 items-center">
               <div
                 className={`tooltip tooltip-bottom ${
@@ -61,9 +55,14 @@ function ModalUsuarios({
                   className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
                 >
                   <Image
+                    src={iconos.guardar_w}
+                    alt="Guardar"
+                    className="w-5 h-5 md:w-6 md:h-6 mr-1 hidden dark:block"
+                  />
+                  <Image
                     src={iconos.guardar}
                     alt="Guardar"
-                    className="w-5 h-5 md:w-6 md:h-6 mr-1"
+                    className="w-5 h-5 md:w-6 md:h-6 mr-1 block dark:hidden"
                   />
                   <span className="hidden sm:inline">Guardar</span>
                 </button>
@@ -71,7 +70,9 @@ function ModalUsuarios({
               <button
                 type="button"
                 className="btn btn-sm btn-circle btn-ghost"
-                onClick={() => document.getElementById("modal_usuarios").close()}
+                onClick={() =>
+                  document.getElementById("modal_usuarios").close()
+                }
               >
                 ✕
               </button>
@@ -165,7 +166,7 @@ function ModalUsuarios({
                 maxLenght={255}
                 isDisabled={isDisabled}
               />
-               <Inputs
+              <Inputs
                 dataType={"string"}
                 name={"match_password"}
                 tamañolabel={""}
