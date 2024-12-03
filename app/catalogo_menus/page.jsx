@@ -26,7 +26,7 @@ function Menus() {
   const { data: session, status } = useSession();
   const [menus, setMenus] = useState([]);
   const [menu, setMenu] = useState({});
-  const [menusFiltrados, setMenusFiltrados] = useState([]);
+  const [menusFiltrados, setMenusFiltrados] = useState(null);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
@@ -57,7 +57,7 @@ function Menus() {
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
-      const { token,permissions } = session.user;
+      const { token, permissions } = session.user;
       const es_admin = session.user.es_admin;
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const data = await getMenus(token, bajas);
@@ -69,8 +69,8 @@ function Menus() {
         permissions,
         session.user.id,
         menuSeleccionado
-      )
-      setPermissions(permisos)
+      );
+      setPermissions(permisos);
     };
     if (status === "loading" || !session) {
       return;
@@ -367,15 +367,15 @@ function Menus() {
               (!session ? (
                 <></>
               ) : ( */}
-                <TablaMenus
-                  session={session}
-                  menusFiltrados={menusFiltrados}
-                  isLoading={isLoading}
-                  tableAction={tableAction}
-                  permiso_baja={permissions.bajas}
-                  permiso_cambio={permissions.cambios}
-                />
-              {/* ))} */}
+            <TablaMenus
+              session={session}
+              menusFiltrados={menusFiltrados}
+              isLoading={isLoading}
+              tableAction={tableAction}
+              permiso_baja={permissions.bajas}
+              permiso_cambio={permissions.cambios}
+            />
+            {/* ))} */}
           </div>
         </div>
       </div>

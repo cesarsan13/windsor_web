@@ -26,7 +26,7 @@ function Usuarios() {
   const { data: session, status } = useSession();
   const [usuarios, setUsuarios] = useState([]);
   const [usuario, setUsuario] = useState({});
-  const [usuariosFiltrados, setUsuariosFiltrados] = useState([]);
+  const [usuariosFiltrados, setUsuariosFiltrados] = useState(null);
   const [animateLoading, setAnimateLoading] = useState(false);
 
   const [bajas, setBajas] = useState(false);

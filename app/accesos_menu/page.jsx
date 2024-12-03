@@ -22,7 +22,7 @@ function Accesos_Menu() {
   const { data: session, status } = useSession();
   const [menus, setMenus] = useState([]);
   const [menu, setMenu] = useState({});
-  const [menusFiltrados, setMenusFiltrados] = useState([]);
+  const [menusFiltrados, setMenusFiltrados] = useState(null);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
