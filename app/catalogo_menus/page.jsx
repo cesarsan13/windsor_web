@@ -18,7 +18,7 @@ import { useSession } from "next-auth/react";
 import "jspdf-autotable";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import { debounce } from "@/app/utils/globalfn";
+import { debounce, permissionsComponents } from "@/app/utils/globalfn";
 import ModalMenu from "../accesos_menu/components/modalMenu";
 
 function Menus() {
@@ -41,6 +41,7 @@ function Menus() {
     tb_id: "",
     tb_desc: "",
   });
+  const [permissions, setPermissions] = useState({});
   const {
     register,
     handleSubmit,
@@ -56,11 +57,20 @@ function Menus() {
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
-      const { token } = session.user;
+      const { token,permissions } = session.user;
+      const es_admin = session.user.es_admin;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const data = await getMenus(token, bajas);
       setMenus(data);
       setMenusFiltrados(data);
       setisLoading(false);
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menuSeleccionado
+      )
+      setPermissions(permisos)
     };
     if (status === "loading" || !session) {
       return;
@@ -334,6 +344,8 @@ function Menus() {
                 home={home}
                 Ver={handleVerClick}
                 animateLoading={animateLoading}
+                permiso_alta={permissions.altas}
+                permiso_imprime={permissions.impresion}
               />
             </div>
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
@@ -351,17 +363,19 @@ function Menus() {
               handleBusquedaChange={handleBusquedaChange}
               busqueda={busqueda}
             />
-            {status === "loading" ||
+            {/* {status === "loading" ||
               (!session ? (
                 <></>
-              ) : (
+              ) : ( */}
                 <TablaMenus
                   session={session}
                   menusFiltrados={menusFiltrados}
                   isLoading={isLoading}
                   tableAction={tableAction}
+                  permiso_baja={permissions.bajas}
+                  permiso_cambio={permissions.cambios}
                 />
-              ))}
+              {/* ))} */}
           </div>
         </div>
       </div>
