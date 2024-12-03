@@ -100,7 +100,7 @@ function RepBecas() {
     setAnimateLoading(true)
     console.log(formaBecas);
     if (horario1.numero === undefined && horario2.numero == undefined) {
-      showSwal("Oppss!", "Para imprimir, mínimo debe estar seleccionado un Horario", "error");
+      showSwal("Oppss!", "Para imprimir, mínimo debe estar seleccionado un Alumno", "error");
       setAnimateLoading(false)
     } else {
 
@@ -149,11 +149,13 @@ function RepBecas() {
           Enca1(reporte);
         }
       });
-      const pdfData = reporte.doc.output("datauristring");
-      setPdfData(pdfData);
-      setPdfPreview(true);
-      showModalVista(true);
-      setAnimateLoading(false)
+      setTimeout(() => {
+        const pdfData = reporte.doc.output("datauristring");
+        setPdfData(pdfData);
+        setPdfPreview(true);
+        showModalVista(true);
+        setAnimateLoading(false)
+      }, 500)
     }
   };
   const showModalVista = (show) => {
@@ -179,148 +181,56 @@ function RepBecas() {
         CerrarView={CerrarView}
       />
 
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
-        <div className="flex flex-col justify-start p-3">
-          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
-            <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
-              <Acciones
-                Ver={handleVerClick}
-                ImprimePDF={ImprimePDF}
-                ImprimeExcel={ImprimeExcel}
-                home={home}
-                isLoading={animateLoading}
-                permiso_imprime={permissions.impresion}
-                CerrarView={CerrarView}>              
-              </Acciones>
-            </div>
-            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
-              Reporte de Becas.
-            </h1>
-          </div>
-        </div>
-        <div className="flex flex-col items-center h-full">
-          <div className="w-full max-w-4xl space-y-4">
-            <div className="w-full">
-              <label className="text-sm text-black dark:text-white">Alumno 1:</label>
-              <BuscarCat
-                table="alumnos"
-                token={session.user.token}
-                nameInput={["numero", "nombre"]}
-                fieldsToShow={["numero", "nombre"]}
-                setItem={setHorario1}
-                modalId="modal_horarios"
-              />
-            </div>
-            <div className="w-full">
-              <label className="text-sm text-black dark:text-white">Alumno 2:</label>
-              <BuscarCat
-                table="alumnos"
-                token={session.user.token}
-                nameInput={["numero_2", "nombre_2"]}
-                fieldsToShow={["numero", "nombre"]}
-                setItem={setHorario2}
-                modalId="modal_horarios2"
-              />
-            </div>
-            <div className="flex flex-col space-y-2 md:space-y-0 md:flex-row md:items-center md:space-x-4">
-              <span className="text-black dark:text-white">Ordenar por:</span>
-              <div className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="ordenar"
-                  value="nombre"
-                  onChange={handleCheckChange}
-                  checked={sOrdenar === "nombre"}
-                  className="radio checked:bg-blue-500"
-                />
-                <span className="text-black dark:text-white">Nombre</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="ordenar"
-                  value="id"
-                  onChange={handleCheckChange}
-                  checked={sOrdenar === "id"}
-                  className="radio checked:bg-blue-500"
-                />
-                <span className="text-black dark:text-white">Número</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* <div className="container w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3">
-        <div className="flex justify-start p-3">
-            <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
-                Reporte de Becas.
-            </h1>
-        </div>
-        <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
-            <div className="col-span-1 flex flex-col">
+      <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+        <div className="w-full py-3">
+          <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
+            <div className="flex flex-wrap items-start md:items-center mx-auto">
+              <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
                 <Acciones
-                    Ver={handleVerClick}
-                    ImprimePDF={ImprimePDF}
-                    ImprimeExcel={ImprimeExcel}
-                    home={home}
-                    CerrarView={CerrarView}>
+                  Ver={handleVerClick}
+                  ImprimePDF={ImprimePDF}
+                  ImprimeExcel={ImprimeExcel}
+                  home={home}
+                  isLoading={animateLoading}
+                  permiso_imprime={permissions.impresion}
+                  CerrarView={CerrarView}>
                 </Acciones>
+              </div>
+              <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
+                Reporte de Becas.
+              </h1>
             </div>
-
-            <div className="col-span-7 flex flex-col space-y-4">
-                <div className="flex flex-col space-y-4">
-                    <div className="w-full">
-                        <label className="text-sm text-black dark:text-white">Horario 1:</label>
-                        <BuscarCat
-                            table="horarios"
-                            token={session.user.token}
-                            nameInput={["horario_1", "horario_1_nombre"]}
-                            fieldsToShow={["numero", "horario"]}
-                            setItem={setHorario1}
-                            modalId="modal_horarios"
-                        />
-                    </div>
-                    <div className="w-full">
-                        <label className="text-sm text-black dark:text-white">Horario 2:</label>
-                        <BuscarCat
-                            table="horarios"
-                            token={session.user.token}
-                            nameInput={["horario_2", "horario_2_nombre"]}
-                            fieldsToShow={["numero", "horario"]}
-                            setItem={setHorario2}
-                            modalId="modal_horarios2"
-                        />
-                    </div>
-                </div>
-                <div className="flex flex-col space-y-2 md:space-y-0 md:flex-row md:items-center md:space-x-4">
-                    <span className="text-black dark:text-white">Ordenar por:</span>
-                    <div className="flex items-center space-x-2">
-                        <input
-                            type="radio"
-                            name="ordenar"
-                            value="nombre"
-                            onChange={handleCheckChange}
-                            checked={sOrdenar === "nombre"}
-                            className="radio checked:bg-blue-500"
-                        />
-                        <span className="text-black dark:text-white">Nombre</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <input
-                            type="radio"
-                            name="ordenar"
-                            value="id"
-                            onChange={handleCheckChange}
-                            checked={sOrdenar === "id"}
-                            className="radio checked:bg-blue-500"
-                        />
-                        <span className="text-black dark:text-white">Número</span>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
-    </div> */}
+        <div className="w-full py-3 flex flex-col gap-y-4">
+          <div className="max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
+            <div className="flex flex-col max-[499px]:gap-1 gap-4">
+              <div className="lg:w-fit md:w-fit">
+                <BuscarCat
+                  table="alumnos"
+                  token={session.user.token}
+                  nameInput={["numero", "nombre"]}
+                  fieldsToShow={["numero", "nombre"]}
+                  setItem={setHorario1}
+                  modalId="modal_horarios"
+                  titulo={"Alumno 1"}
+                />
+              </div>
+              <div className="">
+                <BuscarCat
+                  table="alumnos"
+                  token={session.user.token}
+                  nameInput={["numero_2", "nombre_2"]}
+                  fieldsToShow={["numero", "nombre"]}
+                  setItem={setHorario2}
+                  modalId="modal_horarios2"
+                  titulo={"Alumno 2"}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>      
     </>
   );
 }
