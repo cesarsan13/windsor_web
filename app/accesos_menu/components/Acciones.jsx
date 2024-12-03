@@ -1,35 +1,53 @@
-import React from 'react'
+import React from "react";
 import Tooltip from "@/app/components/tooltip";
 import Button from "@/app/components/button";
 import { TbLoader3 } from "react-icons/tb";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
-function Acciones({ home, Alta, Buscar, animateLoading }) {
+function Acciones({
+  home,
+  Alta,
+  Buscar,
+  animateLoading,
+  permiso_alta,
+  permiso_imprime,
+}) {
   const images = [
-    { 
+    {
       srcLight: iconos.buscar_w,
-      srcDark: iconos.buscar, 
-      alt: "Buscar", 
-      tooltipTitle: "Buscar", 
-      onClick: Buscar 
+      srcDark: iconos.buscar,
+      alt: "Buscar",
+      tooltipTitle: "Buscar",
+      onClick: Buscar,
+      permission: true,
     },
-    { 
+    {
       srcLight: iconos.alta_w,
-      srcDark: iconos.alta, 
-      alt: "Alta", 
-      tooltipTitle: "Alta", 
-      onClick: Alta, 
+      srcDark: iconos.alta,
+      alt: "Alta",
+      tooltipTitle: "Alta",
+      onClick: Alta,
+      permission: permiso_alta,
     },
-    { 
+    {
       srcLight: iconos.salir_w,
       srcDark: iconos.salir,
-      alt: "Salir", 
-      tooltipTitle: "Salir", 
-      onClick: home, 
+      alt: "Salir",
+      tooltipTitle: "Salir",
+      onClick: home,
+      permission: true,
     },
   ];
 
-  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, animateLoading }) => {
+  const ImageTooltip = ({
+    srcLight,
+    srcDark,
+    tooltipTitle,
+    onClick,
+    animateLoading,
+    permission,
+  }) => {
+    if (!permission) return null;
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
@@ -43,7 +61,6 @@ function Acciones({ home, Alta, Buscar, animateLoading }) {
               <Image
                 src={srcDark}
                 alt={tooltipTitle}
-
                 className="w-5 h-5 md:w-6 md:h-6 block dark:hidden"
               />
               <Image
@@ -68,10 +85,11 @@ function Acciones({ home, Alta, Buscar, animateLoading }) {
           tooltipTitle={image.tooltipTitle}
           onClick={image.onClick}
           animateLoading={idx === 2 && animateLoading}
+          permission={image.permission}
         />
       ))}
     </div>
   );
 }
 
-export default Acciones
+export default Acciones;

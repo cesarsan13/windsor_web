@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import { useForm } from "react-hook-form";
@@ -15,9 +15,7 @@ import {
 import { getMenus as getmenu } from "@/app/utils/api/menus/menus";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { useMemo } from "react";
-import { debounce } from "@/app/utils/globalfn";
-import { useRef } from "react";
+import { debounce, permissionsComponents } from "@/app/utils/globalfn";
 
 function Accesos_Menu() {
   const router = useRouter();
@@ -32,19 +30,29 @@ function Accesos_Menu() {
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState("");
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
-  const [menussel,setMenusSel] = useState([])
+  const [menussel, setMenusSel] = useState([]);
   const menuRef = useRef(menus);
+  const [permissions, setPermissions] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
-      const { token } = session.user;
+      const { token, permissions } = session.user;
+      const es_admin = session.user.es_admin;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const data = await getMenus(token, bajas);
       const dataMenu = await getmenu(token, false);
       setMenusSel(dataMenu);
       setMenus(data);
       setMenusFiltrados(data);
       setisLoading(false);
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menuSeleccionado
+      );
+      setPermissions(permisos);
     };
     if (status === "loading" || !session) {
       return;
@@ -246,6 +254,8 @@ function Accesos_Menu() {
                 Alta={Alta}
                 home={home}
                 animateLoading={animateLoading}
+                permiso_alta={permissions.altas}
+                permiso_imprime={permissions.impresion}
               />
             </div>
 
@@ -263,17 +273,18 @@ function Accesos_Menu() {
               handleBusquedaChange={handleBusquedaChange}
               busqueda={busqueda}
             />
-            {status === "loading" ||
-              (!session ? (
-                <></>
-              ) : (
+
             <TablaMenu
               session={session}
               isLoading={isLoading}
               menusFiltrados={menusFiltrados}
-              tableAction={tableAction}
+              showModal={showModal}
+              setMenu={setMenu}
+              setAccion={setAccion}
+              setCurrentId={setCurrentId}
+              permiso_cambio={permissions.cambios}
+              permiso_baja={permissions.bajas}
             />
-              ))}
           </div>
         </div>
       </div>

@@ -411,6 +411,7 @@ function Usuarios() {
               busqueda={busqueda}
             />
             <TablaUsuarios
+              session={session}
               isLoading={isLoading}
               usuariosFiltrados={usuariosFiltrados}
               showModal={showModal}
