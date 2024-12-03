@@ -7,12 +7,13 @@ import Image from "next/image";
 function TablaMenu({
   menusFiltrados,
   isLoading,
-  tableAction
+  tableAction,
+  session,
 }) {
   return !isLoading ? (
     <>
       <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white  w-full lg:w-full">
-        {menusFiltrados.length > 0 ? (
+        {menusFiltrados && menusFiltrados.length > 0 ? (
           <table className="table table-xs table-zebra w-full">
             <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
               <tr>
@@ -74,9 +75,13 @@ function TablaMenu({
               ))}
             </tbody>
           </table>
-        ) : (
-          <NoData />
-        )}
+        ) : menusFiltrados != null &&
+            session &&
+            menusFiltrados.length === 0 ? (
+              <NoData></NoData>
+            ) : (
+              <Loading></Loading>
+            )}
       </div>
     </>
   ) : (

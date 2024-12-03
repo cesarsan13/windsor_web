@@ -259,11 +259,17 @@ function Accesos_Menu() {
               handleBusquedaChange={handleBusquedaChange}
               busqueda={busqueda}
             />
+            {status === "loading" ||
+              (!session ? (
+                <></>
+              ) : (
             <TablaMenu
+              session={session}
               isLoading={isLoading}
               menusFiltrados={menusFiltrados}
               tableAction={tableAction}
             />
+              ))}
           </div>
         </div>
       </div>
