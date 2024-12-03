@@ -67,7 +67,7 @@ function Comentarios() {
       return coincideID && coincideComentario1;
     });
     setFormaComentariosFiltrados(infoFiltrada);
-  }, [busqueda, formasComentarios]);
+  }, [busqueda]);
 
   const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
