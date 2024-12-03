@@ -4,7 +4,7 @@ import Image from "next/image";
 import { TbLoader3 } from "react-icons/tb";
 import iconos from "@/app/utils/iconos";
 
-function Acciones({ Buscar, Alta, home, Ver, animateLoading }) {
+function Acciones({ Buscar, Alta, home, Ver, animateLoading,permiso_alta }) {
   const images = [
     {
       srcLight: iconos.buscar_w,
@@ -12,6 +12,7 @@ function Acciones({ Buscar, Alta, home, Ver, animateLoading }) {
       alt: "Buscar",
       tooltipTitle: "Buscar",
       onClick: Buscar,
+      permission: true,
     },
     {
       srcLight: iconos.alta_w,
@@ -19,6 +20,7 @@ function Acciones({ Buscar, Alta, home, Ver, animateLoading }) {
       alt: "Alta",
       tooltipTitle: "Alta",
       onClick: Alta,
+      permission: permiso_alta,
     },
     // {
     //   srcLight: iconos.vistaPrevia_w,
@@ -33,10 +35,12 @@ function Acciones({ Buscar, Alta, home, Ver, animateLoading }) {
       alt: "Salir",
       tooltipTitle: "Salir",
       onClick: home,
+      permission: true,
     },
   ];
 
-  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, animateLoading }) => {
+  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, animateLoading,permission }) => {
+    if (!permission) return null;
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
         <button
@@ -75,6 +79,7 @@ function Acciones({ Buscar, Alta, home, Ver, animateLoading }) {
           tooltipTitle={image.tooltipTitle}
           onClick={image.onClick}
           animateLoading={idx === 2 && animateLoading}
+          permission={image.permission}      
         />
       ))}
     </div>
