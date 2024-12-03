@@ -371,3 +371,9 @@ export const permissionsComponents = (es_admin, permissions, id_usuario, id_punt
     );
   return permisos;
 }
+
+export const PoneCeros = (importe, longitud) => {
+  const trabajoString = String(importe).trim();
+  const cerosFaltantes = longitud - trabajoString.length;
+  return "0".repeat(cerosFaltantes) + trabajoString;
+}

@@ -1,5 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { formatFecha } from "@/app/utils/globalfn";
 
 export const getCobranza = async (token, fecha, alumnoIni, alumnoFin, sinDeudores) => {
     const res = await fetch(`${process.env.DOMAIN_API}api/documentoscobranza/all`, {
@@ -19,18 +20,20 @@ export const getCobranza = async (token, fecha, alumnoIni, alumnoFin, sinDeudore
     return resJson.data;
 }
 
-export const Enca1 = (doc, alumno, seccion, cuenta, fecha) => {
+export const Enca1 = (doc, alumno = "", seccion = "", fecha = "") => {
     if (!doc.tiene_encabezado) {
         doc.imprimeEncabezadoPrincipalV();
+        doc.setFontSize(14);
         doc.nextRow(10);
-        doc.ImpPosX("COLEGIO BILINGÜE WINDSOR S.C.", 75, doc.tw_ren, 0, "L");
-        doc.nextRow(5);
-        doc.ImpPosX(`CUENTA DEPÓSITO ${cuenta ?? ""}`, 15, doc.tw_ren, 0, "L");
-        doc.nextRow(5);
-        doc.ImpPosX(`F E C H A ${fecha ?? ""}`, 150, doc.tw_ren, 0, "L");
+        doc.ImpPosX("COLEGIO BILINGÜE WINDSOR S.C.", 60, doc.tw_ren, 0, "L");
+        doc.setFontSize(10);
+        doc.nextRow(7);
+        doc.ImpPosX("CUENTA DEPÓSITO CONVENIO  CIE  861790", 15, doc.tw_ren, 0, "L");
+        doc.nextRow(7);
+        doc.ImpPosX(`F E C H A ${formatFecha(fecha) ?? ""}`, 150, doc.tw_ren, 0, "L");
         doc.nextRow(10);
-        doc.ImpPosX(`Nombre del Alumno ${alumno ?? ""}`, 15, doc.tw_ren, 0, "L");
-        doc.ImpPosX(`Sección ${seccion ?? ""}`, 130, doc.tw_ren, 0, "L");
+        doc.ImpPosX(`NOMBRE DEL ALUMNO: ${alumno ?? ""}`, 15, doc.tw_ren, 50, "L");
+        doc.ImpPosX(`SECCIÓN: ${seccion?.toString().toUpperCase() ?? ""}`, 130, doc.tw_ren, 0, "L");
         doc.nextRow(4);
         doc.printLineV();
         doc.nextRow(4);

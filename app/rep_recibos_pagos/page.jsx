@@ -17,6 +17,7 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { getHorarios } from "@/app/utils/api/horarios/horarios";
+import { formatNumber, PoneCeros } from "../utils/globalfn";
 
 function RecibosPagos() {
     const router = useRouter();
@@ -56,22 +57,26 @@ function RecibosPagos() {
         }
         const fetchData = async () => {
             const { token } = session.user;
-            const [dataC, dataA, dataH] =
+            const [dataA, dataH] =
                 await Promise.all([
-                    getCobranza(token),
+                    // getCobranza(token),
                     getAlumnos(token, false),
                     getHorarios(token, false)
                 ]);
-            setDocsCobranza(dataC);
+            // setDocsCobranza(dataC);
             setAlumnos(dataA);
             setHorarios(dataH);
         };
         fetchData();
     }, [session, status]);
 
-    const calculateSaldo = (item) => {
-        return parseFloat(((item.importe - item.importe_pago) - (item.importe * (item.descuento / 100))).toFixed(2));
-    };
+    // const calculateSaldo = (item) => {
+    //     const importe = parseFloat(item.importe) || 0;
+    //     const importePago = parseFloat(item.importe_pago) || 0;
+    //     const descuento = parseFloat(item.descuento) || 0;
+    //     const saldo = (importe - importePago) - (importe * (descuento / 100));
+    //     return formatNumber(saldo);
+    // };
 
     const handleVerClick = async () => {
         setAnimateLoading(true);
@@ -86,9 +91,21 @@ function RecibosPagos() {
             setAnimateLoading(false);
             return;
         }
-        const newPDF = new ReportePDF(configuracion, "Portrait");
+        if (!fecha) {
+            showSwal(
+                "Oppss!",
+                "Para imprimir, debe tener seleccionado una 'Fecha'",
+                "error"
+            );
+            setAnimateLoading(false);
+            return;
+        }
+        // const newPDF = new ReportePDF(configuracion, "Landscape");
+        const newPDF = new ReportePDF(configuracion, "Portraity");
         let alumnAnt = null;
         let siImp = false;
+        let saldo_total = 0;
+        let alumnoData = {};
         const docsCobranzaFiltrados = await getCobranza(
             token,
             fecha,
@@ -96,31 +113,70 @@ function RecibosPagos() {
             alumnoFin.numero,
             sinDeudores,
         );
-        console.log(docsCobranzaFiltrados);
-        docsCobranzaFiltrados.forEach((item) => {
-            const twSaldo = calculateSaldo(item);
+        setDocsCobranza(docsCobranzaFiltrados);
+        docsCobranzaFiltrados.forEach((item, index) => {
             if (alumnAnt !== item.alumno) {
-                const alumnoData = alumnos.find(alumno => alumno.numero === item.alumno);
-                siImp = alumnoData && alumnoData.baja !== "*" && twSaldo >= 0.09;
-                if (siImp) {
-                    Enca1(newPDF);
+                if (alumnAnt !== null) {
+                    const ref = "100910" + PoneCeros(parseInt(alumnAnt), 4);
+                    newPDF.tw_ren = 260;
+                    newPDF.ImpPosX(`C A N T I D A D    A    P A G A R           ${formatNumber(saldo_total)}`, 100, newPDF.tw_ren, 0, "C");
+                    newPDF.nextRow(5);
+                    newPDF.ImpPosX(`EL PAGO DEBERÁ HACERSE EN BBVA, S.A.   REFERENCIA...${ref}`, 100, newPDF.tw_ren, 0, "C");
+                    newPDF.nextRow(5);
+                    newPDF.ImpPosX("UNICAMENTE PARA TRANSFERENCIAS ELECTRONICAS CLABE 012180004505271730", 100, newPDF.tw_ren, 0, "C");
+                    newPDF.nextRow(5);
+                    newPDF.ImpPosX("PONER EN CONCEPTO NUMERO DE REFERENCIA", 100, newPDF.tw_ren, 0, "C");
+                    newPDF.nextRow(5);
+                    newPDF.ImpPosX("FAVOR DE NO HACER CORRECCIONES      REALIZAR PAGO EXACTO", 100, newPDF.tw_ren, 0, "C");
+                    newPDF.nextRow(5);
+                    saldo_total = 0
                 }
-            }
-            if (siImp && twSaldo >= 0.09) {
-                newPDF.ImpPosX(item.producto, newPDF.tw_ren, 0, "L");
-                newPDF.ImpPosX(`${productos.descripcion}`, newPDF.tw_ren, 0, "L");
-                newPDF.ImpPosX(twSaldo.toFixed(2), newPDF.tw_ren, 0, "L");
-            }
-            alumnAnt = item.alumno;
-        });
+                alumnoData = alumnos.find(alumno => alumno.numero === item.alumno);
+                siImp = alumnoData && alumnoData.baja !== "*" && item.tw_saldo >= 0.09;
+                if (siImp) {
+                    newPDF.tw_ren = 280;
+                    Enca1(newPDF, alumnoData.nombre, alumnoData.horario_1_nombre, fecha);
+                };
+            };
 
+            Enca1(newPDF, alumnoData.nombre, alumnoData.horario_1_nombre, fecha);
+            if (newPDF.tw_ren >= newPDF.tw_endRen - 30) {
+                newPDF.pageBreak();
+                Enca1(newPDF, alumnoData.nombre, alumnoData.horario_1_nombre, fecha);
+            };
+
+            if (siImp && item.tw_saldo >= 0.09) {
+                newPDF.ImpPosX(item.producto.toString(), 25, newPDF.tw_ren, 0, "R");
+                newPDF.ImpPosX(item.producto_descripcion.toString(), 40, newPDF.tw_ren, 0, "L");
+                newPDF.ImpPosX(item.numero_doc.toString(), 135, newPDF.tw_ren, 0, "R");
+                newPDF.ImpPosX(item.fecha.toString(), 140, newPDF.tw_ren, 0, "L");
+                newPDF.ImpPosX(formatNumber(item.tw_saldo.toString()), 190, newPDF.tw_ren, 0, "R");
+                saldo_total = saldo_total + item.tw_saldo;
+            };
+            alumnAnt = item.alumno;
+
+            if (index === docsCobranzaFiltrados.length - 1) {
+                const ref = "100910" + PoneCeros(parseInt(alumnAnt), 4);
+                newPDF.tw_ren = 260;
+                newPDF.ImpPosX(`C A N T I D A D    A    P A G A R           ${formatNumber(saldo_total)}`, 100, newPDF.tw_ren, 0, "C");
+                newPDF.nextRow(5);
+                newPDF.ImpPosX(`EL PAGO DEBERÁ HACERSE EN BBVA, S.A.   REFERENCIA...${ref}`, 100, newPDF.tw_ren, 0, "C");
+                newPDF.nextRow(5);
+                newPDF.ImpPosX("UNICAMENTE PARA TRANSFERENCIAS ELECTRONICAS CLABE 012180004505271730", 100, newPDF.tw_ren, 0, "C");
+                newPDF.nextRow(5);
+                newPDF.ImpPosX("PONER EN CONCEPTO NUMERO DE REFERENCIA", 100, newPDF.tw_ren, 0, "C");
+                newPDF.nextRow(5);
+                newPDF.ImpPosX("FAVOR DE NO HACER CORRECCIONES      REALIZAR PAGO EXACTO", 100, newPDF.tw_ren, 0, "C");
+                newPDF.nextRow(5);
+                saldo_total = 0
+            }
+        });
         const pdfData = newPDF.doc.output("datauristring");
         setPdfData(pdfData);
         setPdfPreview(true);
         showModalVista(true);
         setAnimateLoading(false);
     };
-
 
     const ImprimePDF = async () => {
         ImprimirPDF(configuracion);
@@ -165,7 +221,7 @@ function RecibosPagos() {
                             <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
                                 <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading} />
                             </div>
-                            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
+                            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
                                 Reporte Recibo de Pagos.
                             </h1>
                         </div>
