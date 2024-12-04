@@ -13,10 +13,15 @@ function TablaAsignaturas({
   setAccion,
   setCurrentId,
   formatNumber,
-  tableAction,
   permiso_cambio,
   permiso_baja,
 }) {
+  const tableAction = (evt, formaAsignaturas, accion) => {
+    setAsignatura(formaAsignaturas);
+    setAccion(accion);
+    setCurrentId(formaAsignaturas.numero);
+    showModal(true);
+  };
   const ActionButton = ({ tooltip, iconDark, iconLight, onClick, permission }) => {
     if (!permission) return null;
     return (
