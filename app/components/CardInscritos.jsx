@@ -19,7 +19,7 @@ function CardsHome({ titulo, value, descripcion, valueImp/*,setItem*/ }) {
             <div className="w-full sticky top-0 flex justify-center ">
                 <div className="grid grid-flow-row text-neutral-600 dark:text-white">
                     {/* <div className="stats shadow bg-base-200 dark:bg-[#1d232a]"> */}
-                    <h1 className="font-bold text-black my-4">Alumnos inscritos por mes</h1>
+                    <h1 className="font-bold text-black my-4">Alumnos inscritos este mes</h1>
                         {/* <label
                             className={`input input-bordered  input-sm md:input-md flex items-center gap-3  text-black dark:text-white`}
                         >
