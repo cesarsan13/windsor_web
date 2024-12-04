@@ -140,7 +140,6 @@ function Pagos_1() {
     });
   }, [formaPagoPage]);
 
-
   useEffect(() => {
     if (cantidad_producto === "") {
       setValue("cantidad_producto", formatNumber(1));
@@ -366,7 +365,7 @@ function Pagos_1() {
       recargo = formatNumber(arFind.por_recargo);
     } else {
       recargo = formatNumber(0);
-    };
+    }
     if (desPr) {
       setDrecargo(desPr);
       setMuestraRecargos(false);
@@ -376,7 +375,7 @@ function Pagos_1() {
       setDrecargo("");
       setMuestraRecargos(false);
       showModal("modal_recargos", false);
-    };
+    }
   };
 
   const Parciales = async () => {
@@ -389,7 +388,11 @@ function Pagos_1() {
     }
     let validar = selectedTable.numero_producto;
     if (!validar) {
-      await showSwalAndWait("¡Error!", "No hay ningún artículo seleccionado. Asegúrate de haberlo elegido en la tabla.", "error");
+      await showSwalAndWait(
+        "¡Error!",
+        "No hay ningún artículo seleccionado. Asegúrate de haberlo elegido en la tabla.",
+        "error"
+      );
       setMuestraParciales(false);
       return;
     }
@@ -435,7 +438,11 @@ function Pagos_1() {
     Monto_Pago = Elimina_Comas(data.monto_parcial);
     if (Monto_Pago === 0) {
       showModal("modal_parciales", false);
-      await showSwalAndWait("Error!", "Monto del pago parcial en cero' ", "error");
+      await showSwalAndWait(
+        "Error!",
+        "Monto del pago parcial en cero' ",
+        "error"
+      );
       showModal("modal_parciales", true);
       return;
     }
@@ -443,14 +450,22 @@ function Pagos_1() {
     const clave = dat.clave_seguridad;
     if (data.clave_acceso.toLowerCase() !== clave.toLowerCase()) {
       showModal("modal_parciales", false);
-      await showSwalAndWait("Error!", "Clave de autorización invalida' ", "error");
+      await showSwalAndWait(
+        "Error!",
+        "Clave de autorización invalida' ",
+        "error"
+      );
       showModal("modal_parciales", true);
       return;
     }
     Monto_Actual = Elimina_Comas(h1Total);
     if (Monto_Pago > Monto_Actual) {
       showModal("modal_parciales", false);
-      await showSwalAndWait("", "El monto del pago parcial es mayor al pago total", "info");
+      await showSwalAndWait(
+        "",
+        "El monto del pago parcial es mayor al pago total",
+        "info"
+      );
       showModal("modal_parciales", true);
       return;
     }
@@ -953,6 +968,7 @@ function Pagos_1() {
                 selectedRow={selectedRow}
                 setSelectedRow={setSelectedRow}
                 permiso_baja={permissions.bajas}
+                permiso_cambio={permissions.cambios}
               />
             </div>
           </div>

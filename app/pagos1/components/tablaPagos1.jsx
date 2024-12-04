@@ -88,7 +88,10 @@ function TablaPagos1({
                   description={"Eliminar"}
                   permission={permiso_baja}
                 />
-                <ActionColumn description={"Seleccionar"} permission={true} />
+                <ActionColumn
+                  description={"Seleccionar"}
+                  permission={permiso_cambio}
+                />
               </tr>
             </thead>
             <tbody>

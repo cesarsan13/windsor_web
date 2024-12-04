@@ -69,8 +69,6 @@ export default function Home() {
       setMesActualNum(mes);
       const año = fecha.getFullYear();
       setAñoActual(año);
-      console.log(`mes => ${mes}`);
-      console.log(`año => ${año}`);
 
       const { token } = session.user;
       const [res, dataAlHor, DataAlSex, cumpleañerosMes,Adeudos] = await Promise.all([
@@ -99,27 +97,7 @@ export default function Home() {
       setAlPorGrado(promedioTotal);
       setCumpleañeros(cumpleañerosMes);
       setHorarioCantidadAlumnos(res.horarios_populares);
-      // setInscritos(alumnsInscritos);
-      // const objectFormat = {
-      //   Alumnos: alumnsInscritos.data_alumnos,
-      //   Detalles: alumnsInscritos.data_detalle,
-      //   Productos: alumnsInscritos.data_productos,
-      //   Horarios: alumnsInscritos.data_horarios,
-      //   Fecha: `${año}/${mes}/01`
-      // }
-      // const totalesIns = await getConsultasInsXMes(objectFormat);
-      // console.log("Totales => ",totalesIns);'
-      // const formData = new FormData();
-      // const fecha2 = new Date(año, mes, 0); // El día 0 retorna el último día del mes anterior
-      // let ultDia = fecha2.getDate(); // Retorna el día (número) del último día
-      // const fechaIni = `${añoActual}/${mesActualNum}/01`;
-      // const fechaFin = `${añoActual}/${mesActualNum}/${ultDia}`;
-      // formData.append("fecha_ini", fechaIni);
-      // formData.append("fecha_fin", fechaFin);
-      // console.log(`Fechas a enviar1 ${fechaIni} y ${fechaFin}`)
-      // console.log(`Fechas a enviar2 ${año}/${mes}/01 y ${año}/${mes}/${ultDia}`)
       const totalesIns = await getConsultasInsXMes(token);
-      console.log("Totales => ",totalesIns);
       setTotalAlumnosXMes(totalesIns.data[0].alumnos);
       setTotalImporteXmes(formatNumber(totalesIns.data[0].importe));
       setisLoading(false);
@@ -127,36 +105,6 @@ export default function Home() {
     };
     fetchChart();
   }, [session, status]);
-
-
-
-  // useEffect(() => {
-  //   // if (status === "loading" || !session || dataLoaded) {
-  //   //   return;
-  //   // }
-  //   const fetchIns = async () => {
-  //     const { token } = session.user;
-  //     if (mesSelect < 10){
-  //       mesSelect = "0"+mesSelect;
-  //     }
-
-  //     const formData = new FormData();
-  //     const fecha2 = new Date(añoActual, mesSelect, 0); // El día 0 retorna el último día del mes anterior
-  //     let ultDia = fecha2.getDate(); // Retorna el día (número) del último día
-  //     const fecha3 = new Date(añoActual, mesActualNum, 0); // El día 0 retorna el último día del mes anterior
-  //     let ultDia2 = fecha3.getDate(); // Retorna el día (número) del último día
-  //     const mesInicio = mesSelect || mesActualNum;
-  //     const fechaIni = `${añoActual}/${mesInicio}/01`;
-  //     const fechaFin = `${añoActual}/${mesInicio}/${ultDia || ultDia2}`;
-  //     formData.append("fecha_ini", fechaIni);
-  //     formData.append("fecha_fin", fechaFin);
-  //     console.log(`Fechas a enviar ${añoActual}/${mesSelect}/01 y ${añoActual}/${mesSelect}/${ultDia}`);
-  //     console.log("Form Data => ",formData);
-  //     const totalesIns = await getConsultasInsXMes(token,formData);
-  //     console.log("Totales => ",totalesIns);
-  //   }
-  //   fetchIns();
-  // }, [session,mesSelect,añoActual,mesActualNum]);
 
   if (status === "loading" || isLoading === true) {
     return (
