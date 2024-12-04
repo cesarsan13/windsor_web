@@ -21,10 +21,15 @@ import { formatNumber } from "@/app/utils/globalfn";
 const CumpleañerosView = React.lazy(() =>
   import("@/app/components/Cumpleañeros/Cumpleañeros")
 );
+const AdeudosView = React.lazy(()=>
+  import("@/app/components/Adeudos/Adeudos")
+);
 const SliderControl = React.lazy(() =>
   import("@/app/components/SliderControl")
 );
 import iconos from "./utils/iconos";
+import { Documentos } from "./utils/api/Rep_Femac_7/Rep_Femac_7";
+import { formatDate } from "./utils/globalfn";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -44,6 +49,7 @@ export default function Home() {
   const [mesActualNum, setMesActualNum] = useState("");
   const [añoActual, setAñoActual] = useState("");
   let [mesSelect, setMesSelect] = useState("");
+  const [adeudos,setAdeudos]=useState([]);
   useEffect(() => {
     if (status === "loading" || !session || dataLoaded) {
       return;
@@ -67,13 +73,16 @@ export default function Home() {
       console.log(`año => ${año}`);
 
       const { token } = session.user;
-      const [res, dataAlHor, DataAlSex, cumpleañerosMes/*, alumnsInscritos*/] = await Promise.all([
+      const [res, dataAlHor, DataAlSex, cumpleañerosMes,Adeudos] = await Promise.all([
         getEstadisticasTotales(token),
         getAlumnoXHorario(token),
         getDataSex(token),
         getCumpleañosMes(token),
-        // getConsultasInscripcion(token)
+        Documentos(token,formatDate(fecha).replace(/\//g, "-"),false)
       ]);
+      // const fechaHoy = formatDate(fecha).replace(/\//g, "-")
+      // const AdeudosMes = Adeudos.documentos.filter((adeudo)=>adeudo.fecha === fechaHoy)
+      setAdeudos(Adeudos)
       // console.log(res);
       // console.log("alumnsInscritos => ",alumnsInscritos);
       const totalEstudiantes = res.promedio_alumnos_por_curso.reduce(
@@ -204,6 +213,10 @@ export default function Home() {
                   cumpleañeros={Cumpleañeros}
                   mesActual={mesActual}
                 ></CumpleañerosView>
+                <AdeudosView
+                adeudos={adeudos}
+                mesActual={mesActual}
+                ></AdeudosView>
                 {/* <div className="grid gap-4 w-full card  items-center p-5 mb-4">
                   <div className="card w-full h-full bg-base-100 shadow-lg rounded-lg">
                     Hola
