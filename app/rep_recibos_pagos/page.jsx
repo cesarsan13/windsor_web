@@ -17,18 +17,17 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { getHorarios } from "@/app/utils/api/horarios/horarios";
-import { formatNumber, PoneCeros } from "../utils/globalfn";
+import { formatNumber, PoneCeros } from "@/app/utils/globalfn";
 
 function RecibosPagos() {
     const router = useRouter();
     const { data: session, status } = useSession();
     const [alumnoIni, setAlumnoIni] = useState({});
     const [alumnoFin, setAlumnoFin] = useState({});
-    const [alumnosFiltrados, setAlumnosFiltrados] = useState([]);
+    // const [alumnosFiltrados, setAlumnosFiltrados] = useState([]);
     const [docsCobranza, setDocsCobranza] = useState([]);
-    const [docsCobranzaFiltrados, setDocsCobranzaFiltrados] = useState([]);
     const [alumnos, setAlumnos] = useState([]);
-    const [horarios, setHorarios] = useState([]);
+    // const [horarios, setHorarios] = useState([]);
     const [sinDeudores, setSinDeudores] = useState(false);
     const [grupoAlumno, setGrupoAlumno] = useState(false);
     const [pdfPreview, setPdfPreview] = useState(false);
@@ -40,15 +39,15 @@ function RecibosPagos() {
     const dd = String(today.getDate()).padStart(2, "0");
     const formattedToday = `${yyyy}-${mm}-${dd}`;
     const [fecha, setFecha] = useState(formattedToday);
-    // const alumno1A = alumnos1 === undefined ? 0 : alumnos1.numero;
-    // const alumno2A = alumnos2 === undefined ? 0 : alumnos2.numero;
     const configuracion = {
         Encabezado: {
             Nombre_Aplicacion: "Sistema de Control Escolar",
             Nombre_Reporte: "Reporte Recibo de Pagos",
             Nombre_Usuario: `Usuario: ${session?.user.name}`,
         },
-        body: alumnosFiltrados,
+        body: docsCobranza,
+        alumnos: alumnos,
+        fecha_in: fecha,
     };
 
     useEffect(() => {
@@ -57,15 +56,15 @@ function RecibosPagos() {
         }
         const fetchData = async () => {
             const { token } = session.user;
-            const [dataA, dataH] =
+            const [dataA] =
                 await Promise.all([
                     // getCobranza(token),
                     getAlumnos(token, false),
-                    getHorarios(token, false)
+                    // getHorarios(token, false)
                 ]);
             // setDocsCobranza(dataC);
             setAlumnos(dataA);
-            setHorarios(dataH);
+            // setHorarios(dataH);
         };
         fetchData();
     }, [session, status]);
@@ -101,7 +100,7 @@ function RecibosPagos() {
             return;
         }
         // const newPDF = new ReportePDF(configuracion, "Landscape");
-        const newPDF = new ReportePDF(configuracion, "Portraity");
+        const newPDF = new ReportePDF(configuracion, "Portrait");
         let alumnAnt = null;
         let siImp = false;
         let saldo_total = 0;
@@ -112,6 +111,7 @@ function RecibosPagos() {
             alumnoIni.numero,
             alumnoFin.numero,
             sinDeudores,
+            grupoAlumno,
         );
         setDocsCobranza(docsCobranzaFiltrados);
         docsCobranzaFiltrados.forEach((item, index) => {
@@ -138,13 +138,11 @@ function RecibosPagos() {
                     Enca1(newPDF, alumnoData.nombre, alumnoData.horario_1_nombre, fecha);
                 };
             };
-
             Enca1(newPDF, alumnoData.nombre, alumnoData.horario_1_nombre, fecha);
             if (newPDF.tw_ren >= newPDF.tw_endRen - 30) {
                 newPDF.pageBreak();
                 Enca1(newPDF, alumnoData.nombre, alumnoData.horario_1_nombre, fecha);
             };
-
             if (siImp && item.tw_saldo >= 0.09) {
                 newPDF.ImpPosX(item.producto.toString(), 25, newPDF.tw_ren, 0, "R");
                 newPDF.ImpPosX(item.producto_descripcion.toString(), 40, newPDF.tw_ren, 0, "L");
@@ -154,7 +152,6 @@ function RecibosPagos() {
                 saldo_total = saldo_total + item.tw_saldo;
             };
             alumnAnt = item.alumno;
-
             if (index === docsCobranzaFiltrados.length - 1) {
                 const ref = "100910" + PoneCeros(parseInt(alumnAnt), 4);
                 newPDF.tw_ren = 260;
