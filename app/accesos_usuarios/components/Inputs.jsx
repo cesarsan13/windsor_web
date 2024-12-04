@@ -17,7 +17,7 @@ function Inputs({
           name={name}
           id={name}
           type="checkbox"
-          className="toggle toggle-success"
+          className="toggle toggle-success"   
           {...register(name, {
             ...(requerido && { required: message }),
           })}
