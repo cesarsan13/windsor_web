@@ -15,8 +15,7 @@ function ListView({ adeudos }) {
             });
         }
     }, [])
-    let alu_Ant = 0;        
-    console.log(adeudos)
+    let alu_Ant = 0;            
     const fecha = new Date();
     const fechaHoy = formatDate(fecha).replace(/\//g, "-")
     const documentos = adeudos.documentos?.filter((doc)=>doc.fecha === fechaHoy)
@@ -41,8 +40,7 @@ function ListView({ adeudos }) {
                 alu_Ant = documento.alumno;
                 const data =alumnos.find((alumno)=>alumno.numero === documento.alumno)
                 const saldoAlumno = saldosPorAlumno[documento.alumno]?.total || 0;
-                const nombreAlumno = saldosPorAlumno[documento.alumno]?.nombre || "Sin nombre";
-                console.log(`Alumno Num: ${documento.alumno} Nombre: ${data?.nombre}`)
+                const nombreAlumno = saldosPorAlumno[documento.alumno]?.nombre || "Sin nombre";                
                 return (
                     <>
                         {mostrar && (                            
