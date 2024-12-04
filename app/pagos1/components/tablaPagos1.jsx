@@ -17,8 +17,8 @@ function TablaPagos1({
   selectedRow,
   setSelectedRow,
   permiso_baja,
+  permiso_cambio,
 }) {
-
   const tableAction = (evt, pago, accion) => {
     setPago(pago);
     setAccion(accion);
@@ -28,12 +28,18 @@ function TablaPagos1({
     }
     if (accion === "Eliminar") {
       setSelectedTable({});
-      setSelectedRow(null)
+      setSelectedRow(null);
       deleteRow(pago);
     }
   };
 
-  const ActionButton = ({ tooltip, iconDark, iconLight, onClick, permission }) => {
+  const ActionButton = ({
+    tooltip,
+    iconDark,
+    iconLight,
+    onClick,
+    permission,
+  }) => {
     if (!permission) return null;
     return (
       <th>
@@ -55,7 +61,7 @@ function TablaPagos1({
       <>
         <th className="w-[5%] pt-[.10rem] pb-[.10rem]">{description}</th>
       </>
-    )
+    );
   };
 
   return !isLoading ? (
@@ -78,24 +84,22 @@ function TablaPagos1({
                 <td className="w-[6%] text-right">Neto</td>
                 <td className="w-[6%] text-right">Total</td>
                 <td className="w-[5%] text-right">Alumno</td>
-                < ActionColumn
+                <ActionColumn
                   description={"Eliminar"}
                   permission={permiso_baja}
                 />
-                < ActionColumn
-                  description={"Seleccionar"}
-                  permission={true}
-                />
+                <ActionColumn description={"Seleccionar"} permission={true} />
               </tr>
             </thead>
             <tbody>
               {pagosFiltrados.map((item) => (
                 <tr
                   key={item.numero_producto}
-                  className={`hover:cursor-pointer ${selectedRow === item.numero_producto
-                    ? "dark:bg-[#334155] bg-[#f1f5f9]"
-                    : ""
-                    }`}
+                  className={`hover:cursor-pointer ${
+                    selectedRow === item.numero_producto
+                      ? "dark:bg-[#334155] bg-[#f1f5f9]"
+                      : ""
+                  }`}
                 >
                   <th className="text-right">{item.numero_producto}</th>
                   <td className="hidden">{item.numero_producto}</td>
@@ -143,9 +147,7 @@ function TablaPagos1({
               </tr>
             </tfoot> */}
           </table>
-        ) : pagosFiltrados != null &&
-          session &&
-          pagosFiltrados.length === 0 ? (
+        ) : pagosFiltrados != null && session && pagosFiltrados.length === 0 ? (
           <NoData></NoData>
         ) : (
           <Loading></Loading>
