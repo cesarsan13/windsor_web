@@ -25,6 +25,7 @@ function Accesos_Usuarios() {
   const [accesosUsuariosFiltrados, setAccesosUsuariosFiltrados] = useState([]);
   const [openModal, setModal] = useState(false);
   const [currentID, setCurrentId] = useState("");
+  //const [todos, setTodos] = useState(false);
   const accesosUsuariosRef = useRef(accesosUsuarios);
   useEffect(() => {
     if (status === "loading" || !session || !usuario.id) {
@@ -40,10 +41,14 @@ function Accesos_Usuarios() {
     };
     fetchData();
   }, [session, status, usuario]);
+
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
+    getValues,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -54,8 +59,10 @@ function Accesos_Usuarios() {
       bajas: accesoUsuario.bajas,
       cambios: accesoUsuario.cambios,
       impresion: accesoUsuario.impresion,
+      todos: accesoUsuario.todos
     },
   });
+
   useEffect(() => {
     reset({
       id_usuario: accesoUsuario.id_usuario,
@@ -65,11 +72,16 @@ function Accesos_Usuarios() {
       bajas: accesoUsuario.bajas,
       cambios: accesoUsuario.cambios,
       impresion: accesoUsuario.impresion,
+      todos: accesoUsuario.todos
     });
   }, [accesoUsuario, reset]);
+
+  
+  
+  
   if (status === "loading") {
     return (
-      <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
+      <div className="container skeleton w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
     );
   }
   const showModal = (show) => {
@@ -84,12 +96,20 @@ function Accesos_Usuarios() {
     showModal(true);
   };
   const onSubmitModal = handleSubmit(async (data) => {
+    console.log(data);
     data.id_punto_menu = currentID;
     data.id_usuario = usuario.id;
-    // console.log("qe pedo", data);
+
+
     let res = null;
     res = await guardaAccesosUsuarios(session.user.token, data);
     if (res.status) {
+      data.t_a = data.t_a === true ? 1 : 0 || data.t_a === 1 ? 1 : 0;
+      data.altas = data.altas === true ? 1 : 0 || data.altas === 1 ? 1 : 0;
+      data.bajas = data.bajas === true ? 1 : 0 || data.bajas === 1 ? 1 : 0;
+      data.cambios = data.cambios === true ? 1 : 0 || data.cambios === 1 ? 1 : 0;
+      data.impresion = data.impresion === true ? 1 : 0 || data.impresion === 1 ? 1 : 0;
+
       const accUsuarioActualizados = accesosUsuarios.map((c) =>
         c.id_punto_menu === currentID ? { ...c, ...data } : c
       );
@@ -99,6 +119,7 @@ function Accesos_Usuarios() {
       showModal(false);
     }
   });
+
   const TodosSiNo = async (event) => {
     event.preventDefault();
     if (!usuario.id) {
@@ -138,8 +159,8 @@ function Accesos_Usuarios() {
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
     }
-    // console.log(name);
   };
+
   return (
     <>
       <ModalAccesosUsuarios
@@ -149,6 +170,10 @@ function Accesos_Usuarios() {
         register={register}
         session={session}
         onSubmit={onSubmitModal}
+        setAccesoUsuario={setAccesoUsuario}
+        setValue = {setValue}
+        watch = {watch}
+        getValues={getValues}
       />
       <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">

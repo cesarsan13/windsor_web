@@ -39,11 +39,10 @@ function Rep_Flujo_01() {
       const { token, permissions } = session.user;
       const es_admin = session.user.es_admin;
       const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
-      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado)
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado);
       setPermissions(permisos);
       const fecha_ciclo = Fecha_de_Ctod(fecha_ini, -63);
       const data = await DocumentosCobranza(token, fecha_ciclo, fecha_fin);
-      console.log(data);
       setDataDocumentoCobranza(data);
     };
     fetchData();
