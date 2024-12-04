@@ -131,7 +131,7 @@ function Repo_Femac_7() {
       let nom_grupo = "";
       let grupo_ant = "";
       let grupo_act = "";
-
+      
       for (const dato of data) {
         if (dato.horario_1 > 0) {
           grupo_act = dato.horario_1;
@@ -146,7 +146,7 @@ function Repo_Femac_7() {
             {
               method: "PUT",
               body: JSON.stringify({
-                alumno: dato.id,
+                alumno: dato.numero,
                 nomGrupo: dato.horario,
                 numOrd: num_Ord,
                 baja: dato.baja,
@@ -157,7 +157,7 @@ function Repo_Femac_7() {
               }),
             }
           );
-          if (res.status) break;
+          if (res.status ===400) break;
           grupo_ant = grupo_act;
         }
       }
