@@ -56,19 +56,19 @@ export const verImprimir = async (configuracion) => {
             detalle.fecha >= fecha_ini &&
             detalle.fecha <= fecha_fin
         );
-        if (detalleEncontrado) {
+        if (detalleEncontrado.length > 0) {
             detalleEncontrado.forEach((detalle) => {
                 const productoEncontrado = bodyProductos.filter(producto =>
                     producto.ref === 'INS' &&
                     producto.numero === detalle.articulo
                 );
-                if (productoEncontrado) {
-                    console.log('entro');
+                if (productoEncontrado.length > 0) {
+                    // console.log('entro');
                     si_inscrito = true;
                     si_suma = true;
                     det_inscripcion += detalle.precio_unitario * detalle.cantidad;
                     total_inscripcion += detalle.precio_unitario * detalle.cantidad;
-                } else { console.log('no entro'); };
+                } else { /*console.log('no entro');*/ };
                 fecha_inscripcion = detalle.fecha;
             });
             if (si_suma) {
@@ -122,19 +122,19 @@ export const Imprimir = (configuracion) => {
             detalle.fecha >= fecha_ini &&
             detalle.fecha <= fecha_fin
         );
-        if (detalleEncontrado) {
+        if (detalleEncontrado.length > 0) {
             detalleEncontrado.forEach((detalle) => {
                 const productoEncontrado = bodyProductos.filter(producto =>
                     producto.ref === 'INS' &&
                     producto.numero === detalle.articulo
                 );
-                if (productoEncontrado) {
-                    console.log('no entro');
+                if (productoEncontrado.length > 0) {
+                    // console.log('no entro');
                     si_inscrito = true;
                     si_suma = true;
                     det_inscripcion += detalle.precio_unitario * detalle.cantidad;
                     total_inscripcion += detalle.precio_unitario * detalle.cantidad;
-                } else { console.log('no entro'); };
+                } else { /*console.log('no entro');*/ };
                 fecha_inscripcion = detalle.fecha;
             });
             if (si_suma) {
@@ -191,14 +191,14 @@ export const ImprimirExcel = (configuracion) => {
             detalle.fecha <= fecha_fin
         );
         // console.log("detalleEncontrado=>",detalleEncontrado);
-        if (detalleEncontrado) {
+        if (detalleEncontrado.length > 0) {
             detalleEncontrado.forEach((detalle) => {
                 const productoEncontrado = bodyProductos.filter(producto =>
                     producto.ref === 'INS' &&
                     producto.numero === detalle.articulo
                 );
 
-                if (productoEncontrado) {
+                if (productoEncontrado.length > 0) {
                     si_suma = true;
                     det_inscripcion += detalle.precio_unitario * detalle.cantidad;
                     total_inscripcion += detalle.precio_unitario * detalle.cantidad;
