@@ -23,10 +23,8 @@ function Accesos_Usuarios() {
   const [isLoading, setisLoading] = useState(false);
   const [accesosUsuarios, setAccesosUsuarios] = useState([]);
   const [accesosUsuariosFiltrados, setAccesosUsuariosFiltrados] = useState([]);
-  const [openModal, setModal] = useState(false);
   const [currentID, setCurrentId] = useState("");
-  //const [todos, setTodos] = useState(false);
-  const accesosUsuariosRef = useRef(accesosUsuarios);
+  
   useEffect(() => {
     if (status === "loading" || !session || !usuario.id) {
       return;
@@ -58,8 +56,7 @@ function Accesos_Usuarios() {
       altas: accesoUsuario.altas,
       bajas: accesoUsuario.bajas,
       cambios: accesoUsuario.cambios,
-      impresion: accesoUsuario.impresion,
-      todos: accesoUsuario.todos
+      impresion: accesoUsuario.impresion
     },
   });
 
@@ -71,13 +68,9 @@ function Accesos_Usuarios() {
       altas: accesoUsuario.altas,
       bajas: accesoUsuario.bajas,
       cambios: accesoUsuario.cambios,
-      impresion: accesoUsuario.impresion,
-      todos: accesoUsuario.todos
+      impresion: accesoUsuario.impresion
     });
   }, [accesoUsuario, reset]);
-
-  
-  
   
   if (status === "loading") {
     return (
@@ -96,7 +89,6 @@ function Accesos_Usuarios() {
     showModal(true);
   };
   const onSubmitModal = handleSubmit(async (data) => {
-    console.log(data);
     data.id_punto_menu = currentID;
     data.id_usuario = usuario.id;
 
@@ -164,16 +156,12 @@ function Accesos_Usuarios() {
   return (
     <>
       <ModalAccesosUsuarios
-        accesoUsuario={accesoUsuario}
         accion={accion}
         errors={errors}
         register={register}
-        session={session}
         onSubmit={onSubmitModal}
-        setAccesoUsuario={setAccesoUsuario}
         setValue = {setValue}
         watch = {watch}
-        getValues={getValues}
       />
       <div className="container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">

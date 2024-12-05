@@ -1,22 +1,19 @@
 import iconos from "@/app/utils/iconos";
 import Image from "next/image";
-import React, { use, useEffect, useState } from "react";
+import React, { use, useEffect, useState, useRef } from "react";
 import Inputs from "./Inputs";
-import { useForm } from "react-hook-form";
 
 function ModalAccesosUsuarios({
-  accesoUsuario,
   accion,
   onSubmit,
   errors,
   register,
   watch,
-  setValue,
-  getValues
-  
+  setValue
 }) {
   const [titulo, setTitulo] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
+  const [isChecked, setIsChecked] = useState(false);
 
   useEffect(() => {
     if (accion === "Eliminar" || accion === "ver") {
@@ -36,44 +33,40 @@ function ModalAccesosUsuarios({
     );
   }, [accion]);
 
-  useEffect(() => {
-
-    if (todos === true) {
+  const toggleCheckbox = (event) => {
+    if (event.target.checked === true) {
       setValue("t_a", 1);
       setValue("altas", 1);
       setValue("bajas", 1);
       setValue("cambios", 1);
       setValue("impresion", 1);
-    } else if (todos === false) {
-
+    } else if (event.target.checked === false) {
       setValue("t_a", 0);
       setValue("altas", 0);
       setValue("bajas", 0);
       setValue("cambios", 0);
       setValue("impresion", 0);
     }
-  }, [watch("todos"), setValue]); 
+  };
 
   useEffect(() => {
     const valores = [
-      getValues("t_a"),
-      getValues("altas"),
-      getValues("bajas"),
-      getValues("cambios"),
-      getValues("impresion"),
+      watch("t_a"),
+      watch("altas"),
+      watch("bajas"),
+      watch("cambios"),
+      watch("impresion"),
     ];
-
-    const todosSeleccionados = valores.every(valor => valor === 1);
-    if (todosSeleccionados && todos !== true) {
-      setValue("todos", true);
+    const todosSeleccionados = valores.every(valor => valor === 1 || valor === true);
+    if (todosSeleccionados && watch("todos") !== true) {
+      setIsChecked(true);
+    }
+    else if (!todosSeleccionados && watch("todos") !== false ){
+      setIsChecked(false);
     }
 
-    else if (!todosSeleccionados && todos !== false) {
-      setValue("todos", false);
-    }
-  }, [getValues, setValue, watch("todos")]);
-
-  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watch("todos"), watch("t_a"), watch("altas"), watch("bajas"), watch("cambios"), watch("impresion"), setValue]); 
 
 
   return (
@@ -124,17 +117,19 @@ function ModalAccesosUsuarios({
           </div>
           <fieldset id="fs_accesosusuario">
             <div className="container flex flex-col space-y-5">
-            <Inputs
-              Titulo={"Todos"}
-              register={register}
-              errors={errors}
-              message={"Todo Requerido"}
-              name={"todos"}
-              requerido={false}
-              tamañolabel={"w-full"}
-              className={"md:w-1/3 w-3/6"}
-              
-            />
+            <div className="form-control w-52">
+              <label className={`label cursor-pointer`}>
+                <span className="label-text">Todos</span>
+                <input
+                  name="todos"
+                  id= "todos"
+                  type="checkbox"
+                  className="toggle toggle-success"
+                  checked={isChecked}
+                  onChange={toggleCheckbox}
+                />
+              </label>
+            </div>
               
               <Inputs
                 Titulo={"Tiene Acceso"}
@@ -145,7 +140,6 @@ function ModalAccesosUsuarios({
                 requerido={false}
                 tamañolabel={"w-full"}
                 className={"md:w-1/3 w-3/6"}
-                
               />
               <Inputs
                 Titulo={"Altas"}
@@ -155,7 +149,6 @@ function ModalAccesosUsuarios({
                 name={"altas"}
                 requerido={false}
                 className={"md:w-1/3 w-3/6"}
-               
               />
               <Inputs
                 Titulo={"Bajas"}
@@ -165,7 +158,6 @@ function ModalAccesosUsuarios({
                 name={"bajas"}
                 requerido={false}
                 className={"md:w-1/3 w-3/6"}
-               
               />
               <Inputs
                 Titulo={"Cambios"}
@@ -175,7 +167,6 @@ function ModalAccesosUsuarios({
                 name={"cambios"}
                 requerido={false}
                 className={"md:w-1/3 w-3/6"}
-                
               />
               <Inputs
                 Titulo={"Impresion"}
@@ -185,81 +176,7 @@ function ModalAccesosUsuarios({
                 name={"impresion"}
                 requerido={false}
                 className={"md:w-1/3 w-3/6"}
-                
               />
-              
-              
-              
-              
-             {/* <Inputs
-                Titulo={"Todos"}
-                register={register}
-                errors={errors}
-                message={"todo Requerido"}
-                name={"todos"}
-                requerido={false}
-                tamañolabel={"w-full"}
-                className={"md:w-1/3 w-3/6"}
-                value={accesoUsuario.todos}
-                onChange={(e) => setTodos("todos", e.target.checked)}
-              />
-              <Inputs
-                Titulo={"Tiene Acceso"}
-                register={register}
-                errors={errors}
-                message={"T_A Requerido"}
-                name={"t_a"}
-                requerido={false}
-                tamañolabel={"w-full"}
-                className={"md:w-1/3 w-3/6"}
-                value={accesoUsuario.t_a}
-                onChange={(e) => handleToggleChange("t_a", e.target.checked)}
-              />
-              <Inputs
-                Titulo={"Altas"}
-                register={register}
-                errors={errors}
-                message={"Altas Requerido"}
-                name={"altas"}
-                requerido={false}
-                className={"md:w-1/3 w-3/6"}
-                value={accesoUsuario.altas}
-                onChange={(e) => handleToggleChange("altas", e.target.checked)}
-               
-              />
-              <Inputs
-                Titulo={"Bajas"}
-                register={register}
-                errors={errors}
-                message={"Baja Requerido"}
-                name={"bajas"}
-                requerido={false}
-                className={"md:w-1/3 w-3/6"}
-                value={accesoUsuario.bajas}
-                onChange={(e) => handleToggleChange("bajas", e.target.checked)}
-              />
-              <Inputs
-                Titulo={"Cambios"}
-                register={register}
-                errors={errors}
-                message={"Cambios Requerido"}
-                name={"cambios"}
-                requerido={false}
-                className={"md:w-1/3 w-3/6"}
-                value={accesoUsuario.cambios}
-                onChange={(e) => handleToggleChange("cambios", e.target.checked)}
-              />
-              <Inputs
-                Titulo={"Impresion"}
-                register={register}
-                errors={errors}
-                message={"Impresion Requerido"}
-                name={"impresion"}
-                requerido={false}
-                className={"md:w-1/3 w-3/6"}
-                value={accesoUsuario.impresion}
-                onChange={(e) => handleToggleChange("impresion", e.target.checked)}
-              />*/}
             </div>
           </fieldset>
         </form>
