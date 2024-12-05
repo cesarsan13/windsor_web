@@ -110,8 +110,8 @@ function TablaFormFact({
                 />
                 <ActionButton
                   tooltip="A. Formato"
-                  iconDark={iconos.eliminar}
-                  iconLight={iconos.eliminar_w}
+                  iconDark={iconos.actualizar_formato}
+                  iconLight={iconos.actualizar_formato_w}
                   onClick={(evt) => tableAction(evt, item, "ActualizaFormato")}
                   permission={permiso_cambio}
                 />
