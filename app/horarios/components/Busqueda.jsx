@@ -65,7 +65,7 @@ function Busqueda({
             ><Image src={iconos.eliminar} alt="Bajas"  className="block dark:hidden"></Image>
             <Image src={iconos.eliminar_w} alt="Bajas" className="hidden dark:block"></Image>
             </button>
-            <span className=" text-lg font-xthin text-black hidden sm:inline">Bajas</span>
+            <span className=" text-lg font-xthin dark:text-neutral-200 text-neutral-600 hidden sm:inline">Bajas</span>
           </label>
         </div>
       </div>
