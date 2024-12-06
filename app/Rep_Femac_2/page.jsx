@@ -42,8 +42,8 @@ function AlumnosPorClase() {
       const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
       const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado)
       setPermissions(permisos);
-      const data = await getRepDosSel(token, horario1, horario2, sOrdenar);
-      setFormaRepDosSel(data.data);
+      //const data = await getRepDosSel(token, horario1, horario2, sOrdenar);
+      //setFormaRepDosSel(data.data);
       setisLoading(false);
     };
     fetchData();
@@ -101,7 +101,7 @@ function AlumnosPorClase() {
     ssetordenar(event.target.value);
   };
 
-  const handleVerClick = () => {
+  const handleVerClick = async () => {
     setAnimateLoading(true);
     cerrarModalVista();
     if (horario1.numero === undefined) {
@@ -117,13 +117,16 @@ function AlumnosPorClase() {
         document.getElementById("modalVPAlumnosPorClase").close();
       }, 500);
     } else {
+      const data = await getRepDosSel(session.user.token, horario1, horario2, sOrdenar);
+      setFormaRepDosSel(data.data);
+
       const configuracion = {
         Encabezado: {
           Nombre_Aplicacion: "Sistema de Control Escolar",
           Nombre_Reporte: "Reporte de Alumnos por clase",
           Nombre_Usuario: `Usuario: ${session.user.name}`,
         },
-        body: FormaRepDosSel,
+        body: data.data,
       };
       const reporte = new ReportePDF(configuracion, "Landscape");
       const { body } = configuracion;

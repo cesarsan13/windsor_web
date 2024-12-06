@@ -113,6 +113,7 @@ function AltasBajasAlumnos() {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte Altas Bajas de Alumnos por Periodo",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
+        Datos_Grupo: `Tipo: ${selectedOptionAB.toUpperCase()}`,
       },
       body: alumnosFiltrados,
     };
@@ -125,7 +126,8 @@ function AltasBajasAlumnos() {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte Altas Bajas de Alumnos por Periodo",
-        Nombre_Usuario: `Usuario: ${session.user.name}`,
+        Nombre_Usuario: `${session.user.name}`,
+        Clase: `Tipo: ${selectedOptionAB.toUpperCase()}`,
       },
       body: alumnosFiltrados,
       columns: [
@@ -166,6 +168,7 @@ function AltasBajasAlumnos() {
           Nombre_Aplicacion: "Sistema de Control Escolar",
           Nombre_Reporte: "Reporte Altas Bajas de Alumnos por Periodo",
           Nombre_Usuario: `Usuario: ${session.user.name}`,
+          Datos_Grupo: `Tipo: ${selectedOptionAB.toUpperCase()}`,
         },
         body: alumnosFiltrados,
       };
@@ -174,7 +177,7 @@ function AltasBajasAlumnos() {
       const { body } = configuracion;
       const Enca2 = (doc) => {
         if (!doc.tiene_encabezado) {
-          doc.imprimeEncabezadoPrincipalV();
+          doc.imprimeEncabezadoPrincipalVConcentradoCal();
           doc.nextRow(12);
           doc.ImpPosX("No", 15, doc.tw_ren);
           doc.ImpPosX("Nombre", 35, doc.tw_ren);

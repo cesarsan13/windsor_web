@@ -77,7 +77,7 @@ function AlumnosPorClase() {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte Relación General de Alumnos",
-        Nombre_Usuario: `Usuario: ${session.user.name}`,
+        Nombre_Usuario: `${session.user.name}`,
       },
       body: alumnosFiltrados,
       columns: [

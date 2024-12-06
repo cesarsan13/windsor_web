@@ -39,8 +39,8 @@ function Rep_Femac_13() {
       const { token, permissions } = session.user;
       const es_admin = session.user.es_admin;
       const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
-      const data = await getRepASem(token, horario, sOrdenar);
-      setFormaRepASem(data.data);
+      //const data = await getRepASem(token, horario, sOrdenar);
+      //setFormaRepASem(data.data);
       const permisos = permissionsComponents(
         es_admin,
         permissions,
@@ -60,7 +60,7 @@ function Rep_Femac_13() {
     router.push("/");
   };
 
-  const handleClickVer = () => {
+  const handleClickVer = async () => {
     setAnimateLoading(true);
     cerrarModalVista();
     if (horario.numero === undefined) {
@@ -76,13 +76,17 @@ function Rep_Femac_13() {
         document.getElementById("modalVPRepFemac13").close();
       }, 500);
     } else {
+
+      const data = await getRepASem(session.user.token, horario, sOrdenar);
+      setFormaRepASem(data.data);
+
       const configuracion = {
         Encabezado: {
           Nombre_Aplicacion: "Sistema de Control Escolar",
           Nombre_Reporte: "Lista de Alumnos por Clase Semanal",
           Nombre_Usuario: `Usuario: ${session.user.name}`,
         },
-        body: FormaRepASem,
+        body: data.data,
       };
       const reporte = new ReportePDF(configuracion);
       const { body } = configuracion;
@@ -292,7 +296,7 @@ function Rep_Femac_13() {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Lista de Alumnos por Clase Semanal",
-        Nombre_Usuario: `Usuario: ${session.user.name}`,
+        Nombre_Usuario: `${session.user.name}`,
         Clase: `Clase: ${horario.horario}`,
         Profesor: "Profesor: ",
         FechaE: `Fecha: ${fecha}`,
