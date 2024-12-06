@@ -30,7 +30,7 @@ export const getReportAltaBajaAlumno = async (
 
 const Enca1 = (doc) => {
   if (!doc.tiene_encabezado) {
-    doc.imprimeEncabezadoPrincipalV();
+    doc.imprimeEncabezadoPrincipalVConcentradoCal();
     doc.nextRow(12);
     doc.ImpPosX("No", 15, doc.tw_ren);
     doc.ImpPosX("Nombre", 35, doc.tw_ren);

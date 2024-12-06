@@ -42,8 +42,8 @@ function Rep_Femac_3() {
       const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado)
       setPermissions(permisos);
       setToken(token);
-      const data = await getAlumnosPorMes(token, horario, sOrdenar);
-      setFormaRepDosSel(data.data);
+      //const data = await getAlumnosPorMes(token, horario, sOrdenar);
+      //setFormaRepDosSel(data.data);
       setisLoading(false);
     };
     fetchData();
@@ -70,7 +70,7 @@ function Rep_Femac_3() {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte de Alumnos por clase mensual",
-        Nombre_Usuario: `Usuario: ${session.user.name}`,
+        Nombre_Usuario: `${session.user.name}`,
       },
       body: FormaRepDosSel,
       columns: [
@@ -89,7 +89,7 @@ function Rep_Femac_3() {
     ssetordenar(event.target.value);
   };
 
-  const handleVerClick = () => {
+  const handleVerClick = async () => {
     setAnimateLoading(true);
     cerrarModalVista();
     if (horario.numero === undefined) {
@@ -105,13 +105,17 @@ function Rep_Femac_3() {
         document.getElementById("modalVPRepFemac3").close();
       }, 500);
     } else {
+
+      const data = await getAlumnosPorMes(session.user.token, horario, sOrdenar);
+      setFormaRepDosSel(data.data);
+
       const configuracion = {
         Encabezado: {
           Nombre_Aplicacion: "Lista de Alumnos por clase mensual",
           Nombre_Reporte: "Reporte de Alumnos",
           Nombre_Usuario: `Usuario: ${session.user.name}`,
         },
-        body: FormaRepDosSel,
+        body: data.data,
       };
 
       const reporte = new ReportePDF(configuracion, "Portrait");
@@ -283,8 +287,8 @@ function Rep_Femac_3() {
                     <input
                       type="radio"
                       name="options"
-                      value="id"
-                      checked={sOrdenar === "id"}
+                      value="numero"
+                      checked={sOrdenar === "numero"}
                       onChange={handleCheckChange}
                       className="radio checked:bg-blue-500"
                     />
