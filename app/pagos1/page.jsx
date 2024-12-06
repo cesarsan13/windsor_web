@@ -106,6 +106,7 @@ function Pagos_1() {
     reset: resetImpr,
     handleSubmit: handleSumbitImpr,
     formState: { errors: errorsImpr },
+    setValue: setValueImpr,
   } = useForm({
     defaultValues: {
       pago: formaPagoPage.pago,
@@ -523,12 +524,31 @@ function Pagos_1() {
         if (res.status) {
           res2 = await guardarDocumento(token, newData);
           if (res2.status) {
+            const data2 = res2.data;
+            const pagosActualizados = pagosFiltrados.map(pago =>
+              pago.numero_producto === newData.producto
+                ? {
+                  ...pago, precio_base: formatNumber(data2.importe), neto: formatNumber(data2.importe), total: formatNumber(data2.importe),
+                }
+                : pago
+            );
+            const fTotal = Elimina_Comas(h1Total);
+            const dTotal = Elimina_Comas(Monto_Pago);
+            let restaTotal = fTotal - dTotal;
+            if (!restaTotal) {
+              restaTotal = "0";
+            };
+            setH1Total(formatNumber(restaTotal));
+            setPagosFiltrados(pagosActualizados);
             showSwal(res2.alert_title, res2.alert_text, res2.alert_icon);
             setValue("monto_parcial", "");
             setValue("clave_acceso", "");
             showModal("modal_parciales", false);
             setSelectedRow(null);
             setSelectedTable({});
+            handleSubmit(async () => {
+              await datosImpresion(Monto_Pago, data);
+            })();
           } else {
             showSwal(res2.alert_title, res2.alert_text, res2.alert_icon);
             setSelectedRow(null);
@@ -613,10 +633,14 @@ function Pagos_1() {
       setMuestraImpresion(false);
       return;
     }
+    await datosImpresion(h1Total, data);
+  };
+
+  const datosImpresion = async (total, data) => {
     let dataP = await buscaPropietario(session.user.token, 1);
     const formaPagoFind = formaPago.find((forma) => forma.numero === 1);
     const newData = {
-      pago: h1Total || 0,
+      pago: total || 0,
       recibo: dataP.con_recibos || 0,
       forma_pago_id: formaPagoFind.numero || 0,
       comentario_ad: data.comentarios || "",
@@ -625,7 +649,7 @@ function Pagos_1() {
     setformaPagoPage(newData);
     setMuestraImpresion(false);
     showModal("my_modal_4", true);
-  };
+  }
 
   const BuscaArticulo = async (numero) => {
     let res;
