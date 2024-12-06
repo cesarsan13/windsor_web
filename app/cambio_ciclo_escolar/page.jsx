@@ -37,12 +37,10 @@ function Cambio_Ciclo_Escolar() {
         session.user.id,
         menu_seleccionado
       );
-      setPermissions(permisos);
-      console.log(data);
+      setPermissions(permisos);      
     };
     fetchData();
-  }, [session, status]);
-  console.log("ciclo escolar:", cicloEscolar);
+  }, [session, status]);  
   const {
     register,
     handleSubmit,

@@ -165,10 +165,7 @@ function Clases() {
     });
     setModal(!openModal);
     setAccion("Alta");
-    showModal(true);
-    console.log("Materia: ",materia);
-    console.log("Profesor: ",profesor);
-    console.log("Grado: ",grado);
+    showModal(true);    
     // setMateria({numero:"",descripcion:""});
     // setProfesor({numero:"",nombre:""});
     // setGrado({numero:"",horario:""});
@@ -176,10 +173,7 @@ function Clases() {
     // Forzar un renderizado
     setMateria({});
     setProfesor({});
-    setGrado({});
-    console.log("2Materia: ",materia);
-    console.log("2Profesor: ",profesor);
-    console.log("2Grado: ",grado);
+    setGrado({});    
     document.getElementById("lunes").focus();
   };
 
@@ -190,8 +184,7 @@ function Clases() {
 };
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault();
-    if (!currentID) {
-      // console.log("Clases: ",clases);
+    if (!currentID) {      
       const claseExistente = clases.find(
         (clase) =>
           clase.grupo === data.grupo &&
