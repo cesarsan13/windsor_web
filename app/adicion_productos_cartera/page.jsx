@@ -29,9 +29,12 @@ function Adicion_Productos_Cartera() {
             const {permissions} = session.user;
             const es_admin = session.user.es_admin;
             const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
-            const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado)
+            const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado)            
             setPermissions(permisos);
         }
+        if (status === "loading" || !session) {
+            return;
+          }
         fetchData();
     }, [session]);
     
@@ -145,7 +148,7 @@ function Adicion_Productos_Cartera() {
                                 BRef={ActRef}
                                 Bproceso={onSubmitProceso}
                                 home={home}
-                                permiso_alta={permissions.alta}
+                                permiso_alta={permissions.altas}
                             />
                         </div>
 
