@@ -84,20 +84,16 @@ function C_Calificaciones() {
   ]);
 
   const handlBimestreChange = (event) => {
-    setBimestreSelected(event.target.value);
-    // console.log("Nuevo valor de bimestre:", event.target.value);
+    setBimestreSelected(event.target.value);    
   };
   const handlEvalChange = (event) => {
-    setEvaluacionSelected(event.target.value);
-    // console.log("Nuevo valor de eval:", event.target.value);
+    setEvaluacionSelected(event.target.value);    
   };
   const handlActividadesChange = (event) => {
-    setActividadesSelected(event.target.value);
-    // console.log("Nuevo valor de actividad:", event.target.value);
+    setActividadesSelected(event.target.value);    
   };
   const handlAsignaturaChange = (event) => {
     setAsignaturaSelected(event.target.value);
-    // console.log("Nuevo valor de asignatura:", event.target.value);
   };
 
   useEffect(() => {

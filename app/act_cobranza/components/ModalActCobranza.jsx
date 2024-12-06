@@ -17,8 +17,7 @@ function ModalActCobranza({
 }) {
     const [error, setError] = useState(null);
     const [titulo, setTitulo] = useState("");
-    const [isDisabled, setIsDisabled] = useState(true);
-    console.log("documento", documento)
+    const [isDisabled, setIsDisabled] = useState(true);    
     useEffect(() => {
         if (accion === "Eliminar" || accion === "ver") {
             setIsDisabled(true)
