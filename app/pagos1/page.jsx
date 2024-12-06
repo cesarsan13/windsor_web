@@ -528,12 +528,12 @@ function Pagos_1() {
             const pagosActualizados = pagosFiltrados.map(pago =>
               pago.numero_producto === newData.producto
                 ? {
-                  ...pago, precio_base: formatNumber(data2.importe), neto: formatNumber(data2.importe), total: formatNumber(data2.importe),
+                  ...pago, precio_base: formatNumber(Monto_Pago), neto: formatNumber(Monto_Pago), total: formatNumber(Monto_Pago),
                 }
                 : pago
             );
             const fTotal = Elimina_Comas(h1Total);
-            const dTotal = Elimina_Comas(Monto_Pago);
+            const dTotal = Elimina_Comas(data2.importe);
             let restaTotal = fTotal - dTotal;
             if (!restaTotal) {
               restaTotal = "0";
@@ -547,7 +547,7 @@ function Pagos_1() {
             setSelectedRow(null);
             setSelectedTable({});
             handleSubmit(async () => {
-              await datosImpresion(Monto_Pago, data);
+              await datosImpresion(data2.importe, data);
             })();
           } else {
             showSwal(res2.alert_title, res2.alert_text, res2.alert_icon);
