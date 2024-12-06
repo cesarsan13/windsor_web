@@ -89,7 +89,7 @@ function ModalActCobranza({
                                 array={documento.producto}
                                 accion={accion}
                                 alignRight={true}
-                                deshabilitado={accion === "Editar" ||accion === "Eliminar"}
+                                deshabilitado={accion === "Ver" ||accion === "Eliminar" || accion === "Editar"}
                             ></BuscarCat>
                             <Inputs
                                 dataType={"int"}
@@ -101,7 +101,7 @@ function ModalActCobranza({
                                 errors={errors}
                                 register={register}
                                 message={"documento Requerido"}
-                                isDisabled={isDisabled || accion === "Editar"}
+                                isDisabled={isDisabled || accion === "Editar" || accion === "Ver"}
                             />
                             <Inputs
                                 dataType={"string"}
@@ -114,7 +114,7 @@ function ModalActCobranza({
                                 errors={errors}
                                 register={register}
                                 message={"Fecha Requerido"}
-                                isDisabled={isDisabled || accion === "Editar"}
+                                isDisabled={isDisabled || accion === "Editar" || accion === "Ver"}
                             />
                             <Inputs
                                 dataType={"float"}
@@ -126,7 +126,7 @@ function ModalActCobranza({
                                 errors={errors}
                                 register={register}
                                 message={"importe Requerido"}
-                                isDisabled={isDisabled}
+                                isDisabled={isDisabled || accion === "Ver"}
                                 handleBlur={handleBlur}
                                 requerido={true}
                                 onClick={handleInputClick}
@@ -141,7 +141,7 @@ function ModalActCobranza({
                                 errors={errors}
                                 register={register}
                                 message={"descuento Requerido"}
-                                isDisabled={isDisabled}
+                                isDisabled={isDisabled || accion === "Ver"}
                                 handleBlur={handleBlur}
                                 requerido={false}
                                 onClick={handleInputClick}
