@@ -18,6 +18,7 @@ export const getreportAlumn = async (token, baja, tipoOrden, alumnos1, alumnos2)
       "Content-Type": "application/json"
     } 
   })
+
   const resJson = await res.json();
   return resJson.data;
 }

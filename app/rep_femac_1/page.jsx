@@ -48,14 +48,14 @@ function AlumnosPorClase() {
       const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
       const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado)
       setPermissions(permisos);
-      const data = await getreportAlumn(
-        token,
-        bajas,
-        selectedOption,
-        alumno1V,
-        alumno2V
-      );
-      setAlumnosFiltrados(data);
+      //const data = await getreportAlumn(
+      //  token,
+      //  bajas,
+      //  selectedOption,
+      //  alumno1V,
+      //  alumno2V
+      //);
+      //setAlumnosFiltrados(data);
     };
     fetchData();
   }, [session, status, bajas, selectedOption, alumno1V, alumno2V]);
@@ -113,13 +113,22 @@ function AlumnosPorClase() {
         //document.getElementById("modalVRep6").close();
       }, 500);
     } else {
+      const data = await getreportAlumn(
+        session.user.token,
+        bajas,
+        selectedOption,
+        alumno1V,
+        alumno2V
+      );
+      setAlumnosFiltrados(data);
+
       const configuracion = {
         Encabezado: {
           Nombre_Aplicacion: "Sistema de Control Escolar",
           Nombre_Reporte: "Reporte Relación General de Alumnos",
           Nombre_Usuario: `Usuario: ${session.user.name}`,
         },
-        body: alumnosFiltrados,
+        body: data,
       };
 
       const newPDF = new ReportePDF(configuracion, "Portrait");

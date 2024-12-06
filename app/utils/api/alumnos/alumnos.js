@@ -59,9 +59,12 @@ export const guardarAlumnos = async (token, formData, accion, numero) => {
   }
   if (accion === "Eliminar" || accion === "Editar") {
     if (accion === "Eliminar") {
+      let fecha_hoy = new Date();
       formData.append("baja", "*");
+      formData.append("fecha_baja", format_Fecha_String(fecha_hoy.toISOString().split("T")[0]));
     } else {
       formData.append("baja", "n");
+      formData.append("fecha_baja", " ");
     }
     url = `${process.env.DOMAIN_API}api/students/update/${numero}`;
   }
