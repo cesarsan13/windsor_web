@@ -75,9 +75,9 @@ function TablaDocumentosCobranza({
                 permission={permiso_baja}
               />
               <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Producto</td>
-              <td className="w-[60%] pt-[.10rem] pb-[.10rem]">Descripción</td>
+              <td className="w-[50%] pt-[.10rem] pb-[.10rem]">Descripción</td>
               <td className="w-[10%] pt-[.10rem] pb-[.10rem]">Documento</td>
-              <td className="w-[60%] pt-[.10rem] pb-[.10rem]">Fecha</td>
+              <td className="w-[80%] pt-[.10rem] pb-[.10rem]">Fecha</td>
               <td className="w-[40%] pt-[.10rem] pb-[.10rem]">Importe</td>
               <td className="w-[40%] pt-[.10rem] pb-[.10rem]">Desc</td>
               <td className="w-[40%] pt-[.10rem] pb-[.10rem]">F. Pago</td>
