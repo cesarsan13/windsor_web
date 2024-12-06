@@ -14,52 +14,46 @@ import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import { formatDate, permissionsComponents } from "../utils/globalfn";
 
 function Adicion_Productos_Cartera() {
-  const router = useRouter();
-  const { data: session, status } = useSession();
-  const [articulo, setArticulos] = useState("");
-  const [cond_ant, setCondAnt] = useState("");
-  const [isLoading, setisLoading] = useState(false);
-  const [isLoading2, setisLoading2] = useState(false);
-  const [permissions, setPermissions] = useState({});
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = String(today.getMonth() + 1).padStart(2, "0");
-  const dd = String(today.getDate()).padStart(2, "0");
-  const date = `${yyyy}-${mm}-${dd}`;
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const { permissions } = session.user;
-      const es_admin = session.user.es_admin;
-      const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
-      const permisos = permissionsComponents(
-        es_admin,
-        permissions,
-        session.user.id,
-        menu_seleccionado
-      );
-      setPermissions(permisos);
-    };
-    if (status === "loading" || !session) {
-      return;
-    }
-
-    fetchData();
-  }, [session, status]);
-
-  const {
-    register,
-    handleSubmit,
-    watch,
-    reset,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      fecha: date,
-      periodo: 0,
-      cond_1: 0,
-    },
-  });
+    const router = useRouter();
+    const { data: session, status } = useSession();
+    const [articulo, setArticulos] = useState("");
+    const [cond_ant, setCondAnt] = useState("");
+    const [isLoading, setisLoading] = useState(false);
+    const [isLoading2, setisLoading2] = useState(false);
+    const [permissions, setPermissions] = useState({});
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    const date = `${yyyy}-${mm}-${dd}`;
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            const {permissions} = session.user;
+            const es_admin = session.user.es_admin;
+            const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
+            const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado)            
+            setPermissions(permisos);
+        }
+        if (status === "loading" || !session) {
+            return;
+          }
+        fetchData();
+    }, [session]);
+    
+    const {
+        register,
+        handleSubmit,
+        watch,
+        reset,
+        formState: { errors },
+    } = useForm({
+        defaultValues: {
+            fecha: date,
+            periodo: 0,
+            cond_1:0
+        },
+    });
 
   const ActRef = handleSubmit(async (data) => {
     const { token } = session.user;
@@ -132,26 +126,26 @@ function Adicion_Productos_Cartera() {
     router.push("/");
   };
 
-  if (status === "loading") {
+    if (status === "loading") {
+        return (
+            <div className="container skeleton w-full max-w-screen-xl shadow-xl rounded-xl"></div>
+        );
+    }
     return (
-      <div className="container skeleton w-full max-w-screen-xl shadow-xl rounded-xl"></div>
-    );
-  }
-  return (
-    <>
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
-        <div className="flex flex-col justify-start p-3">
-          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
-            <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
-              <Acciones
-                isLoadingRef={isLoading}
-                isLoadingProc={isLoading2}
-                BRef={ActRef}
-                Bproceso={onSubmitProceso}
-                home={home}
-                permiso_alta={permissions.altas}
-              />
-            </div>
+        <>
+            <div className='container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden'>
+                <div className='flex flex-col justify-start p-3'>
+                    <div className='flex flex-wrap md:flex-nowrap items-start md:items-center'>
+                        <div className='order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0'>
+                            <Acciones
+                                isLoadingRef={isLoading}
+                                isLoadingProc={isLoading2}
+                                BRef={ActRef}
+                                Bproceso={onSubmitProceso}
+                                home={home}
+                                permiso_alta={permissions.altas}
+                            />
+                        </div>
 
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Proceso de Adición a Cobranza.
