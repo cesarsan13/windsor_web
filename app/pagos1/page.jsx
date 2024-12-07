@@ -100,6 +100,7 @@ function Pagos_1() {
     },
   });
   const cantidad_producto = watch("cantidad_producto");
+  const fecha = watch("fecha");
 
   const {
     register: registerImpr,
@@ -525,11 +526,14 @@ function Pagos_1() {
           res2 = await guardarDocumento(token, newData);
           if (res2.status) {
             const data2 = res2.data;
-            const pagosActualizados = pagosFiltrados.map(pago =>
+            const pagosActualizados = pagosFiltrados.map((pago) =>
               pago.numero_producto === newData.producto
                 ? {
-                  ...pago, precio_base: formatNumber(Monto_Pago), neto: formatNumber(Monto_Pago), total: formatNumber(Monto_Pago),
-                }
+                    ...pago,
+                    precio_base: formatNumber(Monto_Pago),
+                    neto: formatNumber(Monto_Pago),
+                    total: formatNumber(Monto_Pago),
+                  }
                 : pago
             );
             const fTotal = Elimina_Comas(h1Total);
@@ -537,7 +541,7 @@ function Pagos_1() {
             let restaTotal = fTotal - dTotal;
             if (!restaTotal) {
               restaTotal = "0";
-            };
+            }
             setH1Total(formatNumber(restaTotal));
             setPagosFiltrados(pagosActualizados);
             showSwal(res2.alert_title, res2.alert_text, res2.alert_icon);
@@ -547,7 +551,7 @@ function Pagos_1() {
             setSelectedRow(null);
             setSelectedTable({});
             handleSubmit(async () => {
-              await datosImpresion(data2.importe, data);
+              await datosImpresion(data.monto_parcial, data);
             })();
           } else {
             showSwal(res2.alert_title, res2.alert_text, res2.alert_icon);
@@ -649,7 +653,7 @@ function Pagos_1() {
     setformaPagoPage(newData);
     setMuestraImpresion(false);
     showModal("my_modal_4", true);
-  }
+  };
 
   const BuscaArticulo = async (numero) => {
     let res;
