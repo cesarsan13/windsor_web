@@ -25,12 +25,22 @@ function Cambio_Numero_Alumno() {
         },
     });
 
+    useEffect(() => {
+        const fetchData = async () => {
+            const { token, permissions } = session.user;
+            const es_admin = session.user.es_admin;
+            const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
+            const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado)
+            setPermissions(permisos);
+        }
+        if (status === "loading" || !session) {
+            return;
+          }
+        fetchData();
+    }, [session, status])
+
     const onSubmit = handleSubmit(async (data) => {
         let { token, permissions } = session.user;
-        const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-        const es_admin = session.user.es_admin;
-        const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
-        setPermissions(permisos)
         if (!alumno.numero) {
             showSwal("Error", "Debe seleccionar un alumno para continuar.", "error");
             return;
