@@ -8,7 +8,6 @@ export const getRelaciondeFacturas = async (token, tomaFecha, tomaCanceladas, fe
     factura_ini = (factura_ini === '' || factura_ini === undefined) ? 0 : factura_ini;
     factura_fin = (factura_fin === '' || factura_fin === undefined) ? 0 : factura_fin;
 
-    console.log(tomaFecha, tomaCanceladas, fecha_cobro_ini, fecha_cobro_fin, factura_ini, factura_fin);
     let url = `${process.env.DOMAIN_API}api/reportes/rep_femac_9_anexo_4`
     const res = await fetch(url, {
         method: "post",
@@ -186,9 +185,9 @@ export const ImprimirExcel = (configuracion) => {
             reciboI: recibo,
             fechapI: fecha,
             nombreI: razon_social_cambio,
-            subtotalI: total_importe.toFixed(2),
+            subtotalI: formatNumber(total_importe),
             ivaI: `${ivaimp} %`,
-            totalI: sub_total.toFixed(2)
+            totalI: formatNumber(sub_total)
         });
 
         total_general = total_general + sub_total;
@@ -200,7 +199,7 @@ export const ImprimirExcel = (configuracion) => {
         nombreI: '',
         subtotalI: '',
         ivaI: 'TOTAL IMPORTE',
-        totalI: total_general.toFixed(2)
+        totalI: formatNumber(total_general)
     });
     newExcel.setColumnas(columns);
     newExcel.addData(newBody);
@@ -210,7 +209,7 @@ export const ImprimirExcel = (configuracion) => {
       .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
     const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
     const timeStr = formatTime(date).replace(/:/g, "");
-    newExcel.guardaReporte(`${nombre}${dateStr}${timeStr}`);
+    newExcel.guardaReporte(`${nombre}_${dateStr}${timeStr}`);
 };
 
 

@@ -1,7 +1,7 @@
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
 import { calculaDigitoBvba, format_Fecha_String } from "../../globalfn";
-import { formatDate, formatTime, formatFecha } from "../../globalfn";
+import { formatDate, formatTime, formatFecha, formatNumber } from "../../globalfn";
 
 
 export const getReporteCobranzaporAlumno = async (token, fecha_ini, fecha_fin, alumno_ini,
@@ -67,7 +67,7 @@ const Enca1 = (doc, fecha_ini, fecha_fin, cajero_ini, cajero_fin, tomaFechas) =>
     }
     
     doc.ImpPosX("No.",15,doc.tw_ren),
-    doc.ImpPosX("Nombre",50,doc.tw_ren),
+    doc.ImpPosX("Nombre",40,doc.tw_ren),
     doc.nextRow(5);
     doc.ImpPosX("Producto",15,doc.tw_ren),
     doc.ImpPosX("Descripcion",30,doc.tw_ren),
@@ -95,18 +95,18 @@ export const ImprimirPDF = (configuracion, fecha_ini, fecha_fin, cajero_ini, caj
   const { body } = configuracion;
   const F_fecha_ini = format_Fecha_String(fecha_ini)
   const F_fecha_fin = format_Fecha_String(fecha_fin)
-  console.log("Body => ",body)
     let alumno_Ant = "";
     let total_importe = 0;
     let total_general = 0;
   
     const Cambia_Alumno = (doc, total_importe) => {
-        doc.ImpPosX(`TOTAL: ${total_importe.toString()}` || '', 97, doc.tw_ren);
+        doc.ImpPosX(`TOTAL: ${formatNumber(total_importe)}` || '', 122, doc.tw_ren, 0, "R");
         doc.nextRow(8);
     }
   
     Enca1(newPDF,F_fecha_ini, F_fecha_fin, cajero_ini, cajero_fin, tomaFechas);
     body.forEach((reporte2) => {
+        newPDF.setFontSize(9)
         let tipoPago2 = " ";
         let nombre = " ";
   
@@ -129,21 +129,20 @@ export const ImprimirPDF = (configuracion, fecha_ini, fecha_fin, cajero_ini, caj
         }
   
         if(reporte2.id_al !== alumno_Ant && reporte2.id_al != null){
-          newPDF.ImpPosX(reporte2.id_al +"-"+ calculaDigitoBvba(reporte2.id_al.toString()),15, newPDF.tw_ren, 0, "R");
-            newPDF.ImpPosX(reporte2.nom_al,50, newPDF.tw_ren, 0 , "L");
+          newPDF.ImpPosX(reporte2.id_al +"-"+ calculaDigitoBvba(reporte2.id_al.toString()),25, newPDF.tw_ren, 0, "R");
+            newPDF.ImpPosX(reporte2.nom_al,40, newPDF.tw_ren, 0 , "L");
             Enca1(newPDF);
             if (newPDF.tw_ren >= newPDF.tw_endRen) {
               newPDF.pageBreak();
                 Enca1(newPDF);
             }
         }
-        newPDF.setFontSize(8)
         newPDF.ImpPosX(reporte2.articulo.toString(),15, newPDF.tw_ren, 0 , "L");
         newPDF.ImpPosX(reporte2.descripcion.toString(),30, newPDF.tw_ren, 0 , "L");
         // newPDF.ImpPosX(reporte2.numero_doc.toString(),70, newPDF.tw_ren, 0 , "R");
         newPDF.ImpPosX(reporte2.numero_doc.toString(),87, newPDF.tw_ren, 0 , "R");
         newPDF.ImpPosX(reporte2.fecha.toString(),90, newPDF.tw_ren, 0 , "L");
-        newPDF.ImpPosX(reporte2.importe.toString(),122, newPDF.tw_ren, 0 , "R");
+        newPDF.ImpPosX(formatNumber(reporte2.importe),122, newPDF.tw_ren, 0 , "R");
         newPDF.ImpPosX(reporte2.recibo.toString(),140, newPDF.tw_ren, 0 , "R");
         newPDF.ImpPosX(reporte2.desc_Tipo_Pago_1.toString(),143, newPDF.tw_ren, 0 , "L");
         newPDF.ImpPosX(tipoPago2.toString(),163, newPDF.tw_ren, 0 , "L");
@@ -160,7 +159,7 @@ export const ImprimirPDF = (configuracion, fecha_ini, fecha_fin, cajero_ini, caj
     });
     Cambia_Alumno(newPDF, total_importe);
     
-    newPDF.ImpPosX(`TOTAL IMPORTE: ${total_general}` || '', 80, newPDF.tw_ren, 0 , "R");
+    newPDF.ImpPosX(`TOTAL IMPORTE: ${formatNumber(total_general)}` || '', 122, newPDF.tw_ren, 0 , "R");
     const date = new Date();
     const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
       .toString()
@@ -227,7 +226,7 @@ export const ImprimirExcel = (configuracion) =>{
       descripcion: imp.descripcion,
       numero_doc: imp.numero_doc,
       fecha: imp.fecha,
-      importe: imp.importe,
+      importe: formatNumber(imp.importe),
       recibo: imp.recibo,
       desc_Tipo_Pago_1: imp.desc_Tipo_Pago_1,
       desc_Tipo_Pago_2: tipoPago2,
@@ -246,7 +245,7 @@ export const ImprimirExcel = (configuracion) =>{
     descripcion: "",
     numero_doc: "",
     fecha: "TOTAL GENERAL",
-    importe: total_general,
+    importe: formatNumber(total_general),
     recibo: "",
     desc_Tipo_Pago_1: "",
     desc_Tipo_Pago_2: "",
@@ -259,7 +258,7 @@ export const ImprimirExcel = (configuracion) =>{
     .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
   const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
   const timeStr = formatTime(date).replace(/:/g, "");
-  newExcel.guardaReporte(`${nombre}${dateStr}${timeStr}`);
+  newExcel.guardaReporte(`${nombre}_${dateStr}${timeStr}`);
 };
 
 const Cambia_Alumno_Excel = (total_importe, data) => {
@@ -268,7 +267,7 @@ const Cambia_Alumno_Excel = (total_importe, data) => {
     descripcion: "",
     numero_doc: "",
     fecha: "TOTAL",
-    importe: total_importe,
+    importe: formatNumber(total_importe),
     recibo: "",
     desc_Tipo_Pago_1: "",
     desc_Tipo_Pago_2: "",

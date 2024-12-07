@@ -79,7 +79,7 @@ export const ImprimirPDF = (configuracion, fecha_ini, fecha_fin, tomaFechas) =>{
   let total_general = 0;
 
   const Cambia_Alumno = (doc, total_importe) => {
-      doc.ImpPosX(`TOTAL: ${formatNumber(total_importe)}` || "", 157, doc.tw_ren, 0, "R");
+      doc.ImpPosX(`TOTAL: ${formatNumber(total_importe)}` || "", 176, doc.tw_ren, 0, "R");
       doc.nextRow(8);
   }
 
@@ -137,6 +137,7 @@ export const ImprimirPDF = (configuracion, fecha_ini, fecha_fin, tomaFechas) =>{
 
       Enca1(newPDF,F_fecha_ini, F_fecha_fin, tomaFechas);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
+
       newPDF.pageBreak();
       Enca1(newPDF,F_fecha_ini, F_fecha_fin, tomaFechas);
     }
@@ -147,9 +148,15 @@ export const ImprimirPDF = (configuracion, fecha_ini, fecha_fin, tomaFechas) =>{
   Cambia_Alumno(newPDF, total_importe);
   
   newPDF.ImpPosX(`TOTAL IMPORTE: ${formatNumber(total_general)}` || "",
-      157, newPDF.tw_ren, 0, "R"
+      176, newPDF.tw_ren, 0, "R"
     );
-  newPDF.guardaReporte(`Reporte Estado de Cuenta del dia ${F_fecha_ini} al ${F_fecha_fin}`)
+    const date = new Date();
+    const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+    const timeStr = formatTime(date).replace(/:/g, "");
+  newPDF.guardaReporte(`Reporte Estado de Cuenta del dia ${F_fecha_ini} al ${F_fecha_fin}_${dateStr}${timeStr}`)
 };
 
 export const ImprimirExcel = (configuracion) =>{
@@ -226,7 +233,15 @@ export const ImprimirExcel = (configuracion) =>{
     recibo: "",
   });
   newExcel.addData(data1);
-  newExcel.guardaReporte(nombre);
+
+  const date = new Date();
+    const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+    const timeStr = formatTime(date).replace(/:/g, "");
+
+  newExcel.guardaReporte(`${nombre}_${dateStr}${timeStr}`);
 };
 
 const Cambia_Alumno_Excel = (total_importe, data) => {

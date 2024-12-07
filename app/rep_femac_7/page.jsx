@@ -173,7 +173,7 @@ function Repo_Femac_7() {
     let saldoTotal = 0; // Inicializa saldoTotal a 0
     const data = await Documentos(token, fecha, grupoAlumno);
     const documentos = data.documentos;
-    const indeces = data.indeces;
+    const indeces = data.indeces;  
     const alumnos = data.alumnos;
     documentos.forEach((doc, index) => {
       grupo_act = doc.grupo;
@@ -233,7 +233,7 @@ function Repo_Femac_7() {
         }
 
         Enca1(reporte);
-        if (reporte.tw_ren >= reporte.tw_endRen) {
+        if (reporte.tw_ren >= reporte.tw_endRenH) {
           reporte.pageBreakH();
           Enca1(reporte);
         }

@@ -1,7 +1,7 @@
 import { calculaDigitoBvba } from "../../globalfn";
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
-import { formatDate, formatTime, formatFecha, format_Fecha_String } from "../../globalfn";
+import { formatDate, formatTime, formatFecha, format_Fecha_String, formatNumber } from "../../globalfn";
 
 
 export const getDetallePedido = async (
@@ -19,6 +19,7 @@ export const getDetallePedido = async (
       },
     }
   );
+  
   const resJson = await res.json();
   return resJson.data;
 };
@@ -114,15 +115,9 @@ export const ImprimirPDF = async (
         Enca1(newPDF);
       }
     }
-    newPDF.ImpPosX(
-      trabRep.alumno.toString() +
-      "-" +
-      calculaDigitoBvba(trabRep.alumno.toString()),
-      24,
-      newPDF.tw_ren,0,"R"
-    );
+    newPDF.ImpPosX(trabRep.alumno.toString() + "-" + calculaDigitoBvba(trabRep.alumno.toString()), 24, newPDF.tw_ren, 0, "R");
     newPDF.ImpPosX(trabRep.nombre.toString(), 38, newPDF.tw_ren,0,"L");
-    newPDF.ImpPosX(trabRep.importe.toString(), 138, newPDF.tw_ren,0,"R");
+    newPDF.ImpPosX(formatNumber(trabRep.importe), 138, newPDF.tw_ren,0,"R");
     newPDF.ImpPosX(trabRep.fecha.toString(), 168, newPDF.tw_ren,0,"L");
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
@@ -135,7 +130,7 @@ export const ImprimirPDF = async (
   });
   Cambia_Articulo(newPDF, tot_art);
   newPDF.ImpPosX("TOTAL General", 98, newPDF.tw_ren,0,"L");
-  newPDF.ImpPosX(total_general.toString(), 138, newPDF.tw_ren,0,"R");
+  newPDF.ImpPosX(formatNumber(total_general), 138, newPDF.tw_ren,0,"R");
   const date = new Date();
   const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
     .toString()
@@ -147,7 +142,7 @@ newPDF.guardaReporte(`Reporte_Cobranza_Producto_${dateStr}${timeStr}`);
 };
 const Cambia_Articulo = (doc, Total_Art) => {
   doc.ImpPosX("TOTAL", 108, doc.tw_ren,0,"L");
-  doc.ImpPosX(Total_Art.toString(), 138, doc.tw_ren,0,"R");
+  doc.ImpPosX(formatNumber(Total_Art), 138, doc.tw_ren,0,"R");
   doc.nextRow(4);
 };
 const Enca1 = (doc) => {
@@ -237,7 +232,7 @@ export const ImprimirExcel = async (
       alumno:
         trabRep.alumno + "-" + calculaDigitoBvba(trabRep.alumno.toString()),
       nombre: trabRep.nombre,
-      importe: trabRep.importe,
+      importe: formatNumber(trabRep.importe),
       fecha: trabRep.fecha,
     });
     // newExcel.addData(data1);
@@ -250,7 +245,7 @@ export const ImprimirExcel = async (
   data1.push({
     alumno: "",
     nombre: "Total General",
-    importe: total_general,
+    importe: formatNumber(total_general),
     fecha: "",
   });
   // newExcel.addData(data1);
@@ -268,7 +263,7 @@ const Cambia_Articulo_Excel = (tot_art, data) => {
   data.push({
     alumno: "",
     nombre: "Total",
-    importe: tot_art,
+    importe: formatNumber(tot_art),
     fecha: "",
   });
   data.push({

@@ -108,7 +108,6 @@ function RelaciondeFacturas() {
 
     const reporte = new ReportePDF(configuracion);
     const { body } = configuracion;
-    console.log("FormaRepRelaciondeFacturas=>",body);
     const Enca1 = (doc) => {
       if (!doc.tiene_encabezado) {
         doc.imprimeEncabezadoPrincipalV();
@@ -210,10 +209,10 @@ function RelaciondeFacturas() {
     reporte.nextRow(4);
     reporte.ImpPosX(
       `TOTAL IMPORTE: ${formatNumber(total_general)}` || "",
-      150,
+      198,
       reporte.tw_ren,
       0,
-      "L"
+      "R"
     );
 
     setTimeout(() => {

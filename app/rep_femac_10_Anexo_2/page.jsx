@@ -59,15 +59,15 @@ function EstadodeCuenta() {
       let { token, permissions } = session.user;
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const es_admin = session.user.es_admin;
-      const data = await getReporteEstadodeCuenta(
-        token,
-        fecha_ini,
-        fecha_fin,
-        alumno_ini.numero,
-        alumno_fin.numero,
-        tomaFechas
-      );
-      setFormaReporteEstadodeCuenta(data);
+      //const data = await getReporteEstadodeCuenta(
+      //  token,
+      //  fecha_ini,
+      //  fecha_fin,
+      //  alumno_ini.numero,
+      //  alumno_fin.numero,
+      //  tomaFechas
+      //);
+      //setFormaReporteEstadodeCuenta(data);
       const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
       setPermissions(permisos);
     };
@@ -90,16 +90,27 @@ function EstadodeCuenta() {
     router.push("/");
   };
 
-  const handleVerClick = () => {
+  const handleVerClick = async () => {
     setAnimateLoading(true);
     cerrarModalVista();
+
+    const data = await getReporteEstadodeCuenta(
+      session.user.token,
+      fecha_ini,
+      fecha_fin,
+      alumno_ini.numero,
+      alumno_fin.numero,
+      tomaFechas
+    );
+    setFormaReporteEstadodeCuenta(data);
+
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte Estado de Cuenta",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
-      body: FormaRepEstadodeCuenta,
+      body: data,
     };
 
     const reporte = new ReportePDF(configuracion);
