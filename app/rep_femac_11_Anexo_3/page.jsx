@@ -3,7 +3,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import Acciones from "./components/Acciones";
 import Inputs from "./components/Inputs";
-import { calculaDigitoBvba, formatDate } from "../utils/globalfn";
+import { calculaDigitoBvba, formatDate, formatNumber } from "../utils/globalfn";
 import { useForm } from "react-hook-form";
 import {
   getReporteCobranzaporAlumno,
@@ -64,17 +64,17 @@ function CobranzaPorAlumno() {
       let { token, permissions } = session.user;
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const es_admin = session.user.es_admin;
-      const data = await getReporteCobranzaporAlumno(
-        token,
-        fecha_ini,
-        fecha_fin,
-        alumno_ini.numero,
-        alumno_fin.numero,
-        cajero_ini.numero,
-        cajero_fin.numero,
-        tomaFechas
-      );
-      setFormaReporteCobranzaporAlumno(data);
+      //const data = await getReporteCobranzaporAlumno(
+      //  token,
+      //  fecha_ini,
+      //  fecha_fin,
+      //  alumno_ini.numero,
+      //  alumno_fin.numero,
+      //  cajero_ini.numero,
+      //  cajero_fin.numero,
+      //  tomaFechas
+      //);
+      //setFormaReporteCobranzaporAlumno(data);
       const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
       setPermissions(permisos)
     };
@@ -99,7 +99,7 @@ function CobranzaPorAlumno() {
     router.push("/");
   };
 
-  const handleVerClick = () => {
+  const handleVerClick = async () => {
     setAnimateLoading(true);
     cerrarModalVista();
     if (cajero_ini.numero === undefined) {
@@ -115,13 +115,26 @@ function CobranzaPorAlumno() {
         document.getElementById("modalVPRepFemac11Anexo3").close();
       }, 500);
     }else{
+
+      const data = await getReporteCobranzaporAlumno(
+        session.user.token,
+        fecha_ini,
+        fecha_fin,
+        alumno_ini.numero,
+        alumno_fin.numero,
+        cajero_ini.numero,
+        cajero_fin.numero,
+        tomaFechas
+      );
+      setFormaReporteCobranzaporAlumno(data);
+
       const configuracion = {
         Encabezado: {
           Nombre_Aplicacion: "Sistema de Control Escolar",
           Nombre_Reporte: "Reporte Cobranza por Alumno(s)",
           Nombre_Usuario: `Usuario: ${session.user.name}`,
         },
-        body: FormaRepCobranzaporAlumno,
+        body: data,
       };
   
       const reporte = new ReportePDF(configuracion);
@@ -165,7 +178,7 @@ function CobranzaPorAlumno() {
           }
   
           doc.ImpPosX("No.", 15, doc.tw_ren),
-          doc.ImpPosX("Nombre", 50, doc.tw_ren),
+          doc.ImpPosX("Nombre", 40, doc.tw_ren),
           doc.nextRow(5);
           doc.ImpPosX("Producto", 15, doc.tw_ren),
           doc.ImpPosX("Descripcion", 30, doc.tw_ren),
@@ -190,17 +203,15 @@ function CobranzaPorAlumno() {
       let total_general = 0;
   
       const Cambia_Alumno = (doc, total_importe) => {
-        doc.ImpPosX(`TOTAL: ${total_importe.toString()}` || "", 97, doc.tw_ren);
+        doc.ImpPosX(`TOTAL: ${formatNumber(total_importe)}` || "", 122, doc.tw_ren, 0, "R");
         doc.nextRow(8);
       };
-  
+      
       Enca1(reporte);
-      console.log("Body=>",body);
       body.forEach((reporte2) => {
+        reporte.setFontSize(9);
         let tipoPago2 = " ";
         let nombre = " ";
-
-        console.log(body);
   
         if(reporte2.nombre === null){
           nombre = " ";
@@ -221,25 +232,25 @@ function CobranzaPorAlumno() {
         if (reporte2.id_al !== alumno_Ant && reporte2.id_al != null) {
           reporte.ImpPosX(
             reporte2.id_al + "-" + calculaDigitoBvba(reporte2.id_al.toString()),
-            15,
+            25,
             reporte.tw_ren,
             0,
             "R"
           );
-          reporte.ImpPosX(reporte2.nom_al.toString(), 50, reporte.tw_ren);
+          reporte.ImpPosX(reporte2.nom_al.toString(), 40, reporte.tw_ren);
           Enca1(reporte);
           if (reporte.tw_ren >= reporte.tw_endRen) {
             reporte.pageBreak();
             Enca1(reporte);
           }
         }
-        reporte.setFontSize(8)
+        
         reporte.ImpPosX(reporte2.articulo.toString(), 15, reporte.tw_ren, 0 , "L");
         reporte.ImpPosX(reporte2.descripcion.toString(), 30, reporte.tw_ren,0,"L");
         // reporte.ImpPosX(reporte2.numero_doc.toString(), 70, reporte.tw_ren,"R");
         reporte.ImpPosX(reporte2.numero_doc.toString(), 87, reporte.tw_ren, 0 , "R");
         reporte.ImpPosX(reporte2.fecha.toString(), 90, reporte.tw_ren,0,"L");
-        reporte.ImpPosX(reporte2.importe.toString(), 122, reporte.tw_ren, 0 , "R");
+        reporte.ImpPosX(formatNumber(reporte2.importe), 122, reporte.tw_ren, 0 , "R");
         reporte.ImpPosX(reporte2.recibo.toString(), 140, reporte.tw_ren, 0 , "R");
         reporte.ImpPosX(
           reporte2.desc_Tipo_Pago_1.toString(),
@@ -264,11 +275,12 @@ function CobranzaPorAlumno() {
       Cambia_Alumno(reporte, total_importe);
   
       reporte.ImpPosX(
-        `TOTAL IMPORTE: ${total_general.toString()}` || "",
-        80,
-        reporte.tw_ren
+        `TOTAL IMPORTE: ${(formatNumber(total_general))}` || "",
+        122,
+        reporte.tw_ren,
+        0,
+        "R"
       );
-      console.log("setTimeout")
       setTimeout(() => {
         const pdfData = reporte.doc.output("datauristring");
         setPdfData(pdfData);

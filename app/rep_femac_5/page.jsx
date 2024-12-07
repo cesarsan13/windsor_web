@@ -113,7 +113,7 @@ function AltasBajasAlumnos() {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte Altas Bajas de Alumnos por Periodo",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
-        Datos_Grupo: `Tipo: ${selectedOptionAB.toUpperCase()}`,
+        Datos_Grupo: `Estatus: ${selectedOptionAB.toUpperCase()}`,
       },
       body: alumnosFiltrados,
     };
@@ -127,7 +127,7 @@ function AltasBajasAlumnos() {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte Altas Bajas de Alumnos por Periodo",
         Nombre_Usuario: `${session.user.name}`,
-        Clase: `Tipo: ${selectedOptionAB.toUpperCase()}`,
+        Clase: `Estatus: ${selectedOptionAB.toUpperCase()}`,
       },
       body: alumnosFiltrados,
       columns: [
@@ -168,7 +168,7 @@ function AltasBajasAlumnos() {
           Nombre_Aplicacion: "Sistema de Control Escolar",
           Nombre_Reporte: "Reporte Altas Bajas de Alumnos por Periodo",
           Nombre_Usuario: `Usuario: ${session.user.name}`,
-          Datos_Grupo: `Tipo: ${selectedOptionAB.toUpperCase()}`,
+          Datos_Grupo: `Estatus: ${selectedOptionAB.toUpperCase()}`,
         },
         body: alumnosFiltrados,
       };

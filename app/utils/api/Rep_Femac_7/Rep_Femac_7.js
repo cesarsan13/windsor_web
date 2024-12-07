@@ -104,7 +104,7 @@ export const Imprimir = async (
     alu_Act = doc.alumno;
     if (grupoAlumno) {
       if (grupo_act !== grupo_ant) {
-        newPDF.ImpPosX("Grupo " + grupo_act, 14, newPDF.tw_ren, 0, "R");
+        newPDF.ImpPosX("Grupo " + grupo_act, 14, newPDF.tw_ren,);
         newPDF.nextRow(4);
       }
     }
@@ -125,7 +125,6 @@ export const Imprimir = async (
     if (si_Imp === true) {
       newPDF.ImpPosX(alu_Act.toString(), 26, newPDF.tw_ren, 0, "R");
       const data = alumnos.find((alu) => alu.numero === alu_Act);
-      console.log("Alumno encontrado => ", data);
       nombre = data.nombre;
       newPDF.ImpPosX(nombre, 28, newPDF.tw_ren, 0, "L");
       newPDF.ImpPosX(doc.producto, 122, newPDF.tw_ren, 0, "R");
@@ -148,7 +147,7 @@ export const Imprimir = async (
       }
 
       Enca1(newPDF);
-      if (newPDF.tw_ren >= newPDF.tw_endRen) {
+      if (newPDF.tw_ren >= newPDF.tw_endRenH) {
         newPDF.pageBreakH();
         Enca1(newPDF);
       }
@@ -326,7 +325,7 @@ export const ImprimirExcel = async (
     .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
   const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
   const timeStr = formatTime(date).replace(/:/g, "");
-  newExcel.guardaReporte(`${nombre}${dateStr}${timeStr}`);
+  newExcel.guardaReporte(`${nombre}_${dateStr}${timeStr}`);
 };
 
 export const grupo_cobranza = async (token) => {

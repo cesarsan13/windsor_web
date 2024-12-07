@@ -7,6 +7,7 @@ import {
   formatDate_NewDate,
   format_Fecha_String,
   permissionsComponents,
+  formatNumber
 } from "../utils/globalfn";
 import BuscarCat from "../components/BuscarCat";
 import { useSession } from "next-auth/react";
@@ -20,14 +21,13 @@ import {
   insertTrabRepCobr,
 } from "../utils/api/rep_femac_12_anexo_4/rep_femac_12_anexo";
 import { ReportePDF } from "../utils/ReportesPDF";
-import { Viewer, Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import VistaPrevia from "../components/VistaPrevia";
 import { useEffect } from "react";
+import { showSwal } from "../utils/alerts";
 
 function RepFemac12Anexo() {
   const date = new Date();
-  console.log(date);
   const dateStr = formatDate(date);
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -55,6 +55,7 @@ function RepFemac12Anexo() {
       .toISOString()
       .split("T")[0];
   };
+
 
   useEffect(()=>{
     if (status === "loading" || !session) {
@@ -142,6 +143,20 @@ function RepFemac12Anexo() {
     setisLoading(true);
     setAnimateLoading(true);
     cerrarModalVista();
+
+    if (producto1.numero === undefined && producto2.numero === undefined ) {
+      showSwal(
+        "Oppss!",
+        "Para imprimir, debes de seleccionar los productos.",
+        "error"
+      );
+      setTimeout(() => {
+        setPdfPreview(false);
+        setPdfData("");
+        setAnimateLoading(false);
+        document.getElementById("modalVPRepFemac12Anexo4").close();
+      }, 500);
+    } else {
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -173,7 +188,7 @@ function RepFemac12Anexo() {
     };
     const Cambia_Articulo = (doc, Total_Art) => {
       doc.ImpPosX("TOTAL", 108, doc.tw_ren, 0, "R");
-      doc.ImpPosX(Total_Art.toString(), 138, doc.tw_ren, 0, "R");
+      doc.ImpPosX(formatNumber(Total_Art), 138, doc.tw_ren, 0, "R");
       doc.nextRow(4);
     };
     Enca1(reporte);
@@ -217,37 +232,17 @@ function RepFemac12Anexo() {
         tot_art = 0;
       }
       if (trabRep.articulo !== Art_Ant) {
-        reporte.ImpPosX(
-          trabRep.articulo.toString(),
-          24,
-          reporte.tw_ren,
-          0,
-          "R"
-        );
-        reporte.ImpPosX(
-          trabRep.descripcion.toString(),
-          43,
-          reporte.tw_ren,
-          0,
-          "L"
-        );
+        reporte.ImpPosX(trabRep.articulo.toString(), 24, reporte.tw_ren, 0, "R");
+        reporte.ImpPosX(trabRep.descripcion.toString(), 43, reporte.tw_ren, 0, "L");
         Enca1(reporte);
         if (reporte.tw_ren >= reporte.tw_endRen) {
           reporte.pageBreak();
           Enca1(reporte);
         }
       }
-      reporte.ImpPosX(
-        trabRep.alumno.toString() +
-          "-" +
-          calculaDigitoBvba(trabRep.alumno.toString()),
-        24,
-        reporte.tw_ren,
-        0,
-        "R"
-      );
+      reporte.ImpPosX(trabRep.alumno.toString() + "-" + calculaDigitoBvba(trabRep.alumno.toString()), 24, reporte.tw_ren, 0, "R");
       reporte.ImpPosX(trabRep.nombre.toString(), 38, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(trabRep.importe.toString(), 138, reporte.tw_ren, 0, "R");
+      reporte.ImpPosX(formatNumber(trabRep.importe), 138, reporte.tw_ren, 0, "R");
       reporte.ImpPosX(trabRep.fecha.toString(), 168, reporte.tw_ren, 0, "L");
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRen) {
@@ -260,7 +255,7 @@ function RepFemac12Anexo() {
     });
     Cambia_Articulo(reporte, tot_art);
     reporte.ImpPosX("TOTAL General", 98, reporte.tw_ren, 0, "L");
-    reporte.ImpPosX(total_general.toString(), 138, reporte.tw_ren, 0, "R");
+    reporte.ImpPosX(formatNumber(total_general), 138, reporte.tw_ren, 0, "R");
     setTimeout(() => {
       const pdfData = reporte.doc.output("datauristring");
       setPdfData(pdfData);
@@ -268,6 +263,7 @@ function RepFemac12Anexo() {
       showModalVista(true);
       setAnimateLoading(false);
     }, 500);
+    }
   };
 
   const showModalVista = (show) => {
@@ -390,7 +386,7 @@ function RepFemac12Anexo() {
                         type="radio"
                         name="ordenar"
                         value="nombre"
-                        className="radio"
+                        className="radio  checked:bg-blue-500"
                       />
                     </label>
                     <label
@@ -402,7 +398,7 @@ function RepFemac12Anexo() {
                         type="radio"
                         name="ordenar"
                         value="id"
-                        className="radio"
+                        className="radio  checked:bg-blue-500"
                       />
                     </label>
                   </label>

@@ -92,11 +92,11 @@ export const verImprimir = async (configuracion) => {
   });
 
   newPDF.ImpPosX(
-    `Total: ${total.toFixed(2)}` || "",
-    160,
+    `Total: ${formatNumber(total)}` || "",
+    192,
     newPDF.tw_ren,
     0,
-    "L"
+    "R"
   );
   const pdfData = newPDF.doc.output("datauristring");
   return pdfData;
@@ -134,8 +134,8 @@ export const Imprimir = (configuracion) => {
     }
   });
   newPDF.ImpPosX(
-    `Total: ${total.toFixed(2)}` || "",
-    160,
+    `Total: ${formatNumber(total)}` || "",
+    192,
     newPDF.tw_ren,
     0,
     "R"
@@ -176,7 +176,7 @@ export const ImprimirExcel = (configuracion) => {
         fecha: rec.fecha,
         alumno: rec.alumno,
         nombre_alumno: rec.nombre_alumno,
-        importe_total: importe_total.toFixed(2),
+        importe_total: formatNumber(importe_total),
       });
     }
   });
@@ -186,7 +186,7 @@ export const ImprimirExcel = (configuracion) => {
     fecha: "",
     alumno: "",
     nombre_alumno: "Total",
-    importe_total: total.toFixed(2),
+    importe_total: formatNumber(total),
   });
   newExcel.setColumnas(columns);
   newExcel.addData(newBody);
@@ -196,5 +196,5 @@ export const ImprimirExcel = (configuracion) => {
     .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
   const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
   const timeStr = formatTime(date).replace(/:/g, "");
-  newExcel.guardaReporte(`${nombre}${dateStr}${timeStr}`);
+  newExcel.guardaReporte(`${nombre}_${dateStr}${timeStr}`);
 };
