@@ -2,7 +2,6 @@ import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
 import React from "react";
 import Select from "react-select";
 import { Controller } from "react-hook-form";
-import { TbBackground } from "react-icons/tb";
 
 function Inputs({
   Titulo,
@@ -27,35 +26,34 @@ function Inputs({
   const styles = {
     control: (styles) => ({
       ...styles,
-      width: '100%',
-      minHeight: '48px',
-      maxWidth: '400px',
-      overflow: 'hidden',
-      backgroundColor: 'bg-white dark:bg-[#1d232a]',
+      width: "100%",
+      minHeight: "48px",
+      maxWidth: "400px",
+      overflow: "hidden",
+      backgroundColor: "bg-white dark:bg-[#1d232a]",
     }),
     valueContainer: (styles) => ({
       ...styles,
-      display: 'flex',
-      flexWrap: 'nowrap',
-      overflowX: 'auto',
-      maxWidth: '100%',
+      display: "flex",
+      flexWrap: "nowrap",
+      overflowX: "auto",
+      maxWidth: "100%",
     }),
     multiValue: (styles) => ({
       ...styles,
-      borderRadius: '4px',
-      fontSize: '16px',
+      borderRadius: "4px",
+      fontSize: "16px",
     }),
     multiValueLabel: (styles) => ({
       ...styles,
-      fontSize: '14px',
+      fontSize: "14px",
     }),
   };
+
   if (type === "multi-select") {
     return (
       <div className="flex flex-col">
-        <label
-          className={tamañolabel}
-        >
+        <label className={tamañolabel}>
           {Titulo}
           <Controller
             name={name}
@@ -77,31 +75,38 @@ function Inputs({
             )}
           />
         </label>
-
         {errors[name] && requerido && (
           <span className="text-red-500 text-sm">{errors[name].message}</span>
         )}
       </div>
     );
   }
+
   if (type === "select") {
     return (
       <div className="w-full md:w-1/2 px-0.5 py-2 mb-2 md:mb-0">
         <label
           htmlFor={name}
-          className={`input input-bordered  input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
+          className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
         >
           {Titulo}
           <select
             name={name}
-            className={`text-black dark:text-white bg-transparent dark: ${className}`}
+            className={`text-black dark:text-white ${
+              isDisabled
+                ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                : "bg-white"
+            } ${className}`}
             id={name}
             {...register(name, {
               ...(requerido && { required: message }),
             })}
             disabled={isDisabled}
           >
-            <option value="" className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]">
+            <option
+              value=""
+              className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]"
+            >
               Seleccione una opción
             </option>
             {arreglos.map((arreglo) => (
@@ -121,6 +126,7 @@ function Inputs({
       </div>
     );
   }
+
   if (type === "text") {
     return (
       <div className="flex flex-col">
@@ -129,12 +135,15 @@ function Inputs({
         >
           {Titulo}
           <input
-            // defaultValue={defaultValue}
             {...(maxLenght !== 0 && { maxLength: maxLenght })}
             name={name}
             id={name}
             type={type}
-            className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 input-xs md:input-sm ${className}`}
+            className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 input-xs md:input-sm ${
+              isDisabled
+                ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                : ""
+            } ${className}`}
             {...(dataType === "int" && { onKeyDown: soloEnteros })}
             {...(dataType === "float" && { onKeyDown: soloDecimales })}
             {...register(name, {
