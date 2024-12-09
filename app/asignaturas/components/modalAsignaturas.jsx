@@ -140,7 +140,7 @@ function ModalAsignaturas({
                   register={register}
                   maxLenght={6}
                   message={"Numero requerido"}
-                  isDisabled={!isDisabled}
+                  isDisabled={true}
                   handleBlur={handleBlurOut}
                 />
               </div>
@@ -167,7 +167,7 @@ function ModalAsignaturas({
                   dataType={"string"}
                   name={"lenguaje"}
                   tamañolabel={"w-full"}
-                  className={" w-full fyo8m-select p-1.5 grow bg-[#ffffff] "}
+                  className={`fyo8m-select p-1.5 grow ${isDisabled ? "bg-gray-200 text-gray-500 cursor-not-allowed" : "bg-white"}`}
                   Titulo={"Lenguaje: "}
                   type={"select"}
                   requerido={true}

@@ -24,14 +24,17 @@ function Inputs({
         <label
         // className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel}  text-black dark:text-white`}
 
-          className={`input input-bordered  input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
+        className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
         >
           {Titulo}
           <select
             name={name}
             id={name}
-            className={`text-black dark:text-white bg-transparent dark: ${className}`}
-            {...register(name, {
+            className={`text-black dark:text-white ${
+              isDisabled
+                ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                : "bg-white"
+            } ${className}`}            {...register(name, {
               ...(requerido && { required: message }),
             })}
             disabled={isDisabled}

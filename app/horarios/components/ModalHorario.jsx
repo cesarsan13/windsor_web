@@ -156,7 +156,7 @@ function ModalHorario({
                 tamañolabel={"input input-bordered flex items-center gap-3 grow text-black dark:text-white"}
                 message={"dia requerido"}
                 register={register}
-                className={"p-1.5 grow react-select-container text-black"}
+                className={`fyo8m-select p-1.0 grow ${isDisabled ? "bg-gray-200 text-gray-500 cursor-not-allowed" : "bg-white"}`}
                 errors={errors}
                 requerido={true}
                 dataType={"multi-select"}
@@ -204,7 +204,7 @@ function ModalHorario({
                 name={"sexo"}
                 message={"sexo requerido"}
                 tamañolabel={""}
-                className={"fyo8m-select p-1.5 grow bg-[#ffffff]"}
+                className={`fyo8m-select p-1.5 grow ${isDisabled ? "bg-gray-200 text-gray-500 cursor-not-allowed" : "bg-white"}`}
                 register={register}
                 errors={errors}
                 requerido={true}
