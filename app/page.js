@@ -183,6 +183,7 @@ export default function Home() {
                     descripcion={`Importe Generado.`}
                     valueImp={totalImporteXmes}
                     setItem={setMesSelect}
+                    mes={mesActual}
                   />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4  justify-items-center">

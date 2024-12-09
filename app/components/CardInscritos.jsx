@@ -5,7 +5,7 @@ import {
     getConsultasInsXMes
   } from "@/app/utils/api/estadisticas/estadisticas";
 
-function CardsHome({ titulo, value, descripcion, valueImp/*,setItem*/ }) {
+function CardsHome({ titulo, value, descripcion, valueImp, mes/*,setItem*/ }) {
     const [mesSeleccionado, setMesSeleccionado] = useState("");
     // Manejar el cambio del select
     // const handleChange = (event) => {
@@ -19,7 +19,7 @@ function CardsHome({ titulo, value, descripcion, valueImp/*,setItem*/ }) {
             <div className="w-full sticky top-0 flex justify-center ">
                 <div className="grid grid-flow-row text-neutral-600 dark:text-white">
                     {/* <div className="stats shadow bg-base-200 dark:bg-[#1d232a]"> */}
-                    <h1 className="font-bold text-black my-4">Alumnos inscritos este mes</h1>
+                    <h1 className="font-bold text-black my-4">Alumnos inscritos del mes de {mes}</h1>
                         {/* <label
                             className={`input input-bordered  input-sm md:input-md flex items-center gap-3  text-black dark:text-white`}
                         >
@@ -44,13 +44,15 @@ function CardsHome({ titulo, value, descripcion, valueImp/*,setItem*/ }) {
                                 </select>
                             </div>
                         </label> */}
-                        <div className="stats shadow bg-base-200 dark:bg-[#1d232a] p-2">
-                            <div className="stat-title text-sm truncate text-neutral-600 dark:text-white">{titulo}</div>
-                            <div className="stat-value text-xl md:text-4xl text-neutral-600 dark:text-white">{value || "0"}</div>
-                            <div className="stat-desc text-xs md:text-sm truncate text-neutral-600 dark:text-white">
-                                {descripcion}
+                        <div className="stats shadow bg-base-200 dark:bg-[#1d232a] ">
+                            <div className="stat">
+                                <div className="stat-title text-sm truncate text-neutral-600 dark:text-white">{titulo}</div>
+                                <div className="stat-value text-xl md:text-4xl text-neutral-600 dark:text-white">{value || "0"}</div>
+                                <div className="stat-desc text-xs md:text-sm truncate text-neutral-600 dark:text-white">
+                                    {descripcion}
+                                </div>
+                                <div className="stat-value text-xl md:text-4xl text-neutral-600 dark:text-white">${valueImp || "0"}</div>
                             </div>
-                            <div className="stat-value text-xl md:text-4xl text-neutral-600 dark:text-white">${valueImp || "0"}</div>
                         </div>
                     {/* </div> */}
                 </div>
