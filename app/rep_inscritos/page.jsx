@@ -68,65 +68,6 @@ function AltasBajasAlumnos() {
     setPermissions(permisos)
   },[session,status])
 
-  // const formaImprime = async () => {
-  //     let res;
-  //     let si_inscrito = false;
-  //     let si_suma = false;
-  //     let alumnos = 0;
-  //     let det_inscripcion = 0;
-  //     let total_inscripcion = 0;
-  //     let fecha_inscripcion = "";
-  //     let fecha_inscrip = "";
-  //     let horario_1 = 0;
-  //     const { token } = session.user;
-  //     const fechaIni = fecha_ini ? fecha_ini.replace(/-/g, "/") : 0;
-  //     const fechaFin = fecha_fin ? fecha_fin.replace(/-/g, "/") : 0;
-
-  //     // res = await getConsultasInscripcion(token);
-  //     // if (res.status) {
-  //     let dataAlumnos = res.data_alumnos;
-  //     let dataDetalles = res.data_detalle;
-  //     let dataProductos = res.data_productos;
-  //     let dataHorarios = res.data_horarios;
-
-  //     for (const item of dataAlumnos) {
-  //         const detalleEncontrado = dataDetalles.find(detalle =>
-  //             detalle.alumno === item.id &&
-  //             detalle.fecha >= fechaIni &&
-  //             detalle.fecha <= fechaFin
-  //         );
-  //         if (detalleEncontrado) {
-  //             for (const producto of dataProductos) {
-  //                 const productoEncontrado = dataProductos.find(producto =>
-  //                     producto.ref === 'INS' &&
-  //                     producto.id === producto.articulo
-  //                 );
-  //                 if (productoEncontrado) {
-  //                     si_inscrito = true;
-  //                     si_suma = true;
-  //                     det_inscripcion += producto.precio_unitario * producto.cantidad;
-  //                     total_inscripcion += producto.precio_unitario * producto.cantidad;
-  //                 }; fecha_inscripcion = producto.fecha;
-  //             }
-  //             if (si_suma) {
-  //                 const horarioEncontrado = dataHorarios.fin(
-  //                     horario => horario.numero === item.horario_1
-  //                 );
-  //                 if (horarioEncontrado) {
-  //                     //imprime algo imp_pos 70, AllTrim(RsHorario!Horario), 3
-  //                 }
-  //                 //imprime otro algo  imp_pos 90, Fecha_Inscripcion, 4
-  //                 //imprime otro algo  imp_pos_Izq 120, Formato_Imprime(Det_Inscripcion, 2), 5
-  //                 alumnos += 1;
-  //             }
-  //             det_inscripcion = 0;
-  //         }
-  //     }
-  //     // } else { showSwal(res.alert_title, res.alert_text, res.alert_icon); }
-
-  //     // return data;
-  // };
-
   const handleVerClick = async () => {
     setisLoading(true);
     setAnimateLoading(true);
