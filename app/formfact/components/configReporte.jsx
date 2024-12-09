@@ -37,6 +37,7 @@ function ConfigReporte({
     setSelectedIndex(null);
     setLabels([]);
   };
+  console.log("Index:",selectedIndex)
   return (
     <div className=" w-11/12 max-w-5xl">
       <button
@@ -72,7 +73,7 @@ function ConfigReporte({
               setTextoAnterior={setTextoAnterior}
               currentID={currentID}
             ></Sheet>
-            {selectedIndex && (
+            {selectedIndex != null && (
               <div className="pt-5">
                 <PropertyPage
                   session={session}
