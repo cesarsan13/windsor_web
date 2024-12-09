@@ -49,20 +49,20 @@ export default function Home() {
   const [mesActualNum, setMesActualNum] = useState("");
   const [añoActual, setAñoActual] = useState("");
   let [mesSelect, setMesSelect] = useState("");
-  const [adeudos, setAdeudos] = useState([]);
+  const [adeudos, setAdeudos] = useState([]); 
   useEffect(() => {
-    if (status === "loading" || !session || dataLoaded) {
+    if (status === "loading" || !session || dataLoaded) { 
       return;
     }
     const fetchChart = async () => {
-      setisLoading(true);
+      setisLoading(true); 
 
-      // Crear una nueva fecha
+      // Crear una nueva fecha 
       const fecha = new Date();
       // Obtener el nombre del mes en español
       const nombreMes = fecha.toLocaleString("es-ES", { month: "long" });
       // Capitalizar la primera letra
-      setMesActual(nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1));
+      setMesActual(nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1)); 
 
       // Los meses comienzan desde 0, así que sumamos 1
       const mes = fecha.getMonth() + 1;
@@ -128,17 +128,17 @@ export default function Home() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 place-content-start">
                   <CardsHome
                     titulo={`Total de Alumnos`}
-                    value={totalAlumnos}
+                    value={totalAlumnos || "0"}
                     descripcion={`Alumnos inscritos en la institución.`}
                   />
                   <CardsHome
                     titulo={`Total de Grados`}
-                    value={totalCursos}
+                    value={totalCursos || "0"}
                     descripcion={`Grados disponibles para los estudiantes.`}
                   />
                   <CardsHome
                     titulo={`Promedio Alumnos por Grado`}
-                    value={totalAlPorGrado}
+                    value={totalAlPorGrado || "0"}
                     descripcion={`Reflejando la carga educativa.`}
                   />
                   <CardsHome
