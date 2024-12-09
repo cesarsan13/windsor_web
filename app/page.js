@@ -128,17 +128,17 @@ export default function Home() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 place-content-start">
                   <CardsHome
                     titulo={`Total de Alumnos`}
-                    value={totalAlumnos}
+                    value={totalAlumnos || "0"}
                     descripcion={`Alumnos inscritos en la institución.`}
                   />
                   <CardsHome
                     titulo={`Total de Grados`}
-                    value={totalCursos}
+                    value={totalCursos || "0"}
                     descripcion={`Grados disponibles para los estudiantes.`}
                   />
                   <CardsHome
                     titulo={`Promedio Alumnos por Grado`}
-                    value={totalAlPorGrado}
+                    value={totalAlPorGrado || "0"}
                     descripcion={`Reflejando la carga educativa.`}
                   />
                   <CardsHome
