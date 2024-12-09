@@ -21,7 +21,7 @@ import { formatNumber } from "@/app/utils/globalfn";
 const CumpleañerosView = React.lazy(() =>
   import("@/app/components/Cumpleañeros/Cumpleañeros")
 );
-const AdeudosView = React.lazy(()=>
+const AdeudosView = React.lazy(() =>
   import("@/app/components/Adeudos/Adeudos")
 );
 const SliderControl = React.lazy(() =>
@@ -49,7 +49,7 @@ export default function Home() {
   const [mesActualNum, setMesActualNum] = useState("");
   const [añoActual, setAñoActual] = useState("");
   let [mesSelect, setMesSelect] = useState("");
-  const [adeudos,setAdeudos]=useState([]);
+  const [adeudos, setAdeudos] = useState([]);
   useEffect(() => {
     if (status === "loading" || !session || dataLoaded) {
       return;
@@ -63,20 +63,20 @@ export default function Home() {
       const nombreMes = fecha.toLocaleString("es-ES", { month: "long" });
       // Capitalizar la primera letra
       setMesActual(nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1));
-      
+
       // Los meses comienzan desde 0, así que sumamos 1
-      const mes = fecha.getMonth() + 1; 
+      const mes = fecha.getMonth() + 1;
       setMesActualNum(mes);
       const año = fecha.getFullYear();
       setAñoActual(año);
 
       const { token } = session.user;
-      const [res, dataAlHor, DataAlSex, cumpleañerosMes,Adeudos] = await Promise.all([
+      const [res, dataAlHor, DataAlSex, cumpleañerosMes, Adeudos] = await Promise.all([
         getEstadisticasTotales(token),
         getAlumnoXHorario(token),
         getDataSex(token),
         getCumpleañosMes(token),
-        Documentos(token,formatDate(fecha).replace(/\//g, "-"),false)
+        Documentos(token, formatDate(fecha).replace(/\//g, "-"), false)
       ]);
       // const fechaHoy = formatDate(fecha).replace(/\//g, "-")
       // const AdeudosMes = Adeudos.documentos.filter((adeudo)=>adeudo.fecha === fechaHoy)
@@ -162,8 +162,8 @@ export default function Home() {
                   mesActual={mesActual}
                 ></CumpleañerosView>
                 <AdeudosView
-                adeudos={adeudos}
-                mesActual={mesActual}
+                  adeudos={adeudos}
+                  mesActual={mesActual}
                 ></AdeudosView>
                 {/* <div className="grid gap-4 w-full card  items-center p-5 mb-4">
                   <div className="card w-full h-full bg-base-100 shadow-lg rounded-lg">
@@ -176,18 +176,18 @@ export default function Home() {
                     .
                   </div>
                 </div> */}
-                
+
                 <CardInscritos
-                    titulo={`Total de Alumnos`}
-                    value={totalAlumnosXMes}
-                    descripcion={`Importe Generado.`}
-                    valueImp={totalImporteXmes}
-                    setItem={setMesSelect}
-                  />
+                  titulo={`Total de Alumnos`}
+                  value={totalAlumnosXMes}
+                  descripcion={`Importe Generado.`}
+                  valueImp={totalImporteXmes}
+                  setItem={setMesSelect}
+                />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4  justify-items-center">
-                  
-                </div>
+
+              </div>
             </div>
           </div>
           <SliderControl
