@@ -47,7 +47,7 @@ function Sheet({
         numero_forma: currentID,
         tiempo_operacion: 0,
         tipo_campo: 2,
-        visible: "S",
+        visible: 1,
       },
     ]);
   };
