@@ -3,6 +3,7 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
 import Inputs from './Inputs';
 import { getUltimaSecuencia } from '@/app/utils/api/actividades/actividades';
+import { FaSpinner } from 'react-icons/fa';
 
 function ModalActividades({
     accion,
@@ -16,6 +17,7 @@ function ModalActividades({
     watch,
     setValue,
     session,
+    isLoadingButton,
 }) {
     const [error, setError] = useState(null);
     const [titulo, setTitulo] = useState("");
@@ -27,17 +29,17 @@ function ModalActividades({
             const secuencia = await getUltimaSecuencia(token, materia)
             setValue("secuencia", secuencia.data)
         }
-        if (materia && accion==="Alta") {
+        if (materia && accion === "Alta") {
             fetchSecuencia(materia)
-        } else{
-            setValue("secuencia","")
+        } else {
+            setValue("secuencia", "")
         }
     }, [materia])
     useEffect(() => {
         if (accion === "Eliminar" || accion === "Ver") {
-            setIsDisabled(true);            
+            setIsDisabled(true);
         }
-        if (accion === "Alta" || accion === "Editar") {            
+        if (accion === "Alta" || accion === "Editar") {
             setIsDisabled(false);
         }
         setTitulo(
@@ -49,7 +51,7 @@ function ModalActividades({
                         ? `Eliminar Actividad: ${currentID}`
                         : `Ver Actividad: ${currentID}`
         );
-    }, [accion])    
+    }, [accion, currentID])
     return (
         <dialog className='modal' id='my_modal_3'>
             <div className='modal-box'>
@@ -65,13 +67,17 @@ function ModalActividades({
                                     type="submit"
                                     id="btn_guardar"
                                     className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm "
+                                    disabled={isLoadingButton}
                                 >
-                                    <Image
-                                        src={iconos.guardar}
-                                        alt="Guardar"
-                                        className="w-5 h-5 md:w-6 md:h-6 mr-1"
-                                    />
-                                    <span className="hidden sm:inline">Guardar</span>
+                                    {isLoadingButton ? (
+                                        <FaSpinner className="animate-spin mx-2" />
+                                    ) : (
+                                        <>
+                                            <Image src={iconos.guardar} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 block dark:hidden" />
+                                            <Image src={iconos.guardar_w} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 hidden dark:block" />
+                                        </>
+                                    )}
+                                    {isLoadingButton ? " Cargando..." : " Guardar"}
                                 </button>
                             </div>
                             <button
