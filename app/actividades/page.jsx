@@ -1,17 +1,20 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Acciones from './components/Acciones'
 import Busqueda from './components/Busqueda'
 import TablaActividades from './components/tablaActividades';
 import { useSession } from 'next-auth/react';
-import { getActividades, Imprimir, guardarActividad,ImprimirExcel } from '../utils/api/actividades/actividades';
+import { getActividades, Imprimir, guardarActividad, ImprimirExcel } from '../utils/api/actividades/actividades';
 import { useForm } from 'react-hook-form';
 import ModalActividades from './components/ModalActividades';
 import { confirmSwal, showSwal } from '../utils/alerts';
 import ModalVistaPreviaActividades from './components/ModalVistaPreviaActividades';
 import { ReportePDF } from '../utils/ReportesPDF';
+import { debounce, permissionsComponents } from '../utils/globalfn';
+import { useRouter } from 'next/navigation';
 
 function Page() {
+    const router = useRouter();
     const { data: session, status } = useSession();
     const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
     const [actividades, setActividades] = useState([]);
@@ -21,21 +24,35 @@ function Page() {
     const [openModal, setModal] = useState(false);
     const [accion, setAccion] = useState("");
     const [isLoading, setisLoading] = useState(false);
+    const [isLoadingButton, setisLoadingButton] = useState(false);
     const [currentID, setCurrentId] = useState("");
     const [pdfPreview, setPdfPreview] = useState(false);
     const [pdfData, setPdfData] = useState("");
+    const [animateLoading, setAnimateLoading] = useState(false);
+    const [permissions, setPermissions] = useState({});
+    const actividadesRef = useRef(actividades)
 
     useEffect(() => {
-        if (status === "loading" || !session) {
-            return;
-        }
         const fetchData = async () => {
             setisLoading(true);
             const { token } = session.user
+            let { permissions } = session.user
+            const es_admin = session.user.es_admin;
+            const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
             const data = await getActividades(token, bajas)
             setActividades(data)
             setActividadesFiltradas(data)
             setisLoading(false);
+            const permisos = permissionsComponents(
+                es_admin,
+                permissions,
+                session.user.id,
+                menuSeleccionado
+            );
+            setPermissions(permisos);
+        }
+        if (status === "loading" || !session) {
+            return;
         }
         fetchData()
     }, [session, status, bajas])
@@ -73,19 +90,29 @@ function Page() {
             baja: actividad.baja,
         })
     }, [actividad, reset])
-    const Buscar = () => {
-        const { tb_id, td_desc } = busqueda;
-        if (tb_id === "" && td_desc === "") {
-            setActividadesFiltradas(actividades)
+    useEffect(() => {
+        actividadesRef.current = actividades
+    }, [actividades])
+    const Buscar = useCallback(() => {
+        const { tb_id, tb_desc } = busqueda;
+        if (tb_id === "" && tb_desc === "") {
+            setActividadesFiltradas(actividadesRef.current)
             return
         }
-        const infoFiltrada = actividades.filter((actividad) => {
+        const infoFiltrada = actividadesRef.current.filter((actividad) => {
             const coincideId = tb_id ? actividad["materia"].toString().toLowerCase().includes(tb_id.toLowerCase()) : true
-            const coincideDescripcion = td_desc ? actividad["materia"].toString().toLowerCase().includes(tb_id.toLowerCase()) : true
+            const coincideDescripcion = tb_desc ? actividad["descripcion"].toString().toLowerCase().includes(tb_desc.toLowerCase()) : true
             return coincideId && coincideDescripcion
         })
         setActividadesFiltradas(infoFiltrada)
-    }
+    }, [busqueda])
+    const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
+    useEffect(() => {
+        debouncedBuscar();
+        return () => {
+            clearTimeout(debouncedBuscar);
+        };
+    }, [busqueda, debouncedBuscar]);
     if (status === "loading") {
         return (
             <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -99,7 +126,7 @@ function Page() {
         event.preventDefault;
         setBusqueda((estadoPrevio) => ({
             ...estadoPrevio,
-            [event.target]: event.target.value,
+            [event.target.id]: event.target.value,
         }));
     };
 
@@ -128,6 +155,7 @@ function Page() {
     }
     const onSubmitModal = handleSubmit(async (data) => {
         event.preventDefault
+        setisLoadingButton(true);
         let res = null
         if (accion === "Eliminar") {
             showModal(false)
@@ -140,6 +168,7 @@ function Page() {
             )
             if (!confirmed) {
                 showModal(true)
+                setisLoadingButton(false);
                 return
             }
         }
@@ -177,8 +206,10 @@ function Page() {
             showSwal(res.alert_title, res.alert_text, res.alert_icon);
             showModal(false);
         }
+        setisLoadingButton(false);
     })
     const handleVerClick = () => {
+        setAnimateLoading(true)
         const configuracion = {
             Encabezado: {
                 Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -212,10 +243,13 @@ function Page() {
                 Enca1(reporte);
             }
         })
-        const pdfData = reporte.doc.output("datauristring");
-        setPdfData(pdfData);
-        setPdfPreview(true);
-        showModalVista(true)
+        setTimeout(() => {
+            const pdfData = reporte.doc.output("datauristring");
+            setPdfData(pdfData);
+            setPdfPreview(true);
+            showModalVista(true)
+            setAnimateLoading(false)
+        }, 500)
     }
     const showModalVista = (show) => {
         show
@@ -240,15 +274,18 @@ function Page() {
                 Nombre_Reporte: "Reporte Datos Actividades",
                 Nombre_Usuario: `Usuario: ${session.user.name}`,
             },
-            body:ActividadesFiltradas,
-            columns:[
-                {header:"Asignatura",dataKey:"materia"},
-                {header:"Actividad",dataKey:"descripcion"}
+            body: ActividadesFiltradas,
+            columns: [
+                { header: "Asignatura", dataKey: "materia" },
+                { header: "Actividad", dataKey: "descripcion" }
             ],
-            nombre:"Actividades"
+            nombre: "Actividades"
         }
         ImprimirExcel(configuracion)
     }
+    const home = () => {
+        router.push("/");
+      };
     return (
         <>
             <ModalActividades
@@ -262,6 +299,7 @@ function Page() {
                 session={session}
                 setValue={setValue}
                 onSubmit={onSubmitModal}
+                isLoadingButton={isLoadingButton}
             />
             <ModalVistaPreviaActividades pdfData={pdfData} pdfPreview={pdfPreview} PDF={ImprimePDF} Excel={ImprimeExcel} />
             <div className='container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden'>
@@ -271,6 +309,11 @@ function Page() {
                             <Acciones
                                 Alta={Alta}
                                 Ver={handleVerClick}
+                                Buscar={Buscar}
+                                animateLoading={animateLoading}
+                                permiso_alta={permissions.altas}
+                                permiso_imprime={permissions.impresion}
+                                home={home}
                             />
                         </div>
                         <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
@@ -287,14 +330,20 @@ function Page() {
                             limpiarBusqueda={limpiarBusqueda}
                             setBajas={setBajas}
                         />
-                        <TablaActividades
-                            isLoading={isLoading}
-                            setAccion={setAccion}
-                            setActividad={setActividad}
-                            setCurrentId={setCurrentId}
-                            showModal={showModal}
-                            ActividadesFiltradas={ActividadesFiltradas}
-                        />
+                        {status === "loading" || !session ? (
+                            <></>
+                        ) : (
+                            <TablaActividades
+                                isLoading={isLoading}
+                                setAccion={setAccion}
+                                setActividad={setActividad}
+                                setCurrentId={setCurrentId}
+                                showModal={showModal}
+                                ActividadesFiltradas={ActividadesFiltradas}
+                                permiso_cambio={permissions.cambios}
+                                permiso_baja={permissions.bajas}
+                            />
+                        )}
                     </div>
                 </div>
             </div>
