@@ -217,7 +217,7 @@ function Horarios() {
           }
         }
       }
-      showSwal(res.alert_title, res.message, res.alert_icon);
+      showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
     } else {
       showSwal(res.alert_title, res.alert_text, "error", "my_modal_horario");
