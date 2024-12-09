@@ -160,9 +160,9 @@ export const Imprimir = (configuracion) => {
         }
     });
     newPDF.nextRow(4);
-    newPDF.ImpPosX(`Total: ${formatNumber(total_inscripcion)}` || '0.00', 175, newPDF.tw_ren);
+    newPDF.ImpPosX(`Total: ${formatNumber(total_inscripcion)}` || '0.00', 195, newPDF.tw_ren, 0, "R");
     newPDF.nextRow(4);
-    newPDF.ImpPosX(`Total Alumnos: ${alumnos.toString() || '0'}`, 175, newPDF.tw_ren);
+    newPDF.ImpPosX(`Total Alumnos: ${alumnos.toString() || '0'}`, 195, newPDF.tw_ren, 0, "R");
     const date = new Date();
     const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
       .toString()
@@ -170,7 +170,7 @@ export const Imprimir = (configuracion) => {
     const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
     const timeStr = formatTime(date).replace(/:/g, "");
 
-  newPDF.guardaReporte(`Reporte_Alumnos_Inscritos${dateStr}${timeStr}`);
+  newPDF.guardaReporte(`Reporte_Alumnos_Inscritos_${dateStr}${timeStr}`);
 };
 
 export const ImprimirExcel = (configuracion) => {
@@ -218,12 +218,26 @@ export const ImprimirExcel = (configuracion) => {
             }
         }
     });
+    //newBody.push({
+    //    numero: '',
+    //    nombre: '',
+    //    horario: '',
+    //    fecha_inscripcion: `Total: ${formatNumber(total_inscripcion) || '0.00'}`,
+    //    det_inscripcion: `Total: ${alumnos || '0'}`,
+    //});
     newBody.push({
         numero: '',
         nombre: '',
         horario: '',
-        fecha_inscripcion: `Total: ${formatNumber(total_inscripcion) || '0.00'}`,
-        det_inscripcion: `Total: ${alumnos || '0'}`,
+        fecha_inscripcion: `Total:`,
+        det_inscripcion: ` ${formatNumber(total_inscripcion) || '0.00'}`,
+    });
+    newBody.push({
+        numero: '',
+        nombre: '',
+        horario: '',
+        fecha_inscripcion: `Total Alumnos:`,
+        det_inscripcion: `${alumnos || '0'}`,
     });
     newExcel.setColumnas(columns);
     newExcel.addData(newBody);
@@ -233,7 +247,7 @@ export const ImprimirExcel = (configuracion) => {
       .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
     const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
     const timeStr = formatTime(date).replace(/:/g, "");
-    newExcel.guardaReporte(`${nombre}${dateStr}${timeStr}`);
+    newExcel.guardaReporte(`${nombre}_${dateStr}${timeStr}`);
 };
 
 

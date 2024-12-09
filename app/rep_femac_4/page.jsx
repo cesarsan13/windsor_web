@@ -58,12 +58,25 @@ function Rep_femac_4() {
       const es_admin = session.user.es_admin;
       if (alumno && Object.keys(alumno).length > 0) {
         const data = await getCredencialAlumno(token, formData);
-        // console.log("Credencial del alumno => ",data);
         setCredencial(data);
-        const imagenUrl = await getFotoAlumno(
-          session.user.token,
-          alumno.ruta_foto
-        );
+        //const imagenUrl = await getFotoAlumno(
+        //  session.user.token,
+        //  alumno.ruta_foto
+        //);
+        const rutaUser = "user_Credencial.png";
+        let imagenUrl;
+
+        if(alumno.ruta_foto === " " || alumno.ruta_foto === "" ){
+          imagenUrl = await getFotoAlumno(
+            session.user.token,
+            rutaUser
+          );
+        } else {
+          imagenUrl = await getFotoAlumno(
+            session.user.token,
+            alumno.ruta_foto
+          );
+        }
         if (imagenUrl) {
           setCapturedImage(imagenUrl);
         }
@@ -102,7 +115,6 @@ function Rep_femac_4() {
       );
       setPermissions(permisos);
       const formato = await getCredencialFormato(token, 3);
-      // console.log("formato => ",formato);
       setFormato(formato);
     };
     if (status === "loading" || !session) {
@@ -352,9 +364,9 @@ function Rep_femac_4() {
         CerrarView={CerrarView}
       />
       <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
-        <div className="w-full py-3">
+        <div className="w-full py-1">
           {/* Fila de la cabecera de la pagina */}
-          <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
+          <div className="flex flex-col justify-start p-2 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
                 <Acciones
@@ -372,33 +384,36 @@ function Rep_femac_4() {
         </div>
 
         {/* Fila del formulario de la pagina */}
-        <div className="w-full py-3 flex flex-col gap-y-2">
-          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
-            <div className="col-span-full md:col-span-full lg:col-span-full">
-              {/* <div className="w-full"> */}
-              <div className="w-2/6 max-[600px]:w-full max-[768px]:w-full">
-                <input
+        <div className=" overflow-y-auto w-full py-3 flex flex-col gap-y-2 mb-2 ">
+          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto">
+            <div className="col-span-3 md:col-span-full lg:col-span-full">
+              <div className="w-full max-[400px]:w-1/2 max-[600px]:w-full max-[768px]:w-full h-1/3">
+                {/*<input
                   type="file"
                   name="imagen"
                   onChange={handleFileChange}
                   ref={inputfileref}
                   style={{ display: "none" }}
                   className="ml-4 btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white font-bold px-4 rounded"
-                />
+                />*/}
                 {(capturedImage || files) && (
-                  <div className="bottom-0 left-0 w-full">
-                    <h2 className="text-center text-xl mb-2">
-                      {condicion ? "Imagen Seleccionada:" : "Foto del Alumno:"}
-                    </h2>
-                    <Image
-                      src={
-                        condicion ? URL.createObjectURL(files) : capturedImage
-                      }
-                      alt="Imagen"
-                      width={80}
-                      height={80}
-                      className="w-full object-contain mx-auto my-4"
-                    />
+                  <div className="flex items-center">
+                    <div className="w-1/3 pl-1 p-0">
+                      <Image
+                        src={
+                          condicion ? URL.createObjectURL(files) : capturedImage
+                        }
+                        alt="Imagen"
+                        width={48}
+                        height={48}
+                        className="w-full object-contain mx-auto my-1 pr-4"
+                      />
+                    </div>
+                    <div className="w-1/3">
+                      <h2 className="text-center text-xl mb-2 text-black dark:text-white">
+                        {condicion ? "Imagen Seleccionada:" : "Foto del Alumno:"}
+                      </h2>
+                    </div>
                   </div>
                 )}
               </div>
