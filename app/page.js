@@ -178,12 +178,13 @@ export default function Home() {
                 </div> */}
 
                 <CardInscritos
-                  titulo={`Total de Alumnos`}
-                  value={totalAlumnosXMes}
-                  descripcion={`Importe Generado.`}
-                  valueImp={totalImporteXmes}
-                  setItem={setMesSelect}
-                />
+                    titulo={`Total de Alumnos`}
+                    value={totalAlumnosXMes}
+                    descripcion={`Importe Generado.`}
+                    valueImp={totalImporteXmes}
+                    setItem={setMesSelect}
+                    mes={mesActual}
+                  />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4  justify-items-center">
 
