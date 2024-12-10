@@ -129,7 +129,7 @@ function BuscarCat({
             setTiutloInput(["numero", "descripcion"]);
             break;
           case "usuarios":
-            fetchedData= await getUsuarios(token,false)
+            fetchedData = await getUsuarios(token, false)
             setTiutloInput(["numero", "nombre"]);
             break;
         }
@@ -188,7 +188,6 @@ function BuscarCat({
 
   const BuscarInfo = () => {
     const inputValueStr = String(inputValue);
-
     if (inputValueStr === "") {
       setFilteredData(data);
       reset({
@@ -205,14 +204,11 @@ function BuscarCat({
         const valorCampoStr = String(valorCampo);
 
         if (typeof valorCampo === "number") {
-          return valorCampoStr.includes(inputValueStr);
+          return valorCampoStr === inputValueStr;
         }
-        return valorCampoStr
-          .toLowerCase()
-          .includes(inputValueStr.toLowerCase());
+        return valorCampoStr.toLowerCase() === inputValueStr.toLowerCase();
       });
     });
-
     setFilteredData(infoFiltrada);
     setItem(infoFiltrada);
     if (infoFiltrada.length > 0) {
@@ -222,6 +218,13 @@ function BuscarCat({
       setValue(nameInput[0], id);
       setValue(nameInput[1], description);
       setItem(item);
+    } else {
+      reset({
+        [nameInput[0]]: "",
+        [nameInput[1]]: "Sin información.",
+      });
+      setFilteredData([]);
+      setItem({});
     }
   };
 
