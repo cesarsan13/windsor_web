@@ -38,8 +38,8 @@ function TablaDoc({ docFiltrados, isLoading, tableSelect, session }) {
                     data-tip={`Seleccionar`}
                     onClick={(evt) => tableSelect(evt, item)}
                   >
-                    <Image src={iconos.documento}className="block dark:hidden" alt="Seleccionar" />
-                    <Image src={iconos.documento_w} className="hidden dark:block" alt="Seleccionar"/>
+                    <Image src={iconos.documento} className="block dark:hidden" alt="Seleccionar" />
+                    <Image src={iconos.documento_w} className="hidden dark:block" alt="Seleccionar" />
                   </div>
                 </th>
               </tr>
