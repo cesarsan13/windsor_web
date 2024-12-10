@@ -185,9 +185,9 @@ function ModalComentarios({
               <Inputs
                 name={"generales"}
                 tamañolabel={"w-3/6"}
-                className={"select p-1.5 grow "}
+                className={"md:w-1/3 w-3/6"}
                 Titulo={"Generales:"}
-                type={"select"}
+                type={"toogle"}
                 requerido={false}
                 errors={errors}
                 maxLenght={1}
