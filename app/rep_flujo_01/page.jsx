@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Inputs from "./components/Inputs";
 import { useForm } from "react-hook-form";
 import Acciones from "./components/Acciones";
-import { Fecha_de_Ctod, formatDate, permissionsComponents, formatFecha } from "../utils/globalfn";
+import { Fecha_de_Ctod, formatDate, permissionsComponents, formatFecha, formatNumber} from "../utils/globalfn";
 import {
   DocumentosCobranza,
   ImprimirExcel,
@@ -42,9 +42,9 @@ function Rep_Flujo_01() {
       const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado);
       setPermissions(permisos);
       
-      const fecha_ciclo = Fecha_de_Ctod(fecha_ini, -63);
-      const data = await DocumentosCobranza(token, fecha_ciclo, fecha_fin);
-      setDataDocumentoCobranza(data);
+      //const fecha_ciclo = Fecha_de_Ctod(fecha_ini, -63);
+      //const data = await DocumentosCobranza(token, fecha_ciclo, fecha_fin);
+      //setDataDocumentoCobranza(data);
     };
     fetchData();
   }, [session, status, fecha_ini, fecha_fin]);
@@ -60,18 +60,24 @@ function Rep_Flujo_01() {
   const home = () => {
     router.push("/");
   };
-  const handleVerClick = () => {
+  const handleVerClick = async () => {
     setAnimateLoading(true);
+
+    const fecha_ciclo = Fecha_de_Ctod(fecha_ini, -63);
+      const data = await DocumentosCobranza(session.user.token, fecha_ciclo, fecha_fin);
+      setDataDocumentoCobranza(data);
+
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: `Reporte de Adeudos Pendientes  al ${fecha_ini}`,
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
-      body: dataDocumentoCobranza,
+      body: data,
     };
     const reporte = new ReportePDF(configuracion);
     const { body } = configuracion;
+    console.log(body);
     const documentosCobranza = body.documentos_cobranza;
     const alumnos = body.alumnos;
     let Tw_Col = Array.from({ length: 14 }, () => Array(9).fill(0.0));
@@ -100,7 +106,8 @@ function Rep_Flujo_01() {
       }
     };
     Enca1(reporte);
-    for (let Pos_Act = 0; Pos_Act < 13; Pos_Act++) {
+    let Pos_Act;
+    for (Pos_Act = 0; Pos_Act <= 13; Pos_Act++) {
       Tw_Per[Pos_Act] = "";
       Tw_Col[Pos_Act][1] = 0;
       Tw_Col[Pos_Act][2] = 0;
@@ -111,27 +118,27 @@ function Rep_Flujo_01() {
       Tw_Col[Pos_Act][7] = 0;
       Tw_Col[Pos_Act][8] = 0;
     }
-    for (let Pos_Act = 1; Pos_Act < 8; Pos_Act++) {
+    for (Pos_Act = 1; Pos_Act <= 8; Pos_Act++) {
       Tw_TGe[Pos_Act] = 0;
     }
     Tw_Per[1] = fecha_ini.slice(0, 7);
     Tw_Per[12] = fecha_fin.slice(0, 7);
     let adiciona;
     let per_str;
-    let pos_act;
+
     documentosCobranza.forEach((documento) => {
-      const alumno = alumnos.find((alu) => alu.id === documento.alumno);
+      const alumno = alumnos.find((alu) => alu.numero === documento.alumno);
       if (alumno) {
         adiciona = true;
         if (selectedOption === "sin_deudor") {
-          if (alumno.estatus.toUpperCase() === "CARTERA") {
+          if (alumno.estatus.toUpperCase() === "Cartera") {
             adiciona = false;
           } else {
             adiciona = true;
           }
         }
         if (selectedOption === "solo_deudores") {
-          if (alumno.estatus.toUpperCase() === "CARTERA") {
+          if (alumno.estatus.toUpperCase() === "Cartera") {
             adiciona = true;
           } else {
             adiciona = false;
@@ -140,71 +147,75 @@ function Rep_Flujo_01() {
       } else {
         adiciona = false;
       }
+
       if (adiciona === true) {
+        console.log("entra el adiciona");
         per_str = documento.fecha.toString().slice(0, 7);
         if (per_str < Tw_Per[1]) {
-          pos_act = 0;
+          Pos_Act = 0;
         } else if (per_str > Tw_Per[12]) {
-          pos_act = 13;
+          Pos_Act = 13;
         } else {
-          for (pos_act = 1; pos_act < 13; pos_act++) {
-            if (Tw_Per[pos_act] === per_str) break;
-            if (Tw_Per[pos_act] === "") {
-              Tw_Per[pos_act] = per_str;
+          for (Pos_Act = 1; Pos_Act <= 13; Pos_Act++) {
+            if (Tw_Per[Pos_Act] === per_str) break;
+            if (Tw_Per[Pos_Act] === "") {
+              Tw_Per[Pos_Act] = per_str;
               break;
             }
           }
         }
-        if (pos_act < 13) {
+        console.log("pos_act antes del if", Pos_Act);
+        if (Pos_Act = 13) { //<
+          console.log("en el if");
+          
           if (documento.ref.toString().toUpperCase() === "COL") {
-            Tw_Col[pos_act][1] = Number(Tw_Col[pos_act][1]) + documento.importe;
-            Tw_Col[pos_act][2] =
-              Number(Tw_Col[pos_act][2]) +
-              documento.importe * (documento.descuento / 100);
-          }
+            console.log("col", documento);
+            Tw_Col[Pos_Act][1] = Number(Tw_Col[Pos_Act][1]) + documento.importe;
+            Tw_Col[Pos_Act][2] = Number(Tw_Col[Pos_Act][2]) + documento.importe * (documento.descuento / 100);
+          } 
           if (documento.ref.toString().toUpperCase() === "INS") {
-            Tw_Col[pos_act][3] = Number(Tw_Col[pos_act][3]) + documento.importe;
-            Tw_Col[pos_act][4] =
-              Number(Tw_Col[pos_act][4]) +
-              documento.importe * (documento.descuento / 100);
+            console.log("ins", documento.importe);
+            Tw_Col[Pos_Act][3] = Number(Tw_Col[Pos_Act][3]) + documento.importe;
+            Tw_Col[Pos_Act][4] = Number(Tw_Col[Pos_Act][4]) + documento.importe * (documento.descuento / 100);
           }
           if (documento.ref.toString().toUpperCase() === "REC") {
-            Tw_Col[pos_act][4] = Number(Tw_Col[pos_act][4]) + documento.importe;
+            console.log("rec", documento);
+            Tw_Col[Pos_Act][4] = Number(Tw_Col[Pos_Act][4]) + documento.importe;
           }
           if (documento.ref.toString().toUpperCase() == "TAL") {
-            Tw_Col[pos_act][5] = Number(Tw_Col[pos_act][5]) + documento.importe;
+            console.log("tal", documento);
+            Tw_Col[Pos_Act][5] = Number(Tw_Col[Pos_Act][5]) + documento.importe;
           }
-          Tw_Col[pos_act][8] =
-            Number(Tw_Col[pos_act][8]) + documento.importe_pago;
+          Tw_Col[Pos_Act][8] = Number(Tw_Col[Pos_Act][8]) + documento.importe_pago;
         }
       }
     });
     let imp_total;
-    for (pos_act = 0; pos_act < 13; pos_act++) {
+    for(Pos_Act = 0; Pos_Act <= 13; Pos_Act++) {
       imp_total =
-        Number(Tw_Col[pos_act][1]) -
-        Number(Tw_Col[pos_act][2]) +
-        Number(Tw_Col[pos_act][3]) +
-        Number(Tw_Col[pos_act][4]) +
-        Number(Tw_Col[pos_act][5]);
-      Tw_TGe[1] = Number(Tw_TGe[1]) + Number(Tw_Col[pos_act][1]);
-      Tw_TGe[2] = Number(Tw_TGe[2]) + Number(Tw_Col[pos_act][2]);
-      Tw_TGe[3] = Number(Tw_TGe[3]) + Number(Tw_Col[pos_act][3]);
-      Tw_TGe[4] = Number(Tw_TGe[4]) + Number(Tw_Col[pos_act][4]);
-      Tw_TGe[5] = Number(Tw_TGe[5]) + Number(Tw_Col[pos_act][5]);
-      Tw_TGe[6] = Number(Tw_TGe[6]) + Number(Tw_Col[pos_act][6]);
+        Number(Tw_Col[Pos_Act][1]) -
+        Number(Tw_Col[Pos_Act][2]) +
+        Number(Tw_Col[Pos_Act][3]) +
+        Number(Tw_Col[Pos_Act][4]) +
+        Number(Tw_Col[Pos_Act][5]);
+      Tw_TGe[1] = Number(Tw_TGe[1]) + Number(Tw_Col[Pos_Act][1]);
+      Tw_TGe[2] = Number(Tw_TGe[2]) + Number(Tw_Col[Pos_Act][2]);
+      Tw_TGe[3] = Number(Tw_TGe[3]) + Number(Tw_Col[Pos_Act][3]);
+      Tw_TGe[4] = Number(Tw_TGe[4]) + Number(Tw_Col[Pos_Act][4]);
+      Tw_TGe[5] = Number(Tw_TGe[5]) + Number(Tw_Col[Pos_Act][5]);
+      Tw_TGe[6] = Number(Tw_TGe[6]) + Number(Tw_Col[Pos_Act][6]);
       Tw_TGe[7] = Number(Tw_TGe[7]) + Number(imp_total);
-      Tw_TGe[8] = Number(Tw_TGe[8]) + Number(Tw_Col[pos_act][8]);
-      reporte.ImpPosX(Tw_Per[pos_act].toString(), 14, reporte.tw_ren);
-      reporte.ImpPosX(Tw_Col[pos_act][1].toString(), 34, reporte.tw_ren);
-      reporte.ImpPosX(Tw_Col[pos_act][2].toString(), 54, reporte.tw_ren);
-      reporte.ImpPosX(Tw_Col[pos_act][3].toString(), 74, reporte.tw_ren);
-      reporte.ImpPosX(Tw_Col[pos_act][4].toString(), 94, reporte.tw_ren);
-      reporte.ImpPosX(Tw_Col[pos_act][5].toString(), 114, reporte.tw_ren);
-      reporte.ImpPosX(imp_total.toString(), 134, reporte.tw_ren);
-      reporte.ImpPosX(Tw_Col[pos_act][8].toString(), 154, reporte.tw_ren);
-      const sum = Number(imp_total) - Number(Tw_Col[pos_act][8].toString());
-      reporte.ImpPosX(sum.toString(), 174, reporte.tw_ren);
+      Tw_TGe[8] = Number(Tw_TGe[8]) + Number(Tw_Col[Pos_Act][8]);
+      reporte.ImpPosX(Tw_Per[Pos_Act].toString(), 14, reporte.tw_ren);
+      reporte.ImpPosX(formatNumber(Tw_Col[Pos_Act][1].toString()), 34, reporte.tw_ren);
+      reporte.ImpPosX(formatNumber(Tw_Col[Pos_Act][2].toString()), 54, reporte.tw_ren);
+      reporte.ImpPosX(formatNumber(Tw_Col[Pos_Act][3].toString()), 74, reporte.tw_ren);
+      reporte.ImpPosX(formatNumber(Tw_Col[Pos_Act][4].toString()), 94, reporte.tw_ren);
+      reporte.ImpPosX(formatNumber(Tw_Col[Pos_Act][5].toString()), 114, reporte.tw_ren);
+      reporte.ImpPosX(formatNumber(imp_total.toString()), 134, reporte.tw_ren);
+      reporte.ImpPosX(formatNumber(Tw_Col[Pos_Act][8].toString()), 154, reporte.tw_ren);
+      const sum = Number(imp_total) - Number(Tw_Col[Pos_Act][8].toString());
+      reporte.ImpPosX(formatNumber(sum.toString()), 174, reporte.tw_ren);
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRen) {
         reporte.pageBreak();
@@ -212,15 +223,15 @@ function Rep_Flujo_01() {
       }
     }
     reporte.ImpPosX("Total", 14, reporte.tw_ren);
-    reporte.ImpPosX(Tw_TGe[1].toString(), 34, reporte.tw_ren);
-    reporte.ImpPosX(Tw_TGe[2].toString(), 54, reporte.tw_ren);
-    reporte.ImpPosX(Tw_TGe[3].toString(), 74, reporte.tw_ren);
-    reporte.ImpPosX(Tw_TGe[4].toString(), 94, reporte.tw_ren);
-    reporte.ImpPosX(Tw_TGe[5].toString(), 114, reporte.tw_ren);
-    reporte.ImpPosX(Tw_TGe[7].toString(), 134, reporte.tw_ren);
-    reporte.ImpPosX(Tw_TGe[8].toString(), 154, reporte.tw_ren);
+    reporte.ImpPosX(formatNumber(Tw_TGe[1].toString()), 34, reporte.tw_ren);
+    reporte.ImpPosX(formatNumber(Tw_TGe[2].toString()), 54, reporte.tw_ren);
+    reporte.ImpPosX(formatNumber(Tw_TGe[3].toString()), 74, reporte.tw_ren);
+    reporte.ImpPosX(formatNumber(Tw_TGe[4].toString()), 94, reporte.tw_ren);
+    reporte.ImpPosX(formatNumber(Tw_TGe[5].toString()), 114, reporte.tw_ren);
+    reporte.ImpPosX(formatNumber(Tw_TGe[7].toString()), 134, reporte.tw_ren);
+    reporte.ImpPosX(formatNumber(Tw_TGe[8].toString()), 154, reporte.tw_ren);
     const sum = Number(Tw_TGe[7].toString()) - Number(Tw_TGe[8].toString());
-    reporte.ImpPosX(sum.toString(), 174, reporte.tw_ren);
+    reporte.ImpPosX(formatNumber(sum.toString()), 174, reporte.tw_ren);
     const pdfData = reporte.doc.output("datauristring");
     setPdfData(pdfData);
     setPdfPreview(true);
