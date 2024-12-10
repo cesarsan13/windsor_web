@@ -18,11 +18,14 @@ function ModalActividades({
     setValue,
     session,
     isLoadingButton,
+    asignaturas
 }) {
     const [error, setError] = useState(null);
     const [titulo, setTitulo] = useState("");
     const [isDisabled, setIsDisabled] = useState(true);
     const materia = watch("materia")
+    const [asignatura, setAsignatura] = useState([]);
+    const [asignaturaSelected, setAsignaturaSelected] = useState([]);
     useEffect(() => {
         const fetchSecuencia = async (materia) => {
             const { token } = session.user
@@ -52,12 +55,15 @@ function ModalActividades({
                         : `Ver Actividad: ${currentID}`
         );
     }, [accion, currentID])
+    const handlAsignaturaChange = (event) => {
+        setAsignaturaSelected(event.target.value);
+      };
     return (
         <dialog className='modal' id='my_modal_3'>
-            <div className='modal-box'>
+            <div className='modal-box bg-base-200'>
                 <form onSubmit={onSubmit}>
-                    <div className='sticky -top-6 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5'>
-                        <h3 className='font-bold text-lg'>{titulo}</h3>
+                    <div className='sticky -top-6 flex justify-between items-center bg-base-200 dark:bg-[#1d232a] w-full h-10 z-10 mb-5'>
+                        <h3 className='font-bold text-lg text-black dark:text-white'>{titulo}</h3>
                         <div className='flex space-x-2 items-center'>
                             <div className={`tooltip tooltip-bottom ${accion === "Ver"
                                 ? "hover:cursor-not-allowed hidden"
@@ -81,7 +87,7 @@ function ModalActividades({
                                 </button>
                             </div>
                             <button
-                                className="btn btn-sm btn-circle btn-ghost"
+                                className="btn btn-sm btn-circle btn-ghost text-black dark:text-white"
                                 onClick={(event) => {
                                     event.preventDefault();
                                     document.getElementById("my_modal_3").close();
@@ -93,7 +99,23 @@ function ModalActividades({
                     </div>
                     <fieldset id='fs_actividad'>
                         <div className='container flex flex-col space-y-5'>
-                            <Inputs
+                        <Inputs
+                            dataType={"int"}
+                            name={"materia"}
+                            tamañolabel={""}
+                            className={"fyo8m-select p-1.5 grow bg-[#ffffff] "}
+                            Titulo={"Asignatura: "}
+                            type={"selectAsignatura"}
+                            requerido={true}
+                            errors={errors}
+                            register={register}
+                            message={"Asignatura Requerido"}
+                            isDisabled={false}
+                            maxLenght={5}
+                            arreglos={asignaturas}
+                            onChange={handlAsignaturaChange}
+                        />
+                            {/* <Inputs
                                 dataType={"int"}
                                 name={"materia"}
                                 tamañolabel={"w-3/6"}
@@ -105,7 +127,7 @@ function ModalActividades({
                                 register={register}
                                 message={"materiaRequerido"}
                                 isDisabled={isDisabled}
-                            />
+                            /> */}
                             <Inputs
                                 dataType={"int"}
                                 name={"secuencia"}
