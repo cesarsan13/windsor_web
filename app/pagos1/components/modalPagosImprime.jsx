@@ -49,9 +49,9 @@ function ModalPagoImprime({
         showModal("my_modal_4", true);
         return;
       }
-      let totalFormat = Elimina_Comas(formaPagoPage.pago);
-      let imp_pago = Elimina_Comas(data.pago);
-      let imp_pago2 = Elimina_Comas(data.pago_2);
+      let totalFormat = Number(Elimina_Comas(formaPagoPage.pago));
+      let imp_pago = Number(Elimina_Comas(data.pago));
+      let imp_pago2 = Number(Elimina_Comas(data.pago_2));
       const totalPago = parseFloat(imp_pago + imp_pago2);
 
       if (totalFormat !== totalPago) {
@@ -174,13 +174,13 @@ function ModalPagoImprime({
     if (evt.target.value === "") return;
     datatype === "int"
       ? setPago((alumno) => ({
-        ...alumno,
-        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-      }))
+          ...alumno,
+          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+        }))
       : setPago((alumno) => ({
-        ...alumno,
-        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-      }));
+          ...alumno,
+          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+        }));
   };
 
   return (
@@ -188,7 +188,9 @@ function ModalPagoImprime({
       <div className="modal-box bg-base-200">
         <form onSubmit={onSubmitModal}>
           <div className="sticky -top-6 flex justify-between items-center bg-base-200 w-full h-10 z-10 mb-5">
-            <h3 className="font-bold text-lg text-neutral-600 dark:text-white">Imprime.</h3>
+            <h3 className="font-bold text-lg text-neutral-600 dark:text-white">
+              Imprime.
+            </h3>
             <div className="flex space-x-2 items-center">
               <div className={`tooltip tooltip-bottom`} data-tip="Guardar">
                 <button
