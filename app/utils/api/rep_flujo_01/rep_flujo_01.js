@@ -7,8 +7,8 @@ export const DocumentosCobranza = async (token, fecha1, fecha2) => {
   const res = await fetch(`${process.env.DOMAIN_API}api/documentosCobranza`, {
     method: "post",
     body: JSON.stringify({
-      fecha_ini: fecha1,
-      fecha_fin: fecha2,
+      fecha_ini: format_Fecha_String(fecha1),
+      fecha_fin: format_Fecha_String(fecha2),
     }),
     headers: {
       Authorization: "Bearer " + token,
