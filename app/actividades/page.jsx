@@ -4,7 +4,7 @@ import Acciones from './components/Acciones'
 import Busqueda from './components/Busqueda'
 import TablaActividades from './components/tablaActividades';
 import { useSession } from 'next-auth/react';
-import { getActividades, Imprimir, guardarActividad, ImprimirExcel } from '../utils/api/actividades/actividades';
+import { getActividades, Imprimir, guardarActividad, ImprimirExcel,getAsignaturas } from '../utils/api/actividades/actividades';
 import { useForm } from 'react-hook-form';
 import ModalActividades from './components/ModalActividades';
 import { confirmSwal, showSwal } from '../utils/alerts';
@@ -31,6 +31,8 @@ function Page() {
     const [animateLoading, setAnimateLoading] = useState(false);
     const [permissions, setPermissions] = useState({});
     const actividadesRef = useRef(actividades)
+    const [asignaturas, setAsignaturas] = useState([]);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -40,6 +42,8 @@ function Page() {
             const es_admin = session.user.es_admin;
             const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
             const data = await getActividades(token, bajas)
+            const asignaturas = await getAsignaturas(token, bajas)
+            setAsignaturas(asignaturas)
             setActividades(data)
             setActividadesFiltradas(data)
             setisLoading(false);
@@ -154,6 +158,7 @@ function Page() {
         showModal(true)
     }
     const onSubmitModal = handleSubmit(async (data) => {
+        console.log("FormData: ",data);
         event.preventDefault
         setisLoadingButton(true);
         let res = null
@@ -300,9 +305,10 @@ function Page() {
                 setValue={setValue}
                 onSubmit={onSubmitModal}
                 isLoadingButton={isLoadingButton}
+                asignaturas={asignaturas}
             />
             <ModalVistaPreviaActividades pdfData={pdfData} pdfPreview={pdfPreview} PDF={ImprimePDF} Excel={ImprimeExcel} />
-            <div className='container h-[80vh] w-full max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden'>
+            <div className='container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden'>
                 <div className='flex flex-col justify-start p-3'>
                     <div className='flex flex-wrap md:flex-nowrap items-start md:items-center'>
                         <div className='order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0'>

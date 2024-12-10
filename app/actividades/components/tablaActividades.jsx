@@ -46,10 +46,11 @@ function TablaActividades({
   return !isLoading ? (
     <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white  w-full lg:w-full">
       {ActividadesFiltradas.length > 0 ? (
-        <table>
+        <table className="table table-xs table-zebra w-full">
           <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
             <tr>
               <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Asignatura</td>
+              <td className="w-[10%]">Descripción</td>
               <th className="w-[5%]">Actividad</th>
               <th className="w-[10%]">Bim 1</th>
               <th className="w-[10%]">Bim 2</th>
@@ -82,6 +83,7 @@ function TablaActividades({
                 >
                   {item.materia}
                 </th>
+                <td>{item.matDescripcion}</td>
                 <td>{item.descripcion}</td>
                 <td className="text-right">{item.EB1}</td>
                 <td className="text-right">{item.EB2}</td>

@@ -15,7 +15,50 @@ function Inputs({
     maxLenght,
     isDisabled,
     handleBlur,
+    arreglos,
+    onChange
 }) {
+    if (type === 'selectAsignatura') {
+        return (
+          <div className="w-full md:w-3/4 px-0.5 py-2 mb-2 md:mb-0">
+            <label
+              htmlFor={name}
+              className={`input input-bordered  input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
+            >
+              {Titulo}
+              <select
+                name={name}
+                className={`text-black dark:text-white bg-transparent dark: ${className}`}
+                id={name}
+                {...register(name, {
+                  ...(requerido && { required: message }),
+                  onChange: (e) => {
+                    onChange && onChange(e);
+                  }
+                })}
+                disabled={isDisabled}
+                // onChange={(e) => onChange && onChange(e)}
+              >
+                <option value="" className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]">
+                  Seleccione una opción
+                </option>
+                {arreglos.map((arreglo) => (
+                  <option
+                    className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]"
+                    key={arreglo.numero}
+                    value={arreglo.numero}
+                  >
+                    {arreglo.descripcion}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {errors[name] && requerido && (
+              <span className="text-red-500 text-sm">{errors[name].message}</span>
+            )}
+          </div>
+        );
+      }
     return (
         <div className='flex flex-col'>
             <label className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}>

@@ -123,3 +123,17 @@ export const ImprimirExcel = (configuracion) => {
   newExcel.addData(body);
   newExcel.guardaReporte(nombre)
 }
+export const getAsignaturas = async (token, baja) => {
+  let url = "";
+  baja
+    ? (url = `${process.env.DOMAIN_API}api/subject/bajas`)
+    : (url = `${process.env.DOMAIN_API}api/subject`);
+  const res = await fetch(url, {
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+  });
+  const resJson = await res.json();
+  return resJson.data;
+};
