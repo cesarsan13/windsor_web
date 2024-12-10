@@ -29,6 +29,7 @@ export const siguiente = async (token) => {
   return resJson.data;
 };
 export const guardaComentarios = async (token, data, accion) => {
+  const generales = data.generales === true ? '1' : '0'
   let url_api = "";
   if (accion === "Alta") {
     url_api = `${process.env.DOMAIN_API}api/comentarios`;
@@ -50,7 +51,7 @@ export const guardaComentarios = async (token, data, accion) => {
       comentario_1: data.comentario_1,
       comentario_2: data.comentario_2,
       comentario_3: data.comentario_3,
-      generales: data.generales,
+      generales: generales,
       baja: data.baja,
     }),
     headers: new Headers({
