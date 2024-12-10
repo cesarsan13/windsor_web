@@ -26,13 +26,18 @@ function ModalBuscarCat({
   const handleSearch = () => {
     const filtered = data.filter((item) => {
       return fieldsToShow.every((field) => {
-        const valorCampo = item[field]?.toString().toLowerCase();
-        const inputValue = inputValues[field]?.toLowerCase();
-        return inputValue ? valorCampo.includes(inputValue) : true;
+        const valorCampo = item[field];
+        const inputValue = inputValues[field];
+        if (!inputValue) return true;
+        if (typeof valorCampo === "number") {
+          return valorCampo === Number(inputValue);
+        }
+        return valorCampo?.toString().toLowerCase().includes(inputValue.toLowerCase());
       });
     });
     setFilteredData(filtered);
   };
+
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
