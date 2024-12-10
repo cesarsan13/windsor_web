@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Inputs from "./components/Inputs";
 import { useForm } from "react-hook-form";
 import Acciones from "./components/Acciones";
-import { Fecha_de_Ctod, formatDate, permissionsComponents } from "../utils/globalfn";
+import { Fecha_de_Ctod, formatDate, permissionsComponents, formatFecha } from "../utils/globalfn";
 import {
   DocumentosCobranza,
   ImprimirExcel,
@@ -16,11 +16,11 @@ import { ReportePDF } from "../utils/ReportesPDF";
 
 function Rep_Flujo_01() {
   const date = new Date();
-  const dateStr = formatDate(date);
+
   const router = useRouter();
   const { data: session, status } = useSession();
-  let [fecha_ini, setFecha_ini] = useState(dateStr.replace(/\//g, "-"));
-  let [fecha_fin, setFecha_fin] = useState(dateStr.replace(/\//g, "-"));
+  let [fecha_ini, setFecha_ini] = useState(date.toISOString().split("T")[0]); //date.toISOString().split("T")[0]
+  let [fecha_fin, setFecha_fin] = useState(date.toISOString().split("T")[0]); //date.toISOString().split("T")[0]
   const [selectedOption, setSelectedOption] = useState("sin_deudores");
   const [dataDocumentoCobranza, setDataDocumentoCobranza] = useState([]);
   const [pdfPreview, setPdfPreview] = useState(false);
@@ -41,6 +41,7 @@ function Rep_Flujo_01() {
       const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
       const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado);
       setPermissions(permisos);
+      
       const fecha_ciclo = Fecha_de_Ctod(fecha_ini, -63);
       const data = await DocumentosCobranza(token, fecha_ciclo, fecha_fin);
       setDataDocumentoCobranza(data);
