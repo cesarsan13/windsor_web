@@ -33,6 +33,7 @@ export const soloEnteros = (event) => {
 export const soloDecimales = (event) => {
   const key = event.key;
   const keyCode = event.keyCode;
+
   // Permitir teclas de retroceso (Backspace)
   if (isControlKey(key)) {
     return;
@@ -59,17 +60,24 @@ export const soloDecimales = (event) => {
   }
   // Permitir Enter para moverse al siguiente campo del formulario
   else if (keyCode === 13) {
-    // Enter
     event.preventDefault();
     const form = event.target.form;
-    const index = Array.prototype.indexOf.call(form, event.target);
-    form.elements[index + 1].focus();
+
+    if (form) {
+      const elements = Array.from(form.elements);
+      const index = elements.indexOf(event.target);
+
+      if (index > -1 && index + 1 < elements.length) {
+        elements[index + 1].focus();
+      }
+    }
   }
   // Permitir solo números
   else if (key < "0" || key > "9") {
     event.preventDefault();
   }
 };
+
 const isControlKey = (key) => {
   // Permitir teclas de control como retroceso, tabulación, flechas, etc.
   return (

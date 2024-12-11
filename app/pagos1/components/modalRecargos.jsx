@@ -11,6 +11,8 @@ function ModalRecargos({
     handleModalClick,
     dRecargo,
     btnRecargo,
+    handleBlur,
+    handleKeyDown,
 }) {
     const Guardar = (evt) => {
         handleModalClick(evt);
@@ -33,7 +35,7 @@ function ModalRecargos({
                                     alt="Guardar"
                                     className="w-5 h-5 md:w-6 md:h-6 mr-1 hidden dark:block"
                                 />
-                                 <Image
+                                <Image
                                     src={iconos.guardar}
                                     alt="Guardar"
                                     className="w-5 h-5 md:w-6 md:h-6 mr-1 block dark:hidden"
@@ -89,8 +91,8 @@ function ModalRecargos({
                                     </div>
                                     <div className="w-full lg:w-auto pb-2 lg:pb-0 mt-0 mb-0 flex pl-5">
                                         <Inputs
-                                            tipoInput={""}
-                                            dataType={"double"}
+                                            tipoInput={"formatNumber"}
+                                            dataType={"float"}
                                             name={"recargo"}
                                             tamañolabel={""}
                                             className={"rounded-l block grow text-right"}
@@ -101,6 +103,8 @@ function ModalRecargos({
                                             errors={errors}
                                             maxLength={8}
                                             isDisabled={false}
+                                            handleBlur={handleBlur}
+                                            handleKeyDown={handleKeyDown}
                                         />
                                         {/* <Tooltip Titulo={"Adiciona"} posicion={"tooltip-top"}>
                                             <Button
