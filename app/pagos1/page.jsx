@@ -321,7 +321,9 @@ function Pagos_1() {
           const importeConDescuento =
             item.importe - item.importe * (item.descuento / 100);
           const diferencia = parseFloat(importeConDescuento.toFixed(2));
-          const saldoF = parseFloat((diferencia - item.importe_pago).toFixed(2));
+          const saldoF = parseFloat(
+            (diferencia - item.importe_pago).toFixed(2)
+          );
           const isPagado = parseFloat(item.importe_pago.toFixed(2)) > 0;
           return {
             numero: item.numero_doc,
@@ -532,11 +534,11 @@ function Pagos_1() {
             const pagosActualizados = pagosFiltrados.map((pago) =>
               pago.numero_producto === newData.producto
                 ? {
-                  ...pago,
-                  precio_base: formatNumber(Monto_Pago),
-                  neto: formatNumber(Monto_Pago),
-                  total: formatNumber(Monto_Pago),
-                }
+                    ...pago,
+                    precio_base: formatNumber(Monto_Pago),
+                    neto: formatNumber(Monto_Pago),
+                    total: formatNumber(Monto_Pago),
+                  }
                 : pago
             );
             const fTotal = Elimina_Comas(h1Total);
@@ -554,7 +556,7 @@ function Pagos_1() {
             setSelectedRow(null);
             setSelectedTable({});
             handleSubmit(async () => {
-              await datosImpresion(formatNumber(data2.importe), data);
+              await datosImpresion(formatNumber(restaTotal), data);
             })();
           } else {
             showSwal(res2.alert_title, res2.alert_text, res2.alert_icon);
@@ -690,7 +692,7 @@ function Pagos_1() {
       if (!restaTotal) {
         restaTotal = "0";
       }
-      restaTotal = restaTotal < 0 ? 0 : restaTotal
+      restaTotal = restaTotal < 0 ? 0 : restaTotal;
       const total = formatNumber(restaTotal);
       setH1Total(total);
       setPagos(pFiltrados);
