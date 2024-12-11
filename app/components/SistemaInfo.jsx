@@ -26,7 +26,6 @@ function SistemaInfo() {
         }
         fetchDatos()
     }, [session, status])    
-    console.log(fechaHoy)
     return (
         <div className='sticky top-16 h-full lg:max-h-10 md:max-h-20 max-h-24 bg-base-100 dark:bg-slate-600 p-2  z-[1]'>
             <div className='flex flex-wrap lg:flex-nowrap justify-center text-center gap-2'>

@@ -17,9 +17,9 @@ function ListView({ adeudos }) {
         }
     }, []);
     const fecha = new Date();
-    const fechaHoy = formatDate(fecha).replace(/\//g, "-")
+    const fechaHoy = formatDate(fecha);
     fecha.setDate(1);
-    const fechaDiaPrimero = formatDate(fecha).replace(/\//g, "-")
+    const fechaDiaPrimero = formatDate(fecha);
     const documentos = adeudos.documentos?.filter((doc) => doc.fecha >= fechaDiaPrimero && doc.fecha <= fechaHoy);
     const alumnos = adeudos.alumnos
     const saldosPorAlumno = documentos?.reduce((acc, documento) => {
