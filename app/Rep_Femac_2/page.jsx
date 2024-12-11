@@ -182,7 +182,7 @@ function AlumnosPorClase() {
           "R"
         );
         reporte.ImpPosX(
-          reporte1.Mes_Nac_1?.toString().substring(4, 2) ?? "",
+          reporte1.Mes_Nac_1?.toString().substring(5, 7) ?? "",
           137,
           reporte.tw_ren,
           0,
