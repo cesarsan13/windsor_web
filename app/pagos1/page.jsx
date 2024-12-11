@@ -457,7 +457,7 @@ function Pagos_1() {
       showModal("modal_parciales", false);
       await showSwalAndWait(
         "Error!",
-        "Clave de autorización invalida' ",
+        "Clave de autorización inválida.",
         "error"
       );
       showModal("modal_parciales", true);
@@ -468,7 +468,7 @@ function Pagos_1() {
       showModal("modal_parciales", false);
       await showSwalAndWait(
         "",
-        "El monto del pago parcial es mayor al pago total",
+        "El monto del pago parcial es mayor al pago total.",
         "info"
       );
       showModal("modal_parciales", true);
@@ -479,7 +479,7 @@ function Pagos_1() {
       showModal("modal_parciales", false);
       await showSwalAndWait(
         "",
-        "El se debe de aplicar a la partida indicada pero la cantidad restante. Es mayor al valor de la partida",
+        "La cantidad restante es mayor al valor de la partida. Asegúrate de aplicarla correctamente a la partida indicada.",
         "info"
       );
       showModal("modal_parciales", true);
@@ -487,12 +487,12 @@ function Pagos_1() {
     }
     showModal("modal_parciales", false);
     Swal.fire({
-      title: "Es correcta la cantidad a cobrar en pago parcial?",
-      text: "Una vez que se autoriza será generado el documento a cobranza. Esta completamente seguro que la operación es correcta",
+      title: "¿Confirmas el monto del pago parcial?",
+      text: "Al autorizar, se generará el documento de cobranza. ¿Estás completamente seguro de que los datos son correctos?",
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: "Sí",
-      cancelButtonText: "No",
+      confirmButtonText: "Sí, confirmar",
+      cancelButtonText: "No, cancelar",
     }).then(async (result) => {
       if (result.isConfirmed) {
         if (!fecha) {
@@ -520,7 +520,7 @@ function Pagos_1() {
           alumno: selectedTable.alumno || 0,
           producto: selectedTable.numero_producto || 0,
           numero_doc: Doc_Ant || 0,
-          fecha: data.fecha || "",
+          fecha: format_Fecha_String(data.fecha) || "",
           descuento: 0,
           importe: A_Pagar || 0,
         };
@@ -554,7 +554,7 @@ function Pagos_1() {
             setSelectedRow(null);
             setSelectedTable({});
             handleSubmit(async () => {
-              await datosImpresion(data.monto_parcial, data);
+              await datosImpresion(formatNumber(data2.importe), data);
             })();
           } else {
             showSwal(res2.alert_title, res2.alert_text, res2.alert_icon);
@@ -578,6 +578,7 @@ function Pagos_1() {
       }
     });
   };
+
   const btnRecargo = (event) => {
     event.preventDefault();
     handleSubmit(submitRecargo)();
@@ -689,6 +690,7 @@ function Pagos_1() {
       if (!restaTotal) {
         restaTotal = "0";
       }
+      restaTotal = restaTotal < 0 ? 0 : restaTotal
       const total = formatNumber(restaTotal);
       setH1Total(total);
       setPagos(pFiltrados);
@@ -840,6 +842,8 @@ function Pagos_1() {
         handleModalClick={handleModalClick}
         dRecargo={dRecargo}
         btnRecargo={btnRecargo}
+        handleBlur={handleBlur}
+        handleKeyDown={handleKeyDown}
       />
       <ModalParciales
         session={session}
@@ -849,6 +853,8 @@ function Pagos_1() {
         setProductos1={setProductos1}
         accionB={accionC}
         btnParciales={btnParciales}
+        handleBlur={handleBlur}
+        handleKeyDown={handleKeyDown}
       />
       <ModalCajeroPago
         session={session}

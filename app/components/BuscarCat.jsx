@@ -145,6 +145,7 @@ function BuscarCat({
               [nameInput[0]]: defaultItem[fieldsToShow[0]] || "",
               [nameInput[1]]: defaultItem[fieldsToShow[1]] || "",
             });
+            setItem(defaultItem);
           }
         }
         setisLoading(false);

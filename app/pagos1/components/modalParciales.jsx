@@ -12,6 +12,8 @@ function ModalParciales({
     setProductos1,
     accionB,
     btnParciales,
+    handleBlur,
+    handleKeyDown,
 }) {
     const nameInputs3 = ["numero_producto", "descripcion"];
     const columnasBuscaCat3 = ["numero", "descripcion"];
@@ -61,8 +63,8 @@ function ModalParciales({
                             <div className="w-full">
                                 <div className="flex flex-row ">
                                     <Inputs
-                                        tipoInput={""}
-                                        dataType={"double"}
+                                        tipoInput={"formatNumber"}
+                                        dataType={"float"}
                                         name={"monto_parcial"}
                                         tamañolabel={""}
                                         className={"rounded block grow text-right"}
@@ -71,8 +73,10 @@ function ModalParciales({
                                         requerido={false}
                                         register={register}
                                         errors={errors}
-                                        maxLength={8}
+                                        maxLenght={8}
                                         isDisabled={false}
+                                        handleBlur={handleBlur}
+                                        handleKeyDown={handleKeyDown}
                                     />
                                     <div className="pl-5">
                                         <Inputs
@@ -80,13 +84,13 @@ function ModalParciales({
                                             dataType={"string"}
                                             name={"clave_acceso"}
                                             tamañolabel={""}
-                                            className={"rounded block grow text-right"}
+                                            className={"rounded block grow text-left"}
                                             Titulo={"Acceso: "}
                                             type={"password"}
                                             requerido={false}
                                             register={register}
                                             errors={errors}
-                                            maxLength={15}
+                                            maxLenght={15}
                                             isDisabled={false}
                                         />
                                     </div>

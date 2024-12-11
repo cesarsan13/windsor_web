@@ -129,7 +129,7 @@ function ModalPagoImprime({
       reiniciarPage();
       showModal("my_modal_4", false);
     } catch (e) {
-      console.log(e.message);
+      // console.log(e.message);
       setisLoading(false);
     }
   });
@@ -174,13 +174,13 @@ function ModalPagoImprime({
     if (evt.target.value === "") return;
     datatype === "int"
       ? setPago((alumno) => ({
-          ...alumno,
-          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-        }))
+        ...alumno,
+        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+      }))
       : setPago((alumno) => ({
-          ...alumno,
-          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-        }));
+        ...alumno,
+        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+      }));
   };
 
   return (
