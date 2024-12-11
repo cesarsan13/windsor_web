@@ -70,19 +70,19 @@ function Rep_Flujo_01() {
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: `Reporte de Adeudos Pendientes  al ${fecha_ini}`,
+        Nombre_Reporte: `Reporte de Adeudos Pendientes al ${fecha_ini}`,
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
       body: data,
     };
     const reporte = new ReportePDF(configuracion);
     const { body } = configuracion;
-    console.log(body);
     const documentosCobranza = body.documentos_cobranza;
     const alumnos = body.alumnos;
     let Tw_Col = Array.from({ length: 14 }, () => Array(9).fill(0.0));
     let Tw_TGe = Array(9).fill(0.0);
     let Tw_Per = Array(14).fill("");
+    let per_str;
     const Enca1 = (doc) => {
       if (!doc.tiene_encabezado) {
         doc.imprimeEncabezadoPrincipalV();
@@ -121,11 +121,10 @@ function Rep_Flujo_01() {
     for (Pos_Act = 1; Pos_Act <= 8; Pos_Act++) {
       Tw_TGe[Pos_Act] = 0;
     }
-    Tw_Per[1] = fecha_ini.slice(0, 7);
-    Tw_Per[12] = fecha_fin.slice(0, 7);
+    Tw_Per[1] = (fecha_ini.slice(0, 7)).replace(/-/g, "/");
+    Tw_Per[12] = (fecha_fin.slice(0, 7)).replace(/-/g, "/");
     let adiciona;
-    let per_str;
-
+    
     documentosCobranza.forEach((documento) => {
       const alumno = alumnos.find((alu) => alu.numero === documento.alumno);
       if (alumno) {
@@ -147,9 +146,7 @@ function Rep_Flujo_01() {
       } else {
         adiciona = false;
       }
-
       if (adiciona === true) {
-        console.log("entra el adiciona");
         per_str = documento.fecha.toString().slice(0, 7);
         if (per_str < Tw_Per[1]) {
           Pos_Act = 0;
@@ -164,26 +161,19 @@ function Rep_Flujo_01() {
             }
           }
         }
-        console.log("pos_act antes del if", Pos_Act);
-        if (Pos_Act = 13) { //<
-          console.log("en el if");
-          
+        if (Pos_Act < 13) { 
           if (documento.ref.toString().toUpperCase() === "COL") {
-            console.log("col", documento);
             Tw_Col[Pos_Act][1] = Number(Tw_Col[Pos_Act][1]) + documento.importe;
             Tw_Col[Pos_Act][2] = Number(Tw_Col[Pos_Act][2]) + documento.importe * (documento.descuento / 100);
           } 
           if (documento.ref.toString().toUpperCase() === "INS") {
-            console.log("ins", documento.importe);
             Tw_Col[Pos_Act][3] = Number(Tw_Col[Pos_Act][3]) + documento.importe;
             Tw_Col[Pos_Act][4] = Number(Tw_Col[Pos_Act][4]) + documento.importe * (documento.descuento / 100);
           }
           if (documento.ref.toString().toUpperCase() === "REC") {
-            console.log("rec", documento);
             Tw_Col[Pos_Act][4] = Number(Tw_Col[Pos_Act][4]) + documento.importe;
           }
           if (documento.ref.toString().toUpperCase() == "TAL") {
-            console.log("tal", documento);
             Tw_Col[Pos_Act][5] = Number(Tw_Col[Pos_Act][5]) + documento.importe;
           }
           Tw_Col[Pos_Act][8] = Number(Tw_Col[Pos_Act][8]) + documento.importe_pago;
@@ -238,6 +228,7 @@ function Rep_Flujo_01() {
     showModalVista(true);
     setAnimateLoading(false);
   };
+
   const ImprimePDF = async () => {
     const configuracion = {
       Encabezado: {
