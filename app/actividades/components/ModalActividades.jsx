@@ -35,7 +35,7 @@ function ModalActividades({
         if (materia && accion === "Alta") {
             fetchSecuencia(materia)
         } else {
-            setValue("secuencia", "")
+            // setValue("secuencia", "")
         }
     }, [materia])
     useEffect(() => {
@@ -55,8 +55,11 @@ function ModalActividades({
                         : `Ver Actividad: ${currentID}`
         );
     }, [accion, currentID])
-    const handlAsignaturaChange = (event) => {
+    const handlAsignaturaChange =async (event) => {
         setAsignaturaSelected(event.target.value);
+        const { token } = session.user
+        const secuencia = await getUltimaSecuencia(token, materia)
+        setValue("secuencia", secuencia.data)
       };
     return (
         <dialog className='modal' id='my_modal_3'>
