@@ -301,47 +301,50 @@ function Pagos_1() {
 
   const submitDocumento = async (data) => {
     const { token } = session.user;
-    let newData = {};
-    let alumnoInvalido = alumnos1.numero;
+    const alumnoInvalido = alumnos1.numero;
     setMuestraDocumento(true);
     if (!alumnoInvalido) {
-      showSwal("Oppss!", "Alumno invalido", "error");
+      showSwal("Oppss!", "Alumno inválido", "error");
       setMuestraDocumento(false);
       return;
     }
     const dataR = await buscaDocumentosCobranza(token, alumnos1.numero);
     if (dataR.length > 0) {
-      setdDocFiltrados([]);
-      for (const item of dataR) {
-        const importeConDescuento =
-          item.importe - item.importe * (item.descuento / 100);
-        const diferencia = parseFloat(importeConDescuento.toFixed(2));
-        if (parseFloat((diferencia - item.importe_pago).toFixed(2)) > 0) {
-          newData = {
+      const documentosFiltrados = dataR
+        .filter((item) => {
+          const importeConDescuento =
+            item.importe - item.importe * (item.descuento / 100);
+          const diferencia = parseFloat(importeConDescuento.toFixed(2));
+          return parseFloat((diferencia - item.importe_pago).toFixed(2)) > 0;
+        })
+        .map((item) => {
+          const importeConDescuento =
+            item.importe - item.importe * (item.descuento / 100);
+          const diferencia = parseFloat(importeConDescuento.toFixed(2));
+          const saldoF = parseFloat((diferencia - item.importe_pago).toFixed(2));
+          const isPagado = parseFloat(item.importe_pago.toFixed(2)) > 0;
+          return {
             numero: item.numero_doc,
             paquete: item.producto,
             fecha: item.fecha,
+            saldo: isPagado
+              ? formatNumber(saldoF)
+              : formatNumber(parseFloat(item.importe.toFixed(2))),
+            descuento: isPagado
+              ? "0.00"
+              : formatNumber(parseFloat(item.descuento.toFixed(2))),
+            nombre_producto: item.nombre_producto || "",
+            alumno: item.alumno || "",
           };
-          if (parseFloat(item.importe_pago.toFixed(2)) > 0) {
-            const Tw_Trabajo = parseFloat(importeConDescuento.toFixed(2));
-            const saldoF = parseFloat(
-              (Tw_Trabajo - item.importe_pago).toFixed(2)
-            );
-            newData.saldo = formatNumber(saldoF);
-            newData.descuento = "0.00";
-          } else {
-            const saldoF = parseFloat(item.importe.toFixed(2));
-            newData.saldo = formatNumber(saldoF);
-            const descF = parseFloat(item.descuento.toFixed(2));
-            newData.descuento = formatNumber(descF);
-            newData.nombre_producto = item.nombre_producto || "";
-            newData.alumno = item.alumno || "";
-          }
-        }
+        });
+      if (documentosFiltrados.length > 0) {
+        setdDocFiltrados(documentosFiltrados);
+        setMuestraDocumento(false);
+        showModal("my_modal_5", true);
+      } else {
+        setMuestraDocumento(false);
+        showSwal("Oppss!", "No hay documentos para cobro", "error");
       }
-      setdDocFiltrados((prevPagos) => [...prevPagos, newData]);
-      setMuestraDocumento(false);
-      showModal("my_modal_5", true);
     } else {
       setMuestraDocumento(false);
       showSwal("Oppss!", "No hay documentos para cobro", "error");
@@ -529,11 +532,11 @@ function Pagos_1() {
             const pagosActualizados = pagosFiltrados.map((pago) =>
               pago.numero_producto === newData.producto
                 ? {
-                    ...pago,
-                    precio_base: formatNumber(Monto_Pago),
-                    neto: formatNumber(Monto_Pago),
-                    total: formatNumber(Monto_Pago),
-                  }
+                  ...pago,
+                  precio_base: formatNumber(Monto_Pago),
+                  neto: formatNumber(Monto_Pago),
+                  total: formatNumber(Monto_Pago),
+                }
                 : pago
             );
             const fTotal = Elimina_Comas(h1Total);

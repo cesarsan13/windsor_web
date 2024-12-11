@@ -98,11 +98,10 @@ function TablaPagos1({
               {pagosFiltrados.map((item) => (
                 <tr
                   key={item.numero_producto}
-                  className={`hover:cursor-pointer ${
-                    selectedRow === item.numero_producto
+                  className={`hover:cursor-pointer ${selectedRow === item.numero_producto
                       ? "dark:bg-[#334155] bg-[#f1f5f9]"
                       : ""
-                  }`}
+                    }`}
                 >
                   <th className="text-right">{item.numero_producto}</th>
                   <td className="hidden">{item.numero_producto}</td>
@@ -124,7 +123,7 @@ function TablaPagos1({
                     permission={permiso_baja}
                   />
                   <ActionButton
-                    tooltip="Editar"
+                    tooltip="Seleccionar"
                     iconDark={iconos.documento}
                     iconLight={iconos.documento_w}
                     onClick={(evt) => tableAction(evt, item, "Seleccionar")}
