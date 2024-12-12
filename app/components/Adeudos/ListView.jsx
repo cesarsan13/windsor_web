@@ -79,7 +79,7 @@ function ListView({ adeudos }) {
                         <FaXmark className='w-7 h-7 hidden dark:block text-black dark:text-white' />
                     </div>
                     <div className='col-span-3 text-xs text-black dark:text-white content-center font-thin'>
-                        <p className="truncate">No hay deudores.</p>
+                        <p className="truncate">No hay adeudos pendientes.</p>
                     </div>
                     <div className='col-span-3 text-xs text-black dark:text-white content-center font-thin'>
                         <p>$ 0.00</p>
