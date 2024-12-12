@@ -39,7 +39,7 @@ function Adicion_Productos_Cartera() {
             return;
           }
         fetchData();
-    }, [session]);
+    }, [session, status]);
     
     const {
         register,
@@ -60,15 +60,6 @@ function Adicion_Productos_Cartera() {
     setisLoading(true);
     if (articulo.cond_1 === 0) {
       showSwal("Error: Generacion Cobranza", "Condicion Invalida.", "error");
-      setisLoading(false);
-      return;
-    }
-    if (data.periodo === 0) {
-      showSwal(
-        "Error: Generacion Cobranza",
-        "Numero de periodo en 0.",
-        "error"
-      );
       setisLoading(false);
       return;
     }
@@ -120,7 +111,7 @@ function Adicion_Productos_Cartera() {
       fecha: date,
       periodo: 0,
     });
-  }, [articulo, reset]);
+  }, [articulo, date, reset]);
 
   const home = () => {
     router.push("/");
