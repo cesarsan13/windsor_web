@@ -299,7 +299,7 @@ function RepFemac12Anexo() {
     <>
       <VistaPrevia
         id={"modalVPRepFemac12Anexo4"}
-        titulo={"Vista Previa de Corbanza por Productos"}
+        titulo={"Vista Previa de Cobranza por Productos"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
