@@ -2,7 +2,6 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import Acciones from "./components/Acciones";
-import Inputs from "@/app/rep_femac_10_Anexo_2/components/textComponent";
 import { calculaDigitoBvba, formatDate } from "../utils/globalfn";
 import { useForm } from "react-hook-form";
 import { getReporteEstadodeCuenta, ImprimirExcel, ImprimirPDF } from "../utils/api/rep_femac_10_Anexo_2/rep_femac_10_Anexo_2";
@@ -11,11 +10,11 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import BuscarCat from "@/app/components/BuscarCat";
 import "jspdf-autotable";
-import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import VistaPrevia from "../components/VistaPrevia";
 import { permissionsComponents } from "../utils/globalfn";
+import { showSwal } from "../utils/alerts";
 
 function EstadodeCuenta() {
   const router = useRouter();
@@ -94,6 +93,18 @@ function EstadodeCuenta() {
     setAnimateLoading(true);
     cerrarModalVista();
 
+    if (alumno_ini.numero === undefined) {
+      showSwal(
+        "Oppss!",
+        "Para imprimir, mínimo debe estar seleccionado un Alumno de 'Inicio'",
+        "error"
+      );
+      setTimeout(() => {
+        setPdfPreview(false);
+        setPdfData("");
+        setAnimateLoading(false);
+      }, 500);
+    } else {
     const data = await getReporteEstadodeCuenta(
       session.user.token,
       fecha_ini,
@@ -234,6 +245,7 @@ function EstadodeCuenta() {
       showModalVista(true);
       setAnimateLoading(false);
     }, 500);
+    }
   };
 
   const showModalVista = (show) => {
