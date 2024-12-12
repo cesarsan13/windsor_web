@@ -57,16 +57,16 @@ function RepFemac12Anexo() {
   };
 
 
-  useEffect(()=>{
+  useEffect(() => {
     if (status === "loading" || !session) {
       return;
     }
-    let {permissions}=session.user
+    let { permissions } = session.user
     const es_admin = session.user.es_admin
     const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-    const permisos = permissionsComponents(es_admin,permissions,session.user.id,menuSeleccionado)
+    const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado)
     setPermissions(permisos)
-  },[session,status])
+  }, [session, status])
 
   useEffect(() => {
     setFecha1(getPrimerDiaDelMes());
@@ -140,129 +140,141 @@ function RepFemac12Anexo() {
   };
 
   const handleVerClick = async () => {
-    setisLoading(true);
-    setAnimateLoading(true);
-    cerrarModalVista();
-
-    if (producto1.numero === undefined && producto2.numero === undefined ) {
-      showSwal(
-        "Oppss!",
-        "Para imprimir, debes de seleccionar los productos.",
-        "error"
-      );
-      setTimeout(() => {
-        setPdfPreview(false);
-        setPdfData("");
-        setAnimateLoading(false);
-        document.getElementById("modalVPRepFemac12Anexo4").close();
-      }, 500);
-    } else {
-    const configuracion = {
-      Encabezado: {
-        Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: "Reporte de Cobranza por Producto",
-        Nombre_Usuario: `Usuario: ${session.user.name}`,
-      },
-    };
-    const { token } = session.user;
-    const reporte = new ReportePDF(configuracion);
-    const Enca1 = (doc) => {
-      if (!doc.tiene_encabezado) {
-        doc.imprimeEncabezadoPrincipalV();
-        doc.nextRow(12);
-        doc.ImpPosX("Producto", 24, doc.tw_ren, 0, "R");
-        doc.ImpPosX("Descripcion", 43, doc.tw_ren, 0, "L");
-        doc.nextRow(4);
-        doc.ImpPosX("Alumno", 24, doc.tw_ren, 0, "R");
-        doc.ImpPosX("Nombre", 38, doc.tw_ren, 0, "L");
-        doc.ImpPosX("Importe", 138, doc.tw_ren, 0, "R");
-        doc.ImpPosX("Fecha Pago", 168, doc.tw_ren, 0, "L");
-        doc.nextRow(4);
-        doc.printLineV();
-        doc.nextRow(4);
-        doc.tiene_encabezado = true;
+    try {
+      setisLoading(true);
+      setAnimateLoading(true);
+      cerrarModalVista();
+      if (producto1.numero === undefined && producto2.numero === undefined) {
+        showSwal(
+          "Oppss!",
+          "Para imprimir, debes de seleccionar los productos.",
+          "error"
+        );
+        setTimeout(() => {
+          setPdfPreview(false);
+          setPdfData("");
+          setAnimateLoading(false);
+          document.getElementById("modalVPRepFemac12Anexo4").close();
+        }, 500);
       } else {
-        doc.nextRow(6);
-        doc.tiene_encabezado = true;
-      }
-    };
-    const Cambia_Articulo = (doc, Total_Art) => {
-      doc.ImpPosX("TOTAL", 108, doc.tw_ren, 0, "R");
-      doc.ImpPosX(formatNumber(Total_Art), 138, doc.tw_ren, 0, "R");
-      doc.nextRow(4);
-    };
-    Enca1(reporte);
-    let articulo = producto1.numero === undefined ? "" : producto1.numero;
-    let artFin = producto2.numero === undefined ? "" : producto2.numero;
-    const data = await getDetallePedido(
-      token,
-      fecha1,
-      fecha2,
-      articulo,
-      artFin
-    );
-    let alu_Ant;
-    let alumno;
-    for (const dato of data) {
-      if (alu_Ant !== dato.alumno) {
-        alumno = dato.nombre;
-      }
-      const importe =
-        dato.cantidad * dato.precio_unitario -
-        dato.cantidad * dato.precio_unitario * (dato.descuento / 100);
-      const datos = {
-        recibo: dato.recibo,
-        fecha: dato.fecha,
-        articulo: parseInt(dato.articulo),
-        documento: dato.documento,
-        alumno: dato.alumno,
-        nombre: alumno,
-        importe: importe,
-      };
-      const res = await insertTrabRepCobr(token, datos);
-      alu_Ant = dato.alumno;
-    }
-    const dataTrabRepCobr = await getTrabRepCob(token, sOrdenar);
-    let Art_Ant = "";
-    let tot_art = 0;
-    let total_general = 0;
-    dataTrabRepCobr.forEach((trabRep) => {
-      if (trabRep.articulo !== Art_Ant && Art_Ant !== "") {
-        Cambia_Articulo(reporte, tot_art);
-        tot_art = 0;
-      }
-      if (trabRep.articulo !== Art_Ant) {
-        reporte.ImpPosX(trabRep.articulo.toString(), 24, reporte.tw_ren, 0, "R");
-        reporte.ImpPosX(trabRep.descripcion.toString(), 43, reporte.tw_ren, 0, "L");
+        const configuracion = {
+          Encabezado: {
+            Nombre_Aplicacion: "Sistema de Control Escolar",
+            Nombre_Reporte: "Reporte de Cobranza por Producto",
+            Nombre_Usuario: `Usuario: ${session.user.name}`,
+          },
+        };
+        const { token } = session.user;
+        const reporte = new ReportePDF(configuracion);
+        const Enca1 = (doc) => {
+          if (!doc.tiene_encabezado) {
+            doc.imprimeEncabezadoPrincipalV();
+            doc.nextRow(12);
+            doc.ImpPosX("Producto", 24, doc.tw_ren, 0, "R");
+            doc.ImpPosX("Descripcion", 43, doc.tw_ren, 0, "L");
+            doc.nextRow(4);
+            doc.ImpPosX("Alumno", 24, doc.tw_ren, 0, "R");
+            doc.ImpPosX("Nombre", 38, doc.tw_ren, 0, "L");
+            doc.ImpPosX("Importe", 138, doc.tw_ren, 0, "R");
+            doc.ImpPosX("Fecha Pago", 168, doc.tw_ren, 0, "L");
+            doc.nextRow(4);
+            doc.printLineV();
+            doc.nextRow(4);
+            doc.tiene_encabezado = true;
+          } else {
+            doc.nextRow(6);
+            doc.tiene_encabezado = true;
+          }
+        };
+        const Cambia_Articulo = (doc, Total_Art) => {
+          doc.ImpPosX("TOTAL: ", 98, doc.tw_ren, 0, "L");
+          doc.ImpPosX(formatNumber(Total_Art), 138, doc.tw_ren, 0, "R");
+          doc.nextRow(4);
+        };
         Enca1(reporte);
-        if (reporte.tw_ren >= reporte.tw_endRen) {
-          reporte.pageBreak();
+        let articulo = producto1.numero === undefined ? "" : producto1.numero;
+        let artFin = producto2.numero === undefined ? "" : producto2.numero;
+        const data = await getDetallePedido(
+          token,
+          fecha1,
+          fecha2,
+          articulo,
+          artFin
+        );
+        let alu_Ant;
+        let alumno;
+        console.log(data);
+        await Promise.all(data.map(async (dato) => {
+          if (alu_Ant !== dato.alumno) {
+            alumno = dato.nombre;
+          }
+          const importe =
+            dato.cantidad * dato.precio_unitario -
+            dato.cantidad * dato.precio_unitario * (dato.descuento / 100);
+          const datos = {
+            recibo: dato.recibo,
+            fecha: dato.fecha,
+            articulo: parseInt(dato.articulo),
+            documento: dato.documento,
+            alumno: dato.alumno,
+            nombre: alumno,
+            importe: importe,
+          };
+          await insertTrabRepCobr(token, datos);
+          alu_Ant = dato.alumno;
+        }));
+        const dataTrabRepCobr = await getTrabRepCob(token, sOrdenar);
+        let Art_Ant = "";
+        let tot_art = 0;
+        let total_general = 0;
+        dataTrabRepCobr.forEach((trabRep) => {
+          if (trabRep.articulo !== Art_Ant && Art_Ant !== "") {
+            Cambia_Articulo(reporte, tot_art);
+            tot_art = 0;
+          }
+          if (trabRep.articulo !== Art_Ant) {
+            reporte.ImpPosX((trabRep.articulo ?? "").toString(), 24, reporte.tw_ren, 0, "R");
+            reporte.ImpPosX((trabRep.descripcion ?? "").toString(), 43, reporte.tw_ren, 0, "L");
+            Enca1(reporte);
+            if (reporte.tw_ren >= reporte.tw_endRen) {
+              reporte.pageBreak();
+              Enca1(reporte);
+            }
+          }
+          reporte.ImpPosX(
+            (trabRep.alumno ?? "").toString() +
+            "-" +
+            calculaDigitoBvba((trabRep.alumno ?? "").toString()),
+            24,
+            reporte.tw_ren,
+            0,
+            "R"
+          );
+          reporte.ImpPosX((trabRep.nombre ?? "").toString(), 38, reporte.tw_ren, 0, "L");
+          reporte.ImpPosX(formatNumber(trabRep.importe ?? 0), 138, reporte.tw_ren, 0, "R");
+          reporte.ImpPosX((trabRep.fecha ?? "").toString(), 168, reporte.tw_ren, 0, "L");
           Enca1(reporte);
-        }
+          if (reporte.tw_ren >= reporte.tw_endRen) {
+            reporte.pageBreak();
+            Enca1(reporte);
+          }
+          tot_art = tot_art + trabRep.importe;
+          total_general = total_general + trabRep.importe;
+          Art_Ant = trabRep.articulo;
+        });
+        Cambia_Articulo(reporte, tot_art);
+        reporte.ImpPosX("TOTAL GENERAL: ", 98, reporte.tw_ren, 0, "L");
+        reporte.ImpPosX(formatNumber(total_general), 148, reporte.tw_ren, 0, "R");
+        setTimeout(() => {
+          const pdfData = reporte.doc.output("datauristring");
+          setPdfData(pdfData);
+          setPdfPreview(true);
+          showModalVista(true);
+          setAnimateLoading(false);
+        }, 500);
       }
-      reporte.ImpPosX(trabRep.alumno.toString() + "-" + calculaDigitoBvba(trabRep.alumno.toString()), 24, reporte.tw_ren, 0, "R");
-      reporte.ImpPosX(trabRep.nombre.toString(), 38, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(formatNumber(trabRep.importe), 138, reporte.tw_ren, 0, "R");
-      reporte.ImpPosX(trabRep.fecha.toString(), 168, reporte.tw_ren, 0, "L");
-      Enca1(reporte);
-      if (reporte.tw_ren >= reporte.tw_endRen) {
-        reporte.pageBreak();
-        Enca1(reporte);
-      }
-      tot_art = tot_art + trabRep.importe;
-      total_general = total_general + trabRep.importe;
-      Art_Ant = trabRep.articulo;
-    });
-    Cambia_Articulo(reporte, tot_art);
-    reporte.ImpPosX("TOTAL General", 98, reporte.tw_ren, 0, "L");
-    reporte.ImpPosX(formatNumber(total_general), 138, reporte.tw_ren, 0, "R");
-    setTimeout(() => {
-      const pdfData = reporte.doc.output("datauristring");
-      setPdfData(pdfData);
-      setPdfPreview(true);
-      showModalVista(true);
-      setAnimateLoading(false);
-    }, 500);
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -301,7 +313,7 @@ function RepFemac12Anexo() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading} permiso_imprime={permissions.impresion}/>
+                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading} permiso_imprime={permissions.impresion} />
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Reporte de Cobranza por Productos
