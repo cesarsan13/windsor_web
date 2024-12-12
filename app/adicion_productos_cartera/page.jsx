@@ -54,15 +54,14 @@ function Adicion_Productos_Cartera() {
             cond_1:0
         },
     });
-
   const ActRef = handleSubmit(async (data) => {
     const { token } = session.user;
     setisLoading(true);
-    if (articulo.cond_1 === 0) {
+    if (articulo.cond_1 === 0 || articulo.numero === undefined) {
       showSwal("Error: Generacion Cobranza", "Condicion Invalida.", "error");
       setisLoading(false);
       return;
-    }
+    } else {
     const res = await actualizarCartera(token);
     if (res.status) {
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
@@ -71,6 +70,7 @@ function Adicion_Productos_Cartera() {
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
     }
     setisLoading(false);
+  }
   });
 
   const onSubmitProceso = handleSubmit(async (data) => {
