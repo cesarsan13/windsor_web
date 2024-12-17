@@ -11,6 +11,7 @@ import Link from "next/link";
 function LoginPage() {
   const { session } = useSession();
   const router = useRouter();
+  const [empresas, setEmpresas] = useState([]);
   const [error, setError] = useState(null);
   const [mostrarContr, setMostrarContr] = useState(false);
   const mostrarContraseña = () => {
@@ -18,6 +19,12 @@ function LoginPage() {
   };
 
   useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch(`${process.env.DOMAIN_API}api/basesDatos`);
+      const resJson = await res.json();
+      setEmpresas(resJson.data);
+    };
+    fetchData();
     // Quitar scroll en el body al cargar la página
     document.body.style.overflow = "hidden";
     return () => {
@@ -35,6 +42,7 @@ function LoginPage() {
     const res = await signIn("credentials", {
       email: data.username,
       password: data.password,
+      xEscuela: data.xEscuela,
       redirect: false,
     });
     if (res.error) {
@@ -72,9 +80,43 @@ function LoginPage() {
             {error}
           </p>
         )}
-        <h1 className="text-slate-900 text-2xl block mb-6 mt-4 text-center">
+        <h1 className="text-slate-900 text-2xl block mb-6 mt-4 text-ce nter">
           Iniciar Sesión
         </h1>
+
+        <label className="text-slate-500 mb-2 block" htmlFor="username">
+          Escuela
+        </label>
+        <select
+          type="select"
+          name="xEscuela"
+          className="p-3 rounded block text-slate-400 w-full"
+          {...register("xEscuela", {
+            required: "Seleccione una Escuela",
+          })}
+        >
+          <option
+            value=""
+            className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]"
+          >
+            Seleccione una opción
+          </option>
+          {empresas &&
+            empresas.map((arreglo) => (
+              <option
+                className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]"
+                key={arreglo.id}
+                value={arreglo.id}
+              >
+                {arreglo.nombre}
+              </option>
+            ))}
+        </select>
+        {errors.username && (
+          <span className="text-red-500 text-sm">
+            {errors.username.message}
+          </span>
+        )}
 
         <label className="text-slate-500 mb-2 block" htmlFor="username">
           Correo Electrónico
