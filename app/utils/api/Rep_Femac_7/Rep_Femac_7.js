@@ -9,6 +9,7 @@ export const Documentos = async (token, fecha, grupo) => {
     {
       headers: {
         Authorization: `Bearer ${token}`,
+        xescuela: localStorage.getItem("xescuela"),
       },
     }
   );
@@ -76,6 +77,7 @@ export const Imprimir = async (
             headers: new Headers({
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
+              xescuela: localStorage.getItem("xescuela"),
             }),
           }
         );
@@ -204,6 +206,7 @@ export const ImprimirExcel = async (
             headers: new Headers({
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
+              xescuela: localStorage.getItem("xescuela"),
             }),
           }
         );
@@ -333,6 +336,7 @@ export const grupo_cobranza = async (token) => {
   const res = await fetch(`${process.env.DOMAIN_API}api/documentoscobranza`, {
     headers: {
       Authorization: `Bearer ${token}`,
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();

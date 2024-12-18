@@ -10,6 +10,7 @@ export const getUsuarios = async (token, baja) => {
   const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -77,6 +78,7 @@ export const updateContraseña = async (data, $id) => {
     }),
     headers: {
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   // console.log(res);
@@ -114,6 +116,7 @@ export const guardaUsuario = async (token, data, accion) => {
     headers: new Headers({
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     }),
   });
   const resJson = await res.json();

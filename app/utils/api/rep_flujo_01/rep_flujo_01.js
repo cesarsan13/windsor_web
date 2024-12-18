@@ -13,6 +13,7 @@ export const DocumentosCobranza = async (token, fecha1, fecha2) => {
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();

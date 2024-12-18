@@ -22,6 +22,7 @@ export const getReportAltaBajaAlumno = async (
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
