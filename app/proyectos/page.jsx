@@ -1,6 +1,6 @@
 "use client";
 import React, {useCallback, useEffect, useState, useRef, useMemo } from "react";
-import { useSession } from "next-auth/react";
+import { showSwal, confirmSwal } from "../utils/alerts";
 import { useForm } from "react-hook-form";
 import { debounce } from "@/app/utils/globalfn";
 import { useRouter } from "next/navigation";
@@ -8,10 +8,10 @@ import Acciones from "@/app/proyectos/components/Acciones";
 import Busqueda from "@/app/proyectos/components/Busqueda";
 import TablaProyectos from "@/app/proyectos/components/TablaProyectos";
 import ModalProyectos from "./components/ModalProyectos";
+import { guardaProyectos } from "../utils/api/proyectos/proyectos";
 
 function Proyectos(){
     const router = useRouter();
-    const { data: session, status } = useSession();
     const [busqueda, setBusqueda] = useState({
       nombre: "",
       host: "",
@@ -59,32 +59,24 @@ function Proyectos(){
     }, [basesDeDatos, reset]);
 
     useEffect(() => {
-        if (status === "loading" || !session) {
-          return;
-        }
-        //const fetchProyectos = async () => {
-        //    try {
-        //        setisLoading(true);
-        //        const { token } = session.user;
-        //        const data = {};  //aqui va la funcion para la busqueda
-//
-        //        setBasesDeDatosS(data);
-        //        setBasesDeDatosFiltrados(data);
-        //    } catch (error) {
-        //        setError(error.message);
-        //    } finally {
-        //        setisLoading(false);
-        //    } 
-        //};
-        //fetchProyectos();
-    }, [session, status]);
+        const fetchProyectos = async () => {
+          setisLoading(true);
+          const res = await fetch(`${process.env.DOMAIN_API}api/basesDatos`);
+          const resJson = await res.json();
+          setBasesDeDatosS(resJson.data);
+          setBasesDeDatosFiltrados(resJson.data);
+          setisLoading(false);
+        };
+        fetchProyectos();
+    }, []);
 
 
     const Alta = async (event) => {
-        setCurrentId("");
-        const { token } = session.user;
+      const res = await fetch(`${process.env.DOMAIN_API}api/basesDatos/siguiente`);
+      const resJson = await res.json();
+        setCurrentId(resJson.data);
         reset({
-            id:"",
+            id:resJson.data,
             nombre:"",
             host:"",
             port:"",
@@ -94,7 +86,7 @@ function Proyectos(){
             clave_propietario:"",
             proyecto:"",
         })
-        setBasesDeDatos({id:""})
+        setBasesDeDatos({id:resJson.data})
         setModal(!openModal);
         setAccion("Alta");
         showModal(true);
@@ -133,24 +125,23 @@ function Proyectos(){
        };
      }, [busqueda, debouncedBuscar]);
  
-     const limpiarBusqueda = (evt) => {}
-       //evt.preventDefault;
-       //setBusqueda({ nombre: "", host: "" });
-     ;
+     const limpiarBusqueda = (evt) => {
+       evt.preventDefault;
+       setBusqueda({ nombre: "", host: "" });
+      };
  
      const handleBusquedaChange = (event) => {
-        //event.preventDefault;
-       //setBusqueda((estadoPrevio) => ({
-       //  ...estadoPrevio,
-       //  [event.target.id]: event.target.value,
-       //}));
+        event.preventDefault;
+       setBusqueda((estadoPrevio) => ({
+         ...estadoPrevio,
+         [event.target.id]: event.target.value,
+       }));
      };
 
      const onSubmit = handleSubmit(async (data) => {
         event.preventDefault();
         setisLoadingButton(true);
-        const dataj = JSON.stringify(data);
-        accion === "Alta" ? (data.id = "") : (data.id = currentID);
+        
         let res = null;
         if (accion === "Eliminar") {
           const confirmed = await confirmSwalTarget(
@@ -168,27 +159,23 @@ function Proyectos(){
           }
         }
 
-        res = {} //aqui va la funcion de la ruta
-        if (res.satus) {
+        res = await guardaProyectos(data, accion);
+        if (res.status) {
             if (accion === "Alta") {
-                data.id = res.data;
-                setCurrentId(data.id);
+                
+                setCurrentId(res.data.id);
                 const nuevoproyecto = { currentID, ...data };
-                  setBasesDeDatosS([...basesDeDatosS, nuevoproyecto]);
+                  setBasesDeDatosS([...basesDeDatosS, nuevoproyecto])
+                  setBasesDeDatosFiltrados([
+                    ...basesDeDatosFiltrados, nuevoproyecto]);
             }
-            if (accion === "Eliminar" || accion === "Editar") {
+            if (accion === "Editar") {
                 const index = basesDeDatosS.findIndex((proyecto) => proyecto.id === data.id);
                 if (index !== -1) {
-                    if (accion === "Eliminar") {
-                        const BDFiltrados = basesDeDatosS.filter((p) => p.id !== data.id);
-                        setBasesDeDatosS(BDFiltrados);
-                        setBasesDeDatosFiltrados(BDFiltrados);
-                    } else {
-                        const BDActualizados = basesDeDatosS.map((p) =>
-                        p.id === currentID ? { ...p, ...data } : p);
-                        setBasesDeDatosS(BDActualizados);
-                        setBasesDeDatosFiltrados(BDActualizados);
-                    }
+                  const BDActualizados = basesDeDatosS.map((p) =>
+                  p.id === currentID ? { ...p, ...data } : p);
+                  setBasesDeDatosS(BDActualizados);
+                  setBasesDeDatosFiltrados(BDActualizados);
                 }
             }
             showSwal(res.alert_title, res.alert_text, res.alert_icon);
@@ -209,11 +196,6 @@ function Proyectos(){
         : document.getElementById("modal_proyectos").close();
     };
 
-    if (status === "loading") {
-        return (
-          <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
-        );
-      }
     return(
         <>  
             <ModalProyectos
@@ -222,7 +204,6 @@ function Proyectos(){
                 currentID = {currentID}
                 register = {register}
                 errors = {errors}
-                setBasesDeDatos = {setBasesDeDatos}
                 isLoadingButton = {isLoadingButton}
             ></ModalProyectos>
 
@@ -251,20 +232,15 @@ function Proyectos(){
                             handleBusquedaChange={handleBusquedaChange}
                         ></Busqueda>
                         
-                        {status === "loading" ||
-                        (!session ? (
-                          <></>
-                        ) : (
-                            <TablaProyectos
-                                basesDeDatosFiltrados = {basesDeDatosFiltrados}
-                                isLoading = {isLoading}
-                                session = {session}
-                                showModal = {showModal}
-                                setBasesDeDatos = {setBasesDeDatos}
-                                setAccion = {setAccion}
-                                setCurrentId = {setCurrentId}
-                            />
-                        ))}
+                        <TablaProyectos
+                            basesDeDatosFiltrados = {basesDeDatosFiltrados}
+                            isLoading = {isLoading}
+                            showModal = {showModal}
+                            setBasesDeDatos = {setBasesDeDatos}
+                            setAccion = {setAccion}
+                            setCurrentId = {setCurrentId}
+                        />
+                        
                     </div>
                 </div>
             </div>

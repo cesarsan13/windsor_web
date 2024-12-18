@@ -60,9 +60,6 @@ function TablaProyectos({
                   < ActionColumn
                     description={"Editar"}
                   />
-                  < ActionColumn
-                    description={"Eliminar"}
-                  />
                 </tr>
               </thead>
               <tbody>
@@ -102,12 +99,6 @@ function TablaProyectos({
                       iconDark={iconos.editar}
                       iconLight={iconos.editar_w}
                       onClick={(evt) => tableAction(evt, item, "Editar")}
-                    />
-                    <ActionButton
-                      tooltip="Eliminar"
-                      iconDark={iconos.eliminar}
-                      iconLight={iconos.eliminar_w}
-                      onClick={(evt) => tableAction(evt, item, "Eliminar")}
                     />
                   </tr>
                 ))}

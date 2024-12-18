@@ -1,23 +1,41 @@
 import { soloEnteros, soloDecimales, pone_ceros } from "@/app/utils/globalfn";
 import React from "react";
 import { useState, useEffect } from "react";
-import Inputs from "@/app/comentarios/components/Inputs";
+import Inputs from "@/app/proyectos/components/Inputs";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 import { FaSpinner } from "react-icons/fa";
 
 function ModalProyectos({
-        accion,
-        onSubmit,
-        currentID,
-        register,
-        errors,
-        setBasesDeDatos,
-        isLoadingButton,
+  accion,
+  onSubmit,
+  currentID,
+  register,
+  errors,
+  isLoadingButton,
 }){
     const [error, setError] = useState(null);
     const [titulo, setTitulo] = useState("");
     const [isDisabled, setIsDisabled] = useState(true);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+    useEffect(() => {
+        if (accion === "Ver") {
+          setIsDisabled(true);
+          setIsPasswordVisible(false);
+        }
+        if (accion === "Alta" || accion === "Editar") {
+          setIsDisabled(false);
+          setIsPasswordVisible(false);
+        }
+        setTitulo(
+          accion === "Alta"
+            ? `Nuevo Proyecto`
+            : accion === "Editar"
+            ? `Editar Proyecto: ${currentID}`
+            : `Ver Proyecto: ${currentID}`
+        );
+      }, [accion, currentID]);
 
     return (
         <dialog id="modal_proyectos" className="modal">
@@ -78,7 +96,6 @@ function ModalProyectos({
                               disabled={
                                 accion === "Alta" ||
                                 accion === "Editar" ||
-                                accion === "Eliminar" ||
                                 accion === "Ver"
                               }
                             >
@@ -172,12 +189,13 @@ function ModalProyectos({
                               isDisabled={isDisabled}
                             />
                             <Inputs
+                              contrasena = {true}
                               dataType={"string"}
                               name={"password"}
                               tamañolabel={""}
                               className={"rounded block grow"}
                               Titulo={"Password: "}
-                              type={"text"}
+                              type={"password"}
                               requerido={false}
                               isNumero={false}
                               errors={errors}
@@ -185,6 +203,8 @@ function ModalProyectos({
                               message={"Password requerido"}
                               maxLenght={255}
                               isDisabled={isDisabled}
+                              isPasswordVisible = {isPasswordVisible}
+                              setIsPasswordVisible = {setIsPasswordVisible}
                             />
                             <Inputs
                               dataType={"string"}
