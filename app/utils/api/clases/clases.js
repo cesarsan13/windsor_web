@@ -9,10 +9,10 @@ export const getClasesBuscaCat = async (token, grupo) => {
     body: JSON.stringify({
       grupo: grupo
     }),
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
+    headers: new Headers({
+      Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
+    }),
   });
   const resJson = await res.json();
   return resJson.data;
@@ -25,9 +25,10 @@ export const getClases = async (token, baja) => {
     : (url = `${process.env.DOMAIN_API}api/clase/`);
 
   const res = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: new Headers({
+      Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
+    }),
   });
   const resJson = await res.json();
   return resJson.data;
@@ -65,7 +66,7 @@ export const guardaClase = async (token, data, accion) => {
     }),
     headers: new Headers({
       Authorization: "Bearer " + token,
-      "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     }),
   });
   const resJson = await res.json();

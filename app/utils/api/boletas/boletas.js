@@ -7,10 +7,10 @@ export const getBoletas3 = async (token, grupo) => {
         body: JSON.stringify({
             grupo: grupo
         }),
-        headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-        },
+        headers: new Headers({
+            Authorization: "Bearer " + token,
+            xescuela: localStorage.getItem("xescuela"),
+          }),
     });
     const resJson = await res.json();
     return resJson.data;
@@ -23,10 +23,10 @@ export const getActividadMateria = async (token, numero) => {
         body: JSON.stringify({
             numero: numero
         }),
-        headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-        },
+        headers: new Headers({
+            Authorization: "Bearer " + token,
+            xescuela: localStorage.getItem("xescuela"),
+          }),
     });
     const resJson = await res.json();
     return resJson.data;
@@ -43,10 +43,10 @@ export const getEvaluacionMateria = async (token, data, materia, grupo_nombre) =
             alumno: data.alumno,
             materia: materia,
         }),
-        headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-        },
+        headers: new Headers({
+            Authorization: "Bearer " + token,
+            xescuela: localStorage.getItem("xescuela"),
+          }),
     });
     const resJson = await res.json();
     return resJson.data;
@@ -63,10 +63,10 @@ export const getAreas = async (token, data, materia) => {
             bimestre: data.bimestre,
             alumno: data.alumno,
         }),
-        headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-        },
+        headers: new Headers({
+            Authorization: "Bearer " + token,
+            xescuela: localStorage.getItem("xescuela"),
+          }),
     });
     const resJson = await res.json();
     return resJson.data;
@@ -83,10 +83,10 @@ export const getAreasOtros = async (token, data, materia) => {
             bimestre: data.bimestre,
             alumno: data.alumno,
         }),
-        headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-        },
+        headers: new Headers({
+            Authorization: "Bearer " + token,
+            xescuela: localStorage.getItem("xescuela"),
+          }),
     });
     const resJson = await res.json();
     return resJson.data;
@@ -101,10 +101,10 @@ export const getDatosPorGrupo = async (token, grupo, grupo_nombre, ordenAlfabeti
             grupo_nombre: grupo_nombre,
             orden_alfabetico: ordenAlfabetico
         }),
-        headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-        },
+        headers: new Headers({
+            Authorization: "Bearer " + token,
+            xescuela: localStorage.getItem("xescuela"),
+          }),
     });
     const resJson = await res.json();
     return resJson.data;

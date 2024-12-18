@@ -11,18 +11,20 @@ export const getCajeros = async (token, baja) => {
     : (url = `${process.env.DOMAIN_API}api/Cajero/`);
 
   const res = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: new Headers({
+      Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
+    }),
   });
   const resJson = await res.json();
   return resJson.data;
 };
 export const siguiente = async (token) => {
   const res = await fetch(`${process.env.DOMAIN_API}api/Cajero/siguiente`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: new Headers({
+      Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
+    }),
   });
   const resJson = await res.json();
   return resJson.data;
@@ -59,7 +61,7 @@ export const guardaCajero = async (token, data, accion) => {
       }),
       headers: new Headers({
         Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
+        xescuela: localStorage.getItem("xescuela"),
       }),
     });
     const resJson = await res.json();

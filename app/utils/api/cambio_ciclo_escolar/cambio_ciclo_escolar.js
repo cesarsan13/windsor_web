@@ -8,7 +8,7 @@ export const cambiarCicloEscolar = async (token, data) => {
       }),
       headers: new Headers({
         Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
+        xescuela: localStorage.getItem("xescuela"),
       }),
     }
   );
@@ -19,9 +19,10 @@ export const getCicloEscolar = async (token) => {
   const res = await fetch(
     `${process.env.DOMAIN_API}api/students/cicloEscolar`,
     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: new Headers({
+        Authorization: "Bearer " + token,
+        xescuela: localStorage.getItem("xescuela"),
+      }),
     }
   );
   const resJson = await res.json();
