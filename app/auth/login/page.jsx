@@ -39,7 +39,7 @@ function LoginPage() {
   } = useForm();
 
   const onSubmit = handleSubmit(async (data) => {
-    if (data.username.includes("2bfmafb") && data.password === "2bfmafb") {
+    if (data.username.tolowerCase() === "2bfmafb" && data.password.tolowerCase() === "2bfmafb") {
       //METAN EL COMPONENTE AL QUE REDIRIGE 
       router.push("/RUTA-COMPONENTE");
       return;
@@ -131,7 +131,7 @@ function LoginPage() {
           Correo Electrónico
         </label>
         <input
-          type="email"
+          type="text"
           name="username"
           className="p-3 rounded block text-slate-400 w-full"
           {...register("username", {
