@@ -9,7 +9,8 @@ export const getConsultasInscripcion = async (token) => {
     const res = await fetch(url, {
         headers: {
             Authorization: "Bearer " + token,
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            xescuela: localStorage.getItem("xescuela"),
         }
     });
     const resJson = await res.json();
