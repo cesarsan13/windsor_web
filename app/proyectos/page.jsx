@@ -65,7 +65,6 @@ function Proyectos(){
         //const fetchProyectos = async () => {
         //    try {
         //        setisLoading(true);
-        //        const { token } = session.user;
         //        const data = {};  //aqui va la funcion para la busqueda
 //
         //        setBasesDeDatosS(data);

@@ -7,17 +7,38 @@ import iconos from "@/app/utils/iconos";
 import { FaSpinner } from "react-icons/fa";
 
 function ModalProyectos({
-        accion,
-        onSubmit,
-        currentID,
-        register,
-        errors,
-        setBasesDeDatos,
-        isLoadingButton,
+  accion,
+  onSubmit,
+  currentID,
+  register,
+  errors,
+  setBasesDeDatos,
+  isLoadingButton,
 }){
     const [error, setError] = useState(null);
     const [titulo, setTitulo] = useState("");
     const [isDisabled, setIsDisabled] = useState(true);
+
+    useEffect(() => {
+        if (accion === "Eliminar" || accion === "Ver") {
+          setIsDisabled(true);
+          // accion === "Ver" &&
+          //   document.getElementById("btn_guardar").setAttribute("disabled", true);
+        }
+        if (accion === "Alta" || accion === "Editar") {
+          // alert(accion);
+          setIsDisabled(false);
+        }
+        setTitulo(
+          accion === "Alta"
+            ? `Nuevo Proyecto`
+            : accion === "Editar"
+            ? `Editar Proyecto: ${currentID}`
+            : accion === "Eliminar"
+            ? `Eliminar Proyecto: ${currentID}`
+            : `Ver Proyecto: ${currentID}`
+        );
+      }, [accion, currentID]);
 
     return (
         <dialog id="modal_proyectos" className="modal">
