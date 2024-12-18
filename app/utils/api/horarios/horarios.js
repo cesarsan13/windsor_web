@@ -8,6 +8,7 @@ export const getAlumnoXHorario = async (token) => {
   const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -21,6 +22,7 @@ export const getHorarios = async (token, baja) => {
   const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -31,6 +33,7 @@ export const getUltimoHorario = async (token) => {
   const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -69,6 +72,7 @@ export const guardarHorario = async (token, data, accion) => {
     headers: new Headers({
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     }),
   });
   const resJson = await res.json();
@@ -121,7 +125,7 @@ export const Imprimir = (configuracion) => {
   const date = new Date()
   const dateStr = formatDate(date)
   const timeStr = formatTime(date)
-  newPDF.guardaReporte(`Horarios_${dateStr.replaceAll("/","")}_${timeStr.replaceAll(":","")}`);
+  newPDF.guardaReporte(`Horarios_${dateStr.replaceAll("/", "")}_${timeStr.replaceAll(":", "")}`);
 };
 export const ImprimirExcel = (configuracion) => {
   const newExcel = new ReporteExcel(configuracion);
@@ -133,7 +137,7 @@ export const ImprimirExcel = (configuracion) => {
   const date = new Date()
   const dateStr = formatDate(date)
   const timeStr = formatTime(date)
-  newExcel.guardaReporte(`${nombre}_${dateStr.replaceAll("/","")}_${timeStr.replaceAll(":","")}`);
+  newExcel.guardaReporte(`${nombre}_${dateStr.replaceAll("/", "")}_${timeStr.replaceAll(":", "")}`);
 };
 
 export const getHorariosXAlumno = async (token, horario) => {
@@ -145,6 +149,7 @@ export const getHorariosXAlumno = async (token, horario) => {
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
 

@@ -11,6 +11,7 @@ export const getFormasPago = async (token, baja) => {
   const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -21,6 +22,7 @@ export const siguiente = async (token) => {
   const res = await fetch(`${process.env.DOMAIN_API}api/tipo_cobro/siguiente`, {
     headers: {
       Authorization: `Bearer ${token}`,
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -55,6 +57,7 @@ export const guardaFormaPAgo = async (token, data, accion) => {
     headers: new Headers({
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     }),
   });
   const resJson = await res.json();

@@ -9,6 +9,7 @@ export const getFormFact = async (token, baja) => {
   const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -18,6 +19,7 @@ export const siguiente = async (token) => {
   const res = await fetch(`${process.env.DOMAIN_API}api/FormFact/siguiente`, {
     headers: {
       Authorization: `Bearer ${token}`,
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -49,6 +51,7 @@ export const guardaFormFact = async (token, data, accion) => {
     headers: new Headers({
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     }),
   });
   const resJson = await res.json();
@@ -62,6 +65,7 @@ export const getFacturasFormato = async (token, id) => {
   const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -235,9 +239,10 @@ export const updateFormat = async (token, data) => {
       headers: new Headers({
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
+        xescuela: localStorage.getItem("xescuela"),
       }),
     });
     const resJson = await res.json();
     return resJson;
-  } catch (error) {}
+  } catch (error) { }
 };

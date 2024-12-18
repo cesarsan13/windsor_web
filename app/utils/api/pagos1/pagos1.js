@@ -14,6 +14,7 @@ export const validarClaveCajero = async (token, data) => {
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -30,6 +31,7 @@ export const buscarArticulo = async (token, numero) => {
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -48,6 +50,7 @@ export const buscaDocumento = async (token, data) => {
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -64,6 +67,7 @@ export const buscaPropietario = async (token, numero) => {
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -80,6 +84,7 @@ export const buscaDocumentosCobranza = async (token, alumno_id) => {
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -118,6 +123,7 @@ export const guardarDetallePedido = async (token, data) => {
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -150,6 +156,7 @@ export const guardaEcabYCobrD = async (token, data) => {
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -171,6 +178,7 @@ export const guardarDocumento = async (token, data) => {
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();

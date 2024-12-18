@@ -11,6 +11,7 @@ export const getMateriasPorGrupo = async (token, idHorario) => {
         headers:{
             'Authorization': `Bearer ${token}`,
             'Content-Type': "application/json",
+            xescuela: localStorage.getItem("xescuela"),
         },
     });
     const resJson = await res.json();
@@ -26,6 +27,7 @@ export const getInfoActividadesXGrupo = async (token, idHorario, idBimestre) => 
         headers:{
             'Authorization': `Bearer ${token}`,
             'Content-Type': "application/json",
+            xescuela: localStorage.getItem("xescuela"),
         },
     });
     const resJson = await res.json();
@@ -41,6 +43,7 @@ export const getActividadesXHorarioXAlumnoXMateriaXBimestre = async (token, idHo
         headers:{
             'Authorization': `Bearer ${token}`,
             'Content-Type': "application/json",
+            xescuela: localStorage.getItem("xescuela"),
         },
     });
     const resJson = await res.json();
@@ -56,6 +59,7 @@ export const getMateriasReg = async (token, idHorario) => {
         headers:{
             'Authorization': `Bearer ${token}`,
             'Content-Type': "application/json",
+            xescuela: localStorage.getItem("xescuela"),
         },
     });
     const resJson = await res.json();
@@ -70,6 +74,7 @@ export const getActividadesReg = async (token) => {
         headers:{
             'Authorization': `Bearer ${token}`,
             'Content-Type': "application/json",
+            xescuela: localStorage.getItem("xescuela"),
         },
     });
     const resJson = await res.json();
@@ -84,6 +89,7 @@ export const getAlumno = async (token, idHorario) => {
         headers:{
             'Authorization': `Bearer ${token}`,
             'Content-Type': "application/json",
+            xescuela: localStorage.getItem("xescuela"),
         },
     });
     const resJson = await res.json();
@@ -99,6 +105,7 @@ export const getActividadesDetalles = async (token, idMateria) => {
         headers:{
             'Authorization': `Bearer ${token}`,
             'Content-Type': "application/json",
+            xescuela: localStorage.getItem("xescuela"),
         },
     });
     const resJson = await res.json();

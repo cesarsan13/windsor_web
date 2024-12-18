@@ -6,6 +6,7 @@ export const getMenus = async (token, baja) => {
     const res = await fetch(url, {
         headers: new Headers({
             Authorization: "Bearer " + token,
+            xescuela: localStorage.getItem("xescuela"),
         }),
     });
     const resJson = await res.json();
@@ -16,6 +17,7 @@ export const siguiente = async (token) => {
         `${process.env.DOMAIN_API}api/menu/siguiente`, {
         headers: new Headers({
             Authorization: "Bearer " + token,
+            xescuela: localStorage.getItem("xescuela"),
         }),
     }
     );
@@ -51,6 +53,7 @@ export const guardarMenus = async (token, accion, data) => {
         headers: new Headers({
             Authorization: "Bearer " + token,
             "Content-Type": "application/json",
+            xescuela: localStorage.getItem("xescuela"),
         }),
     });
     const resJson = await res.json();

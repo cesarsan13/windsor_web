@@ -11,6 +11,7 @@ export const getComentarios = async (token, baja) => {
   const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -22,6 +23,7 @@ export const siguiente = async (token) => {
     {
       headers: {
         Authorization: `Bearer ${token}`,
+        xescuela: localStorage.getItem("xescuela"),
       },
     }
   );
@@ -57,6 +59,7 @@ export const guardaComentarios = async (token, data, accion) => {
     headers: new Headers({
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     }),
   });
   const resJson = await res.json();
@@ -115,8 +118,8 @@ export const ImprimirPDF = (configuracion) => {
       comentarios.generales == 1
         ? "Si"
         : comentarios.generales == 0
-        ? "No"
-        : "No valido";
+          ? "No"
+          : "No valido";
     newPDF.ImpPosX(resultado.toString(), 270, newPDF.tw_ren, 0, "L");
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRenH) {
@@ -125,11 +128,11 @@ export const ImprimirPDF = (configuracion) => {
     }
   });
   const date = new Date();
-    const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
-    const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
-    const timeStr = formatTime(date).replace(/:/g, "");
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
   newPDF.guardaReporte(`Comentarios_${dateStr}${timeStr}`);
 };
 export const ImprimirExcel = (configuracion) => {
