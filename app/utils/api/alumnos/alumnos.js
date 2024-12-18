@@ -6,9 +6,10 @@ export const getDataSex = async (token) => {
   let url = "";
   url = `${process.env.DOMAIN_API}api/students/datasex`;
   const res = await fetch(url, {
-    headers: {
+    headers: new Headers({
       Authorization: `Bearer ${token}`,
-    },
+      xescuela: localStorage.getItem("xescuela"),
+    }),
   });
   const resJson = await res.json();
   return resJson.data;
@@ -20,9 +21,10 @@ export const getAlumnos = async (token, baja) => {
     ? (url = `${process.env.DOMAIN_API}api/students/bajas`)
     : (url = `${process.env.DOMAIN_API}api/students/`);
   const res = await fetch(url, {
-    headers: {
+    headers: new Headers({
       Authorization: `Bearer ${token}`,
-    },
+      xescuela: localStorage.getItem("xescuela"),
+    }),
   });
   const resJson = await res.json();
   return resJson.data;
@@ -31,9 +33,10 @@ export const getAlumnos = async (token, baja) => {
 export const getFotoAlumno = async (token, imagen) => {
   let url = `${process.env.DOMAIN_API}api/students/imagen/${imagen}`;
   const res = await fetch(url, {
-    headers: {
+    headers: new Headers({
       Authorization: `Bearer ${token}`,
-    },
+      xescuela: localStorage.getItem("xescuela"),
+    }),
   });
   const blob = await res.blob();
   return URL.createObjectURL(blob);
@@ -42,10 +45,11 @@ export const getFotoAlumno = async (token, imagen) => {
 export const getLastAlumnos = async (token) => {
   let url = `${process.env.DOMAIN_API}api/students/last`;
   const res = await fetch(url, {
-    headers: {
+    headers: new Headers ({
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
-    },
+      xescuela: localStorage.getItem("xescuela"),
+    }),
   });
   const resJson = await res.json();
   return resJson.data;
@@ -73,6 +77,7 @@ export const guardarAlumnos = async (token, formData, accion, numero) => {
     body: formData,
     headers: new Headers({
       Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
     }),
   });
   const resJson = await res.json();

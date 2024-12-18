@@ -3,7 +3,7 @@ export const actualizarCartera = async (token) => {
         method: 'GET',
         headers: new Headers({
             Authorization: "Bearer " + token,
-            // "Content-Type": "application/json",
+            xescuela: localStorage.getItem("xescuela"),
         }),
     });
     const resJson = await res.json();
@@ -21,7 +21,7 @@ export const procesoCartera = async (token, data) => {
         }),
         headers: new Headers({
             Authorization: "Bearer " + token,
-            "Content-Type": "application/json",
+            xescuela: localStorage.getItem("xescuela"),
         }),
     });
     const resJson = await res.json();
