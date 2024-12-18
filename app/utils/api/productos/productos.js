@@ -8,10 +8,11 @@ export const getProductos = async (token, baja) => {
     ? (url = `${process.env.DOMAIN_API}api/product/bajas`)
     : (url = `${process.env.DOMAIN_API}api/product`);
   const res = await fetch(url, {
-    headers: {
+    headers: new Headers({
       Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
       "Content-Type": "application/json",
-    },
+    }),
   });
   const resJson = await res.json();
   return resJson.data;
@@ -20,10 +21,11 @@ export const getProductos = async (token, baja) => {
 export const getLastProduct = async (token) => {
   let url = `${process.env.DOMAIN_API}api/product/last`;
   const res = await fetch(url, {
-    headers: {
+    headers: new Headers({
       Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
       "Content-Type": "application/json",
-    },
+    }),
   });
   const resJson = await res.json();
   return resJson.data;
@@ -39,10 +41,11 @@ export const filtroProductos = async (token, tipo, valor) => {
   let url = `${process.env.DOMAIN_API}api/product/filter/${tipo}/${valor}`;
   const res = await fetch(url, {
     method: "GET",
-    headers: {
+    headers: new Headers({
       Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
       "Content-Type": "application/json",
-    },
+    }),
   });
   const resJson = await res.json();
   return resJson.data;
@@ -83,6 +86,7 @@ export const guardarProductos = async (token, data, accion) => {
     }),
     headers: new Headers({
       Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
       "Content-Type": "application/json",
     }),
   });

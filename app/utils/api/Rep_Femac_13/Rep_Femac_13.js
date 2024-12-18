@@ -10,10 +10,11 @@ export const getRepASem = async (token, horario, orden) => {
         horario: horario,
         orden: orden,
       }),
-      headers: {
+      headers: new Headers({
         Authorization: "Bearer " + token,
+        xescuela: localStorage.getItem("xescuela"),
         "Content-Type": "application/json",
-      },
+      }),
     });
     const resJson = await res.json();
     return resJson.data;

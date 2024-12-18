@@ -13,10 +13,11 @@ export const getreportAlumn = async (token, baja, tipoOrden, alumnos1, alumnos2)
       alumnos1: alumnos1,
       alumnos2: alumnos2,
     }),
-    headers: {
+    headers: new Headers({
       Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
       "Content-Type": "application/json"
-    } 
+    } )
   })
 
   const resJson = await res.json();
