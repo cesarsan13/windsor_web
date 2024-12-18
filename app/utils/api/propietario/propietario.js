@@ -6,6 +6,7 @@ export const getPropietario = async (token) => {
         method: "get", 
         headers:{
             'Authorization': `Bearer ${token}`,
+            xescuela: localStorage.getItem("xescuela"),
             'Content-Type': "application/json",
         },
     });
@@ -19,6 +20,7 @@ export const getConfiguracion = async (token) => {
         method: "get", 
         headers:{
             'Authorization': `Bearer ${token}`,
+            xescuela: localStorage.getItem("xescuela"),
             'Content-Type': "application/json",
         },
     });
@@ -40,6 +42,7 @@ export const updatePropietario = async (token, data) => {
         }),
         headers:{
             'Authorization': `Bearer ${token}`,
+            xescuela: localStorage.getItem("xescuela"),
             'Content-Type': "application/json",
         },
     });
@@ -53,6 +56,7 @@ export const siguienteConfiguracion = async (token) => {
     const res = await fetch(url, {
         headers:{
             'Authorization': `Bearer ${token}`,
+            xescuela: localStorage.getItem("xescuela"),
         },
     });
     const resJson = await res.json();
@@ -71,6 +75,7 @@ export const updateConfiguracion = async (token, data) => {
         }),
         headers:{
             'Authorization': `Bearer ${token}`,
+            xescuela: localStorage.getItem("xescuela"),
             'Content-Type': "application/json",
         },
     });
@@ -88,10 +93,11 @@ export const createConfiguracion = async (token, data) => {
             valor_configuracion: data.valor_configuracion,
             texto_configuracion: data.texto_configuracion,
         }),
-        headers:{
+        headers:new Headers({
             'Authorization': `Bearer ${token}`,
+            xescuela: localStorage.getItem("xescuela"),
             'Content-Type': "application/json",
-        },
+        }),
     });
     const resJson = await res.json();
     return resJson;

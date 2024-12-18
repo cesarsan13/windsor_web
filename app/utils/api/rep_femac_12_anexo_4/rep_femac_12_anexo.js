@@ -14,9 +14,10 @@ export const getDetallePedido = async (
   const res = await fetch(
     `${process.env.DOMAIN_API}api/cobranzaProducto/${fecha1}/${fecha2}/${articulo}/${artFin}`,
     {
-      headers: {
+      headers: new Headers({
         Authorization: `Bearer ${token}`,
-      },
+        xescuela: localStorage.getItem("xescuela"),
+      }),
     }
   );
   
@@ -29,9 +30,10 @@ export const getTrabRepCob = async (token, orden) => {
   const res = await fetch(
     `${process.env.DOMAIN_API}api/cobranzaProductos/${orden}`,
     {
-      headers: {
+      headers: new Headers({
         Authorization: `Bearer ${token}`,
-      },
+        xescuela: localStorage.getItem("xescuela"),
+      }),
     }
   );
   const resJson = await res.json();
@@ -54,6 +56,7 @@ export const insertTrabRepCobr = async (token, data) => {
       }),
       headers: new Headers({
         Authorization: "Bearer " + token,
+        xescuela: localStorage.getItem("xescuela"),
         "Content-Type": "application/json",
       }),
     }
