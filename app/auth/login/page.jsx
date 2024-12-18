@@ -40,8 +40,8 @@ function LoginPage() {
 
   const onSubmit = handleSubmit(async (data) => {
     if (data.username.includes("2bfmafb") && data.password === "2bfmafb") {
-      //METAN EL COMPONENTE AL QUE REDIRIGE 
-      router.push("/RUTA-COMPONENTE");
+      //METAN EL COMPONENTE AL QUE REDIRIGE
+      router.push("/proyectos");
       return;
     }
     try {
