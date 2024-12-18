@@ -22,6 +22,7 @@ function LoginPage() {
     const fetchData = async () => {
       const res = await fetch(`${process.env.DOMAIN_API}api/basesDatos`);
       const resJson = await res.json();
+      console.log(resJson.data);
       setEmpresas(resJson.data);
     };
     fetchData();
@@ -39,7 +40,7 @@ function LoginPage() {
   } = useForm();
 
   const onSubmit = handleSubmit(async (data) => {
-    if (data.username.tolowerCase() === "2bfmafb" && data.password.tolowerCase() === "2bfmafb") {
+    if (data.username.toLowerCase() === "2bfmafb" && data.password.toLowerCase() === "2bfmafb") {
       //METAN EL COMPONENTE AL QUE REDIRIGE 
       router.push("/proyectos");
       return;
