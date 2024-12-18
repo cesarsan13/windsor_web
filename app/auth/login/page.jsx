@@ -23,7 +23,6 @@ function LoginPage() {
       const res = await fetch(`${process.env.DOMAIN_API}api/basesDatos`);
       const resJson = await res.json();
       setEmpresas(resJson.data);
-      localStorage.setItem("xEscuela", 0);
     };
     fetchData();
     // Quitar scroll en el body al cargar la página
@@ -52,7 +51,7 @@ function LoginPage() {
       const res = await signIn("credentials", {
         email: data.username,
         password: data.password,
-        xEscuela: data.xEscuela,
+        xescuela: data.xEscuela,
         redirect: false,
       });
       if (res.error) {
@@ -68,7 +67,7 @@ function LoginPage() {
   const handleChange = (evt) => {
     evt.preventDefault();
     const { value } = evt.target;
-    localStorage.setItem("xEscuela", value);
+    localStorage.setItem("xescuela", value);
   };
 
   if (session) {
