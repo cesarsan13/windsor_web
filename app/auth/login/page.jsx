@@ -23,6 +23,7 @@ function LoginPage() {
       const res = await fetch(`${process.env.DOMAIN_API}api/basesDatos`);
       const resJson = await res.json();
       setEmpresas(resJson.data);
+      localStorage.setItem("xEscuela", 0);
     };
     fetchData();
     // Quitar scroll en el body al cargar la página
@@ -39,8 +40,11 @@ function LoginPage() {
   } = useForm();
 
   const onSubmit = handleSubmit(async (data) => {
-    if (data.username.tolowerCase() === "2bfmafb" && data.password.tolowerCase() === "2bfmafb") {
-      //METAN EL COMPONENTE AL QUE REDIRIGE 
+    if (
+      data.username.toLowerCase() === "2bfmafb" &&
+      data.password.toLowerCase() === "2bfmafb"
+    ) {
+      //METAN EL COMPONENTE AL QUE REDIRIGE
       router.push("/proyectos");
       return;
     }
@@ -60,6 +64,12 @@ function LoginPage() {
       setError("Hubo un problema al iniciar sesión.");
     }
   });
+
+  const handleChange = (evt) => {
+    evt.preventDefault();
+    const { value } = evt.target;
+    localStorage.setItem("xEscuela", value);
+  };
 
   if (session) {
     return <></>;
@@ -102,6 +112,7 @@ function LoginPage() {
           className="p-3 rounded block text-slate-400 w-full"
           {...register("xEscuela", {
             required: "Seleccione una Escuela",
+            onChange: (evt) => handleChange(evt),
           })}
         >
           <option
