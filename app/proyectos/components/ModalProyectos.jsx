@@ -58,7 +58,7 @@ function ModalProyectos({
                               type="submit"
                               id="btn_guardar"
                               className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
-                              onClick={onsubmit}
+                              onClick={onSubmit}
                               disabled={isLoadingButton}
                             >
                               {isLoadingButton ? (
