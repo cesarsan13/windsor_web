@@ -5,9 +5,10 @@ import { ReportePDF } from "../../ReportesPDF";
 export const getAplicaciones1 = async (token) => {
   let url = `${process.env.DOMAIN_API}api/aplicacion1`;
   const res = await fetch(url, {
-    headers: {
+    headers: new Headers({
       Authorization: `Bearer ${token}`,
-    },
+      xescuela: localStorage.getItem("xescuela"),
+    }),
   });
   const resJson = await res.json();
   return resJson.data;
@@ -18,6 +19,7 @@ export const siguiente = async (token) => {
     {
       headers: new Headers({
         Authorization: "Bearer " + token,
+        xescuela: localStorage.getItem("xescuela"),
       }),
     }
   );
@@ -50,6 +52,7 @@ export const guradaAplicacion1 = async (token, data, accion) => {
     }),
     headers: new Headers({
       Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
       "Content-Type": "application/json",
     }),
   });

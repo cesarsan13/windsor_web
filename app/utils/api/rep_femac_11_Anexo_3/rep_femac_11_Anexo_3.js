@@ -17,10 +17,11 @@ export const getReporteCobranzaporAlumno = async (token, fecha_ini, fecha_fin, a
                 cajero_ini: cajero_ini,
                 cajero_fin: cajero_fin
             }),
-            headers: {
+            headers: new Headers({
               Authorization: "Bearer " + token,
+              xescuela: localStorage.getItem("xescuela"),
               "Content-Type": "application/json",
-            },
+            }),
           });
           const resJson = await res.json();
           return resJson.data;

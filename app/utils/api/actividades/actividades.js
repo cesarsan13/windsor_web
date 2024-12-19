@@ -8,10 +8,11 @@ export const getActividadSecuencia = async (token, materia) => {
     body: JSON.stringify({
       materia: materia
     }),
-    headers: {
+    headers: new Headers({
       Authorization: `Bearer ${token}`,
+      xescuela: localStorage.getItem("xescuela"),
       'Content-Type': 'application/json',
-    },
+    }),
   });
   const resJson = await res.json();
   return resJson;
@@ -23,9 +24,10 @@ export const getActividades = async (token, baja) => {
     ? (url = `${process.env.DOMAIN_API}api/actividades/baja`)
     : (url = `${process.env.DOMAIN_API}api/actividades/get`);
   const res = await fetch(url, {
-    headers: {
+    headers: new Headers({
       Authorization: `Bearer ${token}`,
-    },
+      xescuela: localStorage.getItem("xescuela"),
+    }),
   });
   const resJson = await res.json();
   return resJson.data;
@@ -40,6 +42,7 @@ export const getUltimaSecuencia = async (token, materia) => {
       }),
       headers: new Headers({
         Authorization: "Bearer " + token,
+        xescuela: localStorage.getItem("xescuela"),
         "Content-Type": "application/json",
       }),
     }
@@ -76,6 +79,7 @@ export const guardarActividad = async (token, accion, data) => {
     }),
     headers: new Headers({
       Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
       "Content-Type": "application/json",
     }),
   });
@@ -129,10 +133,11 @@ export const getAsignaturas = async (token, baja) => {
     ? (url = `${process.env.DOMAIN_API}api/subject/bajas`)
     : (url = `${process.env.DOMAIN_API}api/subject`);
   const res = await fetch(url, {
-    headers: {
+    headers: new Headers({
       Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
       "Content-Type": "application/json",
-    },
+    }),
   });
   const resJson = await res.json();
   return resJson.data;

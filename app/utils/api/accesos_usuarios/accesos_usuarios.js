@@ -8,6 +8,7 @@ export const getAccesosUsuarios = async (token, data) => {
     }),
     headers: new Headers({
       Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
       "Content-Type": "application/json",
     }),
   });
@@ -30,6 +31,7 @@ export const guardaAccesosUsuarios = async (token, data) => {
     }),
     headers: new Headers({
       Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
       "Content-Type": "application/json",
     }),
   });
@@ -47,6 +49,7 @@ export const actualizaTodos = async (token, data) => {
     }),
     headers: new Headers({
       Authorization: `Bearer ${token}`,
+      xescuela: localStorage.getItem("xescuela"),
       "Content-Type": "application/json",
     }),
   });

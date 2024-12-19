@@ -21,7 +21,8 @@ export const getRelaciondeFacturas = async (token, tomaFecha, tomaCanceladas, fe
         }),
         headers: {
             Authorization: "Bearer " + token,
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            xescuela: localStorage.getItem("xescuela"),
         }
     })
     const resJson = await res.json();

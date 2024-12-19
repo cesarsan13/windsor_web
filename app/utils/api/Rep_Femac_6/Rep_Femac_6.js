@@ -423,7 +423,9 @@ export const Cobranza = async (token, fecha_inicia, fecha_final, cajero) => {
       }),
       headers: {
        Authorization: "Bearer " + token,
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            xescuela: localStorage.getItem("xescuela"),
+            
       },
     }
   );

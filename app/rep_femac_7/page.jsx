@@ -153,6 +153,7 @@ function Repo_Femac_7() {
               }),
               headers: new Headers({
                 Authorization: `Bearer ${token}`,
+                xescuela: localStorage.getItem("xescuela"),
                 "Content-Type": "application/json",
               }),
             }

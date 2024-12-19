@@ -8,9 +8,10 @@ export const getProfesores = async (token, baja) => {
         ? (url = `${process.env.DOMAIN_API}api/profesores/index-baja`)
         : (url = `${process.env.DOMAIN_API}api/profesores/index`);
     const res = await fetch(url, {
-        headers: {
+        headers: new Headers({
             Authorization: `Bearer ${token}`,
-        },
+            xescuela: localStorage.getItem("xescuela"),
+        }),
     });
     const resJson = await res.json();
     return resJson.data;
@@ -18,9 +19,10 @@ export const getProfesores = async (token, baja) => {
 
 export const siguiente = async (token) => {
     const res = await fetch(`${process.env.DOMAIN_API}api/profesores/siguiente`, {
-        headers: {
+        headers: new Headers({
             Authorization: `Bearer ${token}`,
-        },
+            xescuela: localStorage.getItem("xescuela"),
+        }),
     });
     const resJson = await res.json();
     return resJson.data;
@@ -64,6 +66,7 @@ export const guardaProfesor = async (token, data, accion) => {
         }),
         headers: new Headers({
             Authorization: "Bearer " + token,
+            xescuela: localStorage.getItem("xescuela"),
             "Content-Type": "application/json",
         }),
     });

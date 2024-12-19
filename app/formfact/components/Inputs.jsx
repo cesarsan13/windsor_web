@@ -60,7 +60,7 @@ function Inputs({
       </div>
     )
   }  else{ 
-    console.log(arreglos)   
+    // console.log(arreglos)   
     return(
       <div className="flex flex-col">
         <label

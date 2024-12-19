@@ -12,6 +12,13 @@ import iconos from "@/app/utils/iconos";
 function Register() {
   const router = useRouter();
   const [error, setError] = useState(null);
+  const [empresas, setEmpresas] = useState([]);
+
+  const handleChange = (evt) => {
+    evt.preventDefault();
+    const { value } = evt.target;
+    localStorage.setItem("xescuela", value);
+  };
 
   const {
     register,
@@ -19,13 +26,18 @@ function Register() {
     formState: { errors },
   } = useForm();
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch(`${process.env.DOMAIN_API}api/basesDatos`);
+      const resJson = await res.json();
+      setEmpresas(resJson.data);
+    };
+    fetchData();
+  }, []);
 
   const onSubmit = handleSubmit(async (data) => {
-
     event.preventDefault();
-
     const res = await guardaRegistro(data);
-
     showSwal(res.alert_title, res.alert_text, res.alert_icon);
     if (!res.status) {
       setError(res.alert_text);
@@ -64,6 +76,17 @@ function Register() {
         <h1 className="text-slate-900 text-2xl block mb-6 mt-4 text-center">
           Registro
         </h1>
+        <Inputs
+          titulo={"Escuela"}
+          name={"xEscuela"}
+          type={"select"}
+          opciones={empresas}
+          register={register}
+          errors={errors}
+          requerido={true}
+          message={"Seleccione una Escuela"}
+          handleChange={handleChange}
+        />
         <Inputs
           titulo={"Nombre Completo"}
           name={"nombre"}

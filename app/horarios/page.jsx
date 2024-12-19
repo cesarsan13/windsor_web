@@ -85,7 +85,7 @@ function Horarios() {
       const data = await getHorarios(token, bajas);
       setHorarios(data);
       setHorariosFiltrados(data);
-      console.log("permisos:",permissions)
+      // console.log("permisos:",permissions)
       const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
       setPermissions(permisos);
       setisLoading(false);

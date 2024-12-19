@@ -16,6 +16,7 @@ export const getBecas = async (token, alumno1, alumno2, orden) => {
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
+        xescuela: localStorage.getItem("xescuela"),
       },
     });
     

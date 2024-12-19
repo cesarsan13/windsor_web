@@ -15,10 +15,11 @@ export const getReporteEstadodeCuenta = async (token, fecha_ini, fecha_fin, alum
                 alumno_ini: alumno_ini,
                 alumno_fin: alumno_fin
             }),
-            headers: {
+            headers: new Headers({
               Authorization: "Bearer " + token,
+              xescuela: localStorage.getItem("xescuela"),
               "Content-Type": "application/json",
-            },
+            }),
           });
           const resJson = await res.json();
           return resJson.data;

@@ -9,10 +9,10 @@ export const getAsignaturas = async (token, baja) => {
       ? (url = `${process.env.DOMAIN_API}api/subject/bajas`)
       : (url = `${process.env.DOMAIN_API}api/subject`);
     const res = await fetch(url, {
-      headers: {
+      headers: new Headers({
         Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
+        xescuela: localStorage.getItem("xescuela"),
+      }),
     });
     const resJson = await res.json();
     return resJson.data;
@@ -22,10 +22,10 @@ export const getAsignaturas = async (token, baja) => {
     let url = "";
     url = `${process.env.DOMAIN_API}api/subject/caso-otro`;
     const res = await fetch(url, {
-      headers: {
+      headers: new Headers({
         Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
+        xescuela: localStorage.getItem("xescuela"),
+      }),
     });
     const resJson = await res.json();
     return resJson.data;
@@ -41,10 +41,10 @@ export const getAsignaturas = async (token, baja) => {
     let url = `${process.env.DOMAIN_API}api/subject/filter/${tipo}/${valor}`;
     const res = await fetch(url, {
       method: "GET",
-      headers: {
+      headers: new Headers({
         Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
+        xescuela: localStorage.getItem("xescuela"),
+      }),
     });
     const resJson = await res.json();
     return resJson.data;
@@ -52,16 +52,16 @@ export const getAsignaturas = async (token, baja) => {
   export const getLastSubject = async (token) => {
     let url = `${process.env.DOMAIN_API}api/subject/last`;
     const res = await fetch(url, {
-      headers: {
+      headers: new Headers({
         Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
+        xescuela: localStorage.getItem("xescuela"),
+      }),
     });
     const resJson = await res.json();
     return resJson.data;
   };
   export const guardarAsinatura = async (token, data, accion, numero) => {
-    console.log("Data a guardar: ",data);
+    // console.log("Data a guardar: ",data);
     let url = "";
     let met = "";
     if (accion === "Alta") {
@@ -97,7 +97,7 @@ export const getAsignaturas = async (token, baja) => {
       }),
       headers: new Headers({
         Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
+        xescuela: localStorage.getItem("xescuela"),
       }),
     });
     const resJson = await res.json();

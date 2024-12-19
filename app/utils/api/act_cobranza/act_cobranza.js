@@ -8,6 +8,7 @@ export const getDocumentosAlumno = async (token, alumno_id) => {
       }),
       headers: new Headers({
         Authorization: "Bearer " + token,
+        xescuela: localStorage.getItem("xescuela"),
         "Content-Type": "application/json",
       }),
     }
@@ -40,6 +41,7 @@ export const guardarActCobranza = async (token,accion,data)=>{
     }),
     headers: new Headers({
       Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
       "Content-Type": "application/json",
     }),
   });
