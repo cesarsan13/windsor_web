@@ -61,7 +61,7 @@ export const getAsignaturas = async (token, baja) => {
     return resJson.data;
   };
   export const guardarAsinatura = async (token, data, accion, numero) => {
-    console.log("Data a guardar: ",data);
+    // console.log("Data a guardar: ",data);
     let url = "";
     let met = "";
     if (accion === "Alta") {
