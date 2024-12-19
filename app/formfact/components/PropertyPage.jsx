@@ -16,7 +16,7 @@ function PropertyPage({
   changeSelectedLabel,
   arreglo
 }) {
-  console.log("property: ",propertyData)
+  // console.log("property: ",propertyData)
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -134,11 +134,11 @@ function PropertyPage({
   };
   const handleKeyDown = async (evt) => {
     if (evt.key === 'Enter') {
-      console.log("entra");
+      // console.log("entra");
       const { name } = evt.target;
       const resultado = [...labels];
       let value = await getValueInput(evt);
-      console.log(value);
+      // console.log(value);
       const redondea = 10;
       value = roundToNearest(value, redondea);
       resultado[selectedIndex] = {
@@ -146,7 +146,7 @@ function PropertyPage({
         [name]: value,
       };
       setLabels(resultado);
-    } else { console.log("no entra"); }
+    } else { /*console.log("no entra");*/ }
   };
   const handleCancelarClick = (evt) => {
     evt.preventDefault();

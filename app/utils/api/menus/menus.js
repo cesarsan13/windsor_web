@@ -41,8 +41,8 @@ export const guardarMenus = async (token, accion, data) => {
         url = `${process.env.DOMAIN_API}api/menu/update`;
         method = 'PUT'
     }
-    console.log('URL', url);
-    console.log('metodo', method);
+    // console.log('URL', url);
+    // console.log('metodo', method);
     const res = await fetch(`${url}`, {
         method: method,
         body: JSON.stringify({
