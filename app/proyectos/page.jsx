@@ -8,7 +8,8 @@ import Acciones from "@/app/proyectos/components/Acciones";
 import Busqueda from "@/app/proyectos/components/Busqueda";
 import TablaProyectos from "@/app/proyectos/components/TablaProyectos";
 import ModalProyectos from "./components/ModalProyectos";
-import { guardaProyectos } from "../utils/api/proyectos/proyectos";
+import { useSession } from "next-auth/react";
+import { guardaProyectos, getProyectos, siguiente } from "../utils/api/proyectos/proyectos";
 
 function Proyectos(){
     const router = useRouter();
@@ -18,6 +19,7 @@ function Proyectos(){
     });
     const [accion, setAccion] = useState("");
     const [currentID, setCurrentId] = useState(0);
+    const [bajas, setBajas] = useState(false);
     const [basesDeDatos, setBasesDeDatos] = useState({});
     const [basesDeDatosS, setBasesDeDatosS] = useState([]);
     const [basesDeDatosFiltrados, setBasesDeDatosFiltrados] = useState([]);
@@ -61,10 +63,9 @@ function Proyectos(){
     useEffect(() => {
         const fetchProyectos = async () => {
           setisLoading(true);
-          const res = await fetch(`${process.env.DOMAIN_API}api/basesDatos`);
-          const resJson = await res.json();
-          setBasesDeDatosS(resJson.data);
-          setBasesDeDatosFiltrados(resJson.data);
+          const data = await getProyectos();
+          setBasesDeDatosS(data);
+          setBasesDeDatosFiltrados(data);
           setisLoading(false);
         };
         fetchProyectos();
@@ -72,11 +73,9 @@ function Proyectos(){
 
 
     const Alta = async (event) => {
-      const res = await fetch(`${process.env.DOMAIN_API}api/basesDatos/siguiente`);
-      const resJson = await res.json();
-        setCurrentId(resJson.data);
+        setCurrentId("");
         reset({
-            id:resJson.data,
+            id:"",
             nombre:"",
             host:"",
             port:"",
@@ -86,7 +85,10 @@ function Proyectos(){
             clave_propietario:"",
             proyecto:"",
         })
-        setBasesDeDatos({id:resJson.data})
+        let siguienteId = await siguiente();
+        siguienteId = Number(siguienteId) + 1;
+        setCurrentId(siguienteId);
+        setBasesDeDatos({id:siguienteId})
         setModal(!openModal);
         setAccion("Alta");
         showModal(true);
@@ -226,6 +228,7 @@ function Proyectos(){
                     <div className="w-full max-w-4xl">
 
                         <Busqueda
+                            setBajas={setBajas}
                             limpiarBusqueda={limpiarBusqueda}
                             evtBuscar={Buscar}
                             busqueda={busqueda}
