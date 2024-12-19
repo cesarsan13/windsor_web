@@ -22,7 +22,6 @@ function LoginPage() {
     const fetchData = async () => {
       const res = await fetch(`${process.env.DOMAIN_API}api/basesDatos`);
       const resJson = await res.json();
-      console.log(resJson.data);
       setEmpresas(resJson.data);
     };
     fetchData();
