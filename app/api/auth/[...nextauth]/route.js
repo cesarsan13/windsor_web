@@ -21,8 +21,8 @@ export const authOptions = {
           headers: new Headers({ "Content-Type": "application/json" }),
         });
         const resjson = await res.json();
-        const { status } = resjson;
-        if (!status) throw new Error("Credenciales Incorrectas");
+        const { status,message } = resjson;        
+        if (!status) throw new Error(message.errorInfo ? message.errorInfo : message);
 
         resjson.data.token = resjson.token;
 

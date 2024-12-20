@@ -161,7 +161,7 @@ export const ImprimirPDF = (configuracion) => {
         newPDF.ImpPosX(`ESPAÑOL`, 150, newPDF.tw_ren, 0, "L");
     } else { newPDF.ImpPosX(`INGLES`, 150, newPDF.tw_ren, 0, "L"); }
     newPDF.nextRow(4);
-    console.log(body);
+    // console.log(body);
     const data = body.map((boleta) => [
         // { content: boleta.numero?.toString() ?? "", styles: { halign: 'right' } },
         boleta.descripcion.toString(),

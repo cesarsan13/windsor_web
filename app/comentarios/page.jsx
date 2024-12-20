@@ -311,7 +311,7 @@ function Comentarios() {
       }
     }
     res = await guardaComentarios(session.user.token, data, accion);
-    console.log("Res => ", res);
+    // console.log("Res => ", res);
     if (res.status) {
       if (accion === "Alta") {
         data.numero = res.data;

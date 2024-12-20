@@ -101,7 +101,7 @@ export const guardaUsuario = async (token, data, accion) => {
       url_api = `${process.env.DOMAIN_API}api/usuario/update`;
     }
   }
-  console.log(data);
+  // console.log(data);
   const res = await fetch(`${url_api}`, {
     method: "POST",
     body: JSON.stringify({
