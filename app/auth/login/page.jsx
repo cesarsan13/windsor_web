@@ -42,13 +42,16 @@ function LoginPage() {
   } = useForm();
 
   const onSubmit = handleSubmit(async (data) => {
-    if (
+    setError(null);
+    const isAdmin =
       data.username.toLowerCase() === "2bfmafb" &&
-      data.password.toLowerCase() === "2bfmafb"
-    ) {
-      //METAN EL COMPONENTE AL QUE REDIRIGE
-      router.push("/proyectos");
-      return;
+      data.password.toLowerCase() === "2bfmafb";
+    const missingEscuela = !data.xEscuela;
+    if (isAdmin) {
+      return router.push("/proyectos");
+    }
+    if (missingEscuela) {
+      return setError("Debe seleccionar una escuela.");
     }
     try {
       const res = await signIn("credentials", {
@@ -57,12 +60,13 @@ function LoginPage() {
         xescuela: data.xEscuela,
         redirect: false,
       });
+
       if (res.error) {
         setError(res.error);
       } else {
         router.push("/");
       }
-    } catch (err) {
+    } catch {
       setError("Hubo un problema al iniciar sesión.");
     }
   });
@@ -113,7 +117,7 @@ function LoginPage() {
           name="xEscuela"
           className="p-3 rounded block text-slate-400 w-full"
           {...register("xEscuela", {
-            required: "Seleccione una Escuela",
+            // required: "Seleccione una Escuela",
             onChange: (evt) => handleChange(evt),
           })}
         >
