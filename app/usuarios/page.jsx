@@ -49,11 +49,17 @@ function Usuarios() {
       const { token, permissions } = session.user;
       const es_admin = session.user.es_admin;
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-
-      const data = await getUsuarios(token, bajas);
+  
+      let data = await getUsuarios(token, bajas);
+      
+      if (!es_admin) {
+        data = data.filter((user) => user.id === session.user.id);
+      }
+  
       setUsuarios(data);
       setUsuariosFiltrados(data);
       setisLoading(false);
+  
       const permisos = permissionsComponents(
         es_admin,
         permissions,
@@ -62,11 +68,13 @@ function Usuarios() {
       );
       setPermissions(permisos);
     };
+  
     if (status === "loading" || !session) {
       return;
     }
     fetchData();
   }, [session, status, bajas]);
+  
   useEffect(() => {
     usuariosRef.current = usuarios;
   }, [usuarios]);
