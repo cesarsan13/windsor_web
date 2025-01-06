@@ -28,6 +28,7 @@ function Menu({ vertical, toogle }) {
     fetchMenus();
   }, [session, status]);
 
+
   const toggleMenu = (menu) => {
     setIsOpen((prev) => {
       const newState = { ...prev };
@@ -73,17 +74,19 @@ function Menu({ vertical, toogle }) {
   }, []);
 
   const groupedMenus = menus.reduce((acc, menu) => {
+    const {user} = session;
+    if (!user.es_admin && menu.menu === "Utilerías") return acc;
+
     if (!acc[menu.menu]) acc[menu.menu] = [];
     acc[menu.menu].push(menu);
     return acc;
   }, {});
 
   const sortedCategories = Object.keys(groupedMenus).sort();
-
+  
   const renderMenuItems = (category) => {
     const { permissions } = session.user;
     const { user } = session;
-
     return (groupedMenus[category] || []).map((menuItem) => {
       const is_admin = user.es_admin;
       const hasPermission =
