@@ -24,7 +24,6 @@ function LoginPage() {
         `${process.env.DOMAIN_API_PROYECTOS}api/basesDatos`
       );
       const resJson = await res.json();
-      // console.log(resJson.data);
       setEmpresas(resJson.data);
     };
     fetchData();

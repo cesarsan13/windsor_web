@@ -80,7 +80,7 @@ function Register() {
           titulo={"Escuela"}
           name={"xEscuela"}
           type={"select"}
-          opciones={empresas}
+          opciones={empresas.filter((arreglo) => arreglo.proyecto === 'control_escolar')}
           register={register}
           errors={errors}
           requerido={true}
