@@ -127,8 +127,10 @@ function LoginPage() {
           >
             Seleccione una opción
           </option>
-          {empresas &&
-            empresas.map((arreglo) => (
+          {empresas && 
+            empresas
+            .filter((arreglo) => arreglo.proyecto === 'control_escolar')
+            .map((arreglo) => (
               <option
                 className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]"
                 key={arreglo.id}
