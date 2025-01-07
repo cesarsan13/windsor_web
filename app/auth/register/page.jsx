@@ -80,7 +80,7 @@ function Register() {
           titulo={"Escuela"}
           name={"xEscuela"}
           type={"select"}
-          opciones={empresas}
+          opciones={empresas.filter((arreglo) => arreglo.proyecto === 'control_escolar')}
           register={register}
           errors={errors}
           requerido={true}
@@ -117,12 +117,12 @@ function Register() {
           register={register}
           type={"text"}
         />
-        <button className="w-full max-w-md bg-blue-700 text-white p-3 rounded-lg mt-6 hover:bg-blue-900">
+        <button className="w-full bg-blue-700 text-white p-3 rounded-lg mt-6 hover:bg-blue-900">
           Crear cuenta
         </button>
         <button
           type="button"
-          className="w-full max-w-md bg-red-700 text-white p-3 rounded-lg mt-6 hover:bg-red-900"
+          className="w-full md:w1/3 bg-red-700 text-white p-3 rounded-lg mt-6 hover:bg-red-900"
           onClick={() => router.push("./login")}
         >
           Regresar
