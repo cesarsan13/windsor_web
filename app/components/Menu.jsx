@@ -75,10 +75,15 @@ function Menu({ vertical, toogle }) {
 
   const groupedMenus = menus.reduce((acc, menu) => {
     const {user} = session;
-    if (!user.es_admin && menu.menu === "Utilerías") return acc;
-
     if (!acc[menu.menu]) acc[menu.menu] = [];
-    acc[menu.menu].push(menu);
+    
+    if(!user.es_admin && menu.menu === "Utilerías"){
+      if(menu.descripcion === "Usuarios"){
+        acc[menu.menu].push(menu);
+      }
+    } else {
+      acc[menu.menu].push(menu);
+    }
     return acc;
   }, {});
 
