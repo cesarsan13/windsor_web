@@ -71,7 +71,7 @@ function ModalProyectos({
             </h3>
             <div className="flex space-x-2 items-center">
               <div
-                className={`tooltip tooltip-bottom ${accion === "Ver"
+                className={`tooltip tooltip-bottom ${accion === "Ver" || accion === "Alta"
                   ? "hover:cursor-not-allowed hidden"
                   : "hover:cursor-pointer"
                   }`}
