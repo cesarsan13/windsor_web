@@ -145,7 +145,7 @@ function ModalProductos({
                 register={register}
                 maxLenght={6}
                 message={"Numero requerido"}
-                isDisabled={disabledNum}
+                isDisabled={accion === "Alta" ? !isDisabled : isDisabled}
                 handleBlur={handleBlurOut}
               />
               <Inputs
