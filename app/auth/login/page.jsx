@@ -63,7 +63,7 @@ function LoginPage() {
       if (res.error) {
         setError(res.error);
       } else {
-        router.push("/");
+        return router.push("/");
       }
     } catch {
       setError("Hubo un problema al iniciar sesión.");
@@ -126,18 +126,18 @@ function LoginPage() {
           >
             Seleccione una opción
           </option>
-          {empresas && 
+          {empresas &&
             empresas
-            .filter((arreglo) => arreglo.proyecto === 'control_escolar')
-            .map((arreglo) => (
-              <option
-                className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]"
-                key={arreglo.id}
-                value={arreglo.id}
-              >
-                {arreglo.nombre}
-              </option>
-            ))}
+              .filter((arreglo) => arreglo.proyecto === "control_escolar")
+              .map((arreglo) => (
+                <option
+                  className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]"
+                  key={arreglo.id}
+                  value={arreglo.id}
+                >
+                  {arreglo.nombre}
+                </option>
+              ))}
         </select>
         {errors.xEscuela && (
           <span className="text-red-500 text-sm">
