@@ -213,7 +213,7 @@ function ModalAlumnos({
                     errors={errors}
                     register={register}
                     message={"id Requerido"}
-                    isDisabled={isDisabled}
+                    isDisabled={accion === "Alta" ? !isDisabled : isDisabled}
                     handleBlur={handleBlur}
                   />
 
