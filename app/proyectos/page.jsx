@@ -229,6 +229,7 @@ function Proyectos() {
         errors={errors}
         isLoadingButton={isLoadingButton}
         baseSeleccionada={basesDeDatos}
+        showModal={showModal}
       ></ModalProyectos>
 
       <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">

@@ -16,11 +16,13 @@ function ModalProyectos({
   errors,
   isLoadingButton,
   baseSeleccionada,
+  showModal,
 }) {
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isLoadingEstructura, setisLoadingEstructura] = useState(false);
 
   useEffect(() => {
     if (accion === "Ver") {
@@ -35,13 +37,14 @@ function ModalProyectos({
       accion === "Alta"
         ? `Nuevo Proyecto`
         : accion === "Editar"
-        ? `Editar Proyecto: ${currentID}`
-        : `Ver Proyecto: ${currentID}`
+          ? `Editar Proyecto: ${currentID}`
+          : `Ver Proyecto: ${currentID}`
     );
   }, [accion, currentID]);
 
   const ejecutaEstructuras = async () => {
     try {
+      setisLoadingEstructura(true);
       if (!baseSeleccionada) return;
 
       const res = await estructuras(baseSeleccionada);
@@ -50,9 +53,13 @@ function ModalProyectos({
         return;
       }
       showSwal("Exito!", res.message, res.alert_icon, "modal_proyectos");
-    } catch (error) {}
+    } catch (error) { }
+    finally {
+      setisLoadingEstructura(false);
+      showModal(false);
+    }
   };
-  const ejecutaSeeders = async () => {};
+  const ejecutaSeeders = async () => { };
 
   return (
     <dialog id="modal_proyectos" className="modal">
@@ -64,11 +71,10 @@ function ModalProyectos({
             </h3>
             <div className="flex space-x-2 items-center">
               <div
-                className={`tooltip tooltip-bottom ${
-                  accion === "Ver"
-                    ? "hover:cursor-not-allowed hidden"
-                    : "hover:cursor-pointer"
-                }`}
+                className={`tooltip tooltip-bottom ${accion === "Ver"
+                  ? "hover:cursor-not-allowed hidden"
+                  : "hover:cursor-pointer"
+                  }`}
                 data-tip="Guardar"
               >
                 <button
@@ -102,7 +108,14 @@ function ModalProyectos({
                 className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
                 onClick={(evt) => ejecutaEstructuras(evt)}
               >
-                Estructuras
+                {isLoadingEstructura ? (
+                  <>
+                    <FaSpinner className="animate-spin mx-2" />
+                    Cargando...
+                  </>
+                ) : (
+                  "Estructuras"
+                )}
               </button>
               <button
                 type="button"
@@ -264,8 +277,8 @@ function ModalProyectos({
           </fieldset>
         </form>
         <div className="flex flex-row justify-between mt-5 mx-5"></div>
-      </div>
-    </dialog>
+      </div >
+    </dialog >
   );
 }
 export default ModalProyectos;
