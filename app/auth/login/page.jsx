@@ -24,7 +24,6 @@ function LoginPage() {
         `${process.env.DOMAIN_API_PROYECTOS}api/basesDatos`
       );
       const resJson = await res.json();
-      // console.log(resJson.data);
       setEmpresas(resJson.data);
     };
     fetchData();
@@ -127,8 +126,10 @@ function LoginPage() {
           >
             Seleccione una opción
           </option>
-          {empresas &&
-            empresas.map((arreglo) => (
+          {empresas && 
+            empresas
+            .filter((arreglo) => arreglo.proyecto === 'control_escolar')
+            .map((arreglo) => (
               <option
                 className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]"
                 key={arreglo.id}
