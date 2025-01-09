@@ -37,29 +37,30 @@ function ModalProyectos({
       accion === "Alta"
         ? `Nuevo Proyecto`
         : accion === "Editar"
-          ? `Editar Proyecto: ${currentID}`
-          : `Ver Proyecto: ${currentID}`
+        ? `Editar Proyecto: ${currentID}`
+        : `Ver Proyecto: ${currentID}`
     );
   }, [accion, currentID]);
 
   const ejecutaEstructuras = async () => {
+    let res;
     try {
       setisLoadingEstructura(true);
       if (!baseSeleccionada) return;
 
-      const res = await estructuras(baseSeleccionada);
+      res = await estructuras(baseSeleccionada);
       if (!res.status) {
         showSwal("Error", res.message, res.alert_icon, "modal_proyectos");
         return;
       }
-      showSwal("Exito!", res.message, res.alert_icon, "modal_proyectos");
-    } catch (error) { }
-    finally {
+    } catch (error) {
+    } finally {
       setisLoadingEstructura(false);
       showModal(false);
+      showSwal("Exito!", res.message, res.alert_icon);
     }
   };
-  const ejecutaSeeders = async () => { };
+  const ejecutaSeeders = async () => {};
 
   return (
     <dialog id="modal_proyectos" className="modal">
@@ -71,10 +72,11 @@ function ModalProyectos({
             </h3>
             <div className="flex space-x-2 items-center">
               <div
-                className={`tooltip tooltip-bottom ${accion === "Ver"
-                  ? "hover:cursor-not-allowed hidden"
-                  : "hover:cursor-pointer"
-                  }`}
+                className={`tooltip tooltip-bottom ${
+                  accion === "Ver"
+                    ? "hover:cursor-not-allowed hidden"
+                    : "hover:cursor-pointer"
+                }`}
                 data-tip="Guardar"
               >
                 <button
@@ -105,10 +107,11 @@ function ModalProyectos({
               </div>
               <button
                 type="button"
-                className={`bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm ${accion === "Alta"
-                  ? "hover:cursor-not-allowed hidden"
-                  : "hover:cursor-pointer"
-                  }`}
+                className={`bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm ${
+                  accion === "Alta"
+                    ? "hover:cursor-not-allowed hidden"
+                    : "hover:cursor-pointer"
+                }`}
                 onClick={(evt) => ejecutaEstructuras(evt)}
               >
                 {isLoadingEstructura ? (
@@ -280,8 +283,8 @@ function ModalProyectos({
           </fieldset>
         </form>
         <div className="flex flex-row justify-between mt-5 mx-5"></div>
-      </div >
-    </dialog >
+      </div>
+    </dialog>
   );
 }
 export default ModalProyectos;
