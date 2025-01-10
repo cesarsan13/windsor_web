@@ -1,5 +1,6 @@
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
+import { formatDate, formatTime, formatFecha, format_Fecha_String } from "../../globalfn";
 
 export const Documentos = async (token, fecha, grupo) => {
   const group = grupo ? 1 : 0;
@@ -8,6 +9,7 @@ export const Documentos = async (token, fecha, grupo) => {
     {
       headers: {
         Authorization: `Bearer ${token}`,
+        xescuela: localStorage.getItem("xescuela"),
       },
     }
   );
@@ -75,6 +77,7 @@ export const Imprimir = async (
             headers: new Headers({
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
+              xescuela: localStorage.getItem("xescuela"),
             }),
           }
         );
@@ -103,7 +106,7 @@ export const Imprimir = async (
     alu_Act = doc.alumno;
     if (grupoAlumno) {
       if (grupo_act !== grupo_ant) {
-        newPDF.ImpPosX("Grupo " + grupo_act, 14, newPDF.tw_ren);
+        newPDF.ImpPosX("Grupo " + grupo_act, 14, newPDF.tw_ren,);
         newPDF.nextRow(4);
       }
     }
@@ -112,7 +115,7 @@ export const Imprimir = async (
       si_Imp = incide && incide.Incide >= documento;
 
       if (sinDeudores === true) {
-        const estatus = alumnos.find((alu) => alu.id === alu_Act);
+        const estatus = alumnos.find((alu) => alu.numero === alu_Act);
         if (
           estatus.estatus.toUpperCase() === "DEUDOR" ||
           estatus.estatus.toUpperCase() === "CARTERA"
@@ -122,31 +125,31 @@ export const Imprimir = async (
       }
     }
     if (si_Imp === true) {
-      newPDF.ImpPosX(alu_Act.toString(), 14, newPDF.tw_ren);
-      const data = alumnos.find((alu) => alu.id === alu_Act);
+      newPDF.ImpPosX(alu_Act.toString(), 26, newPDF.tw_ren, 0, "R");
+      const data = alumnos.find((alu) => alu.numero === alu_Act);
       nombre = data.nombre;
-      newPDF.ImpPosX(nombre.toString(), 28, newPDF.tw_ren);
-      newPDF.ImpPosX(doc.producto.toString(), 108, newPDF.tw_ren);
-      newPDF.ImpPosX(doc.descripcion.toString(), 128, newPDF.tw_ren);
-      newPDF.ImpPosX(doc.fecha.toString(), 208, newPDF.tw_ren);
+      newPDF.ImpPosX(nombre, 28, newPDF.tw_ren, 0, "L");
+      newPDF.ImpPosX(doc.producto, 122, newPDF.tw_ren, 0, "R");
+      newPDF.ImpPosX(doc.descripcion, 128, newPDF.tw_ren, 0, "L");
+      newPDF.ImpPosX(doc.fecha, 208, newPDF.tw_ren, 0, "L");
       saldo = doc.importe - doc.importe * (doc.descuento / 100);
       saldoTotal += saldo;
       total_General += saldo;
-      newPDF.ImpPosX(saldo.toFixed(2).toString(), 228, newPDF.tw_ren);
+      newPDF.ImpPosX(saldo.toFixed(2), 243, newPDF.tw_ren, 0, "R");
 
       const isLastRecordForAlumno =
         index === documentos.length - 1 ||
         documentos[index + 1].alumno !== alu_Act;
 
       if (isLastRecordForAlumno) {
-        newPDF.ImpPosX(saldoTotal.toFixed(2).toString(), 248, newPDF.tw_ren);
-        newPDF.ImpPosX(data.telefono_1.toString(), 268, newPDF.tw_ren);
+        newPDF.ImpPosX(saldoTotal.toFixed(2), 264, newPDF.tw_ren, 0, "R");
+        newPDF.ImpPosX(data.telefono1, 268, newPDF.tw_ren, 0, "L");
         saldoTotal = 0;
         newPDF.nextRow(5);
       }
 
       Enca1(newPDF);
-      if (newPDF.tw_ren >= newPDF.tw_endRen) {
+      if (newPDF.tw_ren >= newPDF.tw_endRenH) {
         newPDF.pageBreakH();
         Enca1(newPDF);
       }
@@ -154,9 +157,16 @@ export const Imprimir = async (
     grupo_ant = grupo_act;
     alu_Ant = alu_Act;
   });
-  newPDF.ImpPosX("Total General", 208, newPDF.tw_ren);
-  newPDF.ImpPosX(total_General.toFixed(2).toString(), 248, newPDF.tw_ren);
-  newPDF.guardaReporte("Reporte de Adeudos Pendientes");
+  newPDF.ImpPosX("Total General", 208, newPDF.tw_ren, 0, "L");
+  newPDF.ImpPosX(total_General.toFixed(2), 248, newPDF.tw_ren, 0, "L");
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+
+newPDF.guardaReporte(`Reporte_de_Adeudos_Pendientes_${dateStr}${timeStr}`);
 };
 
 export const ImprimirExcel = async (
@@ -196,6 +206,7 @@ export const ImprimirExcel = async (
             headers: new Headers({
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
+              xescuela: localStorage.getItem("xescuela"),
             }),
           }
         );
@@ -241,7 +252,7 @@ export const ImprimirExcel = async (
       si_Imp = incide && incide.Incide >= documento;
 
       if (sinDeudores === true) {
-        const estatus = alumnos.find((alu) => alu.id === alu_Act);
+        const estatus = alumnos.find((alu) => alu.numero === alu_Act);
         if (
           estatus.estatus.toUpperCase() === "DEUDOR" ||
           estatus.estatus.toUpperCase() === "CARTERA"
@@ -251,7 +262,7 @@ export const ImprimirExcel = async (
       }
     }
     if (si_Imp === true) {
-      const data = alumnos.find((alu) => alu.id === alu_Act);
+      const data = alumnos.find((alu) => alu.numero === alu_Act);
       Nombre = data.nombre;
       saldo = doc.importe - doc.importe * (doc.descuento / 100);
       saldoTotal += saldo;
@@ -279,7 +290,7 @@ export const ImprimirExcel = async (
           fecha: doc.fecha,
           saldo: saldo.toFixed(2),
           total: saldoTotal.toFixed(2),
-          telefono: data.telefono_1,
+          telefono: data.telefono1,
         });
         saldoTotal = 0;
         Docs.push({
@@ -311,7 +322,13 @@ export const ImprimirExcel = async (
   const { columns } = configuracion;
   newExcel.setColumnas(columns);
   newExcel.addData(Docs);
-  newExcel.guardaReporte(nombre);
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+  newExcel.guardaReporte(`${nombre}_${dateStr}${timeStr}`);
 };
 
 export const grupo_cobranza = async (token) => {
@@ -319,6 +336,7 @@ export const grupo_cobranza = async (token) => {
   const res = await fetch(`${process.env.DOMAIN_API}api/documentoscobranza`, {
     headers: {
       Authorization: `Bearer ${token}`,
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();

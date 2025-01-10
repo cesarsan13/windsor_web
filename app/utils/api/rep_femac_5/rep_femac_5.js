@@ -1,6 +1,7 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { calculaDigitoBvba } from "@/app/utils/globalfn";
+import { formatDate, formatTime, formatFecha, format_Fecha_String } from "../../globalfn";
 
 export const getReportAltaBajaAlumno = async (
   token,
@@ -21,67 +22,24 @@ export const getReportAltaBajaAlumno = async (
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
   return resJson.data;
 };
 
-const Enca2 = (doc) => {
-  if (!doc.tiene_encabezado) {
-    doc.imprimeEncabezadoPrincipalV();
-    doc.nextRow(12);
-    doc.ImpPosX("Nombre", 5, doc.tw_ren);
-    doc.ImpPosX("Dia", 150, doc.tw_ren);
-    doc.ImpPosX("Mes", 160, doc.tw_ren);
-    doc.ImpPosX("Año", 170, doc.tw_ren);
-    doc.nextRow(4);
-    doc.printLineF();
-    doc.nextRow(4);
-    doc.tiene_encabezado = true;
-  } else {
-    doc.nextRow(6);
-    doc.tiene_encabezado = true;
-  }
-};
-
-export const verImprimir = async (configuracion, impr) => {
-  const newPDF = new ReportePDF(configuracion);
-  const { body } = configuracion;
-  Enca2(newPDF);
-  body.forEach((alumno) => {
-    const nombre = `${alumno.nombre || ""} ${alumno.a_paterno || ""} ${
-      alumno.a_materno || ""
-    }`;
-    let fecha;
-    fecha = new Date(alumno.fecha_nac);
-    const diaFor = fecha.getDate().toString().padStart(2, "0");
-    const mesFor = (fecha.getMonth() + 1).toString().padStart(2, "0");
-    const añoFor = fecha.getFullYear().toString();
-    newPDF.ImpPosX(nombre, 5, newPDF.tw_ren);
-    newPDF.ImpPosX(diaFor, 150, newPDF.tw_ren);
-    newPDF.ImpPosX(mesFor, 160, newPDF.tw_ren);
-    newPDF.ImpPosX(añoFor, 170, newPDF.tw_ren);
-    Enca2(newPDF);
-    if (newPDF.tw_ren >= newPDF.tw_endRen) {
-      newPDF.pageBreak();
-      Enca2(newPDF);
-    }
-  });
-  const pdfData = newPDF.doc.output("datauristring");
-  return pdfData;
-};
-
 const Enca1 = (doc) => {
   if (!doc.tiene_encabezado) {
-    doc.imprimeEncabezadoPrincipalH();
+    doc.imprimeEncabezadoPrincipalVConcentradoCal();
     doc.nextRow(12);
-    doc.ImpPosX("Nombre", 15, doc.tw_ren);
+    doc.ImpPosX("No", 15, doc.tw_ren);
+    doc.ImpPosX("Nombre", 35, doc.tw_ren);
     doc.ImpPosX("Dia", 170, doc.tw_ren);
     doc.ImpPosX("Mes", 180, doc.tw_ren);
     doc.ImpPosX("Año", 190, doc.tw_ren);
     doc.nextRow(4);
-    doc.printLineH();
+    doc.printLineV();
     doc.nextRow(4);
     doc.tiene_encabezado = true;
   } else {
@@ -90,21 +48,22 @@ const Enca1 = (doc) => {
   }
 };
 
-export const Imprimir = (configuracion, impr) => {
-  const orientacion = "Landscape";
-  const newPDF = new ReportePDF(configuracion, orientacion);
+export const Imprimir = (configuracion) => {
+  const newPDF = new ReportePDF(configuracion);
   const { body } = configuracion;
   Enca1(newPDF);
   body.forEach((alumno) => {
-    const nombre = `${alumno.nombre || ""} ${alumno.a_paterno || ""} ${
+    const nombre = `${alumno.a_nombre || ""} ${alumno.a_paterno || ""} ${
       alumno.a_materno || ""
     }`;
+    const id = calculaDigitoBvba((alumno.numero || '').toString() || '');
     let fecha;
     fecha = new Date(alumno.fecha_nac);
     const diaFor = fecha.getDate().toString().padStart(2, "0");
     const mesFor = (fecha.getMonth() + 1).toString().padStart(2, "0");
     const añoFor = fecha.getFullYear().toString();
-    newPDF.ImpPosX(nombre, 15, newPDF.tw_ren);
+    newPDF.ImpPosX(`${alumno.numero}-${id}`, 15, newPDF.tw_ren);
+    newPDF.ImpPosX(nombre, 35, newPDF.tw_ren);
     newPDF.ImpPosX(diaFor, 170, newPDF.tw_ren);
     newPDF.ImpPosX(mesFor, 180, newPDF.tw_ren);
     newPDF.ImpPosX(añoFor, 190, newPDF.tw_ren);
@@ -115,7 +74,14 @@ export const Imprimir = (configuracion, impr) => {
       Enca1(newPDF);
     }
   });
-  newPDF.guardaReporte("Reporte Altas Bajas Alumnos por Periodo");
+  const date = new Date();
+    const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+    const timeStr = formatTime(date).replace(/:/g, "");
+
+  newPDF.guardaReporte(`Reporte_Altas_Bajas_Alumnos_Periodo_${dateStr}${timeStr}`);
 };
 
 export const ImprimirExcel = (configuracion) => {
@@ -136,5 +102,11 @@ export const ImprimirExcel = (configuracion) => {
   });
   newExcel.setColumnas(columns);
   newExcel.addData(newBody);
-  newExcel.guardaReporte(nombre);
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+  newExcel.guardaReporte(`${nombre}${dateStr}${timeStr}`);
 };

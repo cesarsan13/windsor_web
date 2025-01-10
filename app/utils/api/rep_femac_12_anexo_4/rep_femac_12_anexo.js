@@ -1,6 +1,8 @@
 import { calculaDigitoBvba } from "../../globalfn";
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
+import { formatDate, formatTime, formatFecha, format_Fecha_String, formatNumber } from "../../globalfn";
+
 
 export const getDetallePedido = async (
   token,
@@ -12,11 +14,13 @@ export const getDetallePedido = async (
   const res = await fetch(
     `${process.env.DOMAIN_API}api/cobranzaProducto/${fecha1}/${fecha2}/${articulo}/${artFin}`,
     {
-      headers: {
+      headers: new Headers({
         Authorization: `Bearer ${token}`,
-      },
+        xescuela: localStorage.getItem("xescuela"),
+      }),
     }
   );
+  
   const resJson = await res.json();
   return resJson.data;
 };
@@ -26,9 +30,10 @@ export const getTrabRepCob = async (token, orden) => {
   const res = await fetch(
     `${process.env.DOMAIN_API}api/cobranzaProductos/${orden}`,
     {
-      headers: {
+      headers: new Headers({
         Authorization: `Bearer ${token}`,
-      },
+        xescuela: localStorage.getItem("xescuela"),
+      }),
     }
   );
   const resJson = await res.json();
@@ -51,6 +56,7 @@ export const insertTrabRepCobr = async (token, data) => {
       }),
       headers: new Headers({
         Authorization: "Bearer " + token,
+        xescuela: localStorage.getItem("xescuela"),
         "Content-Type": "application/json",
       }),
     }
@@ -85,7 +91,7 @@ export const ImprimirPDF = async (
     const datos = {
       recibo: dato.recibo,
       fecha: dato.fecha,
-      articulo: dato.articulo,
+      articulo: Number(dato.articulo),
       documento: dato.documento,
       alumno: dato.alumno,
       nombre: alumno,
@@ -104,24 +110,18 @@ export const ImprimirPDF = async (
       tot_art = 0;
     }
     if (trabRep.articulo !== Art_Ant) {
-      newPDF.ImpPosX(trabRep.articulo.toString(), 14, newPDF.tw_ren);
-      newPDF.ImpPosX(trabRep.descripcion.toString(), 33, newPDF.tw_ren);
+      newPDF.ImpPosX(trabRep.articulo.toString(), 24, newPDF.tw_ren,0,"R");
+      newPDF.ImpPosX(trabRep.descripcion.toString(), 43, newPDF.tw_ren,0,"L");
       Enca1(newPDF);
       if (newPDF.tw_ren >= newPDF.tw_endRen) {
         newPDF.pageBreak();
         Enca1(newPDF);
       }
     }
-    newPDF.ImpPosX(
-      trabRep.alumno.toString() +
-        "-" +
-        calculaDigitoBvba(trabRep.alumno.toString()),
-      14,
-      newPDF.tw_ren
-    );
-    newPDF.ImpPosX(trabRep.nombre.toString(), 28, newPDF.tw_ren);
-    newPDF.ImpPosX(trabRep.importe.toString(), 128, newPDF.tw_ren);
-    newPDF.ImpPosX(trabRep.fecha.toString(), 158, newPDF.tw_ren);
+    newPDF.ImpPosX(trabRep.alumno.toString() + "-" + calculaDigitoBvba(trabRep.alumno.toString()), 24, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(trabRep.nombre.toString(), 38, newPDF.tw_ren,0,"L");
+    newPDF.ImpPosX(formatNumber(trabRep.importe), 138, newPDF.tw_ren,0,"R");
+    newPDF.ImpPosX(trabRep.fecha.toString(), 168, newPDF.tw_ren,0,"L");
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
       newPDF.pageBreak();
@@ -132,26 +132,33 @@ export const ImprimirPDF = async (
     Art_Ant = trabRep.articulo;
   });
   Cambia_Articulo(newPDF, tot_art);
-  newPDF.ImpPosX("TOTAL General", 98, newPDF.tw_ren);
-  newPDF.ImpPosX(total_general.toString(), 128, newPDF.tw_ren);
-  newPDF.guardaReporte("Reporte Cobranza por Producto");
+  newPDF.ImpPosX("TOTAL General", 98, newPDF.tw_ren,0,"L");
+  newPDF.ImpPosX(formatNumber(total_general), 138, newPDF.tw_ren,0,"R");
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+
+newPDF.guardaReporte(`Reporte_Cobranza_Producto_${dateStr}${timeStr}`);
 };
 const Cambia_Articulo = (doc, Total_Art) => {
-  doc.ImpPosX("TOTAL", 108, doc.tw_ren);
-  doc.ImpPosX(Total_Art.toString(), 128, doc.tw_ren);
+  doc.ImpPosX("TOTAL", 108, doc.tw_ren,0,"L");
+  doc.ImpPosX(formatNumber(Total_Art), 138, doc.tw_ren,0,"R");
   doc.nextRow(4);
 };
 const Enca1 = (doc) => {
   if (!doc.tiene_encabezado) {
     doc.imprimeEncabezadoPrincipalV();
     doc.nextRow(12);
-    doc.ImpPosX("Producto", 14, doc.tw_ren);
-    doc.ImpPosX("Descripcion", 33, doc.tw_ren);
+    doc.ImpPosX("Producto", 24, doc.tw_ren,0,"R");
+    doc.ImpPosX("Descripcion", 43, doc.tw_ren,0,"L");
     doc.nextRow(4);
-    doc.ImpPosX("Alumno", 14, doc.tw_ren);
-    doc.ImpPosX("Nombre", 28, doc.tw_ren);
-    doc.ImpPosX("Importe", 128, doc.tw_ren);
-    doc.ImpPosX("Fecha Pago", 158, doc.tw_ren);
+    doc.ImpPosX("Alumno", 24, doc.tw_ren,0,"R");
+    doc.ImpPosX("Nombre", 38, doc.tw_ren,0,"L");
+    doc.ImpPosX("Importe", 138, doc.tw_ren,0,"R");
+    doc.ImpPosX("Fecha Pago", 168, doc.tw_ren,0,"L");
     doc.nextRow(4);
     doc.printLineV();
     doc.nextRow(4);
@@ -228,7 +235,7 @@ export const ImprimirExcel = async (
       alumno:
         trabRep.alumno + "-" + calculaDigitoBvba(trabRep.alumno.toString()),
       nombre: trabRep.nombre,
-      importe: trabRep.importe,
+      importe: formatNumber(trabRep.importe),
       fecha: trabRep.fecha,
     });
     // newExcel.addData(data1);
@@ -241,19 +248,25 @@ export const ImprimirExcel = async (
   data1.push({
     alumno: "",
     nombre: "Total General",
-    importe: total_general,
+    importe: formatNumber(total_general),
     fecha: "",
   });
   // newExcel.addData(data1);
   newExcel.addData(data1);
-  newExcel.guardaReporte(nombre);
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+  newExcel.guardaReporte(`${nombre}${dateStr}${timeStr}`);
 };
 
 const Cambia_Articulo_Excel = (tot_art, data) => {
   data.push({
     alumno: "",
     nombre: "Total",
-    importe: tot_art,
+    importe: formatNumber(tot_art),
     fecha: "",
   });
   data.push({

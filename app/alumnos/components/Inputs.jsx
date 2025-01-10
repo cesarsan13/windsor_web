@@ -16,6 +16,8 @@ function Inputs({
   isDisabled,
   handleBlur,
   arreglos,
+  pattern,
+  message_pattern,
 }) {
   if (type === "select") {
     return (
@@ -42,11 +44,6 @@ function Inputs({
                 {arreglo.descripcion}
               </option>
             ))}
-            {/* <option value={"Activo"}>Activo</option>
-            <option value={"Enfermo"}>Enfermo</option>
-            <option value={"Permiso"}>Permiso</option>
-            <option value={"Cartera"}>Cartera</option>
-            <option value={"Baja"}>Baja</option> */}
           </select>
         </label>
         {errors[name] && (
@@ -76,6 +73,9 @@ function Inputs({
                 value: maxLenght,
                 message: `El campo ${name} no puede tener más de ${maxLenght} caracteres`,
               },
+              ...(pattern && {
+                pattern: { value: pattern, message: message_pattern },
+              }),
               ...(requerido && { required: message }),
             })}
             {...(dataType === "int" ||

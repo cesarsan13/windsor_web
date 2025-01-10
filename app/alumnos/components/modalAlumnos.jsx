@@ -1,4 +1,9 @@
-import { soloEnteros, soloDecimales, pone_ceros } from "@/app/utils/globalfn";
+import {
+  soloEnteros,
+  soloDecimales,
+  pone_ceros,
+  validarRFC,
+} from "@/app/utils/globalfn";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import { useState, useEffect, useRef } from "react";
 import Inputs from "@/app/alumnos/components/Inputs";
@@ -6,10 +11,15 @@ import Webcam from "react-webcam";
 import Image from "next/image";
 import BuscarCat from "@/app/components/BuscarCat";
 import iconos from "@/app/utils/iconos";
+import { getTab } from "@/app/utils/api/alumnos/alumnos";
+import { FaSpinner } from "react-icons/fa";
 
 function ModalAlumnos({
+  activeTab,
+  setActiveTab,
   session,
   accion,
+  handleSubmit,
   onSubmit,
   currentID,
   register,
@@ -25,19 +35,24 @@ function ModalAlumnos({
   setGrado2,
   setcond1,
   setcond2,
+  files,
+  setFile,
+  isLoadingButton,
 }) {
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
-  const [activeTab, setActiveTab] = useState(1);
+
   const columnasBuscaCat = ["numero", "horario"];
   const nameInputs = ["horario_1", "horario_1_nombre"];
   const nameInputs2 = ["horario_2", "horario_2_nombre"];
-  const columnasBuscaCat1 = ["id", "descripcion"];
+
+  const columnasBuscaCat1 = ["numero", "descripcion"];
   const nameInputs3 = ["cond_1", "cond_1_nombre"];
   const nameInputs4 = ["cond_2", "cond_2_nombre"];
   const webcamRef = useRef(null);
   const [isCameraOn, setIsCameraOn] = useState(false);
+  const inputfileref = useRef(null);
 
   const toggleCamera = () => {
     setIsCameraOn(!isCameraOn);
@@ -51,6 +66,25 @@ function ModalAlumnos({
     }
   };
 
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFile(selectedFile);
+        setcondicion(true);
+        setCapturedImage(reader.result); // La imagen en formato Base64
+      };
+      reader.readAsDataURL(selectedFile); // Convierte el archivo a Base64
+    }
+  };
+
+  const openFileSelector = () => {
+    if (inputfileref.current) {
+      inputfileref.current.click(); // Simula el clic en el input
+    }
+  };
+
   useEffect(() => {
     if (accion === "Eliminar" || accion === "Ver") {
       setIsDisabled(true);
@@ -60,13 +94,15 @@ function ModalAlumnos({
     }
     setTitulo(
       accion === "Alta"
-        ? `Nuevo Alumno: ${currentID}`
+        ? `Nuevo Alumno`
         : accion === "Editar"
         ? `Editar Alumno: ${currentID}`
         : accion === "Eliminar"
         ? `Eliminar Alumno: ${currentID}`
         : `Ver Alumno: ${currentID}`
     );
+    // const alj = JSON.stringify(alumno);
+    // console.log(alumno);
   }, [accion, currentID]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
@@ -83,39 +119,71 @@ function ModalAlumnos({
   const handleTabs = (num) => {
     setActiveTab(num);
   };
+  // console.log(JSON.stringify(alumno));
+
+  const checkErrorsAndSubmit = (event) => {
+    event.preventDefault();
+    handleSubmit(
+      (data) => {
+        onSubmit(data); // Envío si es válido
+      },
+      () => {
+        // Intnta enviar el formulario
+        if (Object.keys(errors).length > 0) {
+          const primerError = Object.keys(errors)[0];
+          setActiveTab(getTab(primerError));
+        }
+      }
+    )();
+  };
 
   return (
-    <dialog id="my_modal_3" className="modal">
-      <div className="modal-box w-full max-w-3xl h-full">
-            <form onSubmit={onSubmit} encType="multipart/form-data">
-            <div className="sticky -top-3 flex justify-between items-center bg-white dark:bg-[#1d232a] w-full h-10 z-10 mb-5">
-          <h3 className="font-bold text-lg">{titulo}</h3>
-          <div className="flex space-x-2 items-center">
-          <div
-              className={`tooltip tooltip-bottom ${
-                accion === "Ver"
-                  ? "hover:cursor-not-allowed hidden"
-                  : "hover:cursor-pointer"
-              }`}
-              data-tip="Guardar"
-            >
-              <button
-                type="submit"
-                id="btn_guardar"
-                className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
+    <dialog id="my_modal_alumnos" className="modal ">
+      <div className="modal-box w-full max-w-3xl h-full bg-base-200">
+        <form
+          onSubmit={(evt) => checkErrorsAndSubmit(evt)}
+          encType="multipart/form-data"
+        >
+          <div className="sticky -top-6 flex justify-between items-center bg-base-200  w-full h-10 z-10 mb-5">
+            <h3 className="font-bold text-lg text-neutral-600 dark:text-white">{titulo}</h3>
+            <div className="flex space-x-2 items-center">
+              <div
+                className={`tooltip tooltip-bottom ${
+                  accion === "Ver"
+                    ? "hover:cursor-not-allowed hidden"
+                    : "hover:cursor-pointer"
+                }`}
+                data-tip="Guardar"
               >
-                        <Image src={iconos.guardar} alt="Guardar" className="w-4 h-4 mr-1" />
-                <span className="hidden sm:inline">Guardar</span>
+                <button
+                  type="submit"
+                  id="btn_guardar"
+                  className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
+                  onClick={onsubmit}
+                  disabled={isLoadingButton}
+                >
+                  {isLoadingButton ? (
+                    <FaSpinner className="animate-spin mx-2" />
+                  ) : (
+                    <>
+                      <Image src={iconos.guardar} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 block dark:hidden" />
+                      <Image src={iconos.guardar_w} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 hidden dark:block" />
+                    </>
+                  )}
+                  {isLoadingButton ? " Cargando..." : " Guardar"}
+                </button>
+              </div>
+              <button
+                className="btn btn-sm btn-circle btn-ghost bg-base-200 dark:bg-[#1d232a] text-neutral-600 dark:text-white"
+                onClick={(event) => {
+                  event.preventDefault();
+                  document.getElementById("my_modal_alumnos").close();
+                }}
+              >
+                ✕
               </button>
             </div>
-            <button
-              className="btn btn-sm btn-circle btn-ghost"
-              onClick={() => document.getElementById("my_modal_3").close()}
-            >
-              ✕
-            </button>
-            </div>
-        </div>
+          </div>
           <fieldset id="fs_alumnos">
             <div role="tablist" className="tabs tabs-lifted ">
               <input
@@ -136,16 +204,16 @@ function ModalAlumnos({
                 <div className="flex flex-wrap -mx-3 mb-6 px-3">
                   <Inputs
                     dataType={"int"}
-                    name={"id"}
+                    name={"numero"}
                     tamañolabel={""}
                     className={"rounded block grow text-right"}
                     Titulo={"Numero: "}
                     type={"text"}
-                    requerido={true}
+                    requerido={accion === "Alta" ? false : true}
                     errors={errors}
                     register={register}
                     message={"id Requerido"}
-                    isDisabled={!isDisabled}
+                    isDisabled={accion === "Alta" ? !isDisabled : isDisabled}
                     handleBlur={handleBlur}
                   />
 
@@ -289,9 +357,9 @@ function ModalAlumnos({
                     isDisabled={isDisabled}
                     handleBlur={handleBlur}
                     arreglos={[
-                      { id: "Hombre", descripcion: "Hombre" },
-                      { id: "Femenino", descripcion: "Femenino" },
-                      { id: "Otro", descripcion: "Otro" },
+                      { id: "H", descripcion: "Hombre" },
+                      { id: "M", descripcion: "Mujer" },
+                      { id: "O", descripcion: "Otro" },
                     ]}
                   />
 
@@ -313,8 +381,8 @@ function ModalAlumnos({
                   />
 
                   <Inputs
-                    dataType={"string"}
-                    name={"telefono_1"}
+                    dataType={"int"}
+                    name={"telefono1"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
                     Titulo={"Tels: "}
@@ -330,8 +398,8 @@ function ModalAlumnos({
                   />
 
                   <Inputs
-                    dataType={"string"}
-                    name={"telefono_2"}
+                    dataType={"int"}
+                    name={"telefono2"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
                     Titulo={"Tel (opcional)"}
@@ -346,7 +414,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"celular"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -362,17 +430,17 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"codigo_barras"}
                     tamañolabel={""}
                     className={"rounded block grow"}
-                    Titulo={"Codigo barras: "}
+                    Titulo={"Matricula: "}
                     type={"text"}
                     requerido={false}
                     isNumero={false}
                     errors={errors}
                     register={register}
-                    message={"Codigo barras requerido"}
+                    message={"Matricula requerida"}
                     maxLenght={255}
                     isDisabled={isDisabled}
                     handleBlur={handleBlur}
@@ -488,7 +556,7 @@ function ModalAlumnos({
                     errors={errors}
                     register={register}
                     message={"Codigo postal requerida"}
-                    maxLenght={10}
+                    maxLenght={6}
                     isDisabled={isDisabled}
                     handleBlur={handleBlur}
                   />
@@ -498,7 +566,7 @@ function ModalAlumnos({
                     tamañolabel={""}
                     className={"rounded block grow"}
                     Titulo={"Email: "}
-                    type={"email"}
+                    type={"text"}
                     requerido={true}
                     isNumero={false}
                     errors={errors}
@@ -507,6 +575,8 @@ function ModalAlumnos({
                     maxLenght={255}
                     isDisabled={isDisabled}
                     handleBlur={handleBlur}
+                    pattern={/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/}
+                    message_pattern={"Formato de Correo inválido"}
                   />
                 </div>
               </div>
@@ -540,23 +610,57 @@ function ModalAlumnos({
                     </>
                   )}
                   <div className="bottom-0 left-0 w-full flex justify-center mb-4">
-                    <button
+                    {/* <button
                       type="button"
                       onClick={toggleCamera}
                       className="btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white font-bold px-4 rounded"
                     >
                       {isCameraOn ? "Apagar cámara" : "Encender cámara"}
-                    </button>
-                    <button
+                    </button> */}
+                    {/* <button
                       type="button"
                       onClick={capture}
                       disabled={!isCameraOn}
                       className="ml-4 btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white font-bold px-4 rounded"
                     >
                       Capturar Foto
+                    </button> */}
+                    <button
+                      type="button"
+                      onClick={openFileSelector}
+                      className="ml-4 btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white font-bold px-4 rounded"
+                    >
+                      Seleccionar Foto
                     </button>
                   </div>
-                  {capturedImage && (
+
+                  <input
+                    type="file"
+                    name="imagen"
+                    onChange={handleFileChange}
+                    ref={inputfileref}
+                    style={{ display: "none" }}
+                    className="ml-4 btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white font-bold px-4 rounded"
+                  />
+
+                  {(capturedImage || files) && (
+                    <div className="bottom-0 left-0 w-full">
+                      <h2 className="text-center text-xl mb-2">
+                        {condicion ? "Imagen Seleccionada:" : "Foto Seleccionada:"}
+                      </h2>
+                      <Image
+                        src={
+                          condicion ? URL.createObjectURL(files) : capturedImage
+                        }
+                        alt="Imagen"
+                        width={80}
+                        height={80}
+                        className="w-full object-contain mx-auto my-4"
+                      />
+                    </div>
+                  )}
+
+                  {/*{capturedImage && (
                     <div className="bottom-0 left-0 w-full">
                       <h2 className="text-center text-xl mb-2">
                         Foto Capturada:
@@ -569,7 +673,7 @@ function ModalAlumnos({
                         className="w-full object-contain mx-auto my-4"
                       />
                     </div>
-                  )}
+                  )}*/}
                 </div>
               </div>
 
@@ -599,8 +703,10 @@ function ModalAlumnos({
                     token={session.user.token}
                     modalId="modal_horarios"
                     array={alumno.horario_1}
+                    id={alumno.numero}
                     alignRight={true}
                     inputWidths={{ first: "60px", second: "380px" }}
+                    accion={accion}
                   />
                 </div>
               </div>
@@ -616,107 +722,75 @@ function ModalAlumnos({
               />
               <div
                 role="tabpanel"
-                className={`tab-content p-6 rounded-box max-md:!row-start-4 ${
+                className={`tab-content p-6 rounded-box max-md:!row-start-4 space-y-4 ${
                   activeTab === 5 ? "tab-active " : ""
                 }`}
               >
-                <div className="flex flex-wrap -mx-3 mb-6">
-                  <Inputs
-                    dataType={"string"}
-                    name={"ciclo_escolar"}
-                    tamañolabel={""}
-                    className={"rounded block grow"}
-                    Titulo={"Ciclo escolar: "}
-                    type={"text"}
-                    requerido={false}
-                    isNumero={false}
-                    errors={errors}
-                    register={register}
-                    message={"Ciclo escolar requerido"}
-                    maxLenght={50}
-                    isDisabled={isDisabled}
-                    handleBlur={handleBlur}
-                  />
-                  <Inputs
-                    dataType={"double"}
-                    name={"descuento"}
-                    tamañolabel={""}
-                    className={"rounded block grow text-right"}
-                    Titulo={"Descuento: "}
-                    type={"text"}
-                    requerido={false}
-                    isNumero={true}
-                    errors={errors}
-                    register={register}
-                    message={"Descuento requerido"}
-                    maxLenght={12}
-                    isDisabled={isDisabled}
-                    handleBlur={handleBlur}
-                  />
-                  <BuscarCat
-                    table="formaPago"
-                    fieldsToShow={columnasBuscaCat1}
-                    nameInput={nameInputs3}
-                    setItem={setcond1}
-                    token={session.user.token}
-                    modalId="modal_formaPago1"
-                    array={alumno.cond_1}
-                    titulo="Forma pago: "
-                    alignRight={true}
-                    inputWidths={{ first: "80px", second: "380px" }}
-                  />
-                  <BuscarCat
-                    table={"formaPago"}
-                    fieldsToShow={columnasBuscaCat1}
-                    nameInput={nameInputs4}
-                    setItem={setcond2}
-                    token={session.user.token}
-                    modalId="modal_formaPago2"
-                    array={alumno.cond_2}
-                    titulo={"Forma pago:"}
-                    alignRight={true}
-                    inputWidths={{ first: "80px", second: "380px" }}
-                  />
-                  {/* <Inputs
-                                        dataType={"string"}
-                                        name={"cond_1"}
-                                        tamañolabel={""}
-                                        className={"form-select p-1.5 grow bg-[#1d232a] "}
-                                        Titulo={"Pago: "}
-                                        type={"select"}
-                                        requerido={true}
-                                        isNumero={false}
-                                        errors={errors}
-                                        register={register}
-                                        message={"Pago 1 requerido"}
-                                        maxLenght={50}
-                                        isDisabled={isDisabled}
-                                        handleBlur={handleBlur}
-                                        arreglos={[
-                                            { label: "PENDIENTE", value: "PENDIENTE" },
-                                        ]}
-                                    />
-                                    <Inputs
-                                        dataType={"string"}
-                                        name={"cond_2"}
-                                        tamañolabel={""}
-                                        className={"form-select p-1.5 grow bg-[#1d232a] "}
-                                        Titulo={"Pago: "}
-                                        type={"select"}
-                                        requerido={true}
-                                        isNumero={false}
-                                        errors={errors}
-                                        register={register}
-                                        message={"Pago 2 requerido"}
-                                        maxLenght={50}
-                                        isDisabled={isDisabled}
-                                        handleBlur={handleBlur}
-                                        arreglos={[
-                                            { label: "PENDIENTE", value: "PENDIENTE" },
-                                        ]}
-                                    /> */}
-                </div>
-              </div>
+                 <div className="flex flex-wrap -mx-3 mb-6 gap-4">
+    <div className="flex w-full md:w-full gap-4">
+      <Inputs
+        dataType={"string"}
+        name={"ciclo_escolar"}
+        tamañolabel={""}
+        className={"rounded block grow"}
+        Titulo={"Ciclo escolar: "}
+        type={"text"}
+        requerido={false}
+        isNumero={false}
+        errors={errors}
+        register={register}
+        message={"Ciclo escolar requerido"}
+        maxLenght={50}
+        isDisabled={isDisabled}
+        handleBlur={handleBlur}
+      />
+      <Inputs
+        dataType={"double"}
+        name={"descuento"}
+        tamañolabel={""}
+        className={"rounded block grow text-right"}
+        Titulo={"Descuento: "}
+        type={"text"}
+        requerido={false}
+        isNumero={true}
+        errors={errors}
+        register={register}
+        message={"Descuento requerido"}
+        maxLenght={12}
+        isDisabled={isDisabled}
+        handleBlur={handleBlur}
+      />
+    </div>
+    <BuscarCat
+      table="formaPago"
+      fieldsToShow={columnasBuscaCat1}
+      nameInput={nameInputs3}
+      setItem={setcond1}
+      token={session.user.token}
+      modalId="modal_formaPago1"
+      array={alumno.cond_1}
+      id={alumno.cond_1}
+      titulo="Forma pago: "
+      alignRight={true}
+      inputWidths={{ first: "80px", second: "380px" }}
+      accion={accion}
+    />
+    <BuscarCat
+      table={"formaPago"}
+      fieldsToShow={columnasBuscaCat1}
+      nameInput={nameInputs4}
+      setItem={setcond2}
+      token={session.user.token}
+      modalId="modal_formaPago2"
+      array={alumno.cond_2}
+      id={alumno.cond_2}
+      titulo={"Forma pago:"}
+      alignRight={true}
+      inputWidths={{ first: "80px", second: "380px" }}
+      accion={accion}
+    />
+  </div>
+</div>
 
               <input
                 type="radio"
@@ -751,7 +825,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"tel_p_1"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -767,7 +841,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"tel_p_2"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -783,7 +857,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"cel_p_1"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -863,7 +937,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"tel_ase_1"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -879,7 +953,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"tel_ase_2"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -933,7 +1007,7 @@ function ModalAlumnos({
                     dataType={"string"}
                     name={"rfc_factura"}
                     tamañolabel={""}
-                    className={"rounded block grow"}
+                    className={"rounded block grow uppercase"}
                     Titulo={"RFC Factura: "}
                     type={"text"}
                     requerido={false}
@@ -944,6 +1018,10 @@ function ModalAlumnos({
                     maxLenght={50}
                     isDisabled={isDisabled}
                     handleBlur={handleBlur}
+                    pattern={
+                      /^([A-ZÑ&]{3,4})\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])[A-Z\d]{2}[A-Z\d]{1}$/i
+                    }
+                    message_pattern={"Formato de RFC Inválido"}
                   />
                   <Inputs
                     dataType={"string"}
@@ -1010,7 +1088,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"raz_cp"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -1021,7 +1099,7 @@ function ModalAlumnos({
                     errors={errors}
                     register={register}
                     message={"Codigo postal requerido"}
-                    maxLenght={10}
+                    maxLenght={6}
                     isDisabled={isDisabled}
                     handleBlur={handleBlur}
                   />
@@ -1061,7 +1139,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"tel_pad_1"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -1077,7 +1155,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"tel_pad_2"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -1093,7 +1171,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"cel_pad_1"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -1125,7 +1203,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"tel_mad_1"}
                     tamañolabel={""}
                     className={"rounded block grow text-right"}
@@ -1141,7 +1219,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"tel_mad_2"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -1157,7 +1235,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"cel_mad_1"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -1177,7 +1255,7 @@ function ModalAlumnos({
                     name={"nom_avi"}
                     tamañolabel={""}
                     className={"rounded block grow"}
-                    Titulo={"Avisar: "}
+                    Titulo={"Avisar:"}
                     type={"text"}
                     requerido={false}
                     isNumero={false}
@@ -1189,7 +1267,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"tel_avi_1"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -1205,7 +1283,7 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
+                    dataType={"int"}
                     name={"tel_avi_2"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
@@ -1221,8 +1299,8 @@ function ModalAlumnos({
                     handleBlur={handleBlur}
                   />
                   <Inputs
-                    dataType={"string"}
-                    name={"cel_avi_1"}
+                    dataType={"int"}
+                    name={"cel_avi"}
                     tamañolabel={""}
                     className={"rounded block grow text-left"}
                     Titulo={"Celular del aviso: "}

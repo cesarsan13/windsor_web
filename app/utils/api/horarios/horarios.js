@@ -1,6 +1,19 @@
+import { formatDate, formatTime } from "../../globalfn";
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
 
+export const getAlumnoXHorario = async (token) => {
+  let url = "";
+  url = `${process.env.DOMAIN_API}api/horarios/alumnosxhorario`;
+  const res = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      xescuela: localStorage.getItem("xescuela"),
+    },
+  });
+  const resJson = await res.json();
+  return resJson.data;
+};
 export const getHorarios = async (token, baja) => {
   let url = "";
   baja
@@ -9,6 +22,7 @@ export const getHorarios = async (token, baja) => {
   const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -19,6 +33,7 @@ export const getUltimoHorario = async (token) => {
   const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -51,11 +66,13 @@ export const guardarHorario = async (token, data, accion) => {
       sexo: data.sexo,
       edad_ini: data.edad_ini,
       edad_fin: data.edad_fin,
+      salon: data.salon,
       baja: data.baja,
     }),
     headers: new Headers({
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     }),
   });
   const resJson = await res.json();
@@ -66,14 +83,15 @@ const Enca1 = (doc) => {
   if (!doc.tiene_encabezado) {
     doc.imprimeEncabezadoPrincipalV();
     doc.nextRow(12);
-    doc.ImpPosX("Numero", 14, doc.tw_ren);
-    doc.ImpPosX("Cancha", 28, doc.tw_ren);
-    doc.ImpPosX("Dia", 42, doc.tw_ren);
-    doc.ImpPosX("Horario", 82, doc.tw_ren);
-    doc.ImpPosX("Niños", 114, doc.tw_ren);
-    doc.ImpPosX("Sexo", 134, doc.tw_ren);
-    doc.ImpPosX("Edad Ini", 154, doc.tw_ren);
-    doc.ImpPosX("Edad Fin", 174, doc.tw_ren);
+    doc.ImpPosX("Numero", 14, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Horario", 28, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Salón", 62, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Dia", 90, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Cancha", 117, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Niños", 134, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Sexo", 149, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Edad Ini", 164, doc.tw_ren, 0, "L");
+    doc.ImpPosX("Edad Fin", 184, doc.tw_ren, 0, "L");
     doc.nextRow(4);
     doc.printLineV();
     doc.nextRow(4);
@@ -89,28 +107,52 @@ export const Imprimir = (configuracion) => {
   const { body } = configuracion;
   Enca1(newPDF);
   body.forEach((horario) => {
-    newPDF.ImpPosX(horario.numero.toString(),14,newPDF.tw_ren)
-    newPDF.ImpPosX(horario.cancha.toString(),28,newPDF.tw_ren)
-    newPDF.ImpPosX(horario.dia.toString(),42,newPDF.tw_ren)
-    newPDF.ImpPosX(horario.horario.toString(),82,newPDF.tw_ren)
-    newPDF.ImpPosX(horario.max_niños.toString(),114,newPDF.tw_ren)
-    newPDF.ImpPosX(horario.sexo.toString(),134,newPDF.tw_ren)
-    newPDF.ImpPosX(horario.edad_ini.toString(),154,newPDF.tw_ren)
-    newPDF.ImpPosX(horario.edad_fin.toString(),174,newPDF.tw_ren)
+    newPDF.ImpPosX(horario.numero.toString(), 24, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(horario.horario.toString(), 28, newPDF.tw_ren);
+    newPDF.ImpPosX(horario.salon.toString(), 62, newPDF.tw_ren);
+    newPDF.ImpPosX(horario.dia.toString(), 90, newPDF.tw_ren);
+    newPDF.ImpPosX(horario.cancha.toString(), 127, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(horario.max_niños.toString(), 144, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(horario.sexo.toString(), 149, newPDF.tw_ren);
+    newPDF.ImpPosX(horario.edad_ini.toString(), 174, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(horario.edad_fin.toString(), 194, newPDF.tw_ren, 0, "R");
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
       newPDF.pageBreak();
       Enca1(newPDF);
     }
   });
-  newPDF.guardaReporte("Horarios")
+  const date = new Date()
+  const dateStr = formatDate(date)
+  const timeStr = formatTime(date)
+  newPDF.guardaReporte(`Horarios_${dateStr.replaceAll("/", "")}_${timeStr.replaceAll(":", "")}`);
 };
-export const ImprimirExcel = (configuracion)=>{
-  const newExcel = new ReporteExcel(configuracion)
-  const {columns} = configuracion
-  const {body} = configuracion
-  const {nombre}=configuracion
+export const ImprimirExcel = (configuracion) => {
+  const newExcel = new ReporteExcel(configuracion);
+  const { columns } = configuracion;
+  const { body } = configuracion;
+  const { nombre } = configuracion;
   newExcel.setColumnas(columns);
   newExcel.addData(body);
-  newExcel.guardaReporte(nombre);
-}
+  const date = new Date()
+  const dateStr = formatDate(date)
+  const timeStr = formatTime(date)
+  newExcel.guardaReporte(`${nombre}_${dateStr.replaceAll("/", "")}_${timeStr.replaceAll(":", "")}`);
+};
+
+export const getHorariosXAlumno = async (token, horario) => {
+  const res = await fetch(`${process.env.DOMAIN_API}api/AlumnosPC/Lista`, {
+    method: "post",
+    body: JSON.stringify({
+      horario: horario,
+    }),
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
+    },
+  });
+
+  const resJson = await res.json();
+  return resJson.data;
+};

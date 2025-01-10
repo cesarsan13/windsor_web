@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Acciones from "@/app/rep_femac_3/components/Acciones";
-import ModalVistaPreviaRepFemac3 from "./components/modalVistaPreviaRepFemac3";
+import VistaPrevia from "../components/VistaPrevia";
 import {
   getAlumnosPorMes,
   Imprimir,
@@ -14,6 +14,8 @@ import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "jspdf-autotable";
 import BuscarCat from "../components/BuscarCat";
 import { showSwal } from "@/app/utils/alerts";
+import { animator } from "chart.js";
+import { permissionsComponents } from "../utils/globalfn";
 
 function Rep_Femac_3() {
   const router = useRouter();
@@ -23,8 +25,10 @@ function Rep_Femac_3() {
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [isLoading, setisLoading] = useState(false);
+  const [animateLoading, setAnimateLoading] = useState(false);
   const [horario, setHorario] = useState({});
   const [token, setToken] = useState("");
+  const [permissions, setPermissions] = useState({});
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -32,10 +36,14 @@ function Rep_Femac_3() {
     }
     const fetchData = async () => {
       setisLoading(true);
-      const { token } = session.user;
+      const { token, permissions } = session.user;
+      const es_admin = session.user.es_admin;
+      const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado)
+      setPermissions(permisos);
       setToken(token);
-      const data = await getAlumnosPorMes(token, horario, sOrdenar);
-      setFormaRepDosSel(data.data);
+      //const data = await getAlumnosPorMes(token, horario, sOrdenar);
+      //setFormaRepDosSel(data.data);
       setisLoading(false);
     };
     fetchData();
@@ -62,7 +70,7 @@ function Rep_Femac_3() {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte de Alumnos por clase mensual",
-        Nombre_Usuario: `Usuario: ${session.user.name}`,
+        Nombre_Usuario: `${session.user.name}`,
       },
       body: FormaRepDosSel,
       columns: [
@@ -81,21 +89,33 @@ function Rep_Femac_3() {
     ssetordenar(event.target.value);
   };
 
-  const handleVerClick = () => {
+  const handleVerClick = async () => {
+    setAnimateLoading(true);
+    cerrarModalVista();
     if (horario.numero === undefined) {
       showSwal(
         "Oppss!",
         "Para imprimir, debes seleccionar el horario",
         "error"
       );
+      setTimeout(() => {
+        setPdfPreview(false);
+        setPdfData("");
+        setAnimateLoading(false);
+        document.getElementById("modalVPRepFemac3").close();
+      }, 500);
     } else {
+
+      const data = await getAlumnosPorMes(session.user.token, horario, sOrdenar);
+      setFormaRepDosSel(data.data);
+
       const configuracion = {
         Encabezado: {
           Nombre_Aplicacion: "Lista de Alumnos por clase mensual",
           Nombre_Reporte: "Reporte de Alumnos",
           Nombre_Usuario: `Usuario: ${session.user.name}`,
         },
-        body: FormaRepDosSel,
+        body: data.data,
       };
 
       const reporte = new ReportePDF(configuracion, "Portrait");
@@ -104,11 +124,11 @@ function Rep_Femac_3() {
         if (!doc.tiene_encabezado) {
           doc.imprimeEncabezadoPrincipalV();
           doc.nextRow(12);
-          doc.ImpPosX("No.", 15, doc.tw_ren),
-            doc.ImpPosX("No. 1", 25, doc.tw_ren),
-            doc.ImpPosX("Nombre", 35, doc.tw_ren),
-            doc.ImpPosX("Año", 120, doc.tw_ren),
-            doc.ImpPosX("Mes", 130, doc.tw_ren),
+          doc.ImpPosX("No.", 15, doc.tw_ren, 0, "R"),
+            doc.ImpPosX("No. 1", 25, doc.tw_ren, 0, "R"),
+            doc.ImpPosX("Nombre", 35, doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Año", 130, doc.tw_ren, 0, "R"),
+            doc.ImpPosX("Mes", 140, doc.tw_ren, 0, "R"),
             doc.nextRow(4);
           doc.printLineV();
           doc.nextRow(4);
@@ -127,35 +147,45 @@ function Rep_Femac_3() {
             ? reporte1.Num_Renglon.toString()
             : "",
           15,
-          reporte.tw_ren
+          reporte.tw_ren,
+          0,
+          "R"
         );
         reporte.ImpPosX(
           reporte1.Numero_1.toString() !== "0"
             ? reporte1.Numero_1.toString()
             : "",
           25,
-          reporte.tw_ren
+          reporte.tw_ren,
+          0,
+          "R"
         );
         reporte.ImpPosX(
           reporte1.Nombre_1.toString() !== "0"
             ? reporte1.Nombre_1.toString()
             : "",
           35,
-          reporte.tw_ren
+          reporte.tw_ren,
+          0,
+          "L"
         );
         reporte.ImpPosX(
           reporte1.Año_Nac_1.toString().substring(0, 4) !== "0"
             ? reporte1.Año_Nac_1.toString().substring(0, 4)
             : "",
-          120,
-          reporte.tw_ren
+          130,
+          reporte.tw_ren,
+          0,
+          "R"
         );
         reporte.ImpPosX(
           reporte1.Mes_Nac_1.toString().substring(4, 2) !== "0"
             ? reporte1.Mes_Nac_1.toString().substring(4, 2)
             : "",
-          130,
-          reporte.tw_ren
+          140,
+          reporte.tw_ren,
+          0,
+          "R"
         );
 
         Enca1(reporte);
@@ -165,10 +195,13 @@ function Rep_Femac_3() {
         }
       });
 
-      const pdfData = reporte.doc.output("datauristring");
-      setPdfData(pdfData);
-      setPdfPreview(true);
-      showModalVista(true);
+      setTimeout(() => {
+        const pdfData = reporte.doc.output("datauristring");
+        setPdfData(pdfData);
+        setPdfPreview(true);
+        showModalVista(true);
+        setAnimateLoading(false);
+      }, 500);
     }
   };
 
@@ -177,28 +210,46 @@ function Rep_Femac_3() {
       ? document.getElementById("modalVPRepFemac3").showModal()
       : document.getElementById("modalVPRepFemac3").close();
   };
-
+  const cerrarModalVista = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVPRepFemac3").close();
+  };
+  const CerrarView = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVPRepFemac3").close();
+  };
   return (
     <>
-      <ModalVistaPreviaRepFemac3
+      <VistaPrevia
+        id={"modalVPRepFemac3"}
+        titulo={"Vista Previa de Alumnos por Clase Mensual"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
-      <div className="container  w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3 ">
-        <div className="flex justify-start p-3">
-          <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
-            Reporte de Alumnos por clase mensual.
-          </h1>
-        </div>
-        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-        <div className="md:col-span-1 flex flex-col">
-            <Acciones Ver={handleVerClick} home={home}></Acciones>
+      <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+        <div className="w-full py-3">
+          {/* Fila de la cabecera de la pagina */}
+          <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
+            <div className="flex flex-wrap items-start md:items-center mx-auto">
+              <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
+                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading} permiso_imprime = {permissions.impresion}/>
+              </div>
+              <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
+                Reporte Lista de Alumnos por Clase Mensual
+              </h1>
+            </div>
           </div>
-          <div className="col-span-7">
-            <div className="flex flex-col h-[calc(100%)] space-y-4">
-              {token && (
+        </div>
+        <div className="w-full py-3 flex flex-col gap-y-4">
+          {/* Fila del formulario de la pagina */}
+          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
+            <div className="col-span-full md:col-span-full lg:col-span-full">
+              <div className="w-full">
                 <BuscarCat
                   table={"horarios"}
                   titulo={"Horario: "}
@@ -207,15 +258,20 @@ function Rep_Femac_3() {
                   fieldsToShow={["numero", "horario"]}
                   setItem={setHorario}
                   modalId={"modal_horarios"}
+                  descClassName="md:mt-0 w-full"
                 />
-              )}
-
-              <div className="col-8 flex flex-col">
-                <div className="flex space-x-4">
-                <label className="text-black dark:text-white flex flex-col md:flex-row space-x-4">
-                  <span className="text-black dark:text-white  flex items-center gap-3">Ordenar por:</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-row">
+            <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
+              <div className="flex space-x-4">
+                <label className="text-black dark:text-white flex flex-row md:flex-row space-x-4">
+                  <span className="text-black dark:text-white  flex items-center gap-3">
+                    Ordenar por:
+                  </span>
                   <label className="flex items-center gap-3">
-                  <span className="text-black dark:text-white">Nombre</span>
+                    <span className="text-black dark:text-white">Nombre</span>
                     <input
                       type="radio"
                       name="options"
@@ -224,21 +280,20 @@ function Rep_Femac_3() {
                       onChange={handleCheckChange}
                       className="radio checked:bg-blue-500"
                     />
-                    </label>
-                    
+                  </label>
+
                   <label className="flex items-center gap-3">
-                  <span className="text-black dark:text-white">Número</span>
+                    <span className="text-black dark:text-white">Número</span>
                     <input
                       type="radio"
                       name="options"
-                      value="id"
-                      checked={sOrdenar === "id"}
+                      value="numero"
+                      checked={sOrdenar === "numero"}
                       onChange={handleCheckChange}
                       className="radio checked:bg-blue-500"
                     />
                   </label>
                 </label>
-                </div>
               </div>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import { calculaDigitoBvba } from "@/app/utils/globalfn";
+import { calculaDigitoBvba, Elimina_Comas } from "@/app/utils/globalfn";
+import { obtenerFechaYHoraActual } from "@/app/utils/globalfn";
 
 export const validarClaveCajero = async (token, data) => {
   let url = `${process.env.DOMAIN_API}api/pagos1/validar-clave-cajero`;
@@ -13,6 +14,7 @@ export const validarClaveCajero = async (token, data) => {
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -29,6 +31,7 @@ export const buscarArticulo = async (token, numero) => {
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -47,6 +50,7 @@ export const buscaDocumento = async (token, data) => {
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -63,6 +67,7 @@ export const buscaPropietario = async (token, numero) => {
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -79,6 +84,7 @@ export const buscaDocumentosCobranza = async (token, alumno_id) => {
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -91,15 +97,15 @@ function formatFecha(fecha) {
   return `${año}-${mes}-${dia}`;
 }
 
-function formatFechaEnca(fecha) {
-  if (!fecha) return 0;
-  const [dia, mes, año] = fecha.split("-");
-  return `${año}/${mes}/${dia}`;
-}
+// function formatFechaEnca(fecha) {
+//   if (!fecha) return 0;
+//   const [dia, mes, año] = fecha.split("-");
+//   return `${año}/${mes}/${dia}`;
+// }
 
 export const guardarDetallePedido = async (token, data) => {
-  const fechaIniFormateada = formatFecha(data.fecha);
-  data.fecha = fechaIniFormateada;
+  // const fechaIniFormateada = formatFecha(data.fecha);
+  // data.fecha = fechaIniFormateada;
   let url = `${process.env.DOMAIN_API}api/pagos1/guardar-detalle-pedido`;
   const res = await fetch(url, {
     method: "POST",
@@ -117,6 +123,7 @@ export const guardarDetallePedido = async (token, data) => {
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -124,8 +131,8 @@ export const guardarDetallePedido = async (token, data) => {
 };
 
 export const guardaEcabYCobrD = async (token, data) => {
-  const fechaIniFormateada = formatFecha(data.fecha);
-  data.fecha = fechaIniFormateada;
+  // const fechaIniFormateada = formatFecha(data.fecha);
+  // data.fecha = fechaIniFormateada;
   let url = `${process.env.DOMAIN_API}api/pagos1/guarda-EncabYCobrD`;
   const res = await fetch(url, {
     method: "POST",
@@ -149,6 +156,7 @@ export const guardaEcabYCobrD = async (token, data) => {
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -170,6 +178,7 @@ export const guardarDocumento = async (token, data) => {
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -203,9 +212,8 @@ export const verImprimir = async (configuracion) => {
 
   body.forEach((alumno) => {
     const id = calculaDigitoBvba((alumno.id || "").toString() || "");
-    const nombre = `${alumno.nombre || ""} ${alumno.a_paterno || ""} ${
-      alumno.a_materno || ""
-    }`.substring(0, 20);
+    const nombre = `${alumno.nombre || ""} ${alumno.a_paterno || ""} ${alumno.a_materno || ""
+      }`.substring(0, 20);
     const estatus = (alumno.estatus || "").toString().substring(0, 12);
     const fecha_nac = (alumno.fecha_nac || "").toString().substring(0, 15);
     const horario_1_nombre = (alumno.horario_1_nombre || "")
@@ -234,15 +242,15 @@ export const verImprimir = async (configuracion) => {
 };
 
 const Enca1 = (doc, body) => {
-  const fecha = formatFechaEnca(body.fecha);
+  // const fecha = formatFechaEnca(body.fecha);
   if (!doc.tiene_encabezado) {
-    doc.imprimeEncabezadoPrincipalP(body, fecha);
+    doc.imprimeEncabezadoPrincipalP(body, body.fecha);
     doc.nextRow(12);
     doc.ImpPosX("Mat", 15, doc.tw_ren);
     doc.ImpPosX("Alumno", 30, doc.tw_ren);
-    doc.ImpPosX("Descripcion", 160, doc.tw_ren);
-    doc.ImpPosX("Nom Docto", 200, doc.tw_ren);
-    doc.ImpPosX("Precio", 240, doc.tw_ren);
+    doc.ImpPosX("Descripcion", 140, doc.tw_ren);
+    doc.ImpPosX("Nom Doctor", 195, doc.tw_ren);
+    doc.ImpPosX("Precio", 250, doc.tw_ren);
     doc.ImpPosX("Importe", 270, doc.tw_ren);
     doc.nextRow(4);
     doc.printLineH();
@@ -253,6 +261,51 @@ const Enca1 = (doc, body) => {
     doc.tiene_encabezado = true;
   }
 };
+
+function numeroALetras(num) {
+  const unidades = [
+    "", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez",
+    "once", "doce", "trece", "catorce", "quince", "dieciséis", "diecisiete", "dieciocho", "diecinueve"
+  ];
+  const decenas = [
+    "", "", "veinte", "treinta", "cuarenta", "cincuenta", "sesenta", "setenta", "ochenta", "noventa"
+  ];
+  const centenas = [
+    "", "ciento", "doscientos", "trescientos", "cuatrocientos", "quinientos", "seiscientos", "setecientos", "ochocientos", "novecientos"
+  ];
+  const miles = [
+    "", "mil"
+  ];
+  if (num === 0) return "cero";
+  let letras = "";
+  let decimales = 0;
+  if (num >= 1000) {
+    const mil = Math.floor(num / 1000);
+    letras += mil === 1 ? "mil " : `${numeroALetras(mil)} mil `;
+    num %= 1000;
+  }
+  if (num >= 100) {
+    const centena = Math.floor(num / 100);
+    letras += centenas[centena] + " ";
+    num %= 100;
+  }
+  if (num >= 20) {
+    const decena = Math.floor(num / 10);
+    letras += decenas[decena] + " ";
+    num %= 10;
+  }
+  if (num > 0) {
+    letras += unidades[num];
+  }
+  if (num % 1 !== 0) {
+    decimales = (num % 1).toFixed(2).split('.')[1];
+
+    if (decimales) {
+      letras += " con " + decimales + " centavos";
+    }
+  }
+  return letras.trim();
+}
 
 export const Imprimir = (configuracion) => {
   const orientacion = "Landscape";
@@ -270,14 +323,14 @@ export const Imprimir = (configuracion) => {
     const precio = (pagos.precio || "").toString();
     const importe = (pagos.importe || "").toString();
 
-    newPDF.ImpPosX(`${alumno}`, 15, newPDF.tw_ren);
-    newPDF.ImpPosX(alumno_nombre, 30, newPDF.tw_ren);
-    newPDF.ImpPosX(articulo_id, 150, newPDF.tw_ren);
-    newPDF.ImpPosX(articulo_des, 160, newPDF.tw_ren);
-    newPDF.ImpPosX(nom_doc, 200, newPDF.tw_ren);
-    newPDF.ImpPosX(cantidad, 230, newPDF.tw_ren);
-    newPDF.ImpPosX(precio, 240, newPDF.tw_ren);
-    newPDF.ImpPosX(importe, 270, newPDF.tw_ren);
+    newPDF.ImpPosX(`${alumno}`, 23, newPDF.tw_ren, 40, "R");
+    newPDF.ImpPosX(alumno_nombre, 30, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(articulo_id, 150, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(articulo_des, 140, newPDF.tw_ren, 30, "L");
+    newPDF.ImpPosX(nom_doc, 215, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(cantidad, 240, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(precio, 265, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(importe, 285, newPDF.tw_ren, 0, "R");
     Enca1(newPDF, encaBody);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
       newPDF.pageBreak();
@@ -285,7 +338,9 @@ export const Imprimir = (configuracion) => {
     }
   });
   newPDF.nextRow(4);
-  newPDF.ImpPosX(`Importe con Letras`, 15, newPDF.tw_ren);
+  const num = Elimina_Comas(encaBody.tota_general);
+  const totalConLetras = numeroALetras(parseFloat(num));
+  newPDF.ImpPosX(`Importe con Letras: ${totalConLetras.toString().toUpperCase()} PESOS`, 15, newPDF.tw_ren);
   newPDF.ImpPosX(`Total: ${encaBody.tota_general}`, 240, newPDF.tw_ren);
   newPDF.nextRow(4);
   newPDF.ImpPosX(
@@ -293,7 +348,8 @@ export const Imprimir = (configuracion) => {
     240,
     newPDF.tw_ren
   );
-  newPDF.guardaReporte("Pagos");
+  const { fecha, hora } = obtenerFechaYHoraActual();
+  newPDF.guardaReporte(`Pagos_${fecha}${hora}`);
 };
 
 export const ImprimirExcel = (configuracion) => {

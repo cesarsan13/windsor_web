@@ -1,20 +1,22 @@
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
+import { formatDate, formatTime, formatFecha, format_Fecha_String } from "../../globalfn";
 
 
-export const getBecas = async (token, horario1, horario2, orden) => {
-  horario1 = (horario1 === undefined || Object.keys(horario1).length === 0) ? '' : horario1;
-  horario2 = (horario2 === undefined || Object.keys(horario2).length === 0) ? '' : horario2;
+export const getBecas = async (token, alumno1, alumno2, orden) => {
+  alumno1 = (alumno1 === undefined || Object.keys(alumno1).length === 0) ? '' : alumno1;
+  alumno2 = (alumno2 === undefined || Object.keys(alumno2).length === 0) ? '' : alumno2;
     const res = await fetch (`${process.env.DOMAIN_API}api/reportes/rep_becas`,{
       method: "post",
       body: JSON.stringify({
-        horario1: horario1,
-        horario2: horario2,
+        alumno1: alumno1.numero,
+        alumno2: alumno2.numero,
         orden: orden,
       }),
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
+        xescuela: localStorage.getItem("xescuela"),
       },
     });
     
@@ -63,7 +65,14 @@ export const getBecas = async (token, horario1, horario2, orden) => {
         Enca1(newPDF);
       }
     });
-    newPDF.guardaReporte("RepBecas")
+    const date = new Date();
+    const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+    const timeStr = formatTime(date).replace(/:/g, "");
+
+  newPDF.guardaReporte(`Rep_Becas_${dateStr}${timeStr}`);
   };
 
   export const ImprimirExcel = (configuracion)=>{
@@ -73,5 +82,11 @@ export const getBecas = async (token, horario1, horario2, orden) => {
     const {nombre}=configuracion
     newExcel.setColumnas(columns);
     newExcel.addData(body);
-    newExcel.guardaReporte(nombre);
+    const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+  newExcel.guardaReporte(`${nombre}${dateStr}${timeStr}`);
   }

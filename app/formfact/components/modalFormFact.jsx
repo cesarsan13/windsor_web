@@ -3,6 +3,9 @@ import React from "react";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import { useState, useEffect } from "react";
 import Inputs from "@/app/formfact/components/Inputs";
+import Image from "next/image";
+import iconos from "@/app/utils/iconos";
+import { FaSpinner } from "react-icons/fa";
 
 function ModalFormFact({
   accion,
@@ -12,6 +15,7 @@ function ModalFormFact({
   errors,
   setFormFact,
   formFact,
+  isLoadingButton,
 }) {
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
@@ -32,7 +36,7 @@ function ModalFormFact({
             ? `Eliminar Factura: ${currentID}`
             : `Ver Factura: ${currentID}`
     );
-  }, [accion]);
+  }, [accion,currentID]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
@@ -47,21 +51,51 @@ function ModalFormFact({
   };
   return (
     <dialog id="my_modal_3" className="modal">
-      <div className="modal-box">
-        <button
-          className="btn btn-sm btn-circle btn-ghost  text-black dark:text-white absolute right-2 top-2"
-          onClick={() => document.getElementById("my_modal_3").close()}
-        >
-          ✕
-        </button>
-        {/* if there is a button in form, it will close the modal */}
+      <div className="modal-box bg-base-200">
         <form onSubmit={onSubmit}>
-          <h3 className="font-bold text-lg mb-5  text-black dark:text-white">{titulo}</h3>
+        <div className="sticky -top-6 flex justify-between items-center bg-base-200 w-full h-10 z-10 mb-5">
+        <h3 className="font-bold text-lg text-black dark:text-white">{titulo}</h3>
+        <div className="flex space-x-2 items-center">
+          <div
+            className={`tooltip tooltip-bottom ${
+              accion === "Ver"
+                ? "hover:cursor-not-allowed hidden"
+                : "hover:cursor-pointer"
+            }`}
+            data-tip="Guardar"
+          >
+            <button
+              type="submit"
+              id="btn_guardar"
+              className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
+              onClick={onsubmit}
+              disabled={isLoadingButton}
+            >
+              {isLoadingButton ? (
+                    <FaSpinner className="animate-spin mx-2" />
+                  ) : (
+                    <>
+                      <Image src={iconos.guardar} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 block dark:hidden" />
+                      <Image src={iconos.guardar_w} alt="Guardar" className="w-5 h-5 md:w-6 md:h-6 hidden dark:block" />
+                    </>
+                  )}
+                  {isLoadingButton ? " Cargando..." : " Guardar"}
+            </button>
+          </div>
+          <button
+            type="button"
+            className="btn btn-sm btn-circle btn-ghost text-black dark:text-white"
+            onClick={() => document.getElementById("my_modal_3").close()}
+          >
+            ✕
+          </button>
+        </div>
+      </div>
           <fieldset id="fs_formapago">
             <div className="container flex flex-col space-y-5">
               <Inputs
                 dataType={"int"}
-                name={"numero"}
+                name={"numero_forma"}
                 tamañolabel={"w-6/12"}
                 className={"w-5/12 rounded block text-right"}
                 Titulo={"Numero: "}
@@ -71,11 +105,12 @@ function ModalFormFact({
                 register={register}
                 message={"numero requerido"}
                 isDisabled={true}
+                handleBlur={handleBlur}
               //defaultValue={formaPago.id}
               />
               <Inputs
                 dataType={"string"}
-                name={"nombre"}
+                name={"nombre_forma"}
                 tamañolabel={""}
                 className={"rounded block grow"}
                 Titulo={"Nombre: "}
@@ -84,9 +119,10 @@ function ModalFormFact({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"nombre requerido"}
-                maxLength={50}
+                message={"Nombre requerido"}
+                maxLenght={30}
                 isDisabled={isDisabled}
+                handleBlur={handleBlur}
               //defaultValue={formaPago.descripcion}
               />
               <Inputs
@@ -100,30 +136,14 @@ function ModalFormFact({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"longitud requerido"}
-                maxLength={50}
+                message={"Longitud requerido"}
+                maxLenght={7}
                 isDisabled={isDisabled}
+                handleBlur={handleBlur}
               //defaultValue={formaPago.descripcion}
               />
             </div>
           </fieldset>
-          <div className=" modal-action">
-            <div
-              className={`tooltip tooltip-top my-5 ${accion === "Ver"
-                ? "hover:cursor-not-allowed hidden"
-                : "hover:cursor-pointer"
-                }`}
-              data-tip="Guardar"
-            >
-              <button
-                type="submit"
-                id="btn_guardar"
-                className="bg-transparent over:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn"
-              >
-                <i className="fa-regular fa-floppy-disk mx-2"></i> Guardar
-              </button>
-            </div>
-          </div>
         </form>
       </div>
     </dialog>

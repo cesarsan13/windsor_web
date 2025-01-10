@@ -1,5 +1,5 @@
 "use client";
-import React, { useTransition } from "react";
+import React, { useTransition, useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalFormFact from "@/app/formfact/components/modalFormFact";
@@ -19,12 +19,13 @@ import { siguiente } from "@/app/utils/api/formfact/formfact";
 import "jspdf-autotable";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import ConfigReporte from "./components/configReporte";
+import { debounce, permissionsComponents } from "../utils/globalfn";
 function FormFact() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [formFacts, setFormFacts] = useState([]); //formasPago
   const [formFact, setFormFact] = useState({}); //formaPago
-  const [formFactsFiltrados, setFormFactsFiltrados] = useState([]);
+  const [formFactsFiltrados, setFormFactsFiltrados] = useState(null);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
@@ -37,6 +38,10 @@ function FormFact() {
   const [labels, setLabels] = useState([]);
   const [propertyData, setPropertyData] = useState({});
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
+  const formFactsRef = useRef(formFacts)
+  const [isLoadingButton, setisLoadingButton] = useState(false);
+  const [animateLoading, setAnimateLoading] = useState(false);
+  const [permissions, setPermissions] = useState({});
 
   const [configuracion, setConfiguracion] = useState({
     Encabezado: {
@@ -47,6 +52,9 @@ function FormFact() {
     body: {},
   });
   useEffect(() => {
+    formFactsRef.current = formFacts
+  }, [formFacts])
+  useEffect(() => {
     if (formato === "") {
       return;
     }
@@ -55,23 +63,24 @@ function FormFact() {
   }, [formato]);
 
   useEffect(() => {
-    if (status === "loading" || !session) {
-      return;
-    }
     const fetchData = async () => {
       setisLoading(true);
-      const { token } = session.user;
+      let { token, permissions } = session.user;
+      const es_admin = session.user.es_admin;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const data = await getFormFact(token, bajas);
       setFormFacts(data);
       setFormFactsFiltrados(data);
       setisLoading(false);
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
+      setPermissions(permisos)
     };
+    if (status === "loading" || !session) {
+      return;
+    }
     fetchData();
     setFormato("Facturas");
   }, [session, status, bajas]);
-  useEffect(() => {
-    Buscar();
-  }, [busqueda]);
 
   useEffect(() => {
     const reporte = new ReportePDF(configuracion, "portrait");
@@ -89,69 +98,70 @@ function FormFact() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      numero: formFact.numero,
-      nombre: formFact.nombre,
+      numero_forma: formFact.numero_forma,
+      nombre_forma: formFact.nombre_forma,
       longitud: formFact.longitud,
     },
   });
   useEffect(() => {
     reset({
-      numero: formFact.numero,
-      nombre: formFact.nombre,
+      numero_forma: formFact.numero_forma,
+      nombre_forma: formFact.nombre_forma,
       longitud: formFact.longitud,
     });
   }, [formFact, reset]);
-  const Buscar = () => {
-    // alert(filtro);
+
+  const Buscar = useCallback(() => {
     const { tb_id, tb_desc } = busqueda;
     if (tb_id === "" && tb_desc === "") {
-      setFormFactsFiltrados(formFacts);
+      setFormFactsFiltrados(formFactsRef.current);
       return;
     }
-    const infoFiltrada = formFacts.filter((formFact) => {
+    const infoFiltrada = formFactsRef.current.filter((formFact) => {
       const coincideId = tb_id
-        ? formFact["numero"].toString().includes(tb_id)
+        ? formFact["numero_forma"].toString().includes(tb_id)
         : true;
       const coincideDescripcion = tb_desc
-        ? formFact.nombre.toLowerCase().includes(tb_desc.toLowerCase())
+        ? formFact.nombre_forma.toLowerCase().includes(tb_desc.toLowerCase())
         : true;
       return coincideId && coincideDescripcion;
     });
-    // const valorCampo = formFact[filtro];
-    // if (typeof valorCampo === "number") {
-    //   return valorCampo.toString().includes(TB_Busqueda);
-    // }
-    // return valorCampo
-    //   ?.toString()
-    //   .toLowerCase()
-    //   .includes(TB_Busqueda.toLowerCase());
-    // });
     setFormFactsFiltrados(infoFiltrada);
-  };
+  }, [busqueda]);
+
+  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar])
+
+  useEffect(() => {
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar);
+    };
+  }, [busqueda, debouncedBuscar]);
 
   const limpiarBusqueda = (evt) => {
-    evt.preventDefault;
+    evt.preventDefault();
     setBusqueda({ tb_id: "", tb_desc: "" });
   };
   const Alta = async (event) => {
     setCurrentId("");
     const { token } = session.user;
     reset({
-      numero: "",
-      nombre: "",
+      numero_forma: "",
+      nombre_forma: "",
       longitud: "",
     });
     let siguienteId = await siguiente(token);
     siguienteId = Number(siguienteId) + 1;
     setCurrentId(siguienteId);
-    setFormFact({ numero: siguienteId });
+    setFormFact({ numero_forma: siguienteId });
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);
 
-    document.getElementById("nombre").focus();
+    document.getElementById("nombre_forma").focus();
   };
   const onSubmitModal = handleSubmit(async (data) => {
+    setisLoadingButton(true);
     event.preventDefault;
     const dataj = JSON.stringify(data);
     data.id = currentID;
@@ -167,6 +177,7 @@ function FormFact() {
       );
       if (!confirmed) {
         showModal(true);
+        setisLoadingButton(false);
         return;
       }
     }
@@ -180,24 +191,26 @@ function FormFact() {
         }
       }
       if (accion === "Eliminar" || accion === "Editar") {
-        const index = formFacts.findIndex((c) => c.numero === data.numero);
+        const index = formFacts.findIndex(
+          (c) => c.numero_forma === data.numero_forma
+        );
         if (index !== -1) {
           if (accion === "Eliminar") {
             const formFiltrados = formFacts.filter(
-              (c) => c.numero !== data.numero
+              (c) => c.numero_forma !== data.numero_forma
             );
             setFormFacts(formFiltrados);
             setFormFactsFiltrados(formFiltrados);
           } else {
             if (bajas) {
               const formFiltrados = formFacts.filter(
-                (c) => c.numero !== data.numero
+                (c) => c.numero_forma !== data.numero_forma
               );
               setFormFacts(formFiltrados);
               setFormFactsFiltrados(formFiltrados);
             } else {
               const formActualizadas = formFacts.map((c) =>
-                c.numero === currentID ? { ...c, ...data } : c
+                c.numero_forma === currentID ? { ...c, ...data } : c
               );
               setFormFacts(formActualizadas);
               setFormFactsFiltrados(formActualizadas);
@@ -208,6 +221,7 @@ function FormFact() {
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
     }
+    setisLoadingButton(false);
   });
   const showModal = (show) => {
     show
@@ -238,62 +252,73 @@ function FormFact() {
   }
   return (
     <>
-      <div className="h-[83vh] max-h-[83vh] container w-full bg-slate-100 rounded-3xl shadow-xl px-3 dark:bg-slate-700 overflow-y-auto">
-        <ModalFormFact
-          accion={accion}
-          onSubmit={onSubmitModal}
-          currentID={currentID}
-          errors={errors}
-          register={register}
-          setFormFact={setFormFact}
-          formFact={formFact}
-        />
-        <div className="flex justify-start p-3">
-          <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
-            Formas Facturas.
-          </h1>
-        </div>
-        <div className="flex flex-col md:grid md:grid-cols-8 md:grid-rows-1 h-full">
-          <div className="md:col-span-1 flex flex-col">
-            <Acciones
+      <ModalFormFact
+        accion={accion}
+        onSubmit={onSubmitModal}
+        currentID={currentID}
+        errors={errors}
+        register={register}
+        setFormFact={setFormFact}
+        formFact={formFact}
+        isLoadingButton={isLoadingButton}
+      />
+      <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+        <div className="flex flex-col justify-start p-3">
+          <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
+            <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
+              <Acciones 
               Buscar={Buscar}
               Alta={Alta}
-              home={home} /*imprimir={imprimir} excel={excel}*/
-            ></Acciones>
-          </div>
-          <div className="md:col-span-7">
-            <div className="flex flex-col h-full">
-              <Busqueda
-                setBajas={setBajas}
-                limpiarBusqueda={limpiarBusqueda}
-                Buscar={Buscar}
-                handleBusquedaChange={handleBusquedaChange}
-                setFormato={setFormato}
-                busqueda={busqueda}
+              home={home}
+              permiso_alta={permissions.altas}
               />
-              {showSheet ? (
-                <ConfigReporte
-                  labels={labels}
-                  setLabels={setLabels}
-                  formato={formato}
-                  propertyData={propertyData}
-                  setShowSheet={setShowSheet}
-                  currentID={currentID}
-                ></ConfigReporte>
-              ) : (
-                <TablaFormFact
-                  isLoading={isLoading}
-                  formFactsFiltrados={formFactsFiltrados}
-                  showModal={showModal}
-                  setFormFact={setFormFact}
-                  setAccion={setAccion}
-                  setCurrentId={setCurrentId}
-                  setShowSheet={setShowSheet}
-                  fetchFacturasFormato={fetchFacturasFormato}
-                  formato={formato}
-                />
-              )}
             </div>
+            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-16">
+              Formas Facturas
+            </h1>
+          </div>
+        </div>
+
+        <div className="flex flex-col items-center h-full">
+          <div className="w-full max-w-4xl overflow-scroll">
+            <Busqueda
+              setBajas={setBajas}
+              limpiarBusqueda={limpiarBusqueda}
+              Buscar={Buscar}
+              handleBusquedaChange={handleBusquedaChange}
+              setFormato={setFormato}
+              busqueda={busqueda}
+            />
+            {showSheet ? (
+              <ConfigReporte
+                labels={labels}
+                setLabels={setLabels}
+                formato={formato}
+                propertyData={propertyData}
+                setShowSheet={setShowSheet}
+                currentID={currentID}
+              ></ConfigReporte>
+            ) : (
+              (status === "loading" || (!session)) ?
+                (<></>) :
+                (
+                  <TablaFormFact
+                    isLoading={isLoading}
+                    formFactsFiltrados={formFactsFiltrados}
+                    showModal={showModal}
+                    setFormFact={setFormFact}
+                    setAccion={setAccion}
+                    setCurrentId={setCurrentId}
+                    setShowSheet={setShowSheet}
+                    fetchFacturasFormato={fetchFacturasFormato}
+                    formato={formato}
+                    session={session}
+                    permiso_cambio={permissions.cambios}
+                    permiso_baja={permissions.bajas}
+                  />
+                )
+
+            )}
           </div>
         </div>
       </div>

@@ -1,23 +1,81 @@
 import React from "react";
 import Tooltip from "@/app/components/tooltip";
-import Button from "@/app/components/button";
-function Acciones({ Buscar, Alta, home, imprimir, excel }) {
+import Image from "next/image";
+import { TbLoader3 } from "react-icons/tb";
+import iconos from "@/app/utils/iconos";
+
+function Acciones({ Buscar, Alta, home, Ver, animateLoading, permiso_alta }) {
+  const images = [
+    {
+      srcLight: iconos.buscar_w,
+      srcDark: iconos.buscar,
+      alt: "Buscar",
+      tooltipTitle: "Buscar",
+      onClick: Buscar,
+      permission: true,
+    },
+    {
+      srcLight: iconos.alta_w,
+      srcDark: iconos.alta,
+      alt: "Alta",
+      tooltipTitle: "Alta",
+      onClick: Alta,
+      permission: permiso_alta,
+    },
+    {
+      srcLight: iconos.salir_w,
+      srcDark: iconos.salir,
+      alt: "Salir",
+      tooltipTitle: "Salir",
+      onClick: home,
+      permission: true,
+    },
+  ];
+
+  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, animateLoading, permission }) => {
+    if (!permission) return null;
     return (
-        <div className="join join-horizontal justify-around md:join-vertical">
-        <Tooltip Titulo={"Buscar"} posicion={"tooltip-top"}>
-        <Button
-        icono={"fa-solid fa-magnifying-glass"}
-        onClick={Buscar}
-        ></Button>
-        </Tooltip>
-        <Tooltip Titulo={"Alta"} posicion={"tooltip-top"}>
-        <Button icono={"fa-regular fa-square-plus"} onClick={Alta}></Button>
-        </Tooltip>
-        <Tooltip Titulo={"Inicio"} posicion={"tooltip-top"}>
-        <Button icono={"fas fa-home"} onClick={home}></Button>
-        </Tooltip>
-    </div>
+      <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
+        <button
+          className="w-6 h-5 bg-transparent hover:bg-transparent border-none shadow-none text-black dark:text-white rounded-lg"
+          onClick={onClick}
+        >
+          {animateLoading ? (
+            <TbLoader3 className="animate-spin text-2xl" />
+          ) : (
+            <>
+              <Image
+                src={srcDark}
+                alt={tooltipTitle}
+                className="w-5 h-5 md:w-6 md:h-6 block dark:hidden"
+              />
+              <Image
+                src={srcLight}
+                alt={tooltipTitle}
+                className="w-5 h-5 md:w-6 md:h-6 hidden dark:block"
+              />
+            </>
+          )}
+        </button>
+      </Tooltip>
     );
+  };
+
+  return (
+    <div className="grid grid-flow-col gap-5 justify-around w-full">
+      {images.map((image, idx) => (
+        <ImageTooltip
+          key={idx}
+          srcLight={image.srcLight}
+          srcDark={image.srcDark}
+          tooltipTitle={image.tooltipTitle}
+          onClick={image.onClick}
+          animateLoading={animateLoading && idx === 2}
+          permission={image.permission}
+        />
+      ))}
+    </div>
+  );
 }
 
 export default Acciones;

@@ -11,19 +11,22 @@ function Inputs({
     maxLenght,
     isDisabled,
     setValue,
-    value
+    value,
+    conteClassName="flex flex-col",
+    labelClassName="input input-bordered input-md text-black dark:text-white flex items-center gap-3",
+    inputClassName="text-black dark:text-white"
 }) {
     return (
-        <div className="flex flex-col">
+        <div className={conteClassName}>
             <label
-                className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
+                className={labelClassName}>
                 {Titulo}
                 <input
                     {...(maxLenght !== 0 && { maxLength: maxLenght })}
                     name={name}
                     id={name}
                     type={type}
-                    className={`text-black dark:text-white ${className}`}
+                    className={inputClassName}
                     {...(dataType === "int" && { onKeyDown: soloEnteros })}
                     {...(dataType === "float" && { onKeyDown: soloDecimales })}
                     {...(dataType === "int" ||

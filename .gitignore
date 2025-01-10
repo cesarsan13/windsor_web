@@ -36,3 +36,10 @@ yarn-error.log*
 next-env.d.ts
 .env
 settings.json
+
+package-lock.json
+package.json
+
+package-lock.json
+package.json
+settings.json

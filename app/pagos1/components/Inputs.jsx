@@ -18,12 +18,15 @@ function Inputs({
   eventInput,
   valueInput,
   dataType,
+  onClick,
+  message,
 }) {
-  if (tipoInput === 'onChange') {
+  if (tipoInput === "onChange") {
     return (
       <div className="flex flex-col">
         <label
-          className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
+          className={`input input-bordered input-sm md:input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}
+        >
           {Titulo}
           <input
             {...(maxLenght !== 0 && { maxLength: maxLenght })}
@@ -32,6 +35,7 @@ function Inputs({
             type={type}
             className={`text-black dark:text-white ${className}`}
             disabled={isDisabled}
+            onFocus={(e) => e.target.select()}
           // onChange={(event) => setValue(event.target.value)}
           />
         </label>
@@ -42,11 +46,12 @@ function Inputs({
         )}
       </div>
     );
-  } else if (tipoInput === 'valueDisabled') {
+  } else if (tipoInput === "valueDisabled") {
     return (
       <div className="flex flex-col">
         <label
-          className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
+          className={`input input-bordered input-sm md:input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}
+        >
           {Titulo}
           <input
             {...(maxLenght !== 0 && { maxLength: maxLenght })}
@@ -55,6 +60,7 @@ function Inputs({
             type={type}
             className={`text-black dark:text-white ${className}`}
             disabled={isDisabled}
+            onFocus={(e) => e.target.select()}
             value={valueInput}
             {...register(name, {
               ...(requerido && { required: message }),
@@ -68,21 +74,25 @@ function Inputs({
         )}
       </div>
     );
-  } else if (tipoInput === 'enterEvent') {
+  } else if (tipoInput === "enterEvent") {
     return (
       <div className="flex flex-col">
         <label
-          className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
+          className={`input input-bordered input-sm md:input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}
+        >
           {Titulo}
           <input
             {...(maxLenght !== 0 && { maxLength: maxLenght })}
             name={name}
             id={name}
             type={type}
-            className={`text-black dark:text-white ${className}`}
+            onFocus={(e) => e.target.select()}
+            className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none  ${className}`}
             disabled={isDisabled}
             // onKeyDown={soloEnteros}
             onKeyDown={(evt) => eventInput(evt)}
+            onBlurCapture={(event) => handleBlur(event, type)}
+            onClick={onClick}
             {...register(name, {
               ...(requerido && { required: message }),
             })}
@@ -95,14 +105,14 @@ function Inputs({
         )}
       </div>
     );
-  } else if (tipoInput === 'disabledInput') {
+  } else if (tipoInput === "disabledInput") {
     return (
       <input
         {...(maxLenght !== 0 && { maxLength: maxLenght })}
         name={name}
         id={name}
         type={type}
-        className={`input input-bordered bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-md flex items-center gap-3 ${className}`}
+        className={`input input-bordered bg-gray-100 dark:bg-slate-800 text-black dark:text-white input-sm md:input-md flex items-center gap-3 ${className}`}
         disabled={isDisabled}
         value={valueInput}
         {...register(name, {
@@ -110,11 +120,11 @@ function Inputs({
         })}
       />
     );
-  } else if (tipoInput === 'numberDouble') {
+  } else if (tipoInput === "numberDouble") {
     return (
-      <div className="w-full md:w-1/2 px-0.5 py-2 mb-6 md:mb-0">
+      <div className="w-full md:w-1/2 ">
         <label
-          className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
+          className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
         >
           {Titulo}
           <input
@@ -122,7 +132,8 @@ function Inputs({
             name={name}
             id={name}
             type={type}
-            className={`text-black dark:text-white ${className}`}
+            onFocus={(e) => e.target.select()}
+            className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none  ${className}`}
             {...(dataType === "int" && { onKeyDown: soloEnteros })}
             {...(dataType === "float" && { onKeyDown: soloDecimales })}
             {...(dataType === "int" ||
@@ -143,19 +154,51 @@ function Inputs({
         )}
       </div>
     );
-  } else {
+  } else if (tipoInput === "formatNumber") {
     return (
       <div className="flex flex-col">
         <label
-          className={`input input-bordered input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}>
+          className={`input input-bordered input-sm md:input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}
+        >
           {Titulo}
           <input
             {...(maxLenght !== 0 && { maxLength: maxLenght })}
             name={name}
             id={name}
             type={type}
-            className={`text-black dark:text-white ${className}`}
+            onFocus={(e) => e.target.select()}
+            className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none  ${className}`}
             disabled={isDisabled}
+            onKeyDown={(evt) => soloDecimales(evt)}
+            onBlurCapture={(event) => handleBlur(event, type)}
+            onClick={onClick}
+            {...register(name, {
+              ...(requerido && { required: message }),
+            })}
+          />
+        </label>
+        {errors[name] && (
+          <span className="text-red-500 text-sm mt-2">
+            {errors[name].message}
+          </span>
+        )}
+      </div>
+    );
+  } else {
+    return (
+      <div className="flex flex-col">
+        <label
+          className={`input input-bordered input-sm md:input-md text-black dark:text-white flex items-center gap-3 ${tamañolabel}`}
+        >
+          {Titulo}
+          <input
+            {...(maxLenght !== 0 && { maxLength: maxLenght })}
+            name={name}
+            id={name}
+            type={type}
+            className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${className}`}
+            disabled={isDisabled}
+            onFocus={(e) => e.target.select()}
             {...(dataType === "int" && { onKeyDown: soloEnteros })}
             {...(dataType === "float" && { onKeyDown: soloDecimales })}
             {...(dataType === "int" ||
@@ -176,7 +219,5 @@ function Inputs({
     );
   }
 }
-
-
 
 export default Inputs;

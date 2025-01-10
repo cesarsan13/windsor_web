@@ -1,96 +1,139 @@
 "use client";
 import Loading from "@/app/components/loading";
-import NoData from "@/app/components/noData";
+import NoData from "@/app/components/NoData";
 import React, { useState } from "react";
+import iconos from "@/app/utils/iconos";
+import Image from "next/image";
+import { formatNumber } from "@/app/utils/globalfn";
 
 function TablaPagos1({
+  session,
   pagosFiltrados,
   isLoading,
-  setPagos,
+  setPago,
   setAccion,
   setSelectedTable,
   deleteRow,
-  // tableHeight,
+  selectedRow,
+  setSelectedRow,
+  permiso_baja,
+  permiso_cambio,
 }) {
-  const [selectedRow, setSelectedRow] = useState(null);
-
   const tableAction = (evt, pago, accion) => {
-    setPagos(pago);
+    setPago(pago);
     setAccion(accion);
-    setSelectedTable(pago);
-    setSelectedRow(pago.numero);
+    if (accion === "Seleccionar") {
+      setSelectedTable(pago);
+      setSelectedRow(pago.numero_producto);
+    }
     if (accion === "Eliminar") {
+      setSelectedTable({});
+      setSelectedRow(null);
       deleteRow(pago);
     }
+  };
+
+  const ActionButton = ({
+    tooltip,
+    iconDark,
+    iconLight,
+    onClick,
+    permission,
+  }) => {
+    if (!permission) return null;
+    return (
+      <th>
+        <div
+          className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
+          data-tip={tooltip}
+          onClick={onClick}
+        >
+          <Image src={iconDark} alt={tooltip} className="block dark:hidden" />
+          <Image src={iconLight} alt={tooltip} className="hidden dark:block" />
+        </div>
+      </th>
+    );
+  };
+
+  const ActionColumn = ({ description, permission }) => {
+    if (!permission) return null;
+    return (
+      <>
+        <th className="w-[5%] pt-[.10rem] pb-[.10rem]">{description}</th>
+      </>
+    );
   };
 
   return !isLoading ? (
     <>
       <div
-        className="overflow-x-auto mt-3 text-black bg-white dark:bg-[#1d232a] dark:text-white m-2 w-full lg:w-5/8 h-auto"
+        className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white  w-full lg:w-full"
         style={{ height: `auto` }}
       >
-        {pagosFiltrados.length > 0 ? (
-          <table className="table table-xs  table-pin-rows table-pin-cols max-h-full">
-            <thead className="relative z-[1] md:static">
+        {pagosFiltrados && pagosFiltrados.length > 0 ? (
+          <table className="table table-xs w-full">
+            <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
               <tr>
-                <th></th>
-                <td className="hidden">Clave</td>
-                <td>Descripción</td>
-                <td>Documento</td>
-                <td>Cantidad</td>
-                <td>Precio</td>
-                <td>Descuento</td>
-                <td>Neto</td>
-                <td>Total</td>
-                <td>Alumno</td>
-                <th className="w-[calc(20%)]">Acciones</th>
+                <th className="w-[5%]"></th>
+                {/* <td className="hidden">Clave</td> */}
+                <td className="w-[35%]">Descripción</td>
+                <td className="w-[5%]">Documento</td>
+                <td className="w-[5%] text-right">Cantidad</td>
+                <td className="w-[6%] text-right">Precio</td>
+                <td className="w-[6%] text-right">Descuento</td>
+                <td className="w-[6%] text-right">Neto</td>
+                <td className="w-[6%] text-right">Total</td>
+                <td className="w-[5%] text-right">Alumno</td>
+                <ActionColumn
+                  description={"Eliminar"}
+                  permission={permiso_baja}
+                />
+                <ActionColumn
+                  description={"Seleccionar"}
+                  permission={permiso_cambio}
+                />
               </tr>
             </thead>
             <tbody>
               {pagosFiltrados.map((item) => (
                 <tr
-                  key={item.numero}
-                  className={`hover:cursor-pointer ${
-                    selectedRow === item.numero
+                  key={item.numero_producto}
+                  className={`hover:cursor-pointer ${selectedRow === item.numero_producto
                       ? "dark:bg-[#334155] bg-[#f1f5f9]"
                       : ""
-                  }`}
-                  // className={`hover:cursor-pointer ${selectedRow === item.numero ? 'selected-row' : ''}`}
-                  onClick={() => setSelectedRow(item.numero)}
+                    }`}
                 >
-                  <th className="text-right">{item.numero}</th>
-                  <td className="hidden">{item.numero}</td>
-                  <td>{item.descripcion}</td>
-                  <td>{item.documento}</td>
-                  <td>{item.cantidad_producto}</td>
-                  <td>{item.precio_base}</td>
-                  <td>{item.descuento}</td>
-                  <td>{item.neto}</td>
-                  <td>{item.total}</td>
-                  <td>{item.alumno}</td>
-                  <th>
-                    <div className="flex flex-row space-x-1">
-                      <div
-                        className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
-                        data-tip={`Eliminar ${item.numero}`}
-                        onClick={(evt) => tableAction(evt, item, "Eliminar")}
-                      >
-                        <i className="fa-solid fa-trash pt-2"></i>
-                      </div>
-                      <div
-                        className="kbd tooltip tooltip-left hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white"
-                        data-tip={`Seleccionar ${item.numero}`}
-                        onClick={(evt) => tableAction(evt, item, "Seleccionar")}
-                      >
-                        <i className="fa-regular fa-hand-pointer pt-2"></i>
-                      </div>
-                    </div>
-                  </th>
+                  <th className="text-right">{item.numero_producto}</th>
+                  <td className="hidden">{item.numero_producto}</td>
+                  <td className="text-left">{item.descripcion}</td>
+                  <td className="text-right">{item.documento}</td>
+                  <td className="text-right">{item.cantidad_producto}</td>
+                  <td className="text-right">
+                    {formatNumber(item.precio_base)}
+                  </td>
+                  <td className="text-right">{formatNumber(item.descuento)}</td>
+                  <td className="text-right">{formatNumber(item.neto)}</td>
+                  <td className="text-right">{formatNumber(item.total)}</td>
+                  <td className="text-right">{item.alumno}</td>
+                  <ActionButton
+                    tooltip="Eliminar"
+                    iconDark={iconos.eliminar}
+                    iconLight={iconos.eliminar_w}
+                    onClick={(evt) => tableAction(evt, item, "Eliminar")}
+                    permission={permiso_baja}
+                  />
+                  <ActionButton
+                    tooltip="Seleccionar"
+                    iconDark={iconos.documento}
+                    iconLight={iconos.documento_w}
+                    onClick={(evt) => tableAction(evt, item, "Seleccionar")}
+                    permission={permiso_cambio}
+                  />
                 </tr>
               ))}
             </tbody>
-            <tfoot>
+            <tfoot />
+            {/* <tfoot>
               <tr>
                 <th></th>
                 <td className="hidden">Clave</td>
@@ -104,10 +147,12 @@ function TablaPagos1({
                 <td>Alumno</td>
                 <th>Acciones</th>
               </tr>
-            </tfoot>
+            </tfoot> */}
           </table>
+        ) : pagosFiltrados != null && session && pagosFiltrados.length === 0 ? (
+          <NoData></NoData>
         ) : (
-          <NoData />
+          <Loading></Loading>
         )}
       </div>
     </>

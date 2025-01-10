@@ -1,5 +1,7 @@
+import { format_Fecha_String, formatNumber } from "../../globalfn";
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
+import { formatDate, formatTime, formatFecha} from "../../globalfn";
 
 export const ImprimirExcel = (configuracion, cajero) => {
   const newExcel = new ReporteExcel(configuracion);
@@ -206,7 +208,13 @@ export const ImprimirExcel = (configuracion, cajero) => {
     newExcel.addData(cajeros);
   }
   const { nombre } = configuracion;
-  newExcel.guardaReporte(nombre);
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+  newExcel.guardaReporte(`${nombre}${dateStr}${timeStr}`);
 };
 
 export const Imprimir = (configuracion, cajero) => {
@@ -217,9 +225,9 @@ export const Imprimir = (configuracion, cajero) => {
   //producto
   if (cajero === 0 || cajero === undefined) {
     if (body.producto.length > 0) {
-      newPDF.ImpPosX("Producto", 14, newPDF.tw_ren);
-      newPDF.ImpPosX("Descripcion", 34, newPDF.tw_ren);
-      newPDF.ImpPosX("Importe", 154, newPDF.tw_ren);
+      newPDF.ImpPosX("Producto", 14, newPDF.tw_ren, 0,"L");
+      newPDF.ImpPosX("Descripcion", 34, newPDF.tw_ren, 0,"L");
+      newPDF.ImpPosX("Importe", 154, newPDF.tw_ren, 0,"L");
       newPDF.nextRow(4);
       let atr_ant = 0;
       let tot_ant = 0;
@@ -228,9 +236,9 @@ export const Imprimir = (configuracion, cajero) => {
       let total_productos = 0;
       body.producto.forEach((producto) => {
         if (atr_ant !== producto.articulo && atr_ant !== 0) {
-          newPDF.ImpPosX(atr_ant.toString(), 14, newPDF.tw_ren);
-          newPDF.ImpPosX(atr_des_ant.toString(), 34, newPDF.tw_ren);
-          newPDF.ImpPosX(tot_ant.toString(), 154, newPDF.tw_ren);
+          newPDF.ImpPosX(atr_ant.toString(), 27, newPDF.tw_ren, 0,"R");
+          newPDF.ImpPosX(atr_des_ant.toString(), 34, newPDF.tw_ren, 0,"L");
+          newPDF.ImpPosX(formatNumber(tot_ant), 166, newPDF.tw_ren, 0,"R");
           total_productos = total_productos + tot_ant;
           Enca1(newPDF);
           if (newPDF.tw_ren >= newPDF.tw_endRen) {
@@ -249,21 +257,21 @@ export const Imprimir = (configuracion, cajero) => {
         atr_des_ant = producto.descripcion;
       });
       total_productos = total_productos + tot_ant;
-      newPDF.ImpPosX(atr_ant.toString(), 14, newPDF.tw_ren);
-      newPDF.ImpPosX(atr_des_ant.toString(), 34, newPDF.tw_ren);
-      newPDF.ImpPosX(tot_ant.toString(), 154, newPDF.tw_ren);
+      newPDF.ImpPosX(atr_ant.toString(), 27, newPDF.tw_ren, 0,"R");
+      newPDF.ImpPosX(atr_des_ant.toString(), 34, newPDF.tw_ren, 0,"L");
+      newPDF.ImpPosX(formatNumber(tot_ant), 166, newPDF.tw_ren, 0,"R");
       newPDF.nextRow(5);
       newPDF.ImpPosX("Total Productos", 34, newPDF.tw_ren);
-      newPDF.ImpPosX(total_productos.toString(), 154, newPDF.tw_ren);
+      newPDF.ImpPosX(formatNumber(total_productos), 166, newPDF.tw_ren, 0,"R");
       newPDF.nextRow(15);
     } else {
-      newPDF.ImpPosX("Producto", 14, newPDF.tw_ren);
-      newPDF.ImpPosX("Descripcion", 34, newPDF.tw_ren);
-      newPDF.ImpPosX("Importe", 154, newPDF.tw_ren);
+      newPDF.ImpPosX("Producto", 14, newPDF.tw_ren, 0,"L");
+      newPDF.ImpPosX("Descripcion", 34, newPDF.tw_ren, 0,"L");
+      newPDF.ImpPosX("Importe", 154, newPDF.tw_ren, 0,"L");
       newPDF.nextRow(5);
       let total_productos = 0;
-      newPDF.ImpPosX("Total Productos", 34, newPDF.tw_ren);
-      newPDF.ImpPosX(total_productos.toString(), 154, newPDF.tw_ren);
+      newPDF.ImpPosX("Total Productos", 34, newPDF.tw_ren, 0,"L");
+      newPDF.ImpPosX(formatNumber(total_productos), 166, newPDF.tw_ren, 0,"R");
       newPDF.nextRow(15);
     }
   }
@@ -274,9 +282,9 @@ export const Imprimir = (configuracion, cajero) => {
     Tw_Pago[Tw_count][2] = "";
   }
   if (body.tipo_pago.length > 0) {
-    newPDF.ImpPosX("Tipo Pago", 14, newPDF.tw_ren);
-    newPDF.ImpPosX("Descripcion", 34, newPDF.tw_ren);
-    newPDF.ImpPosX("Importe", 154, newPDF.tw_ren);
+    newPDF.ImpPosX("Tipo Pago", 14, newPDF.tw_ren, 0,"L");
+    newPDF.ImpPosX("Descripcion", 34, newPDF.tw_ren, 0,"L");
+    newPDF.ImpPosX("Importe", 154, newPDF.tw_ren, 0,"L");
     newPDF.nextRow(4);
     body.tipo_pago.forEach((tipoPago) => {
       for (let Tw_count = 0; Tw_count < 20; Tw_count++) {
@@ -311,9 +319,9 @@ export const Imprimir = (configuracion, cajero) => {
     let total_tipo_pago = 0;
     for (let Tw_count = 0; Tw_count < 20; Tw_count++) {
       if (Tw_Pago[Tw_count][0] === 0) break;
-      newPDF.ImpPosX(Tw_Pago[Tw_count][0].toString(), 14, newPDF.tw_ren);
-      newPDF.ImpPosX(Tw_Pago[Tw_count][2].toString(), 34, newPDF.tw_ren);
-      newPDF.ImpPosX(Tw_Pago[Tw_count][1].toString(), 154, newPDF.tw_ren);
+      newPDF.ImpPosX(Tw_Pago[Tw_count][0].toString(), 30, newPDF.tw_ren, 0,"R");
+      newPDF.ImpPosX(Tw_Pago[Tw_count][2].toString(), 34, newPDF.tw_ren, 0,"L");
+      newPDF.ImpPosX(formatNumber(Tw_Pago[Tw_count][1]), 166, newPDF.tw_ren, 0,"R");
       total_tipo_pago = total_tipo_pago + Number(Tw_Pago[Tw_count][1]);
       Enca1(newPDF);
       if (newPDF.tw_ren >= newPDF.tw_endRen) {
@@ -322,23 +330,23 @@ export const Imprimir = (configuracion, cajero) => {
       }
     }
     // newPDF.nextRow(5);
-    newPDF.ImpPosX("Total Tipo Pago", 34, newPDF.tw_ren);
-    newPDF.ImpPosX(total_tipo_pago.toString(), 154, newPDF.tw_ren);
+    newPDF.ImpPosX("Total Tipo Pago", 34, newPDF.tw_ren, 0,"L");
+    newPDF.ImpPosX(formatNumber(total_tipo_pago), 166, newPDF.tw_ren, 0,"R");
     newPDF.nextRow(15);
   } else {
-    newPDF.ImpPosX("Tipo Pago", 14, newPDF.tw_ren);
-    newPDF.ImpPosX("Descripcion", 34, newPDF.tw_ren);
-    newPDF.ImpPosX("Importe", 154, newPDF.tw_ren);
+    newPDF.ImpPosX("Tipo Pago", 14, newPDF.tw_ren, 0,"L");
+    newPDF.ImpPosX("Descripcion", 34, newPDF.tw_ren, 0,"L");
+    newPDF.ImpPosX("Importe", 154, newPDF.tw_ren, 0,"L");
     newPDF.nextRow(5);
     let total_tipo_pago = 0;
-    newPDF.ImpPosX("Total Tipo Pago", 34, newPDF.tw_ren);
-    newPDF.ImpPosX(total_tipo_pago.toString(), 154, newPDF.tw_ren);
+    newPDF.ImpPosX("Total Tipo Pago", 34, newPDF.tw_ren, 0,"L");
+    newPDF.ImpPosX(formatNumber(total_tipo_pago), 166, newPDF.tw_ren, 0,"R");
     newPDF.nextRow(15);
   }
   if (body.cajeros.length > 0) {
-    newPDF.ImpPosX("Cajero", 14, newPDF.tw_ren);
-    newPDF.ImpPosX("Descripcion", 34, newPDF.tw_ren);
-    newPDF.ImpPosX("Importe", 154, newPDF.tw_ren);
+    newPDF.ImpPosX("Cajero", 14, newPDF.tw_ren, 0,"L");
+    newPDF.ImpPosX("Descripcion", 34, newPDF.tw_ren, 0,"L");
+    newPDF.ImpPosX("Importe", 154, newPDF.tw_ren, 0,"L");
     newPDF.nextRow(4);
     let cajero_ant = 0;
     let tot_cajero = 0;
@@ -346,9 +354,9 @@ export const Imprimir = (configuracion, cajero) => {
     let total_cajero = 0;
     body.cajeros.forEach((cajero) => {
       if (cajero_ant !== cajero.cajero && cajero_ant !== 0) {
-        newPDF.ImpPosX(cajero_ant.toString(), 14, newPDF.tw_ren);
-        newPDF.ImpPosX(cajero_desc_ant.toString(), 34, newPDF.tw_ren);
-        newPDF.ImpPosX(tot_cajero.toString(), 154, newPDF.tw_ren);
+        newPDF.ImpPosX(cajero_ant.toString(), 24, newPDF.tw_ren, 0,"R");
+        newPDF.ImpPosX(cajero_desc_ant.toString(), 34, newPDF.tw_ren, 0,"L");
+        newPDF.ImpPosX(formatNumber(tot_cajero), 166, newPDF.tw_ren, 0,"R");
         total_cajero = total_cajero + tot_cajero;
         Enca1(newPDF);
         if (newPDF.tw_ren >= newPDF.tw_endRen) {
@@ -361,22 +369,29 @@ export const Imprimir = (configuracion, cajero) => {
       cajero_desc_ant = cajero.nombre;
     });
     total_cajero = total_cajero + tot_cajero;
-    newPDF.ImpPosX(cajero_ant.toString(), 14, newPDF.tw_ren);
-    newPDF.ImpPosX(cajero_desc_ant.toString(), 34, newPDF.tw_ren);
-    newPDF.ImpPosX(tot_cajero.toString(), 154, newPDF.tw_ren);
+    newPDF.ImpPosX(cajero_ant.toString(), 24, newPDF.tw_ren, 0,"R");
+    newPDF.ImpPosX(cajero_desc_ant.toString(), 34, newPDF.tw_ren, 0,"L");
+    newPDF.ImpPosX(formatNumber(tot_cajero), 166, newPDF.tw_ren, 0,"R");
     newPDF.nextRow(5);
-    newPDF.ImpPosX("Total Cajeros", 34, newPDF.tw_ren);
-    newPDF.ImpPosX(total_cajero.toString(), 154, newPDF.tw_ren);
+    newPDF.ImpPosX("Total Cajeros", 34, newPDF.tw_ren, 0,"L");
+    newPDF.ImpPosX(formatNumber(total_cajero), 166, newPDF.tw_ren, 0,"R");
   } else {
-    newPDF.ImpPosX("Cajero", 14, newPDF.tw_ren);
-    newPDF.ImpPosX("Descripcion", 34, newPDF.tw_ren);
-    newPDF.ImpPosX("Importe", 154, newPDF.tw_ren);
+    newPDF.ImpPosX("Cajero", 14, newPDF.tw_ren, 0,"L");
+    newPDF.ImpPosX("Descripcion", 34, newPDF.tw_ren, 0,"L");
+    newPDF.ImpPosX("Importe", 154, newPDF.tw_ren, 0,"L");
     newPDF.nextRow(4);
     let total_cajero = 0;
-    newPDF.ImpPosX("Total Cajeros", 34, newPDF.tw_ren);
-    newPDF.ImpPosX(total_cajero.toString(), 154, newPDF.tw_ren);
+    newPDF.ImpPosX("Total Cajeros", 34, newPDF.tw_ren, 0,"L");
+    newPDF.ImpPosX(formatNumber(total_cajero), 166, newPDF.tw_ren, 0,"R");
   }
-  newPDF.guardaReporte("Reporte de Cobranza");
+  const date = new Date();
+    const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+    const timeStr = formatTime(date).replace(/:/g, "");
+
+  newPDF.guardaReporte(`Reporte_Cobranza_${dateStr}${timeStr}`);
 };
 function roundNumber(value, decimals) {
   const factor = Math.pow(10, decimals);
@@ -398,15 +413,19 @@ const Enca1 = (doc) => {
 export const Cobranza = async (token, fecha_inicia, fecha_final, cajero) => {
   const valorFinal = cajero === 0 || cajero === undefined ? 0 : cajero;
   const res = await fetch(
-    `${process.env.DOMAIN_API}api/cobranza/` +
-      fecha_inicia +
-      `/` +
-      fecha_final +
-      `/` +
-      valorFinal,
+    `${process.env.DOMAIN_API}api/cobranza/`,
     {
+      method:"post",
+      body:JSON.stringify({
+        Fecha_Inicial:format_Fecha_String(fecha_inicia),
+        Fecha_Final:format_Fecha_String(fecha_final),
+        cajero:valorFinal
+      }),
       headers: {
-        Authorization: `Bearer ${token}`,
+       Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+            xescuela: localStorage.getItem("xescuela"),
+            
       },
     }
   );

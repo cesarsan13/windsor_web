@@ -1,25 +1,28 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { format_Fecha_String, formatNumber } from "../../globalfn";
+import { formatDate, formatTime, formatFecha } from "../../globalfn";
+
 
 export const getRelaciondeFacturas = async (token, tomaFecha, tomaCanceladas, fecha_cobro_ini, fecha_cobro_fin, factura_ini, factura_fin) => {
     factura_ini = (factura_ini === '' || factura_ini === undefined) ? 0 : factura_ini;
     factura_fin = (factura_fin === '' || factura_fin === undefined) ? 0 : factura_fin;
 
-    console.log(tomaFecha, tomaCanceladas, fecha_cobro_ini, fecha_cobro_fin, factura_ini, factura_fin);
     let url = `${process.env.DOMAIN_API}api/reportes/rep_femac_9_anexo_4`
     const res = await fetch(url, {
         method: "post",
         body: JSON.stringify({
             tomaFecha: tomaFecha,
             tomaCanceladas: tomaCanceladas,
-            fecha_cobro_ini: fecha_cobro_ini,
-            fecha_cobro_fin: fecha_cobro_fin,
+            fecha_cobro_ini: format_Fecha_String(fecha_cobro_ini),
+            fecha_cobro_fin: format_Fecha_String(fecha_cobro_fin),
             factura_ini: factura_ini,
             factura_fin: factura_fin,
         }),
         headers: {
             Authorization: "Bearer " + token,
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            xescuela: localStorage.getItem("xescuela"),
         }
     })
     const resJson = await res.json();
@@ -34,27 +37,27 @@ const Enca1 = (doc,fecha_cobro_ini, fecha_cobro_fin, tomaFechas, tomaCanceladas)
             {
                 if(fecha_cobro_fin == '')
                 {
-                    doc.ImpPosX(`Reporte de Factura del ${fecha_cobro_ini} `,15,doc.tw_ren),
+                    doc.ImpPosX(`Reporte de Factura del ${fecha_cobro_ini} `,15,doc.tw_ren, 0, "L"),
                     doc.nextRow(5);
                 }
                 else{
-                    doc.ImpPosX(`Reporte de Facturas del ${fecha_cobro_ini} al ${fecha_cobro_fin}`,15,doc.tw_ren),
+                    doc.ImpPosX(`Reporte de Facturas del ${fecha_cobro_ini} al ${fecha_cobro_fin}`,15,doc.tw_ren, 0, "L"),
                     doc.nextRow(5);
                 }
             }
             
             if(tomaCanceladas === true){
-              doc.ImpPosX("Facturas Canceladas", 15, doc.tw_ren),
+              doc.ImpPosX("Facturas Canceladas", 15, doc.tw_ren, 0, "L"),
               doc.nextRow(5);
             }
 
-            doc.ImpPosX("Factura",15,doc.tw_ren),
-            doc.ImpPosX("Recibo",30,doc.tw_ren),
-            doc.ImpPosX("Fecha P",45,doc.tw_ren),
-            doc.ImpPosX("Nombre",68,doc.tw_ren),
-            doc.ImpPosX("Subtotal",145,doc.tw_ren),
-            doc.ImpPosX("I.V.A",165,doc.tw_ren),
-            doc.ImpPosX("Total",180,doc.tw_ren),
+            doc.ImpPosX("Factura",15,doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Recibo",30,doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Fecha P",45,doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Nombre",68,doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Subtotal",145,doc.tw_ren, 0, "L"),
+            doc.ImpPosX("I.V.A",167,doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Total",180,doc.tw_ren, 0, "L"),
             doc.nextRow(4);
             doc.printLineV();
             doc.nextRow(4);
@@ -68,6 +71,8 @@ const Enca1 = (doc,fecha_cobro_ini, fecha_cobro_fin, tomaFechas, tomaCanceladas)
 export const ImprimirPDF = (configuracion, fecha_cobro_ini, fecha_cobro_fin, tomaFechas, tomaCanceladas) => {
     const newPDF = new ReportePDF(configuracion, "Portrait");
     const { body } = configuracion;
+    const F_fecha_cobro_ini = format_Fecha_String(fecha_cobro_ini)
+    const F_fecha_cobro_fin = format_Fecha_String(fecha_cobro_fin)
     Enca1(newPDF, fecha_cobro_ini, fecha_cobro_fin, tomaFechas, tomaCanceladas);
     let total_general = 0;
 
@@ -98,32 +103,38 @@ export const ImprimirPDF = (configuracion, fecha_cobro_ini, fecha_cobro_fin, tom
           sub_total = total_importe;
         }
 
-        if(razon_social === '' || razon_social === ' '){
+        if(razon_social === '' || razon_social === ' '  || razon_social === null){
           razon_social_cambio = r_s_nombre;
         } else {
           razon_social_cambio = razon_social;
        
         }
-          newPDF.ImpPosX(noFac.toString(), 15, newPDF.tw_ren);
-          newPDF.ImpPosX(recibo.toString(), 30, newPDF.tw_ren);
-          newPDF.ImpPosX(fecha, 45, newPDF.tw_ren);
-          newPDF.ImpPosX(razon_social_cambio, 68, newPDF.tw_ren);
-          newPDF.ImpPosX(total_importe.toFixed(2), 145, newPDF.tw_ren);
-          newPDF.ImpPosX(`${ivaimp} %`.toString(), 165, newPDF.tw_ren);
-          newPDF.ImpPosX(sub_total.toFixed(2), 180, newPDF.tw_ren);
+          newPDF.ImpPosX(noFac.toString(), 25, newPDF.tw_ren, 0, "R");
+          newPDF.ImpPosX(recibo.toString(), 40, newPDF.tw_ren, 0, "R");
+          newPDF.ImpPosX(fecha, 45, newPDF.tw_ren, 0, "L");
+          newPDF.ImpPosX(razon_social_cambio, 68, newPDF.tw_ren, 0, "L");
+          newPDF.ImpPosX(formatNumber(total_importe), 157, newPDF.tw_ren, 0, "R");
+          newPDF.ImpPosX(`${ivaimp} %`.toString(), 175, newPDF.tw_ren, 0, "R");
+          newPDF.ImpPosX(formatNumber(sub_total), 198, newPDF.tw_ren, 0, "R");
        
         Enca1(newPDF);
         if (newPDF.tw_ren >= newPDF.tw_endRen) {
           newPDF.pageBreak();
-          Enca1(newPDF, fecha_cobro_ini, fecha_cobro_fin, tomaFechas, tomaCanceladas);
+          Enca1(newPDF, F_fecha_cobro_ini, F_fecha_cobro_fin, tomaFechas, tomaCanceladas);
         }
         total_general = total_general + sub_total;
 
     });
     newPDF.nextRow(4);
-    newPDF.ImpPosX(`TOTAL IMPORTE: ${total_general.toFixed(2)}`|| '', 149, newPDF.tw_ren);
+    newPDF.ImpPosX(`TOTAL IMPORTE: ${formatNumber(total_general)}`|| '', 150, newPDF.tw_ren,0, "L");
+    const date = new Date();
+    const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+    const timeStr = formatTime(date).replace(/:/g, "");
 
-    newPDF.guardaReporte("rep_relacion_facturas");
+  newPDF.guardaReporte(`Rep_Relacion_Facturas_${dateStr}${timeStr}`);
 }
 
 export const ImprimirExcel = (configuracion) => {
@@ -134,7 +145,7 @@ export const ImprimirExcel = (configuracion) => {
     let total_general = 0;
 
     body.forEach((rec) => {
-        const noFac = rec.numero_factura;
+        let noFac = rec.numero_factura;
         const recibo = rec.recibo;
         const fecha = rec.fecha;
         const razon_social = rec.razon_social;
@@ -144,6 +155,9 @@ export const ImprimirExcel = (configuracion) => {
         const precio_unitario = rec.precio_unitario;
         const descuento = rec.descuento;
 
+        if(noFac == "" || noFac == null || noFac == " "){
+          noFac = "0";
+        }
         let total_importe = 0; 
         let sub_total = 0;
         const r_s_nombre = "FACTURA GLOBAL DEL DIA";
@@ -172,9 +186,9 @@ export const ImprimirExcel = (configuracion) => {
             reciboI: recibo,
             fechapI: fecha,
             nombreI: razon_social_cambio,
-            subtotalI: total_importe.toFixed(2),
+            subtotalI: formatNumber(total_importe),
             ivaI: `${ivaimp} %`,
-            totalI: sub_total.toFixed(2)
+            totalI: formatNumber(sub_total)
         });
 
         total_general = total_general + sub_total;
@@ -186,11 +200,17 @@ export const ImprimirExcel = (configuracion) => {
         nombreI: '',
         subtotalI: '',
         ivaI: 'TOTAL IMPORTE',
-        totalI: total_general.toFixed(2)
+        totalI: formatNumber(total_general)
     });
     newExcel.setColumnas(columns);
     newExcel.addData(newBody);
-    newExcel.guardaReporte(nombre);
+    const date = new Date();
+    const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+    const timeStr = formatTime(date).replace(/:/g, "");
+    newExcel.guardaReporte(`${nombre}_${dateStr}${timeStr}`);
 };
 
 

@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
+import iconos from "@/app/utils/iconos";
+import Image from "next/image";
 
 function Busqueda({
   setBajas,
@@ -15,11 +17,11 @@ function Busqueda({
 
   return (
     <div className="grid grid-cols-3 md:grid-cols-12 gap-2">
-      <div className="col-span-1 md:col-span-2">
+      <div className="col-span-1 md:col-span-1/2">
         <input
           id="tb_id"
-          className="input input-bordered input-md max-w-xs w-full dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 text-right"
-          placeholder="Id..."
+          className="input input-bordered input-sm md:input-md w-full sm:w-full dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 text-right"
+          placeholder="Núm..."
           onChange={(event) => handleBusquedaChange(event)}
           onKeyDown={(evt) => {
             soloEnteros(evt);
@@ -31,7 +33,7 @@ function Busqueda({
       <div className="col-span-2 md:col-span-4">
         <input
           id="tb_desc"
-          className="input input-bordered input-md join-item w-full max-w-lg dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600"
+          className="input input-bordered input-sm md:input-md w-full sm:w-full dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 text-left"
           placeholder="Descripcion..."
           onChange={(event) => handleBusquedaChange(event)}
           onKeyDown={(evt) => handleKeyDown(evt)}
@@ -41,11 +43,12 @@ function Busqueda({
       <div className="md:col-span-1">
         <div className=" tooltip" data-tip="Limpiar">
           <button
-            className="btn btn-square join-item input input-sm  dark:bg-[#191e24] dark:text-neutral-200 text-neutral-600 border-none shadow-none "
+            className="join-item dark:text-neutral-200 text-neutral-600 border-none  w-5 h-5 md:w-6 md:h-6 mt-4"
             onClick={(evt) => limpiarBusqueda(evt)}
-          >
-            <i className="fa-solid fa-broom"></i>
-          </button>
+            >
+            <Image src={iconos.limpiar} alt="Limpiar" className="block dark:hidden" />
+            <Image src={iconos.limpiar_w} alt="Limpiar" className="hidden dark:block" />
+            </button>
         </div>
       </div>
       <div className="md:col-span-1">
@@ -57,11 +60,14 @@ function Busqueda({
               className=" checkbox mx-2 checkbox-md"
               onClick={(evt) => setBajas(evt.target.checked)}
             />
-            <span className="fas fa-trash block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
-            <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
+            <button className=" join-item  dark:text-neutral-200 text-neutral-600 border-none shadow-none w-5 h-5 md:w-6 md:h-6 mt-1">
+              <Image src={iconos.eliminar} alt="Bajas" className="block dark:hidden"></Image>
+              <Image src={iconos.eliminar_w} alt="Bajas" className="hidden dark:block"></Image>
+            </button>
+            <span className=" text-lg font-xthin text-neutral-600 dark:text-white hidden sm:inline">
               Bajas
             </span>
-          </label>
+            </label>
         </div>
       </div>
     </div>

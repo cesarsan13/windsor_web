@@ -1,11 +1,12 @@
 "use client";
 import Loading from "@/app/components/loading";
-import NoData from "@/app/components/noData";
+import NoData from "@/app/components/NoData";
 import { getFotoAlumno } from "@/app/utils/api/alumnos/alumnos";
 import { calculaDigitoBvba, poneCeros } from "@/app/utils/globalfn";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 import React from "react";
+
 function TablaAlumnos({
   session,
   alumnosFiltrados,
@@ -17,81 +18,122 @@ function TablaAlumnos({
   formatNumber,
   setCapturedImage,
   setcondicion,
+  permiso_cambio,
+  permiso_baja,
 }) {
   const tableAction = async (evt, alumno, accion) => {
-    const imagenUrl = await getFotoAlumno(session.user.token, alumno.imagen);
+    const imagenUrl = await getFotoAlumno(session.user.token, alumno.ruta_foto);
     if (imagenUrl) {
       setCapturedImage(imagenUrl);
     }
-    let ref = "100910" + poneCeros(alumno.id, 4);
+    let ref = "100910" + poneCeros(alumno.numero, 4);
     let digitoBvba = calculaDigitoBvba(ref);
     let resultado = `${ref}${digitoBvba}`;
     alumno.referencia = resultado;
     setAlumno(alumno);
     setAccion(accion);
-    setCurrentId(alumno.id);
+    setCurrentId(alumno.numero);
     showModal(true);
     setcondicion(false);
   };
 
+  const ActionButton = ({ tooltip, iconDark, iconLight, onClick, permission }) => {
+    if (!permission) return null;
+    return (
+      <th>
+        <div
+          className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
+          data-tip={tooltip}
+          onClick={onClick}
+        >
+          <Image src={iconDark} alt={tooltip} className="block dark:hidden" />
+          <Image src={iconLight} alt={tooltip} className="hidden dark:block" />
+        </div>
+      </th>
+    );
+  };
+
+  const ActionColumn = ({ description, permission }) => {
+    if (!permission) return null;
+    return (
+      <>
+        <th className="w-[5%] pt-[.10rem] pb-[.10rem]">{description}</th>
+      </>
+    )
+  }
+
   return !isLoading ? (
-    <div className="overflow-x-auto mt-3 h-[calc(55vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white  w-full lg:w-full">
-      {alumnosFiltrados.length > 0 ? (
-        <table className="table table-sm table-zebra w-full">
+    <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-full">
+      {alumnosFiltrados && alumnosFiltrados.length > 0 ? (
+        <table className="table table-xs table-zebra w-full">
           <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
             <tr>
-            <th className="sm:w-[10%]"></th>
-              <td className="w-[40%]">Nombre</td>
-              <td className="sm:table-cell">Grado</td>
-              <th className="w-[30%] sm:w-[10%]">Acciones</th>
+              <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
+              <td className="w-[40%] pt-[.10rem] pb-[.10rem]">Nombre</td>
+              <td className="sm:table-cell pt-[.10rem] pb-[.10rem]">Grado</td>
+              < ActionColumn
+                description={"Ver"}
+                permission={true}
+              />
+              < ActionColumn
+                description={"Editar"}
+                permission={permiso_cambio}
+              />
+              < ActionColumn
+                description={"Eliminar"}
+                permission={permiso_baja}
+              />
             </tr>
           </thead>
           <tbody>
             {alumnosFiltrados.map((item) => (
-              <tr key={item.id} className="hover:cursor-pointer">
-                <th className={
+              <tr key={item.numero} className="hover:cursor-pointer">
+                <th
+                  className={
                     typeof item.comision === "number"
                       ? "text-left"
                       : "text-right"
                   }
                 >
-                  {item.id}
+                  {item.numero}
                 </th>
-                <td className="w-[40%]">{`${item.a_nombre} ${item.a_paterno} ${item.a_materno}`}</td>
-                <td className=" sm:table-cell">
+                <td className="w-[40%] max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap pt-[.10rem] pb-[.10rem]">
+                  {`${item.a_nombre} ${item.a_paterno} ${item.a_materno}`}
+                </td>
+                <td className="sm:table-cell pt-[.10rem] pb-[.10rem] truncate">
                   {item.horario_1_nombre}
                 </td>
-                <th className="w-[25%] sm:w-[10%]">
-                  <div className="flex flex-row space-x-1 sm:space-x-3">
-                    <div
-                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                      data-tip={`Ver ${item.id}`}
-                      onClick={(evt) => tableAction(evt, item, `Ver`)}
-                    >
-                        <Image src={iconos.ver} alt="Editar" />
-                        </div>
-                    <div
-                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                      data-tip={`Editar ${item.id}`}
-                      onClick={(evt) => tableAction(evt, item, `Editar`)}
-                    >
-                        <Image src={iconos.editar} alt="Editar" />
-                        </div>
-                    <div
-                      className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                      data-tip={`Eliminar  ${item.id}`}
-                      onClick={(evt) => tableAction(evt, item, "Eliminar")}
-                    >
-                        <Image src={iconos.eliminar} alt="Editar" />
-                        </div>
-                  </div>
-                </th>
+                <ActionButton
+                  tooltip="Ver"
+                  iconDark={iconos.ver}
+                  iconLight={iconos.ver_w}
+                  onClick={(evt) => tableAction(evt, item, "Ver")}
+                  permission={true}
+                />
+                <ActionButton
+                  tooltip="Editar"
+                  iconDark={iconos.editar}
+                  iconLight={iconos.editar_w}
+                  onClick={(evt) => tableAction(evt, item, "Editar")}
+                  permission={permiso_cambio}
+                />
+                <ActionButton
+                  tooltip="Eliminar"
+                  iconDark={iconos.eliminar}
+                  iconLight={iconos.eliminar_w}
+                  onClick={(evt) => tableAction(evt, item, "Eliminar")}
+                  permission={permiso_baja}
+                />
               </tr>
             ))}
           </tbody>
         </table>
+      ) : alumnosFiltrados != null &&
+        session &&
+        alumnosFiltrados.length === 0 ? (
+        <NoData></NoData>
       ) : (
-        <NoData />
+        <Loading></Loading>
       )}
     </div>
   ) : (

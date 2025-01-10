@@ -5,26 +5,28 @@ import { useRouter } from "next/navigation";
 import Inputs from "./components/Inputs";
 import { useForm } from "react-hook-form";
 import Acciones from "./components/Acciones";
-import { Fecha_de_Ctod, formatDate } from "../utils/globalfn";
+import { Fecha_de_Ctod, formatDate, permissionsComponents, formatFecha, formatNumber} from "../utils/globalfn";
 import {
   DocumentosCobranza,
   ImprimirExcel,
   ImprimirPDF,
 } from "../utils/api/rep_flujo_01/rep_flujo_01";
-import ModalVistaPreviaRepFlujo01 from "./components/modalVistaPreviaRepFlujo01";
+import VistaPrevia from "../components/VistaPrevia";
 import { ReportePDF } from "../utils/ReportesPDF";
 
 function Rep_Flujo_01() {
   const date = new Date();
-  const dateStr = formatDate(date);
+
   const router = useRouter();
   const { data: session, status } = useSession();
-  let [fecha_ini, setFecha_ini] = useState(dateStr.replace(/\//g, "-"));
-  let [fecha_fin, setFecha_fin] = useState(dateStr.replace(/\//g, "-"));
+  let [fecha_ini, setFecha_ini] = useState(date.toISOString().split("T")[0]); //date.toISOString().split("T")[0]
+  let [fecha_fin, setFecha_fin] = useState(date.toISOString().split("T")[0]); //date.toISOString().split("T")[0]
   const [selectedOption, setSelectedOption] = useState("sin_deudores");
   const [dataDocumentoCobranza, setDataDocumentoCobranza] = useState([]);
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
+  const [permissions, setPermissions] = useState({});
+  const [animateLoading, setAnimateLoading] = useState(false);
   const {
     formState: { errors },
   } = useForm({});
@@ -34,11 +36,15 @@ function Rep_Flujo_01() {
       return;
     }
     const fetchData = async () => {
-      const { token } = session.user;
-      const fecha_ciclo = Fecha_de_Ctod(fecha_ini, -63);
-      console.log("nueva fecha xd:", fecha_ciclo);
-      const data = await DocumentosCobranza(token, fecha_ciclo, fecha_fin);
-      setDataDocumentoCobranza(data);
+      const { token, permissions } = session.user;
+      const es_admin = session.user.es_admin;
+      const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
+      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado);
+      setPermissions(permisos);
+      
+      //const fecha_ciclo = Fecha_de_Ctod(fecha_ini, -63);
+      //const data = await DocumentosCobranza(token, fecha_ciclo, fecha_fin);
+      //setDataDocumentoCobranza(data);
     };
     fetchData();
   }, [session, status, fecha_ini, fecha_fin]);
@@ -54,24 +60,29 @@ function Rep_Flujo_01() {
   const home = () => {
     router.push("/");
   };
-  const handleVerClick = () => {
+  const handleVerClick = async () => {
+    setAnimateLoading(true);
+
+    const fecha_ciclo = Fecha_de_Ctod(fecha_ini, -63);
+      const data = await DocumentosCobranza(session.user.token, fecha_ciclo, fecha_fin);
+      setDataDocumentoCobranza(data);
+
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: `Reporte de Adeudos Pendientes  al ${fecha_ini}`,
+        Nombre_Reporte: `Reporte de Adeudos Pendientes al ${fecha_ini}`,
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
-      body: dataDocumentoCobranza,
+      body: data,
     };
     const reporte = new ReportePDF(configuracion);
     const { body } = configuracion;
     const documentosCobranza = body.documentos_cobranza;
     const alumnos = body.alumnos;
-    console.log("documentos Cobranza:", documentosCobranza);
-    console.log("alumnos:", alumnos);
     let Tw_Col = Array.from({ length: 14 }, () => Array(9).fill(0.0));
     let Tw_TGe = Array(9).fill(0.0);
     let Tw_Per = Array(14).fill("");
+    let per_str;
     const Enca1 = (doc) => {
       if (!doc.tiene_encabezado) {
         doc.imprimeEncabezadoPrincipalV();
@@ -95,7 +106,8 @@ function Rep_Flujo_01() {
       }
     };
     Enca1(reporte);
-    for (let Pos_Act = 0; Pos_Act < 13; Pos_Act++) {
+    let Pos_Act;
+    for (Pos_Act = 0; Pos_Act <= 13; Pos_Act++) {
       Tw_Per[Pos_Act] = "";
       Tw_Col[Pos_Act][1] = 0;
       Tw_Col[Pos_Act][2] = 0;
@@ -106,27 +118,26 @@ function Rep_Flujo_01() {
       Tw_Col[Pos_Act][7] = 0;
       Tw_Col[Pos_Act][8] = 0;
     }
-    for (let Pos_Act = 1; Pos_Act < 8; Pos_Act++) {
+    for (Pos_Act = 1; Pos_Act <= 8; Pos_Act++) {
       Tw_TGe[Pos_Act] = 0;
     }
-    Tw_Per[1] = fecha_ini.slice(0, 7);
-    Tw_Per[12] = fecha_fin.slice(0, 7);
+    Tw_Per[1] = (fecha_ini.slice(0, 7)).replace(/-/g, "/");
+    Tw_Per[12] = (fecha_fin.slice(0, 7)).replace(/-/g, "/");
     let adiciona;
-    let per_str;
-    let pos_act;
+    
     documentosCobranza.forEach((documento) => {
-      const alumno = alumnos.find((alu) => alu.id === documento.alumno);
+      const alumno = alumnos.find((alu) => alu.numero === documento.alumno);
       if (alumno) {
         adiciona = true;
         if (selectedOption === "sin_deudor") {
-          if (alumno.estatus.toUpperCase() === "CARTERA") {
+          if (alumno.estatus.toUpperCase() === "Cartera") {
             adiciona = false;
           } else {
             adiciona = true;
           }
         }
         if (selectedOption === "solo_deudores") {
-          if (alumno.estatus.toUpperCase() === "CARTERA") {
+          if (alumno.estatus.toUpperCase() === "Cartera") {
             adiciona = true;
           } else {
             adiciona = false;
@@ -138,68 +149,63 @@ function Rep_Flujo_01() {
       if (adiciona === true) {
         per_str = documento.fecha.toString().slice(0, 7);
         if (per_str < Tw_Per[1]) {
-          pos_act = 0;
+          Pos_Act = 0;
         } else if (per_str > Tw_Per[12]) {
-          pos_act = 13;
+          Pos_Act = 13;
         } else {
-          for (pos_act = 1; pos_act < 13; pos_act++) {
-            if (Tw_Per[pos_act] === per_str) break;
-            if (Tw_Per[pos_act] === "") {
-              Tw_Per[pos_act] = per_str;
+          for (Pos_Act = 1; Pos_Act <= 13; Pos_Act++) {
+            if (Tw_Per[Pos_Act] === per_str) break;
+            if (Tw_Per[Pos_Act] === "") {
+              Tw_Per[Pos_Act] = per_str;
               break;
             }
           }
         }
-        if (pos_act < 13) {
+        if (Pos_Act < 13) { 
           if (documento.ref.toString().toUpperCase() === "COL") {
-            Tw_Col[pos_act][1] = Number(Tw_Col[pos_act][1]) + documento.importe;
-            Tw_Col[pos_act][2] =
-              Number(Tw_Col[pos_act][2]) +
-              documento.importe * (documento.descuento / 100);
-          }
+            Tw_Col[Pos_Act][1] = Number(Tw_Col[Pos_Act][1]) + documento.importe;
+            Tw_Col[Pos_Act][2] = Number(Tw_Col[Pos_Act][2]) + documento.importe * (documento.descuento / 100);
+          } 
           if (documento.ref.toString().toUpperCase() === "INS") {
-            Tw_Col[pos_act][3] = Number(Tw_Col[pos_act][3]) + documento.importe;
-            Tw_Col[pos_act][4] =
-              Number(Tw_Col[pos_act][4]) +
-              documento.importe * (documento.descuento / 100);
+            Tw_Col[Pos_Act][3] = Number(Tw_Col[Pos_Act][3]) + documento.importe;
+            Tw_Col[Pos_Act][4] = Number(Tw_Col[Pos_Act][4]) + documento.importe * (documento.descuento / 100);
           }
           if (documento.ref.toString().toUpperCase() === "REC") {
-            Tw_Col[pos_act][4] = Number(Tw_Col[pos_act][4]) + documento.importe;
+            Tw_Col[Pos_Act][4] = Number(Tw_Col[Pos_Act][4]) + documento.importe;
           }
           if (documento.ref.toString().toUpperCase() == "TAL") {
-            Tw_Col[pos_act][5] = Number(Tw_Col[pos_act][5]) + documento.importe;
+            Tw_Col[Pos_Act][5] = Number(Tw_Col[Pos_Act][5]) + documento.importe;
           }
-          Tw_Col[pos_act][8] =
-            Number(Tw_Col[pos_act][8]) + documento.importe_pago;
+          Tw_Col[Pos_Act][8] = Number(Tw_Col[Pos_Act][8]) + documento.importe_pago;
         }
       }
     });
     let imp_total;
-    for (pos_act = 0; pos_act < 13; pos_act++) {
+    for(Pos_Act = 0; Pos_Act <= 13; Pos_Act++) {
       imp_total =
-        Number(Tw_Col[pos_act][1]) -
-        Number(Tw_Col[pos_act][2]) +
-        Number(Tw_Col[pos_act][3]) +
-        Number(Tw_Col[pos_act][4]) +
-        Number(Tw_Col[pos_act][5]);
-      Tw_TGe[1] = Number(Tw_TGe[1]) + Number(Tw_Col[pos_act][1]);
-      Tw_TGe[2] = Number(Tw_TGe[2]) + Number(Tw_Col[pos_act][2]);
-      Tw_TGe[3] = Number(Tw_TGe[3]) + Number(Tw_Col[pos_act][3]);
-      Tw_TGe[4] = Number(Tw_TGe[4]) + Number(Tw_Col[pos_act][4]);
-      Tw_TGe[5] = Number(Tw_TGe[5]) + Number(Tw_Col[pos_act][5]);
-      Tw_TGe[6] = Number(Tw_TGe[6]) + Number(Tw_Col[pos_act][6]);
+        Number(Tw_Col[Pos_Act][1]) -
+        Number(Tw_Col[Pos_Act][2]) +
+        Number(Tw_Col[Pos_Act][3]) +
+        Number(Tw_Col[Pos_Act][4]) +
+        Number(Tw_Col[Pos_Act][5]);
+      Tw_TGe[1] = Number(Tw_TGe[1]) + Number(Tw_Col[Pos_Act][1]);
+      Tw_TGe[2] = Number(Tw_TGe[2]) + Number(Tw_Col[Pos_Act][2]);
+      Tw_TGe[3] = Number(Tw_TGe[3]) + Number(Tw_Col[Pos_Act][3]);
+      Tw_TGe[4] = Number(Tw_TGe[4]) + Number(Tw_Col[Pos_Act][4]);
+      Tw_TGe[5] = Number(Tw_TGe[5]) + Number(Tw_Col[Pos_Act][5]);
+      Tw_TGe[6] = Number(Tw_TGe[6]) + Number(Tw_Col[Pos_Act][6]);
       Tw_TGe[7] = Number(Tw_TGe[7]) + Number(imp_total);
-      Tw_TGe[8] = Number(Tw_TGe[8]) + Number(Tw_Col[pos_act][8]);
-      reporte.ImpPosX(Tw_Per[pos_act].toString(), 14, reporte.tw_ren);
-      reporte.ImpPosX(Tw_Col[pos_act][1].toString(), 34, reporte.tw_ren);
-      reporte.ImpPosX(Tw_Col[pos_act][2].toString(), 54, reporte.tw_ren);
-      reporte.ImpPosX(Tw_Col[pos_act][3].toString(), 74, reporte.tw_ren);
-      reporte.ImpPosX(Tw_Col[pos_act][4].toString(), 94, reporte.tw_ren);
-      reporte.ImpPosX(Tw_Col[pos_act][5].toString(), 114, reporte.tw_ren);
-      reporte.ImpPosX(imp_total.toString(), 134, reporte.tw_ren);
-      reporte.ImpPosX(Tw_Col[pos_act][8].toString(), 154, reporte.tw_ren);
-      const sum = Number(imp_total) - Number(Tw_Col[pos_act][8].toString());
-      reporte.ImpPosX(sum.toString(), 174, reporte.tw_ren);
+      Tw_TGe[8] = Number(Tw_TGe[8]) + Number(Tw_Col[Pos_Act][8]);
+      reporte.ImpPosX(Tw_Per[Pos_Act].toString(), 14, reporte.tw_ren);
+      reporte.ImpPosX(formatNumber(Tw_Col[Pos_Act][1].toString()), 34, reporte.tw_ren);
+      reporte.ImpPosX(formatNumber(Tw_Col[Pos_Act][2].toString()), 54, reporte.tw_ren);
+      reporte.ImpPosX(formatNumber(Tw_Col[Pos_Act][3].toString()), 74, reporte.tw_ren);
+      reporte.ImpPosX(formatNumber(Tw_Col[Pos_Act][4].toString()), 94, reporte.tw_ren);
+      reporte.ImpPosX(formatNumber(Tw_Col[Pos_Act][5].toString()), 114, reporte.tw_ren);
+      reporte.ImpPosX(formatNumber(imp_total.toString()), 134, reporte.tw_ren);
+      reporte.ImpPosX(formatNumber(Tw_Col[Pos_Act][8].toString()), 154, reporte.tw_ren);
+      const sum = Number(imp_total) - Number(Tw_Col[Pos_Act][8].toString());
+      reporte.ImpPosX(formatNumber(sum.toString()), 174, reporte.tw_ren);
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRen) {
         reporte.pageBreak();
@@ -207,23 +213,22 @@ function Rep_Flujo_01() {
       }
     }
     reporte.ImpPosX("Total", 14, reporte.tw_ren);
-    reporte.ImpPosX(Tw_TGe[1].toString(), 34, reporte.tw_ren);
-    reporte.ImpPosX(Tw_TGe[2].toString(), 54, reporte.tw_ren);
-    reporte.ImpPosX(Tw_TGe[3].toString(), 74, reporte.tw_ren);
-    reporte.ImpPosX(Tw_TGe[4].toString(), 94, reporte.tw_ren);
-    reporte.ImpPosX(Tw_TGe[5].toString(), 114, reporte.tw_ren);
-    reporte.ImpPosX(Tw_TGe[7].toString(), 134, reporte.tw_ren);
-    reporte.ImpPosX(Tw_TGe[8].toString(), 154, reporte.tw_ren);
+    reporte.ImpPosX(formatNumber(Tw_TGe[1].toString()), 34, reporte.tw_ren);
+    reporte.ImpPosX(formatNumber(Tw_TGe[2].toString()), 54, reporte.tw_ren);
+    reporte.ImpPosX(formatNumber(Tw_TGe[3].toString()), 74, reporte.tw_ren);
+    reporte.ImpPosX(formatNumber(Tw_TGe[4].toString()), 94, reporte.tw_ren);
+    reporte.ImpPosX(formatNumber(Tw_TGe[5].toString()), 114, reporte.tw_ren);
+    reporte.ImpPosX(formatNumber(Tw_TGe[7].toString()), 134, reporte.tw_ren);
+    reporte.ImpPosX(formatNumber(Tw_TGe[8].toString()), 154, reporte.tw_ren);
     const sum = Number(Tw_TGe[7].toString()) - Number(Tw_TGe[8].toString());
-    reporte.ImpPosX(sum.toString(), 174, reporte.tw_ren);
-    console.log("tw_col", Tw_Col);
-    console.log("tw_tGe", Tw_TGe);
-    console.log("tw_per", Tw_Per);
+    reporte.ImpPosX(formatNumber(sum.toString()), 174, reporte.tw_ren);
     const pdfData = reporte.doc.output("datauristring");
     setPdfData(pdfData);
     setPdfPreview(true);
     showModalVista(true);
+    setAnimateLoading(false);
   };
+
   const ImprimePDF = async () => {
     const configuracion = {
       Encabezado: {
@@ -263,77 +268,102 @@ function Rep_Flujo_01() {
       ? document.getElementById("modalVPRepFlujo01").showModal()
       : document.getElementById("modalVPRepFlujo01").close();
   };
+  const CerrarView = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVPRepFlujo01").close();
+  };
   return (
     <>
-      <ModalVistaPreviaRepFlujo01
+      <VistaPrevia
+        id={"modalVPRepFlujo01"}
+        titulo={"Vista Previa de Adeudos Pendientes"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
-      <div className="container w-full  max-w-screen-xl bg-slate-100 dark:bg-slate-700 shadow-xl rounded-xl px-3">
-        <div className="flex justify-start p-3 ">
-          <h1 className="text-4xl font-xthin text-black dark:text-white md:px-12">
-            Reporte Adeudos Pendientes
-          </h1>
-        </div>
-        <div className="container grid grid-cols-8 grid-rows-1 h-[calc(100%-20%)]">
-          <div className="col-span-1 flex flex-col">
-            <Acciones home={home} Ver={handleVerClick} />
-          </div>
-          <div className="col-span-7">
-            <div className="flex flex-col h-full space-y-4">
-              <div className="flex flex-col md:flex-row lg:space-x-4">
-                <Inputs
-                  name={"fecha_ini"}
-                  tamañolabel={""}
-                  className={"rounded block grow"}
-                  Titulo={"Fecha Inicial: "}
-                  type={"date"}
-                  errors={errors}
-                  maxLength={11}
-                  isDisabled={false}
-                  setValue={setFecha_ini}
-                  value={fecha_ini}
-                />
-                <Inputs
-                  name={"fecha_fin"}
-                  tamañolabel={""}
-                  className={"rounded block grow"}
-                  Titulo={"Fecha Final: "}
-                  type={"date"}
-                  errors={errors}
-                  maxLength={11}
-                  isDisabled={false}
-                  setValue={setFecha_fin}
-                  value={fecha_fin}
+
+      <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+        <div className="w-full py-3">
+          <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
+            <div className="flex flex-wrap items-start md:items-center mx-auto">
+              <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
+                <Acciones
+                  home={home}
+                  Ver={handleVerClick}
+                  isLoading = {animateLoading}
+                  permiso_imprime = {permissions.impresion}
                 />
               </div>
-              <div className="flex space-x-4">
-                <div className="flex flex-col space-y-2">
-                  <label className="flex items-center space-x-2 dark:text-white text-black">
-                    <input
-                      type="radio"
-                      name="options"
-                      value="sin_deudores"
-                      checked={selectedOption === "sin_deudores"}
-                      onChange={handleCheckChange}
-                      className="form-radio"
-                    />
-                    <span>Sin Deudores</span>
-                  </label>
-                  <label className="flex items-center space-x-2 dark:text-white text-black">
-                    <input
-                      type="radio"
-                      name="options"
-                      value="solo_deudores"
-                      checked={selectedOption === "solo_deudores"}
-                      onChange={handleCheckChange}
-                      className="form-radio"
-                    />
-                    <span>Solo Deudores</span>
-                  </label>
-                </div>
+                <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
+                  Reporte Adeudos Pendientes
+                </h1>
+            </div>
+          </div>
+        </div>
+        <div className="w-full py-3 flex flex-col gap-y-4">
+          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
+            <div className="flex flex-row max-[300px]:gap-1 gap-4 justify-center" >
+                <Inputs
+                name={"fecha_ini"}
+                tamañolabel={""}
+                //className={"rounded block grow"}
+                Titulo={"Fecha Inicial: "}
+                type={"date"}
+                errors={errors}
+                maxLength={11}
+                isDisabled={false}
+                setValue={setFecha_ini}
+                value={fecha_ini}
+                conteClassName="lg:w-fit md:w-fit"
+                labelClassName="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full"
+                inputClassName="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700"
+                />
+
+                <Inputs
+                name={"fecha_fin"}
+                tamañolabel={""}
+                //className={"rounded block grow "}
+                Titulo={"Fecha Final: "}
+                type={"date"}
+                errors={errors}
+                maxLength={11}
+                isDisabled={false}
+                setValue={setFecha_fin}
+                value={fecha_fin}
+                conteClassName="lg:w-fit md:w-fit"
+                labelClassName="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full"
+                inputClassName="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700"
+                />
+            </div>
+          </div>
+          <div className="flex flex-row ">
+            <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
+              <div className="flex space-x-4 justify-center">
+              <label className="flex items-center space-x-2 dark:text-white text-black">
+                  <input
+                    type="radio"
+                    name="options"
+                    value="sin_deudores"
+                    checked={selectedOption === "sin_deudores"}
+                    onChange={handleCheckChange}
+                    className="radio checked:bg-blue-500"
+                  />
+                  <span>Sin Deudores</span>
+                </label>
+                <label className="flex items-center space-x-2 dark:text-white text-black">
+                  <input
+                    type="radio"
+                    name="options"
+                    value="solo_deudores"
+                    checked={selectedOption === "solo_deudores"}
+                    onChange={handleCheckChange}
+                    className="radio checked:bg-blue-500"
+                  />
+                  <span>Solo Deudores</span>
+                </label>
               </div>
             </div>
           </div>

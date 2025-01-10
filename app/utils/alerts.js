@@ -1,39 +1,45 @@
 import Swal from "sweetalert2";
 
-export const showSwalAndWait = (title, text, icon) => {
+export const showSwalAndWait = (title, text, icon, wait = 2000) => {
   return new Promise((resolve) => {
     Swal.fire({
       title: title,
-      text: text,
+      html: text,
       icon: icon,
-      timer: 2000,
+      timer: wait,
       showConfirmButton: false,
       customClass: {
-        popup: 'swal-popup'
-      }
+        popup: "swal-popup",
+      },
     }).then(() => {
       resolve();
     });
   });
 };
 
-export const showSwal = (titulo, mensaje, icono) => {
-  Swal.fire({
+export const showSwal = (titulo, mensaje, icono, target = "") => {
+  let options = {
     position: "center",
     icon: icono,
     title: titulo,
-    text: mensaje,
+    html: mensaje,
     showConfirmButton: true,
-    timer: 1500,
-  });
+    timer: 2500,
+  };
+  if (target !== "") {
+    options.target = document.getElementById(target);
+  }
+  Swal.fire(options);
 };
+
 
 export const confirmSwal = async (
   titulo,
   mensaje,
   icono,
   confirmButtonText,
-  cancelButtonText
+  cancelButtonText,
+  target
 ) => {
   return new Promise((resolve, reject) => {
     Swal.fire({
@@ -45,6 +51,7 @@ export const confirmSwal = async (
       cancelButtonColor: "#d33",
       confirmButtonText: confirmButtonText,
       cancelButtonText: cancelButtonText,
+      ...(target && { target: document.getElementById(target) }),
     }).then((result) => {
       if (result.isConfirmed) {
         resolve(true); // Resolvemos la promesa con true si se confirma
@@ -54,3 +61,4 @@ export const confirmSwal = async (
     });
   });
 };
+

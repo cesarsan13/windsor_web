@@ -2,6 +2,9 @@ import { soloEnteros, soloDecimales, pone_ceros } from "@/app/utils/globalfn";
 import React from "react";
 import { useState, useEffect } from "react";
 import Inputs from "@/app/comentarios/components/Inputs";
+import Image from "next/image";
+import iconos from "@/app/utils/iconos";
+import { FaSpinner } from "react-icons/fa";
 
 function ModalComentarios({
   accion,
@@ -10,6 +13,7 @@ function ModalComentarios({
   register,
   errors,
   setFormaComentarios,
+  isLoadingButton,
 }) {
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
@@ -26,14 +30,14 @@ function ModalComentarios({
     }
     setTitulo(
       accion === "Alta"
-        ? `Nuevos Comentarios: ${currentID}`
+        ? `Nuevo Comentario`
         : accion === "Editar"
-        ? `Editar Comentarios: ${currentID}`
+        ? `Editar Comentario: ${currentID}`
         : accion === "Eliminar"
-        ? `Eliminar Comentarios: ${currentID}`
-        : `Ver Comentarios: ${currentID}`
+        ? `Eliminar Comentario: ${currentID}`
+        : `Ver Comentario: ${currentID}`
     );
-  }, [accion]);
+  }, [accion, currentID]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
@@ -46,35 +50,90 @@ function ModalComentarios({
           [evt.target.name]: pone_ceros(evt.target.value, 2, true),
         }));
   };
+
+  const generales = [
+    { id: 1, descripcion: "Si" },
+    { id: 0, descripcion: "No" },
+  ];
+
   return (
     <dialog id="my_modal_3" className="modal">
-      <div className="modal-box">
-        <button
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-white text-black"
-          onClick={() => document.getElementById("my_modal_3").close()}
-        >
-          ✕
-        </button>
-        {/* if there is a button in form, it will close the modal */}
+      <div className="modal-box bg-base-200">
         <form onSubmit={onSubmit}>
-          <h3 className="font-bold text-lg mb-5  text-black dark:text-white">
-            {titulo}
-          </h3>
+          <div className="sticky -top-6 flex justify-between items-center bg-transparent w-full h-10 z-10 mb-5">
+            {/* bg-white */}
+            <h3 className="font-bold text-lg text-neutral-600 dark:text-white">
+              {titulo}
+            </h3>
+            <div className="flex space-x-2 items-center">
+              <div
+                className={`tooltip tooltip-bottom ${
+                  accion === "Ver"
+                    ? "hover:cursor-not-allowed hidden"
+                    : "hover:cursor-pointer"
+                }`}
+                data-tip="Guardar"
+              >
+                <button
+                  type="submit"
+                  id="btn_guardar"
+                  className="bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn btn-sm"
+                  onClick={onsubmit}
+                  disabled={isLoadingButton}
+                >
+                  {isLoadingButton ? (
+                    <FaSpinner className="animate-spin mx-2" />
+                  ) : (
+                    <>
+                      <Image
+                        src={iconos.guardar}
+                        alt="Guardar"
+                        className="w-5 h-5 md:w-6 md:h-6 block dark:hidden"
+                      />
+                      <Image
+                        src={iconos.guardar_w}
+                        alt="Guardar"
+                        className="w-5 h-5 md:w-6 md:h-6 hidden dark:block"
+                      />
+                    </>
+                  )}
+                  {isLoadingButton ? " Cargando..." : " Guardar"}
+                </button>
+              </div>
+              <button
+                type="button"
+                className="btn btn-sm btn-circle btn-ghost bg-base-200 dark:bg-[#1d232a] text-neutral-600 dark:text-white"
+                onClick={() => document.getElementById("my_modal_3").close()}
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+
           <fieldset id="fs_comentario">
-          <div className="container flex flex-col space-y-5">
-          <Inputs
-                dataType={"int"}
-                name={"id"}
-                tamañolabel={"w-2/6"}
-                className={"w-3/6 text-right"}
-                Titulo={"Numero: "}
-                type={"text"}
-                requerido={true}
-                errors={errors}
-                register={register}
-                message={"id Requerido"}
-                isDisabled={!isDisabled}
-              />
+            <div className="container flex flex-col space-y-5">
+              <fieldset
+                disabled={
+                  accion === "Alta" ||
+                  accion === "Editar" ||
+                  accion === "Eliminar" ||
+                  accion === "Ver"
+                }
+              >
+                <Inputs
+                  dataType={"int"}
+                  name={"numero"}
+                  tamañolabel={"w-2/6"}
+                  className={"w-3/6 text-right"}
+                  Titulo={"Numero: "}
+                  type={"text"}
+                  requerido={accion === "Alta" ? false : true}
+                  errors={errors}
+                  register={register}
+                  message={"id Requerido"}
+                  isDisabled={accion === "Alta" ? !isDisabled : isDisabled}
+                />
+              </fieldset>
               <Inputs
                 dataType={"string"}
                 name={"comentario_1"}
@@ -82,7 +141,7 @@ function ModalComentarios({
                 className={"rounded block grow"}
                 Titulo={"Comentario 1: "}
                 type={"text"}
-                requerido={true}
+                requerido={false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -98,7 +157,7 @@ function ModalComentarios({
                 className={"rounded block grow"}
                 Titulo={"Comentario 2: "}
                 type={"text"}
-                requerido={true}
+                requerido={false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -114,7 +173,7 @@ function ModalComentarios({
                 className={"rounded block grow"}
                 Titulo={"Comentario 3: "}
                 type={"text"}
-                requerido={true}
+                requerido={false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -126,40 +185,19 @@ function ModalComentarios({
               <Inputs
                 name={"generales"}
                 tamañolabel={"w-3/6"}
-                className={"fyo8m-select p-1.5 grow bg-[#ffffff] "}
+                className={"md:w-1/3 w-3/6"}
                 Titulo={"Generales:"}
-                type={"select"}
-                requerido={true}
+                type={"toogle"}
+                requerido={false}
                 errors={errors}
                 maxLenght={1}
                 register={register}
                 message={"General requerido"}
                 isDisabled={isDisabled}
-                arreglos={[
-                  { id: "S", descripcion: "Si" },
-                  { id: "N", descripcion: "No" },
-                ]}
+                generales={generales}
               />
             </div>
           </fieldset>
-          <div className=" modal-action">
-            <div
-              className={`tooltip tooltip-top my-5 ${
-                accion === "Ver"
-                  ? "hover:cursor-not-allowed hidden"
-                  : "hover:cursor-pointer"
-              }`}
-              data-tip="Guardar"
-            >
-              <button
-                type="submit"
-                id="btn_guardar"
-                className="bg-transparent over:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn"
-              >
-                <i className="fa-regular fa-floppy-disk mx-2"></i> Guardar
-              </button>
-            </div>
-          </div>
         </form>
       </div>
     </dialog>

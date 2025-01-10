@@ -1,5 +1,6 @@
-import { ReporteExcel } from "../../ReportesExcel";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
+import { formatDate, formatFecha, formatTime } from "../../globalfn";
 
 export const getProductos = async (token, baja) => {
   let url = "";
@@ -7,10 +8,11 @@ export const getProductos = async (token, baja) => {
     ? (url = `${process.env.DOMAIN_API}api/product/bajas`)
     : (url = `${process.env.DOMAIN_API}api/product`);
   const res = await fetch(url, {
-    headers: {
+    headers: new Headers({
       Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
       "Content-Type": "application/json",
-    },
+    }),
   });
   const resJson = await res.json();
   return resJson.data;
@@ -19,10 +21,11 @@ export const getProductos = async (token, baja) => {
 export const getLastProduct = async (token) => {
   let url = `${process.env.DOMAIN_API}api/product/last`;
   const res = await fetch(url, {
-    headers: {
+    headers: new Headers({
       Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
       "Content-Type": "application/json",
-    },
+    }),
   });
   const resJson = await res.json();
   return resJson.data;
@@ -38,10 +41,11 @@ export const filtroProductos = async (token, tipo, valor) => {
   let url = `${process.env.DOMAIN_API}api/product/filter/${tipo}/${valor}`;
   const res = await fetch(url, {
     method: "GET",
-    headers: {
+    headers: new Headers({
       Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
       "Content-Type": "application/json",
-    },
+    }),
   });
   const resJson = await res.json();
   return resJson.data;
@@ -61,17 +65,17 @@ export const guardarProductos = async (token, data, accion) => {
     } else {
       data.baja = "n";
     }
-    url = `${process.env.DOMAIN_API}api/product/update/${data.id}`;
+    url = `${process.env.DOMAIN_API}api/product/update/${data.numero}`;
     met = "put";
   }
   const res = await fetch(`${url}`, {
     method: met,
     body: JSON.stringify({
-      id: data.id,
+      numero: data.numero,
       descripcion: data.descripcion,
       costo: data.costo,
       frecuencia: data.frecuencia,
-      pro_recargo: data.pro_recargo,
+      por_recargo: data.por_recargo,
       aplicacion: data.aplicacion,
       iva: data.iva,
       cond_1: data.cond_1,
@@ -82,6 +86,7 @@ export const guardarProductos = async (token, data, accion) => {
     }),
     headers: new Headers({
       Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
       "Content-Type": "application/json",
     }),
   });
@@ -118,24 +123,28 @@ export const Imprimir = (configuracion) => {
   const { body } = configuracion;
   Enca1(newPDF);
   body.forEach((producto) => {
-    newPDF.ImpPosX(producto.id.toString(), 14, newPDF.tw_ren);
-    newPDF.ImpPosX(producto.descripcion.toString(), 28, newPDF.tw_ren);
-    newPDF.ImpPosX(producto.costo.toString(), 80, newPDF.tw_ren);
-    newPDF.ImpPosX(producto.frecuencia.toString(), 100, newPDF.tw_ren);
-    newPDF.ImpPosX(producto.pro_recargo.toString(), 130, newPDF.tw_ren);
-    newPDF.ImpPosX(producto.aplicacion.toString(), 150, newPDF.tw_ren);
-    newPDF.ImpPosX(producto.iva.toString(), 175, newPDF.tw_ren);
-    newPDF.ImpPosX(producto.cond_1.toString(), 190, newPDF.tw_ren);
+    newPDF.ImpPosX(producto.numero.toString(), 24, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(producto.descripcion.toString(), 28, newPDF.tw_ren, 25, "L");
+    newPDF.ImpPosX(producto.costo.toString(), 93, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(producto.frecuencia.toString(), 100, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(producto.por_recargo.toString(), 143, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(producto.aplicacion.toString(), 150, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(producto.iva.toString(), 183, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(producto.cond_1.toString(), 203, newPDF.tw_ren, 0, "R");
     const cam_precio = producto.cam_precio ? "Si" : "No";
-    newPDF.ImpPosX(cam_precio.toString(), 215, newPDF.tw_ren);
-    newPDF.ImpPosX(producto.ref.toString(), 250, newPDF.tw_ren);
+    newPDF.ImpPosX(cam_precio.toString(), 215, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(producto.ref.toString(), 250, newPDF.tw_ren, 0, "L");
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRenH) {
       newPDF.pageBreakH();
       Enca1(newPDF);
     }
   });
-  newPDF.guardaReporte("Productos");
+  const date = new Date()
+  const dateStr = formatDate(date)
+  const timeStr = formatTime(date)
+  // console.log("dateStr:",dateStr," timeStr:",timeStr)
+  newPDF.guardaReporte(`Productos_${dateStr.replaceAll("/","")}_${timeStr.replaceAll(":","")}`);
 };
 
 export const ImprimirExcel = (configuracion) => {
@@ -146,5 +155,8 @@ export const ImprimirExcel = (configuracion) => {
   newExcel.setColumnas(columns);
   newExcel.setCondition("cam_precio", (value) => value === 1);
   newExcel.addData(body);
-  newExcel.guardaReporte(nombre);
+  const date = new Date()
+  const dateStr = formatDate(date)
+  const timeStr = formatTime(date)  
+  newExcel.guardaReporte(`${nombre}_${dateStr.replaceAll("/","")}_${timeStr.replaceAll(":","")}`);
 };

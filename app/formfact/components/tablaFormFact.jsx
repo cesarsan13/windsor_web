@@ -1,7 +1,9 @@
 "use client";
 import Loading from "@/app/components/loading";
-import NoData from "@/app/components/noData";
+import NoData from "@/app/components/NoData";
 import React from "react";
+import Image from "next/image";
+import iconos from "@/app/utils/iconos";
 
 function TablaFormFact({
   formFactsFiltrados,
@@ -12,97 +14,117 @@ function TablaFormFact({
   setCurrentId,
   setShowSheet,
   fetchFacturasFormato,
+  session,
+  permiso_cambio,
+  permiso_baja,
 }) {
   const tableAction = (evt, formFact, accion) => {
     setFormFact(formFact);
     setAccion(accion);
-    setCurrentId(formFact.numero);
-    if (evt.target.attributes.name.value !== "btn_actualiza_formato") {
+    setCurrentId(formFact.numero_forma);
+    if (accion !== "ActualizaFormato") {
       showModal(true);
     } else {
-      fetchFacturasFormato(formFact.numero);
+      fetchFacturasFormato(formFact.numero_forma);
       setShowSheet(true);
     }
   };
+  const ActionButton = ({ tooltip, iconDark, iconLight, onClick, permission }) => {
+    if (!permission) return null;
+    return (
+      <th>
+        <div
+          className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
+          data-tip={tooltip}
+          onClick={onClick}
+        >
+          <Image src={iconDark} alt={tooltip} className="block dark:hidden" />
+          <Image src={iconLight} alt={tooltip} className="hidden dark:block" />
+        </div>
+      </th>
+    );
+  };
+  const ActionColumn = ({ description, permission }) => {
+    if (!permission) return null;
+    return (
+      <>
+        <th className="w-[5%] pt-[.10rem] pb-[.10rem]">{description}</th>
+      </>
+    )
+  }
 
   return !isLoading ? (
     <>
-      <div className="overflow-x-auto mt-3 h-[calc(55vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-3/4">
-        {formFactsFiltrados.length > 0 ? (
+      <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white  w-full lg:w-full">
+        {formFactsFiltrados && formFactsFiltrados.length > 0 ? (
           <table className="table table-xs table-zebra w-full">
-            <thead className="sticky top-0 bg-white dark:bg-[#1d232a]">
+            <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
               <tr>
-                <th></th>
+                <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
                 <td className="w-[60%]">Nombre</td>
                 <td className="w-[40%]">Longitud</td>
-                <th className="w-[calc(20%)]">Acciones</th>
+                < ActionColumn
+                description={"Ver"}
+                permission={true}
+              />
+              < ActionColumn
+                description={"Editar"}
+                permission={permiso_cambio}
+              />
+              < ActionColumn
+                description={"Eliminar"}
+                permission={permiso_baja}
+              />
+              < ActionColumn
+                description={"A. Formato"}
+                permission={permiso_cambio}
+              />
               </tr>
             </thead>
             <tbody>
               {formFactsFiltrados.map((item) => (
                 <tr key={item.numero} className="hover:cursor-pointer">
-                  <th className="text-left">{item.numero}</th>
-                  <td className="text-left w-50">{item.nombre}</td>
+                  <th className="text-left">{item.numero_forma}</th>
+                  <td className="text-left w-50">{item.nombre_forma}</td>
                   <td>{item.longitud}</td>
-                  <th>
-                    <div className="flex flex-row space-x-1">
-                      <div
-                        className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                        data-tip={`Ver ${item.numero}`}
-                        name="btn_ver"
-                        onClick={(evt) => tableAction(evt, item, `Ver`)}
-                      >
-                        <i
-                          className="fa-solid fa-eye"
-                          name="btn_ver"
-                        ></i>
-                      </div>
-                      <div
-                        className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                        data-tip={`Editar ${item.numero}`}
-                        name="btn_editar"
-                        onClick={(evt) => tableAction(evt, item, `Editar`)}
-                      >
-                        <i
-                          className="fa-solid fa-file"
-                          name="btn_editar"
-                        ></i>
-                      </div>
-                      <div
-                        className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                        data-tip={`Eliminar ${item.numero}`}
-                        name="btn_elimina"
-                        onClick={(evt) => tableAction(evt, item, "Eliminar")}
-                      >
-                        <i
-                          className="fa-solid fa-trash"
-                          name="btn_elimina"
-                        ></i>
-                      </div>
-                      <div
-                        className="hidden sm:hidden md:block lg:block kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white"
-                        data-tip={`Actualizar Formato`}
-                        name="btn_actualiza_formato"
-                        onClick={(evt) =>
-                          tableAction(evt, item, "ActualizaFormato")
-                        }
-                      >
-                        <i
-                          className="fa-regular fa-file-lines"
-                          name="btn_actualiza_formato"
-                        ></i>
-                      </div>
-
-                    </div>
-                  </th>
+                  <ActionButton
+                  tooltip="Ver"
+                  iconDark={iconos.ver}
+                  iconLight={iconos.ver_w}
+                  onClick={(evt) => tableAction(evt, item, "Ver")}
+                  permission={true}
+                />
+                <ActionButton
+                  tooltip="Editar"
+                  iconDark={iconos.editar}
+                  iconLight={iconos.editar_w}
+                  onClick={(evt) => tableAction(evt, item, "Editar")}
+                  permission={permiso_cambio}
+                />
+                <ActionButton
+                  tooltip="Eliminar"
+                  iconDark={iconos.eliminar}
+                  iconLight={iconos.eliminar_w}
+                  onClick={(evt) => tableAction(evt, item, "Eliminar")}
+                  permission={permiso_baja}
+                />
+                <ActionButton
+                  tooltip="A. Formato"
+                  iconDark={iconos.actualizar_formato}
+                  iconLight={iconos.actualizar_formato_w}
+                  onClick={(evt) => tableAction(evt, item, "ActualizaFormato")}
+                  permission={permiso_cambio}
+                />
                 </tr>
               ))}
             </tbody>
             <tfoot />
           </table>
-        ) : (
-          <NoData />
-        )}
+        ) : formFactsFiltrados != null &&
+            session &&
+            formFactsFiltrados.length === 0 ? (
+              <NoData></NoData>
+            ):(<Loading></Loading>)}
       </div>
     </>
   ) : (

@@ -1,14 +1,30 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { format_Fecha_String, formatTime } from "../../globalfn";
+
+export const getDataSex = async (token) => {
+  let url = "";
+  url = `${process.env.DOMAIN_API}api/students/datasex`;
+  const res = await fetch(url, {
+    headers: new Headers({
+      Authorization: `Bearer ${token}`,
+      xescuela: localStorage.getItem("xescuela"),
+    }),
+  });
+  const resJson = await res.json();
+  return resJson.data;
+};
+
 export const getAlumnos = async (token, baja) => {
   let url = "";
   baja
     ? (url = `${process.env.DOMAIN_API}api/students/bajas`)
     : (url = `${process.env.DOMAIN_API}api/students/`);
   const res = await fetch(url, {
-    headers: {
+    headers: new Headers({
       Authorization: `Bearer ${token}`,
-    },
+      xescuela: localStorage.getItem("xescuela"),
+    }),
   });
   const resJson = await res.json();
   return resJson.data;
@@ -17,9 +33,10 @@ export const getAlumnos = async (token, baja) => {
 export const getFotoAlumno = async (token, imagen) => {
   let url = `${process.env.DOMAIN_API}api/students/imagen/${imagen}`;
   const res = await fetch(url, {
-    headers: {
+    headers: new Headers({
       Authorization: `Bearer ${token}`,
-    },
+      xescuela: localStorage.getItem("xescuela"),
+    }),
   });
   const blob = await res.blob();
   return URL.createObjectURL(blob);
@@ -28,16 +45,17 @@ export const getFotoAlumno = async (token, imagen) => {
 export const getLastAlumnos = async (token) => {
   let url = `${process.env.DOMAIN_API}api/students/last`;
   const res = await fetch(url, {
-    headers: {
+    headers: new Headers ({
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
-    },
+      xescuela: localStorage.getItem("xescuela"),
+    }),
   });
   const resJson = await res.json();
   return resJson.data;
 };
 
-export const guardarAlumnos = async (token, formData, accion, id) => {
+export const guardarAlumnos = async (token, formData, accion, numero) => {
   let url = "";
   if (accion === "Alta") {
     url = `${process.env.DOMAIN_API}api/students/save`;
@@ -45,17 +63,21 @@ export const guardarAlumnos = async (token, formData, accion, id) => {
   }
   if (accion === "Eliminar" || accion === "Editar") {
     if (accion === "Eliminar") {
+      let fecha_hoy = new Date();
       formData.append("baja", "*");
+      formData.append("fecha_baja", format_Fecha_String(fecha_hoy.toISOString().split("T")[0]));
     } else {
       formData.append("baja", "n");
+      formData.append("fecha_baja", " ");
     }
-    url = `${process.env.DOMAIN_API}api/students/update/${id}`;
+    url = `${process.env.DOMAIN_API}api/students/update/${numero}`;
   }
   const res = await fetch(`${url}`, {
     method: "POST",
     body: formData,
     headers: new Headers({
       Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
     }),
   });
   const resJson = await res.json();
@@ -88,47 +110,56 @@ export const Imprimir = (configuracion) => {
   const { body } = configuracion;
   Enca1(newPDF);
   body.forEach((alumnos) => {
-    const id = alumnos.id.toString().substring(0, 25);
-    const nombre = `${alumnos.nombre.toString()} ${alumnos.a_paterno} ${
-      alumnos.a_materno
-    }`.substring(0, 20);
-    const direccion = alumnos.direccion.toString().substring(0, 12);
-    const colonia = alumnos.colonia.toString().substring(0, 20);
-    const fecha_nac = alumnos.fecha_nac.toString().substring(0, 15);
-    const fecha_inscripcion = alumnos.fecha_inscripcion
-      .toString()
-      .substring(0, 15);
-    const telefono = alumnos.telefono_1.toString().substring(0, 15);
-    newPDF.ImpPosX(alumnos.id.toString(), 10, newPDF.tw_ren);
+    newPDF.ImpPosX(alumnos.numero.toString(), 19, newPDF.tw_ren, 0, "R");
     newPDF.ImpPosX(
       alumnos.nombre.toString().substring(0, 20),
       25,
-      newPDF.tw_ren
+      newPDF.tw_ren,
+      0,
+      "L"
     );
     newPDF.ImpPosX(
       alumnos.direccion.toString().substring(0, 12),
       90,
-      newPDF.tw_ren
+      newPDF.tw_ren,
+      0,
+      "L"
     );
     newPDF.ImpPosX(
       alumnos.colonia.toString().substring(0, 20),
       120,
-      newPDF.tw_ren
+      newPDF.tw_ren,
+      0,
+      "L"
     );
     newPDF.ImpPosX(
-      alumnos.fecha_nac.toString().substring(0, 15),
+      format_Fecha_String(alumnos.fecha_nac.toString().substring(0, 15)),
       175,
-      newPDF.tw_ren
+      newPDF.tw_ren,
+      0,
+      "L"
     );
-    newPDF.ImpPosX(alumnos.fecha_inscripcion.toString(), 200, newPDF.tw_ren);
-    newPDF.ImpPosX(alumnos.telefono_1.toString(), 230, newPDF.tw_ren);
+    newPDF.ImpPosX(
+      format_Fecha_String(alumnos.fecha_inscripcion.toString()),
+      200,
+      newPDF.tw_ren,
+      0,
+      "L"
+    );
+    newPDF.ImpPosX(alumnos.telefono1.toString(), 254, newPDF.tw_ren, 0, "R");
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRenH) {
       newPDF.pageBreakH();
       Enca1(newPDF);
     }
   });
-  newPDF.guardaReporte("Alumnos");
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+  newPDF.guardaReporte(`Alumnos_${dateStr}${timeStr}`);
 };
 
 export const ImprimirExcel = (configuracion) => {
@@ -139,4 +170,33 @@ export const ImprimirExcel = (configuracion) => {
   newExcel.setColumnas(columns);
   newExcel.addData(body);
   newExcel.guardaReporte(nombre);
+};
+
+export const getTab = (nombre_campo) => {
+  switch (nombre_campo) {
+    case "a_materno": // campo en el tab 'Alumno'
+    case "a_paterno":
+    case "a_nombre":
+    case "estatus":
+    case "fecha_nac":
+    case "sexo":
+    case "escuela":
+    case "telefono1":
+    case "celular":
+      return 1;
+      // setActiveTab(1);
+      break;
+    case "direccion": // campo en el tab 'Generales'
+    case "colonia":
+    case "ciudad":
+    case "estado":
+    case "cp":
+    case "email":
+      return 2;
+      break;
+    case "rfc_factura":
+      return 7;
+    default:
+      break;
+  }
 };
