@@ -132,7 +132,7 @@ function ModalAsignaturas({
                   dataType={"int"}
                   name={"numero"}
                   tamañolabel={"w-2/4"}
-                  className={"w-3/6  text-right uppercase"}
+                  className={"w-3/6 text-right uppercase"}
                   Titulo={"Numero: "}
                   type={"inputNum"}
                   requerido={accion === "Alta" ? false : true}

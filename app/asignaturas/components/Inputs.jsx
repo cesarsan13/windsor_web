@@ -30,7 +30,7 @@ function Inputs({
           <select
             name={name}
             id={name}
-            className={`text-black dark:text-white ${
+            className={`text-black ${
               isDisabled
                 ? "bg-gray-200 text-gray-500 cursor-not-allowed"
                 : "bg-white"
