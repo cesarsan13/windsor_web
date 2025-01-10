@@ -28,7 +28,7 @@ function Register() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(`${process.env.DOMAIN_API}api/basesDatos`);
+      const res = await fetch(`${process.env.DOMAIN_API_PROYECTOS}api/basesDatos`);
       const resJson = await res.json();
       setEmpresas(resJson.data);
     };
