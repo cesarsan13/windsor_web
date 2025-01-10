@@ -8,9 +8,10 @@ export const guardaRegistro = async (data) => {
       nombre: data.nombre,
       email: data.email,
     }),
-    headers: {
+    headers: new Headers({
       "Content-Type": "application/json",
-    },
+      xescuela: localStorage.getItem("xescuela"),
+    }),
   });
   const resJson = await res.json();
   return resJson;

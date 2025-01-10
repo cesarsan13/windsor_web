@@ -14,10 +14,11 @@ export const getRepDosSel = async (token, horario1, horario2, orden) => {
       horario2: horario2,
       orden: orden,
     }),
-    headers: {
+    headers: new Headers({
       Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
       "Content-Type": "application/json",
-    },
+    }),
   });
 
   const resJson = await res.json();

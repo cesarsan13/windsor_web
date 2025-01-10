@@ -158,7 +158,7 @@ function Page() {
         showModal(true)
     }
     const onSubmitModal = handleSubmit(async (data) => {
-        console.log("FormData: ",data);
+        // console.log("FormData: ",data);
         event.preventDefault
         setisLoadingButton(true);
         let res = null

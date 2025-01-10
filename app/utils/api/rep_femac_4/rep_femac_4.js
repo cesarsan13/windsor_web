@@ -8,6 +8,7 @@ export const getFotoAlumno = async (token, imagen) => {
   const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const blob = await res.blob();
@@ -21,6 +22,7 @@ export const getCredencialFormato = async (token, id) => {
     const res = await fetch(url, {
       headers: {
         Authorization: `Bearer ${token}`,
+        xescuela: localStorage.getItem("xescuela"),
       },
     });
     const resJson = await res.json();
@@ -35,6 +37,7 @@ export const getCredencialFormato = async (token, id) => {
       body: formData,
       headers: new Headers({
         Authorization: "Bearer " + token,
+        xescuela: localStorage.getItem("xescuela"),
       }),
     });
     const resJson = await res.json();

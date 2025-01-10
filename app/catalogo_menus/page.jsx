@@ -162,7 +162,7 @@ function Menus() {
     res = await guardarMenus(session.user.token, accion, data);
     if (res.status) {
       if (accion === "Alta") {
-        console.log("menus alaverga", data);
+        // console.log("menus alaverga", data);
         const nuevoMenu = { currentID, ...data };
         setMenus([...menus, nuevoMenu]);
         if (!bajas) {

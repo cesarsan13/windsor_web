@@ -18,10 +18,10 @@ export const getCobranzaDiaria = async (
       recibo: recibo,
       alumno: alumno,
     }),
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
+    headers: new Headers({
+      Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
+    }),
   });
   const resJson = await res.json();
   return resJson.data;
@@ -36,10 +36,10 @@ export const guardarCobranzaDiaria = async (token, data) => {
       importe: data.importe,
       cue_banco: data.cue_banco,
     }),
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
+    headers: new Headers({
+      Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
+    }),
   });
   const resJson = await res.json();
   return resJson;

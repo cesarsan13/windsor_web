@@ -12,6 +12,13 @@ import iconos from "@/app/utils/iconos";
 function Register() {
   const router = useRouter();
   const [error, setError] = useState(null);
+  const [empresas, setEmpresas] = useState([]);
+
+  const handleChange = (evt) => {
+    evt.preventDefault();
+    const { value } = evt.target;
+    localStorage.setItem("xescuela", value);
+  };
 
   const {
     register,
@@ -19,13 +26,18 @@ function Register() {
     formState: { errors },
   } = useForm();
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch(`${process.env.DOMAIN_API_PROYECTOS}api/basesDatos`);
+      const resJson = await res.json();
+      setEmpresas(resJson.data);
+    };
+    fetchData();
+  }, []);
 
   const onSubmit = handleSubmit(async (data) => {
-
     event.preventDefault();
-
     const res = await guardaRegistro(data);
-
     showSwal(res.alert_title, res.alert_text, res.alert_icon);
     if (!res.status) {
       setError(res.alert_text);
@@ -65,6 +77,17 @@ function Register() {
           Registro
         </h1>
         <Inputs
+          titulo={"Escuela"}
+          name={"xEscuela"}
+          type={"select"}
+          opciones={empresas.filter((arreglo) => arreglo.proyecto === 'control_escolar')}
+          register={register}
+          errors={errors}
+          requerido={true}
+          message={"Seleccione una Escuela"}
+          handleChange={handleChange}
+        />
+        <Inputs
           titulo={"Nombre Completo"}
           name={"nombre"}
           id={"nombre"}
@@ -94,12 +117,12 @@ function Register() {
           register={register}
           type={"text"}
         />
-        <button className="w-full max-w-md bg-blue-700 text-white p-3 rounded-lg mt-6 hover:bg-blue-900">
+        <button className="w-full bg-blue-700 text-white p-3 rounded-lg mt-6 hover:bg-blue-900">
           Crear cuenta
         </button>
         <button
           type="button"
-          className="w-full max-w-md bg-red-700 text-white p-3 rounded-lg mt-6 hover:bg-red-900"
+          className="w-full md:w1/3 bg-red-700 text-white p-3 rounded-lg mt-6 hover:bg-red-900"
           onClick={() => router.push("./login")}
         >
           Regresar

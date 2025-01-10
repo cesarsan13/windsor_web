@@ -8,6 +8,7 @@ export const getMateriaBuscar = async (token, numero) => {
         headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
+            xescuela: localStorage.getItem("xescuela"),
         },
     });
     const resJson = await res.json();
@@ -24,6 +25,7 @@ export const getMateriaEvaluacion = async (token, numero) => {
         headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
+            xescuela: localStorage.getItem("xescuela"),
         },
     });
     const resJson = await res.json();

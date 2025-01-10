@@ -45,7 +45,7 @@ function RepBecas() {
       const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado)
       setPermissions(permisos)
       const data = await getBecas(token, horario1, horario2, sOrdenar);
-      console.log(data);
+      // console.log(data);
       setFormaBecas(data.data);
       setisLoading(false);
     }
@@ -98,7 +98,7 @@ function RepBecas() {
 
   const handleVerClick = () => {
     setAnimateLoading(true)
-    console.log(formaBecas);
+    // console.log(formaBecas);
     if (horario1.numero === undefined && horario2.numero == undefined) {
       showSwal("Oppss!", "Para imprimir, mínimo debe estar seleccionado un Alumno", "error");
       setAnimateLoading(false)
@@ -134,7 +134,7 @@ function RepBecas() {
         }
       };
       Enca1(reporte);
-      console.log(body);
+      // console.log(body);
       body.forEach((reporte1) => {
         reporte.ImpPosX(reporte1.numero.toString(), 15, reporte.tw_ren);
         reporte.ImpPosX(reporte1.alumno.toString(), 25, reporte.tw_ren);

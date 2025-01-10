@@ -11,26 +11,29 @@ export const getCajeros = async (token, baja) => {
     : (url = `${process.env.DOMAIN_API}api/Cajero/`);
 
   const res = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: new Headers({
+      Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
+    }),
   });
   const resJson = await res.json();
   return resJson.data;
 };
 export const siguiente = async (token) => {
   const res = await fetch(`${process.env.DOMAIN_API}api/Cajero/siguiente`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: new Headers({
+      Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
+    }),
   });
   const resJson = await res.json();
   return resJson.data;
 };
 export const guardaCajero = async (token, data, accion) => {
+  console.log(`Data a enviar: `,data);
     let url_api = "";
     if (accion === "Alta") {
-      url_api = `${process.env.DOMAIN_API}api/Cajero/`;
+      url_api = `${process.env.DOMAIN_API}api/Cajero/store`;
       data.baja = "";
     }
     if (accion === "Eliminar" || accion === "Editar") {
@@ -39,26 +42,28 @@ export const guardaCajero = async (token, data, accion) => {
       } else {
         data.baja = "";
       }
-      url_api = `${process.env.DOMAIN_API}api/Cajero/UpdateCajeros/`;
+      url_api = `${process.env.DOMAIN_API}api/Cajero/UpdateCajeros`;
     }
-  
+   let data_env = JSON.stringify({
+    numero: data.numero,
+    nombre: data.nombre,
+    direccion: data.direccion,
+    colonia: data.colonia,
+    estado: data.estado,
+    telefono: data.telefono,
+    fax: data.fax,
+    mail: data.mail,
+    baja: data.baja,
+    // fec_cambio: data.fec_cambio,
+    clave_cajero: data.clave_cajero
+  });
+  // console.log(`Data a enviar: `,data_env);
     const res = await fetch(`${url_api}`, {
       method: "post",
-      body: JSON.stringify({
-        numero: data.numero,
-        nombre: data.nombre,
-        direccion: data.direccion,
-        colonia: data.colonia,
-        estado: data.estado,
-        telefono: data.telefono,
-        fax: data.fax,
-        mail: data.mail,
-        baja: data.baja,
-        fec_cambio: data.fec_cambio,
-        clave_cajero: data.clave_cajero,
-      }),
+      body:data_env,
       headers: new Headers({
         Authorization: "Bearer " + token,
+        xescuela: localStorage.getItem("xescuela"),
         "Content-Type": "application/json",
       }),
     });

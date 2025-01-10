@@ -6,6 +6,7 @@ export const getEstadisticasTotales = async (token) => {
   const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -17,6 +18,7 @@ export const getCumpleañosMes = async (token) => {
   const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
+      xescuela: localStorage.getItem("xescuela"),
     },
   });
   const resJson = await res.json();
@@ -28,7 +30,8 @@ export const getConsultasInscripcion = async (token) => {
   const res = await fetch(url, {
       headers: {
           Authorization: "Bearer " + token,
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          xescuela: localStorage.getItem("xescuela"),
       }
   });
   const resJson = await res.json();
@@ -43,7 +46,8 @@ export const getConsultasInsXMes = async (token) => {
       // body: formData,
       headers: {
           Authorization: "Bearer " + token,
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          xescuela: localStorage.getItem("xescuela"),
       }
   });
   const resJson = await res.json();

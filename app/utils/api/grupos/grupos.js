@@ -6,6 +6,7 @@ export const getGrupos = async (token, baja) => {
     const res = await fetch(url, {
         headers: {
             Authorization: `Bearer ${token}`,
+            xescuela: localStorage.getItem("xescuela"),
         },
     });
     const resJson = await res.json();

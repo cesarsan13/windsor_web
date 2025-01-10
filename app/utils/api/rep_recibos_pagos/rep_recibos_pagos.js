@@ -15,6 +15,7 @@ export const getCobranza = async (token, fecha, alumnoIni, alumnoFin, sinDeudore
         headers: {
             Authorization: "Bearer " + token,
             "Content-Type": "application/json",
+            xescuela: localStorage.getItem("xescuela"),
         },
     });
     const resJson = await res.json();
