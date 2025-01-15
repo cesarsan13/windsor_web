@@ -48,6 +48,7 @@ function Menu({ vertical, toogle }) {
       return newState;
     });
   };
+  
 
   const closeMenus = () => {
     setIsOpen(
