@@ -17,7 +17,7 @@ function Menu({ vertical, toogle }) {
     const token = localStorage.getItem("puntoMenu");
     if (!token) {
       console.warn("Variable 'myVariable' no encontrada en localStorage. Redirigiendo al login.");
-      router.push("/login");
+      router.push("/");
     }
   }, []);
 
