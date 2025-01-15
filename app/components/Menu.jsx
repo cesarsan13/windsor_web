@@ -84,7 +84,7 @@ function Menu({ vertical, toogle }) {
   }, []);
 
   const groupedMenus = menus.reduce((acc, menu) => {
-    const { user } = session;
+    const { user } = session || {};
     if (!acc[menu.menu]) acc[menu.menu] = [];
 
     if (!user.es_admin && menu.menu === "Utilerías") {
