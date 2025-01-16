@@ -28,7 +28,7 @@ function Acciones({ Buscar, Alta, home, Ver, procesarDatos, animateLoading, perm
       alt: "Vista previa",
       tooltipTitle: "Vista previa",
       onClick: Ver,
-      permission: permiso_imprime,
+      permission: permiso_imprime, 
     },
     {
       srcLight: iconos.procesa_w,

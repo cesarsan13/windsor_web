@@ -19,7 +19,7 @@ function TablaProcesaDatos({
                             {itemHeaderTable()}
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody> 
                         {datosFiltrados.map((item) => (
                             itemDataTable(item) 
                         ))}

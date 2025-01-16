@@ -154,7 +154,7 @@ export const Imprimir = (configuracion) => {
       newPDF.pageBreakH();
       Enca1(newPDF);
     }
-  });
+  }); 
   const date = new Date()
   const dateStr = formatDate(date)     
   const timeStr = formatTime(date)
