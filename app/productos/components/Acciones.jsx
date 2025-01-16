@@ -24,7 +24,7 @@ function Acciones({ Buscar, Alta, home, Ver, animateLoading, permiso_alta, permi
     },
     {
       srcLight: iconos.vistaPrevia_w,
-      srcDark: iconos.vistaPrevia,
+      srcDark: iconos.vistaPrevia, 
       alt: "Vista previa",
       tooltipTitle: "Vista previa",
       onClick: Ver,

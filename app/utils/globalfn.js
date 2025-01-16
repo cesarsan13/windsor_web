@@ -5,7 +5,7 @@ export const debounce = (func, delay) => {
       clearTimeout(timeoutId);
     }
     timeoutId = setTimeout(() => {
-      func(...args);
+      func(...args); 
     }, delay);
   };
 };
