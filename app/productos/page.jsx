@@ -46,6 +46,10 @@ function Productos() {
   const [animateLoading, setAnimateLoading] = useState(false);
   const [permissions, setPermissions] = useState({});
   const productosRef = useRef(productos);
+  //useState para los datos que se trae del excel
+  const [dataJson, setDataJson] = useState([]);
+  const [reload_page, setReloadPage] = useState(false)
+  // console.log(dataJson);
 
   useEffect(() => {
     productosRef.current = productos;

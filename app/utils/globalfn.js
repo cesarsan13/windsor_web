@@ -78,7 +78,7 @@ export const soloDecimales = (event) => {
   }
 };
 
-const isControlKey = (key) => {
+ const isControlKey = (key) => {
   // Permitir teclas de control como retroceso, tabulación, flechas, etc.
   return (
     key === "Backspace" ||
