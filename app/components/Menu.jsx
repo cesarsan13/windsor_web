@@ -12,7 +12,7 @@ function Menu({ vertical, toogle }) {
   const menuRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
-
+//
   useEffect(() => {
     try {
       if (typeof window !== "undefined" && window.localStorage) {
