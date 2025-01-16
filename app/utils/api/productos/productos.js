@@ -51,6 +51,21 @@ export const filtroProductos = async (token, tipo, valor) => {
   return resJson.data;
 };
 
+export const storeBatchProduct = async (token, data) => {
+  let url = `${process.env.DOMAIN_API}api/product/batch`;
+  const res = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: new Headers({
+      Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
+      "Content-Type": "application/json",
+    }),
+  });
+  const resJson = await res.json();
+  return resJson.data;
+};
+
 export const guardarProductos = async (token, data, accion) => {
   let url = "";
   let met = "";
@@ -144,7 +159,7 @@ export const Imprimir = (configuracion) => {
   const dateStr = formatDate(date)
   const timeStr = formatTime(date)
   // console.log("dateStr:",dateStr," timeStr:",timeStr)
-  newPDF.guardaReporte(`Productos_${dateStr.replaceAll("/","")}_${timeStr.replaceAll(":","")}`);
+  newPDF.guardaReporte(`Productos_${dateStr.replaceAll("/", "")}_${timeStr.replaceAll(":", "")}`);
 };
 
 export const ImprimirExcel = (configuracion) => {
@@ -157,6 +172,6 @@ export const ImprimirExcel = (configuracion) => {
   newExcel.addData(body);
   const date = new Date()
   const dateStr = formatDate(date)
-  const timeStr = formatTime(date)  
-  newExcel.guardaReporte(`${nombre}_${dateStr.replaceAll("/","")}_${timeStr.replaceAll(":","")}`);
+  const timeStr = formatTime(date)
+  newExcel.guardaReporte(`${nombre}_${dateStr.replaceAll("/", "")}_${timeStr.replaceAll(":", "")}`);
 };
