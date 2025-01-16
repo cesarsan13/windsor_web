@@ -3,18 +3,20 @@ import React, { useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal } from "../utils/alerts";
 import ModalProductos from "@/app/productos/components/modalProductos";
+import ModalProcesarDatos from "@/app/components/modalProcesarDatos";
 import TablaProductos from "@/app/productos/components/tablaProductos";
 import Busqueda from "@/app/productos/components/Busqueda";
 import Acciones from "@/app/productos/components/Acciones";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { useForm } from "react-hook-form";
-import { debounce, permissionsComponents } from "@/app/utils/globalfn";
+import { chunkArray, debounce, permissionsComponents } from "@/app/utils/globalfn";
 import {
   getProductos,
   guardarProductos,
   getLastProduct,
   Imprimir,
   ImprimirExcel,
+  storeBatchProduct,
 } from "@/app/utils/api/productos/productos";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -45,7 +47,7 @@ function Productos() {
   const [num, setNum] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
   const [permissions, setPermissions] = useState({});
-  const productosRef = useRef(productos);
+  const productosRef = useRef(productos); 
   //useState para los datos que se trae del excel
   const [dataJson, setDataJson] = useState([]); 
   const [reload_page, setReloadPage] = useState(false)
@@ -54,6 +56,7 @@ function Productos() {
   useEffect(() => { 
     productosRef.current = productos;
   }, [productos]);
+
   const Buscar = useCallback(() => {
     const { tb_id, tb_desc } = busqueda;
     if (tb_id === "" && tb_desc === "") {
@@ -66,9 +69,9 @@ function Productos() {
         : true;
       const coincideDescripcion = tb_desc
         ? producto["descripcion"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_desc.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_desc.toLowerCase())
         : true;
       return coincideId && coincideDescripcion;
     });
@@ -107,7 +110,7 @@ function Productos() {
       return;
     }
     fetchData();
-  }, [session, status, bajas]);
+  }, [session, status, bajas, reload_page]);
 
   const {
     register,
@@ -130,6 +133,7 @@ function Productos() {
       ref: producto.ref,
     },
   });
+
   useEffect(() => {
     reset({
       numero: producto.numero,
@@ -178,9 +182,9 @@ function Productos() {
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);
-
     document.getElementById("descripcion").focus();
   };
+
   const Elimina_Comas = (data) => {
     const convertir = (producto) => {
       const productoConvertido = { ...producto };
@@ -210,7 +214,6 @@ function Productos() {
     event.preventDefault;
     setisLoadingButton(true);
     const dataj = JSON.stringify(data);
-    // data.numero = currentID;
     let res = null;
     if (accion === "Eliminar") {
       showModal(false);
@@ -271,6 +274,7 @@ function Productos() {
     }
     setisLoadingButton(false);
   });
+
   const formatValidationErrors = (errors) => {
     let errorMessages = [];
     for (const field in errors) {
@@ -283,6 +287,7 @@ function Productos() {
     }
     return errorMessages.join("\n");
   };
+
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
     setBusqueda({ tb_id: "", tb_desc: "" });
@@ -324,19 +329,33 @@ function Productos() {
     };
     ImprimirExcel(configuracion);
   };
+
+  const procesarDatos = () => {
+    showModalProcesa(true);
+  }
+
   const showModal = (show) => {
     show
       ? document.getElementById("my_modal_3").showModal()
       : document.getElementById("my_modal_3").close();
   };
+
+  const showModalProcesa = (show) => {
+    show
+      ? document.getElementById("my_modal_4").showModal()
+      : document.getElementById("my_modal_4").close();
+  };
+
   const showModalVista = (show) => {
     show
       ? document.getElementById("modalVProducto").showModal()
       : document.getElementById("modalVProducto").close();
   };
+
   const home = () => {
     router.push("/");
   };
+
   const handleBusquedaChange = (event) => {
     event.preventDefault;
     setBusqueda((estadoPrevio) => ({
@@ -344,6 +363,7 @@ function Productos() {
       [event.target.id]: event.target.value,
     }));
   };
+
   const handleVerClick = () => {
     setAnimateLoading(true);
     const configuracion = {
@@ -428,11 +448,13 @@ function Productos() {
       setAnimateLoading(false);
     }, 500);
   };
+
   const CerrarView = () => {
     setPdfPreview(false);
     setPdfData("");
     document.getElementById("modalVProducto").close();
   };
+
   const tableAction = (acc, id) => {
     const producto = productos.find((producto) => producto.numero === id);
     if (producto) {
@@ -444,6 +466,110 @@ function Productos() {
       showModal(true);
     }
   };
+
+  const buttonProcess = async () => {
+    event.preventDefault();
+    setisLoadingButton(true);
+    const { token } = session.user;
+    const chunks = chunkArray(dataJson, 20);
+    for (let chunk of chunks) {
+      await storeBatchProduct(token, chunk)
+    }
+    setDataJson([]);
+    showModalProcesa(false);
+    showSwal("Éxito", "Los datos se han subido correctamente.", "success");
+    setReloadPage(!reload_page);
+    setisLoadingButton(false);
+  };
+
+  const handleFileChange = async (e) => {
+    const confirmed = await confirmSwal(
+      "¿Desea Continuar?",
+      "Asegúrate de que las columnas del archivo de excel coincidan exactamente con las columnas de la tabla en la base de datos.",
+      "warning",
+      "Aceptar",
+      "Cancelar",
+      "my_modal_4"
+    );
+    if (!confirmed) {
+      return;
+    }
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        const convertedData = jsonData.map(item => ({
+          numero: parseInt(item.Numero || 0),
+          descripcion: (item.Descripcion && String(item.Descripcion).trim() !== "") ? String(item.Descripcion).slice(0, 255) : "N/A",
+          costo: parseFloat(item.Costo || 0),
+          frecuencia: (item.Frecuencia && String(item.Frecuencia).trim() !== "") ? String(item.Frecuencia).slice(0, 20) : "N/A",
+          por_recargo: parseFloat(item.Por_Recargo || 0),
+          aplicacion: (item.Aplicacion && String(item.Aplicacion).trim() !== "") ? String(item.Aplicacion).slice(0, 25) : "N/A",
+          iva: parseFloat(item.IVA || 0),
+          cond_1: parseInt(item.Cond_1 || 0),
+          cam_precio: item.Cam_Precio ? 1 : 0,
+          ref: (item.Ref && item.Ref.trim() !== "") ? String(item.Ref).slice(0, 20) : "N/A",
+          baja: (item.Baja && item.Baja.trim() !== "") ? String(item.Baja).slice(0, 1) : "n",
+        }));
+        setDataJson(convertedData);
+      };
+      reader.readAsArrayBuffer(selectedFile);
+    }
+  };
+
+  const itemHeaderTable = () => {
+    return (
+      <>
+        <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
+        <td className="w-[40%]">Descripcion</td>
+        <td className="w-[15%]">Costo</td>
+        <td className="w-[15%]">Frecuencia</td>
+        <td className="w-[10%]">Recargo</td>
+        <td className="w-[15%]">Aplicacion</td>
+        <td className="w-[10%]">IVA</td>
+        <td className="w-[10%]">Condición</td>
+        <td className="w-[10%]">Cambia Precio</td>
+        <td className="w-[10%]">Referencia</td>
+        <td className="w-[10%]">Baja</td>
+      </>
+    );
+  };
+
+  const itemDataTable = (item) => {
+    return (
+      <>
+        <tr key={item.numero} className="hover:cursor-pointer">
+          <th
+            className={
+              typeof item.numero === "number"
+                ? "text-left"
+                : "text-right"
+            }
+          >
+            {item.numero}
+          </th>
+          <td className="w-[40%] max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap pt-[.10rem] pb-[.10rem]">
+            {item.descripcion}
+          </td>
+          <td className="text-right">{formatNumber(item.costo)}</td>
+          <td className="text-left">{item.frecuencia}</td>
+          <td className="text-right">{item.por_recargo}</td>
+          <td className="text-right">{item.aplicacion}</td>
+          <td className="text-right">{item.iva}</td>
+          <td className="text-right">{item.cond_1}</td>
+          <td className="text-right">{item.cam_precio}</td>
+          <td className="text-left">{item.ref}</td>
+          <td className="text-left">{item.baja}</td>
+        </tr>
+      </>
+    );
+  };
+
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -468,6 +594,21 @@ function Productos() {
         productos={productos}
         isLoadingButton={isLoadingButton}
       />
+      <ModalProcesarDatos
+        id_modal={"my_modal_4"}
+        session={session}
+        buttonProcess={buttonProcess}
+        isLoadingButton={isLoadingButton}
+        isLoading={isLoading}
+        title={"Procesar Datos desde Excel."}
+        setDataJson={setDataJson}
+        dataJson={dataJson}
+        handleFileChange={handleFileChange}
+        itemHeaderTable={itemHeaderTable}
+        itemDataTable={itemDataTable}
+        //clase para mover al tamaño del modal a preferencia (max-w-4xl)
+        classModal={"modal-box w-full max-w-4xl h-full bg-base-200"}
+      />
       <VistaPrevia
         id={"modalVProducto"}
         titulo={"Vista Previa de Productos"}
@@ -486,6 +627,7 @@ function Productos() {
                 Alta={Alta}
                 home={home}
                 Ver={handleVerClick}
+                procesarDatos={procesarDatos}
                 animateLoading={animateLoading}
                 permiso_alta={permissions.altas}
                 permiso_imprime={permissions.impresion}
