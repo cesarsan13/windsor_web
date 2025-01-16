@@ -8,7 +8,7 @@ function ModalProcesarDatos({
     id_modal, 
     session,
     buttonProcess,
-    isLoadingButton,
+    isLoadingButton, 
     isLoading, 
     title,
     dataJson,

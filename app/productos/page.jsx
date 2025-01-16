@@ -51,7 +51,7 @@ function Productos() {
   const [reload_page, setReloadPage] = useState(false)
   // console.log(dataJson);
 
-  useEffect(() => {
+  useEffect(() => { 
     productosRef.current = productos;
   }, [productos]);
   const Buscar = useCallback(() => {

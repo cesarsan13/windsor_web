@@ -9,7 +9,7 @@ export const debounce = (func, delay) => {
     }, delay);
   };
 };
-
+ 
 export const soloEnteros = (event) => {
   const key = event.key;
   const keyCode = event.keyCode;
