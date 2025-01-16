@@ -12,14 +12,36 @@ function Menu({ vertical, toogle }) {
   const menuRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
-
+//
   useEffect(() => {
-    const token = localStorage.getItem("puntoMenu");
-    if (!token) {
-      console.warn("Variable 'myVariable' no encontrada en localStorage. Redirigiendo al login.");
+    try {
+      if (typeof window !== "undefined" && window.localStorage) {
+        const token = localStorage.getItem("puntoMenu");
+        if (!token) {
+          console.warn(
+            "Variable 'puntoMenu' no encontrada en localStorage. Redirigiendo al login."
+          );
+          router.push("/");
+        }
+      } else {
+        console.error("localStorage no está disponible en este navegador.");
+        router.push("/");
+      }
+    } catch (error) {
+      console.error(
+        "Error al acceder a localStorage. Posiblemente deshabilitado o no soportado:",
+        error
+      );
       router.push("/");
     }
-  }, []);
+  }, [router]);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      console.log("Sesión iniciada. Redirigiendo al home...");
+      router.push("/");
+    }
+  }, [status, router]);
 
   useEffect(() => {
     if (status === "loading" || !session) return;
@@ -48,7 +70,6 @@ function Menu({ vertical, toogle }) {
       return newState;
     });
   };
-  
 
   const closeMenus = () => {
     setIsOpen(
