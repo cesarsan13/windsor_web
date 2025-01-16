@@ -47,7 +47,7 @@ function Productos() {
   const [num, setNum] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
   const [permissions, setPermissions] = useState({});
-  const productosRef = useRef(productos);
+  const productosRef = useRef(productos); 
   //useState para los datos que se trae del excel
   const [dataJson, setDataJson] = useState([]);
   const [reload_page, setReloadPage] = useState(false)

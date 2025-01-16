@@ -5,7 +5,7 @@ import TablaProcesaDatos from "@/app/components/tablaProcesarDatos";
 import { FaSpinner } from "react-icons/fa";
 
 function ModalProcesarDatos({
-    id_modal,
+    id_modal, 
     session,
     buttonProcess,
     isLoadingButton,

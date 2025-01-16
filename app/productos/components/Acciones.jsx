@@ -18,7 +18,7 @@ function Acciones({ Buscar, Alta, home, Ver, procesarDatos, animateLoading, perm
       srcLight: iconos.alta_w,
       srcDark: iconos.alta,
       alt: "Alta",
-      tooltipTitle: "Alta",
+      tooltipTitle: "Alta", 
       onClick: Alta,
       permission: permiso_alta,
     },
