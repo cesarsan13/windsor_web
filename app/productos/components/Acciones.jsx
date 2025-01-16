@@ -31,6 +31,14 @@ function Acciones({ Buscar, Alta, home, Ver, animateLoading, permiso_alta, permi
       permission: permiso_imprime, 
     },
     {
+      srcLight: iconos.procesa_w,
+      srcDark: iconos.procesa,
+      alt: "Procesar datos desde un archivo excel",
+      tooltipTitle: "Procesar datos desde un archivo excel.",
+      onClick: procesarDatos,
+      permission: true,
+    },
+    {
       srcLight: iconos.salir_w,
       srcDark: iconos.salir,
       alt: "Salir",
