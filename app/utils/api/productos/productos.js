@@ -156,7 +156,7 @@ export const Imprimir = (configuracion) => {
     }
   });
   const date = new Date()
-  const dateStr = formatDate(date)    
+  const dateStr = formatDate(date)     
   const timeStr = formatTime(date)
   // console.log("dateStr:",dateStr," timeStr:",timeStr)
   newPDF.guardaReporte(`Productos_${dateStr.replaceAll("/", "")}_${timeStr.replaceAll(":", "")}`);

@@ -9,7 +9,7 @@ function ModalProcesarDatos({
     session,
     buttonProcess,
     isLoadingButton,
-    isLoading,
+    isLoading, 
     title,
     dataJson,
     handleFileChange,

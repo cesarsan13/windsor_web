@@ -15,7 +15,7 @@ function TablaProcesaDatos({
             {datosFiltrados && datosFiltrados.length > 0 ? (
                 <table className="table table-xs table-zebra w-full">
                     <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
-                        <tr>
+                        <tr> 
                             {itemHeaderTable()}
                         </tr>
                     </thead>
