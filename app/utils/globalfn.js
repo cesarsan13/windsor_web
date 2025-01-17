@@ -5,11 +5,11 @@ export const debounce = (func, delay) => {
       clearTimeout(timeoutId);
     }
     timeoutId = setTimeout(() => {
-      func(...args); 
+      func(...args);
     }, delay);
   };
 };
- 
+
 export const soloEnteros = (event) => {
   const key = event.key;
   const keyCode = event.keyCode;
@@ -78,7 +78,7 @@ export const soloDecimales = (event) => {
   }
 };
 
- const isControlKey = (key) => {
+const isControlKey = (key) => {
   // Permitir teclas de control como retroceso, tabulación, flechas, etc.
   return (
     key === "Backspace" ||
@@ -392,6 +392,14 @@ export const chunkArray = (array, size) => {
     result.push(array.slice(i, i + size));
   }
   return result;
+};
+
+export const validateString = (MAX_LENGTHS, key, str) => {
+  if (typeof str === "string") {
+    const maxLength = MAX_LENGTHS[key] || str.length;
+    return str.slice(0, maxLength);
+  }
+  return str;
 };
 
  //Formateo para las fechas en los excel (OBLIGATORIO)

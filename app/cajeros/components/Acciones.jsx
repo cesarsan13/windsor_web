@@ -9,6 +9,7 @@ function Acciones({
   Alta,
   home,
   Ver,
+  procesarDatos,
   animateLoading,
   permiso_alta,
   permiso_imprime,
@@ -37,6 +38,14 @@ function Acciones({
       tooltipTitle: "Vista previa",
       onClick: Ver,
       permission: permiso_imprime,
+    },
+    {
+      srcLight: iconos.procesa_w,
+      srcDark: iconos.procesa,
+      alt: "Procesar datos desde un archivo excel",
+      tooltipTitle: "Procesar datos desde un archivo excel.",
+      onClick: procesarDatos,
+      permission: true,
     },
     {
       srcLight: iconos.salir_w,
