@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation"; // Para redirección
 import { useSession } from "next-auth/react";
 import { getMenus } from "@/app/utils/api/accesos_menu/accesos_menu";
 
@@ -10,6 +11,37 @@ function Menu({ vertical, toogle }) {
   const [menus, setMenus] = useState([]);
   const menuRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
+  const router = useRouter();
+//
+  useEffect(() => {
+    try {
+      if (typeof window !== "undefined" && window.localStorage) {
+        const token = localStorage.getItem("puntoMenu");
+        if (!token) {
+          console.warn(
+            "Variable 'puntoMenu' no encontrada en localStorage. Redirigiendo al login."
+          );
+          router.push("/");
+        }
+      } else {
+        console.error("localStorage no está disponible en este navegador.");
+        router.push("/");
+      }
+    } catch (error) {
+      console.error(
+        "Error al acceder a localStorage. Posiblemente deshabilitado o no soportado:",
+        error
+      );
+      router.push("/");
+    }
+  }, [router]);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      console.log("Sesión iniciada. Redirigiendo al home...");
+      router.push("/");
+    }
+  }, [status, router]);
 
   useEffect(() => {
     if (status === "loading" || !session) return;
@@ -27,7 +59,6 @@ function Menu({ vertical, toogle }) {
 
     fetchMenus();
   }, [session, status]);
-
 
   const toggleMenu = (menu) => {
     setIsOpen((prev) => {
@@ -74,11 +105,11 @@ function Menu({ vertical, toogle }) {
   }, []);
 
   const groupedMenus = menus.reduce((acc, menu) => {
-    const {user} = session;
+    const { user } = session || {};
     if (!acc[menu.menu]) acc[menu.menu] = [];
-    
-    if(!user.es_admin && menu.menu === "Utilerías"){
-      if(menu.descripcion === "Usuarios"){
+
+    if (!user.es_admin && menu.menu === "Utilerías") {
+      if (menu.descripcion === "Usuarios") {
         acc[menu.menu].push(menu);
       }
     } else {
@@ -88,7 +119,7 @@ function Menu({ vertical, toogle }) {
   }, {});
 
   const sortedCategories = Object.keys(groupedMenus).sort();
-  
+
   const renderMenuItems = (category) => {
     const { permissions } = session.user;
     const { user } = session;
@@ -152,8 +183,7 @@ function Menu({ vertical, toogle }) {
               isOpen[category] ? "" : "hidden"
             }`}
           >
-            {renderMenuItems(category)}
-          </ul>
+            {renderMenuItems(category)}</ul>
         </div>
       ))}
     </div>

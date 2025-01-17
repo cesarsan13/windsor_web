@@ -34,7 +34,7 @@ function Acciones({ Buscar, Alta, home, Ver, procesarDatos, animateLoading, perm
       srcLight: iconos.procesa_w,
       srcDark: iconos.procesa,
       alt: "Procesar datos desde un archivo excel",
-      tooltipTitle: "Procesar datos desde un archivo excel",
+      tooltipTitle: "Procesar datos desde un archivo excel.",
       onClick: procesarDatos,
       permission: true,
     },

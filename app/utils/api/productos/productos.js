@@ -159,7 +159,7 @@ export const Imprimir = (configuracion) => {
   const dateStr = formatDate(date)     
   const timeStr = formatTime(date)
   // console.log("dateStr:",dateStr," timeStr:",timeStr)
-  newPDF.guardaReporte(`Productos_${dateStr.replaceAll("/", "")}_${timeStr.replaceAll(":", "")}`);
+  newPDF.guardaReporte(`Productos_${dateStr.replaceAll("/","")}_${timeStr.replaceAll(":","")}`);
 };
 
 export const ImprimirExcel = (configuracion) => {
@@ -172,6 +172,6 @@ export const ImprimirExcel = (configuracion) => {
   newExcel.addData(body);
   const date = new Date()
   const dateStr = formatDate(date)
-  const timeStr = formatTime(date)
-  newExcel.guardaReporte(`${nombre}_${dateStr.replaceAll("/", "")}_${timeStr.replaceAll(":", "")}`);
+  const timeStr = formatTime(date)  
+  newExcel.guardaReporte(`${nombre}_${dateStr.replaceAll("/","")}_${timeStr.replaceAll(":","")}`);
 };
