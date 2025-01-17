@@ -936,7 +936,7 @@ function Alumnos() {
   const handleFileChange = async (e) => {
     const confirmed = await confirmSwal(
       "¿Desea Continuar?",
-      "Asegúrate de que las columnas del archivo de excel coincidan exactamente con las columnas de la tabla en la base de datos.",
+      "Por favor, verifica que las columnas del archivo de Excel coincidan exactamente con las columnas de la tabla en la base de datos y que no contengan espacios en blanco.",
       "warning",
       "Aceptar",
       "Cancelar",
