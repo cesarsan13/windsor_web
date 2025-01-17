@@ -6,12 +6,15 @@ import ModalCajeros from "@/app/cajeros/components/modalCajeros";
 import TablaCajeros from "./components/tablaCajeros";
 import Busqueda from "./components/Busqueda";
 import Acciones from "@/app/cajeros/components/Acciones";
+import ModalProcesarDatos from "../components/modalProcesarDatos";
+import * as XLSX from "xlsx";
 import { useForm } from "react-hook-form";
 import {
   getCajeros,
   guardaCajero,
   Imprimir,
   ImprimirExcel,
+  storeBatchCajero,
 } from "@/app/utils/api/cajeros/cajeros";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -19,7 +22,7 @@ import { siguiente } from "@/app/utils/api/cajeros/cajeros";
 import "jspdf-autotable";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { ReportePDF } from "../utils/ReportesPDF";
-import { debounce, permissionsComponents } from "../utils/globalfn";
+import { debounce, permissionsComponents, chunkArray } from "../utils/globalfn";
 
 function Cajeros() {
   const router = useRouter();
@@ -44,7 +47,9 @@ function Cajeros() {
     tb_tel: "",
   });
   const [permissions, setPermissions] = useState({});
-
+  //useState para los datos que se trae del excel
+  const [dataJson, setDataJson] = useState([]); 
+  const [reload_page, setReloadPage] = useState(false)
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
@@ -68,7 +73,7 @@ function Cajeros() {
       return;
     }
     fetchData();
-  }, [session, status, bajas]);
+  }, [session, status, bajas, reload_page]);
 
   const {
     register,
@@ -237,6 +242,14 @@ function Cajeros() {
     }
     setisLoadingButton(false);
   });
+  const procesarDatos = () => {
+    showModalProcesa(true);
+  }
+  const showModalProcesa = (show) => {
+    show
+      ? document.getElementById("my_modal_4").showModal()
+      : document.getElementById("my_modal_4").close();
+  };
   const showModal = (show) => {
     show
       ? document.getElementById("my_modal_3").showModal()
@@ -351,6 +364,106 @@ function Cajeros() {
     document.getElementById("modalVPCajero").close();
   };
 
+    const buttonProcess = async () => {
+      event.preventDefault();
+      setisLoadingButton(true);
+      const { token } = session.user;
+      const chunks = chunkArray(dataJson, 20);
+      for (let chunk of chunks) {
+        await storeBatchCajero(token, chunk)
+      }
+      setDataJson([]);
+      showModalProcesa(false);
+      showSwal("Éxito", "Los datos se han subido correctamente.", "success");
+      setReloadPage(!reload_page);
+      setisLoadingButton(false);
+    };
+
+      const handleFileChange = async (e) => {
+        const confirmed = await confirmSwal(
+          "¿Desea Continuar?",
+          "Asegúrate de que las columnas del archivo de excel coincidan exactamente con las columnas de la tabla en la base de datos.",
+          "warning",
+          "Aceptar",
+          "Cancelar",
+          "my_modal_4"
+        );
+        if (!confirmed) {
+          return;
+        }
+        const selectedFile = e.target.files[0];
+        if (selectedFile) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const data = new Uint8Array(event.target.result);
+            const workbook = XLSX.read(data, { type: "array" });
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet);
+            const convertedData = jsonData.map(item => ({
+              numero: parseInt(item.Numero || 0),
+              nombre: (item.Nombre && String(item.Nombre).trim() !== "") ? String(item.Nombre).slice(0, 35) : "N/A",
+              direccion: (item.Direccion && String(item.Direccion).trim() !== "") ? String(item.Direccion).slice(0, 50) : "N/A",
+              colonia: (item.Colonia && String(item.Colonia).trim() !== "") ? String(item.Colonia).slice(0, 30) : "N/A",
+              estado: (item.Estado && String(item.Estado).trim() !== "") ? String(item.Estado).slice(0, 30) : "N/A",
+              telefono: (item.Telefono && String(item.Telefono).trim() !== "") ? String(item.Telefono).slice(0, 20) : "N/A",
+              fax: (item.Fax && String(item.Fax).trim() !== "") ? String(item.Fax).slice(0, 20) : "N/A",
+              mail: (item.Mail && String(item.Mail).trim() !== "") ? String(item.Mail).slice(0, 40) : "N/A",
+              clave_cajero: (item.Clave_cajero && item.Clave_cajero.trim() !== "") ? String(item.Clave_cajero).slice(0, 8) : "N/A",
+              baja: (item.Baja && item.Baja.trim() !== "") ? String(item.Baja).slice(0, 1) : "n",
+            }));
+            setDataJson(convertedData);
+          };
+          reader.readAsArrayBuffer(selectedFile);
+        }
+      };
+
+      const itemHeaderTable = () => {
+        return (
+          <>
+            <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
+            <td className="w-[35%]">Nombre</td>
+            <td className="w-[20%]">Direccion</td>
+            <td className="w-[30%]">Colonia</td>
+            <td className="w-[10%]">Estado</td>
+            <td className="w-[15%]">Telefono</td>
+            <td className="w-[10%]">Fax</td>
+            <td className="w-[10%]">Mail</td>
+            <td className="w-[10%]">Clave Cajero</td>
+            <td className="w-[10%]">Baja</td>
+          </>
+        );
+      };
+
+      const itemDataTable = (item) => {
+        return (
+          <>
+            <tr key={item.numero} className="hover:cursor-pointer">
+              <th
+                className={
+                  typeof item.numero === "number"
+                    ? "text-left"
+                    : "text-right"
+                }
+              >
+                {item.numero}
+              </th>
+              <td className="w-[40%] max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap pt-[.10rem] pb-[.10rem]">
+                {item.nombre}
+              </td>
+              <td className="text-right">{item.direccion}</td>
+              {/* <td className="text-left">{item.colonia}</td> */}
+              {/* <td className="text-right">{item.estado}</td> */}
+              <td className="text-right">{item.telefono}</td>
+              {/* <td className="text-right">{item.fax}</td> */}
+              <td className="text-right">{item.mail}</td>
+              {/* <td className="text-right">{item.clave_cajero}</td> */}
+              <td className="text-left">{item.baja}</td>
+            </tr>
+          </>
+        );
+      };
+
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -367,6 +480,21 @@ function Cajeros() {
         setCajero={setCajero}
         cajero={cajero}
         isLoadingButton={isLoadingButton}
+      />
+      <ModalProcesarDatos
+        id_modal={"my_modal_4"}
+        session={session}
+        buttonProcess={buttonProcess}
+        isLoadingButton={isLoadingButton}
+        isLoading={isLoading}
+        title={"Procesar Datos desde Excel."}
+        setDataJson={setDataJson}
+        dataJson={dataJson}
+        handleFileChange={handleFileChange}
+        itemHeaderTable={itemHeaderTable}
+        itemDataTable={itemDataTable}
+        //clase para mover al tamaño del modal a preferencia (max-w-4xl)
+        classModal={"modal-box w-full max-w-4xl h-full bg-base-200"}
       />
       <VistaPrevia
         id={"modalVPCajero"}
@@ -386,6 +514,7 @@ function Cajeros() {
                 Alta={Alta}
                 home={home}
                 Ver={handleVerClick}
+                procesarDatos={procesarDatos}
                 animateLoading={animateLoading}
                 permiso_alta={permissions.altas}
                 permiso_imprime={permissions.impresion}

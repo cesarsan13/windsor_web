@@ -11,6 +11,7 @@ export const authOptions = {
           type: "password",
           placeholder: "*****",
         },
+        xescuela: {label: "Escuela", type: "text"},
       },
 
       async authorize(credentials, request) {

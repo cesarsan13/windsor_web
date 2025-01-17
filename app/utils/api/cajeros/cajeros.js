@@ -70,6 +70,22 @@ export const guardaCajero = async (token, data, accion) => {
     const resJson = await res.json();
     return resJson;
   };
+
+  export const storeBatchCajero = async (token, data) => {
+    let url = `${process.env.DOMAIN_API}api/Cajero/batch`;
+    const res = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: new Headers({
+        Authorization: "Bearer " + token,
+        xescuela: localStorage.getItem("xescuela"),
+        "Content-Type": "application/json",
+      }),
+    });
+    const resJson = await res.json();
+    return resJson.data;
+  }
+
   const Enca1 = (doc) => {
     if (!doc.tiene_encabezado) {
       doc.imprimeEncabezadoPrincipalV();

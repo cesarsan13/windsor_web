@@ -40,6 +40,8 @@ function Accesos_Menu() {
       const { token, permissions } = session.user;
       const es_admin = session.user.es_admin;
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+      const menuSeleccionado2 = Number(localStorage.getItem("prueba"));
+      console.log(menuSeleccionado2);
       const data = await getMenus(token, bajas);
       const dataMenu = await getmenu(token, false);
       setMenusSel(dataMenu);
