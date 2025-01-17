@@ -5,11 +5,11 @@ import TablaProcesaDatos from "@/app/components/tablaProcesarDatos";
 import { FaSpinner } from "react-icons/fa";
 
 function ModalProcesarDatos({
-    id_modal, 
+    id_modal,
     session,
     buttonProcess,
-    isLoadingButton, 
-    isLoading, 
+    isLoadingButton,
+    isLoading,
     title,
     dataJson,
     handleFileChange,
@@ -61,7 +61,7 @@ function ModalProcesarDatos({
                         <button
                             type="button"
                             className="btn btn-sm btn-circle btn-ghost text-black dark:text-white"
-                            onClick={() => document.getElementById(id_modal).close()}
+                            onClick={() => resetModal()}
                             disabled={isLoadingButton}
                         >
                             ✕
@@ -88,13 +88,17 @@ function ModalProcesarDatos({
                             style={{ display: "none" }}
                             className="ml-4 btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white font-bold px-4 rounded"
                         />
-                        <TablaProcesaDatos
-                            session={session}
-                            isLoading={isLoading}
-                            datosFiltrados={dataJson}
-                            itemHeaderTable={itemHeaderTable}
-                            itemDataTable={itemDataTable}
-                        />
+                    </div>
+                    <div className="flex flex-col items-center h-full">
+                        <div className="w-full max-w-4xl">
+                            <TablaProcesaDatos
+                                session={session}
+                                isLoading={isLoading}
+                                datosFiltrados={dataJson}
+                                itemHeaderTable={itemHeaderTable}
+                                itemDataTable={itemDataTable}
+                            />
+                        </div>
                     </div>
                 </fieldset>
             </div>
