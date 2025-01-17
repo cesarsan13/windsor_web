@@ -836,7 +836,7 @@ function Pagos_1() {
         await storeBatchDetallePedido(token, chunk)
       }
       setDataJson([]);
-      showModalProcesa(false);
+      document.getElementById("my_modal_detalle_pedido").close();
       showSwal("Éxito", "Los datos se han subido correctamente.", "success");
       setReloadPage(!reload_page);
       setisLoadingButton(false);
