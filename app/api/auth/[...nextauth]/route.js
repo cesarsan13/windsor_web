@@ -25,8 +25,9 @@ export const authOptions = {
         if (!status) throw new Error(message.errorInfo ? message.errorInfo : message);
 
         resjson.data.token = resjson.token;
+        
         resjson.data.xescuela = credentials.xescuela;
-        console.log("hola ",resjson.data);
+        // console.log("hola ",resjson.data);
 
         return resjson.data;
       },
