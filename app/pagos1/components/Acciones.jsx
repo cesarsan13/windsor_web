@@ -3,6 +3,7 @@ import Tooltip from "@/app/components/tooltip";
 import { TbLoader3 } from "react-icons/tb";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
+import { permission } from "process";
 function Acciones({
   Documento,
   Recargos,
@@ -10,15 +11,24 @@ function Acciones({
   ImprimePDF,
   home,
   Alta,
+  procesarDatos,
   muestraRecargos,
   muestraParciales,
   muestraImpresion,
   muestraDocumento,
   permiso_alta,
-  permiso_imprime
+  permiso_imprime,
 }) {
-  const isAnyLoading = muestraRecargos || muestraParciales || muestraImpresion || muestraDocumento;
+  const isAnyLoading = muestraRecargos || muestraParciales || muestraImpresion || muestraDocumento ;
   const images = [
+    {
+      srcLight:iconos.procesa_w,
+      srcDark:iconos.procesa,
+      alt:"Procesar datos desde un archivo excel",
+      tooltipTitle:"Procesar datos desde un archivo excel",
+      onClick: procesarDatos,
+      permission:true
+    },
     {
       srcLight: iconos.alta_w,
       srcDark: iconos.alta,
