@@ -1,5 +1,42 @@
-export { default } from "next-auth/middleware";
+import { getToken } from "next-auth/jwt";
+import { NextResponse } from "next/server";
 
+// Clave secreta para decodificar el token
+const secret = process.env.NEXTAUTH_SECRET;
+
+export async function middleware(req) {
+  // Obtén el token de sesión desde las cookies
+  const token = await getToken({ req, secret });
+  console.log("Token recibido:", token);
+  // Ruta solicitada
+  const { pathname } = req.nextUrl;
+
+  // Rutas públicas que no requieren validación
+  const publicPaths = ["/control_escolar/auth/login", "/control_escolar/auth/register"];
+
+  if (publicPaths.includes(pathname)) {
+    // Permitir acceso directo a rutas públicas
+    return NextResponse.next();
+  }
+
+  // Si no existe el token (usuario no autenticado), redirigir al login
+  if (!token) {
+    const loginUrl = new URL("/control_escolar/auth/login", req.url);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  // if (!token.xescuela) {
+  //   const loginUrl = new URL("/control_escolar/auth/login", req.url);
+  //   return NextResponse.redirect(loginUrl);
+  // }
+
+  // Permitir acceso si todas las validaciones pasan
+  return NextResponse.next();
+}
+
+
+
+export { default } from "next-auth/middleware";
 export const config = {
   matcher: [
     "/",

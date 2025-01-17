@@ -385,3 +385,11 @@ export const PoneCeros = (importe, longitud) => {
   const cerosFaltantes = longitud - trabajoString.length;
   return "0".repeat(cerosFaltantes) + trabajoString;
 }
+
+export const chunkArray = (array, size) => {
+  const result = [];
+  for (let i = 0; i < array.length; i += size) {
+    result.push(array.slice(i, i + size));
+  }
+  return result;
+};
