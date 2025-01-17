@@ -72,6 +72,21 @@ export const getFacturasFormato = async (token, id) => {
   return resJson.data;
 };
 
+export const storeBatchFormFact = async (token, data) => {
+  let url = `${process.env.DOMAIN_API}api/FormFact/batch`;
+  const res = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: new Headers({
+      Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
+      "Content-Type": "application/json",
+    }),
+  });
+  const resJson = await res.json();
+  return resJson.data;
+};
+
 export const getPropertyData = (filtro) => {
   let campo = {};
   switch (filtro) {
