@@ -45,7 +45,7 @@ export const getFotoAlumno = async (token, imagen) => {
 export const getLastAlumnos = async (token) => {
   let url = `${process.env.DOMAIN_API}api/students/last`;
   const res = await fetch(url, {
-    headers: new Headers ({
+    headers: new Headers({
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
       xescuela: localStorage.getItem("xescuela"),
@@ -82,6 +82,21 @@ export const guardarAlumnos = async (token, formData, accion, numero) => {
   });
   const resJson = await res.json();
   return resJson;
+};
+
+export const storeBatchAlumnos = async (token, data) => {
+  let url = `${process.env.DOMAIN_API}api/students/batch`;
+  const res = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: new Headers({
+      Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
+      "Content-Type": "application/json",
+    }),
+  });
+  const resJson = await res.json();
+  return resJson.data;
 };
 
 const Enca1 = (doc) => {

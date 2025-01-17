@@ -18,6 +18,7 @@ import {
   Imprimir,
   ImprimirExcel,
   getTab,
+  storeBatchAlumnos,
 } from "@/app/utils/api/alumnos/alumnos";
 import { getHorarios } from "@/app/utils/api/horarios/horarios";
 import { useState, useEffect } from "react";
@@ -32,7 +33,10 @@ import {
   debounce,
   formatTime,
   permissionsComponents,
-} from "../utils/globalfn";
+  chunkArray,
+  validateString,
+} from "@/app/utils/globalfn";
+import ModalProcesarDatos from "../components/modalProcesarDatos";
 function Alumnos() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -61,6 +65,67 @@ function Alumnos() {
   const [files, setFile] = useState(null);
   const [activeTab, setActiveTab] = useState(1);
   const [permissions, setPermissions] = useState({});
+  const [dataJson, setDataJson] = useState([]);
+  const [reload_page, setReloadPage] = useState(false);
+  const MAX_LENGTHS = {
+    nombre: 50,
+    a_paterno: 50,
+    a_materno: 50,
+    a_nombre: 50,
+    fecha_nac: 15,
+    fecha_inscripcion: 15,
+    fecha_baja: 15,
+    sexo: 15,
+    telefono1: 15,
+    telefono2: 15,
+    celular: 15,
+    codigo_barras: 255,
+    direccion: 255,
+    colonia: 100,
+    ciudad: 100,
+    estado: 100,
+    cp: 10,
+    email: 255,
+    imagen: 250,
+    dia_1: 20,
+    dia_2: 20,
+    dia_3: 20,
+    dia_4: 20,
+    nom_pediatra: 50,
+    tel_p_1: 15,
+    tel_p_2: 15,
+    cel_p_1: 15,
+    tipo_sangre: 20,
+    alergia: 50,
+    aseguradora: 100,
+    poliza: 30,
+    tel_ase_1: 15,
+    tel_ase_2: 15,
+    razon_social: 30,
+    raz_direccion: 255,
+    raz_cp: 10,
+    raz_colonia: 100,
+    raz_ciudad: 100,
+    raz_estado: 100,
+    nom_padre: 100,
+    tel_pad_1: 15,
+    tel_pad_2: 15,
+    cel_pad: 15,
+    nom_madre: 100,
+    tel_mad_1: 15,
+    tel_mad_2: 15,
+    cel_mad: 15,
+    nom_avi: 100,
+    tel_avi_1: 15,
+    tel_avi_2: 15,
+    cel_avi: 15,
+    ciclo_escolar: 50,
+    rfc_factura: 50,
+    estatus: 20,
+    escuela: 50,
+    grupo: 15,
+    baja: 1,
+  };
 
   const alumnosRef = useRef(alumnos);
   const [busqueda, setBusqueda] = useState({
@@ -84,15 +149,15 @@ function Alumnos() {
         : true;
       const coincideDescripcion = tb_desc
         ? alumno["nombre"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_desc.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_desc.toLowerCase())
         : true;
       const coincideGrado = tb_grado
         ? (alumno["horario_1_nombre"] || "")
-            .toString()
-            .toLowerCase()
-            .includes(tb_grado.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_grado.toLowerCase())
         : true;
       return coincideId && coincideDescripcion && coincideGrado;
     });
@@ -136,7 +201,7 @@ function Alumnos() {
       return;
     }
     fetchData();
-  }, [session, status, bajas]);
+  }, [session, status, bajas, reload_page]);
 
   const {
     register,
@@ -478,9 +543,8 @@ function Alumnos() {
         return;
       }
     }
-    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${
-      data.a_nombre || ""
-    }`.trim();
+    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${data.a_nombre || ""
+      }`.trim();
     data.nombre = nombreCompleto;
     const formData = new FormData();
     formData.append("numero", data.numero || "");
@@ -844,9 +908,350 @@ function Alumnos() {
     }, 500);
   };
 
+  const procesarDatos = () => {
+    showModalProcesa(true);
+  };
+
+  const showModalProcesa = (show) => {
+    show
+      ? document.getElementById("my_modal_4").showModal()
+      : document.getElementById("my_modal_4").close();
+  };
+
+  const buttonProcess = async () => {
+    event.preventDefault();
+    setisLoadingButton(true);
+    const { token } = session.user;
+    const chunks = chunkArray(dataJson, 20);
+    for (let chunk of chunks) {
+      await storeBatchAlumnos(token, chunk)
+    }
+    setDataJson([]);
+    showModalProcesa(false);
+    showSwal("Éxito", "Los datos se han subido correctamente.", "success");
+    setReloadPage(!reload_page);
+    setisLoadingButton(false);
+  };
+
+  const handleFileChange = async (e) => {
+    const confirmed = await confirmSwal(
+      "¿Desea Continuar?",
+      "Asegúrate de que las columnas del archivo de excel coincidan exactamente con las columnas de la tabla en la base de datos.",
+      "warning",
+      "Aceptar",
+      "Cancelar",
+      "my_modal_4"
+    );
+    if (!confirmed) {
+      return;
+    }
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        const convertedData = jsonData.map(item => ({
+          numero: parseInt(item.Numero || 0),
+          nombre: validateString(MAX_LENGTHS, "nombre", item.Nombre || "N/A"),
+          a_paterno: validateString(MAX_LENGTHS, "a_paterno", item.A_Paterno || "N/A"),
+          a_materno: validateString(MAX_LENGTHS, "a_materno", item.A_Materno || "N/A"),
+          a_nombre: validateString(MAX_LENGTHS, "a_nombre", item.A_Nombre || ""),
+          fecha_nac: validateString(MAX_LENGTHS, "fecha_nac", item.Fecha_Nac || "N/A"),
+          fecha_inscripcion: validateString(MAX_LENGTHS, "fecha_inscripcion", item.Fecha_Inscripcion || "N/A"),
+          fecha_baja: validateString(MAX_LENGTHS, "fecha_baja", item.Fecha_Baja || ""),
+          sexo: validateString(MAX_LENGTHS, "sexo", item.Sexo || "N/A"),
+          telefono1: validateString(MAX_LENGTHS, "telefono1", item.Telefono1 || "N/A"),
+          telefono2: validateString(MAX_LENGTHS, "telefono2", item.Telefono2 || ""),
+          celular: validateString(MAX_LENGTHS, "celular", item.Celular || "N/A"),
+          codigo_barras: validateString(MAX_LENGTHS, "codigo_barras", item.Codigo_Barras || ""),
+          direccion: validateString(MAX_LENGTHS, "direccion", item.Direccion || "N/A"),
+          colonia: validateString(MAX_LENGTHS, "colonia", item.Colonia || "N/A"),
+          ciudad: validateString(MAX_LENGTHS, "ciudad", item.Ciudad || "N/A"),
+          estado: validateString(MAX_LENGTHS, "estado", item.Estado || "N/A"),
+          cp: validateString(MAX_LENGTHS, "cp", item.CP || "N/A"),
+          email: validateString(MAX_LENGTHS, "email", item.Email || "N/A"),
+          imagen: validateString(MAX_LENGTHS, "imagen", item.Imagen || ""),
+          dia_1: validateString(MAX_LENGTHS, "dia_1", item.Dia_1 || ""),
+          dia_2: validateString(MAX_LENGTHS, "dia_2", item.Dia_2 || ""),
+          dia_3: validateString(MAX_LENGTHS, "dia_3", item.Dia_3 || ""),
+          dia_4: validateString(MAX_LENGTHS, "dia_4", item.Dia_4 || ""),
+          hora_1: parseInt(item.Hora_1 || 0),
+          hora_2: parseInt(item.Hora_2 || 0),
+          hora_3: parseInt(item.Hora_3 || 0),
+          hora_4: parseInt(item.Hora_4 || 0),
+          cancha_1: parseInt(item.Cancha_1 || 0),
+          cancha_2: parseInt(item.Cancha_2 || 0),
+          cancha_3: parseInt(item.Cancha_3 || 0),
+          cancha_4: parseInt(item.Cancha_4 || 0),
+          horario_1: parseInt(item.Horario_1 || 0),
+          horario_2: parseInt(item.Horario_2 || 0),
+          horario_3: parseInt(item.Horario_3 || 0),
+          horario_4: parseInt(item.Horario_4 || 0),
+          horario_5: parseInt(item.Horario_5 || 0),
+          horario_6: parseInt(item.Horario_6 || 0),
+          horario_7: parseInt(item.Horario_7 || 0),
+          horario_8: parseInt(item.Horario_8 || 0),
+          horario_9: parseInt(item.Horario_9 || 0),
+          horario_10: parseInt(item.Horario_10 || 0),
+          horario_11: parseInt(item.Horario_11 || 0),
+          horario_12: parseInt(item.Horario_12 || 0),
+          horario_13: parseInt(item.Horario_13 || 0),
+          horario_14: parseInt(item.Horario_14 || 0),
+          horario_15: parseInt(item.Horario_15 || 0),
+          horario_16: parseInt(item.Horario_16 || 0),
+          horario_17: parseInt(item.Horario_17 || 0),
+          horario_18: parseInt(item.Horario_18 || 0),
+          horario_19: parseInt(item.Horario_19 || 0),
+          horario_20: parseInt(item.Horario_20 || 0),
+          cond_1: parseInt(item.Cond_1 || 0),
+          cond_2: parseInt(item.Cond_2 || 0),
+          cond_3: parseInt(item.Cond_3 || 0),
+          nom_pediatra: validateString(MAX_LENGTHS, "nom_pediatra", item.Nom_Pediatra || ""),
+          tel_p_1: validateString(MAX_LENGTHS, "tel_p_1", item.Tel_P_1 || ""),
+          tel_p_2: validateString(MAX_LENGTHS, "tel_p_2", item.Tel_P_2 || ""),
+          cel_p_1: validateString(MAX_LENGTHS, "cel_p_1", item.Cel_P_1 || ""),
+          tipo_sangre: validateString(MAX_LENGTHS, "tipo_sangre", item.Tipo_Sangre || ""),
+          alergia: validateString(MAX_LENGTHS, "alergia", item.Alergia || ""),
+          aseguradora: validateString(MAX_LENGTHS, "aseguradora", item.Aseguradora || ""),
+          poliza: validateString(MAX_LENGTHS, "poliza", item.Poliza || ""),
+          tel_ase_1: validateString(MAX_LENGTHS, "tel_ase_1", item.Tel_Ase_1 || ""),
+          tel_ase_2: validateString(MAX_LENGTHS, "tel_ase_2", item.Tel_Ase_2 || ""),
+          razon_social: validateString(MAX_LENGTHS, "razon_social", item.Razon_Social || ""),
+          raz_direccion: validateString(MAX_LENGTHS, "raz_direccion", item.Raz_Direccion || ""),
+          raz_cp: validateString(MAX_LENGTHS, "raz_cp", item.Raz_CP || ""),
+          raz_colonia: validateString(MAX_LENGTHS, "raz_colonia", item.Raz_Colonia || ""),
+          raz_ciudad: validateString(MAX_LENGTHS, "raz_ciudad", item.Raz_Ciudad || ""),
+          raz_estado: validateString(MAX_LENGTHS, "raz_estado", item.Raz_Estado || ""),
+          nom_padre: validateString(MAX_LENGTHS, "nom_padre", item.Nom_Padre || ""),
+          tel_pad_1: validateString(MAX_LENGTHS, "tel_pad_1", item.Tel_Pad_1 || ""),
+          tel_pad_2: validateString(MAX_LENGTHS, "tel_pad_2", item.Tel_Pad_2 || ""),
+          cel_pad: validateString(MAX_LENGTHS, "cel_pad", item.Cel_Pad || ""),
+          nom_madre: validateString(MAX_LENGTHS, "nom_madre", item.Nom_Madre || ""),
+          tel_mad_1: validateString(MAX_LENGTHS, "tel_mad_1", item.Tel_Mad_1 || ""),
+          tel_mad_2: validateString(MAX_LENGTHS, "tel_mad_2", item.Tel_Mad_2 || ""),
+          cel_mad: validateString(MAX_LENGTHS, "cel_mad", item.Cel_Mad || ""),
+          nom_avi: validateString(MAX_LENGTHS, "nom_avi", item.Nom_Avi || ""),
+          tel_avi_1: validateString(MAX_LENGTHS, "tel_avi_1", item.Tel_Avi_1 || ""),
+          tel_avi_2: validateString(MAX_LENGTHS, "tel_avi_2", item.Tel_Avi_2 || ""),
+          cel_avi: validateString(MAX_LENGTHS, "cel_avi", item.Cel_Avi || ""),
+          ciclo_escolar: validateString(MAX_LENGTHS, "ciclo_escolar", item.Ciclo_Escolar || ""),
+          descuento: parseFloat(item.Descuento || 0),
+          rfc_factura: validateString(MAX_LENGTHS, "rfc_factura", item.RFC_Factura || ""),
+          estatus: validateString(MAX_LENGTHS, "estatus", item.Estatus || "N/A"),
+          escuela: validateString(MAX_LENGTHS, "escuela", item.Escuela || ""),
+          grupo: validateString(MAX_LENGTHS, "grupo", item.Grupo || ""),
+          baja: validateString(MAX_LENGTHS, "baja", item.Baja || "n"),
+        }));
+        setDataJson(convertedData);
+      };
+      reader.readAsArrayBuffer(selectedFile);
+    }
+  };
+
+  const itemHeaderTable = () => {
+    return (
+      <>
+        <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
+        <td className="w-[20%]">Nombre</td>
+        <td className="w-[20%]">A. Paterno</td>
+        <td className="w-[20%]">A. Materno</td>
+        <td className="w-[20%]">A. Nombre</td>
+        <td className="w-[10%]">Fecha Nac.</td>
+        <td className="w-[10%]">Fecha Inscripción</td>
+        <td className="w-[10%]">Fecha Baja</td>
+        <td className="w-[5%]">Sexo</td>
+        <td className="w-[10%]">Teléfono 1</td>
+        <td className="w-[10%]">Teléfono 2</td>
+        <td className="w-[10%]">Celular</td>
+        <td className="w-[10%]">Código Barras</td>
+        <td className="w-[20%]">Dirección</td>
+        <td className="w-[15%]">Colonia</td>
+        <td className="w-[15%]">Ciudad</td>
+        <td className="w-[10%]">Estado</td>
+        <td className="w-[5%]">CP</td>
+        <td className="w-[20%]">Email</td>
+        <td className="w-[20%]">Ruta Foto</td>
+        <td className="w-[5%]">Día 1</td>
+        <td className="w-[5%]">Día 2</td>
+        <td className="w-[5%]">Día 3</td>
+        <td className="w-[5%]">Día 4</td>
+        <td className="w-[5%]">Hora 1</td>
+        <td className="w-[5%]">Hora 2</td>
+        <td className="w-[5%]">Hora 3</td>
+        <td className="w-[5%]">Hora 4</td>
+        <td className="w-[5%]">Cancha 1</td>
+        <td className="w-[5%]">Cancha 2</td>
+        <td className="w-[5%]">Cancha 3</td>
+        <td className="w-[5%]">Cancha 4</td>
+        <td className="w-[10%]">Horario 1</td>
+        <td className="w-[10%]">Horario 2</td>
+        <td className="w-[10%]">Horario 3</td>
+        <td className="w-[10%]">Horario 4</td>
+        <td className="w-[10%]">Horario 5</td>
+        <td className="w-[10%]">Horario 6</td>
+        <td className="w-[10%]">Horario 7</td>
+        <td className="w-[10%]">Horario 8</td>
+        <td className="w-[10%]">Horario 9</td>
+        <td className="w-[10%]">Horario 10</td>
+        <td className="w-[10%]">Horario 11</td>
+        <td className="w-[10%]">Horario 12</td>
+        <td className="w-[10%]">Horario 13</td>
+        <td className="w-[10%]">Horario 14</td>
+        <td className="w-[10%]">Horario 15</td>
+        <td className="w-[10%]">Horario 16</td>
+        <td className="w-[10%]">Horario 17</td>
+        <td className="w-[10%]">Horario 18</td>
+        <td className="w-[10%]">Horario 19</td>
+        <td className="w-[10%]">Horario 20</td>
+        <td className="w-[15%]">Condición 1</td>
+        <td className="w-[15%]">Condición 2</td>
+        <td className="w-[15%]">Condición 3</td>
+        <td className="w-[20%]">Nom. Pediatra</td>
+        <td className="w-[10%]">Tel. P 1</td>
+        <td className="w-[10%]">Tel. P 2</td>
+        <td className="w-[10%]">Cel. P 1</td>
+        <td className="w-[10%]">Tipo Sangre</td>
+        <td className="w-[20%]">Alergia</td>
+        <td className="w-[20%]">Aseguradora</td>
+        <td className="w-[10%]">Póliza</td>
+        <td className="w-[10%]">Tel. Aseg. 1</td>
+        <td className="w-[10%]">Tel. Aseg. 2</td>
+        <td className="w-[20%]">Razón Social</td>
+        <td className="w-[20%]">Raz. Dirección</td>
+        <td className="w-[10%]">Raz. CP</td>
+        <td className="w-[15%]">Raz. Colonia</td>
+        <td className="w-[15%]">Raz. Ciudad</td>
+        <td className="w-[10%]">Raz. Estado</td>
+        <td className="w-[20%]">Nombre Padre</td>
+        <td className="w-[10%]">Tel. Padre 1</td>
+        <td className="w-[10%]">Tel. Padre 2</td>
+        <td className="w-[10%]">Cel. Padre</td>
+        <td className="w-[20%]">Nombre Madre</td>
+        <td className="w-[10%]">Tel. Madre 1</td>
+        <td className="w-[10%]">Tel. Madre 2</td>
+        <td className="w-[10%]">Cel. Madre</td>
+        <td className="w-[20%]">Nombre Avi</td>
+        <td className="w-[10%]">Tel. Avi 1</td>
+        <td className="w-[10%]">Tel. Avi 2</td>
+        <td className="w-[10%]">Cel. Avi 1</td>
+        <td className="w-[10%]">Ciclo Escolar</td>
+        <td className="w-[5%]">Descuento</td>
+        <td className="w-[10%]">RFC Factura</td>
+        <td className="w-[5%]">Estatus</td>
+        <td className="w-[15%]">Escuela</td>
+        <td className="w-[15%]">Grupo</td>
+        <td className="w-[5%]">Baja</td>
+      </>
+    );
+  };
+
+  const itemDataTable = (item) => {
+    return (
+      <>
+        <tr key={item.numero} className="hover:cursor-pointer">
+          <th className="text-left">{item.numero}</th>
+          <td>{item.nombre}</td>
+          <td>{item.a_paterno}</td>
+          <td>{item.a_materno}</td>
+          <td>{item.a_nombre}</td>
+          <td>{item.fecha_nac}</td>
+          <td>{item.fecha_inscripcion}</td>
+          <td>{item.fecha_baja}</td>
+          <td>{item.sexo}</td>
+          <td>{item.telefono1}</td>
+          <td>{item.telefono2}</td>
+          <td>{item.celular}</td>
+          <td>{item.codigo_barras}</td>
+          <td>{item.direccion}</td>
+          <td>{item.colonia}</td>
+          <td>{item.ciudad}</td>
+          <td>{item.estado}</td>
+          <td>{item.cp}</td>
+          <td>{item.email}</td>
+          <td>{item.imagen}</td>
+          <td>{item.dia_1}</td>
+          <td>{item.dia_2}</td>
+          <td>{item.dia_3}</td>
+          <td>{item.dia_4}</td>
+          <td>{item.hora_1}</td>
+          <td>{item.hora_2}</td>
+          <td>{item.hora_3}</td>
+          <td>{item.hora_4}</td>
+          <td>{item.cancha_1}</td>
+          <td>{item.cancha_2}</td>
+          <td>{item.cancha_3}</td>
+          <td>{item.cancha_4}</td>
+          <td>{item.horario_1}</td>
+          <td>{item.horario_2}</td>
+          <td>{item.horario_3}</td>
+          <td>{item.horario_4}</td>
+          <td>{item.horario_5}</td>
+          <td>{item.horario_6}</td>
+          <td>{item.horario_7}</td>
+          <td>{item.horario_8}</td>
+          <td>{item.horario_9}</td>
+          <td>{item.horario_10}</td>
+          <td>{item.horario_11}</td>
+          <td>{item.horario_12}</td>
+          <td>{item.horario_13}</td>
+          <td>{item.horario_14}</td>
+          <td>{item.horario_15}</td>
+          <td>{item.horario_16}</td>
+          <td>{item.horario_17}</td>
+          <td>{item.horario_18}</td>
+          <td>{item.horario_19}</td>
+          <td>{item.horario_20}</td>
+          <td>{item.cond_1}</td>
+          <td>{item.cond_2}</td>
+          <td>{item.cond_3}</td>
+          <td>{item.nom_pediatra}</td>
+          <td>{item.tel_p_1}</td>
+          <td>{item.tel_p_2}</td>
+          <td>{item.cel_p_1}</td>
+          <td>{item.tipo_sangre}</td>
+          <td>{item.alergia}</td>
+          <td>{item.aseguradora}</td>
+          <td>{item.poliza}</td>
+          <td>{item.tel_ase_1}</td>
+          <td>{item.tel_ase_2}</td>
+          <td>{item.razon_social}</td>
+          <td>{item.raz_direccion}</td>
+          <td>{item.raz_cp}</td>
+          <td>{item.raz_colonia}</td>
+          <td>{item.raz_ciudad}</td>
+          <td>{item.raz_estado}</td>
+          <td>{item.nom_padre}</td>
+          <td>{item.tel_pad_1}</td>
+          <td>{item.tel_pad_2}</td>
+          <td>{item.cel_pad}</td>
+          <td>{item.nom_madre}</td>
+          <td>{item.tel_mad_1}</td>
+          <td>{item.tel_mad_2}</td>
+          <td>{item.cel_mad}</td>
+          <td>{item.nom_avi}</td>
+          <td>{item.tel_avi_1}</td>
+          <td>{item.tel_avi_2}</td>
+          <td>{item.cel_avi}</td>
+          <td>{item.ciclo_escolar}</td>
+          <td>{item.descuento}</td>
+          <td>{item.rfc_factura}</td>
+          <td>{item.estatus}</td>
+          <td>{item.escuela}</td>
+          <td>{item.grupo}</td>
+          <td>{item.baja}</td>
+        </tr>
+      </>
+    );
+  };
+
+
   if (status === "loading") {
     return (
-      <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
+      <div className="container skeleton w-full max-w-screen-xl  shadow-xl rounded-xl "></div>
     );
   }
   return (
@@ -876,6 +1281,21 @@ function Alumnos() {
         files={files}
         isLoadingButton={isLoadingButton}
       />
+      <ModalProcesarDatos
+        id_modal={"my_modal_4"}
+        session={session}
+        buttonProcess={buttonProcess}
+        isLoadingButton={isLoadingButton}
+        isLoading={isLoading}
+        title={"Procesar Datos desde Excel."}
+        setDataJson={setDataJson}
+        dataJson={dataJson}
+        handleFileChange={handleFileChange}
+        itemHeaderTable={itemHeaderTable}
+        itemDataTable={itemDataTable}
+        //clase para mover al tamaño del modal a preferencia (max-w-4xl)
+        classModal={"modal-box w-full max-w-5xl h-full bg-base-200"}
+      />
       <VistaPrevia
         id="modalVPAlumno"
         titulo="Vista Previa de Alumnos"
@@ -896,6 +1316,7 @@ function Alumnos() {
                 PDF={imprimePDF}
                 Excel={ImprimeExcel}
                 Ver={handleVerClick}
+                procesarDatos={procesarDatos}
                 animateLoading={animateLoading}
                 permiso_alta={permissions.altas}
                 permiso_imprime={permissions.impresion}
