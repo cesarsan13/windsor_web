@@ -11,7 +11,6 @@ export const authOptions = {
           type: "password",
           placeholder: "*****",
         },
-        xescuela: {label: "Escuela", type: "text"},
       },
 
       async authorize(credentials, request) {
@@ -26,6 +25,8 @@ export const authOptions = {
         if (!status) throw new Error(message.errorInfo ? message.errorInfo : message);
 
         resjson.data.token = resjson.token;
+        resjson.data.xescuela = credentials.xescuela;
+        console.log("hola ",resjson.data);
 
         return resjson.data;
       },

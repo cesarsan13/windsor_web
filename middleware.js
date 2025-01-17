@@ -25,10 +25,10 @@ export async function middleware(req) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // if (!token.xescuela) {
-  //   const loginUrl = new URL("/control_escolar/auth/login", req.url);
-  //   return NextResponse.redirect(loginUrl);
-  // }
+  if (!token.xescuela) {
+    const loginUrl = new URL("/control_escolar/auth/login", req.url);
+    return NextResponse.redirect(loginUrl);
+  }
 
   // Permitir acceso si todas las validaciones pasan
   return NextResponse.next();
