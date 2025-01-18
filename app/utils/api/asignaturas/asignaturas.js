@@ -161,7 +161,6 @@ export const ImprimirExcel = (configuracion) => {
 };
 
 export const storeBatchAsignatura = async (token, data) => {
-  console.log("data", data);
   let url = `${process.env.DOMAIN_API}api/subject/Batch`;
   const res = await fetch(url, {
     method: "POST",

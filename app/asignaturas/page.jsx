@@ -397,10 +397,6 @@ function Asignaturas() {
   };
 
   //Procesa datos
-   const handleInputClick = (evt) => {
-      evt.preventDefault();
-      evt.target.select();
-    };
     const procesarDatos = () => {
       //showModalProcesa(true);
       document.getElementById("my_modal_asignaturas").showModal()
@@ -498,13 +494,13 @@ function Asignaturas() {
             <td className="text-left">{item.fecha_seg}</td>
             <td className="text-left">{item.hora_seg}</td>
             <td className="text-left">{item.cve_seg}</td>
-            <td className="text-right">{item.baja}</td>
+            <td className="text-left">{item.baja}</td>
             <td className="text-right">{item.evaluaciones}</td>
-            <td className="text-right">{item.actividad}</td>
+            <td className="text-left">{item.actividad}</td>
             <td className="text-right">{item.area}</td>
             <td className="text-right">{item.orden}</td>
-            <td className="text-right">{item.lenguaje}</td>
-            <td className="text-right">{item.caso_evaluar}</td>
+            <td className="text-left">{item.lenguaje}</td>
+            <td className="text-left">{item.caso_evaluar}</td>
           </tr>
         </>
       );
