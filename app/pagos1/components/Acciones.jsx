@@ -11,7 +11,7 @@ function Acciones({
   ImprimePDF,
   home,
   Alta,
-  procesarDatos,
+  // procesarDatos,
   muestraRecargos,
   muestraParciales,
   muestraImpresion,
@@ -21,14 +21,14 @@ function Acciones({
 }) {
   const isAnyLoading = muestraRecargos || muestraParciales || muestraImpresion || muestraDocumento ;
   const images = [
-    {
-      srcLight:iconos.procesa_w,
-      srcDark:iconos.procesa,
-      alt:"Procesar datos desde un archivo excel",
-      tooltipTitle:"Procesar datos desde un archivo excel",
-      onClick: procesarDatos,
-      permission:true
-    },
+    // {
+    //   srcLight:iconos.procesa_w,
+    //   srcDark:iconos.procesa,
+    //   alt:"Procesar datos desde un archivo excel",
+    //   tooltipTitle:"Procesar datos desde un archivo excel",
+    //   onClick: procesarDatos,
+    //   permission:true
+    // },
     {
       srcLight: iconos.alta_w,
       srcDark: iconos.alta,

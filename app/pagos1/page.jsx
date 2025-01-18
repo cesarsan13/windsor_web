@@ -4,7 +4,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import ModalCajeroPago from "@/app/pagos1/components/modalCajeroPago";
 import ModalDocTabla from "@/app/pagos1/components/modalDocTabla";
-import ModalNuevoRegistro from "@/app/pagos1/components/ModalNuevoRegistro";
+// import ModalNuevoRegistro from "@/app/pagos1/components/ModalNuevoRegistro";
 import Acciones from "@/app/pagos1/components/Acciones";
 import { useForm } from "react-hook-form";
 import {
@@ -947,7 +947,7 @@ function Pagos_1() {
         //clase para mover al tamaño del modal a preferencia (max-w-4xl)
         classModal={"modal-box w-full max-w-4xl h-full bg-base-200"}
       />
-      <ModalNuevoRegistro
+      {/* <ModalNuevoRegistro
         session={session}
         productos1={productos1}
         setProductos1={setProductos1}
@@ -961,7 +961,7 @@ function Pagos_1() {
         handleInputClick={handleInputClick}
         handleEnterKey={handleEnterKey}
         handleModalClick={handleModalClick}
-      />
+      /> */}
       <ModalRecargos
         register={register}
         errors={errors}
