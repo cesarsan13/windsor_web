@@ -159,6 +159,7 @@ export const Imprimir = (configuracion) => {
   const dateStr = formatDate(date);
   const timeStr = formatTime(date);
   // console.log("dateStr:",dateStr," timeStr:",timeStr)
+  newPDF.guardaReporte(`Productos_${dateStr.replaceAll("/","")}_${timeStr.replaceAll(":","")}`);
   newPDF.guardaReporte(
     `Productos_${dateStr.replaceAll("/", "")}_${timeStr.replaceAll(":", "")}`
   );
@@ -172,10 +173,8 @@ export const ImprimirExcel = (configuracion) => {
   newExcel.setColumnas(columns);
   newExcel.setCondition("cam_precio", (value) => value === 1);
   newExcel.addData(body);
-  const date = new Date();
-  const dateStr = formatDate(date);
-  const timeStr = formatTime(date);
-  newExcel.guardaReporte(
-    `${nombre}_${dateStr.replaceAll("/", "")}_${timeStr.replaceAll(":", "")}`
-  );
+  const date = new Date()
+  const dateStr = formatDate(date)
+  const timeStr = formatTime(date)  
+  newExcel.guardaReporte(`${nombre}_${dateStr.replaceAll("/","")}_${timeStr.replaceAll(":","")}`);
 };
