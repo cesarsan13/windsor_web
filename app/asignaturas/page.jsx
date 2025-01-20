@@ -16,6 +16,7 @@ import {
   getLastSubject,
   Imprimir,
   ImprimirExcel,
+  storeBatchAsignatura,
 } from "@/app/utils/api/asignaturas/asignaturas";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -25,7 +26,8 @@ import * as XLSX from "xlsx";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import { debounce, permissionsComponents } from "@/app/utils/globalfn";
+import { debounce, permissionsComponents, chunkArray } from "@/app/utils/globalfn";
+import ModalProcesarDatos from "../components/modalProcesarDatos";
 
 function Asignaturas() {
   const router = useRouter();
@@ -49,7 +51,8 @@ function Asignaturas() {
   const asignaturasRef = useRef(asignaturas)
   const [isLoadingButton, setisLoadingButton] = useState(false);
   const [permissions, setPermissions] = useState({});
-
+  const [dataJson, setDataJson] = useState([]); 
+  const [reload_page, setReloadPage] = useState(false)
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
@@ -392,6 +395,117 @@ function Asignaturas() {
     };
     ImprimirExcel(configuracion);
   };
+
+  //Procesa datos
+    const procesarDatos = () => {
+      //showModalProcesa(true);
+      document.getElementById("my_modal_asignaturas").showModal()
+    }
+  
+    const buttonProcess = async () => {
+        event.preventDefault();
+        setisLoadingButton(true);
+        const { token } = session.user;
+        const chunks = chunkArray(dataJson, 20);
+        for (let chunk of chunks) {
+          await storeBatchAsignatura(token, chunk)
+        }
+        setDataJson([]);
+        document.getElementById("my_modal_asignaturas").close();
+        showSwal("Éxito", "Los datos se han subido correctamente.", "success");
+        setReloadPage(!reload_page);
+        setisLoadingButton(false);
+      };  
+  
+    const handleFileChange = async (e) => {
+        const confirmed = await confirmSwal(
+          "¿Desea Continuar?",
+          "Asegúrate de que las columnas del archivo de excel coincidan exactamente con las columnas de la tabla en la base de datos.",
+          "warning",
+          "Aceptar",
+          "Cancelar",
+          "my_modal_asignaturas"
+        );
+        if (!confirmed) {
+          return;
+        }
+        const selectedFile = e.target.files[0];
+        if (selectedFile) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const data = new Uint8Array(event.target.result);
+            const workbook = XLSX.read(data, { type: "array" });
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet);
+            const convertedData = jsonData.map(item => ({
+              numero: parseInt(item.Numero|| 0),
+              descripcion: (item.Descripcion && String(item.Descripcion).trim() !== "") ? String(item.Descripcion).slice(0, 100) : "N/A",
+              fecha_seg: (item.Fecha_Seg && String(item.Fecha_Seg).trim() !== "") ? String(item.Fecha_Seg).slice(0, 10) : " ",
+              hora_seg: (item.Hora_Seg && String(item.Hora_Seg).trim() !== "") ? String(item.Hora_Seg).slice(0, 10) : " ",
+              cve_seg: (item.Cve_Seg && String(item.Cve_Seg).trim() !== "") ? String(item.Cve_Seg).slice(0, 10) : " ",
+              baja: (item.Baja && item.Baja.trim() !== "") ? String(item.Baja).slice(0, 1) : "n",
+              evaluaciones: parseInt(item.Evaluaciones || 0),
+              actividad: (item.Actividad && item.Actividad.trim() !== "") ? String(item.Actividad).slice(0, 2) : "N/A",
+              area: parseInt(item.Area || 0),
+              orden: parseInt(item.Orden || 0),
+              lenguaje:(item.Lenguaje && item.Lenguaje.trim() !== "") ? String(item.Lenguaje).slice(0, 15) : "N/A",
+              caso_evaluar: (item.Caso_Evaluar && item.Caso_Evaluar.trim() !== "") ? String(item.Caso_Evaluar).slice(0, 15) : "N/A",
+            }));
+            setDataJson(convertedData);
+          };
+          reader.readAsArrayBuffer(selectedFile);
+        }
+      };
+  
+    const itemHeaderTable = () => {
+      return (
+        <>
+          <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">No.</td>
+          <td className="w-[40%]">Descripcion</td>
+          <td className="w-[15%]">Fecha Seg</td>
+          <td className="w-[15%]">Hora Seg</td>
+          <td className="w-[10%]">Cve Seg</td>
+          <td className="w-[15%]">Baja</td>
+          <td className="w-[10%]">Evaluaciones</td>
+          <td className="w-[10%]">Actividad</td>
+          <td className="w-[10%]">Area</td>
+          <td className="w-[10%]">Orden</td>
+          <td className="w-[10%]">Lenguaje</td>
+          <td className="w-[10%]">Caso Evaluar</td>
+        </>
+      );
+    };
+  
+    const itemDataTable = (item) => {
+      return (
+        <>
+          <tr key={item.numero} className="hover:cursor-pointer">
+            <th
+              className={
+                typeof item.numero === "number"
+                  ? "text-left"
+                  : "text-right"
+              }
+            >
+              {item.numero}
+            </th>
+            <td className="text-left">{item.descripcion}</td>
+            <td className="text-left">{item.fecha_seg}</td>
+            <td className="text-left">{item.hora_seg}</td>
+            <td className="text-left">{item.cve_seg}</td>
+            <td className="text-left">{item.baja}</td>
+            <td className="text-right">{item.evaluaciones}</td>
+            <td className="text-left">{item.actividad}</td>
+            <td className="text-right">{item.area}</td>
+            <td className="text-right">{item.orden}</td>
+            <td className="text-left">{item.lenguaje}</td>
+            <td className="text-left">{item.caso_evaluar}</td>
+          </tr>
+        </>
+      );
+    };
+
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -399,6 +513,21 @@ function Asignaturas() {
   }
   return (
     <>
+      <ModalProcesarDatos
+        id_modal={"my_modal_asignaturas"}
+        session={session}
+        buttonProcess={buttonProcess}
+        isLoadingButton={isLoadingButton}
+        isLoading={isLoading}
+        title={"Procesar Datos desde Excel."}
+        setDataJson={setDataJson}
+        dataJson={dataJson}
+        handleFileChange={handleFileChange}
+        itemHeaderTable={itemHeaderTable}
+        itemDataTable={itemDataTable}
+        //clase para mover al tamaño del modal a preferencia (max-w-4xl)
+        classModal={"modal-box w-full max-w-4xl h-full bg-base-200"}
+      />  
       <ModalAsignaturas
         accion={accion}
         onSubmit={onSubmitModal}
@@ -434,6 +563,7 @@ function Asignaturas() {
                 Alta={Alta}
                 home={home}
                 Ver={handleVerClick}
+                procesarDatos={procesarDatos}
                 isLoading={animateLoading}
                 permiso_alta={permissions.altas}
                 permiso_imprime={permissions.impresion}

@@ -14,13 +14,16 @@ import {
   ImprimirPDF,
   siguiente,
   ImprimirExcel,
+  storeBatchProfesores
 } from "@/app/utils/api/profesores/profesores";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import "jspdf-autotable";
+import * as XLSX from "xlsx";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import { debounce,permissionsComponents } from "../utils/globalfn";
+import { debounce,permissionsComponents, chunkArray } from "../utils/globalfn";
+import ModalProcesarDatos from "../components/modalProcesarDatos";
 function Profesores() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -41,8 +44,9 @@ function Profesores() {
     tb_nombre: "",
   });
   const [animateLoading, setAnimateLoading] = useState(false);
-
   const [permissions, setPermissions] = useState({});
+  const [dataJson, setDataJson] = useState([]); 
+  const [reload_page, setReloadPage] = useState(false)
 
   useEffect(() => {
     profesoresRef.current = profesores; // Actualiza el ref cuando profesores cambia
@@ -447,6 +451,134 @@ function Profesores() {
     }));
   };
 
+      const procesarDatos = () => {
+        //showModalProcesa(true);
+        document.getElementById("my_modal_profesores").showModal()
+      }
+    
+      const buttonProcess = async () => {
+          event.preventDefault();
+          setisLoadingButton(true);
+          const { token } = session.user;
+          const chunks = chunkArray(dataJson, 20);
+          for (let chunk of chunks) {
+            await storeBatchProfesores(token, chunk)
+          }
+          setDataJson([]);
+          document.getElementById("my_modal_profesores").close();
+          showSwal("Éxito", "Los datos se han subido correctamente.", "success");
+          setReloadPage(!reload_page);
+          setisLoadingButton(false);
+        };  
+    
+      const handleFileChange = async (e) => {
+          const confirmed = await confirmSwal(
+            "¿Desea Continuar?",
+            "Asegúrate de que las columnas del archivo de excel coincidan exactamente con las columnas de la tabla en la base de datos.",
+            "warning",
+            "Aceptar",
+            "Cancelar",
+            "my_modal_profesores"
+          );
+          if (!confirmed) {
+            return;
+          }
+          const selectedFile = e.target.files[0];
+          if (selectedFile) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const data = new Uint8Array(event.target.result);
+              const workbook = XLSX.read(data, { type: "array" });
+              const sheetName = workbook.SheetNames[0];
+              const worksheet = workbook.Sheets[sheetName];
+              const jsonData = XLSX.utils.sheet_to_json(worksheet);
+              const convertedData = jsonData.map(item => ({
+                numero: parseInt(item.Numero|| 0),
+                nombre: (item.Nombre && String(item.Nombre).trim() !== "") ? String(item.Nombre).slice(0, 100) : "N/A",
+                ap_paterno: (item.Ap_Paterno && String(item.Ap_Paterno).trim() !== "") ? String(item.Ap_Paterno).slice(0, 100) : "N/A",
+                ap_materno: (item.Ap_Materno && String(item.Ap_Materno).trim() !== "") ? String(item.Ap_Materno).slice(0, 100) : "N/A",
+                direccion: (item.Direccion && String(item.Direccion).trim() !== "") ? String(item.Direccion).slice(0, 100) : "N/A",
+                colonia: (item.Colonia && String(item.Colonia).trim() !== "") ? String(item.Colonia).slice(0, 100) : "N/A",
+                ciudad: (item.Ciudad && String(item.Ciudad).trim() !== "") ? String(item.Ciudad).slice(0, 100) : "N/A",
+                estado: (item.Estado && String(item.Estado).trim() !== "") ? String(item.Estado).slice(0, 100) : "N/A",
+                cp: (item.CP && String(item.CP).trim() !== "") ? String(item.CP).slice(0, 100) : "N/A",
+                pais: (item.Pais && String(item.Pais).trim() !== "") ? String(item.Pais).slice(0, 100) : "N/A",
+                rfc: (item.RFC && String(item.RFC).trim() !== "") ? String(item.RFC).slice(0, 100) : "N/A",
+                telefono_1: (item.Telefono_1 && String(item.Telefono_1).trim() !== "") ? String(item.Telefono_1).slice(0, 100) : "N/A",
+                telefono_2: (item.Telefono_2 && String(item.Telefono_2).trim() !== "") ? String(item.Telefono_2).slice(0, 100) : "N/A",
+                fax: (item.Fax && String(item.Fax).trim() !== "") ? String(item.Fax).slice(0, 100) : "N/A",
+                celular: (item.Celular && String(item.Celular).trim() !== "") ? String(item.Celular).slice(0, 100) : "N/A",
+                email: (item.Email && String(item.Email).trim() !== "") ? String(item.Email).slice(0, 100) : "N/A",
+                contraseña: (item.Contraseña && String(item.Contraseña).trim() !== "") ? String(item.Contraseña).slice(0, 100) : "N/A",
+                baja: (item.Baja && item.Baja.trim() !== "") ? String(item.Baja).slice(0, 1) : "n",
+              }));
+              setDataJson(convertedData);
+            };
+            reader.readAsArrayBuffer(selectedFile);
+          }
+        };
+    
+      const itemHeaderTable = () => {
+        return (
+          <>
+            <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">No.</td>
+            <td className="w-[40%]">Nombre</td>
+            <td className="w-[15%]">Ap. Paterno</td>
+            <td className="w-[15%]">Ap. Materno</td>
+            <td className="w-[10%]">Direccion</td>
+            <td className="w-[15%]">Colonia</td>
+            <td className="w-[10%]">Ciudad</td>
+            <td className="w-[10%]">Estado</td>
+            <td className="w-[10%]">CP</td>
+            <td className="w-[10%]">Pais</td>
+            <td className="w-[10%]">RFC</td>
+            <td className="w-[10%]">Telefono 1</td>
+            <td className="w-[10%]">Telefono 2</td>
+            <td className="w-[10%]">Fax</td>
+            <td className="w-[10%]">Celular</td>
+            <td className="w-[10%]">Email</td>
+            <td className="w-[10%]">Contraseña</td>
+            <td className="w-[10%]">Baja</td>
+          </>
+        );
+      };
+    
+      const itemDataTable = (item) => {
+        return (
+          <>
+            <tr key={item.numero} className="hover:cursor-pointer">
+              <th
+                className={
+                  typeof item.numero === "number"
+                    ? "text-left"
+                    : "text-right"
+                }
+              >
+                {item.numero}
+              </th>
+              <td className="text-left">{item.nombre}</td>
+              <td className="text-left">{item.ap_paterno}</td>
+              <td className="text-left">{item.ap_materno}</td>
+              <td className="text-left">{item.direccion}</td>
+              <td className="text-left">{item.colonia}</td>
+              <td className="text-left">{item.ciudad}</td>
+              <td className="text-left">{item.estado}</td>
+              <td className="text-left">{item.cp}</td>
+              <td className="text-left">{item.pais}</td>
+              <td className="text-left">{item.rfc}</td>
+              <td className="text-left">{item.telefono_1}</td>
+              <td className="text-left">{item.telefono_2}</td>
+              <td className="text-left">{item.fax}</td>
+              <td className="text-left">{item.celular}</td>
+              <td className="text-left">{item.email}</td>
+              <td className="text-left">{item.contraseña}</td>
+              <td className="text-left">{item.baja}</td>
+
+            </tr>
+          </>
+        );
+      };
+
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -454,6 +586,22 @@ function Profesores() {
   }
   return (
     <>
+       <ModalProcesarDatos
+        id_modal={"my_modal_profesores"}
+        session={session}
+        buttonProcess={buttonProcess}
+        isLoadingButton={isLoadingButton}
+        isLoading={isLoading}
+        title={"Procesar Datos desde Excel."}
+        setDataJson={setDataJson}
+        dataJson={dataJson}
+        handleFileChange={handleFileChange}
+        itemHeaderTable={itemHeaderTable}
+        itemDataTable={itemDataTable}
+        //clase para mover al tamaño del modal a preferencia (max-w-4xl)
+        classModal={"modal-box w-full max-w-4xl h-full bg-base-200"}
+      />  
+
       <ModalProfesores
         accion={accion}
         onSubmit={onSubmitModal}
@@ -483,6 +631,7 @@ function Profesores() {
                 Alta={Alta}
                 home={home}
                 Ver={handleVerClick}
+                procesarDatos ={procesarDatos}
                 animateLoading={animateLoading}
                 permiso_alta={permissions.altas}
                 permiso_imprime={permissions.impresion}

@@ -401,3 +401,15 @@ export const validateString = (MAX_LENGTHS, key, str) => {
   }
   return str;
 };
+
+ //Formateo para las fechas en los excel (OBLIGATORIO)
+ export const fechaFormatExcel = (fechaS) => {
+  const date = new Date((fechaS - 25567 - 1) * 86400 * 1000);
+
+  // Formatear la fecha en dd/mm/yyyy
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Meses comienzan desde 0
+  const year = date.getFullYear();
+  
+  return `${day}/${month}/${year}`;
+};

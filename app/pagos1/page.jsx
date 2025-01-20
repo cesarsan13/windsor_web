@@ -4,7 +4,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import ModalCajeroPago from "@/app/pagos1/components/modalCajeroPago";
 import ModalDocTabla from "@/app/pagos1/components/modalDocTabla";
-import ModalNuevoRegistro from "@/app/pagos1/components/ModalNuevoRegistro";
+// import ModalNuevoRegistro from "@/app/pagos1/components/ModalNuevoRegistro";
 import Acciones from "@/app/pagos1/components/Acciones";
 import { useForm } from "react-hook-form";
 import {
@@ -14,7 +14,9 @@ import {
   buscaDocumento,
   validarClaveCajero,
   buscarArticulo,
+  storeBatchDetallePedido
 } from "@/app/utils/api/pagos1/pagos1";
+import ModalProcesarDatos from "../components/modalProcesarDatos";
 import { getFormasPago } from "@/app/utils/api/formapago/formapago";
 import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
 import {
@@ -23,9 +25,9 @@ import {
   pone_ceros,
   format_Fecha_String,
   permissionsComponents,
+  fechaFormatExcel,
+  chunkArray,
 } from "@/app/utils/globalfn";
-import Button from "@/app/components/button";
-import Tooltip from "@/app/components/tooltip";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import "jspdf-autotable";
@@ -34,8 +36,9 @@ import TablaPagos1 from "@/app/pagos1/components/tablaPagos1";
 import ModalPagoImprime from "@/app/pagos1/components/modalPagosImprime";
 import ModalRecargos from "@/app/pagos1/components/modalRecargos";
 import ModalParciales from "@/app/pagos1/components/modalParciales";
-import { showSwal, showSwalAndWait } from "@/app/utils/alerts";
+import { showSwal, showSwalAndWait, confirmSwal} from "@/app/utils/alerts";
 import Swal from "sweetalert2";
+import * as XLSX from "xlsx";
 function Pagos_1() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -58,6 +61,7 @@ function Pagos_1() {
   const [muestraParciales, setMuestraParciales] = useState(false);
   const [muestraImpresion, setMuestraImpresion] = useState(false);
   const [muestraDocumento, setMuestraDocumento] = useState(false);
+  const [isLoadingButton, setisLoadingButton] = useState(false);
   const [dRecargo, setDrecargo] = useState("");
   const [selectedTable, setSelectedTable] = useState({});
   const [cargado, setCargado] = useState(false);
@@ -72,6 +76,9 @@ function Pagos_1() {
   const nameInputs2 = ["numero", "comentario_1"];
   const columnasBuscaCat2 = ["numero", "comentario_1"];
   const [permissions, setPermissions] = useState({});
+
+  const [dataJson, setDataJson] = useState([]); 
+  const [reload_page, setReloadPage] = useState(false)
 
   const {
     register,
@@ -815,6 +822,108 @@ function Pagos_1() {
     evt.preventDefault();
     evt.target.select();
   };
+  const procesarDatos = () => {
+    //showModalProcesa(true);
+    document.getElementById("my_modal_detalle_pedido").showModal()
+  }
+
+  const buttonProcess = async () => {
+      event.preventDefault();
+      setisLoadingButton(true);
+      const { token } = session.user;
+      const chunks = chunkArray(dataJson, 20);
+      for (let chunk of chunks) {
+        await storeBatchDetallePedido(token, chunk)
+      }
+      setDataJson([]);
+      document.getElementById("my_modal_detalle_pedido").close();
+      showSwal("Éxito", "Los datos se han subido correctamente.", "success");
+      setReloadPage(!reload_page);
+      setisLoadingButton(false);
+    };  
+
+  const handleFileChange = async (e) => {
+      const confirmed = await confirmSwal(
+        "¿Desea Continuar?",
+        "Asegúrate de que las columnas del archivo de excel coincidan exactamente con las columnas de la tabla en la base de datos.",
+        "warning",
+        "Aceptar",
+        "Cancelar",
+        "my_modal_detalle_pedido"
+      );
+      if (!confirmed) {
+        return;
+      }
+      const selectedFile = e.target.files[0];
+      if (selectedFile) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const data = new Uint8Array(event.target.result);
+          const workbook = XLSX.read(data, { type: "array" });
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+          const jsonData = XLSX.utils.sheet_to_json(worksheet);
+          const convertedData = jsonData.map(item => ({
+            recibo: parseInt(item.Recibo || 0),
+            alumno: parseInt(item.Alumno || 0),
+            articulo: parseInt(item.Articulo || 0),
+            documento: parseInt(item.Documento || 0),
+            fecha: (fechaFormatExcel(item.Fecha) || ""),
+            cantidad: parseInt(item.Cantidad || 0),
+            precio_unitario: parseFloat(item.Precio_Unitario || 0),
+            descuento: parseInt(item.Descuento || 0),
+            iva: parseFloat(item.IVA || 0),
+            numero_factura: parseInt(item.Numero_Factura || 0),
+          }));
+          setDataJson(convertedData);
+        };
+        reader.readAsArrayBuffer(selectedFile);
+      }
+    };
+
+  const itemHeaderTable = () => {
+    return (
+      <>
+        <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Recibo.</td>
+        <td className="w-[40%]">Alumno</td>
+        <td className="w-[15%]">Articulo</td>
+        <td className="w-[15%]">Documento</td>
+        <td className="w-[10%]">Fecha</td>
+        <td className="w-[15%]">Cantidad</td>
+        <td className="w-[10%]">Precio Unitario</td>
+        <td className="w-[10%]">Descuento</td>
+        <td className="w-[10%]">IVA</td>
+        <td className="w-[10%]">Numero Factura</td>
+      </>
+    );
+  };
+
+  const itemDataTable = (item) => {
+    return (
+      <>
+        <tr key={item.recibo} className="hover:cursor-pointer">
+          <th
+            className={
+              typeof item.recibo === "number"
+                ? "text-left"
+                : "text-right"
+            }
+          >
+            {item.recibo}
+          </th>
+          <td className="text-left">{item.alumno}</td>
+          <td className="text-left">{item.articulo}</td>
+          <td className="text-left">{item.documento}</td>
+          <td className="text-left">{item.fecha}</td>
+          <td className="text-right">{item.cantidad}</td>
+          <td className="text-right">{item.precio_unitario}</td>
+          <td className="text-right">{item.descuento}</td>
+          <td className="text-right">{item.iva}</td>
+          <td className="text-right">{item.numero_factura}</td>
+        </tr>
+      </>
+    );
+  };
 
   if (status === "loading") {
     return (
@@ -823,7 +932,22 @@ function Pagos_1() {
   }
   return (
     <>
-      <ModalNuevoRegistro
+      <ModalProcesarDatos
+        id_modal={"my_modal_detalle_pedido"}
+        session={session}
+        buttonProcess={buttonProcess}
+        isLoadingButton={isLoadingButton}
+        isLoading={isLoading}
+        title={"Procesar Datos desde Excel."}
+        setDataJson={setDataJson}
+        dataJson={dataJson}
+        handleFileChange={handleFileChange}
+        itemHeaderTable={itemHeaderTable}
+        itemDataTable={itemDataTable}
+        //clase para mover al tamaño del modal a preferencia (max-w-4xl)
+        classModal={"modal-box w-full max-w-4xl h-full bg-base-200"}
+      />
+      {/* <ModalNuevoRegistro
         session={session}
         productos1={productos1}
         setProductos1={setProductos1}
@@ -837,7 +961,7 @@ function Pagos_1() {
         handleInputClick={handleInputClick}
         handleEnterKey={handleEnterKey}
         handleModalClick={handleModalClick}
-      />
+      /> */}
       <ModalRecargos
         register={register}
         errors={errors}
@@ -907,6 +1031,7 @@ function Pagos_1() {
                 Recargos={Recargos}
                 Parciales={Parciales}
                 Alta={Alta}
+                procesarDatos={procesarDatos}
                 muestraRecargos={muestraRecargos}
                 muestraParciales={muestraParciales}
                 muestraImpresion={muestraImpresion}

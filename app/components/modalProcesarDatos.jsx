@@ -90,7 +90,7 @@ function ModalProcesarDatos({
                         />
                     </div>
                     <div className="flex flex-col items-center h-full">
-                        <div className="w-full max-w-4xl">
+                        <div className="w-full max-w-3xl">
                             <TablaProcesaDatos
                                 session={session}
                                 isLoading={isLoading}
