@@ -23,7 +23,7 @@ import "jspdf-autotable";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { ReportePDF } from "../utils/ReportesPDF";
 import { debounce, permissionsComponents, chunkArray } from "../utils/globalfn";
-
+import { truncateTable } from "../utils/GlobalApis";
 function Cajeros() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -364,20 +364,33 @@ function Cajeros() {
     document.getElementById("modalVPCajero").close();
   };
 
-    const buttonProcess = async () => {
-      event.preventDefault();
-      setisLoadingButton(true);
-      const { token } = session.user;
-      const chunks = chunkArray(dataJson, 20);
-      for (let chunk of chunks) {
-        await storeBatchCajero(token, chunk)
-      }
-      setDataJson([]);
-      showModalProcesa(false);
-      showSwal("Éxito", "Los datos se han subido correctamente.", "success");
-      setReloadPage(!reload_page);
+  const buttonProcess = async () => {
+    event.preventDefault();
+    setisLoadingButton(true);
+    const confirmed = await confirmSwal(
+      "¿Desea continuar?",
+      "Se eliminarán todos los datos actuales de la tabla.",
+      "warning",
+      "Aceptar",
+      "Cancelar",
+      "my_modal_4"
+    );
+    if (!confirmed) {
       setisLoadingButton(false);
-    };
+      return;
+    }
+    const { token } = session.user;
+    await truncateTable(token, "cajeros");
+    const chunks = chunkArray(dataJson, 20);
+    for (let chunk of chunks) {
+      await storeBatchCajero(token, chunk);
+    }
+    setDataJson([]);
+    showModalProcesa(false);
+    showSwal("Éxito", "Los datos se han subido correctamente.", "success");
+    setReloadPage(!reload_page);
+    setisLoadingButton(false);
+  };
 
       const handleFileChange = async (e) => {
         const confirmed = await confirmSwal(
