@@ -12,6 +12,7 @@ import {
   guardarHorario,
   Imprimir,
   ImprimirExcel,
+  storeBatchHorario,
 } from "@/app/utils/api/horarios/horarios";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -20,6 +21,7 @@ import { getProductos } from "../utils/api/productos/productos";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { ReportePDF } from "../utils/ReportesPDF";
 import { debounce, permissionsComponents } from "../utils/globalfn";
+import ModalProcesarDatos from "../components/modalProcesarDatos";
 
 function Horarios() {
   const router = useRouter();
@@ -42,6 +44,9 @@ function Horarios() {
   const horariosRef = useRef(horarios)
   const [isLoadingButton, setisLoadingButton] = useState(false);
   const [permissions, setPermissions] = useState({});
+  //useState para los datos que se trae del excel
+  const [dataJson, setDataJson] = useState([]);
+  const [reload_page, setReloadPage] = useState(false);
 
   useEffect(() => {
     horariosRef.current = horarios
@@ -94,7 +99,7 @@ function Horarios() {
       return;
     }
     fetchData();
-  }, [session, status, bajas]);
+  }, [session, status, bajas, reload_page]);
 
   const {
     register,
@@ -224,6 +229,14 @@ function Horarios() {
     }
     setisLoadingButton(false);
   });
+  const procesarDatos = () => {
+    showModalProcesa(true);
+  };
+  const showModalProcesa = (show) => {
+    show
+      ? document.getElementById("my_modal_4").showModal()
+      : document.getElementById("my_modal_4").close();
+  };
   const showModal = (show) => {
     show
       ? document.getElementById("my_modal_horario").showModal()
@@ -346,6 +359,107 @@ function Horarios() {
     setPdfData("");
     document.getElementById("modalVPHorarios").close();
   };
+
+    const buttonProcess = async () => {
+      event.preventDefault();
+      setisLoadingButton(true);
+      const { token } = session.user;
+      const chunks = chunkArray(dataJson, 20);
+      for (let chunk of chunks) {
+        await storeBatchHorario(token, chunk)
+      }
+      setDataJson([]);
+      showModalProcesa(false);
+      showSwal("Éxito", "Los datos se han subido correctamente.", "success");
+      setReloadPage(!reload_page);
+      setisLoadingButton(false);
+    };
+
+      const handleFileChange = async (e) => {
+        const confirmed = await confirmSwal(
+          "¿Desea Continuar?",
+          "Por favor, verifica que las columnas del archivo de Excel coincidan exactamente con las columnas de la tabla en la base de datos y que no contengan espacios en blanco.",
+          "warning",
+          "Aceptar",
+          "Cancelar",
+          "my_modal_4"
+        );
+        if (!confirmed) {
+          return;
+        }
+        const selectedFile = e.target.files[0];
+        if (selectedFile) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const data = new Uint8Array(event.target.result);
+            const workbook = XLSX.read(data, { type: "array" });
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet);
+            const convertedData = jsonData.map(item => ({
+              numero: parseInt(item.Numero || 0),
+              cancha: parseInt(item.Cancha || 0),
+              dia: (item.Dia && String(item.Dia).trim() !== "") ? String(item.Dia).slice(0, 15) : "N/A",
+              horario: (item.Horario && String(item.Horario).trim() !== "") ? String(item.Horario).slice(0, 20) : "N/A",
+              max_niños: parseInt(item.Max_niños || 0),
+              sexo: (item.Sexo && String(item.Sexo).trim() !== "") ? String(item.Sexo).slice(0, 8) : "N/A",
+              edad_ini: parseInt(item.Edad_ini || 0),
+              edad_fin: parseInt(item.Edad_fin || 0),
+              baja: (item.Baja && item.Baja.trim() !== "") ? String(item.Baja).slice(0, 1) : "n",
+              salon: (item.Salon && item.Salon.trim() !== "") ? String(item.Salon).slice(0, 10) : "N/A",
+            }));
+            setDataJson(convertedData);
+          };
+          reader.readAsArrayBuffer(selectedFile);
+        }
+      };
+
+      const itemHeaderTable = () => {
+        return (
+          <>
+            <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
+            <td className="w-[40%]">Cancha</td>
+            <td className="w-[15%]">Dia</td>
+            <td className="w-[15%]">Horario</td>
+            <td className="w-[15%]">Max_niños</td>
+            <td className="w-[15%]">Sexo</td>
+            <td className="w-[10%]">Edad_ini</td>
+            <td className="w-[10%]">Edad_fin</td>
+            <td className="w-[10%]">Baja</td>
+            <td className="w-[10%]">Salon</td>
+          </>
+        );
+      };
+
+      const itemDataTable = (item) => {
+        return (
+          <>
+            <tr key={item.numero} className="hover:cursor-pointer">
+              <th
+                className={
+                  typeof item.numero === "number"
+                    ? "text-left"
+                    : "text-right"
+                }
+              >
+                {item.numero}
+              </th>
+              <td className="w-[40%] max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap pt-[.10rem] pb-[.10rem]">
+                {item.cancha}
+              </td>
+              <td className="text-right">{item.dia}</td>
+              <td className="text-left">{item.horario}</td>
+              <td className="text-right">{item.max_niños}</td>
+              <td className="text-right">{item.sexo}</td>
+              <td className="text-right">{item.edad_ini}</td>
+              <td className="text-right">{item.edad_fin}</td>
+              <td className="text-right">{item.baja}</td>
+              <td className="text-left">{item.salon}</td>
+            </tr>
+          </>
+        );
+      };
+
   const showModalVista = (show) => {
     show
       ? document.getElementById("modalVPHorarios").showModal()
@@ -370,6 +484,21 @@ function Horarios() {
         setDia={setDia}
         isLoadingButton={isLoadingButton}
       />
+      <ModalProcesarDatos
+        id_modal={"my_modal_4"}
+        session={session}
+        buttonProcess={buttonProcess}
+        isLoadingButton={isLoadingButton}
+        isLoading={isLoading}
+        title={"Procesar Datos desde Excel."}
+        setDataJson={setDataJson}
+        dataJson={dataJson}
+        handleFileChange={handleFileChange}
+        itemHeaderTable={itemHeaderTable}
+        itemDataTable={itemDataTable}
+        //clase para mover al tamaño del modal a preferencia (max-w-4xl)
+        classModal={"modal-box w-full max-w-4xl h-full bg-base-200"}
+      />
       <VistaPrevia
         id="modalVPHorarios"
         titulo={"Vista Previa de Horarios"}
@@ -389,6 +518,7 @@ function Horarios() {
                 home={home}
                 animateLoading={animateLoading}
                 Ver={handleVerClick}
+                procesarDatos={procesarDatos}
                 permiso_alta={permissions.altas}
                 permiso_imprime={permissions.impresion}
               />

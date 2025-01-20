@@ -7,7 +7,7 @@ const secret = process.env.NEXTAUTH_SECRET;
 export async function middleware(req) {
   // Obtén el token de sesión desde las cookies
   const token = await getToken({ req, secret });
-  console.log("Token recibido:", token);
+  //console.log("Token recibido:", token);
   
   // Ruta solicitada
   const { pathname } = req.nextUrl;
