@@ -149,15 +149,15 @@ function Alumnos() {
         : true;
       const coincideDescripcion = tb_desc
         ? alumno["nombre"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_desc.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
         : true;
       const coincideGrado = tb_grado
         ? (alumno["horario_1_nombre"] || "")
-          .toString()
-          .toLowerCase()
-          .includes(tb_grado.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_grado.toLowerCase())
         : true;
       return coincideId && coincideDescripcion && coincideGrado;
     });
@@ -543,8 +543,9 @@ function Alumnos() {
         return;
       }
     }
-    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${data.a_nombre || ""
-      }`.trim();
+    const nombreCompleto = `${data.a_paterno || ""} ${data.a_materno || ""} ${
+      data.a_nombre || ""
+    }`.trim();
     data.nombre = nombreCompleto;
     const formData = new FormData();
     formData.append("numero", data.numero || "");
@@ -922,9 +923,10 @@ function Alumnos() {
     event.preventDefault();
     setisLoadingButton(true);
     const { token } = session.user;
+    await truncateTable(token, "alumnos");
     const chunks = chunkArray(dataJson, 20);
     for (let chunk of chunks) {
-      await storeBatchAlumnos(token, chunk)
+      await storeBatchAlumnos(token, chunk);
     }
     setDataJson([]);
     showModalProcesa(false);
@@ -954,22 +956,70 @@ function Alumnos() {
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
-        const convertedData = jsonData.map(item => ({
+        const convertedData = jsonData.map((item) => ({
           numero: parseInt(item.Numero || 0),
           nombre: validateString(MAX_LENGTHS, "nombre", item.Nombre || "N/A"),
-          a_paterno: validateString(MAX_LENGTHS, "a_paterno", item.A_Paterno || "N/A"),
-          a_materno: validateString(MAX_LENGTHS, "a_materno", item.A_Materno || "N/A"),
-          a_nombre: validateString(MAX_LENGTHS, "a_nombre", item.A_Nombre || ""),
-          fecha_nac: validateString(MAX_LENGTHS, "fecha_nac", item.Fecha_Nac || "N/A"),
-          fecha_inscripcion: validateString(MAX_LENGTHS, "fecha_inscripcion", item.Fecha_Inscripcion || "N/A"),
-          fecha_baja: validateString(MAX_LENGTHS, "fecha_baja", item.Fecha_Baja || ""),
+          a_paterno: validateString(
+            MAX_LENGTHS,
+            "a_paterno",
+            item.A_Paterno || "N/A"
+          ),
+          a_materno: validateString(
+            MAX_LENGTHS,
+            "a_materno",
+            item.A_Materno || "N/A"
+          ),
+          a_nombre: validateString(
+            MAX_LENGTHS,
+            "a_nombre",
+            item.A_Nombre || ""
+          ),
+          fecha_nac: validateString(
+            MAX_LENGTHS,
+            "fecha_nac",
+            item.Fecha_Nac || "N/A"
+          ),
+          fecha_inscripcion: validateString(
+            MAX_LENGTHS,
+            "fecha_inscripcion",
+            item.Fecha_Inscripcion || "N/A"
+          ),
+          fecha_baja: validateString(
+            MAX_LENGTHS,
+            "fecha_baja",
+            item.Fecha_Baja || ""
+          ),
           sexo: validateString(MAX_LENGTHS, "sexo", item.Sexo || "N/A"),
-          telefono1: validateString(MAX_LENGTHS, "telefono1", item.Telefono1 || "N/A"),
-          telefono2: validateString(MAX_LENGTHS, "telefono2", item.Telefono2 || ""),
-          celular: validateString(MAX_LENGTHS, "celular", item.Celular || "N/A"),
-          codigo_barras: validateString(MAX_LENGTHS, "codigo_barras", item.Codigo_Barras || ""),
-          direccion: validateString(MAX_LENGTHS, "direccion", item.Direccion || "N/A"),
-          colonia: validateString(MAX_LENGTHS, "colonia", item.Colonia || "N/A"),
+          telefono1: validateString(
+            MAX_LENGTHS,
+            "telefono1",
+            item.Telefono1 || "N/A"
+          ),
+          telefono2: validateString(
+            MAX_LENGTHS,
+            "telefono2",
+            item.Telefono2 || ""
+          ),
+          celular: validateString(
+            MAX_LENGTHS,
+            "celular",
+            item.Celular || "N/A"
+          ),
+          codigo_barras: validateString(
+            MAX_LENGTHS,
+            "codigo_barras",
+            item.Codigo_Barras || ""
+          ),
+          direccion: validateString(
+            MAX_LENGTHS,
+            "direccion",
+            item.Direccion || "N/A"
+          ),
+          colonia: validateString(
+            MAX_LENGTHS,
+            "colonia",
+            item.Colonia || "N/A"
+          ),
           ciudad: validateString(MAX_LENGTHS, "ciudad", item.Ciudad || "N/A"),
           estado: validateString(MAX_LENGTHS, "estado", item.Estado || "N/A"),
           cp: validateString(MAX_LENGTHS, "cp", item.CP || "N/A"),
@@ -1010,38 +1060,122 @@ function Alumnos() {
           cond_1: parseInt(item.Cond_1 || 0),
           cond_2: parseInt(item.Cond_2 || 0),
           cond_3: parseInt(item.Cond_3 || 0),
-          nom_pediatra: validateString(MAX_LENGTHS, "nom_pediatra", item.Nom_Pediatra || ""),
+          nom_pediatra: validateString(
+            MAX_LENGTHS,
+            "nom_pediatra",
+            item.Nom_Pediatra || ""
+          ),
           tel_p_1: validateString(MAX_LENGTHS, "tel_p_1", item.Tel_P_1 || ""),
           tel_p_2: validateString(MAX_LENGTHS, "tel_p_2", item.Tel_P_2 || ""),
           cel_p_1: validateString(MAX_LENGTHS, "cel_p_1", item.Cel_P_1 || ""),
-          tipo_sangre: validateString(MAX_LENGTHS, "tipo_sangre", item.Tipo_Sangre || ""),
+          tipo_sangre: validateString(
+            MAX_LENGTHS,
+            "tipo_sangre",
+            item.Tipo_Sangre || ""
+          ),
           alergia: validateString(MAX_LENGTHS, "alergia", item.Alergia || ""),
-          aseguradora: validateString(MAX_LENGTHS, "aseguradora", item.Aseguradora || ""),
+          aseguradora: validateString(
+            MAX_LENGTHS,
+            "aseguradora",
+            item.Aseguradora || ""
+          ),
           poliza: validateString(MAX_LENGTHS, "poliza", item.Poliza || ""),
-          tel_ase_1: validateString(MAX_LENGTHS, "tel_ase_1", item.Tel_Ase_1 || ""),
-          tel_ase_2: validateString(MAX_LENGTHS, "tel_ase_2", item.Tel_Ase_2 || ""),
-          razon_social: validateString(MAX_LENGTHS, "razon_social", item.Razon_Social || ""),
-          raz_direccion: validateString(MAX_LENGTHS, "raz_direccion", item.Raz_Direccion || ""),
+          tel_ase_1: validateString(
+            MAX_LENGTHS,
+            "tel_ase_1",
+            item.Tel_Ase_1 || ""
+          ),
+          tel_ase_2: validateString(
+            MAX_LENGTHS,
+            "tel_ase_2",
+            item.Tel_Ase_2 || ""
+          ),
+          razon_social: validateString(
+            MAX_LENGTHS,
+            "razon_social",
+            item.Razon_Social || ""
+          ),
+          raz_direccion: validateString(
+            MAX_LENGTHS,
+            "raz_direccion",
+            item.Raz_Direccion || ""
+          ),
           raz_cp: validateString(MAX_LENGTHS, "raz_cp", item.Raz_CP || ""),
-          raz_colonia: validateString(MAX_LENGTHS, "raz_colonia", item.Raz_Colonia || ""),
-          raz_ciudad: validateString(MAX_LENGTHS, "raz_ciudad", item.Raz_Ciudad || ""),
-          raz_estado: validateString(MAX_LENGTHS, "raz_estado", item.Raz_Estado || ""),
-          nom_padre: validateString(MAX_LENGTHS, "nom_padre", item.Nom_Padre || ""),
-          tel_pad_1: validateString(MAX_LENGTHS, "tel_pad_1", item.Tel_Pad_1 || ""),
-          tel_pad_2: validateString(MAX_LENGTHS, "tel_pad_2", item.Tel_Pad_2 || ""),
+          raz_colonia: validateString(
+            MAX_LENGTHS,
+            "raz_colonia",
+            item.Raz_Colonia || ""
+          ),
+          raz_ciudad: validateString(
+            MAX_LENGTHS,
+            "raz_ciudad",
+            item.Raz_Ciudad || ""
+          ),
+          raz_estado: validateString(
+            MAX_LENGTHS,
+            "raz_estado",
+            item.Raz_Estado || ""
+          ),
+          nom_padre: validateString(
+            MAX_LENGTHS,
+            "nom_padre",
+            item.Nom_Padre || ""
+          ),
+          tel_pad_1: validateString(
+            MAX_LENGTHS,
+            "tel_pad_1",
+            item.Tel_Pad_1 || ""
+          ),
+          tel_pad_2: validateString(
+            MAX_LENGTHS,
+            "tel_pad_2",
+            item.Tel_Pad_2 || ""
+          ),
           cel_pad: validateString(MAX_LENGTHS, "cel_pad", item.Cel_Pad || ""),
-          nom_madre: validateString(MAX_LENGTHS, "nom_madre", item.Nom_Madre || ""),
-          tel_mad_1: validateString(MAX_LENGTHS, "tel_mad_1", item.Tel_Mad_1 || ""),
-          tel_mad_2: validateString(MAX_LENGTHS, "tel_mad_2", item.Tel_Mad_2 || ""),
+          nom_madre: validateString(
+            MAX_LENGTHS,
+            "nom_madre",
+            item.Nom_Madre || ""
+          ),
+          tel_mad_1: validateString(
+            MAX_LENGTHS,
+            "tel_mad_1",
+            item.Tel_Mad_1 || ""
+          ),
+          tel_mad_2: validateString(
+            MAX_LENGTHS,
+            "tel_mad_2",
+            item.Tel_Mad_2 || ""
+          ),
           cel_mad: validateString(MAX_LENGTHS, "cel_mad", item.Cel_Mad || ""),
           nom_avi: validateString(MAX_LENGTHS, "nom_avi", item.Nom_Avi || ""),
-          tel_avi_1: validateString(MAX_LENGTHS, "tel_avi_1", item.Tel_Avi_1 || ""),
-          tel_avi_2: validateString(MAX_LENGTHS, "tel_avi_2", item.Tel_Avi_2 || ""),
+          tel_avi_1: validateString(
+            MAX_LENGTHS,
+            "tel_avi_1",
+            item.Tel_Avi_1 || ""
+          ),
+          tel_avi_2: validateString(
+            MAX_LENGTHS,
+            "tel_avi_2",
+            item.Tel_Avi_2 || ""
+          ),
           cel_avi: validateString(MAX_LENGTHS, "cel_avi", item.Cel_Avi || ""),
-          ciclo_escolar: validateString(MAX_LENGTHS, "ciclo_escolar", item.Ciclo_Escolar || ""),
+          ciclo_escolar: validateString(
+            MAX_LENGTHS,
+            "ciclo_escolar",
+            item.Ciclo_Escolar || ""
+          ),
           descuento: parseFloat(item.Descuento || 0),
-          rfc_factura: validateString(MAX_LENGTHS, "rfc_factura", item.RFC_Factura || ""),
-          estatus: validateString(MAX_LENGTHS, "estatus", item.Estatus || "N/A"),
+          rfc_factura: validateString(
+            MAX_LENGTHS,
+            "rfc_factura",
+            item.RFC_Factura || ""
+          ),
+          estatus: validateString(
+            MAX_LENGTHS,
+            "estatus",
+            item.Estatus || "N/A"
+          ),
           escuela: validateString(MAX_LENGTHS, "escuela", item.Escuela || ""),
           grupo: validateString(MAX_LENGTHS, "grupo", item.Grupo || ""),
           baja: validateString(MAX_LENGTHS, "baja", item.Baja || "n"),
@@ -1247,7 +1381,6 @@ function Alumnos() {
       </>
     );
   };
-
 
   if (status === "loading") {
     return (

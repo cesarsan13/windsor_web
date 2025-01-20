@@ -9,7 +9,11 @@ import Busqueda from "@/app/productos/components/Busqueda";
 import Acciones from "@/app/productos/components/Acciones";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { useForm } from "react-hook-form";
-import { chunkArray, debounce, permissionsComponents } from "@/app/utils/globalfn";
+import {
+  chunkArray,
+  debounce,
+  permissionsComponents,
+} from "@/app/utils/globalfn";
 import {
   getProductos,
   guardarProductos,
@@ -26,6 +30,7 @@ import * as XLSX from "xlsx";
 import { ReportePDF } from "../utils/ReportesPDF";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
+import { truncateTable } from "../utils/GlobalApis";
 function Productos() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -69,9 +74,9 @@ function Productos() {
         : true;
       const coincideDescripcion = tb_desc
         ? producto["descripcion"]
-          .toString()
-          .toLowerCase()
-          .includes(tb_desc.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
         : true;
       return coincideId && coincideDescripcion;
     });
@@ -470,10 +475,23 @@ function Productos() {
   const buttonProcess = async () => {
     event.preventDefault();
     setisLoadingButton(true);
+    const confirmed = await confirmSwal(
+      "¿Desea continuar?",
+      "Se eliminarán todos los datos actuales de la tabla.",
+      "warning",
+      "Aceptar",
+      "Cancelar",
+      "my_modal_4"
+    );
+    if (!confirmed) {
+      setisLoadingButton(false);
+      return;
+    }
     const { token } = session.user;
+    await truncateTable(token, "productos");
     const chunks = chunkArray(dataJson, 20);
     for (let chunk of chunks) {
-      await storeBatchProduct(token, chunk)
+      await storeBatchProduct(token, chunk);
     }
     setDataJson([]);
     showModalProcesa(false);
@@ -503,18 +521,33 @@ function Productos() {
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
-        const convertedData = jsonData.map(item => ({
+        const convertedData = jsonData.map((item) => ({
           numero: parseInt(item.Numero || 0),
-          descripcion: (item.Descripcion && String(item.Descripcion).trim() !== "") ? String(item.Descripcion).slice(0, 255) : "N/A",
+          descripcion:
+            item.Descripcion && String(item.Descripcion).trim() !== ""
+              ? String(item.Descripcion).slice(0, 255)
+              : "N/A",
           costo: parseFloat(item.Costo || 0),
-          frecuencia: (item.Frecuencia && String(item.Frecuencia).trim() !== "") ? String(item.Frecuencia).slice(0, 20) : "N/A",
+          frecuencia:
+            item.Frecuencia && String(item.Frecuencia).trim() !== ""
+              ? String(item.Frecuencia).slice(0, 20)
+              : "N/A",
           por_recargo: parseFloat(item.Por_Recargo || 0),
-          aplicacion: (item.Aplicacion && String(item.Aplicacion).trim() !== "") ? String(item.Aplicacion).slice(0, 25) : "N/A",
+          aplicacion:
+            item.Aplicacion && String(item.Aplicacion).trim() !== ""
+              ? String(item.Aplicacion).slice(0, 25)
+              : "N/A",
           iva: parseFloat(item.IVA || 0),
           cond_1: parseInt(item.Cond_1 || 0),
           cam_precio: item.Cam_Precio ? 1 : 0,
-          ref: (item.Ref && item.Ref.trim() !== "") ? String(item.Ref).slice(0, 20) : "N/A",
-          baja: (item.Baja && item.Baja.trim() !== "") ? String(item.Baja).slice(0, 1) : "n",
+          ref:
+            item.Ref && item.Ref.trim() !== ""
+              ? String(item.Ref).slice(0, 20)
+              : "N/A",
+          baja:
+            item.Baja && item.Baja.trim() !== ""
+              ? String(item.Baja).slice(0, 1)
+              : "n",
         }));
         setDataJson(convertedData);
       };
@@ -546,9 +579,7 @@ function Productos() {
         <tr key={item.numero} className="hover:cursor-pointer">
           <th
             className={
-              typeof item.numero === "number"
-                ? "text-left"
-                : "text-right"
+              typeof item.numero === "number" ? "text-left" : "text-right"
             }
           >
             {item.numero}

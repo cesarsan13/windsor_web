@@ -21,7 +21,12 @@ import { siguiente } from "@/app/utils/api/formfact/formfact";
 import "jspdf-autotable";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import ConfigReporte from "./components/configReporte";
-import { chunkArray, debounce, permissionsComponents, validateString } from "@/app/utils/globalfn";
+import {
+  chunkArray,
+  debounce,
+  permissionsComponents,
+  validateString,
+} from "@/app/utils/globalfn";
 import * as XLSX from "xlsx";
 function FormFact() {
   const router = useRouter();
@@ -41,7 +46,7 @@ function FormFact() {
   const [labels, setLabels] = useState([]);
   const [propertyData, setPropertyData] = useState({});
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
-  const formFactsRef = useRef(formFacts)
+  const formFactsRef = useRef(formFacts);
   const [isLoadingButton, setisLoadingButton] = useState(false);
   const [animateLoading, setAnimateLoading] = useState(false);
   const [permissions, setPermissions] = useState({});
@@ -58,10 +63,10 @@ function FormFact() {
   const MAX_LENGTHS = {
     nombre_forma: 50,
     baja: 1,
-  }
+  };
   useEffect(() => {
-    formFactsRef.current = formFacts
-  }, [formFacts])
+    formFactsRef.current = formFacts;
+  }, [formFacts]);
   useEffect(() => {
     if (formato === "") {
       return;
@@ -80,8 +85,13 @@ function FormFact() {
       setFormFacts(data);
       setFormFactsFiltrados(data);
       setisLoading(false);
-      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
-      setPermissions(permisos)
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menuSeleccionado
+      );
+      setPermissions(permisos);
     };
     if (status === "loading" || !session) {
       return;
@@ -137,7 +147,7 @@ function FormFact() {
     setFormFactsFiltrados(infoFiltrada);
   }, [busqueda]);
 
-  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar])
+  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
   useEffect(() => {
     debouncedBuscar();
@@ -267,9 +277,10 @@ function FormFact() {
     event.preventDefault();
     setisLoadingButton(true);
     const { token } = session.user;
+    await truncateTable(token, "facturas_formas");
     const chunks = chunkArray(dataJson, 20);
     for (let chunk of chunks) {
-      await storeBatchFormFact(token, chunk)
+      await storeBatchFormFact(token, chunk);
     }
     setDataJson([]);
     showModalProcesa(false);
@@ -289,7 +300,7 @@ function FormFact() {
     );
     if (!confirmed) {
       return;
-    };
+    }
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       const reader = new FileReader();
@@ -300,16 +311,20 @@ function FormFact() {
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
         console.log("data", jsonData);
-        const convertedData = jsonData.map(item => ({
+        const convertedData = jsonData.map((item) => ({
           numero_forma: parseInt(item.Numero_Forma || 0),
-          nombre_forma: validateString(MAX_LENGTHS, "nombre_forma", item.Nombre_Forma || ""),
+          nombre_forma: validateString(
+            MAX_LENGTHS,
+            "nombre_forma",
+            item.Nombre_Forma || ""
+          ),
           longitud: parseFloat(item.Longitud || 0),
           baja: validateString(MAX_LENGTHS, "baja", item.Baja || "n"),
         }));
         setDataJson(convertedData);
       };
       reader.readAsArrayBuffer(selectedFile);
-    };
+    }
   };
 
   const itemHeaderTable = () => {
@@ -407,26 +422,23 @@ function FormFact() {
                 setShowSheet={setShowSheet}
                 currentID={currentID}
               ></ConfigReporte>
+            ) : status === "loading" || !session ? (
+              <></>
             ) : (
-              (status === "loading" || (!session)) ?
-                (<></>) :
-                (
-                  <TablaFormFact
-                    isLoading={isLoading}
-                    formFactsFiltrados={formFactsFiltrados}
-                    showModal={showModal}
-                    setFormFact={setFormFact}
-                    setAccion={setAccion}
-                    setCurrentId={setCurrentId}
-                    setShowSheet={setShowSheet}
-                    fetchFacturasFormato={fetchFacturasFormato}
-                    formato={formato}
-                    session={session}
-                    permiso_cambio={permissions.cambios}
-                    permiso_baja={permissions.bajas}
-                  />
-                )
-
+              <TablaFormFact
+                isLoading={isLoading}
+                formFactsFiltrados={formFactsFiltrados}
+                showModal={showModal}
+                setFormFact={setFormFact}
+                setAccion={setAccion}
+                setCurrentId={setCurrentId}
+                setShowSheet={setShowSheet}
+                fetchFacturasFormato={fetchFacturasFormato}
+                formato={formato}
+                session={session}
+                permiso_cambio={permissions.cambios}
+                permiso_baja={permissions.bajas}
+              />
             )}
           </div>
         </div>
