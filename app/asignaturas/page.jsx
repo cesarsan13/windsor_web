@@ -465,8 +465,8 @@ function Asignaturas() {
           <td className="w-[40%]">Descripcion</td>
           <td className="w-[15%]">Fecha Seg</td>
           <td className="w-[15%]">Hora Seg</td>
-          <td className="w-[10%]">Cve Seg</td>
-          <td className="w-[15%]">Baja</td>
+          <td className="w-[15%]">Cve Seg</td>
+          <td className="w-[10%]">Baja</td>
           <td className="w-[10%]">Evaluaciones</td>
           <td className="w-[10%]">Actividad</td>
           <td className="w-[10%]">Area</td>
