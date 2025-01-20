@@ -21,14 +21,6 @@ function Acciones({
 }) {
   const isAnyLoading = muestraRecargos || muestraParciales || muestraImpresion || muestraDocumento ;
   const images = [
-    // {
-    //   srcLight:iconos.procesa_w,
-    //   srcDark:iconos.procesa,
-    //   alt:"Procesar datos desde un archivo excel",
-    //   tooltipTitle:"Procesar datos desde un archivo excel",
-    //   onClick: procesarDatos,
-    //   permission:true
-    // },
     {
       srcLight: iconos.alta_w,
       srcDark: iconos.alta,
@@ -74,7 +66,21 @@ function Acciones({
       isLoading: muestraImpresion,
       permission: permiso_imprime,
     },
-    { srcLight: iconos.salir_w, srcDark: iconos.salir, alt: "Salir", tooltipTitle: "Salir", onClick: home, permission: true },
+    // {
+    //   srcLight:iconos.procesa_w,
+    //   srcDark:iconos.procesa,
+    //   alt:"Procesar datos desde un archivo excel",
+    //   tooltipTitle:"Procesar datos desde un archivo excel",
+    //   onClick: procesarDatos,
+    //   permission:true
+    // },
+    { srcLight: iconos.salir_w, 
+      srcDark: iconos.salir, 
+      alt: "Salir", 
+      tooltipTitle: "Salir", 
+      onClick: home, 
+      permission: true 
+    },
   ];
 
   const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, isLoading, disabled, permission }) => {

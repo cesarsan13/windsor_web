@@ -1031,7 +1031,7 @@ function Pagos_1() {
                 Recargos={Recargos}
                 Parciales={Parciales}
                 Alta={Alta}
-                procesarDatos={procesarDatos}
+                //procesarDatos={procesarDatos}
                 muestraRecargos={muestraRecargos}
                 muestraParciales={muestraParciales}
                 muestraImpresion={muestraImpresion}

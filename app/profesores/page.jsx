@@ -525,7 +525,7 @@ function Profesores() {
             <td className="w-[40%]">Nombre</td>
             <td className="w-[15%]">Ap. Paterno</td>
             <td className="w-[15%]">Ap. Materno</td>
-            <td className="w-[10%]">Direccion</td>
+            <td className="w-[15%]">Direccion</td>
             <td className="w-[15%]">Colonia</td>
             <td className="w-[10%]">Ciudad</td>
             <td className="w-[10%]">Estado</td>
