@@ -8,20 +8,25 @@ export async function middleware(req) {
   // Obtén el token de sesión desde las cookies
   const token = await getToken({ req, secret });
   //console.log("Token recibido:", token);
-  
+
   // Ruta solicitada
   const { pathname } = req.nextUrl;
 
   // Rutas públicas que no requieren validación
-  const publicPaths = ["/control_escolar/auth/login", "/control_escolar/auth/register"];
+  const publicPaths = [
+    "/control_escolar/auth/login",
+    "/control_escolar/auth/register",
+  ];
 
   // Si la ruta es de logout (/control_escolar), eliminar el token y redirigir a login
-  if (pathname === "/control_escolar") {
-    const logoutResponse = NextResponse.redirect(new URL("/control_escolar/auth/login", req.url));
-    // Eliminar el token de sesión (esto se hace mediante cookies)
-    logoutResponse.cookies.set("next-auth.session-token", "", { maxAge: -1 }); // Elimina el token
-    return logoutResponse;
-  }
+  // if (pathname === "/control_escolar") {
+  //   const logoutResponse = NextResponse.redirect(
+  //     new URL("/control_escolar/auth/login", req.url)
+  //   );
+  //   // Eliminar el token de sesión (esto se hace mediante cookies)
+  //   logoutResponse.cookies.set("next-auth.session-token", "", { maxAge: -1 }); // Elimina el token
+  //   return logoutResponse;
+  // }
 
   if (publicPaths.includes(pathname)) {
     // Permitir acceso directo a rutas públicas
@@ -36,9 +41,55 @@ export async function middleware(req) {
 
   // Si el token no tiene el valor "xescuela", redirigir a login
   if (!token.xescuela) {
-    const loginUrl = new URL("/control_escolar/auth/login", req.url);
-    return NextResponse.redirect(loginUrl);
+    const response = NextResponse.redirect(
+      new URL("/control_escolar/auth/login", req.url)
+    );
+    response.cookies.set("next-auth.session-tokenw", "", {
+      maxAge: -1,
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/control_escolar",
+    });
+    response.cookies.set("next-auth.session-tokenw.0", "", {
+      maxAge: -1,
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/control_escolar",
+    });
+    response.cookies.set("next-auth.session-tokenw.1", "", {
+      maxAge: -1,
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/control_escolar",
+    });
+
+    return response;
   }
+  // if (!token.xprueba) {
+  //   const response = NextResponse.redirect(
+  //     new URL("/control_escolar/auth/login", req.url)
+  //   );
+  //   response.cookies.set("next-auth.session-tokenw", "", {
+  //     maxAge: -1,
+  //     httpOnly: true,
+  //     sameSite: "lax",
+  //     path: "/control_escolar",
+  //   });
+  //   response.cookies.set("next-auth.session-tokenw.0", "", {
+  //     maxAge: -1,
+  //     httpOnly: true,
+  //     sameSite: "lax",
+  //     path: "/control_escolar",
+  //   });
+  //   response.cookies.set("next-auth.session-tokenw.1", "", {
+  //     maxAge: -1,
+  //     httpOnly: true,
+  //     sameSite: "lax",
+  //     path: "/control_escolar",
+  //   });
+
+  //   return response;
+  //  }
 
   // Permitir acceso si todas las validaciones pasan
   return NextResponse.next();
@@ -92,6 +143,6 @@ export const config = {
     "/rep_flujo_01",
     "/rep_inscritos",
     "/rep_w_becas",
-    "/usuarios"
-  ]
+    "/usuarios",
+  ],
 };

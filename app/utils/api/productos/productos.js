@@ -160,6 +160,9 @@ export const Imprimir = (configuracion) => {
   const timeStr = formatTime(date);
   // console.log("dateStr:",dateStr," timeStr:",timeStr)
   newPDF.guardaReporte(`Productos_${dateStr.replaceAll("/","")}_${timeStr.replaceAll(":","")}`);
+  newPDF.guardaReporte(
+    `Productos_${dateStr.replaceAll("/", "")}_${timeStr.replaceAll(":", "")}`
+  );
 };
 
 export const ImprimirExcel = (configuracion) => {
