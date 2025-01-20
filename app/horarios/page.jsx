@@ -22,6 +22,7 @@ import VistaPrevia from "@/app/components/VistaPrevia";
 import { ReportePDF } from "../utils/ReportesPDF";
 import { debounce, permissionsComponents } from "../utils/globalfn";
 import ModalProcesarDatos from "../components/modalProcesarDatos";
+import { truncateTable } from "../utils/GlobalApis";
 
 function Horarios() {
   const router = useRouter();
@@ -360,20 +361,33 @@ function Horarios() {
     document.getElementById("modalVPHorarios").close();
   };
 
-    const buttonProcess = async () => {
-      event.preventDefault();
-      setisLoadingButton(true);
-      const { token } = session.user;
-      const chunks = chunkArray(dataJson, 20);
-      for (let chunk of chunks) {
-        await storeBatchHorario(token, chunk)
-      }
-      setDataJson([]);
-      showModalProcesa(false);
-      showSwal("Éxito", "Los datos se han subido correctamente.", "success");
-      setReloadPage(!reload_page);
+  const buttonProcess = async () => {
+    event.preventDefault();
+    setisLoadingButton(true);
+    const confirmed = await confirmSwal(
+      "¿Desea continuar?",
+      "Se eliminarán todos los datos actuales de la tabla.",
+      "warning",
+      "Aceptar",
+      "Cancelar",
+      "my_modal_4"
+    );
+    if (!confirmed) {
       setisLoadingButton(false);
-    };
+      return;
+    }
+    const { token } = session.user;
+    await truncateTable(token, "horarios");
+    const chunks = chunkArray(dataJson, 20);
+    for (let chunk of chunks) {
+      await storeBatchHorario(token, chunk);
+    }
+    setDataJson([]);
+    showModalProcesa(false);
+    showSwal("Éxito", "Los datos se han subido correctamente.", "success");
+    setReloadPage(!reload_page);
+    setisLoadingButton(false);
+  };
 
       const handleFileChange = async (e) => {
         const confirmed = await confirmSwal(
