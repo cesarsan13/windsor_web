@@ -26,7 +26,6 @@ import { useSession } from "next-auth/react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
-import { truncateTable } from "../utils/GlobalApis";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import {
   formatFecha,
@@ -1035,7 +1034,7 @@ function Alumnos() {
           sexo: validateString(
             MAX_LENGTHS,
             "sexo",
-            (typeof item.Sexo === "string" ? item.Sexo.trim() : "N/A") || "N/A"
+            (typeof item.Sexo === "string" ? item.Sexo.trim() : "N") || "N"
           ),
           telefono1: validateString(
             MAX_LENGTHS,
