@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "../utils/alerts";
+import { showSwal, confirmSwal, showSwalConfirm } from "../utils/alerts";
 import ModalProductos from "@/app/productos/components/modalProductos";
 import ModalProcesarDatos from "@/app/components/modalProcesarDatos";
 import TablaProductos from "@/app/productos/components/tablaProductos";
@@ -490,14 +490,26 @@ function Productos() {
     const { token } = session.user;
     await truncateTable(token, "productos");
     const chunks = chunkArray(dataJson, 20);
+    let allErrors = "";
     for (let chunk of chunks) {
-      await storeBatchProduct(token, chunk);
+      const res = await storeBatchProduct(token, chunk);
+      if (!res.status) {
+        allErrors += res.alert_text;
+      }
     }
-    setDataJson([]);
-    showModalProcesa(false);
-    showSwal("Éxito", "Los datos se han subido correctamente.", "success");
-    setReloadPage(!reload_page);
     setisLoadingButton(false);
+    setDataJson([]);
+    if (allErrors) {
+      showSwalConfirm("Error", allErrors, "error", "my_modal_4");
+    } else {
+      showSwal(
+        "Éxito",
+        "Todos los productos se insertaron correctamente.",
+        "success"
+      );
+    }
+    setReloadPage(!reload_page);
+    // showModalProcesa(false);
   };
 
   const handleFileChange = async (e) => {

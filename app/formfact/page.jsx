@@ -1,7 +1,7 @@
 "use client";
 import React, { useTransition, useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "../utils/alerts";
+import { showSwal, confirmSwal, showSwalConfirm } from "../utils/alerts";
 import ModalFormFact from "@/app/formfact/components/modalFormFact";
 import ModalProcesarDatos from "@/app/components/modalProcesarDatos";
 import TablaFormFact from "@/app/formfact/components/tablaFormFact";
@@ -28,6 +28,7 @@ import {
   validateString,
 } from "@/app/utils/globalfn";
 import * as XLSX from "xlsx";
+import { truncateTable } from "@/app/utils/GlobalApis";
 function FormFact() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -276,17 +277,41 @@ function FormFact() {
   const buttonProcess = async () => {
     event.preventDefault();
     setisLoadingButton(true);
+    const confirmed = await confirmSwal(
+      "¿Desea continuar?",
+      "Se eliminarán todos los datos actuales de la tabla.",
+      "warning",
+      "Aceptar",
+      "Cancelar",
+      "my_modal_4"
+    );
+    if (!confirmed) {
+      setisLoadingButton(false);
+      return;
+    }
     const { token } = session.user;
     await truncateTable(token, "facturas_formas");
     const chunks = chunkArray(dataJson, 20);
+    let allErrors = "";
     for (let chunk of chunks) {
-      await storeBatchFormFact(token, chunk);
+      const res = await storeBatchFormFact(token, chunk);
+      if (!res.status) {
+        allErrors += res.alert_text;
+      }
     }
-    setDataJson([]);
-    showModalProcesa(false);
-    showSwal("Éxito", "Los datos se han subido correctamente.", "success");
-    setReloadPage(!reload_page);
     setisLoadingButton(false);
+    setDataJson([]);
+    if (allErrors) {
+      showSwalConfirm("Error", allErrors, "error", "my_modal_4");
+    } else {
+      showSwal(
+        "Éxito",
+        "Todos los factura formas se insertaron correctamente.",
+        "success"
+      );
+    }
+    setReloadPage(!reload_page);
+    // showModalProcesa(false);
   };
 
   const handleFileChange = async (e) => {

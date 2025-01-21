@@ -84,7 +84,7 @@ export const storeBatchFormFact = async (token, data) => {
     }),
   });
   const resJson = await res.json();
-  return resJson.data;
+  return resJson;
 };
 
 export const getPropertyData = (filtro) => {
