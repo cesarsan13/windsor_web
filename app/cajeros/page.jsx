@@ -49,7 +49,7 @@ function Cajeros() {
   const [permissions, setPermissions] = useState({});
   //useState para los datos que se trae del excel
   const [dataJson, setDataJson] = useState([]); 
-  const [reload_page, setReloadPage] = useState(false)
+  const [reload_page, setReloadPage] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
@@ -465,12 +465,12 @@ function Cajeros() {
                 {item.nombre}
               </td>
               <td className="text-right">{item.direccion}</td>
-              {/* <td className="text-left">{item.colonia}</td> */}
-              {/* <td className="text-right">{item.estado}</td> */}
+              <td className="text-left">{item.colonia}</td>
+              <td className="text-right">{item.estado}</td>
               <td className="text-right">{item.telefono}</td>
-              {/* <td className="text-right">{item.fax}</td> */}
+              <td className="text-right">{item.fax}</td>
               <td className="text-right">{item.mail}</td>
-              {/* <td className="text-right">{item.clave_cajero}</td> */}
+              <td className="text-right">{item.clave_cajero}</td>
               <td className="text-left">{item.baja}</td>
             </tr>
           </>

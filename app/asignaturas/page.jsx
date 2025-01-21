@@ -28,6 +28,7 @@ import { Viewer, Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { debounce, permissionsComponents, chunkArray } from "@/app/utils/globalfn";
 import ModalProcesarDatos from "../components/modalProcesarDatos";
+import { truncateTable } from "../utils/GlobalApis";
 
 function Asignaturas() {
   const router = useRouter();
@@ -70,7 +71,7 @@ function Asignaturas() {
       return;
     }
     fetchData();
-  }, [session, status, bajas]);
+  }, [session, status, bajas, reload_page]);
 
   const {
     register,
@@ -398,24 +399,41 @@ function Asignaturas() {
 
   //Procesa datos
     const procesarDatos = () => {
-      //showModalProcesa(true);
-      document.getElementById("my_modal_asignaturas").showModal()
+      showModalProcesa(true);
+      //.getElementById("my_modal_asignaturas").showModal()
     }
-  
-    const buttonProcess = async () => {
-        event.preventDefault();
-        setisLoadingButton(true);
-        const { token } = session.user;
-        const chunks = chunkArray(dataJson, 20);
-        for (let chunk of chunks) {
-          await storeBatchAsignatura(token, chunk)
-        }
-        setDataJson([]);
-        document.getElementById("my_modal_asignaturas").close();
-        showSwal("Éxito", "Los datos se han subido correctamente.", "success");
-        setReloadPage(!reload_page);
-        setisLoadingButton(false);
-      };  
+    const showModalProcesa = (show) => {
+      show
+        ? document.getElementById("my_modal_4").showModal()
+        : document.getElementById("my_modal_4").close();
+    };
+  const buttonProcess = async () => {
+    event.preventDefault();
+    setisLoadingButton(true);
+    const confirmed = await confirmSwal(
+      "¿Desea continuar?",
+      "Se eliminarán todos los datos actuales de la tabla.",
+      "warning",
+      "Aceptar",
+      "Cancelar",
+      "my_modal_4"
+    );
+    if (!confirmed) {
+      setisLoadingButton(false);
+      return;
+    }
+    const { token } = session.user;
+    await truncateTable(token, "asignaturas");
+    const chunks = chunkArray(dataJson, 20);
+    for (let chunk of chunks) {
+      await storeBatchAsignatura(token, chunk);
+    }
+    setDataJson([]);
+    showModalProcesa(false);
+    showSwal("Éxito", "Los datos se han subido correctamente.", "success");
+    setReloadPage(!reload_page);
+    setisLoadingButton(false);
+  };
   
     const handleFileChange = async (e) => {
         const confirmed = await confirmSwal(
@@ -424,7 +442,8 @@ function Asignaturas() {
           "warning",
           "Aceptar",
           "Cancelar",
-          "my_modal_asignaturas"
+          "my_modal_4"
+
         );
         if (!confirmed) {
           return;
@@ -514,7 +533,7 @@ function Asignaturas() {
   return (
     <>
       <ModalProcesarDatos
-        id_modal={"my_modal_asignaturas"}
+        id_modal={"my_modal_4"}
         session={session}
         buttonProcess={buttonProcess}
         isLoadingButton={isLoadingButton}
