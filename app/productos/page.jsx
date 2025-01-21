@@ -31,6 +31,7 @@ import { ReportePDF } from "../utils/ReportesPDF";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { truncateTable } from "../utils/GlobalApis";
+import BarraCarga from "@/app/components/BarraCarga";
 function Productos() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -56,6 +57,8 @@ function Productos() {
   //useState para los datos que se trae del excel
   const [dataJson, setDataJson] = useState([]);
   const [reload_page, setReloadPage] = useState(false);
+  const [porcentaje, setPorcentaje] = useState(0);
+  const [cerrarTO, setCerrarTO] = useState(false);
   // console.log(dataJson);
 
   useEffect(() => {
@@ -473,44 +476,40 @@ function Productos() {
   };
 
   const buttonProcess = async () => {
+    document.getElementById("cargamodal").showModal();
     event.preventDefault();
     setisLoadingButton(true);
-    const confirmed = await confirmSwal(
-      "¿Desea continuar?",
-      "Se eliminarán todos los datos actuales de la tabla.",
-      "warning",
-      "Aceptar",
-      "Cancelar",
-      "my_modal_4"
-    );
-    if (!confirmed) {
-      setisLoadingButton(false);
-      return;
-    }
     const { token } = session.user;
     await truncateTable(token, "productos");
     const chunks = chunkArray(dataJson, 20);
     let allErrors = "";
+    let chunksProcesados = 0;
+    let numeroChunks = chunks.length;
     for (let chunk of chunks) {
       const res = await storeBatchProduct(token, chunk);
+      chunksProcesados++;
+      const progreso = (chunksProcesados / numeroChunks) * 100;
+      setPorcentaje(Math.round(progreso));
       if (!res.status) {
         allErrors += res.alert_text;
       }
     }
+    setCerrarTO(true);
     setisLoadingButton(false);
     setDataJson([]);
+    setPorcentaje(0);
     if (allErrors) {
       showSwalConfirm("Error", allErrors, "error", "my_modal_4");
     } else {
+      showModalProcesa(false);
       showSwal(
         "Éxito",
         "Todos los productos se insertaron correctamente.",
-        "success",
-        "my_modal_4"
+        "success"
+        // "my_modal_4"
       );
     }
     setReloadPage(!reload_page);
-    // showModalProcesa(false);
   };
 
   const handleFileChange = async (e) => {
@@ -621,6 +620,7 @@ function Productos() {
   }
   return (
     <>
+      <BarraCarga porcentaje={porcentaje} cerrarTO={cerrarTO} />
       <ModalProductos
         accion={accion}
         onSubmit={onSubmitModal}

@@ -946,20 +946,20 @@ function Alumnos() {
     }
     setCerrarTO(true);
     setDataJson([]);
-    document.getElementById("my_modal_4").close()
+    setPorcentaje(0);
     if (allErrors) {
       showSwalConfirm("Error", allErrors, "error", "my_modal_4");
     } else {
+      showModalProcesa(false);
       showSwal(
         "Éxito",
         "Todos los alumnos se insertaron correctamente.",
-        "success",
-        "my_modal_4"
+        "success"
+        // "my_modal_4"
       );
     }
     setReloadPage(!reload_page);
     setisLoadingButton(false);
-    // showModalProcesa(false);
   };
 
   const handleFileChange = async (e) => {
@@ -1616,10 +1616,7 @@ function Alumnos() {
   }
   return (
     <>
-    <BarraCarga
-        porcentaje={porcentaje}
-        cerrarTO={cerrarTO}
-      />
+      <BarraCarga porcentaje={porcentaje} cerrarTO={cerrarTO} />
       <ModalAlumnos
         activeTab={activeTab}
         setActiveTab={setActiveTab}
