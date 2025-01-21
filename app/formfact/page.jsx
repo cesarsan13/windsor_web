@@ -29,6 +29,7 @@ import {
 } from "@/app/utils/globalfn";
 import * as XLSX from "xlsx";
 import { truncateTable } from "@/app/utils/GlobalApis";
+import BarraCarga from "@/app/components/BarraCarga";
 function FormFact() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -53,6 +54,8 @@ function FormFact() {
   const [permissions, setPermissions] = useState({});
   const [dataJson, setDataJson] = useState([]);
   const [reload_page, setReloadPage] = useState(false);
+  const [porcentaje, setPorcentaje] = useState(0);
+  const [cerrarTO, setCerrarTO] = useState(false);
   const [configuracion, setConfiguracion] = useState({
     Encabezado: {
       Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -275,44 +278,40 @@ function FormFact() {
   };
 
   const buttonProcess = async () => {
+    document.getElementById("cargamodal").showModal();
     event.preventDefault();
     setisLoadingButton(true);
-    const confirmed = await confirmSwal(
-      "¿Desea continuar?",
-      "Se eliminarán todos los datos actuales de la tabla.",
-      "warning",
-      "Aceptar",
-      "Cancelar",
-      "my_modal_4"
-    );
-    if (!confirmed) {
-      setisLoadingButton(false);
-      return;
-    }
     const { token } = session.user;
     await truncateTable(token, "facturas_formas");
     const chunks = chunkArray(dataJson, 20);
     let allErrors = "";
+    let chunksProcesados = 0;
+    let numeroChunks = chunks.length;
     for (let chunk of chunks) {
       const res = await storeBatchFormFact(token, chunk);
+      chunksProcesados++;
+      const progreso = (chunksProcesados / numeroChunks) * 100;
+      setPorcentaje(Math.round(progreso));
       if (!res.status) {
         allErrors += res.alert_text;
       }
     }
+    setCerrarTO(true);
     setisLoadingButton(false);
     setDataJson([]);
+    setPorcentaje(0);
     if (allErrors) {
       showSwalConfirm("Error", allErrors, "error", "my_modal_4");
     } else {
+      showModalProcesa(false);
       showSwal(
         "Éxito",
         "Todos los factura formas se insertaron correctamente.",
         "success",
-        "my_modal_4"
+        // "my_modal_4"
       );
     }
     setReloadPage(!reload_page);
-    // showModalProcesa(false);
   };
 
   const handleFileChange = async (e) => {
@@ -386,6 +385,7 @@ function FormFact() {
   }
   return (
     <>
+      <BarraCarga porcentaje={porcentaje} cerrarTO={cerrarTO} />
       <ModalFormFact
         accion={accion}
         onSubmit={onSubmitModal}
