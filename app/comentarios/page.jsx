@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "../utils/alerts";
+import { showSwal, confirmSwal, showSwalConfirm } from "../utils/alerts";
 import ModalComentarios from "./components/ModalComentarios";
 import TablaComentarios from "./components/TablaComentarios";
 import Busqueda from "./components/Busqueda";
@@ -16,15 +16,15 @@ import {
 } from "../utils/api/comentarios/comentarios";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { siguiente } from "@/app/utils/api/comentarios/comentarios";
 import "jspdf-autotable";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import VistaPrevia from "@/app/components/VistaPrevia";
-import { debounce, permissionsComponents, chunkArray } from "@/app/utils/globalfn";
+import { debounce, permissionsComponents, chunkArray, validateString } from "@/app/utils/globalfn";
 import ModalProcesarDatos from "../components/modalProcesarDatos";
 import * as XLSX from "xlsx";
 import BarraCarga from "../components/BarraCarga";
+import { truncateTable } from "@/app/utils/GlobalApis";
 
 function Comentarios() {
   const router = useRouter();
@@ -52,6 +52,13 @@ function Comentarios() {
   const [reload_page, setReloadPage] = useState(false);
   const [porcentaje, setPorcentaje] = useState(0);
   const [cerrarTO, setCerrarTO] = useState(false);
+  const MAX_LENGTHS = {
+    comentario_1: 50,
+    comentario_2: 50,
+    comentario_3: 50,
+    baja: 1,
+    generales:1,
+  };
 
   useEffect(() => {
     comentariosRef.current = formasComentarios; // Actualiza el ref cuando alumnos cambia
@@ -396,23 +403,34 @@ function Comentarios() {
     event.preventDefault();
     setisLoadingButton(true);
     const { token } = session.user;
+    await truncateTable(token, "comentarios");
     const chunks = chunkArray(dataJson, 20);
-
+    let allErrors = "";
     let chunksProcesados = 0;
     let numeroChunks = chunks.length;
 
     for (let chunk of chunks) {
-      await storeBatchComentarios(token, chunk);
+      const res = await storeBatchComentarios(token, chunk);
       chunksProcesados++;
       const progreso = (chunksProcesados / numeroChunks) * 100;
       setPorcentaje(Math.round(progreso));
+      if (!res.status) {
+        allErrors += res.alert_text;
+      }
     }
     setCerrarTO(true);
     setDataJson([]);
     document.getElementById("my_modal_comentarios").close();
-    //setTimeout(() => {
-      showSwal("Éxito", "Los datos se han subido correctamente.", "success");
-    //},700);
+    if (allErrors){
+      showSwalConfirm("Error", allErrors, "error", "my_modal_comentarios");
+    } else {
+      showSwal(
+        "Éxito",
+        "Todos los Comentarios se han subido correctamente.",
+        "success",
+        "my_modal_comentarios"
+      );
+    }
     setReloadPage(!reload_page);
     setisLoadingButton(false);
   };
@@ -439,12 +457,34 @@ function Comentarios() {
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
         const convertedData = jsonData.map(item => ({
-          numero: parseInt(item.Numero|| 0),
-          comentario_1: (item.Comentario_1 && String(item.Comentario_1).trim() !== "") ? String(item.Comentario_1).slice(0, 100) : "N/A",
-          comentario_2: (item.Comentario_2 && String(item.Comentario_2).trim() !== "") ? String(item.Comentario_2).slice(0, 100) : "N/A",
-          comentario_3: (item.Comentario_3 && String(item.Comentario_3).trim() !== "") ? String(item.Comentario_3).slice(0, 100) : "N/A",
-          baja: (item.Baja && item.Baja.trim() !== "") ? String(item.Baja).slice(0, 1) : "n",
-          generales: parseInt(item.Generales || 0),
+          numero: parseInt(item.Numero || 0),
+          comentario_1: validateString(
+            MAX_LENGTHS,
+            "comentario_1",
+            (typeof item.Comentario_1 === "string"
+              ? item.Comentario_1.trim()
+              : "N/A") || "N/A"
+          ),
+          comentario_2:validateString(
+            MAX_LENGTHS,
+            "comentario_2",
+            (typeof item.Comentario_2 === "string"
+              ? item.Comentario_2.trim()
+              : "N/A") || "N/A"
+          ),
+          comentario_3: validateString(
+            MAX_LENGTHS,
+            "comentario_3",
+            (typeof item.Comentario_3 === "string"
+              ? item.Comentario_3.trim()
+              : "N/A") || "N/A"
+          ),
+          baja: validateString(
+            MAX_LENGTHS,
+            "baja",
+            (typeof item.Baja === "string" ? item.Baja.trim() : "n") || "n"
+          ),
+          generales: isNaN(parseInt(item.Generales)) ? 0 : parseInt(item.Generales)
         }));
         setDataJson(convertedData);
       };
@@ -543,11 +583,8 @@ function Comentarios() {
               <Acciones
                 Buscar={Buscar}
                 Alta={Alta}
-                // ImprimePDF={ImprimePDF}
-                // ImprimeExcel={ImprimeExcel}
                 home={home}
                 Ver={handleVerClick}
-                // CerrarView={CerrarView}
                 procesarDatos ={procesarDatos}
                 animateLoading={animateLoading}
                 permiso_alta={permissions.altas}
