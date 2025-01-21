@@ -23,6 +23,7 @@ import { truncateTable } from "../utils/GlobalApis";
 import ModalProcesarDatos from "../components/modalProcesarDatos";
 import * as XLSX from "xlsx";
 import VistaPrevia from "@/app/components/VistaPrevia";
+import BarraCarga from "../components/BarraCarga";
 function FormaPago() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -44,6 +45,8 @@ function FormaPago() {
   //useState para los datos que se trae del excel
   const [dataJson, setDataJson] = useState([]); 
   const [reload_page, setReloadPage] = useState(false);
+  const [porcentaje, setPorcentaje] = useState(0);
+  const [cerrarTO, setCerrarTO] = useState(false);
   useEffect(() => {
     formasPagoRef.current = formasPago; // Actualiza el ref cuando alumnos cambia
   }, [formasPago]);
@@ -352,26 +355,21 @@ function FormaPago() {
   };
 
     const buttonProcess = async () => {
+      document.getElementById("cargamodal").showModal();
       event.preventDefault();
       setisLoadingButton(true);
-      const confirmed = await confirmSwal(
-        "¿Desea continuar?",
-        "Se eliminarán todos los datos actuales de la tabla.",
-        "warning",
-        "Aceptar",
-        "Cancelar",
-        "my_modal_4"
-      );
-      if (!confirmed) {
-        setisLoadingButton(false);
-        return;
-      }
       const { token } = session.user;
       await truncateTable(token, "tipo_cobro");
       const chunks = chunkArray(dataJson, 20);
+      let chunksProcesados = 0;
+      let numeroChunks = chunks.length;
       for (let chunk of chunks) {
         await storeBatchTipoCobro(token, chunk);
+        chunksProcesados++;
+        const progreso = (chunksProcesados / numeroChunks) * 100;
+        setPorcentaje(Math.round(progreso));
       }
+      setCerrarTO(true);
       setDataJson([]);
       showModalProcesa(false);
       showSwal("Éxito", "Los datos se han subido correctamente.", "success");
@@ -460,6 +458,10 @@ function FormaPago() {
   }
   return (
     <>
+    <BarraCarga
+        porcentaje={porcentaje}
+        cerrarTO={cerrarTO}
+      />
       <ModalFormaPago
         accion={accion}
         onSubmit={onSubmitModal}

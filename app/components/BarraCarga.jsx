@@ -6,7 +6,7 @@ function BarraCarga({porcentaje, cerrarTO}){
         if(cerrarTO){
             document.getElementById("cargamodal").close();
         }
-    }, 200);
+    }, 500);
 
     return(
         <>
