@@ -307,7 +307,8 @@ function FormFact() {
       showSwal(
         "Éxito",
         "Todos los factura formas se insertaron correctamente.",
-        "success"
+        "success",
+        "my_modal_4"
       );
     }
     setReloadPage(!reload_page);

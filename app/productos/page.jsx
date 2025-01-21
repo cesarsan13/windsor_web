@@ -505,7 +505,8 @@ function Productos() {
       showSwal(
         "Éxito",
         "Todos los productos se insertaron correctamente.",
-        "success"
+        "success",
+        "my_modal_4"
       );
     }
     setReloadPage(!reload_page);
