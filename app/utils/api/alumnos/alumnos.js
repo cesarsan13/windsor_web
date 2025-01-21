@@ -96,7 +96,7 @@ export const storeBatchAlumnos = async (token, data) => {
     }),
   });
   const resJson = await res.json();
-  return resJson.data;
+  return resJson;
 };
 
 const Enca1 = (doc) => {

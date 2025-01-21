@@ -12,12 +12,16 @@ import {
   guardaFormaPAgo,
   Imprimir,
   ImprimirExcel,
+  storeBatchTipoCobro,
 } from "@/app/utils/api/formapago/formapago";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/formapago/formapago";
 import { ReportePDF } from "../utils/ReportesPDF";
-import { debounce, permissionsComponents } from "../utils/globalfn";
+import { debounce, permissionsComponents, chunkArray } from "../utils/globalfn";
+import { truncateTable } from "../utils/GlobalApis";
+import ModalProcesarDatos from "../components/modalProcesarDatos";
+import * as XLSX from "xlsx";
 import VistaPrevia from "@/app/components/VistaPrevia";
 function FormaPago() {
   const router = useRouter();
@@ -37,7 +41,9 @@ function FormaPago() {
   const formasPagoRef = useRef(formasPago);
   const [isLoadingButton, setisLoadingButton] = useState(false);
   const [permissions, setPermissions] = useState({});
-
+  //useState para los datos que se trae del excel
+  const [dataJson, setDataJson] = useState([]); 
+  const [reload_page, setReloadPage] = useState(false);
   useEffect(() => {
     formasPagoRef.current = formasPago; // Actualiza el ref cuando alumnos cambia
   }, [formasPago]);
@@ -94,7 +100,7 @@ function FormaPago() {
       return;
     }
     fetchData();
-  }, [session, status, bajas]);
+  }, [session, status, bajas, reload_page]);
 
   const {
     register,
@@ -209,6 +215,14 @@ function FormaPago() {
     }
     setisLoadingButton(false);
   });
+  const procesarDatos = () => {
+    showModalProcesa(true);
+  }
+  const showModalProcesa = (show) => {
+    show
+      ? document.getElementById("my_modal_4").showModal()
+      : document.getElementById("my_modal_4").close();
+  };
   const showModal = (show) => {
     show
       ? document.getElementById("my_modal_3").showModal()
@@ -336,6 +350,109 @@ function FormaPago() {
     setPdfData("");
     document.getElementById("modalVFormaPago").close();
   };
+
+    const buttonProcess = async () => {
+      event.preventDefault();
+      setisLoadingButton(true);
+      const confirmed = await confirmSwal(
+        "¿Desea continuar?",
+        "Se eliminarán todos los datos actuales de la tabla.",
+        "warning",
+        "Aceptar",
+        "Cancelar",
+        "my_modal_4"
+      );
+      if (!confirmed) {
+        setisLoadingButton(false);
+        return;
+      }
+      const { token } = session.user;
+      await truncateTable(token, "tipo_cobro");
+      const chunks = chunkArray(dataJson, 20);
+      for (let chunk of chunks) {
+        await storeBatchTipoCobro(token, chunk);
+      }
+      setDataJson([]);
+      showModalProcesa(false);
+      showSwal("Éxito", "Los datos se han subido correctamente.", "success");
+      setReloadPage(!reload_page);
+      setisLoadingButton(false);
+    };
+    
+    const handleFileChange = async (e) => {
+    const confirmed = await confirmSwal(
+      "¿Desea Continuar?",
+      "Asegúrate de que las columnas del archivo de excel coincidan exactamente con las columnas de la tabla en la base de datos.",
+      "warning",
+      "Aceptar",
+      "Cancelar",
+      "my_modal_4"
+    );
+    if (!confirmed) {
+      return;
+    }
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        const convertedData = jsonData.map(item => ({
+          numero: parseInt(item.Numero || 0),
+          descripcion: (item.Descripcion && String(item.Descripcion).trim() !== "") ? String(item.Descripcion).slice(0, 50) : "N/A",
+          comision: parseFloat(item.Comision || 0),
+          aplicacion: (item.Aplicacion && String(item.Aplicacion).trim() !== "") ? String(item.Aplicacion).slice(0, 30) : "N/A",
+          baja: (item.Baja && item.Baja.trim() !== "") ? String(item.Baja).slice(0, 1) : "n",
+          cue_banco: (item.Cue_banco && String(item.Cue_banco).trim() !== "") ? String(item.Cue_banco).slice(0, 34) : "N/A",
+        }));
+        setDataJson(convertedData);
+      };
+      reader.readAsArrayBuffer(selectedFile);
+    }
+    };
+
+    const itemHeaderTable = () => {
+      return (
+        <>
+          <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
+          <td className="w-[50%]">Descripcion</td>
+          <td className="w-[10%]">Comision</td>
+          <td className="w-[15%]">Aplicacion</td>
+          <td className="w-[20%]">Cuenta Banco</td>
+          <td className="w-[10%]">Baja</td>
+        </>
+      );
+    };
+
+    const itemDataTable = (item) => {
+      return (
+        <>
+          <tr key={item.numero} className="hover:cursor-pointer">
+            <th
+              className={
+                typeof item.numero === "number"
+                  ? "text-left"
+                  : "text-right"
+              }
+            >
+              {item.numero}
+            </th>
+            <td className="w-[40%] max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap pt-[.10rem] pb-[.10rem]">
+              {item.descripcion}
+            </td>
+            <td className="text-right">{item.comision}</td>
+            <td className="text-left">{item.aplicacion}</td>
+            <td className="text-right">{item.cue_banco}</td>
+            <td className="text-left">{item.baja}</td>
+          </tr>
+        </>
+      );
+    };
+  
+
   if (status === "loading") {
     return (
       <div className="container skeleton w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -352,6 +469,21 @@ function FormaPago() {
         setFormaPago={setFormaPago}
         formaPago={formaPago}
         isLoadingButton={isLoadingButton}
+      />
+      <ModalProcesarDatos
+        id_modal={"my_modal_4"}
+        session={session}
+        buttonProcess={buttonProcess}
+        isLoadingButton={isLoadingButton}
+        isLoading={isLoading}
+        title={"Procesar Datos desde Excel."}
+        setDataJson={setDataJson}
+        dataJson={dataJson}
+        handleFileChange={handleFileChange}
+        itemHeaderTable={itemHeaderTable}
+        itemDataTable={itemDataTable}
+        //clase para mover al tamaño del modal a preferencia (max-w-4xl)
+        classModal={"modal-box w-full max-w-4xl h-full bg-base-200"}
       />
       <VistaPrevia
         pdfPreview={pdfPreview}
@@ -372,6 +504,7 @@ function FormaPago() {
                 Alta={Alta}
                 home={home}
                 Ver={handleVerClick}
+                procesarDatos={procesarDatos}
                 animateLoading={animateLoading}
                 permiso_alta={permissions.altas}
                 permiso_imprime = {permissions.impresion}
