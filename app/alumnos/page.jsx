@@ -954,7 +954,8 @@ function Alumnos() {
       showSwal(
         "Éxito",
         "Todos los alumnos se insertaron correctamente.",
-        "success"
+        "success",
+        "my_modal_4"
       );
     }
     setReloadPage(!reload_page);
@@ -984,227 +985,427 @@ function Alumnos() {
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
         const convertedData = jsonData.map((item) => ({
           numero: parseInt(item.Numero || 0),
-          nombre: validateString(MAX_LENGTHS, "nombre", item.Nombre || "N/A"),
+          nombre: validateString(
+            MAX_LENGTHS,
+            "nombre",
+            (typeof item.Nombre === "string" ? item.Nombre.trim() : "N/A") ||
+              "N/A"
+          ),
           a_paterno: validateString(
             MAX_LENGTHS,
             "a_paterno",
-            item.A_Paterno || "N/A"
+            (typeof item.A_Paterno === "string"
+              ? item.A_Paterno.trim()
+              : "N/A") || "N/A"
           ),
           a_materno: validateString(
             MAX_LENGTHS,
             "a_materno",
-            item.A_Materno || "N/A"
+            (typeof item.A_Materno === "string"
+              ? item.A_Materno.trim()
+              : "N/A") || "N/A"
           ),
           a_nombre: validateString(
             MAX_LENGTHS,
             "a_nombre",
-            item.A_Nombre || ""
+            (typeof item.A_Nombre === "string" ? item.A_Nombre.trim() : "") ||
+              ""
           ),
           fecha_nac: validateString(
             MAX_LENGTHS,
             "fecha_nac",
-            item.Fecha_Nac || "N/A"
+            (typeof item.Fecha_Nac === "string"
+              ? item.Fecha_Nac.trim()
+              : "N/A") || "N/A"
           ),
           fecha_inscripcion: validateString(
             MAX_LENGTHS,
             "fecha_inscripcion",
-            item.Fecha_Inscripcion || "N/A"
+            (typeof item.Fecha_Inscripcion === "string"
+              ? item.Fecha_Inscripcion.trim()
+              : "N/A") || "N/A"
           ),
           fecha_baja: validateString(
             MAX_LENGTHS,
             "fecha_baja",
-            item.Fecha_Baja || ""
+            (typeof item.Fecha_Baja === "string"
+              ? item.Fecha_Baja.trim()
+              : "") || ""
           ),
-          sexo: validateString(MAX_LENGTHS, "sexo", item.Sexo || "N/A"),
+          sexo: validateString(
+            MAX_LENGTHS,
+            "sexo",
+            (typeof item.Sexo === "string" ? item.Sexo.trim() : "N/A") || "N/A"
+          ),
           telefono1: validateString(
             MAX_LENGTHS,
             "telefono1",
-            item.Telefono1 || "N/A"
+            (typeof item.Telefono1 === "string"
+              ? item.Telefono1.trim()
+              : "N/A") || "N/A"
           ),
           telefono2: validateString(
             MAX_LENGTHS,
             "telefono2",
-            item.Telefono2 || ""
+            (typeof item.Telefono2 === "string" ? item.Telefono2.trim() : "") ||
+              ""
           ),
           celular: validateString(
             MAX_LENGTHS,
             "celular",
-            item.Celular || "N/A"
+            (typeof item.Celular === "string" ? item.Celular.trim() : "N/A") ||
+              "N/A"
           ),
           codigo_barras: validateString(
             MAX_LENGTHS,
             "codigo_barras",
-            item.Codigo_Barras || ""
+            (typeof item.Codigo_Barras === "string"
+              ? item.Codigo_Barras.trim()
+              : "") || ""
           ),
           direccion: validateString(
             MAX_LENGTHS,
             "direccion",
-            item.Direccion || "N/A"
+            (typeof item.Direccion === "string"
+              ? item.Direccion.trim()
+              : "N/A") || "N/A"
           ),
           colonia: validateString(
             MAX_LENGTHS,
             "colonia",
-            item.Colonia || "N/A"
+            (typeof item.Colonia === "string" ? item.Colonia.trim() : "N/A") ||
+              "N/A"
           ),
-          ciudad: validateString(MAX_LENGTHS, "ciudad", item.Ciudad || "N/A"),
-          estado: validateString(MAX_LENGTHS, "estado", item.Estado || "N/A"),
-          cp: validateString(MAX_LENGTHS, "cp", item.CP || "N/A"),
-          email: validateString(MAX_LENGTHS, "email", item.Email || "N/A"),
-          imagen: validateString(MAX_LENGTHS, "imagen", item.Imagen || ""),
-          dia_1: validateString(MAX_LENGTHS, "dia_1", item.Dia_1 || ""),
-          dia_2: validateString(MAX_LENGTHS, "dia_2", item.Dia_2 || ""),
-          dia_3: validateString(MAX_LENGTHS, "dia_3", item.Dia_3 || ""),
-          dia_4: validateString(MAX_LENGTHS, "dia_4", item.Dia_4 || ""),
-          hora_1: parseInt(item.Hora_1 || 0),
-          hora_2: parseInt(item.Hora_2 || 0),
-          hora_3: parseInt(item.Hora_3 || 0),
-          hora_4: parseInt(item.Hora_4 || 0),
-          cancha_1: parseInt(item.Cancha_1 || 0),
-          cancha_2: parseInt(item.Cancha_2 || 0),
-          cancha_3: parseInt(item.Cancha_3 || 0),
-          cancha_4: parseInt(item.Cancha_4 || 0),
-          horario_1: parseInt(item.Horario_1 || 0),
-          horario_2: parseInt(item.Horario_2 || 0),
-          horario_3: parseInt(item.Horario_3 || 0),
-          horario_4: parseInt(item.Horario_4 || 0),
-          horario_5: parseInt(item.Horario_5 || 0),
-          horario_6: parseInt(item.Horario_6 || 0),
-          horario_7: parseInt(item.Horario_7 || 0),
-          horario_8: parseInt(item.Horario_8 || 0),
-          horario_9: parseInt(item.Horario_9 || 0),
-          horario_10: parseInt(item.Horario_10 || 0),
-          horario_11: parseInt(item.Horario_11 || 0),
-          horario_12: parseInt(item.Horario_12 || 0),
-          horario_13: parseInt(item.Horario_13 || 0),
-          horario_14: parseInt(item.Horario_14 || 0),
-          horario_15: parseInt(item.Horario_15 || 0),
-          horario_16: parseInt(item.Horario_16 || 0),
-          horario_17: parseInt(item.Horario_17 || 0),
-          horario_18: parseInt(item.Horario_18 || 0),
-          horario_19: parseInt(item.Horario_19 || 0),
-          horario_20: parseInt(item.Horario_20 || 0),
-          cond_1: parseInt(item.Cond_1 || 0),
-          cond_2: parseInt(item.Cond_2 || 0),
-          cond_3: parseInt(item.Cond_3 || 0),
+          ciudad: validateString(
+            MAX_LENGTHS,
+            "ciudad",
+            (typeof item.Ciudad === "string" ? item.Ciudad.trim() : "N/A") ||
+              "N/A"
+          ),
+          estado: validateString(
+            MAX_LENGTHS,
+            "estado",
+            (typeof item.Estado === "string" ? item.Estado.trim() : "N/A") ||
+              "N/A"
+          ),
+          cp: validateString(
+            MAX_LENGTHS,
+            "cp",
+            (typeof item.CP === "string" ? item.CP.trim() : "N/A") || "N/A"
+          ),
+          email: validateString(
+            MAX_LENGTHS,
+            "email",
+            (typeof item.Email === "string" ? item.Email.trim() : "N/A") ||
+              "N/A"
+          ),
+          imagen: validateString(
+            MAX_LENGTHS,
+            "imagen",
+            (typeof item.Imagen === "string" ? item.Imagen.trim() : "") || ""
+          ),
+          dia_1: validateString(
+            MAX_LENGTHS,
+            "dia_1",
+            (typeof item.Dia_1 === "string" ? item.Dia_1.trim() : "") || ""
+          ),
+          dia_2: validateString(
+            MAX_LENGTHS,
+            "dia_2",
+            (typeof item.Dia_2 === "string" ? item.Dia_2.trim() : "") || ""
+          ),
+          dia_3: validateString(
+            MAX_LENGTHS,
+            "dia_3",
+            (typeof item.Dia_3 === "string" ? item.Dia_3.trim() : "") || ""
+          ),
+          dia_4: validateString(
+            MAX_LENGTHS,
+            "dia_4",
+            (typeof item.Dia_4 === "string" ? item.Dia_4.trim() : "") || ""
+          ),
+          hora_1: isNaN(parseInt(item.Hora_1)) ? 0 : parseInt(item.Hora_1),
+          hora_2: isNaN(parseInt(item.Hora_2)) ? 0 : parseInt(item.Hora_2),
+          hora_3: isNaN(parseInt(item.Hora_3)) ? 0 : parseInt(item.Hora_3),
+          hora_4: isNaN(parseInt(item.Hora_4)) ? 0 : parseInt(item.Hora_4),
+          cancha_1: isNaN(parseInt(item.Cancha_1))
+            ? 0
+            : parseInt(item.Cancha_1),
+          cancha_2: isNaN(parseInt(item.Cancha_2))
+            ? 0
+            : parseInt(item.Cancha_2),
+          cancha_3: isNaN(parseInt(item.Cancha_3))
+            ? 0
+            : parseInt(item.Cancha_3),
+          cancha_4: isNaN(parseInt(item.Cancha_4))
+            ? 0
+            : parseInt(item.Cancha_4),
+          horario_1: isNaN(parseInt(item.Horario_1))
+            ? 0
+            : parseInt(item.Horario_1),
+          horario_2: isNaN(parseInt(item.Horario_2))
+            ? 0
+            : parseInt(item.Horario_2),
+          horario_3: isNaN(parseInt(item.Horario_3))
+            ? 0
+            : parseInt(item.Horario_3),
+          horario_4: isNaN(parseInt(item.Horario_4))
+            ? 0
+            : parseInt(item.Horario_4),
+          horario_5: isNaN(parseInt(item.Horario_5))
+            ? 0
+            : parseInt(item.Horario_5),
+          horario_6: isNaN(parseInt(item.Horario_6))
+            ? 0
+            : parseInt(item.Horario_6),
+          horario_7: isNaN(parseInt(item.Horario_7))
+            ? 0
+            : parseInt(item.Horario_7),
+          horario_8: isNaN(parseInt(item.Horario_8))
+            ? 0
+            : parseInt(item.Horario_8),
+          horario_9: isNaN(parseInt(item.Horario_9))
+            ? 0
+            : parseInt(item.Horario_9),
+          horario_10: isNaN(parseInt(item.Horario_10))
+            ? 0
+            : parseInt(item.Horario_10),
+          horario_11: isNaN(parseInt(item.Horario_11))
+            ? 0
+            : parseInt(item.Horario_11),
+          horario_12: isNaN(parseInt(item.Horario_12))
+            ? 0
+            : parseInt(item.Horario_12),
+          horario_13: isNaN(parseInt(item.Horario_13))
+            ? 0
+            : parseInt(item.Horario_13),
+          horario_14: isNaN(parseInt(item.Horario_14))
+            ? 0
+            : parseInt(item.Horario_14),
+          horario_15: isNaN(parseInt(item.Horario_15))
+            ? 0
+            : parseInt(item.Horario_15),
+          horario_16: isNaN(parseInt(item.Horario_16))
+            ? 0
+            : parseInt(item.Horario_16),
+          horario_17: isNaN(parseInt(item.Horario_17))
+            ? 0
+            : parseInt(item.Horario_17),
+          horario_18: isNaN(parseInt(item.Horario_18))
+            ? 0
+            : parseInt(item.Horario_18),
+          horario_19: isNaN(parseInt(item.Horario_19))
+            ? 0
+            : parseInt(item.Horario_19),
+          horario_20: isNaN(parseInt(item.Horario_20))
+            ? 0
+            : parseInt(item.Horario_20),
+          cond_1: isNaN(parseInt(item.Cond_1)) ? 0 : parseInt(item.Cond_1),
+          cond_2: isNaN(parseInt(item.Cond_2)) ? 0 : parseInt(item.Cond_2),
+          cond_3: isNaN(parseInt(item.Cond_3)) ? 0 : parseInt(item.Cond_3),
           nom_pediatra: validateString(
             MAX_LENGTHS,
             "nom_pediatra",
-            item.Nom_Pediatra || ""
+            (typeof item.Nom_Pediatra === "string"
+              ? item.Nom_Pediatra.trim()
+              : "") || ""
           ),
-          tel_p_1: validateString(MAX_LENGTHS, "tel_p_1", item.Tel_P_1 || ""),
-          tel_p_2: validateString(MAX_LENGTHS, "tel_p_2", item.Tel_P_2 || ""),
-          cel_p_1: validateString(MAX_LENGTHS, "cel_p_1", item.Cel_P_1 || ""),
+          tel_p_1: validateString(
+            MAX_LENGTHS,
+            "tel_p_1",
+            (typeof item.Tel_P_1 === "string" ? item.Tel_P_1.trim() : "") || ""
+          ),
+          tel_p_2: validateString(
+            MAX_LENGTHS,
+            "tel_p_2",
+            (typeof item.Tel_P_2 === "string" ? item.Tel_P_2.trim() : "") || ""
+          ),
+          cel_p_1: validateString(
+            MAX_LENGTHS,
+            "cel_p_1",
+            (typeof item.Cel_P_1 === "string" ? item.Cel_P_1.trim() : "") || ""
+          ),
           tipo_sangre: validateString(
             MAX_LENGTHS,
             "tipo_sangre",
-            item.Tipo_Sangre || ""
+            (typeof item.Tipo_Sangre === "string"
+              ? item.Tipo_Sangre.trim()
+              : "") || ""
           ),
-          alergia: validateString(MAX_LENGTHS, "alergia", item.Alergia || ""),
+          alergia: validateString(
+            MAX_LENGTHS,
+            "alergia",
+            (typeof item.Alergia === "string" ? item.Alergia.trim() : "") || ""
+          ),
           aseguradora: validateString(
             MAX_LENGTHS,
             "aseguradora",
-            item.Aseguradora || ""
+            (typeof item.Aseguradora === "string"
+              ? item.Aseguradora.trim()
+              : "") || ""
           ),
-          poliza: validateString(MAX_LENGTHS, "poliza", item.Poliza || ""),
+          poliza: validateString(
+            MAX_LENGTHS,
+            "poliza",
+            (typeof item.Poliza === "string" ? item.Poliza.trim() : "") || ""
+          ),
           tel_ase_1: validateString(
             MAX_LENGTHS,
             "tel_ase_1",
-            item.Tel_Ase_1 || ""
+            (typeof item.Tel_Ase_1 === "string" ? item.Tel_Ase_1.trim() : "") ||
+              ""
           ),
           tel_ase_2: validateString(
             MAX_LENGTHS,
             "tel_ase_2",
-            item.Tel_Ase_2 || ""
+            (typeof item.Tel_Ase_2 === "string" ? item.Tel_Ase_2.trim() : "") ||
+              ""
           ),
           razon_social: validateString(
             MAX_LENGTHS,
             "razon_social",
-            item.Razon_Social || ""
+            (typeof item.Razon_Social === "string"
+              ? item.Razon_Social.trim()
+              : "") || ""
           ),
           raz_direccion: validateString(
             MAX_LENGTHS,
             "raz_direccion",
-            item.Raz_Direccion || ""
+            (typeof item.Raz_Direccion === "string"
+              ? item.Raz_Direccion.trim()
+              : "") || ""
           ),
-          raz_cp: validateString(MAX_LENGTHS, "raz_cp", item.Raz_CP || ""),
+          raz_cp: validateString(
+            MAX_LENGTHS,
+            "raz_cp",
+            (typeof item.Raz_CP === "string" ? item.Raz_CP.trim() : "") || ""
+          ),
           raz_colonia: validateString(
             MAX_LENGTHS,
             "raz_colonia",
-            item.Raz_Colonia || ""
+            (typeof item.Raz_Colonia === "string"
+              ? item.Raz_Colonia.trim()
+              : "") || ""
           ),
           raz_ciudad: validateString(
             MAX_LENGTHS,
             "raz_ciudad",
-            item.Raz_Ciudad || ""
+            (typeof item.Raz_Ciudad === "string"
+              ? item.Raz_Ciudad.trim()
+              : "") || ""
           ),
           raz_estado: validateString(
             MAX_LENGTHS,
             "raz_estado",
-            item.Raz_Estado || ""
+            (typeof item.Raz_Estado === "string"
+              ? item.Raz_Estado.trim()
+              : "") || ""
           ),
           nom_padre: validateString(
             MAX_LENGTHS,
             "nom_padre",
-            item.Nom_Padre || ""
+            (typeof item.Nom_Padre === "string" ? item.Nom_Padre.trim() : "") ||
+              ""
           ),
           tel_pad_1: validateString(
             MAX_LENGTHS,
             "tel_pad_1",
-            item.Tel_Pad_1 || ""
+            (typeof item.Tel_Pad_1 === "string" ? item.Tel_Pad_1.trim() : "") ||
+              ""
           ),
           tel_pad_2: validateString(
             MAX_LENGTHS,
             "tel_pad_2",
-            item.Tel_Pad_2 || ""
+            (typeof item.Tel_Pad_2 === "string" ? item.Tel_Pad_2.trim() : "") ||
+              ""
           ),
-          cel_pad: validateString(MAX_LENGTHS, "cel_pad", item.Cel_Pad || ""),
+          cel_pad: validateString(
+            MAX_LENGTHS,
+            "cel_pad",
+            (typeof item.Cel_Pad === "string" ? item.Cel_Pad.trim() : "") || ""
+          ),
           nom_madre: validateString(
             MAX_LENGTHS,
             "nom_madre",
-            item.Nom_Madre || ""
+            (typeof item.Nom_Madre === "string" ? item.Nom_Madre.trim() : "") ||
+              ""
           ),
           tel_mad_1: validateString(
             MAX_LENGTHS,
             "tel_mad_1",
-            item.Tel_Mad_1 || ""
+            (typeof item.Tel_Mad_1 === "string" ? item.Tel_Mad_1.trim() : "") ||
+              ""
           ),
           tel_mad_2: validateString(
             MAX_LENGTHS,
             "tel_mad_2",
-            item.Tel_Mad_2 || ""
+            (typeof item.Tel_Mad_2 === "string" ? item.Tel_Mad_2.trim() : "") ||
+              ""
           ),
-          cel_mad: validateString(MAX_LENGTHS, "cel_mad", item.Cel_Mad || ""),
-          nom_avi: validateString(MAX_LENGTHS, "nom_avi", item.Nom_Avi || ""),
+          cel_mad: validateString(
+            MAX_LENGTHS,
+            "cel_mad",
+            (typeof item.Cel_Mad === "string" ? item.Cel_Mad.trim() : "") || ""
+          ),
+          nom_avi: validateString(
+            MAX_LENGTHS,
+            "nom_avi",
+            (typeof item.Nom_Avi === "string" ? item.Nom_Avi.trim() : "") || ""
+          ),
           tel_avi_1: validateString(
             MAX_LENGTHS,
             "tel_avi_1",
-            item.Tel_Avi_1 || ""
+            (typeof item.Tel_Avi_1 === "string" ? item.Tel_Avi_1.trim() : "") ||
+              ""
           ),
           tel_avi_2: validateString(
             MAX_LENGTHS,
             "tel_avi_2",
-            item.Tel_Avi_2 || ""
+            (typeof item.Tel_Avi_2 === "string" ? item.Tel_Avi_2.trim() : "") ||
+              ""
           ),
-          cel_avi: validateString(MAX_LENGTHS, "cel_avi", item.Cel_Avi || ""),
+          cel_avi: validateString(
+            MAX_LENGTHS,
+            "cel_avi",
+            (typeof item.Cel_Avi === "string" ? item.Cel_Avi.trim() : "") || ""
+          ),
           ciclo_escolar: validateString(
             MAX_LENGTHS,
             "ciclo_escolar",
-            item.Ciclo_Escolar || ""
+            (typeof item.Ciclo_Escolar === "string"
+              ? item.Ciclo_Escolar.trim()
+              : "") || ""
           ),
           descuento: parseFloat(item.Descuento || 0),
           rfc_factura: validateString(
             MAX_LENGTHS,
             "rfc_factura",
-            item.RFC_Factura || ""
+            (typeof item.RFC_Factura === "string"
+              ? item.RFC_Factura.trim()
+              : "N/A") || "N/A"
           ),
           estatus: validateString(
             MAX_LENGTHS,
             "estatus",
-            item.Estatus || "N/A"
+            (typeof item.Estatus === "string" ? item.Estatus.trim() : "N/A") ||
+              "N/A"
           ),
-          escuela: validateString(MAX_LENGTHS, "escuela", item.Escuela || ""),
-          grupo: validateString(MAX_LENGTHS, "grupo", item.Grupo || ""),
-          baja: validateString(MAX_LENGTHS, "baja", item.Baja || "n"),
+          escuela: validateString(
+            MAX_LENGTHS,
+            "escuela",
+            (typeof item.Escuela === "string" ? item.Escuela.trim() : "") || ""
+          ),
+          grupo: validateString(
+            MAX_LENGTHS,
+            "grupo",
+            (typeof item.Grupo === "string" ? item.Grupo.trim() : "N/A") ||
+              "N/A"
+          ),
+          baja: validateString(
+            MAX_LENGTHS,
+            "baja",
+            (typeof item.Baja === "string" ? item.Baja.trim() : "n") || "n"
+          ),
         }));
         setDataJson(convertedData);
       };
