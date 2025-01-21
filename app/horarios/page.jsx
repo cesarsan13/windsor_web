@@ -20,9 +20,11 @@ import { getUltimoHorario } from "@/app/utils/api/horarios/horarios";
 import { getProductos } from "../utils/api/productos/productos";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { ReportePDF } from "../utils/ReportesPDF";
-import { debounce, permissionsComponents } from "../utils/globalfn";
+import { debounce, permissionsComponents,validateString, chunkArray} from "../utils/globalfn";
 import ModalProcesarDatos from "../components/modalProcesarDatos";
 import { truncateTable } from "../utils/GlobalApis";
+import * as XLSX from "xlsx";
+import BarraCarga from "../components/BarraCarga";
 
 function Horarios() {
   const router = useRouter();
@@ -48,6 +50,11 @@ function Horarios() {
   //useState para los datos que se trae del excel
   const [dataJson, setDataJson] = useState([]);
   const [reload_page, setReloadPage] = useState(false);
+  const [porcentaje, setPorcentaje] = useState(0);
+  const [cerrarTO, setCerrarTO] = useState(false);
+  const MAX_LENGTHS = {
+    salon: 50,
+  }
 
   useEffect(() => {
     horariosRef.current = horarios
@@ -362,26 +369,21 @@ function Horarios() {
   };
 
   const buttonProcess = async () => {
+    document.getElementById("cargamodal").showModal();
     event.preventDefault();
     setisLoadingButton(true);
-    const confirmed = await confirmSwal(
-      "¿Desea continuar?",
-      "Se eliminarán todos los datos actuales de la tabla.",
-      "warning",
-      "Aceptar",
-      "Cancelar",
-      "my_modal_4"
-    );
-    if (!confirmed) {
-      setisLoadingButton(false);
-      return;
-    }
     const { token } = session.user;
     await truncateTable(token, "horarios");
     const chunks = chunkArray(dataJson, 20);
+    let chunksProcesados = 0;
+    let numeroChunks = chunks.length;
     for (let chunk of chunks) {
       await storeBatchHorario(token, chunk);
+      chunksProcesados++;
+      const progreso = (chunksProcesados / numeroChunks) * 100;
+      setPorcentaje(Math.round(progreso));
     }
+    setCerrarTO(true);
     setDataJson([]);
     showModalProcesa(false);
     showSwal("Éxito", "Los datos se han subido correctamente.", "success");
@@ -412,15 +414,22 @@ function Horarios() {
             const jsonData = XLSX.utils.sheet_to_json(worksheet);
             const convertedData = jsonData.map(item => ({
               numero: parseInt(item.Numero || 0),
-              cancha: parseInt(item.Cancha || 0),
-              dia: (item.Dia && String(item.Dia).trim() !== "") ? String(item.Dia).slice(0, 15) : "N/A",
               horario: (item.Horario && String(item.Horario).trim() !== "") ? String(item.Horario).slice(0, 20) : "N/A",
+              // salon: (item.Salon && item.Salon.trim() !== "") ? String(item.Salon).slice(0, 10) : "N/A",
+                        salon: validateString(
+                          MAX_LENGTHS,
+                          "salon",
+                          (typeof item.Salon === "string" ? item.Salon.trim() : "N/A") ||
+                            "N/A"
+                        ),
+              
+              dia: (item.Dia && String(item.Dia).trim() !== "") ? String(item.Dia).slice(0, 15) : "N/A",
+              cancha: parseInt(item.Cancha || 0),
               max_niños: parseInt(item.Max_niños || 0),
               sexo: (item.Sexo && String(item.Sexo).trim() !== "") ? String(item.Sexo).slice(0, 8) : "N/A",
               edad_ini: parseInt(item.Edad_ini || 0),
               edad_fin: parseInt(item.Edad_fin || 0),
               baja: (item.Baja && item.Baja.trim() !== "") ? String(item.Baja).slice(0, 1) : "n",
-              salon: (item.Salon && item.Salon.trim() !== "") ? String(item.Salon).slice(0, 10) : "N/A",
             }));
             setDataJson(convertedData);
           };
@@ -432,15 +441,15 @@ function Horarios() {
         return (
           <>
             <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
-            <td className="w-[40%]">Cancha</td>
-            <td className="w-[15%]">Dia</td>
             <td className="w-[15%]">Horario</td>
+            <td className="w-[10%]">Salon</td>
+            <td className="w-[15%]">Dia</td>
+            <td className="w-[40%]">Cancha</td>
             <td className="w-[15%]">Max_niños</td>
             <td className="w-[15%]">Sexo</td>
             <td className="w-[10%]">Edad_ini</td>
             <td className="w-[10%]">Edad_fin</td>
             <td className="w-[10%]">Baja</td>
-            <td className="w-[10%]">Salon</td>
           </>
         );
       };
@@ -486,6 +495,10 @@ function Horarios() {
   }
   return (
     <>
+          <BarraCarga
+        porcentaje={porcentaje}
+        cerrarTO={cerrarTO}
+      />
       <ModalHorario
         accion={accion}
         onSubmit={onSubmitModal}
