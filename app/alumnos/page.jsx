@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "../utils/alerts";
+import { showSwal, confirmSwal, showSwalConfirm } from "../utils/alerts";
 import ModalAlumnos from "@/app/alumnos/components/modalAlumnos";
 const TablaAlumnos = React.lazy(() =>
   import("@/app/alumnos/components/tablaAlumnos")
@@ -37,6 +37,7 @@ import {
   validateString,
 } from "@/app/utils/globalfn";
 import ModalProcesarDatos from "../components/modalProcesarDatos";
+import { truncateTable } from "@/app/utils/GlobalApis";
 function Alumnos() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -922,17 +923,41 @@ function Alumnos() {
   const buttonProcess = async () => {
     event.preventDefault();
     setisLoadingButton(true);
+    const confirmed = await confirmSwal(
+      "¿Desea continuar?",
+      "Se eliminarán todos los datos actuales de la tabla.",
+      "warning",
+      "Aceptar",
+      "Cancelar",
+      "my_modal_4"
+    );
+    if (!confirmed) {
+      setisLoadingButton(false);
+      return;
+    }
     const { token } = session.user;
     await truncateTable(token, "alumnos");
     const chunks = chunkArray(dataJson, 20);
+    let allErrors = "";
     for (let chunk of chunks) {
-      await storeBatchAlumnos(token, chunk);
+      const res = await storeBatchAlumnos(token, chunk);
+      if (!res.status) {
+        allErrors += res.alert_text;
+      }
     }
-    setDataJson([]);
-    showModalProcesa(false);
-    showSwal("Éxito", "Los datos se han subido correctamente.", "success");
-    setReloadPage(!reload_page);
     setisLoadingButton(false);
+    setDataJson([]);
+    if (allErrors) {
+      showSwalConfirm("Error", allErrors, "error", "my_modal_4");
+    } else {
+      showSwal(
+        "Éxito",
+        "Todos los alumnos se insertaron correctamente.",
+        "success"
+      );
+    }
+    setReloadPage(!reload_page);
+    // showModalProcesa(false);
   };
 
   const handleFileChange = async (e) => {

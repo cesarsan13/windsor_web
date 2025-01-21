@@ -63,7 +63,7 @@ export const storeBatchProduct = async (token, data) => {
     }),
   });
   const resJson = await res.json();
-  return resJson.data;
+  return resJson;
 };
 
 export const guardarProductos = async (token, data, accion) => {

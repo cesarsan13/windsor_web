@@ -32,6 +32,30 @@ export const showSwal = (titulo, mensaje, icono, target = "") => {
   Swal.fire(options);
 };
 
+export const showSwalConfirm = (titulo, mensaje, icono, target = "") => {
+  let options = {
+    position: "center",
+    icon: icono,
+    title: titulo,
+    html: mensaje,
+    showConfirmButton: true,
+    allowOutsideClick: false, // Evita que se cierre fuera del modal
+    didOpen: (popup) => {
+      // Aplica estilos directamente al modal
+      popup.style.width = "800px"; // Ancho del modal más grande
+      popup.style.maxWidth = "90%"; // Responsivo
+      popup.style.fontSize = "16px"; // Tamaño de fuente más grande
+      popup.style.textAlign = "left"; // Alineación del texto
+      popup.style.overflowY = "auto"; // Scroll si es necesario
+      popup.style.maxHeight = "90vh"; // Altura máxima del modal
+    },
+  };
+
+  if (target !== "") {
+    options.target = document.getElementById(target);
+  }
+  Swal.fire(options);
+};
 
 export const confirmSwal = async (
   titulo,
@@ -61,4 +85,3 @@ export const confirmSwal = async (
     });
   });
 };
-
