@@ -26,6 +26,7 @@ import { useSession } from "next-auth/react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
+import BarraCarga from "../components/BarraCarga";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import {
   formatFecha,
@@ -68,6 +69,8 @@ function Alumnos() {
   const [permissions, setPermissions] = useState({});
   const [dataJson, setDataJson] = useState([]);
   const [reload_page, setReloadPage] = useState(false);
+  const [porcentaje, setPorcentaje] = useState(0);
+  const [cerrarTO, setCerrarTO] = useState(false);
   const MAX_LENGTHS = {
     nombre: 50,
     a_paterno: 50,
@@ -921,32 +924,29 @@ function Alumnos() {
   };
 
   const buttonProcess = async () => {
+    document.getElementById("cargamodal").showModal();
     event.preventDefault();
     setisLoadingButton(true);
-    const confirmed = await confirmSwal(
-      "¿Desea continuar?",
-      "Se eliminarán todos los datos actuales de la tabla.",
-      "warning",
-      "Aceptar",
-      "Cancelar",
-      "my_modal_4"
-    );
-    if (!confirmed) {
-      setisLoadingButton(false);
-      return;
-    }
     const { token } = session.user;
     await truncateTable(token, "alumnos");
     const chunks = chunkArray(dataJson, 20);
     let allErrors = "";
+
+    let chunksProcesados = 0;
+    let numeroChunks = chunks.length;
+
     for (let chunk of chunks) {
       const res = await storeBatchAlumnos(token, chunk);
+      chunksProcesados++;
+      const progreso = (chunksProcesados / numeroChunks) * 100;
+      setPorcentaje(Math.round(progreso));
       if (!res.status) {
         allErrors += res.alert_text;
       }
     }
-    setisLoadingButton(false);
+    setCerrarTO(true);
     setDataJson([]);
+    document.getElementById("my_modal_4").close()
     if (allErrors) {
       showSwalConfirm("Error", allErrors, "error", "my_modal_4");
     } else {
@@ -958,6 +958,7 @@ function Alumnos() {
       );
     }
     setReloadPage(!reload_page);
+    setisLoadingButton(false);
     // showModalProcesa(false);
   };
 
@@ -1615,6 +1616,10 @@ function Alumnos() {
   }
   return (
     <>
+    <BarraCarga
+        porcentaje={porcentaje}
+        cerrarTO={cerrarTO}
+      />
       <ModalAlumnos
         activeTab={activeTab}
         setActiveTab={setActiveTab}

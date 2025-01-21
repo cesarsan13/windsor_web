@@ -24,6 +24,7 @@ import VistaPrevia from "@/app/components/VistaPrevia";
 import { debounce, permissionsComponents, chunkArray } from "@/app/utils/globalfn";
 import ModalProcesarDatos from "../components/modalProcesarDatos";
 import * as XLSX from "xlsx";
+import BarraCarga from "../components/BarraCarga";
 
 function Comentarios() {
   const router = useRouter();
@@ -49,6 +50,8 @@ function Comentarios() {
   });
   const [dataJson, setDataJson] = useState([]); 
   const [reload_page, setReloadPage] = useState(false);
+  const [porcentaje, setPorcentaje] = useState(0);
+  const [cerrarTO, setCerrarTO] = useState(false);
 
   useEffect(() => {
     comentariosRef.current = formasComentarios; // Actualiza el ref cuando alumnos cambia
@@ -387,18 +390,29 @@ function Comentarios() {
     //showModalProcesa(true);
     document.getElementById("my_modal_comentarios").showModal()
   }
-
+  
   const buttonProcess = async () => {
+    document.getElementById("cargamodal").showModal();
     event.preventDefault();
     setisLoadingButton(true);
     const { token } = session.user;
     const chunks = chunkArray(dataJson, 20);
+
+    let chunksProcesados = 0;
+    let numeroChunks = chunks.length;
+
     for (let chunk of chunks) {
-      await storeBatchComentarios(token, chunk)
+      await storeBatchComentarios(token, chunk);
+      chunksProcesados++;
+      const progreso = (chunksProcesados / numeroChunks) * 100;
+      setPorcentaje(Math.round(progreso));
     }
+    setCerrarTO(true);
     setDataJson([]);
     document.getElementById("my_modal_comentarios").close();
-    showSwal("Éxito", "Los datos se han subido correctamente.", "success");
+    //setTimeout(() => {
+      showSwal("Éxito", "Los datos se han subido correctamente.", "success");
+    //},700);
     setReloadPage(!reload_page);
     setisLoadingButton(false);
   };
@@ -481,6 +495,11 @@ function Comentarios() {
   }
   return (
     <>
+      <BarraCarga
+        porcentaje={porcentaje}
+        cerrarTO={cerrarTO}
+      />
+
       <ModalProcesarDatos
         id_modal={"my_modal_comentarios"}
         session={session}
