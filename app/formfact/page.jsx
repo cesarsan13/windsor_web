@@ -335,7 +335,7 @@ function FormFact() {
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
-        console.log("data", jsonData);
+        // console.log("data", jsonData);
         const convertedData = jsonData.map((item) => ({
           numero_forma: item.Numero_Forma || 0,
           nombre_forma: validateString(
