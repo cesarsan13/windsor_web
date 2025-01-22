@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "../utils/alerts";
+import { showSwal, confirmSwal, showSwalConfirm } from "../utils/alerts";
 import ModalFormaPago from "@/app/formapago/components/ModalFormaPago";
 import TablaFormaPago from "@/app/formapago/components/TablaFormaPago";
 import Busqueda from "@/app/formapago/components/Busqueda";
@@ -19,7 +19,7 @@ import { useSession } from "next-auth/react";
 import { siguiente } from "@/app/utils/api/formapago/formapago";
 import { ReportePDF } from "../utils/ReportesPDF";
 import { debounce, permissionsComponents, chunkArray } from "../utils/globalfn";
-import { truncateTable } from "../utils/GlobalApis";
+import { truncateTable, inactiveActiveBaja } from "../utils/GlobalApis";
 import ModalProcesarDatos from "../components/modalProcesarDatos";
 import * as XLSX from "xlsx";
 import VistaPrevia from "@/app/components/VistaPrevia";
@@ -353,6 +353,24 @@ function FormaPago() {
     setPdfData("");
     document.getElementById("modalVFormaPago").close();
   };
+
+    useEffect(() => {
+      const fetchD = async () => {
+        const res = await inactiveActiveBaja(session.user.token, "tipo_cobro");
+        if (res.status) {
+          const { inactive, active } = res.data;
+          showSwalConfirm(
+            "Estado de las Forma de Pago",
+            `Formas de Pago activas: ${active}\nForma de Pago inactivas: ${inactive}`,
+            "info"
+          );
+        }
+      };
+      if (status === "loading" || !session) {
+        return;
+      }
+      fetchD();
+    }, [reload_page]);
 
     const buttonProcess = async () => {
       document.getElementById("cargamodal").showModal();

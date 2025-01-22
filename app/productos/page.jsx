@@ -30,7 +30,7 @@ import * as XLSX from "xlsx";
 import { ReportePDF } from "../utils/ReportesPDF";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import { truncateTable } from "../utils/GlobalApis";
+import { truncateTable, inactiveActiveBaja } from "../utils/GlobalApis";
 import BarraCarga from "@/app/components/BarraCarga";
 function Productos() {
   const router = useRouter();
@@ -221,7 +221,6 @@ function Productos() {
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
     setisLoadingButton(true);
-    const dataj = JSON.stringify(data);
     let res = null;
     if (accion === "Eliminar") {
       showModal(false);
@@ -475,6 +474,24 @@ function Productos() {
     }
   };
 
+  useEffect(() => {
+    const fetchD = async () => {
+      const res = await inactiveActiveBaja(session.user.token, "productos");
+      if (res.status) {
+        const { inactive, active } = res.data;
+        showSwalConfirm(
+          "Estado de los productos",
+          `Productos activos: ${active}\nProductos inactivos: ${inactive}`,
+          "info"
+        );
+      }
+    };
+    if (status === "loading" || !session) {
+      return;
+    }
+    fetchD();
+  }, [reload_page]);
+
   const buttonProcess = async () => {
     document.getElementById("cargamodal").showModal();
     event.preventDefault();
@@ -501,15 +518,17 @@ function Productos() {
     if (allErrors) {
       showSwalConfirm("Error", allErrors, "error", "my_modal_4");
     } else {
-      showModalProcesa(false);
       showSwal(
         "Éxito",
         "Todos los productos se insertaron correctamente.",
         "success"
         // "my_modal_4"
       );
+      showModalProcesa(false);
     }
-    setReloadPage(!reload_page);
+    setTimeout(() => {
+      setReloadPage(!reload_page);
+    }, 3500);
   };
 
   const handleFileChange = async (e) => {
@@ -533,34 +552,38 @@ function Productos() {
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
-        const convertedData = jsonData.map((item) => ({
-          numero: item.Numero || 0,
-          descripcion:
-            item.Descripcion && String(item.Descripcion).trim() !== ""
-              ? String(item.Descripcion).slice(0, 255)
-              : "N/A",
-          costo: parseFloat(item.Costo || 0),
-          frecuencia:
-            item.Frecuencia && String(item.Frecuencia).trim() !== ""
-              ? String(item.Frecuencia).slice(0, 20)
-              : "N/A",
-          por_recargo: parseFloat(item.Por_Recargo || 0),
-          aplicacion:
-            item.Aplicacion && String(item.Aplicacion).trim() !== ""
-              ? String(item.Aplicacion).slice(0, 25)
-              : "N/A",
-          iva: parseFloat(item.IVA || 0),
-          cond_1: parseInt(item.Cond_1 || 0),
-          cam_precio: item.Cam_Precio ? 1 : 0,
-          ref:
-            item.Ref && item.Ref.trim() !== ""
-              ? String(item.Ref).slice(0, 20)
-              : "N/A",
-          baja:
-            item.Baja && item.Baja.trim() !== ""
-              ? String(item.Baja).slice(0, 1)
-              : "n",
-        }));
+        // console.log(jsonData);
+        const convertedData = jsonData.map((item) => {
+          return {
+            numero: String(item.Numero || 0).trim(),
+            descripcion:
+              item.Descripcion && String(item.Descripcion).trim() !== ""
+                ? String(item.Descripcion).slice(0, 255)
+                : "N/A",
+            costo: parseFloat(item.Costo || 0),
+            frecuencia:
+              item.Frecuencia && String(item.Frecuencia).trim() !== ""
+                ? String(item.Frecuencia).slice(0, 20)
+                : "N/A",
+            por_recargo: parseFloat(item.Por_Recargo || 0),
+            aplicacion:
+              item.Aplicacion && String(item.Aplicacion).trim() !== ""
+                ? String(item.Aplicacion).slice(0, 25)
+                : "N/A",
+            iva: parseFloat(item.IVA || 0),
+            cond_1: parseInt(item.Cond_1 || 0),
+            cam_precio: item.Cam_Precio ? 1 : 0,
+            ref:
+              item.Ref && item.Ref.trim() !== ""
+                ? String(item.Ref).slice(0, 20)
+                : "N/A",
+            baja:
+              item.Baja && item.Baja.trim() !== ""
+                ? String(item.Baja).slice(0, 1)
+                : "n",
+          };
+        });
+        console.log(convertedData);
         setDataJson(convertedData);
       };
       reader.readAsArrayBuffer(selectedFile);

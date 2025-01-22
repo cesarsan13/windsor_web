@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "../utils/alerts";
+import { showSwal, confirmSwal, showSwalConfirm } from "../utils/alerts";
 import ModalCajeros from "@/app/cajeros/components/modalCajeros";
 import TablaCajeros from "./components/tablaCajeros";
 import Busqueda from "./components/Busqueda";
@@ -23,7 +23,7 @@ import "jspdf-autotable";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { ReportePDF } from "../utils/ReportesPDF";
 import { debounce, permissionsComponents, chunkArray } from "../utils/globalfn";
-import { truncateTable } from "../utils/GlobalApis";
+import { truncateTable, inactiveActiveBaja } from "../utils/GlobalApis";
 import BarraCarga from "../components/BarraCarga";
 function Cajeros() {
   const router = useRouter();
@@ -376,6 +376,24 @@ function Cajeros() {
     document.getElementById("modalVPCajero").close();
   };
 
+    useEffect(() => {
+      const fetchD = async () => {
+        const res = await inactiveActiveBaja(session.user.token, "cajeros");
+        if (res.status) {
+          const { inactive, active } = res.data;
+          showSwalConfirm(
+            "Estado de los cajeros",
+            `Cajeros activos: ${active}\nCajeros inactivos: ${inactive}`,
+            "info"
+          );
+        }
+      };
+      if (status === "loading" || !session) {
+        return;
+      }
+      fetchD();
+    }, [reload_page]);
+
   const buttonProcess = async () => {
     document.getElementById("cargamodal").showModal();
     event.preventDefault();
@@ -395,8 +413,9 @@ function Cajeros() {
     setDataJson([]);
     showModalProcesa(false);
     showSwal("Éxito", "Los datos se han subido correctamente.", "success");
-    setReloadPage(!reload_page);
-    setisLoadingButton(false);
+    setTimeout(() => {
+      setReloadPage(!reload_page);
+    }, 3500);    setisLoadingButton(false);
   };
 
       const handleFileChange = async (e) => {

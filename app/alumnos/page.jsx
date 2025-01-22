@@ -38,7 +38,7 @@ import {
   validateString,
 } from "@/app/utils/globalfn";
 import ModalProcesarDatos from "../components/modalProcesarDatos";
-import { truncateTable } from "@/app/utils/GlobalApis";
+import { truncateTable, inactiveActiveBaja } from "@/app/utils/GlobalApis";
 function Alumnos() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -912,6 +912,24 @@ function Alumnos() {
       setAnimateLoading(false);
     }, 500);
   };
+
+  useEffect(() => {
+      const fetchD = async () => {
+        const res = await inactiveActiveBaja(session.user.token, "alumnos");
+        if (res.status) {
+          const { inactive, active } = res.data;
+          showSwalConfirm(
+            "Estado de los Alumnos",
+            `Alumnos activos: ${active}\nAlumnos inactivos: ${inactive}`,
+            "info"
+          );
+        }
+      };
+      if (status === "loading" || !session) {
+        return;
+      }
+      fetchD();
+    }, [reload_page]);
 
   const procesarDatos = () => {
     showModalProcesa(true);
