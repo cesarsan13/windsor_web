@@ -28,7 +28,7 @@ import {
   validateString,
 } from "@/app/utils/globalfn";
 import * as XLSX from "xlsx";
-import { truncateTable } from "@/app/utils/GlobalApis";
+import { truncateTable, registrosGenerales } from "@/app/utils/GlobalApis";
 import BarraCarga from "@/app/components/BarraCarga";
 function FormFact() {
   const router = useRouter();
@@ -266,6 +266,24 @@ function FormFact() {
     const facturas = await getFacturasFormato(token, id);
     setLabels(facturas);
   };
+
+  useEffect(() => {
+    const fetchD = async () => {
+      const res = await registrosGenerales(session.user.token, "facturas_formato");
+      if (res.status) {
+        const { active } = res.data;
+        showSwalConfirm(
+          "Estado de Formas Facturas",
+          `Formas activas: ${active}\n`,
+          "info"
+        );
+      }
+    };
+    if (status === "loading" || !session) {
+      return;
+    }
+    fetchD();
+  }, [reload_page]);
 
   const procesarDatos = () => {
     showModalProcesa(true);
