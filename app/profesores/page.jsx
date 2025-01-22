@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal, showSwalAndWait } from "@/app/utils/alerts";
+import { showSwal, confirmSwal, showSwalAndWait, showSwalConfirm } from "@/app/utils/alerts";
 import ModalProfesores from "@/app/profesores/components/ModalProfesores";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import TablaProfesores from "@/app/profesores/components/TablaProfesores";
@@ -22,8 +22,10 @@ import "jspdf-autotable";
 import * as XLSX from "xlsx";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import { debounce,permissionsComponents, chunkArray } from "../utils/globalfn";
+import { debounce,permissionsComponents, chunkArray, validateString, validateInt } from "../utils/globalfn";
 import ModalProcesarDatos from "../components/modalProcesarDatos";
+import { truncateTable } from "../utils/GlobalApis";
+import BarraCarga from "../components/BarraCarga";
 function Profesores() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -47,6 +49,28 @@ function Profesores() {
   const [permissions, setPermissions] = useState({});
   const [dataJson, setDataJson] = useState([]); 
   const [reload_page, setReloadPage] = useState(false)
+  const [porcentaje, setPorcentaje] = useState(0);
+  const [cerrarTO, setCerrarTO] = useState(false);
+  const MAX_LENGTHS = {
+    nombre: 50,
+    nombre_completo: 50,
+    ap_paterno: 50,
+    ap_materno: 50,
+    direccion: 50,
+    colonia: 50,
+    ciudad: 50,
+    estado: 20,
+    cp: 6,
+    pais: 50,
+    rfc: 20,
+    telefono_1: 20,
+    telefono_2: 20,
+    fax: 20,
+    celular: 20,
+    email: 80,
+    contraseña: 255,
+    baja: 1,
+  };
 
   useEffect(() => {
     profesoresRef.current = profesores; // Actualiza el ref cuando profesores cambia
@@ -451,133 +475,246 @@ function Profesores() {
     }));
   };
 
-      const procesarDatos = () => {
-        //showModalProcesa(true);
-        document.getElementById("my_modal_profesores").showModal()
-      }
-    
-      const buttonProcess = async () => {
-          event.preventDefault();
-          setisLoadingButton(true);
-          const { token } = session.user;
-          const chunks = chunkArray(dataJson, 20);
-          for (let chunk of chunks) {
-            await storeBatchProfesores(token, chunk)
-          }
-          setDataJson([]);
-          document.getElementById("my_modal_profesores").close();
-          showSwal("Éxito", "Los datos se han subido correctamente.", "success");
-          setReloadPage(!reload_page);
-          setisLoadingButton(false);
-        };  
-    
-      const handleFileChange = async (e) => {
-          const confirmed = await confirmSwal(
-            "¿Desea Continuar?",
-            "Asegúrate de que las columnas del archivo de excel coincidan exactamente con las columnas de la tabla en la base de datos.",
-            "warning",
-            "Aceptar",
-            "Cancelar",
-            "my_modal_profesores"
-          );
-          if (!confirmed) {
-            return;
-          }
-          const selectedFile = e.target.files[0];
-          if (selectedFile) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-              const data = new Uint8Array(event.target.result);
-              const workbook = XLSX.read(data, { type: "array" });
-              const sheetName = workbook.SheetNames[0];
-              const worksheet = workbook.Sheets[sheetName];
-              const jsonData = XLSX.utils.sheet_to_json(worksheet);
-              const convertedData = jsonData.map(item => ({
-                numero: parseInt(item.Numero|| 0),
-                nombre: (item.Nombre && String(item.Nombre).trim() !== "") ? String(item.Nombre).slice(0, 100) : "N/A",
-                ap_paterno: (item.Ap_Paterno && String(item.Ap_Paterno).trim() !== "") ? String(item.Ap_Paterno).slice(0, 100) : "N/A",
-                ap_materno: (item.Ap_Materno && String(item.Ap_Materno).trim() !== "") ? String(item.Ap_Materno).slice(0, 100) : "N/A",
-                direccion: (item.Direccion && String(item.Direccion).trim() !== "") ? String(item.Direccion).slice(0, 100) : "N/A",
-                colonia: (item.Colonia && String(item.Colonia).trim() !== "") ? String(item.Colonia).slice(0, 100) : "N/A",
-                ciudad: (item.Ciudad && String(item.Ciudad).trim() !== "") ? String(item.Ciudad).slice(0, 100) : "N/A",
-                estado: (item.Estado && String(item.Estado).trim() !== "") ? String(item.Estado).slice(0, 100) : "N/A",
-                cp: (item.CP && String(item.CP).trim() !== "") ? String(item.CP).slice(0, 100) : "N/A",
-                pais: (item.Pais && String(item.Pais).trim() !== "") ? String(item.Pais).slice(0, 100) : "N/A",
-                rfc: (item.RFC && String(item.RFC).trim() !== "") ? String(item.RFC).slice(0, 100) : "N/A",
-                telefono_1: (item.Telefono_1 && String(item.Telefono_1).trim() !== "") ? String(item.Telefono_1).slice(0, 100) : "N/A",
-                telefono_2: (item.Telefono_2 && String(item.Telefono_2).trim() !== "") ? String(item.Telefono_2).slice(0, 100) : "N/A",
-                fax: (item.Fax && String(item.Fax).trim() !== "") ? String(item.Fax).slice(0, 100) : "N/A",
-                celular: (item.Celular && String(item.Celular).trim() !== "") ? String(item.Celular).slice(0, 100) : "N/A",
-                email: (item.Email && String(item.Email).trim() !== "") ? String(item.Email).slice(0, 100) : "N/A",
-                contraseña: (item.Contraseña && String(item.Contraseña).trim() !== "") ? String(item.Contraseña).slice(0, 100) : "N/A",
-                baja: (item.Baja && item.Baja.trim() !== "") ? String(item.Baja).slice(0, 1) : "n",
-              }));
-              setDataJson(convertedData);
-            };
-            reader.readAsArrayBuffer(selectedFile);
-          }
-        };
-    
-      const itemHeaderTable = () => {
-        return (
-          <>
-            <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">No.</td>
-            <td className="w-[40%]">Nombre</td>
-            <td className="w-[15%]">Ap. Paterno</td>
-            <td className="w-[15%]">Ap. Materno</td>
-            <td className="w-[15%]">Direccion</td>
-            <td className="w-[15%]">Colonia</td>
-            <td className="w-[10%]">Ciudad</td>
-            <td className="w-[10%]">Estado</td>
-            <td className="w-[10%]">CP</td>
-            <td className="w-[10%]">Pais</td>
-            <td className="w-[10%]">RFC</td>
-            <td className="w-[10%]">Telefono 1</td>
-            <td className="w-[10%]">Telefono 2</td>
-            <td className="w-[10%]">Fax</td>
-            <td className="w-[10%]">Celular</td>
-            <td className="w-[10%]">Email</td>
-            <td className="w-[10%]">Contraseña</td>
-            <td className="w-[10%]">Baja</td>
-          </>
-        );
-      };
-    
-      const itemDataTable = (item) => {
-        return (
-          <>
-            <tr key={item.numero} className="hover:cursor-pointer">
-              <th
-                className={
-                  typeof item.numero === "number"
-                    ? "text-left"
-                    : "text-right"
-                }
-              >
-                {item.numero}
-              </th>
-              <td className="text-left">{item.nombre}</td>
-              <td className="text-left">{item.ap_paterno}</td>
-              <td className="text-left">{item.ap_materno}</td>
-              <td className="text-left">{item.direccion}</td>
-              <td className="text-left">{item.colonia}</td>
-              <td className="text-left">{item.ciudad}</td>
-              <td className="text-left">{item.estado}</td>
-              <td className="text-left">{item.cp}</td>
-              <td className="text-left">{item.pais}</td>
-              <td className="text-left">{item.rfc}</td>
-              <td className="text-left">{item.telefono_1}</td>
-              <td className="text-left">{item.telefono_2}</td>
-              <td className="text-left">{item.fax}</td>
-              <td className="text-left">{item.celular}</td>
-              <td className="text-left">{item.email}</td>
-              <td className="text-left">{item.contraseña}</td>
-              <td className="text-left">{item.baja}</td>
+  const procesarDatos = () => {
+    document.getElementById("my_modal_profesores").showModal()
+  }
 
-            </tr>
-          </>
-        );
+  const buttonProcess = async () => {
+    document.getElementById("cargamodal").showModal();
+    event.preventDefault();
+    setisLoadingButton(true);
+    const { token } = session.user;
+    await truncateTable(token, "profesores");
+    const chunks = chunkArray(dataJson, 20);
+    let allErrors = "";
+    let chunksProcesados = 0;
+    let numeroChunks = chunks.length;
+    for (let chunk of chunks) {
+      const res = await storeBatchProfesores(token, chunk);
+      chunksProcesados++;
+      const progreso = (chunksProcesados / numeroChunks) * 100;
+      setPorcentaje(Math.round(progreso));
+      if (!res.status) {
+        allErrors += res.alert_text;
+      }
+    }
+    setCerrarTO(true);
+    setDataJson([]);
+    setPorcentaje(0);
+    
+    if(allErrors){
+      showSwalConfirm("Error", allErrors, "error", "my_modal_profesores");
+    } else {
+      document.getElementById("my_modal_profesores").close();
+      showSwal(
+        "Éxito", 
+        "Los datos se han subido correctamente.", 
+        "success", 
+        //"my_modal_profesores"
+      );
+    }
+    setReloadPage(!reload_page);
+    setisLoadingButton(false);
+  };  
+  
+  const handleFileChange = async (e) => {
+    const confirmed = await confirmSwal(
+      "¿Desea Continuar?",
+      "Por favor, verifica que las columnas del archivo de Excel coincidan exactamente con las columnas de la tabla en la base de datos y que no contengan espacios en blanco.",
+      "warning",
+      "Aceptar",
+      "Cancelar",
+      "my_modal_profesores"
+    );
+    if (!confirmed) {
+      return;
+    }
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        const convertedData = jsonData.map(item => ({
+          numero: parseInt(item.Numero|| 0),
+          nombre: 
+          validateString(MAX_LENGTHS,
+            "nombre",
+            (typeof item.Nombre === "string"
+              ? item.Nombre.trim()
+              : "N/A") || "N/A"
+          ),
+          ap_paterno:validateString(
+            MAX_LENGTHS,
+            "ap_paterno",
+            (typeof item.Ap_Paterno === "string"
+              ? item.Ap_Paterno.trim()
+              : "N/A") || "N/A"
+          ),
+          ap_materno:validateString(
+            MAX_LENGTHS,
+            "ap_materno",
+            (typeof item.Ap_Materno === "string"
+              ? item.Ap_Materno.trim()
+              : "N/A") || "N/A"
+          ),
+          direccion: validateString(
+            MAX_LENGTHS,
+            "direccion",
+            (typeof item.Direccion === "string"
+              ? item.Direccion.trim()
+              : "N/A") || "N/A"
+          ),
+          colonia:validateString(
+            MAX_LENGTHS,
+            "colonia",
+            (typeof item.Colonia === "string"
+              ? item.Colonia.trim()
+              : "N/A") || "N/A"
+          ),
+          ciudad:validateString(
+            MAX_LENGTHS,
+            "ciudad",
+            (typeof item.Ciudad === "string"
+              ? item.Ciudad.trim()
+              : "N/A") || "N/A"
+          ),
+          estado:validateString(
+            MAX_LENGTHS,
+            "estado",
+            (typeof item.Estado === "string"
+              ? item.Estado.trim()
+              : "N/A") || "N/A"
+          ),
+          cp:validateString(
+            MAX_LENGTHS,
+            "cp",
+            (typeof item.CP === "string"
+              ? item.CP.trim()
+              : "N/A") || "N/A"
+          ),
+          pais:validateString(
+            MAX_LENGTHS,
+            "pais",
+            (typeof item.Pais === "string"
+              ? item.Pais.trim()
+              : "N/A") || "N/A"
+          ),
+          rfc:validateString(
+            MAX_LENGTHS,
+            "rfc",
+            (typeof item.RFC === "string"
+              ? item.RFC.trim()
+              : "N/A") || "N/A"
+          ),
+          telefono_1:validateString(
+            MAX_LENGTHS,
+            "telefono_1",
+            (typeof item.Telefono_1 === "string"
+              ? item.Telefono_1.trim()
+              : "N/A") || "N/A"
+          ),
+          telefono_2:validateString(
+            MAX_LENGTHS,
+            "telefono_2",
+            (typeof item.Telefono_2 === "string"
+              ? item.Telefono_2.trim()
+              : "N/A") || "N/A"
+          ),
+          fax:validateString(
+            MAX_LENGTHS,
+            "fax",
+            (typeof item.Fax === "string"
+              ? item.Fax.trim()
+              : "N/A") || "N/A"
+          ),
+          celular:validateString(
+            MAX_LENGTHS,
+            "celular",
+            (typeof item.Celular === "string"
+              ? item.Celular.trim()
+              : "N/A") || "N/A"
+          ),
+          email:validateString(
+            MAX_LENGTHS,
+            "email",
+            (typeof item.Email === "string"
+              ? item.Email.trim()
+              : "N/A") || "N/A"
+          ),
+          contraseña:validateString(
+            MAX_LENGTHS,
+            "contraseña",
+            (typeof item.Contraseña === "string"
+              ? item.Contraseña.trim()
+              : "N/A") || "N/A"
+          ),
+          baja:validateString(
+            MAX_LENGTHS,
+            "baja",
+            (typeof item.Baja === "string" ? item.Baja.trim() : "n") || "n"
+          ),
+        }));
+        setDataJson(convertedData);
       };
+      reader.readAsArrayBuffer(selectedFile);
+    }
+  };
+  
+  const itemHeaderTable = () => {
+    return (
+      <>
+        <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">No.</td>
+        <td className="w-[40%]">Nombre</td>
+        <td className="w-[15%]">Ap. Paterno</td>
+        <td className="w-[15%]">Ap. Materno</td>
+        <td className="w-[15%]">Direccion</td>
+        <td className="w-[15%]">Colonia</td>
+        <td className="w-[10%]">Ciudad</td>
+        <td className="w-[10%]">Estado</td>
+        <td className="w-[10%]">CP</td>
+        <td className="w-[10%]">Pais</td>
+        <td className="w-[10%]">RFC</td>
+        <td className="w-[10%]">Telefono 1</td>
+        <td className="w-[10%]">Telefono 2</td>
+        <td className="w-[10%]">Fax</td>
+        <td className="w-[10%]">Celular</td>
+        <td className="w-[10%]">Email</td>
+        <td className="w-[10%]">Contraseña</td>
+        <td className="w-[10%]">Baja</td>
+      </>
+    );
+  };
+    
+  const itemDataTable = (item) => {
+    return (
+      <>
+        <tr key={item.numero} className="hover:cursor-pointer">
+          <th className="text-left"> {item.numero} </th>
+          <td>{item.nombre}</td>
+          <td>{item.ap_paterno}</td>
+          <td>{item.ap_materno}</td>
+          <td>{item.direccion}</td>
+          <td>{item.colonia}</td>
+          <td>{item.ciudad}</td>
+          <td>{item.estado}</td>
+          <td>{item.cp}</td>
+          <td>{item.pais}</td>
+          <td>{item.rfc}</td>
+          <td>{item.telefono_1}</td>
+          <td>{item.telefono_2}</td>
+          <td>{item.fax}</td>
+          <td>{item.celular}</td>
+          <td>{item.email}</td>
+          <td>{item.contraseña}</td>
+          <td>{item.baja}</td>
+        </tr>
+      </>
+    );
+  };
 
   if (status === "loading") {
     return (
@@ -586,6 +723,11 @@ function Profesores() {
   }
   return (
     <>
+      <BarraCarga
+        porcentaje={porcentaje}
+        cerrarTO={cerrarTO}
+      />
+
        <ModalProcesarDatos
         id_modal={"my_modal_profesores"}
         session={session}
