@@ -24,7 +24,7 @@ import { debounce, permissionsComponents, chunkArray, validateString } from "@/a
 import ModalProcesarDatos from "../components/modalProcesarDatos";
 import * as XLSX from "xlsx";
 import BarraCarga from "../components/BarraCarga";
-import { truncateTable } from "@/app/utils/GlobalApis";
+import { truncateTable, inactiveActiveBaja } from "@/app/utils/GlobalApis";
 
 function Comentarios() {
   const router = useRouter();
@@ -392,6 +392,24 @@ function Comentarios() {
       [event.target.id]: event.target.value,
     }));
   };
+
+  useEffect(() => {
+      const fetchD = async () => {
+        const res = await inactiveActiveBaja(session.user.token, "comentarios");
+        if (res.status) {
+          const { inactive, active } = res.data;
+          showSwalConfirm(
+            "Estado de los Comentarios",
+            `Comentarios activos: ${active}\nComentarios inactivos: ${inactive}`,
+            "info"
+          );
+        }
+      };
+      if (status === "loading" || !session) {
+        return;
+      }
+      fetchD();
+    }, [reload_page]);
 
   const procesarDatos = () => {
     showModalProcesa(true);
