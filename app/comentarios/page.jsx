@@ -394,7 +394,6 @@ function Comentarios() {
   };
 
   const procesarDatos = () => {
-    //showModalProcesa(true);
     document.getElementById("my_modal_comentarios").showModal()
   }
   
@@ -420,15 +419,16 @@ function Comentarios() {
     }
     setCerrarTO(true);
     setDataJson([]);
-    document.getElementById("my_modal_comentarios").close();
+    setPorcentaje(0);
     if (allErrors){
       showSwalConfirm("Error", allErrors, "error", "my_modal_comentarios");
     } else {
+      document.getElementById("my_modal_comentarios").close();
       showSwal(
         "Éxito",
         "Todos los Comentarios se han subido correctamente.",
         "success",
-        "my_modal_comentarios"
+        //"my_modal_comentarios"
       );
     }
     setReloadPage(!reload_page);
@@ -438,7 +438,7 @@ function Comentarios() {
   const handleFileChange = async (e) => {
     const confirmed = await confirmSwal(
       "¿Desea Continuar?",
-      "Asegúrate de que las columnas del archivo de excel coincidan exactamente con las columnas de la tabla en la base de datos.",
+      "Por favor, verifica que las columnas del archivo de Excel coincidan exactamente con las columnas de la tabla en la base de datos y que no contengan espacios en blanco.",
       "warning",
       "Aceptar",
       "Cancelar",
@@ -509,20 +509,12 @@ function Comentarios() {
     return (
       <>
         <tr key={item.numero} className="hover:cursor-pointer">
-          <th
-            className={
-              typeof item.numero === "number"
-                ? "text-left"
-                : "text-right"
-            }
-          >
-            {item.numero}
-          </th>
-          <td className="text-left">{item.comentario_1}</td>
-          <td className="text-left">{item.comentario_2}</td>
-          <td className="text-left">{item.comentario_3}</td>
-          <td className="text-left">{item.baja}</td>
-          <td className="text-left">{item.generales}</td>
+          <th className="text-left">{item.numero} </th>
+          <td>{item.comentario_1}</td>
+          <td>{item.comentario_2}</td>
+          <td>{item.comentario_3}</td>
+          <td>{item.baja}</td>
+          <td>{item.generales}</td>
         </tr>
       </>
     );

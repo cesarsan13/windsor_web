@@ -7,7 +7,7 @@ import TablaAsignaturas from "@/app/asignaturas/components/tablaAsignaturas";
 import Busqueda from "@/app/asignaturas/components/Busqueda";
 import Acciones from "@/app/asignaturas/components/Acciones";
 import VistaPrevia from "@/app/components/VistaPrevia";
-import { soloDecimales, soloEnteros, snToBool } from "@/app/utils/globalfn";
+import { snToBool } from "@/app/utils/globalfn";
 import { useForm } from "react-hook-form";
 import {
   getAsignaturas,
@@ -20,15 +20,14 @@ import {
 } from "@/app/utils/api/asignaturas/asignaturas";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import { Viewer, Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import { debounce, permissionsComponents, chunkArray } from "@/app/utils/globalfn";
+import { debounce, permissionsComponents, chunkArray, validateString } from "@/app/utils/globalfn";
 import ModalProcesarDatos from "../components/modalProcesarDatos";
 import { truncateTable } from "../utils/GlobalApis";
+import BarraCarga from "../components/BarraCarga";
 
 function Asignaturas() {
   const router = useRouter();
@@ -42,8 +41,6 @@ function Asignaturas() {
   const [animateLoading, setAnimateLoading] = useState(false);
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState("");
-  const [filtro, setFiltro] = useState("id");
-  // const [TB_Busqueda, setTB_Busqueda] = useState("");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
@@ -54,6 +51,21 @@ function Asignaturas() {
   const [permissions, setPermissions] = useState({});
   const [dataJson, setDataJson] = useState([]); 
   const [reload_page, setReloadPage] = useState(false)
+  const [porcentaje, setPorcentaje] = useState(0);
+  const [cerrarTO, setCerrarTO] = useState(false);
+  const MAX_LENGTHS = {
+    descripcion: 100,
+    evaluaciones: 20,
+    actividad: 10,
+    area: 20,
+    orden: 20,
+    lenguaje:15, 
+    caso_evaluar:15,
+    fecha_seg:10,
+    hora_seg:10,
+    cve_seg:10,
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
@@ -408,29 +420,40 @@ function Asignaturas() {
         : document.getElementById("my_modal_4").close();
     };
   const buttonProcess = async () => {
+    document.getElementById("cargamodal").showModal();
     event.preventDefault();
     setisLoadingButton(true);
-    const confirmed = await confirmSwal(
-      "¿Desea continuar?",
-      "Se eliminarán todos los datos actuales de la tabla.",
-      "warning",
-      "Aceptar",
-      "Cancelar",
-      "my_modal_4"
-    );
-    if (!confirmed) {
-      setisLoadingButton(false);
-      return;
-    }
     const { token } = session.user;
     await truncateTable(token, "asignaturas");
     const chunks = chunkArray(dataJson, 20);
+    let allErrors = "";
+    let chunksProcesados = 0;
+    let numeroChunks = chunks.length;
+
     for (let chunk of chunks) {
-      await storeBatchAsignatura(token, chunk);
+      const res = await storeBatchAsignatura(token, chunk);
+      chunksProcesados++;
+      const progreso = (chunksProcesados / numeroChunks) * 100;
+      setPorcentaje(Math.round(progreso));
+      if (!res.status) {
+        allErrors += res.alert_text;
+      }
     }
+    setCerrarTO(true);
     setDataJson([]);
-    showModalProcesa(false);
-    showSwal("Éxito", "Los datos se han subido correctamente.", "success");
+    setPorcentaje(0);
+    
+    if (allErrors) {
+      showSwalConfirm("Error", allErrors, "error", "my_modal_4");
+    } else {
+      showModalProcesa(false);
+      showSwal(
+        "Éxito",
+        "Todos las Asignaturas se insertaron correctamente.",
+        "success"
+        // "my_modal_4"
+      );
+    }
     setReloadPage(!reload_page);
     setisLoadingButton(false);
   };
@@ -438,7 +461,7 @@ function Asignaturas() {
     const handleFileChange = async (e) => {
         const confirmed = await confirmSwal(
           "¿Desea Continuar?",
-          "Asegúrate de que las columnas del archivo de excel coincidan exactamente con las columnas de la tabla en la base de datos.",
+          "Por favor, verifica que las columnas del archivo de Excel coincidan exactamente con las columnas de la tabla en la base de datos y que no contengan espacios en blanco.",
           "warning",
           "Aceptar",
           "Cancelar",
@@ -459,17 +482,65 @@ function Asignaturas() {
             const jsonData = XLSX.utils.sheet_to_json(worksheet);
             const convertedData = jsonData.map(item => ({
               numero: parseInt(item.Numero|| 0),
-              descripcion: (item.Descripcion && String(item.Descripcion).trim() !== "") ? String(item.Descripcion).slice(0, 100) : "N/A",
-              fecha_seg: (item.Fecha_Seg && String(item.Fecha_Seg).trim() !== "") ? String(item.Fecha_Seg).slice(0, 10) : " ",
-              hora_seg: (item.Hora_Seg && String(item.Hora_Seg).trim() !== "") ? String(item.Hora_Seg).slice(0, 10) : " ",
-              cve_seg: (item.Cve_Seg && String(item.Cve_Seg).trim() !== "") ? String(item.Cve_Seg).slice(0, 10) : " ",
-              baja: (item.Baja && item.Baja.trim() !== "") ? String(item.Baja).slice(0, 1) : "n",
-              evaluaciones: parseInt(item.Evaluaciones || 0),
-              actividad: (item.Actividad && item.Actividad.trim() !== "") ? String(item.Actividad).slice(0, 2) : "N/A",
-              area: parseInt(item.Area || 0),
-              orden: parseInt(item.Orden || 0),
-              lenguaje:(item.Lenguaje && item.Lenguaje.trim() !== "") ? String(item.Lenguaje).slice(0, 15) : "N/A",
-              caso_evaluar: (item.Caso_Evaluar && item.Caso_Evaluar.trim() !== "") ? String(item.Caso_Evaluar).slice(0, 15) : "N/A",
+              descripcion: validateString(
+                MAX_LENGTHS,
+                "descripcion",
+                (typeof item.Descripcion === "string" ? item.Descripcion.trim() : "N/A") ||
+                  "N/A"
+              ),
+              fecha_seg: validateString(
+                MAX_LENGTHS,
+                "fecha_seg",
+                (typeof item.Fecha_Seg === "string" ? item.Fecha_Seg.trim() : "N/A") ||
+                  "N/A"
+              ),
+              hora_seg: validateString(
+                MAX_LENGTHS,
+                "hora_seg",
+                (typeof item.Hora_Seg === "string" ? item.Hora_Seg.trim() : "N/A") ||
+                  "N/A"
+              ),
+              cve_seg: validateString(
+                MAX_LENGTHS,
+                "cve_seg",
+                (typeof item.Cve_Seg === "string" ? item.Cve_Seg.trim() : "N/A") ||
+                  "N/A"
+              ),
+              baja: validateString(
+                MAX_LENGTHS,
+                "baja",
+                (typeof item.Baja === "string" ? item.Baja.trim() : "n") || "n"
+              ),
+              evaluaciones:validateString(
+                MAX_LENGTHS,
+                "evaluaciones",
+                (typeof item.Evaluaciones === "string" ? item.Evaluaciones.trim() : "n") || "n"
+              ),
+              actividad: validateString(
+                MAX_LENGTHS,
+                "actividad",
+                (typeof item.Actividad === "string" ? item.Actividad.trim() : "n") || "n"
+              ),
+              area: validateString(
+                MAX_LENGTHS,
+                "area",
+                (typeof item.Area === "string" ? item.Area.trim() : "n") || "n"
+              ),
+              orden: validateString(
+                MAX_LENGTHS,
+                "orden",
+                (typeof item.Orden === "string" ? item.Orden.trim() : "n") || "n"
+              ),
+              lenguaje:validateString(
+                MAX_LENGTHS,
+                "lenguaje",
+                (typeof item.Lenguaje === "string" ? item.Lenguaje.trim() : "n") || "n"
+              ),
+              caso_evaluar:validateString(
+                MAX_LENGTHS,
+                "caso_evaluar",
+                (typeof item.Caso_Evaluar === "string" ? item.Caso_Evaluar.trim() : "n") || "n"
+              ),
             }));
             setDataJson(convertedData);
           };
@@ -500,26 +571,18 @@ function Asignaturas() {
       return (
         <>
           <tr key={item.numero} className="hover:cursor-pointer">
-            <th
-              className={
-                typeof item.numero === "number"
-                  ? "text-left"
-                  : "text-right"
-              }
-            >
-              {item.numero}
-            </th>
-            <td className="text-left">{item.descripcion}</td>
-            <td className="text-left">{item.fecha_seg}</td>
-            <td className="text-left">{item.hora_seg}</td>
-            <td className="text-left">{item.cve_seg}</td>
-            <td className="text-left">{item.baja}</td>
-            <td className="text-right">{item.evaluaciones}</td>
-            <td className="text-left">{item.actividad}</td>
-            <td className="text-right">{item.area}</td>
-            <td className="text-right">{item.orden}</td>
-            <td className="text-left">{item.lenguaje}</td>
-            <td className="text-left">{item.caso_evaluar}</td>
+            <th className="text-left">{item.numero}</th>
+            <td>{item.descripcion}</td>
+            <td>{item.fecha_seg}</td>
+            <td>{item.hora_seg}</td>
+            <td>{item.cve_seg}</td>
+            <td>{item.baja}</td>
+            <td>{item.evaluaciones}</td>
+            <td>{item.actividad}</td>
+            <td>{item.area}</td>
+            <td>{item.orden}</td>
+            <td>{item.lenguaje}</td>
+            <td>{item.caso_evaluar}</td>
           </tr>
         </>
       );
@@ -532,6 +595,10 @@ function Asignaturas() {
   }
   return (
     <>
+      <BarraCarga 
+        porcentaje={porcentaje}
+        cerrarTO={cerrarTO}
+      />
       <ModalProcesarDatos
         id_modal={"my_modal_4"}
         session={session}
