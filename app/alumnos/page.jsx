@@ -181,7 +181,7 @@ function Alumnos() {
     const fetchData = async () => {
       setisLoading(true);
       let { token, permissions } = session.user;
-      const es_admin = session.user.es_admin;
+      const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
 
       const data = await getAlumnos(token, bajas);
@@ -984,7 +984,7 @@ function Alumnos() {
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
         const convertedData = jsonData.map((item) => ({
-          numero: parseInt(item.Numero || 0),
+          numero: item.Numero || 0,
           nombre: validateString(
             MAX_LENGTHS,
             "nombre",
@@ -1681,6 +1681,7 @@ function Alumnos() {
                 animateLoading={animateLoading}
                 permiso_alta={permissions.altas}
                 permiso_imprime={permissions.impresion}
+                es_admin={session?.user?.es_admin || false}
               />
             </div>
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">

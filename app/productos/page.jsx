@@ -99,7 +99,7 @@ function Productos() {
     const fetchData = async () => {
       setisLoading(true);
       let { token, permissions } = session.user;
-      const es_admin = session.user.es_admin;
+      const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
 
       const data = await getProductos(token, bajas);
@@ -221,7 +221,6 @@ function Productos() {
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
     setisLoadingButton(true);
-    const dataj = JSON.stringify(data);
     let res = null;
     if (accion === "Eliminar") {
       showModal(false);
@@ -533,34 +532,38 @@ function Productos() {
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
-        const convertedData = jsonData.map((item) => ({
-          numero: parseInt(item.Numero || 0),
-          descripcion:
-            item.Descripcion && String(item.Descripcion).trim() !== ""
-              ? String(item.Descripcion).slice(0, 255)
-              : "N/A",
-          costo: parseFloat(item.Costo || 0),
-          frecuencia:
-            item.Frecuencia && String(item.Frecuencia).trim() !== ""
-              ? String(item.Frecuencia).slice(0, 20)
-              : "N/A",
-          por_recargo: parseFloat(item.Por_Recargo || 0),
-          aplicacion:
-            item.Aplicacion && String(item.Aplicacion).trim() !== ""
-              ? String(item.Aplicacion).slice(0, 25)
-              : "N/A",
-          iva: parseFloat(item.IVA || 0),
-          cond_1: parseInt(item.Cond_1 || 0),
-          cam_precio: item.Cam_Precio ? 1 : 0,
-          ref:
-            item.Ref && item.Ref.trim() !== ""
-              ? String(item.Ref).slice(0, 20)
-              : "N/A",
-          baja:
-            item.Baja && item.Baja.trim() !== ""
-              ? String(item.Baja).slice(0, 1)
-              : "n",
-        }));
+        // console.log(jsonData);
+        const convertedData = jsonData.map((item) => {
+          return {
+            numero: String(item.Numero || 0).trim(),
+            descripcion:
+              item.Descripcion && String(item.Descripcion).trim() !== ""
+                ? String(item.Descripcion).slice(0, 255)
+                : "N/A",
+            costo: parseFloat(item.Costo || 0),
+            frecuencia:
+              item.Frecuencia && String(item.Frecuencia).trim() !== ""
+                ? String(item.Frecuencia).slice(0, 20)
+                : "N/A",
+            por_recargo: parseFloat(item.Por_Recargo || 0),
+            aplicacion:
+              item.Aplicacion && String(item.Aplicacion).trim() !== ""
+                ? String(item.Aplicacion).slice(0, 25)
+                : "N/A",
+            iva: parseFloat(item.IVA || 0),
+            cond_1: parseInt(item.Cond_1 || 0),
+            cam_precio: item.Cam_Precio ? 1 : 0,
+            ref:
+              item.Ref && item.Ref.trim() !== ""
+                ? String(item.Ref).slice(0, 20)
+                : "N/A",
+            baja:
+              item.Baja && item.Baja.trim() !== ""
+                ? String(item.Baja).slice(0, 1)
+                : "n",
+          };
+        });
+        console.log(convertedData);
         setDataJson(convertedData);
       };
       reader.readAsArrayBuffer(selectedFile);
@@ -675,6 +678,7 @@ function Productos() {
                 animateLoading={animateLoading}
                 permiso_alta={permissions.altas}
                 permiso_imprime={permissions.impresion}
+                es_admin={session?.user?.es_admin || false}
               />
             </div>
 
