@@ -108,7 +108,6 @@ function Profesores() {
 
 
   useEffect(() => {
-    
     const fetchData = async () => {
       setisLoading(true);
       const { token, permissions } = session.user;
@@ -131,7 +130,7 @@ function Profesores() {
       return;
     }
     fetchData();
-  }, [session, status, bajas]);
+  }, [session, status, bajas, reload_page]);
 
   const {
     register,
