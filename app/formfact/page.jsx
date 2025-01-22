@@ -307,7 +307,7 @@ function FormFact() {
       showSwal(
         "Éxito",
         "Todos los factura formas se insertaron correctamente.",
-        "success",
+        "success"
         // "my_modal_4"
       );
     }
@@ -337,7 +337,7 @@ function FormFact() {
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
         console.log("data", jsonData);
         const convertedData = jsonData.map((item) => ({
-          numero_forma: parseInt(item.Numero_Forma || 0),
+          numero_forma: item.Numero_Forma || 0,
           nombre_forma: validateString(
             MAX_LENGTHS,
             "nombre_forma",
