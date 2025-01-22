@@ -124,7 +124,7 @@ function Comentarios() {
       return;
     }
     fetchData();
-  }, [session, status, bajas]);
+  }, [session, status, bajas, reload_page]);
 
   const {
     register,
@@ -394,9 +394,13 @@ function Comentarios() {
   };
 
   const procesarDatos = () => {
-    document.getElementById("my_modal_comentarios").showModal()
+    showModalProcesa(true);
   }
-  
+  const showModalProcesa = (show) => {
+    show
+      ? document.getElementById("my_modal_4").showModal()
+      : document.getElementById("my_modal_4").close();
+  };
   const buttonProcess = async () => {
     document.getElementById("cargamodal").showModal();
     event.preventDefault();
@@ -404,7 +408,7 @@ function Comentarios() {
     const { token } = session.user;
     await truncateTable(token, "comentarios");
     const chunks = chunkArray(dataJson, 20);
-    let allErrors = "";
+    // let allErrors = "";
     let chunksProcesados = 0;
     let numeroChunks = chunks.length;
 
@@ -413,26 +417,16 @@ function Comentarios() {
       chunksProcesados++;
       const progreso = (chunksProcesados / numeroChunks) * 100;
       setPorcentaje(Math.round(progreso));
-      if (!res.status) {
-        allErrors += res.alert_text;
-      }
+      // if (!res.status) {
+      //   allErrors += res.alert_text;
+      // }
     }
     setCerrarTO(true);
-    setDataJson([]);
-    setPorcentaje(0);
-    if (allErrors){
-      showSwalConfirm("Error", allErrors, "error", "my_modal_comentarios");
-    } else {
-      document.getElementById("my_modal_comentarios").close();
-      showSwal(
-        "Éxito",
-        "Todos los Comentarios se han subido correctamente.",
-        "success",
-        //"my_modal_comentarios"
-      );
-    }
-    setReloadPage(!reload_page);
-    setisLoadingButton(false);
+        setDataJson([]);
+        showModalProcesa(false);
+        showSwal("Éxito", "Los datos se han subido correctamente.", "success");
+        setReloadPage(!reload_page);
+        setisLoadingButton(false);
   };
 
   const handleFileChange = async (e) => {
@@ -442,7 +436,7 @@ function Comentarios() {
       "warning",
       "Aceptar",
       "Cancelar",
-      "my_modal_comentarios"
+      "my_modal_4"
     );
     if (!confirmed) {
       return;
@@ -533,7 +527,7 @@ function Comentarios() {
       />
 
       <ModalProcesarDatos
-        id_modal={"my_modal_comentarios"}
+        id_modal={"my_modal_4"}
         session={session}
         buttonProcess={buttonProcess}
         isLoadingButton={isLoadingButton}
