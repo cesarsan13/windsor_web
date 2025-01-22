@@ -30,7 +30,7 @@ import * as XLSX from "xlsx";
 import { ReportePDF } from "../utils/ReportesPDF";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import { truncateTable } from "../utils/GlobalApis";
+import { truncateTable, inactiveActiveBaja } from "../utils/GlobalApis";
 import BarraCarga from "@/app/components/BarraCarga";
 function Productos() {
   const router = useRouter();
@@ -474,6 +474,24 @@ function Productos() {
     }
   };
 
+  useEffect(() => {
+    const fetchD = async () => {
+      const res = await inactiveActiveBaja(session.user.token, "productos");
+      if (res.status) {
+        const { inactive, active } = res.data;
+        showSwalConfirm(
+          "Estado de los productos",
+          `Productos activos: ${active}\nProductos inactivos: ${inactive}`,
+          "info"
+        );
+      }
+    };
+    if (status === "loading" || !session) {
+      return;
+    }
+    fetchD();
+  }, [reload_page]);
+
   const buttonProcess = async () => {
     document.getElementById("cargamodal").showModal();
     event.preventDefault();
@@ -500,15 +518,17 @@ function Productos() {
     if (allErrors) {
       showSwalConfirm("Error", allErrors, "error", "my_modal_4");
     } else {
-      showModalProcesa(false);
       showSwal(
         "Éxito",
         "Todos los productos se insertaron correctamente.",
         "success"
         // "my_modal_4"
       );
+      showModalProcesa(false);
     }
-    setReloadPage(!reload_page);
+    setTimeout(() => {
+      setReloadPage(!reload_page);
+    }, 3500);
   };
 
   const handleFileChange = async (e) => {
