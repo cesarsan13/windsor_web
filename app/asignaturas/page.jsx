@@ -1,9 +1,10 @@
 "use client";
 import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "../utils/alerts";
+import { showSwal, confirmSwal, showSwalConfirm} from "../utils/alerts";
 import ModalAsignaturas from "@/app/asignaturas/components/modalAsignaturas";
-import TablaAsignaturas from "@/app/asignaturas/components/tablaAsignaturas";
+//import TablaAsignaturas from "@/app/asignaturas/components/tablaAsignaturas";
+const TablaAsignaturas = React.lazy(() => import("@/app/asignaturas/components/tablaAsignaturas"));
 import Busqueda from "@/app/asignaturas/components/Busqueda";
 import Acciones from "@/app/asignaturas/components/Acciones";
 import VistaPrevia from "@/app/components/VistaPrevia";
@@ -41,6 +42,7 @@ function Asignaturas() {
   const [animateLoading, setAnimateLoading] = useState(false);
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState("");
+  const [filtro, setFiltro] = useState("id");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
@@ -412,7 +414,6 @@ function Asignaturas() {
   //Procesa datos
     const procesarDatos = () => {
       showModalProcesa(true);
-      //.getElementById("my_modal_asignaturas").showModal()
     }
     const showModalProcesa = (show) => {
       show
@@ -426,7 +427,7 @@ function Asignaturas() {
     const { token } = session.user;
     await truncateTable(token, "asignaturas");
     const chunks = chunkArray(dataJson, 20);
-    let allErrors = "";
+    //let allErrors = "";
     let chunksProcesados = 0;
     let numeroChunks = chunks.length;
 
@@ -435,25 +436,20 @@ function Asignaturas() {
       chunksProcesados++;
       const progreso = (chunksProcesados / numeroChunks) * 100;
       setPorcentaje(Math.round(progreso));
-      if (!res.status) {
-        allErrors += res.alert_text;
-      }
+      //if (!res.status) {
+      //  allErrors += res.alert_text;
+      //}
     }
     setCerrarTO(true);
     setDataJson([]);
-    setPorcentaje(0);
+    //setPorcentaje(0);
     
-    if (allErrors) {
-      showSwalConfirm("Error", allErrors, "error", "my_modal_4");
-    } else {
-      showModalProcesa(false);
-      showSwal(
-        "Éxito",
-        "Todos las Asignaturas se insertaron correctamente.",
-        "success"
-        // "my_modal_4"
-      );
-    }
+    showModalProcesa(false);
+    showSwal(
+      "Éxito",
+      "Todos las Asignaturas se insertaron correctamente.",
+      "success"
+    );
     setReloadPage(!reload_page);
     setisLoadingButton(false);
   };

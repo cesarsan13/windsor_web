@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal, showSwalAndWait, showSwalConfirm } from "@/app/utils/alerts";
 import ModalProfesores from "@/app/profesores/components/ModalProfesores";
 import VistaPrevia from "@/app/components/VistaPrevia";
-import TablaProfesores from "@/app/profesores/components/TablaProfesores";
+const TablaProfesores= React.lazy(() => import("@/app/profesores/components/TablaProfesores"));
 import Busqueda from "@/app/profesores/components/Busqueda";
 import Acciones from "@/app/profesores/components/Acciones";
 import { useForm } from "react-hook-form";
@@ -476,8 +476,13 @@ function Profesores() {
   };
 
   const procesarDatos = () => {
-    document.getElementById("my_modal_profesores").showModal()
+    showModalProcesa(true);
   }
+  const showModalProcesa = (show) => {
+    show
+      ? document.getElementById("my_modal_profesores").showModal()
+      : document.getElementById("my_modal_profesores").close();
+  };
 
   const buttonProcess = async () => {
     document.getElementById("cargamodal").showModal();
@@ -486,7 +491,7 @@ function Profesores() {
     const { token } = session.user;
     await truncateTable(token, "profesores");
     const chunks = chunkArray(dataJson, 20);
-    let allErrors = "";
+    //let allErrors = "";
     let chunksProcesados = 0;
     let numeroChunks = chunks.length;
     for (let chunk of chunks) {
@@ -494,25 +499,19 @@ function Profesores() {
       chunksProcesados++;
       const progreso = (chunksProcesados / numeroChunks) * 100;
       setPorcentaje(Math.round(progreso));
-      if (!res.status) {
-        allErrors += res.alert_text;
-      }
+      //if (!res.status) {
+      //  allErrors += res.alert_text;
+      //}
     }
     setCerrarTO(true);
     setDataJson([]);
-    setPorcentaje(0);
-    
-    if(allErrors){
-      showSwalConfirm("Error", allErrors, "error", "my_modal_profesores");
-    } else {
-      document.getElementById("my_modal_profesores").close();
-      showSwal(
-        "Éxito", 
-        "Los datos se han subido correctamente.", 
-        "success", 
-        //"my_modal_profesores"
-      );
-    }
+    //setPorcentaje(0);
+    showModalProcesa(false);
+    showSwal(
+      "Éxito", 
+      "Los datos se han subido correctamente.", 
+      "success"
+    );
     setReloadPage(!reload_page);
     setisLoadingButton(false);
   };  

@@ -3,7 +3,7 @@ import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal, showSwalConfirm } from "../utils/alerts";
 import ModalComentarios from "./components/ModalComentarios";
-import TablaComentarios from "./components/TablaComentarios";
+const TablaComentarios = React.lazy(() => import( "./components/TablaComentarios"));
 import Busqueda from "./components/Busqueda";
 import Acciones from "./components/Acciones";
 import { useForm } from "react-hook-form";
@@ -451,7 +451,7 @@ function Comentarios() {
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
         const convertedData = jsonData.map(item => ({
-          numero: parseInt(item.Numero || 0),
+          numero: item.Numero || 0,
           comentario_1: validateString(
             MAX_LENGTHS,
             "comentario_1",
