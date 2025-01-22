@@ -28,7 +28,7 @@ import {
   validateString,
 } from "@/app/utils/globalfn";
 import * as XLSX from "xlsx";
-import { truncateTable } from "@/app/utils/GlobalApis";
+import { truncateTable, registrosGenerales } from "@/app/utils/GlobalApis";
 import BarraCarga from "@/app/components/BarraCarga";
 function FormFact() {
   const router = useRouter();
@@ -267,6 +267,24 @@ function FormFact() {
     setLabels(facturas);
   };
 
+  useEffect(() => {
+    const fetchD = async () => {
+      const res = await registrosGenerales(session.user.token, "facturas_formato");
+      if (res.status) {
+        const { active } = res.data;
+        showSwalConfirm(
+          "Estado de Formas Facturas",
+          `Formas activas: ${active}\n`,
+          "info"
+        );
+      }
+    };
+    if (status === "loading" || !session) {
+      return;
+    }
+    fetchD();
+  }, [reload_page]);
+
   const procesarDatos = () => {
     showModalProcesa(true);
   };
@@ -335,7 +353,7 @@ function FormFact() {
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
-        console.log("data", jsonData);
+        // console.log("data", jsonData);
         const convertedData = jsonData.map((item) => ({
           numero_forma: item.Numero_Forma || 0,
           nombre_forma: validateString(

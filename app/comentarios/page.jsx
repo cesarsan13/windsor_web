@@ -1,9 +1,9 @@
 "use client";
 import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "../utils/alerts";
+import { showSwal, confirmSwal, showSwalConfirm } from "../utils/alerts";
 import ModalComentarios from "./components/ModalComentarios";
-import TablaComentarios from "./components/TablaComentarios";
+const TablaComentarios = React.lazy(() => import( "./components/TablaComentarios"));
 import Busqueda from "./components/Busqueda";
 import Acciones from "./components/Acciones";
 import { useForm } from "react-hook-form";
@@ -16,15 +16,15 @@ import {
 } from "../utils/api/comentarios/comentarios";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { siguiente } from "@/app/utils/api/comentarios/comentarios";
 import "jspdf-autotable";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import VistaPrevia from "@/app/components/VistaPrevia";
-import { debounce, permissionsComponents, chunkArray } from "@/app/utils/globalfn";
+import { debounce, permissionsComponents, chunkArray, validateString } from "@/app/utils/globalfn";
 import ModalProcesarDatos from "../components/modalProcesarDatos";
 import * as XLSX from "xlsx";
 import BarraCarga from "../components/BarraCarga";
+import { truncateTable, inactiveActiveBaja } from "@/app/utils/GlobalApis";
 
 function Comentarios() {
   const router = useRouter();
@@ -52,6 +52,13 @@ function Comentarios() {
   const [reload_page, setReloadPage] = useState(false);
   const [porcentaje, setPorcentaje] = useState(0);
   const [cerrarTO, setCerrarTO] = useState(false);
+  const MAX_LENGTHS = {
+    comentario_1: 50,
+    comentario_2: 50,
+    comentario_3: 50,
+    baja: 1,
+    generales:1,
+  };
 
   useEffect(() => {
     comentariosRef.current = formasComentarios; // Actualiza el ref cuando alumnos cambia
@@ -117,7 +124,7 @@ function Comentarios() {
       return;
     }
     fetchData();
-  }, [session, status, bajas]);
+  }, [session, status, bajas, reload_page]);
 
   const {
     register,
@@ -386,45 +393,68 @@ function Comentarios() {
     }));
   };
 
+  useEffect(() => {
+      const fetchD = async () => {
+        const res = await inactiveActiveBaja(session.user.token, "comentarios");
+        if (res.status) {
+          const { inactive, active } = res.data;
+          showSwalConfirm(
+            "Estado de los Comentarios",
+            `Comentarios activos: ${active}\nComentarios inactivos: ${inactive}`,
+            "info"
+          );
+        }
+      };
+      if (status === "loading" || !session) {
+        return;
+      }
+      fetchD();
+    }, [reload_page]);
+
   const procesarDatos = () => {
-    //showModalProcesa(true);
-    document.getElementById("my_modal_comentarios").showModal()
+    showModalProcesa(true);
   }
-  
+  const showModalProcesa = (show) => {
+    show
+      ? document.getElementById("my_modal_4").showModal()
+      : document.getElementById("my_modal_4").close();
+  };
   const buttonProcess = async () => {
     document.getElementById("cargamodal").showModal();
     event.preventDefault();
     setisLoadingButton(true);
     const { token } = session.user;
+    await truncateTable(token, "comentarios");
     const chunks = chunkArray(dataJson, 20);
-
+    // let allErrors = "";
     let chunksProcesados = 0;
     let numeroChunks = chunks.length;
 
     for (let chunk of chunks) {
-      await storeBatchComentarios(token, chunk);
+      const res = await storeBatchComentarios(token, chunk);
       chunksProcesados++;
       const progreso = (chunksProcesados / numeroChunks) * 100;
       setPorcentaje(Math.round(progreso));
+      // if (!res.status) {
+      //   allErrors += res.alert_text;
+      // }
     }
     setCerrarTO(true);
-    setDataJson([]);
-    document.getElementById("my_modal_comentarios").close();
-    //setTimeout(() => {
-      showSwal("Éxito", "Los datos se han subido correctamente.", "success");
-    //},700);
-    setReloadPage(!reload_page);
-    setisLoadingButton(false);
+        setDataJson([]);
+        showModalProcesa(false);
+        showSwal("Éxito", "Los datos se han subido correctamente.", "success");
+        setReloadPage(!reload_page);
+        setisLoadingButton(false);
   };
 
   const handleFileChange = async (e) => {
     const confirmed = await confirmSwal(
       "¿Desea Continuar?",
-      "Asegúrate de que las columnas del archivo de excel coincidan exactamente con las columnas de la tabla en la base de datos.",
+      "Por favor, verifica que las columnas del archivo de Excel coincidan exactamente con las columnas de la tabla en la base de datos y que no contengan espacios en blanco.",
       "warning",
       "Aceptar",
       "Cancelar",
-      "my_modal_comentarios"
+      "my_modal_4"
     );
     if (!confirmed) {
       return;
@@ -439,12 +469,34 @@ function Comentarios() {
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
         const convertedData = jsonData.map(item => ({
-          numero: parseInt(item.Numero|| 0),
-          comentario_1: (item.Comentario_1 && String(item.Comentario_1).trim() !== "") ? String(item.Comentario_1).slice(0, 100) : "N/A",
-          comentario_2: (item.Comentario_2 && String(item.Comentario_2).trim() !== "") ? String(item.Comentario_2).slice(0, 100) : "N/A",
-          comentario_3: (item.Comentario_3 && String(item.Comentario_3).trim() !== "") ? String(item.Comentario_3).slice(0, 100) : "N/A",
-          baja: (item.Baja && item.Baja.trim() !== "") ? String(item.Baja).slice(0, 1) : "n",
-          generales: parseInt(item.Generales || 0),
+          numero: item.Numero || 0,
+          comentario_1: validateString(
+            MAX_LENGTHS,
+            "comentario_1",
+            (typeof item.Comentario_1 === "string"
+              ? item.Comentario_1.trim()
+              : "N/A") || "N/A"
+          ),
+          comentario_2:validateString(
+            MAX_LENGTHS,
+            "comentario_2",
+            (typeof item.Comentario_2 === "string"
+              ? item.Comentario_2.trim()
+              : "N/A") || "N/A"
+          ),
+          comentario_3: validateString(
+            MAX_LENGTHS,
+            "comentario_3",
+            (typeof item.Comentario_3 === "string"
+              ? item.Comentario_3.trim()
+              : "N/A") || "N/A"
+          ),
+          baja: validateString(
+            MAX_LENGTHS,
+            "baja",
+            (typeof item.Baja === "string" ? item.Baja.trim() : "n") || "n"
+          ),
+          generales: isNaN(parseInt(item.Generales)) ? 0 : parseInt(item.Generales)
         }));
         setDataJson(convertedData);
       };
@@ -469,20 +521,12 @@ function Comentarios() {
     return (
       <>
         <tr key={item.numero} className="hover:cursor-pointer">
-          <th
-            className={
-              typeof item.numero === "number"
-                ? "text-left"
-                : "text-right"
-            }
-          >
-            {item.numero}
-          </th>
-          <td className="text-left">{item.comentario_1}</td>
-          <td className="text-left">{item.comentario_2}</td>
-          <td className="text-left">{item.comentario_3}</td>
-          <td className="text-left">{item.baja}</td>
-          <td className="text-left">{item.generales}</td>
+          <th className="text-left">{item.numero} </th>
+          <td>{item.comentario_1}</td>
+          <td>{item.comentario_2}</td>
+          <td>{item.comentario_3}</td>
+          <td>{item.baja}</td>
+          <td>{item.generales}</td>
         </tr>
       </>
     );
@@ -501,7 +545,7 @@ function Comentarios() {
       />
 
       <ModalProcesarDatos
-        id_modal={"my_modal_comentarios"}
+        id_modal={"my_modal_4"}
         session={session}
         buttonProcess={buttonProcess}
         isLoadingButton={isLoadingButton}
@@ -543,15 +587,13 @@ function Comentarios() {
               <Acciones
                 Buscar={Buscar}
                 Alta={Alta}
-                // ImprimePDF={ImprimePDF}
-                // ImprimeExcel={ImprimeExcel}
                 home={home}
                 Ver={handleVerClick}
-                // CerrarView={CerrarView}
                 procesarDatos ={procesarDatos}
                 animateLoading={animateLoading}
                 permiso_alta={permissions.altas}
                 permiso_imprime={permissions.impresion}
+                es_admin={session?.user?.es_admin || false}
               ></Acciones>
             </div>
 

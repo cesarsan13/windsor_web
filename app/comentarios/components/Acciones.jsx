@@ -4,7 +4,7 @@ import Image from "next/image";
 import { TbLoader3 } from "react-icons/tb";
 import iconos from "@/app/utils/iconos";
 
-function Acciones({ Buscar, Alta, home, Ver, procesarDatos, animateLoading, permiso_alta, permiso_imprime }) {
+function Acciones({ Buscar, Alta, home, Ver, procesarDatos, animateLoading, permiso_alta, permiso_imprime, es_admin }) {
   const images = [
     {
       srcLight: iconos.buscar_w,
@@ -36,7 +36,7 @@ function Acciones({ Buscar, Alta, home, Ver, procesarDatos, animateLoading, perm
       alt: "Procesar datos desde un archivo excel",
       tooltipTitle: "Procesar datos desde un archivo excel.",
       onClick: procesarDatos,
-      permission: true,
+      permission: es_admin,
     },
     {
       srcLight: iconos.salir_w,

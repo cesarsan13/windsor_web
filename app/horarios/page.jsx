@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "../utils/alerts";
+import { showSwal, confirmSwal, showSwalConfirm } from "../utils/alerts";
 import ModalHorario from "@/app/horarios/components/ModalHorario";
 import TablaHorarios from "@/app/horarios/components/tablaHorarios";
 import Busqueda from "@/app/horarios/components/Busqueda";
@@ -22,7 +22,7 @@ import VistaPrevia from "@/app/components/VistaPrevia";
 import { ReportePDF } from "../utils/ReportesPDF";
 import { debounce, permissionsComponents,validateString, chunkArray} from "../utils/globalfn";
 import ModalProcesarDatos from "../components/modalProcesarDatos";
-import { truncateTable } from "../utils/GlobalApis";
+import { truncateTable, inactiveActiveBaja } from "../utils/GlobalApis";
 import * as XLSX from "xlsx";
 import BarraCarga from "../components/BarraCarga";
 
@@ -367,7 +367,24 @@ function Horarios() {
     setPdfData("");
     document.getElementById("modalVPHorarios").close();
   };
-
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
+      const fetchD = async () => {
+        const res = await inactiveActiveBaja(session.user.token, "horarios");
+        if (res.status) {
+          const { inactive, active } = res.data;
+          showSwalConfirm(
+            "Estado de los horarios",
+            `Horarios activos: ${active}\nHorarios inactivos: ${inactive}`,
+            "info"
+          );
+        }
+      };
+      if (status === "loading" || !session) {
+        return;
+      }
+      fetchD();
+    }, [reload_page]);
   const buttonProcess = async () => {
     document.getElementById("cargamodal").showModal();
     event.preventDefault();
