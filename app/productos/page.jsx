@@ -475,7 +475,7 @@ function Productos() {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchD = async () => {
       const res = await inactiveActiveBaja(session.user.token, "productos");
       if (res.status) {
         const { inactive, active } = res.data;
@@ -489,7 +489,7 @@ function Productos() {
     if (status === "loading" || !session) {
       return;
     }
-    fetchData();
+    fetchD();
   }, [reload_page]);
 
   const buttonProcess = async () => {
