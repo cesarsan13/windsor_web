@@ -99,7 +99,7 @@ function Productos() {
     const fetchData = async () => {
       setisLoading(true);
       let { token, permissions } = session.user;
-      const es_admin = session.user.es_admin;
+      const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
 
       const data = await getProductos(token, bajas);
@@ -675,6 +675,7 @@ function Productos() {
                 animateLoading={animateLoading}
                 permiso_alta={permissions.altas}
                 permiso_imprime={permissions.impresion}
+                es_admin={session?.user?.es_admin || false}
               />
             </div>
 

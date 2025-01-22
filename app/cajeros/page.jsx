@@ -421,7 +421,7 @@ function Cajeros() {
             const worksheet = workbook.Sheets[sheetName];
             const jsonData = XLSX.utils.sheet_to_json(worksheet);
             const convertedData = jsonData.map(item => ({
-              numero: parseInt(item.Numero || 0),
+              numero: item.Numero || 0,
               nombre: (item.Nombre && String(item.Nombre).trim() !== "") ? String(item.Nombre).slice(0, 35) : "N/A",
               direccion: (item.Direccion && String(item.Direccion).trim() !== "") ? String(item.Direccion).slice(0, 50) : "N/A",
               colonia: (item.Colonia && String(item.Colonia).trim() !== "") ? String(item.Colonia).slice(0, 30) : "N/A",

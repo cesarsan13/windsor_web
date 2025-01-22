@@ -83,7 +83,7 @@ function FormFact() {
     const fetchData = async () => {
       setisLoading(true);
       let { token, permissions } = session.user;
-      const es_admin = session.user.es_admin;
+      const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const data = await getFormFact(token, bajas);
       setFormFacts(data);
@@ -421,6 +421,7 @@ function FormFact() {
                 procesarDatos={procesarDatos}
                 home={home}
                 permiso_alta={permissions.altas}
+                es_admin={session?.user?.es_admin || false}
               />
             </div>
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-16">
