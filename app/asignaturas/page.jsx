@@ -27,7 +27,7 @@ import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { debounce, permissionsComponents, chunkArray, validateString } from "@/app/utils/globalfn";
 import ModalProcesarDatos from "../components/modalProcesarDatos";
-import { truncateTable } from "../utils/GlobalApis";
+import { truncateTable, inactiveActiveBaja } from "../utils/GlobalApis";
 import BarraCarga from "../components/BarraCarga";
 
 function Asignaturas() {
@@ -410,6 +410,24 @@ function Asignaturas() {
     };
     ImprimirExcel(configuracion);
   };
+
+  useEffect(() => {
+      const fetchD = async () => {
+        const res = await inactiveActiveBaja(session.user.token, "asignaturas");
+        if (res.status) {
+          const { inactive, active } = res.data;
+          showSwalConfirm(
+            "Estado de las Asignaturas",
+            `Asignaturas activas: ${active}\nAsignaturas inactivas: ${inactive}`,
+            "info"
+          );
+        }
+      };
+      if (status === "loading" || !session) {
+        return;
+      }
+      fetchD();
+    }, [reload_page]);
 
   //Procesa datos
     const procesarDatos = () => {

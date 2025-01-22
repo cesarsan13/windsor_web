@@ -24,7 +24,7 @@ import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { debounce,permissionsComponents, chunkArray, validateString, validateInt } from "../utils/globalfn";
 import ModalProcesarDatos from "../components/modalProcesarDatos";
-import { truncateTable } from "../utils/GlobalApis";
+import { truncateTable, inactiveActiveBaja } from "../utils/GlobalApis";
 import BarraCarga from "../components/BarraCarga";
 function Profesores() {
   const router = useRouter();
@@ -108,7 +108,6 @@ function Profesores() {
 
 
   useEffect(() => {
-    
     const fetchData = async () => {
       setisLoading(true);
       const { token, permissions } = session.user;
@@ -474,6 +473,24 @@ function Profesores() {
       [event.target.id]: event.target.value,
     }));
   };
+
+  useEffect(() => {
+      const fetchD = async () => {
+        const res = await inactiveActiveBaja(session.user.token, "profesores");
+        if (res.status) {
+          const { inactive, active } = res.data;
+          showSwalConfirm(
+            "Estado de los profesores",
+            `Profesores activos: ${active}\nProfesores inactivos: ${inactive}`,
+            "info"
+          );
+        }
+      };
+      if (status === "loading" || !session) {
+        return;
+      }
+      fetchD();
+    }, [reload_page]);
 
   const procesarDatos = () => {
     showModalProcesa(true);
