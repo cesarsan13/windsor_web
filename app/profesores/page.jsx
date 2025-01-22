@@ -131,7 +131,7 @@ function Profesores() {
       return;
     }
     fetchData();
-  }, [session, status, bajas]);
+  }, [session, status, bajas, reload_page]);
 
   const {
     register,
