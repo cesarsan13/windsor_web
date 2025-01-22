@@ -649,6 +649,7 @@ function Asignaturas() {
                 isLoading={animateLoading}
                 permiso_alta={permissions.altas}
                 permiso_imprime={permissions.impresion}
+                es_admin={session?.user?.es_admin || false}
               />
             </div>
 
