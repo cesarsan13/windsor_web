@@ -3,7 +3,7 @@ import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal, showSwalConfirm } from "../utils/alerts";
 import ModalComentarios from "./components/ModalComentarios";
-const TablaComentarios = React.lazt(() => import( "./components/TablaComentarios"));
+const TablaComentarios = React.lazy(() => import( "./components/TablaComentarios"));
 import Busqueda from "./components/Busqueda";
 import Acciones from "./components/Acciones";
 import { useForm } from "react-hook-form";
