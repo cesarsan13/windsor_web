@@ -1,9 +1,11 @@
 "use client";
 import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { showSwal, confirmSwal } from "../utils/alerts";
+import { showSwal, confirmSwal, showSwalConfirm} from "../utils/alerts";
 import ModalAsignaturas from "@/app/asignaturas/components/modalAsignaturas";
-import TablaAsignaturas from "@/app/asignaturas/components/tablaAsignaturas";
+//import TablaAsignaturas from "@/app/asignaturas/components/tablaAsignaturas";
+const TablaAsignaturas = React.lazy(() =>
+import("@/app/asignaturas/components/tablaAsignaturas"));
 import Busqueda from "@/app/asignaturas/components/Busqueda";
 import Acciones from "@/app/asignaturas/components/Acciones";
 import VistaPrevia from "@/app/components/VistaPrevia";
@@ -41,6 +43,7 @@ function Asignaturas() {
   const [animateLoading, setAnimateLoading] = useState(false);
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState("");
+  const [filtro, setFiltro] = useState("id");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
@@ -431,6 +434,7 @@ function Asignaturas() {
     let numeroChunks = chunks.length;
 
     for (let chunk of chunks) {
+      console.log("c", chunk);
       const res = await storeBatchAsignatura(token, chunk);
       chunksProcesados++;
       const progreso = (chunksProcesados / numeroChunks) * 100;
