@@ -57,7 +57,7 @@ function Cajeros() {
     const fetchData = async () => {
       setisLoading(true);
       const { token, permissions } = session.user;
-      const es_admin = session.user.es_admin;
+      const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
 
       const data = await getCajeros(token, bajas);
@@ -246,8 +246,17 @@ function Cajeros() {
     setisLoadingButton(false);
   });
   const procesarDatos = () => {
+    if (!session.user.es_admin) {
+      showSwal(
+        "Acción no permitida",
+        "Solo los administradores pueden realizar esta acción.",
+        "warning"
+      );
+      return;
+    }
+  
     showModalProcesa(true);
-  }
+  };
   const showModalProcesa = (show) => {
     show
       ? document.getElementById("my_modal_4").showModal()
@@ -412,7 +421,7 @@ function Cajeros() {
             const worksheet = workbook.Sheets[sheetName];
             const jsonData = XLSX.utils.sheet_to_json(worksheet);
             const convertedData = jsonData.map(item => ({
-              numero: parseInt(item.Numero || 0),
+              numero: item.Numero || 0,
               nombre: (item.Nombre && String(item.Nombre).trim() !== "") ? String(item.Nombre).slice(0, 35) : "N/A",
               direccion: (item.Direccion && String(item.Direccion).trim() !== "") ? String(item.Direccion).slice(0, 50) : "N/A",
               colonia: (item.Colonia && String(item.Colonia).trim() !== "") ? String(item.Colonia).slice(0, 30) : "N/A",
@@ -533,7 +542,8 @@ function Cajeros() {
                 animateLoading={animateLoading}
                 permiso_alta={permissions.altas}
                 permiso_imprime={permissions.impresion}
-              />
+                es_admin={session?.user?.es_admin || false}
+                />
             </div>
 
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">

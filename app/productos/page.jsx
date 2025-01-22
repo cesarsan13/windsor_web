@@ -99,7 +99,7 @@ function Productos() {
     const fetchData = async () => {
       setisLoading(true);
       let { token, permissions } = session.user;
-      const es_admin = session.user.es_admin;
+      const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
 
       const data = await getProductos(token, bajas);
@@ -534,7 +534,7 @@ function Productos() {
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
         const convertedData = jsonData.map((item) => ({
-          numero: parseInt(item.Numero || 0),
+          numero: item.Numero || 0,
           descripcion:
             item.Descripcion && String(item.Descripcion).trim() !== ""
               ? String(item.Descripcion).slice(0, 255)
@@ -675,6 +675,7 @@ function Productos() {
                 animateLoading={animateLoading}
                 permiso_alta={permissions.altas}
                 permiso_imprime={permissions.impresion}
+                es_admin={session?.user?.es_admin || false}
               />
             </div>
 
