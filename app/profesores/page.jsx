@@ -22,7 +22,7 @@ import "jspdf-autotable";
 import * as XLSX from "xlsx";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import { debounce,permissionsComponents, chunkArray, validateString } from "../utils/globalfn";
+import { debounce,permissionsComponents, chunkArray, validateString, validateInt } from "../utils/globalfn";
 import ModalProcesarDatos from "../components/modalProcesarDatos";
 import { truncateTable } from "../utils/GlobalApis";
 import BarraCarga from "../components/BarraCarga";
@@ -545,112 +545,112 @@ function Profesores() {
             "nombre",
             (typeof item.Nombre === "string"
               ? item.Nombre.trim()
-              : "") || ""
+              : "N/A") || "N/A"
           ),
           ap_paterno:validateString(
             MAX_LENGTHS,
             "ap_paterno",
             (typeof item.Ap_Paterno === "string"
               ? item.Ap_Paterno.trim()
-              : "") || ""
+              : "N/A") || "N/A"
           ),
           ap_materno:validateString(
             MAX_LENGTHS,
             "ap_materno",
             (typeof item.Ap_Materno === "string"
               ? item.Ap_Materno.trim()
-              : "") || ""
+              : "N/A") || "N/A"
           ),
           direccion: validateString(
             MAX_LENGTHS,
             "direccion",
             (typeof item.Direccion === "string"
               ? item.Direccion.trim()
-              : "") || ""
+              : "N/A") || "N/A"
           ),
           colonia:validateString(
             MAX_LENGTHS,
             "colonia",
             (typeof item.Colonia === "string"
               ? item.Colonia.trim()
-              : "") || ""
+              : "N/A") || "N/A"
           ),
           ciudad:validateString(
             MAX_LENGTHS,
             "ciudad",
             (typeof item.Ciudad === "string"
               ? item.Ciudad.trim()
-              : "") || ""
+              : "N/A") || "N/A"
           ),
           estado:validateString(
             MAX_LENGTHS,
             "estado",
             (typeof item.Estado === "string"
               ? item.Estado.trim()
-              : "") || ""
+              : "N/A") || "N/A"
           ),
           cp:validateString(
             MAX_LENGTHS,
             "cp",
             (typeof item.CP === "string"
               ? item.CP.trim()
-              : "") || ""
+              : "N/A") || "N/A"
           ),
           pais:validateString(
             MAX_LENGTHS,
             "pais",
             (typeof item.Pais === "string"
               ? item.Pais.trim()
-              : "") || ""
+              : "N/A") || "N/A"
           ),
           rfc:validateString(
             MAX_LENGTHS,
             "rfc",
             (typeof item.RFC === "string"
               ? item.RFC.trim()
-              : "") || ""
+              : "N/A") || "N/A"
           ),
           telefono_1:validateString(
             MAX_LENGTHS,
             "telefono_1",
             (typeof item.Telefono_1 === "string"
               ? item.Telefono_1.trim()
-              : "") || ""
+              : "N/A") || "N/A"
           ),
           telefono_2:validateString(
             MAX_LENGTHS,
             "telefono_2",
             (typeof item.Telefono_2 === "string"
               ? item.Telefono_2.trim()
-              : "") || ""
+              : "N/A") || "N/A"
           ),
           fax:validateString(
             MAX_LENGTHS,
             "fax",
             (typeof item.Fax === "string"
               ? item.Fax.trim()
-              : "") || ""
+              : "N/A") || "N/A"
           ),
           celular:validateString(
             MAX_LENGTHS,
             "celular",
             (typeof item.Celular === "string"
               ? item.Celular.trim()
-              : "") || ""
+              : "N/A") || "N/A"
           ),
           email:validateString(
             MAX_LENGTHS,
             "email",
             (typeof item.Email === "string"
               ? item.Email.trim()
-              : "") || ""
+              : "N/A") || "N/A"
           ),
           contraseña:validateString(
             MAX_LENGTHS,
             "contraseña",
             (typeof item.Contraseña === "string"
               ? item.Contraseña.trim()
-              : "") || ""
+              : "N/A") || "N/A"
           ),
           baja:validateString(
             MAX_LENGTHS,
