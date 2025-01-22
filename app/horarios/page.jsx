@@ -413,7 +413,7 @@ function Horarios() {
             const worksheet = workbook.Sheets[sheetName];
             const jsonData = XLSX.utils.sheet_to_json(worksheet);
             const convertedData = jsonData.map(item => ({
-              numero: parseInt(item.Numero || 0),
+              numero: item.Numero || 0,
               horario: (item.Horario && String(item.Horario).trim() !== "") ? String(item.Horario).slice(0, 20) : "N/A",
               // salon: (item.Salon && item.Salon.trim() !== "") ? String(item.Salon).slice(0, 10) : "N/A",
                         salon: validateString(

@@ -13,6 +13,7 @@ function Acciones({
   animateLoading,
   permiso_alta,
   permiso_imprime,
+  es_admin,
 }) {
   const images = [
     {
@@ -45,7 +46,7 @@ function Acciones({
       alt: "Procesar datos desde un archivo excel",
       tooltipTitle: "Procesar datos desde un archivo excel.",
       onClick: procesarDatos,
-      permission: true,
+      permission: es_admin,
     },
     {
       srcLight: iconos.salir_w,
