@@ -126,7 +126,7 @@ const fetchComentarioStatus = async (showMesssage) => {
       let { token, permissions } = session.user;
       const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-      limpiarBusqueda(EventTarget);
+      limpiarBusqueda();
       const data = await getComentarios(token, bajas);
       await fetchComentarioStatus(false);
       setFormasComentarios(data);
@@ -171,7 +171,7 @@ const fetchComentarioStatus = async (showMesssage) => {
   }, [formaComentarios, reset]);
 
   const limpiarBusqueda = (evt) => {
-    evt.preventDefault();
+    //evt.preventDefault();
     setBusqueda({ tb_numero: "", tb_comentario1: "" });
   };
 

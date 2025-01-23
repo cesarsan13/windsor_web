@@ -61,7 +61,7 @@ function Cajeros() {
       let { token, permissions } = session.user;
       const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-      limpiarBusqueda(EventTarget);
+      limpiarBusqueda();
       const data = await getCajeros(token, bajas);
       await fetchCajerosStatus(false);
       setCajeros(data);
@@ -173,7 +173,7 @@ function Cajeros() {
   }, [busqueda, debouncedBuscar]);
 
   const limpiarBusqueda = (evt) => {
-    evt.preventDefault();
+    //evt.preventDefault();
     setBusqueda({ tb_id: "", tb_desc: "", tb_correo: "", tb_tel: "" });
   };
 
