@@ -51,6 +51,8 @@ function Profesores() {
   const [reload_page, setReloadPage] = useState(false)
   const [porcentaje, setPorcentaje] = useState(0);
   const [cerrarTO, setCerrarTO] = useState(false);
+  const [active, setActive] = useState(false);
+  const [inactive, setInactive] = useState(false);
   const MAX_LENGTHS = {
     nombre: 50,
     nombre_completo: 50,
@@ -99,6 +101,22 @@ function Profesores() {
 
   const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
+  const fetchProfesorStatus = async (showMesssage) => {
+    const res = await inactiveActiveBaja(session.user.token, "profesores");
+    if (res.status) {
+      const { inactive, active } = res.data;
+      setActive(active);
+      setInactive(inactive);
+      showMesssage === true
+        ? showSwalConfirm(
+            "Estado de los profesores",
+            `Profesores activos: ${active}\nProfesores inactivos: ${inactive}`,
+            "info"
+          )
+        : "";
+    }
+  };
+  
   useEffect(() => {
     debouncedBuscar();
     return () => {
@@ -115,6 +133,7 @@ function Profesores() {
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
 
       const data = await getProfesores(token, bajas);
+      await fetchProfesorStatus(false);
       setProfesores(data);
       setProfesoresFiltrados(data);
       setisLoading(false);
@@ -454,6 +473,9 @@ function Profesores() {
       await showSwalAndWait(res.alert_title, res.alert_text, res.alert_icon);
       showModal(true);
     }
+    if (accion === "Alta" || accion === "Eliminar") {
+      await fetchProfesorStatus(false);
+    }
     setisLoadingButton(false);
   });
 
@@ -474,24 +496,6 @@ function Profesores() {
     }));
   };
 
-  useEffect(() => {
-      const fetchD = async () => {
-        const res = await inactiveActiveBaja(session.user.token, "profesores");
-        if (res.status) {
-          const { inactive, active } = res.data;
-          showSwalConfirm(
-            "Estado de los profesores",
-            `Profesores activos: ${active}\nProfesores inactivos: ${inactive}`,
-            "info"
-          );
-        }
-      };
-      if (status === "loading" || !session) {
-        return;
-      }
-      fetchD();
-    }, [reload_page]);
-
   const procesarDatos = () => {
     showModalProcesa(true);
   }
@@ -508,29 +512,30 @@ function Profesores() {
     const { token } = session.user;
     await truncateTable(token, "profesores");
     const chunks = chunkArray(dataJson, 20);
-    //let allErrors = "";
     let chunksProcesados = 0;
     let numeroChunks = chunks.length;
+
     for (let chunk of chunks) {
       const res = await storeBatchProfesores(token, chunk);
       chunksProcesados++;
       const progreso = (chunksProcesados / numeroChunks) * 100;
       setPorcentaje(Math.round(progreso));
-      //if (!res.status) {
-      //  allErrors += res.alert_text;
-      //}
     }
     setCerrarTO(true);
+    setisLoadingButton(false);
     setDataJson([]);
-    //setPorcentaje(0);
-    showModalProcesa(false);
+    setPorcentaje(0);
+    
     showSwal(
       "Éxito", 
       "Los datos se han subido correctamente.", 
       "success"
     );
-    setReloadPage(!reload_page);
-    setisLoadingButton(false);
+    showModalProcesa(false);
+    await fetchProfesorStatus(true);
+    setTimeout(() => {
+      setReloadPage(!reload_page);
+    }, 3500);
   };  
   
   const handleFileChange = async (e) => {
@@ -800,6 +805,9 @@ function Profesores() {
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Profesores.
             </h1>
+            <h3 className="ml-auto order-3">{`Profesores activos: ${
+              active || 0
+            }\nProfesores inactivos: ${inactive || 0}`}</h3>
           </div>
         </div>
 

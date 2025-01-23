@@ -71,6 +71,8 @@ function Alumnos() {
   const [reload_page, setReloadPage] = useState(false);
   const [porcentaje, setPorcentaje] = useState(0);
   const [cerrarTO, setCerrarTO] = useState(false);
+  const [active, setActive] = useState(false);
+  const [inactive, setInactive] = useState(false);
   const MAX_LENGTHS = {
     nombre: 50,
     a_paterno: 50,
@@ -170,6 +172,22 @@ function Alumnos() {
 
   const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
+  const fetchAlumnoStatus = async (showMesssage) => {
+    const res = await inactiveActiveBaja(session.user.token, "alumnos");
+    if (res.status) {
+      const { inactive, active } = res.data;
+      setActive(active);
+      setInactive(inactive);
+      showMesssage === true
+        ? showSwalConfirm(
+            "Estado de los alumnos",
+            `Alumnos activos: ${active}\nAlumnos inactivos: ${inactive}`,
+            "info"
+          )
+        : "";
+    }
+  };
+  
   useEffect(() => {
     debouncedBuscar();
     return () => {
@@ -183,8 +201,8 @@ function Alumnos() {
       let { token, permissions } = session.user;
       const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-
       const data = await getAlumnos(token, bajas);
+      await fetchAlumnoStatus(false);
       const horarios = await getHorarios(token, bajas);
       setHorarios(horarios);
       setAlumnos(data);
@@ -738,6 +756,9 @@ function Alumnos() {
       }
       showSwal("Error", res.alert_text, "error", "my_modal_alumnos");
     }
+    if (accion === "Alta" || accion === "Eliminar") {
+      await fetchAlumnoStatus(false);
+    }
     setisLoadingButton(false);
   });
   const dataURLtoBlob = (dataURL) => {
@@ -913,24 +934,6 @@ function Alumnos() {
     }, 500);
   };
 
-  useEffect(() => {
-      const fetchD = async () => {
-        const res = await inactiveActiveBaja(session.user.token, "alumnos");
-        if (res.status) {
-          const { inactive, active } = res.data;
-          showSwalConfirm(
-            "Estado de los Alumnos",
-            `Alumnos activos: ${active}\nAlumnos inactivos: ${inactive}`,
-            "info"
-          );
-        }
-      };
-      if (status === "loading" || !session) {
-        return;
-      }
-      fetchD();
-    }, [reload_page]);
-
   const procesarDatos = () => {
     showModalProcesa(true);
   };
@@ -963,21 +966,23 @@ function Alumnos() {
       }
     }
     setCerrarTO(true);
+    setisLoadingButton(false);
     setDataJson([]);
     setPorcentaje(0);
     if (allErrors) {
       showSwalConfirm("Error", allErrors, "error", "my_modal_4");
     } else {
-      showModalProcesa(false);
       showSwal(
         "Éxito",
         "Todos los alumnos se insertaron correctamente.",
         "success"
-        // "my_modal_4"
       );
+      showModalProcesa(false);
     }
-    setReloadPage(!reload_page);
-    setisLoadingButton(false);
+    await fetchAlumnoStatus(true);
+    setTimeout(() => {
+      setReloadPage(!reload_page);
+    }, 3500);
   };
 
   const handleFileChange = async (e) => {
