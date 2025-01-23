@@ -28,7 +28,7 @@ import {
   validateString,
 } from "@/app/utils/globalfn";
 import * as XLSX from "xlsx";
-import { truncateTable, registrosGenerales } from "@/app/utils/GlobalApis";
+import { truncateTable, inactiveActiveBaja } from "@/app/utils/GlobalApis";
 import BarraCarga from "@/app/components/BarraCarga";
 function FormFact() {
   const router = useRouter();
@@ -56,6 +56,8 @@ function FormFact() {
   const [reload_page, setReloadPage] = useState(false);
   const [porcentaje, setPorcentaje] = useState(0);
   const [cerrarTO, setCerrarTO] = useState(false);
+  const [active, setActive] = useState(false);
+  const [inactive, setInactive] = useState(false);
   const [configuracion, setConfiguracion] = useState({
     Encabezado: {
       Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -86,6 +88,7 @@ function FormFact() {
       const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const data = await getFormFact(token, bajas);
+      await fetchFormFactStatus(false);
       setFormFacts(data);
       setFormFactsFiltrados(data);
       setisLoading(false);
@@ -152,6 +155,22 @@ function FormFact() {
   }, [busqueda]);
 
   const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
+
+  const fetchFormFactStatus = async (showMesssage) => {
+      const res = await inactiveActiveBaja(session.user.token, "facturas_formas");
+      if (res.status) {
+        const { inactive, active } = res.data;
+        setActive(active);
+        setInactive(inactive);
+        showMesssage === true
+          ? showSwalConfirm(
+              "Estado de las Formas Facturas",
+              `Formas activas: ${active}\nFormas inactivas: ${inactive}`,
+              "info"
+            )
+          : "";
+      }
+    };
 
   useEffect(() => {
     debouncedBuscar();
@@ -243,8 +262,12 @@ function FormFact() {
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
     }
+    if (accion === "Alta" || accion === "Eliminar") {
+      await fetchFormFactStatus(false);
+    }
     setisLoadingButton(false);
   });
+
   const showModal = (show) => {
     show
       ? document.getElementById("my_modal_3").showModal()
@@ -266,24 +289,6 @@ function FormFact() {
     const facturas = await getFacturasFormato(token, id);
     setLabels(facturas);
   };
-
-  useEffect(() => {
-    const fetchD = async () => {
-      const res = await registrosGenerales(session.user.token, "facturas_formato");
-      if (res.status) {
-        const { active } = res.data;
-        showSwalConfirm(
-          "Estado de Formas Facturas",
-          `Formas activas: ${active}\n`,
-          "info"
-        );
-      }
-    };
-    if (status === "loading" || !session) {
-      return;
-    }
-    fetchD();
-  }, [reload_page]);
 
   const procesarDatos = () => {
     showModalProcesa(true);
@@ -321,15 +326,17 @@ function FormFact() {
     if (allErrors) {
       showSwalConfirm("Error", allErrors, "error", "my_modal_4");
     } else {
-      showModalProcesa(false);
       showSwal(
         "Éxito",
         "Todos los factura formas se insertaron correctamente.",
         "success"
-        // "my_modal_4"
       );
+      showModalProcesa(false);
     }
-    setReloadPage(!reload_page);
+    await fetchFormFactStatus(true);
+    setTimeout(() => {
+      setReloadPage(!reload_page);
+    }, 3500);
   };
 
   const handleFileChange = async (e) => {
@@ -445,6 +452,7 @@ function FormFact() {
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-16">
               Formas Facturas
             </h1>
+            <h3 className="ml-auto order-3">{`Formas activas: ${active || 0}\nFormas inactivas: ${inactive || 0}`}</h3>
           </div>
         </div>
 

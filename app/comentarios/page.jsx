@@ -52,6 +52,8 @@ function Comentarios() {
   const [reload_page, setReloadPage] = useState(false);
   const [porcentaje, setPorcentaje] = useState(0);
   const [cerrarTO, setCerrarTO] = useState(false);
+  const [active, setActive] = useState(false);
+  const [inactive, setInactive] = useState(false);
   const MAX_LENGTHS = {
     comentario_1: 50,
     comentario_2: 50,
@@ -87,6 +89,22 @@ function Comentarios() {
 
   const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
+const fetchComentarioStatus = async (showMesssage) => {
+    const res = await inactiveActiveBaja(session.user.token, "comentarios");
+    if (res.status) {
+      const { inactive, active } = res.data;
+      setActive(active);
+      setInactive(inactive);
+      showMesssage === true
+        ? showSwalConfirm(
+            "Estado de los comentarios",
+            `Comentarios activos: ${active}\nComentarios inactivos: ${inactive}`,
+            "info"
+          )
+        : "";
+    }
+  };
+
   useEffect(() => {
     debouncedBuscar();
     return () => {
@@ -109,6 +127,7 @@ function Comentarios() {
       const es_admin = session.user.es_admin;
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const data = await getComentarios(token, bajas);
+      await fetchComentarioStatus(false);
       setFormasComentarios(data);
       setFormaComentariosFiltrados(data);
       const permisos = permissionsComponents(
@@ -374,6 +393,9 @@ function Comentarios() {
     } else {
       showSwal(res.alert_title, res.alert_text, res.alert_icon, "my_modal_3");
     }
+    if(accion === "Alta"|| accion === "Eliminar") {
+      await fetchComentarioStatus(false);
+    }
     setisLoadingButton(false);
   });
 
@@ -393,24 +415,6 @@ function Comentarios() {
     }));
   };
 
-  useEffect(() => {
-      const fetchD = async () => {
-        const res = await inactiveActiveBaja(session.user.token, "comentarios");
-        if (res.status) {
-          const { inactive, active } = res.data;
-          showSwalConfirm(
-            "Estado de los Comentarios",
-            `Comentarios activos: ${active}\nComentarios inactivos: ${inactive}`,
-            "info"
-          );
-        }
-      };
-      if (status === "loading" || !session) {
-        return;
-      }
-      fetchD();
-    }, [reload_page]);
-
   const procesarDatos = () => {
     showModalProcesa(true);
   }
@@ -426,7 +430,6 @@ function Comentarios() {
     const { token } = session.user;
     await truncateTable(token, "comentarios");
     const chunks = chunkArray(dataJson, 20);
-    // let allErrors = "";
     let chunksProcesados = 0;
     let numeroChunks = chunks.length;
 
@@ -435,16 +438,18 @@ function Comentarios() {
       chunksProcesados++;
       const progreso = (chunksProcesados / numeroChunks) * 100;
       setPorcentaje(Math.round(progreso));
-      // if (!res.status) {
-      //   allErrors += res.alert_text;
-      // }
     }
     setCerrarTO(true);
-        setDataJson([]);
-        showModalProcesa(false);
-        showSwal("Éxito", "Los datos se han subido correctamente.", "success");
-        setReloadPage(!reload_page);
-        setisLoadingButton(false);
+    setisLoadingButton(false);
+    setDataJson([]);
+    setPorcentaje(0);
+    showSwal("Éxito", "Los datos se han subido correctamente.", "success");
+    showModalProcesa(false);
+    
+    await fetchComentarioStatus(true);
+    setTimeout(() => {
+      setReloadPage(!reload_page);
+    }, 3500);
   };
 
   const handleFileChange = async (e) => {
@@ -600,6 +605,9 @@ function Comentarios() {
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Comentarios.
             </h1>
+            <h3 className="ml-auto order-3">{`Comentarios activos: ${
+              active || 0
+            }\nComentarios inactivos: ${inactive || 0}`}</h3>
           </div>
         </div>
 
