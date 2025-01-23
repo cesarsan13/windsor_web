@@ -52,6 +52,8 @@ function Horarios() {
   const [reload_page, setReloadPage] = useState(false);
   const [porcentaje, setPorcentaje] = useState(0);
   const [cerrarTO, setCerrarTO] = useState(false);
+  const [active, setActive] = useState(false);
+  const [inactive, setInactive] = useState(false);
   const MAX_LENGTHS = {
     salon: 50,
   }
@@ -89,13 +91,31 @@ function Horarios() {
     };
   }, [busqueda, debouncedBuscar]);
 
+    const fetchHorariosStatus = async (showMesssage) => {
+      const res = await inactiveActiveBaja(session.user.token, "horarios");
+      if (res.status) {
+        const { inactive, active } = res.data;
+        setActive(active);
+        setInactive(inactive);
+        showMesssage === true
+          ? showSwalConfirm(
+              "Estado de los horarios",
+              `Horarios activos: ${active}\nHorarios inactivos: ${inactive}`,
+              "info"
+            )
+          : "";
+      }
+    };
+
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
       let { token, permissions } = session.user;
-      const es_admin = session.user.es_admin;
+      const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+      limpiarBusqueda(EventTarget);
       const data = await getHorarios(token, bajas);
+      await fetchHorariosStatus(false);
       setHorarios(data);
       setHorariosFiltrados(data);
       // console.log("permisos:",permissions)
@@ -235,6 +255,9 @@ function Horarios() {
     } else {
       showSwal(res.alert_title, res.alert_text, "error", "my_modal_horario");
     }
+    if (accion === "Alta" || accion === "Eliminar") {
+      await fetchHorariosStatus(false);
+    }
     setisLoadingButton(false);
   });
   const procesarDatos = () => {
@@ -367,24 +390,6 @@ function Horarios() {
     setPdfData("");
     document.getElementById("modalVPHorarios").close();
   };
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useEffect(() => {
-      const fetchD = async () => {
-        const res = await inactiveActiveBaja(session.user.token, "horarios");
-        if (res.status) {
-          const { inactive, active } = res.data;
-          showSwalConfirm(
-            "Estado de los horarios",
-            `Horarios activos: ${active}\nHorarios inactivos: ${inactive}`,
-            "info"
-          );
-        }
-      };
-      if (status === "loading" || !session) {
-        return;
-      }
-      fetchD();
-    }, [reload_page]);
   const buttonProcess = async () => {
     document.getElementById("cargamodal").showModal();
     event.preventDefault();
@@ -404,8 +409,10 @@ function Horarios() {
     setDataJson([]);
     showModalProcesa(false);
     showSwal("Éxito", "Los datos se han subido correctamente.", "success");
-    setReloadPage(!reload_page);
-    setisLoadingButton(false);
+    await fetchHorariosStatus(true);
+    setTimeout(() => {
+      setReloadPage(!reload_page);
+    }, 3500);
   };
 
       const handleFileChange = async (e) => {
@@ -565,12 +572,16 @@ function Horarios() {
                 procesarDatos={procesarDatos}
                 permiso_alta={permissions.altas}
                 permiso_imprime={permissions.impresion}
+                es_admin={session?.user?.es_admin || false}
               />
             </div>
 
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Horarios
             </h1>
+            <h3 className="ml-auto order-3">{`Horarios activos: ${
+              active || 0
+            }\nHorarios inactivos: ${inactive || 0}`}</h3>
           </div>
         </div>
         <div className="flex flex-col items-center h-full">

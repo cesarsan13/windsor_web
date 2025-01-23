@@ -53,14 +53,17 @@ function Cajeros() {
   const [reload_page, setReloadPage] = useState(false);
   const [porcentaje, setPorcentaje] = useState(0);
   const [cerrarTO, setCerrarTO] = useState(false);
+  const [active, setActive] = useState(false);
+  const [inactive, setInactive] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
       const { token, permissions } = session.user;
       const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-
+      limpiarBusqueda(EventTarget);
       const data = await getCajeros(token, bajas);
+      await fetchCajerosStatus(false);
       setCajeros(data);
       setCajerosFiltrados(data);
       setisLoading(false);
@@ -144,6 +147,22 @@ function Cajeros() {
     });
     setCajerosFiltrados(infoFiltrada);
   }, [busqueda]);
+
+  const fetchCajerosStatus = async (showMesssage) => {
+    const res = await inactiveActiveBaja(session.user.token, "cajeros");
+    if (res.status) {
+      const { inactive, active } = res.data;
+      setActive(active);
+      setInactive(inactive);
+      showMesssage === true
+        ? showSwalConfirm(
+            "Estado de los cajeros",
+            `Cajeros activos: ${active}\nCajeros inactivos: ${inactive}`,
+            "info"
+          )
+        : "";
+    }
+  };
 
   const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
   useEffect(() => {
@@ -242,6 +261,9 @@ function Cajeros() {
       showModal(false);
     } else {
       showSwal(res.alert_title, res.alert_text, "error", "my_modal_3");
+    }
+    if (accion === "Alta" || accion === "Eliminar") {
+      await fetchCajerosStatus(false);
     }
     setisLoadingButton(false);
   });
@@ -376,24 +398,6 @@ function Cajeros() {
     document.getElementById("modalVPCajero").close();
   };
 
-    useEffect(() => {
-      const fetchD = async () => {
-        const res = await inactiveActiveBaja(session.user.token, "cajeros");
-        if (res.status) {
-          const { inactive, active } = res.data;
-          showSwalConfirm(
-            "Estado de los cajeros",
-            `Cajeros activos: ${active}\nCajeros inactivos: ${inactive}`,
-            "info"
-          );
-        }
-      };
-      if (status === "loading" || !session) {
-        return;
-      }
-      fetchD();
-    }, [reload_page]);
-
   const buttonProcess = async () => {
     document.getElementById("cargamodal").showModal();
     event.preventDefault();
@@ -413,9 +417,10 @@ function Cajeros() {
     setDataJson([]);
     showModalProcesa(false);
     showSwal("Éxito", "Los datos se han subido correctamente.", "success");
+    await fetchCajerosStatus(true);
     setTimeout(() => {
       setReloadPage(!reload_page);
-    }, 3500);    setisLoadingButton(false);
+    }, 3500);    
   };
 
       const handleFileChange = async (e) => {
@@ -568,6 +573,9 @@ function Cajeros() {
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Cajeros
             </h1>
+            <h3 className="ml-auto order-3">{`Cajeros activos: ${
+              active || 0
+            }\nCajeros inactivos: ${inactive || 0}`}</h3>
           </div>
         </div>
 
