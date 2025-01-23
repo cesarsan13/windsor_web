@@ -47,6 +47,8 @@ function FormaPago() {
   const [reload_page, setReloadPage] = useState(false);
   const [porcentaje, setPorcentaje] = useState(0);
   const [cerrarTO, setCerrarTO] = useState(false);
+  const [active, setActive] = useState(false);
+  const [inactive, setInactive] = useState(false);
   useEffect(() => {
     formasPagoRef.current = formasPago; // Actualiza el ref cuando alumnos cambia
   }, [formasPago]);
@@ -71,14 +73,21 @@ function FormaPago() {
 
   const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
-  // useEffect(() => {
-  //   const debouncedBuscar = debounce(Buscar, 500);
-  //   debouncedBuscar();
-  //   return () => {
-  //     clearTimeout(debouncedBuscar);
-  //   };
-  // }, [busqueda, Buscar]);
-
+    const fetchFormaPagoStatus = async (showMesssage) => {
+      const res = await inactiveActiveBaja(session.user.token, "tipo_cobro");
+      if (res.status) {
+        const { inactive, active } = res.data;
+        setActive(active);
+        setInactive(inactive);
+        showMesssage === true
+          ? showSwalConfirm(
+              "Estado de las Formas de Pago",
+              `Formas de Pago activas: ${active}\nFormas de Pago inactivas: ${inactive}`,
+              "info"
+            )
+          : "";
+      }
+    };
   useEffect(() => {
     debouncedBuscar();
     return () => {
@@ -90,9 +99,10 @@ function FormaPago() {
     const fetchData = async () => {
       setisLoading(true);
       const { token, permissions } = session.user;
-      const es_admin = session.user.es_admin;
+      const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
       const data = await getFormasPago(token, bajas);
+      await fetchFormaPagoStatus(false);
       setFormasPago(data);
       setFormaPagosFiltrados(data);
       setisLoading(false);
@@ -215,6 +225,9 @@ function FormaPago() {
       showModal(false);
     }else{
       showSwal(res.alert_title, res.alert_text, res.alert_icon,"my_modal_3");
+    }
+    if (accion === "Alta" || accion === "Eliminar") {
+      await fetchFormaPagoStatus(false);
     }
     setisLoadingButton(false);
   });
@@ -354,24 +367,6 @@ function FormaPago() {
     document.getElementById("modalVFormaPago").close();
   };
 
-    useEffect(() => {
-      const fetchD = async () => {
-        const res = await inactiveActiveBaja(session.user.token, "tipo_cobro");
-        if (res.status) {
-          const { inactive, active } = res.data;
-          showSwalConfirm(
-            "Estado de las Forma de Pago",
-            `Formas de Pago activas: ${active}\nForma de Pago inactivas: ${inactive}`,
-            "info"
-          );
-        }
-      };
-      if (status === "loading" || !session) {
-        return;
-      }
-      fetchD();
-    }, [reload_page]);
-
     const buttonProcess = async () => {
       document.getElementById("cargamodal").showModal();
       event.preventDefault();
@@ -391,8 +386,10 @@ function FormaPago() {
       setDataJson([]);
       showModalProcesa(false);
       showSwal("Éxito", "Los datos se han subido correctamente.", "success");
-      setReloadPage(!reload_page);
-      setisLoadingButton(false);
+      await fetchFormaPagoStatus(true);
+      setTimeout(() => {
+        setReloadPage(!reload_page);
+      }, 3500);
     };
     
     const handleFileChange = async (e) => {
@@ -528,12 +525,16 @@ function FormaPago() {
                 animateLoading={animateLoading}
                 permiso_alta={permissions.altas}
                 permiso_imprime = {permissions.impresion}
+                es_admin={session?.user?.es_admin || false}
               />
             </div>
 
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Formas de Pago
             </h1>
+            <h3 className="ml-auto order-3">{`Formas de Pago activas: ${
+              active || 0
+            }\nFormas de Pago inactivas: ${inactive || 0}`}</h3>
           </div>
         </div>
 
