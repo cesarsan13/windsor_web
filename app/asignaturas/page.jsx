@@ -75,7 +75,7 @@ function Asignaturas() {
       const { token, permissions } = session.user;
       const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-      limpiarBusqueda(EventTarget);
+      limpiarBusqueda();
       const data = await getAsignaturas(token, bajas);
       await fetchAsignaturaStatus(false);
       setAsignaturas(data);
@@ -309,7 +309,7 @@ function Asignaturas() {
     setisLoadingButton(false);
   });
   const limpiarBusqueda = (evt) => {
-    evt.preventDefault();
+    //evt.preventDefault();
     setBusqueda({ tb_id: "", tb_desc: "" });
   };
   const showModal = (show) => {

@@ -199,7 +199,7 @@ function Alumnos() {
       let { token, permissions } = session.user;
       const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-      limpiarBusqueda(EventTarget);
+      limpiarBusqueda();
       const data = await getAlumnos(token, bajas);
       await fetchAlumnoStatus(false);
       const horarios = await getHorarios(token, bajas);
@@ -779,7 +779,7 @@ function Alumnos() {
     return new Blob(byteArrays, { type: contentType });
   };
   const limpiarBusqueda = (evt) => {
-    evt.preventDefault();
+    //evt.preventDefault();
     setBusqueda({ tb_id: "", tb_desc: "", tb_grado: "" });
   };
   const showModal = (show) => {
