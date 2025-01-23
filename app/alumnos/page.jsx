@@ -3,9 +3,7 @@ import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal, showSwalConfirm } from "../utils/alerts";
 import ModalAlumnos from "@/app/alumnos/components/modalAlumnos";
-const TablaAlumnos = React.lazy(() =>
-  import("@/app/alumnos/components/tablaAlumnos")
-);
+import TablaAlumnos from "@/app/alumnos/components/tablaAlumnos";
 import Busqueda from "@/app/alumnos/components/Busqueda";
 import Acciones from "@/app/alumnos/components/Acciones";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
@@ -1711,6 +1709,9 @@ function Alumnos() {
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Alumnos
             </h1>
+            <h3 className="ml-auto order-3">{`Alumnos activos: ${
+              active || 0
+            }\nAlumnos inactivos: ${inactive || 0}`}</h3>
           </div>
         </div>
         <div className="flex flex-col items-center h-full">
