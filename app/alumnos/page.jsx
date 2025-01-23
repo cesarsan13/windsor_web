@@ -3,9 +3,7 @@ import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal, showSwalConfirm } from "../utils/alerts";
 import ModalAlumnos from "@/app/alumnos/components/modalAlumnos";
-const TablaAlumnos = React.lazy(() =>
-  import("@/app/alumnos/components/tablaAlumnos")
-);
+import TablaAlumnos from "@/app/alumnos/components/tablaAlumnos";
 import Busqueda from "@/app/alumnos/components/Busqueda";
 import Acciones from "@/app/alumnos/components/Acciones";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
