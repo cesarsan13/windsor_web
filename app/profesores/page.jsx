@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { showSwal, confirmSwal, showSwalAndWait, showSwalConfirm } from "@/app/utils/alerts";
 import ModalProfesores from "@/app/profesores/components/ModalProfesores";
 import VistaPrevia from "@/app/components/VistaPrevia";
-const TablaProfesores= React.lazy(() => import("@/app/profesores/components/TablaProfesores"));
+import TablaProfesores from "@/app/profesores/components/TablaProfesores";
 import Busqueda from "@/app/profesores/components/Busqueda";
 import Acciones from "@/app/profesores/components/Acciones";
 import { useForm } from "react-hook-form";
