@@ -119,7 +119,7 @@ function Productos() {
       let { token, permissions } = session.user;
       const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-
+      limpiarBusqueda(EventTarget);
       const data = await getProductos(token, bajas);
       await fetchProductStatus(false);
       setProductos(data);
