@@ -124,7 +124,7 @@ const fetchComentarioStatus = async (showMesssage) => {
     const fetchData = async () => {
       setisLoading(true);
       let { token, permissions } = session.user;
-      const es_admin = session.user.es_admin;
+      const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const data = await getComentarios(token, bajas);
       await fetchComentarioStatus(false);
