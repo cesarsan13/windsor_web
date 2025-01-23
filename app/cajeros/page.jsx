@@ -58,7 +58,7 @@ function Cajeros() {
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
-      const { token, permissions } = session.user;
+      let { token, permissions } = session.user;
       const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       limpiarBusqueda(EventTarget);
