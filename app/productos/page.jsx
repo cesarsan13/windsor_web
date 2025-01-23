@@ -59,6 +59,8 @@ function Productos() {
   const [reload_page, setReloadPage] = useState(false);
   const [porcentaje, setPorcentaje] = useState(0);
   const [cerrarTO, setCerrarTO] = useState(false);
+  const [active, setActive] = useState(false);
+  const [inactive, setInactive] = useState(false);
   // console.log(dataJson);
 
   useEffect(() => {
@@ -88,6 +90,22 @@ function Productos() {
 
   const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
+  const fetchProductStatus = async (showMesssage) => {
+    const res = await inactiveActiveBaja(session.user.token, "productos");
+    if (res.status) {
+      const { inactive, active } = res.data;
+      setActive(active);
+      setInactive(inactive);
+      showMesssage === true
+        ? showSwalConfirm(
+            "Estado de los productos",
+            `Productos activos: ${active}\nProductos inactivos: ${inactive}`,
+            "info"
+          )
+        : "";
+    }
+  };
+
   useEffect(() => {
     debouncedBuscar();
     return () => {
@@ -103,6 +121,7 @@ function Productos() {
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
 
       const data = await getProductos(token, bajas);
+      await fetchProductStatus(false);
       setProductos(data);
       setProductosFiltrados(data);
       setisLoading(false);
@@ -278,6 +297,9 @@ function Productos() {
       showModal(false);
     } else {
       showSwal(res.alert_title, res.alert_text, "error", "my_modal_3");
+    }
+    if (accion === "Alta" || accion === "Eliminar") {
+      await fetchProductStatus(false);
     }
     setisLoadingButton(false);
   });
@@ -474,24 +496,6 @@ function Productos() {
     }
   };
 
-  useEffect(() => {
-    const fetchD = async () => {
-      const res = await inactiveActiveBaja(session.user.token, "productos");
-      if (res.status) {
-        const { inactive, active } = res.data;
-        showSwalConfirm(
-          "Estado de los productos",
-          `Productos activos: ${active}\nProductos inactivos: ${inactive}`,
-          "info"
-        );
-      }
-    };
-    if (status === "loading" || !session) {
-      return;
-    }
-    fetchD();
-  }, [reload_page]);
-
   const buttonProcess = async () => {
     document.getElementById("cargamodal").showModal();
     event.preventDefault();
@@ -526,6 +530,7 @@ function Productos() {
       );
       showModalProcesa(false);
     }
+    await fetchProductStatus(true);
     setTimeout(() => {
       setReloadPage(!reload_page);
     }, 3500);
@@ -705,6 +710,9 @@ function Productos() {
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Productos
             </h1>
+            <h3 className="ml-auto order-3">{`Productos activos: ${
+              active || 0
+            }\nProductos inactivos: ${inactive || 0}`}</h3>
           </div>
         </div>
         <div className="flex flex-col items-center h-full">
