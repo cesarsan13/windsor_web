@@ -55,6 +55,8 @@ function Asignaturas() {
   const [reload_page, setReloadPage] = useState(false)
   const [porcentaje, setPorcentaje] = useState(0);
   const [cerrarTO, setCerrarTO] = useState(false);
+  const [active, setActive] = useState(false);
+  const [inactive, setInactive] = useState(false);
   const MAX_LENGTHS = {
     descripcion: 100,
     evaluaciones: 20,
@@ -72,9 +74,11 @@ function Asignaturas() {
     const fetchData = async () => {
       setisLoading(true);
       const { token, permissions } = session.user;
-      const es_admin = session.user.es_admin;
+      const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+      limpiarBusqueda(EventTarget);
       const data = await getAsignaturas(token, bajas);
+      await fetchAsignaturaStatus(false);
       setAsignaturas(data);
       setAsignaturasFiltrados(data);
       const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
@@ -146,6 +150,23 @@ function Asignaturas() {
   }, [busqueda]);
 
   const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
+
+  const fetchAsignaturaStatus = async (showMesssage) => {
+      const res = await inactiveActiveBaja(session.user.token, "asignaturas");
+      if (res.status) {
+        const { inactive, active } = res.data;
+        setActive(active);
+        setInactive(inactive);
+        showMesssage === true
+          ? showSwalConfirm(
+              "Estado de las asignaturas",
+              `Asignaturas activas: ${active}\nAsignaturas inactivas: ${inactive}`,
+              "info"
+            )
+          : "";
+      }
+    };
+
   useEffect(() => {
     debouncedBuscar();
     return () => {
@@ -283,6 +304,9 @@ function Asignaturas() {
     } else {
       showSwal(res.alert_title, res.alert_text, "error", "my_modal_3");
     }
+    if (accion === "Alta" || accion === "Eliminar") {
+      await fetchAsignaturaStatus(false);
+    }
     setisLoadingButton(false);
   });
   const limpiarBusqueda = (evt) => {
@@ -411,24 +435,6 @@ function Asignaturas() {
     ImprimirExcel(configuracion);
   };
 
-  useEffect(() => {
-      const fetchD = async () => {
-        const res = await inactiveActiveBaja(session.user.token, "asignaturas");
-        if (res.status) {
-          const { inactive, active } = res.data;
-          showSwalConfirm(
-            "Estado de las Asignaturas",
-            `Asignaturas activas: ${active}\nAsignaturas inactivas: ${inactive}`,
-            "info"
-          );
-        }
-      };
-      if (status === "loading" || !session) {
-        return;
-      }
-      fetchD();
-    }, [reload_page]);
-
   //Procesa datos
     const procesarDatos = () => {
       showModalProcesa(true);
@@ -445,7 +451,6 @@ function Asignaturas() {
     const { token } = session.user;
     await truncateTable(token, "asignaturas");
     const chunks = chunkArray(dataJson, 20);
-    //let allErrors = "";
     let chunksProcesados = 0;
     let numeroChunks = chunks.length;
 
@@ -454,22 +459,23 @@ function Asignaturas() {
       chunksProcesados++;
       const progreso = (chunksProcesados / numeroChunks) * 100;
       setPorcentaje(Math.round(progreso));
-      //if (!res.status) {
-      //  allErrors += res.alert_text;
-      //}
     }
     setCerrarTO(true);
+    setisLoadingButton(false);
     setDataJson([]);
-    //setPorcentaje(0);
-    
-    showModalProcesa(false);
+    setPorcentaje(0);
+  
     showSwal(
       "Éxito",
       "Todos las Asignaturas se insertaron correctamente.",
       "success"
     );
-    setReloadPage(!reload_page);
-    setisLoadingButton(false);
+    showModalProcesa(false);
+
+    await fetchAsignaturaStatus(true);
+    setTimeout(() => {
+      setReloadPage(!reload_page);
+    }, 3500);
   };
   
     const handleFileChange = async (e) => {
@@ -674,6 +680,9 @@ function Asignaturas() {
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Asignaturas
             </h1>
+            <h3 className="ml-auto order-3">{`Asignatuas activas: ${
+              active || 0
+            }\nAsignaturas inactivas: ${inactive || 0}`}</h3>
           </div>
         </div>
         <div className="flex flex-col items-center h-full">
