@@ -1711,6 +1711,9 @@ function Alumnos() {
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Alumnos
             </h1>
+            <h3 className="ml-auto order-3">{`Alumnos activos: ${
+              active || 0
+            }\nAlumnos inactivos: ${inactive || 0}`}</h3>
           </div>
         </div>
         <div className="flex flex-col items-center h-full">
