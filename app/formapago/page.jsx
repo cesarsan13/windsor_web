@@ -101,7 +101,7 @@ function FormaPago() {
       const { token, permissions } = session.user;
       const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
-      limpiarBusqueda(EventTarget);
+      limpiarBusqueda();
       const data = await getFormasPago(token, bajas);
       await fetchFormaPagoStatus(false);
       setFormasPago(data);
@@ -141,7 +141,7 @@ function FormaPago() {
   }, [formaPago, reset]);
   
   const limpiarBusqueda = (evt) => {
-    evt.preventDefault();
+   // evt.preventDefault();
     setBusqueda({ tb_id: "", tb_desc: "" });
   };
 

@@ -119,7 +119,7 @@ function Productos() {
       let { token, permissions } = session.user;
       const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-      limpiarBusqueda(EventTarget);
+      limpiarBusqueda();
       const data = await getProductos(token, bajas);
       await fetchProductStatus(false);
       setProductos(data);
@@ -318,7 +318,7 @@ function Productos() {
   };
 
   const limpiarBusqueda = (evt) => {
-    evt.preventDefault;
+    //evt.preventDefault;
     setBusqueda({ tb_id: "", tb_desc: "" });
   };
 
