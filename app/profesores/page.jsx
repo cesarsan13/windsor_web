@@ -131,7 +131,7 @@ function Profesores() {
       const { token, permissions } = session.user;
       const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-
+      limpiarBusqueda(EventTarget);
       const data = await getProfesores(token, bajas);
       await fetchProfesorStatus(false);
       setProfesores(data);

@@ -101,6 +101,7 @@ function FormaPago() {
       const { token, permissions } = session.user;
       const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
+      limpiarBusqueda(EventTarget);
       const data = await getFormasPago(token, bajas);
       await fetchFormaPagoStatus(false);
       setFormasPago(data);

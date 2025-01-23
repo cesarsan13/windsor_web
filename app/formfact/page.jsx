@@ -87,6 +87,7 @@ function FormFact() {
       let { token, permissions } = session.user;
       const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+      limpiarBusqueda(EventTarget);
       const data = await getFormFact(token, bajas);
       await fetchFormFactStatus(false);
       setFormFacts(data);
