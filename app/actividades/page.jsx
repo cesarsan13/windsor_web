@@ -193,7 +193,6 @@ function Page() {
         showModal(true)
     }
     const onSubmitModal = handleSubmit(async (data) => {
-        // console.log("FormData: ",data);
         event.preventDefault
         setisLoadingButton(true);
         let res = null
@@ -398,14 +397,13 @@ function Page() {
           const sheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[sheetName];
           const jsonData = XLSX.utils.sheet_to_json(worksheet);
-          // console.log(jsonData);
           const convertedData = jsonData.map((item) => {
             return {
                 materia: item.Materia || 0,
                 secuencia: item.Secuencia || 0,
                 matDescripcion:
-                item.Mat_Descripcion && String(item.Mat_Descripcion).trim() !== ""
-                    ? String(item.Descripcion).slice(0, 255)
+                item.MatDescripcion && String(item.MatDescripcion).trim() !== ""
+                    ? String(item.MatDescripcion).slice(0, 255)
                     : "N/A",
                 descripcion:
                 item.Descripcion && String(item.Descripcion).trim() !== ""
@@ -435,7 +433,6 @@ function Page() {
                     : "n",
             };
           });
-          console.log(convertedData);
           setDataJson(convertedData);
         };
         reader.readAsArrayBuffer(selectedFile);
@@ -446,7 +443,7 @@ function Page() {
       return (
         <>
           <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Materia</td>
-          <td className="w-[40%]">Secuencia</td>
+          <td className="w-[10%]">Secuencia</td>
           <td className="w-[20%]">Mat. Desc</td>
           <td className="w-[20%]">Descripcion</td>
           <td className="w-[10%]">Evaluaciones</td>
@@ -472,12 +469,8 @@ function Page() {
               {item.materia}
             </th>
             <td className="text-right">{item.secuencia}</td>
-            <td className="w-[40%] max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap pt-[.10rem] pb-[.10rem]">
-              {item.matDescripcion}
-            </td>
-            <td className="w-[40%] max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap pt-[.10rem] pb-[.10rem]">
-              {item.descripcion}
-            </td>
+            <td className="text-left"> {item.matDescripcion} </td>
+            <td className="text-left"> {item.descripcion} </td>
             <td className="text-right">{item.evaluaciones}</td>
             <td className="text-right">{item.EB1}</td>
             <td className="text-right">{item.EB2}</td>
