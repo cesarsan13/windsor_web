@@ -4,14 +4,19 @@ import Acciones from './components/Acciones'
 import Busqueda from './components/Busqueda'
 import TablaActividades from './components/tablaActividades';
 import { useSession } from 'next-auth/react';
-import { getActividades, Imprimir, guardarActividad, ImprimirExcel,getAsignaturas } from '../utils/api/actividades/actividades';
+import { getActividades, Imprimir, guardarActividad, ImprimirExcel,getAsignaturas, storeBatchActividad } from '../utils/api/actividades/actividades';
 import { useForm } from 'react-hook-form';
 import ModalActividades from './components/ModalActividades';
-import { confirmSwal, showSwal } from '../utils/alerts';
+import { confirmSwal, showSwal, showSwalConfirm } from '../utils/alerts';
 import ModalVistaPreviaActividades from './components/ModalVistaPreviaActividades';
 import { ReportePDF } from '../utils/ReportesPDF';
-import { debounce, permissionsComponents } from '../utils/globalfn';
+import { debounce, permissionsComponents, chunkArray } from '../utils/globalfn';
 import { useRouter } from 'next/navigation';
+import ModalProcesarDatos from '../components/modalProcesarDatos';
+import BarraCarga from '../components/BarraCarga';
+import { truncateTable, inactiveActiveBaja } from '../utils/GlobalApis';
+import * as XLSX from "xlsx";
+
 
 function Page() {
     const router = useRouter();
@@ -32,6 +37,13 @@ function Page() {
     const [permissions, setPermissions] = useState({});
     const actividadesRef = useRef(actividades)
     const [asignaturas, setAsignaturas] = useState([]);
+    //useState para los datos que se trae del excel
+    const [dataJson, setDataJson] = useState([]);
+    const [reload_page, setReloadPage] = useState(false);
+    const [porcentaje, setPorcentaje] = useState(0);
+    const [cerrarTO, setCerrarTO] = useState(false);
+    const [active, setActive] = useState(false);
+    const [inactive, setInactive] = useState(false);
 
 
     useEffect(() => {
@@ -43,6 +55,7 @@ function Page() {
             const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
             const data = await getActividades(token, bajas)
             const asignaturas = await getAsignaturas(token, bajas)
+            await fetchActividadStatus(false);
             setAsignaturas(asignaturas)
             setActividades(data)
             setActividadesFiltradas(data)
@@ -59,7 +72,25 @@ function Page() {
             return;
         }
         fetchData()
-    }, [session, status, bajas])
+    }, [session, status, bajas, reload_page])
+
+    const fetchActividadStatus = async (showMesssage) => {
+        const res = await inactiveActiveBaja(session.user.token, "actividades");
+        if (res.status) {
+          const { inactive, active } = res.data;
+          setActive(active);
+          setInactive(inactive);
+          showMesssage === true
+            ? showSwalConfirm(
+                "Estado de las actividades",
+                `Actividades activas: ${active}\nActividades inactivas: ${inactive}`,
+                "info"
+              )
+            : "";
+        }
+      };
+    
+
     const {
         register,
         handleSubmit,
@@ -97,6 +128,7 @@ function Page() {
     useEffect(() => {
         actividadesRef.current = actividades
     }, [actividades])
+
     const Buscar = useCallback(() => {
         const { tb_id, tb_desc } = busqueda;
         if (tb_id === "" && tb_desc === "") {
@@ -110,13 +142,16 @@ function Page() {
         })
         setActividadesFiltradas(infoFiltrada)
     }, [busqueda])
+
     const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
+
     useEffect(() => {
         debouncedBuscar();
         return () => {
             clearTimeout(debouncedBuscar);
         };
     }, [busqueda, debouncedBuscar]);
+
     if (status === "loading") {
         return (
             <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -210,6 +245,11 @@ function Page() {
             }
             showSwal(res.alert_title, res.alert_text, res.alert_icon);
             showModal(false);
+        } else {
+            showSwal(res.alert_title, res.alert_text, "error", "my_modal_actividades");
+        }
+        if (accion === "Alta" || accion === "Eliminar"){
+            await fetchActividadStatus(false);
         }
         setisLoadingButton(false);
     })
@@ -261,6 +301,14 @@ function Page() {
             ? document.getElementById("modalVPActividades").showModal()
             : document.getElementById("modalVPActividades").close();
     }
+    const procesarDatos = () => {
+        showModalProcesa(true);
+    };
+    const showModalProcesa = (show) => {
+        show
+          ? document.getElementById("my_modal_actividades").showModal()
+          : document.getElementById("my_modal_actividades").close();
+      };
     const ImprimePDF = () => {
         const configuracion = {
             Encabezado: {
@@ -288,11 +336,181 @@ function Page() {
         }
         ImprimirExcel(configuracion)
     }
+
+    const buttonProcess = async () => {
+        document.getElementById("cargamodal").showModal();
+        event.preventDefault();
+        setisLoadingButton(true);
+        const { token } = session.user;
+        await truncateTable(token, "actividades");
+        const chunks = chunkArray(dataJson, 20);
+        let allErrors = "";
+        let chunksProcesados = 0;
+        let numeroChunks = chunks.length;
+        for (let chunk of chunks) {
+          const res = await storeBatchActividad(token, chunk);
+          chunksProcesados++;
+          const progreso = (chunksProcesados / numeroChunks) * 100;
+          setPorcentaje(Math.round(progreso));
+          if (!res.status) {
+            allErrors += res.alert_text;
+          }
+        }
+        setCerrarTO(true);
+        setisLoadingButton(false);
+        setDataJson([]);
+        setPorcentaje(0);
+        if (allErrors) {
+          showSwalConfirm("Error", allErrors, "error", "my_modal_actividades");
+        } else {
+          showSwal(
+            "Éxito",
+            "Todas las Actividades se insertaron correctamente.",
+            "success"
+            // "my_modal_4"
+          );
+          showModalProcesa(false);
+        }
+        await fetchActividadStatus(true);
+        setTimeout(() => {
+          setReloadPage(!reload_page);
+        }, 3500);
+      };
+
+    const handleFileChange = async (e) => {
+      const confirmed = await confirmSwal(
+        "¿Desea Continuar?",
+        "Por favor, verifica que las columnas del archivo de Excel coincidan exactamente con las columnas de la tabla en la base de datos y que no contengan espacios en blanco.",
+        "warning",
+        "Aceptar",
+        "Cancelar",
+        "my_modal_actividades"
+      );
+      if (!confirmed) {
+        return;
+      }
+      const selectedFile = e.target.files[0];
+      if (selectedFile) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const data = new Uint8Array(event.target.result);
+          const workbook = XLSX.read(data, { type: "array" });
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+          const jsonData = XLSX.utils.sheet_to_json(worksheet);
+          // console.log(jsonData);
+          const convertedData = jsonData.map((item) => {
+            return {
+                materia: item.Materia || 0,
+                secuencia: item.Secuencia || 0,
+                matDescripcion:
+                item.Mat_Descripcion && String(item.Mat_Descripcion).trim() !== ""
+                    ? String(item.Descripcion).slice(0, 255)
+                    : "N/A",
+                descripcion:
+                item.Descripcion && String(item.Descripcion).trim() !== ""
+                    ? String(item.Descripcion).slice(0, 255)
+                    : "N/A",
+                evaluaciones: isNaN(parseInt(item.Evaluaciones))
+                    ? 0
+                    : parseInt(item.Evaluaciones),
+                EB1: isNaN(parseInt(item.EB1))
+                    ? 0
+                    : parseInt(item.EB1),
+                EB2:isNaN(parseInt(item.EB2))
+                    ? 0
+                    : parseInt(item.EB2),
+                EB3: isNaN(parseInt(item.EB3))
+                    ? 0
+                    : parseInt(item.EB3),
+                EB4: isNaN(parseInt(item.EB4))
+                    ? 0
+                    : parseInt(item.EB4),
+                EB5:isNaN(parseInt(item.EB5))
+                    ? 0
+                    : parseInt(item.EB5),
+                baja:
+                item.Baja && item.Baja.trim() !== ""
+                    ? String(item.Baja).slice(0, 1)
+                    : "n",
+            };
+          });
+          console.log(convertedData);
+          setDataJson(convertedData);
+        };
+        reader.readAsArrayBuffer(selectedFile);
+      }
+    };
+    
+    const itemHeaderTable = () => {
+      return (
+        <>
+          <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Materia</td>
+          <td className="w-[40%]">Secuencia</td>
+          <td className="w-[20%]">Mat. Desc</td>
+          <td className="w-[20%]">Descripcion</td>
+          <td className="w-[10%]">Evaluaciones</td>
+          <td className="w-[10%]">EB1</td>
+          <td className="w-[10%]">EB2</td>
+          <td className="w-[10%]">EB3</td>
+          <td className="w-[10%]">EB4</td>
+          <td className="w-[10%]">EB5</td>
+          <td className="w-[10%]">Baja</td>
+        </>
+      );
+    };
+    
+    const itemDataTable = (item) => {
+      return (
+        <>
+          <tr key={item.materia} className="hover:cursor-pointer">
+            <th
+              className={
+                typeof item.materia === "number" ? "text-left" : "text-right"
+              }
+            >
+              {item.materia}
+            </th>
+            <td className="text-right">{item.secuencia}</td>
+            <td className="w-[40%] max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap pt-[.10rem] pb-[.10rem]">
+              {item.matDescripcion}
+            </td>
+            <td className="w-[40%] max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap pt-[.10rem] pb-[.10rem]">
+              {item.descripcion}
+            </td>
+            <td className="text-right">{item.evaluaciones}</td>
+            <td className="text-right">{item.EB1}</td>
+            <td className="text-right">{item.EB2}</td>
+            <td className="text-right">{item.EB3}</td>
+            <td className="text-right">{item.EB4}</td>
+            <td className="text-right">{item.EB5}</td>
+            <td className="text-left">{item.baja}</td>
+          </tr>
+        </>
+      );
+    };
+
     const home = () => {
         router.push("/");
       };
     return (
         <>
+            <BarraCarga porcentaje={porcentaje} cerrarTO={cerrarTO} />
+            <ModalProcesarDatos
+              id_modal={"my_modal_actividades"}
+              session={session}
+              buttonProcess={buttonProcess}
+              isLoadingButton={isLoadingButton}
+              isLoading={isLoading}
+              title={"Procesar Datos desde Excel."}
+              setDataJson={setDataJson}
+              dataJson={dataJson}
+              handleFileChange={handleFileChange}
+              itemHeaderTable={itemHeaderTable}
+              itemDataTable={itemDataTable}
+              //clase para mover al tamaño del modal a preferencia (max-w-4xl)
+              classModal={"modal-box w-full max-w-4xl h-full bg-base-200"}
+            />
             <ModalActividades
                 accion={accion}
                 currentID={currentID}
@@ -307,7 +525,12 @@ function Page() {
                 isLoadingButton={isLoadingButton}
                 asignaturas={asignaturas}
             />
-            <ModalVistaPreviaActividades pdfData={pdfData} pdfPreview={pdfPreview} PDF={ImprimePDF} Excel={ImprimeExcel} />
+            <ModalVistaPreviaActividades 
+                pdfData={pdfData} 
+                pdfPreview={pdfPreview} 
+                PDF={ImprimePDF}
+                Excel={ImprimeExcel} 
+            />
             <div className='container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden'>
                 <div className='flex flex-col justify-start p-3'>
                     <div className='flex flex-wrap md:flex-nowrap items-start md:items-center'>
@@ -316,15 +539,20 @@ function Page() {
                                 Alta={Alta}
                                 Ver={handleVerClick}
                                 Buscar={Buscar}
+                                procesarDatos={procesarDatos}
                                 animateLoading={animateLoading}
                                 permiso_alta={permissions.altas}
                                 permiso_imprime={permissions.impresion}
                                 home={home}
+                                es_admin={session?.user?.es_admin || false}
                             />
                         </div>
                         <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
                             Actividades
                         </h1>
+                        <h3 className="ml-auto order-3">{`Actividades Activas: ${
+                          active || 0
+                        }\nActividades Inactivas: ${inactive || 0}`}</h3>
                     </div>
                 </div>
                 <div className='flex flex-col items-center h-full'>
@@ -348,6 +576,7 @@ function Page() {
                                 ActividadesFiltradas={ActividadesFiltradas}
                                 permiso_cambio={permissions.cambios}
                                 permiso_baja={permissions.bajas}
+                                session = {session}
                             />
                         )}
                     </div>

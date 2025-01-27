@@ -142,3 +142,19 @@ export const getAsignaturas = async (token, baja) => {
   const resJson = await res.json();
   return resJson.data;
 };
+
+export const storeBatchActividad = async (token, data) => {
+  let url = `${process.env.DOMAIN_API}api/actividades/batch`;
+  const res = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: new Headers({
+      Authorization: "Bearer " + token,
+      xescuela: localStorage.getItem("xescuela"),
+      "Content-Type": "application/json",
+    }),
+  });
+  const resJson = await res.json();
+  return resJson;
+
+}
