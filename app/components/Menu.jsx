@@ -4,11 +4,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation"; // Para redirección
 import { useSession } from "next-auth/react";
 import { getMenus } from "@/app/utils/api/accesos_menu/accesos_menu";
+import { getSubMenus } from "../utils/api/sub_menus/sub_menus";
 
 function Menu({ vertical, toogle }) {
   const { data: session, status } = useSession();
   const [isOpen, setIsOpen] = useState({});
   const [menus, setMenus] = useState([]);
+  const [subMenus, setSubMenus] = useState([]);
+  const [groupedMenus, setGroupedMenus] = useState({});
   const menuRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
@@ -17,9 +20,12 @@ function Menu({ vertical, toogle }) {
     if (status === "loading" || !session) return;
     const fetchMenus = async () => {
       const { token } = session.user;
-      const fetchedMenus = await getMenus(token, false);
+      const [fetchedMenus, subMenus] = await Promise.all([
+        getMenus(token, false),
+        getSubMenus(token, false),
+      ]);
       setMenus(fetchedMenus);
-
+      setSubMenus(subMenus);
       const initialOpenState = fetchedMenus.reduce((acc, menu) => {
         acc[menu.menu] = false;
         return acc;
@@ -74,19 +80,60 @@ function Menu({ vertical, toogle }) {
     };
   }, []);
 
-  const groupedMenus = menus.reduce((acc, menu) => {
-    const { user } = session || {};
-    if (!acc[menu.menu]) acc[menu.menu] = [];
-
-    if (!user.es_admin && menu.menu === "Utilerías") {
-      if (menu.descripcion === "Usuarios") {
+  useEffect(() => {
+    let groupedMenus = [];
+    let groupedSubMenus = [];
+    groupedMenus = menus.reduce((acc, menu) => {
+      const { user } = session || {};
+      if (!acc[menu.menu]) acc[menu.menu] = [];
+      if (!user.es_admin && menu.menu === "Utilerías") {
+        if (menu.descripcion === "Usuarios") {
+          acc[menu.menu].push(menu);
+        }
+      } else {
+        groupedSubMenus = subMenus.reduce((acc, subMenu) => {
+          const descripcion = subMenu.descripcion;
+          const rutaMenu = menus.find((m) => m.numero === subMenu.id_acceso);
+          if (!acc[descripcion]) {
+            acc[descripcion] = []; // Aquí usamos la descripción como clave
+          }
+          acc[descripcion].push(rutaMenu); // Aquí agrupamos los submenús bajo esa clave
+          return acc;
+        }, {});
         acc[menu.menu].push(menu);
       }
-    } else {
-      acc[menu.menu].push(menu);
-    }
-    return acc;
-  }, {});
+      return acc;
+    }, {});
+    const newObjects = Object.entries(groupedMenus).reduce(
+      (acc, [key, value]) => {
+        const groupedItems = new Set();
+        Object.entries(groupedSubMenus).forEach(([subKey, subMenuArray]) => {
+          subMenuArray.forEach((subMenu) => {
+            if (subMenu.menu === key) {
+              groupedItems.add(subMenu.numero);
+            }
+          });
+        });
+        const filteredItems = value.filter(
+          (item) => !groupedItems.has(item.numero)
+        );
+        acc[key] = acc[key] || [];
+        Object.entries(groupedSubMenus).forEach(([subKey, subMenuArray]) => {
+          const matchingSubMenus = subMenuArray.filter(
+            (subMenu) => subMenu.menu === key
+          );
+          if (matchingSubMenus.length > 0) {
+            acc[key].push({ [subKey]: matchingSubMenus });
+          }
+        });
+        acc[key].push(...filteredItems);
+        return acc;
+      },
+      {}
+    );
+    // console.log(newObjects);
+    setGroupedMenus(newObjects);
+  }, [menus, session]);
 
   const sortedCategories = Object.keys(groupedMenus).sort();
 
@@ -101,8 +148,14 @@ function Menu({ vertical, toogle }) {
           (perm) => perm.id_punto_menu === menuItem.numero && perm.t_a
         );
       const linkTo = hasPermission
-        ? menuItem.ruta
+        ? menuItem.ruta || "#"
         : `/acceso_denegado?menu=true`;
+      const subMenus = Object.keys(menuItem).reduce((acc, key) => {
+        if (Array.isArray(menuItem[key])) {
+          acc.push({ title: key, items: menuItem[key] });
+        }
+        return acc;
+      }, []);
       return (
         <li key={menuItem.numero}>
           <Link
@@ -117,6 +170,36 @@ function Menu({ vertical, toogle }) {
           >
             {menuItem.descripcion}
           </Link>
+          {subMenus.length > 0 && (
+            <ul className="">
+              {subMenus.map((subMenu, idx) => (
+                <li key={idx}>
+                  <strong>{subMenu.title}</strong>
+                  <ul>
+                    {subMenu.items.map((subItem, subIdx) => {
+                      const subLinkTo = subItem.ruta || "#";
+                      return (
+                        <li key={subIdx}>
+                          <Link
+                            href={subLinkTo}
+                            onClick={() => {
+                              closeMenus();
+                              if (isMobile) {
+                                toogle();
+                              }
+                              localStorage.setItem("puntoMenu", subItem.numero);
+                            }}
+                          >
+                            {subItem.descripcion}
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          )}
         </li>
       );
     });
