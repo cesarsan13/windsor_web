@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation"; // Para redirección
 import { useSession } from "next-auth/react";
 import { getMenus } from "@/app/utils/api/accesos_menu/accesos_menu";
-import { getSubMenus } from "@/app/utils/api/sub_menus/sub_menus";
+import { getSubMenus } from "../utils/api/sub_menus/sub_menus";
 
 function Menu({ vertical, toogle }) {
   const { data: session, status } = useSession();
@@ -24,7 +24,6 @@ function Menu({ vertical, toogle }) {
         getMenus(token, false),
         getSubMenus(token, false),
       ]);
-      console.log(subMenus);
       setMenus(fetchedMenus);
       setSubMenus(subMenus);
       const initialOpenState = fetchedMenus.reduce((acc, menu) => {
@@ -33,6 +32,7 @@ function Menu({ vertical, toogle }) {
       }, {});
       setIsOpen(initialOpenState);
     };
+
     fetchMenus();
   }, [session, status]);
 
@@ -80,85 +80,60 @@ function Menu({ vertical, toogle }) {
     };
   }, []);
 
-  // useEffect(() => {
-  //   const grouped = menus.reduce((acc, menu) => {
-  //     const { user } = session || {};
-  //     if (!acc[menu.menu]) acc[menu.menu] = [];
-  //     if (!user.es_admin && menu.menu === "Utilerías") {
-  //       if (menu.descripcion === "Usuarios") {
-  //         acc[menu.menu].push(menu);
-  //       }
-  //     } else {
-  //       const relatedSubMenus = subMenus.filter(
-  //         (subMenu) => subMenu.numero === menu.numero
-  //       );
-  //       if (relatedSubMenus.length > 0) {
-  //         relatedSubMenus.forEach((subMenu) => {
-  //           if (!subMenu.submenus) subMenu.submenus = [];
-  //           if (
-  //             !subMenu.submenus.some(
-  //               (existingSubMenu) => existingSubMenu.numero === menu.numero
-  //             )
-  //           ) {
-  //             subMenu.submenus.push(menu);
-  //           }
-  //           if (!acc[menu.menu].includes(subMenu)) {
-  //             acc[menu.menu].push(subMenu);
-  //           }
-  //         });
-  //       } else {
-  //         acc[menu.menu].push(menu);
-  //       }
-  //     }
-  //     return acc;
-  //   }, {});
-  //   setGroupedMenus(grouped);
-  // }, [menus, subMenus, session]);
-
   useEffect(() => {
-    const groupedSubMenus = subMenus.reduce((acc, subMenu) => {
-      const numero = subMenu.numero;
-      if (!acc[numero]) {
-        acc[numero] = [];
-      }
-      acc[numero].push(subMenu);
-      return acc;
-    }, {});
-    const grouped = menus.reduce((acc, menu) => {
+    let groupedMenus = [];
+    let groupedSubMenus = [];
+    groupedMenus = menus.reduce((acc, menu) => {
       const { user } = session || {};
+      if (!acc[menu.menu]) acc[menu.menu] = [];
       if (!user.es_admin && menu.menu === "Utilerías") {
         if (menu.descripcion === "Usuarios") {
-          acc[menu.menu] = acc[menu.menu] || [];
           acc[menu.menu].push(menu);
         }
       } else {
-        const relatedSubMenus = groupedSubMenus[menu.numero] || [];
-        // const relatedSubMenus = groupedSubMenus.filter(
-        //   (sub) => sub.id_accesso === menu.numero
-        // );
-        console.log(relatedSubMenus);
-        if (relatedSubMenus.length > 0) {
-          const subMenuItems = relatedSubMenus.map((subMenu) => ({
-            numero: subMenu.numero,
-            ruta: subMenu.ruta,
-            descripcion: subMenu.descripcion,
-          }));
-          if (!acc[menu.menu]) acc[menu.menu] = [];
-          acc[menu.menu].push({
-            descripcion: menu.descripcion,
-            numero: menu.numero,
-            submenus: subMenuItems,
-          });
-        } else {
-          if (!acc[menu.menu]) acc[menu.menu] = [];
-          acc[menu.menu].push(menu);
-        }
+        groupedSubMenus = subMenus.reduce((acc, subMenu) => {
+          const descripcion = subMenu.descripcion;
+          const rutaMenu = menus.find((m) => m.numero === subMenu.id_acceso);
+          if (!acc[descripcion]) {
+            acc[descripcion] = []; // Aquí usamos la descripción como clave
+          }
+          acc[descripcion].push(rutaMenu); // Aquí agrupamos los submenús bajo esa clave
+          return acc;
+        }, {});
+        acc[menu.menu].push(menu);
       }
       return acc;
     }, {});
-    console.log(grouped);
-    setGroupedMenus(grouped);
-  }, [menus, subMenus, session]);
+    const newObjects = Object.entries(groupedMenus).reduce(
+      (acc, [key, value]) => {
+        const groupedItems = new Set();
+        Object.entries(groupedSubMenus).forEach(([subKey, subMenuArray]) => {
+          subMenuArray.forEach((subMenu) => {
+            if (subMenu.menu === key) {
+              groupedItems.add(subMenu.numero);
+            }
+          });
+        });
+        const filteredItems = value.filter(
+          (item) => !groupedItems.has(item.numero)
+        );
+        acc[key] = acc[key] || [];
+        Object.entries(groupedSubMenus).forEach(([subKey, subMenuArray]) => {
+          const matchingSubMenus = subMenuArray.filter(
+            (subMenu) => subMenu.menu === key
+          );
+          if (matchingSubMenus.length > 0) {
+            acc[key].push({ [subKey]: matchingSubMenus });
+          }
+        });
+        acc[key].push(...filteredItems);
+        return acc;
+      },
+      {}
+    );
+    // console.log(newObjects);
+    setGroupedMenus(newObjects);
+  }, [menus, session]);
 
   const sortedCategories = Object.keys(groupedMenus).sort();
 
@@ -173,73 +148,63 @@ function Menu({ vertical, toogle }) {
           (perm) => perm.id_punto_menu === menuItem.numero && perm.t_a
         );
       const linkTo = hasPermission
-        ? menuItem.ruta
+        ? menuItem.ruta || "#"
         : `/acceso_denegado?menu=true`;
+      const subMenus = Object.keys(menuItem).reduce((acc, key) => {
+        if (Array.isArray(menuItem[key])) {
+          acc.push({ title: key, items: menuItem[key] });
+        }
+        return acc;
+      }, []);
       return (
         <li key={menuItem.numero}>
-          {menuItem.ruta ? (
-            <Link
-              href={linkTo}
-              onClick={() => {
-                closeMenus();
-                if (isMobile) {
-                  toogle();
-                }
-                localStorage.setItem("puntoMenu", menuItem.numero);
-              }}
-            >
-              {menuItem.descripcion}
-            </Link>
-          ) : (
-            <span>{menuItem.descripcion}</span>
-          )}
-          {menuItem.submenus && menuItem.submenus.length > 0 && (
-            <ul>{renderSubMenuItems(menuItem.submenus)}</ul>
+          <Link
+            href={linkTo}
+            onClick={() => {
+              closeMenus();
+              if (isMobile) {
+                toogle();
+              }
+              localStorage.setItem("puntoMenu", menuItem.numero);
+            }}
+          >
+            {menuItem.descripcion}
+          </Link>
+          {subMenus.length > 0 && (
+            <ul className="">
+              {subMenus.map((subMenu, idx) => (
+                <li key={idx}>
+                  <strong>{subMenu.title}</strong>
+                  <ul>
+                    {subMenu.items.map((subItem, subIdx) => {
+                      const subLinkTo = subItem.ruta || "#";
+                      return (
+                        <li key={subIdx}>
+                          <Link
+                            href={subLinkTo}
+                            onClick={() => {
+                              closeMenus();
+                              if (isMobile) {
+                                toogle();
+                              }
+                              localStorage.setItem("puntoMenu", subItem.numero);
+                            }}
+                          >
+                            {subItem.descripcion}
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </li>
+              ))}
+            </ul>
           )}
         </li>
       );
     });
   };
 
-  const renderSubMenuItems = (subMenus) => {
-    return subMenus.map((subMenu) => {
-      const { permissions } = session.user;
-      const { user } = session;
-      const is_admin = user.es_admin;
-      const hasPermission =
-        is_admin ||
-        permissions.some(
-          (perm) => perm.id_punto_menu === subMenu.numero && perm.t_a
-        );
-      const linkTo = hasPermission
-        ? subMenu.ruta
-        : `/acceso_denegado?menu=true`;
-
-      return (
-        <li key={subMenu.numero}>
-          {subMenu.ruta ? (
-            <Link
-              href={linkTo}
-              onClick={() => {
-                closeMenus();
-                if (isMobile) {
-                  toogle();
-                }
-                localStorage.setItem("puntoMenu", subMenu.numero);
-              }}
-            >
-              {subMenu.descripcion}
-            </Link>
-          ) : (
-            <span>{subMenu.descripcion}</span>
-          )}
-          {subMenu.submenus && subMenu.submenus.length > 0 && (
-            <ul>{renderSubMenuItems(subMenu.submenus)}</ul>
-          )}
-        </li>
-      );
-    });
-  };
   return vertical ? (
     <ul
       ref={menuRef}
