@@ -485,7 +485,8 @@ function Page() {
 
     const home = () => {
         router.push("/");
-      };
+    };
+
     return (
         <>
             <BarraCarga porcentaje={porcentaje} cerrarTO={cerrarTO} />
