@@ -9,6 +9,7 @@ import { getSubMenus } from "../utils/api/sub_menus/sub_menus";
 function Menu({ vertical, toogle }) {
   const { data: session, status } = useSession();
   const [isOpen, setIsOpen] = useState({});
+  const [isOpenSub, setIsOpenSub] = useState({});
   const [menus, setMenus] = useState([]);
   const [subMenus, setSubMenus] = useState([]);
   const [groupedMenus, setGroupedMenus] = useState({});
@@ -47,10 +48,32 @@ function Menu({ vertical, toogle }) {
     });
   };
 
+
+  const toggleMenuSub = (title) => {
+    
+    setIsOpenSub((prev) => {
+      const newState = { ...prev };
+      Object.keys(newState).forEach((key) => {
+        newState[key] = false;
+      });
+      newState[title] = !prev[title];
+      return newState;
+    });
+  };
+
   const closeMenus = () => {
     setIsOpen(
       Object.keys(isOpen).reduce((acc, category) => {
         acc[category] = false;
+        return acc;
+      }, {})
+    );
+  };
+
+  const closeMenusSub = () => {
+    setIsOpenSub(
+      Object.keys(isOpenSub).reduce((acc, title) => {
+        acc[title] = false;
         return acc;
       }, {})
     );
@@ -104,19 +127,23 @@ function Menu({ vertical, toogle }) {
       }
       return acc;
     }, {});
+
     const newObjects = Object.entries(groupedMenus).reduce(
       (acc, [key, value]) => {
         const groupedItems = new Set();
         Object.entries(groupedSubMenus).forEach(([subKey, subMenuArray]) => {
+
           subMenuArray.forEach((subMenu) => {
             if (subMenu.menu === key) {
               groupedItems.add(subMenu.numero);
             }
           });
+
         });
         const filteredItems = value.filter(
           (item) => !groupedItems.has(item.numero)
         );
+
         acc[key] = acc[key] || [];
         Object.entries(groupedSubMenus).forEach(([subKey, subMenuArray]) => {
           const matchingSubMenus = subMenuArray.filter(
@@ -131,12 +158,11 @@ function Menu({ vertical, toogle }) {
       },
       {}
     );
-    // console.log(newObjects);
+    
     setGroupedMenus(newObjects);
   }, [menus, session]);
 
   const sortedCategories = Object.keys(groupedMenus).sort();
-
   const renderMenuItems = (category) => {
     const { permissions } = session.user;
     const { user } = session;
@@ -157,25 +183,31 @@ function Menu({ vertical, toogle }) {
         return acc;
       }, []);
       return (
-        <li key={menuItem.numero}>
-          <Link
-            href={linkTo}
-            onClick={() => {
-              closeMenus();
-              if (isMobile) {
-                toogle();
-              }
-              localStorage.setItem("puntoMenu", menuItem.numero);
-            }}
-          >
-            {menuItem.descripcion}
-          </Link>
+        <>
+          {menuItem.numero != undefined && (
+            <li key={menuItem.numero} className="position">
+              <Link
+                href={linkTo}
+                onClick={() => {
+                  closeMenus();
+                  if (isMobile) {
+                    toogle();
+                  }
+                  localStorage.setItem("puntoMenu", menuItem.numero);
+                }}
+              >
+                {menuItem.descripcion}
+              </Link>
+            </li>
+          )
+
+          }
           {subMenus.length > 0 && (
-            <ul className="">
-              {subMenus.map((subMenu, idx) => (
-                <li key={idx}>
-                  <strong>{subMenu.title}</strong>
-                  <ul>
+            subMenus.map((subMenu, idx) => (
+              <li key={idx} className="position">
+                <details open={isOpenSub[subMenu.items]} onClick={() => toggleMenuSub(subMenu.title)}>
+                  <summary> {subMenu.title}</summary>
+                  <ul className=" text-black dark:text-white ">
                     {subMenu.items.map((subItem, subIdx) => {
                       const subLinkTo = subItem.ruta || "#";
                       return (
@@ -183,7 +215,7 @@ function Menu({ vertical, toogle }) {
                           <Link
                             href={subLinkTo}
                             onClick={() => {
-                              closeMenus();
+                              closeMenusSub();
                               if (isMobile) {
                                 toogle();
                               }
@@ -196,11 +228,11 @@ function Menu({ vertical, toogle }) {
                       );
                     })}
                   </ul>
-                </li>
-              ))}
-            </ul>
+                </details>
+              </li>
+            ))
           )}
-        </li>
+        </>
       );
     });
   };
@@ -232,9 +264,8 @@ function Menu({ vertical, toogle }) {
             {category}
           </div>
           <ul
-            className={`dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow ${
-              isOpen[category] ? "" : "hidden"
-            }`}
+            className={`dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow ${isOpen[category] ? "" : "hidden"
+              }`}
           >
             {renderMenuItems(category)}
           </ul>
