@@ -15,8 +15,7 @@ function Menu({ vertical, toogle }) {
   const [groupedMenus, setGroupedMenus] = useState({});
   const menuRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
-  const router = useRouter();
-  //
+
   useEffect(() => {
     if (status === "loading" || !session) return;
     const fetchMenus = async () => {
@@ -82,6 +81,7 @@ function Menu({ vertical, toogle }) {
   const handleClickOutside = (event) => {
     if (menuRef.current && !menuRef.current.contains(event.target)) {
       closeMenus();
+      closeMenusSub();
     }
   };
 
