@@ -349,7 +349,7 @@ function Rep_Flujo_01() {
                     value="sin_deudores"
                     checked={selectedOption === "sin_deudores"}
                     onChange={handleCheckChange}
-                    className="radio checked:bg-blue-500"
+                    className="radio  checked:text-neutral-600 dark:text-neutral-200"
                   />
                   <span>Sin Deudores</span>
                 </label>
@@ -360,7 +360,7 @@ function Rep_Flujo_01() {
                     value="solo_deudores"
                     checked={selectedOption === "solo_deudores"}
                     onChange={handleCheckChange}
-                    className="radio checked:bg-blue-500"
+                    className="radio  checked:text-neutral-600 dark:text-neutral-200"
                   />
                   <span>Solo Deudores</span>
                 </label>

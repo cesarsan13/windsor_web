@@ -16,7 +16,6 @@ import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import VistaPrevia from "@/app/components/VistaPrevia";
-import { getHorarios } from "@/app/utils/api/horarios/horarios";
 import { formatNumber, PoneCeros } from "@/app/utils/globalfn";
 
 function RecibosPagos() {
@@ -58,12 +57,12 @@ function RecibosPagos() {
             const { token } = session.user;
             const [dataA] =
                 await Promise.all([
-                    // getCobranza(token),
                     getAlumnos(token, false),
+                    // getCobranza(token),
                     // getHorarios(token, false)
                 ]);
-            // setDocsCobranza(dataC);
             setAlumnos(dataA);
+            // setDocsCobranza(dataC);
             // setHorarios(dataH);
         };
         fetchData();
@@ -99,7 +98,6 @@ function RecibosPagos() {
             setAnimateLoading(false);
             return;
         }
-        // const newPDF = new ReportePDF(configuracion, "Landscape");
         const newPDF = new ReportePDF(configuracion, "Portrait");
         let alumnAnt = null;
         let siImp = false;
@@ -225,9 +223,9 @@ function RecibosPagos() {
                     </div>
                 </div>
                 <div className="w-full py-3 flex flex-col gap-y-4">
-                    <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4  w-1/2 mx-auto ">
-                        <div className="flex min-[1920px]:flex-row flex-col min-[1920px]:space-x-4">
-                            <div className="lg:w-fit md:w-fit pb-5">
+                    <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4  min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
+                        <div className="flex flex-row max-[499px]:gap-1 gap-4">
+                            <div className="lg:w-fit md:w-fit">
                                 <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full">
                                     Fecha Ini.
                                     <input
@@ -238,71 +236,77 @@ function RecibosPagos() {
                                     />
                                 </label>
                             </div>
-                            <div className="pb-5">
-                                <BuscarCat
-                                    table="alumnos"
-                                    fieldsToShow={["numero", "nombre_completo"]}
-                                    nameInput={["numero", "nombre_completo"]}
-                                    titulo={"Alumno Inicio: "}
-                                    setItem={setAlumnoIni}
-                                    token={session.user.token}
-                                    modalId="modal_alumnos1"
-                                    alignRight={true}
-                                    inputWidths={{ first: "50px", second: "400px" }}
-                                    descClassName="md:mt-0 w-full"
-                                    contClassName="flex flex-row md:flex-row justify-start gap-2 sm:flex-row w-full"
-                                />
-                            </div>
-                            <BuscarCat
-                                table="alumnos"
-                                fieldsToShow={["numero", "nombre_completo"]}
-                                nameInput={["numero", "nombre_completo"]}
-                                titulo={"Alumno Fin:"}
-                                setItem={setAlumnoFin}
-                                token={session.user.token}
-                                modalId="modal_alumnos2"
-                                alignRight={true}
-                                inputWidths={{ first: "50px", second: "400px" }}
-                                descClassName="md:mt-0 w-full"
-                                contClassName="flex flex-row md:flex-row justify-start gap-2 sm:flex-row w-full"
-                            />
                         </div>
-                    </div>
-                    <div className="flex flex-row">
-                        <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 w-1/2 mx-auto ">
-                            <div className="flex space-x-4">
-                                <div className="tooltip" data-tip="Sin Deudores">
-                                    <label
-                                        htmlFor="ch_sin_deudores"
-                                        className="label cursor-pointer flex items-center space-x-2"
-                                    >
-                                        <input
-                                            id="ch_sin_deudores"
-                                            type="checkbox"
-                                            className="checkbox checkbox-md"
-                                            defaultChecked={true}
-                                            onClick={(evt) => setSinDeudores(evt.target.checked)}
-                                        />
-                                        <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
-                                            Sin Deudores
-                                        </span>
-                                    </label>
+                        <div className="pt-3">
+                            <div className="col-span-full md:col-span-full lg:col-span-full">
+                                <div className="w-full">
+                                    <BuscarCat
+                                        table="alumnos"
+                                        fieldsToShow={["numero", "nombre_completo"]}
+                                        nameInput={["numero", "nombre_completo"]}
+                                        titulo={"Alumno Inicio: "}
+                                        setItem={setAlumnoIni}
+                                        token={session.user.token}
+                                        modalId="modal_alumnos1"
+                                        alignRight={true}
+                                        inputWidths={{ first: "100px", second: "400px" }}
+                                        descClassName="md:mt-0 w-full"
+                                        //contClassName="flex flex-row md:flex-row justify-start gap-2 sm:flex-row w-full"
+                                    />
                                 </div>
-                                <div className="tooltip" data-tip="Imprimir Grupo, Alumno">
-                                    <label
-                                        htmlFor="ch_impr_grupo_alumno"
-                                        className="label cursor-pointer flex items-center space-x-2"
-                                    >
-                                        <input
-                                            id="ch_impr_grupo_alumno"
-                                            type="checkbox"
-                                            className="checkbox checkbox-md"
-                                            onClick={(evt) => setGrupoAlumno(evt.target.checked)}
-                                        />
-                                        <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
-                                            Imprimir Grupo, Alumno
-                                        </span>
-                                    </label>
+                            </div>
+                            <div className="col-span-full md:col-span-full lg:col-span-full">
+                                <div className="w-full">
+                                    <BuscarCat
+                                        table="alumnos"
+                                        fieldsToShow={["numero", "nombre_completo"]}
+                                        nameInput={["numero", "nombre_completo"]}
+                                        titulo={"Alumno Fin:"}
+                                        setItem={setAlumnoFin}
+                                        token={session.user.token}
+                                        modalId="modal_alumnos2"
+                                        alignRight={true}
+                                        inputWidths={{ first: "100px", second: "400px" }}
+                                        descClassName="md:mt-0 w-full"
+                                        //contClassName="flex flex-row md:flex-row justify-start gap-2 sm:flex-row w-full"
+                                    />
+                                </div>
+                            </div>
+                            <div className="flex flex-row ax-[499px]:gap-1 gap-4">
+                                <div className="lg:w-fit md:w-fit">
+                                    <div className="tooltip" data-tip="Sin Deudores">
+                                        <label
+                                            htmlFor="ch_sin_deudores"
+                                            className="label cursor-pointer flex items-center space-x-2"
+                                        >
+                                            <input
+                                                id="ch_sin_deudores"
+                                                type="checkbox"
+                                                className="checkbox checkbox-md"
+                                                defaultChecked={true}
+                                                onClick={(evt) => setSinDeudores(evt.target.checked)}
+                                            />
+                                            <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
+                                                Sin Deudores
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div className="tooltip" data-tip="Imprimir Grupo, Alumno">
+                                        <label
+                                            htmlFor="ch_impr_grupo_alumno"
+                                            className="label cursor-pointer flex items-center space-x-2"
+                                        >
+                                            <input
+                                                id="ch_impr_grupo_alumno"
+                                                type="checkbox"
+                                                className="checkbox checkbox-md"
+                                                onClick={(evt) => setGrupoAlumno(evt.target.checked)}
+                                            />
+                                            <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
+                                                Imprimir Grupo, Alumno
+                                            </span>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -61,7 +61,7 @@ function Busqueda({
                                 value="español"
                                 onChange={handleCheckChange}
                                 checked={selectedOption === "español"}
-                                className="radio checked:bg-blue-500"
+                                className="radio  checked:text-neutral-600 dark:text-neutral-200"
                             />
                         </label>
 
@@ -73,7 +73,7 @@ function Busqueda({
                                 value="ingles"
                                 onChange={handleCheckChange}
                                 checked={selectedOption === "ingles"}
-                                className="radio checked:bg-blue-500"
+                                className="radio  checked:text-neutral-600 dark:text-neutral-200"
                             />
                         </label>
 
@@ -85,7 +85,7 @@ function Busqueda({
                                 value="ambos"
                                 onChange={handleCheckChange}
                                 checked={selectedOption === "ambos"}
-                                className="radio checked:bg-blue-500"
+                                className="radio  checked:text-neutral-600 dark:text-neutral-200"
                             />
                         </label>
                     </div>

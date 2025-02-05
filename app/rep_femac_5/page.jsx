@@ -324,7 +324,7 @@ function AltasBajasAlumnos() {
                         value="nombre"
                         onChange={handleOptionChange}
                         checked={selectedOption === "nombre"}
-                        className="radio checked:bg-blue-500"
+                        className="radio  checked:text-neutral-600 dark:text-neutral-200"
                       />
                     </label>
                     <label className="flex items-center gap-3">
@@ -335,7 +335,7 @@ function AltasBajasAlumnos() {
                         value="numero"
                         onChange={handleOptionChange}
                         checked={selectedOption === "numero"}
-                        className="radio checked:bg-blue-500"
+                        className="radio checked:text-neutral-600 dark:text-neutral-200"
                       />
                     </label>
                     <label className="flex items-center gap-3">
@@ -348,7 +348,7 @@ function AltasBajasAlumnos() {
                         value="fecha_nac"
                         onChange={handleOptionChange}
                         checked={selectedOption === "fecha_nac"}
-                        className="radio checked:bg-blue-500"
+                        className="radio  checked:text-neutral-600 dark:text-neutral-200"
                       />
                     </label>
                   </div>
@@ -372,7 +372,7 @@ function AltasBajasAlumnos() {
                       value="alta"
                       onChange={handleOptionChangeAB}
                       checked={selectedOptionAB === "alta"}
-                      className="radio checked:bg-blue-500"
+                      className="radio  checked:text-neutral-600 dark:text-neutral-200"
                     />
                   </label>
                   <label
@@ -385,7 +385,7 @@ function AltasBajasAlumnos() {
                       value="bajas"
                       onChange={handleOptionChangeAB}
                       checked={selectedOptionAB === "bajas"}
-                      className="radio checked:bg-blue-500"
+                      className="radio  checked:text-neutral-600 dark:text-neutral-200"
                     />
                   </label>
                 </label>

@@ -313,6 +313,7 @@ function CreacionBoletas3Bimestre() {
       calcularLugares(alumnos_in, "Ingles");
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [grupo.numero]);
 
   const calcularLugares = async (alumnos_prop, tipo) => {

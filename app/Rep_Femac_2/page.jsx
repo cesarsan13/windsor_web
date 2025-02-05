@@ -345,7 +345,7 @@ function AlumnosPorClase() {
                       value="nombre"
                       onChange={handleCheckChange}
                       checked={sOrdenar === "nombre"}
-                      className="radio checked:bg-blue-500"
+                      className="radio  checked:text-neutral-600 dark:text-neutral-200"
                     />
                   </label>
                   <label className="flex items-center gap-3">
@@ -356,7 +356,7 @@ function AlumnosPorClase() {
                       value="numero"
                       onChange={handleCheckChange}
                       checked={sOrdenar === "numero"}
-                      className="radio checked:bg-blue-500"
+                      className="radio  checked:text-neutral-600 dark:text-neutral-200"
                     />
                   </label>
                 </label>

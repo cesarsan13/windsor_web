@@ -2,8 +2,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import Acciones from "./components/Acciones";
-import Inputs from "./components/Inputs";
-import { calculaDigitoBvba, formatDate, formatNumber } from "../utils/globalfn";
+import { calculaDigitoBvba, formatNumber } from "../utils/globalfn";
 import { useForm } from "react-hook-form";
 import {
   getReporteCobranzaporAlumno,
@@ -15,7 +14,6 @@ import { useSession } from "next-auth/react";
 import BuscarCat from "@/app/components/BuscarCat";
 import { showSwal } from "@/app/utils/alerts";
 import "jspdf-autotable";
-import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import VistaPrevia from "../components/VistaPrevia";

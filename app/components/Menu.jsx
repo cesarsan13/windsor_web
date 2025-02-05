@@ -90,6 +90,7 @@ function Menu({ vertical, toogle }) {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -160,6 +161,7 @@ function Menu({ vertical, toogle }) {
     );
     
     setGroupedMenus(newObjects);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menus, session]);
 
   const sortedCategories = Object.keys(groupedMenus).sort();
