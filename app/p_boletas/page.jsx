@@ -84,7 +84,7 @@ function P_Boletas() {
             setisLoadingGrupos(false)
         }
         fetchData()
-    }, [session, grupo]);
+    }, [session, grupo, status]);
 
     useEffect(() => {
         if (Number(bimestre) > 5) {

@@ -39,6 +39,7 @@ function Cancelacion_Recibo() {
         const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
         const permisos = permissionsComponents(es_admin,permissions,session.user.id,menuSeleccionado)
         setPermissions(permisos)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[session])
 
     const Proceso = handleSubmit(async (data) => {
@@ -79,56 +80,61 @@ function Cancelacion_Recibo() {
     }
     return (
         <>
-            <div className='container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden'> 
-                <div className='flex flex-col justify-start p-3'>
-                    <div className='flex flex-wrap md:flex-nowrap items-start md:items-center'>
-                        <div className='order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0'>
-                            <Acciones
-                                isLoading={isLoading}
-                                Bproceso={Proceso}
-                                home={home}
-                                permiso_alta={permissions.altas}
-                            />
-                        </div>
-
-                        <h1 className="pl-5 order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around w-auto">
+            <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12"> 
+                <div className="w-full py-3">
+                    <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
+                        <div className="flex flex-wrap items-start md:items-center mx-auto">
+                            <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
+                                <Acciones
+                                    isLoading={isLoading}
+                                    Bproceso={Proceso}
+                                    home={home}
+                                    permiso_alta={permissions.altas}
+                                />
+                            </div>
+                            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                             Cancelación de Recibo.
-                        </h1>
+                            </h1>
+                        </div>
                     </div>
                 </div>
-                <div className='flex flex-col items-center h-full'>
-                    <div className='w-full max-w-4xl pt-2'>
-                        <div className="flex flex-col items-start pb-5">
-                            <Inputs
-                                dataType={"int"}
-                                name={"recibo"}
-                                tamañolabel={"w-full"}
-                                className={"w-[80%] px-2 py-2 text-right"}
-                                Titulo={"Recibo: "}
-                                type={"text"}
-                                requerido={true}
-                                errors={errors}
-                                register={register}
-                                message={"Recibo Requerido"}
-                                isDisabled={false}
-                                maxLenght={7}
-                            />
-                        </div>
-                        <div className="flex flex-col items-start">
-                            <Inputs
-                                dataType={"string"}
-                                name={"fecha"}
-                                tamañolabel={"w-full"}
-                                className={"w-[80%] px-2 py-2 text-left"}
-                                Titulo={"Fecha: "}
-                                type={"date"}
-                                requerido={true}
-                                errors={errors}
-                                register={register}
-                                message={"Fecha Requerido"}
-                                isDisabled={false}
-                                maxLenght={7}
-                            />
+                <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto items-center">
+                    <div className="col-span-full md:col-span-full lg:col-span-full">
+                        <div className="w-full items-center">
+                            <div className="flex items-center">
+                                <div className="pr-1">
+                                    <Inputs
+                                        dataType={"int"}
+                                        name={"recibo"}
+                                        tamañolabel={"w-full"}
+                                        className={"w-[50%] px-2 py-2 text-right"}
+                                        Titulo={"Recibo: "}
+                                        type={"text"}
+                                        requerido={true}
+                                        errors={errors}
+                                        register={register}
+                                        message={"Recibo Requerido"}
+                                        isDisabled={false}
+                                        maxLenght={7}
+                                    />
+                                </div>
+                                <div>
+                                    <Inputs
+                                        dataType={"string"}
+                                        name={"fecha"}
+                                        tamañolabel={"w-full"}
+                                        className={"w-[50%] px-2 py-2 text-left"}
+                                        Titulo={"Fecha: "}
+                                        type={"date"}
+                                        requerido={true}
+                                        errors={errors}
+                                        register={register}
+                                        message={"Fecha Requerido"}
+                                        isDisabled={false}
+                                        maxLenght={7}
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

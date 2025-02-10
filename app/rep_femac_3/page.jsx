@@ -278,7 +278,7 @@ function Rep_Femac_3() {
                       value="nombre"
                       checked={sOrdenar === "nombre"}
                       onChange={handleCheckChange}
-                      className="radio checked:bg-blue-500"
+                      className="radio  checked:text-neutral-600 dark:text-neutral-200"
                     />
                   </label>
 
@@ -290,7 +290,7 @@ function Rep_Femac_3() {
                       value="numero"
                       checked={sOrdenar === "numero"}
                       onChange={handleCheckChange}
-                      className="radio checked:bg-blue-500"
+                      className="radio  checked:text-neutral-600 dark:text-neutral-200"
                     />
                   </label>
                 </label>

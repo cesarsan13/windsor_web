@@ -15,8 +15,8 @@ function Menu({ vertical, toogle }) {
   const [groupedMenus, setGroupedMenus] = useState({});
   const menuRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
-  const router = useRouter();
-  //
+  const detailsRefs = useRef({});
+
   useEffect(() => {
     if (status === "loading" || !session) return;
     const fetchMenus = async () => {
@@ -48,17 +48,11 @@ function Menu({ vertical, toogle }) {
     });
   };
 
-
   const toggleMenuSub = (title) => {
-    
-    setIsOpenSub((prev) => {
-      const newState = { ...prev };
-      Object.keys(newState).forEach((key) => {
-        newState[key] = false;
-      });
-      newState[title] = !prev[title];
-      return newState;
-    });
+    setIsOpenSub((prev) => ({
+      ...prev,
+      [title]: !prev[title],
+    }));
   };
 
   const closeMenus = () => {
@@ -71,17 +65,13 @@ function Menu({ vertical, toogle }) {
   };
 
   const closeMenusSub = () => {
-    setIsOpenSub(
-      Object.keys(isOpenSub).reduce((acc, title) => {
-        acc[title] = false;
-        return acc;
-      }, {})
-    );
+    setIsOpenSub({});
   };
 
   const handleClickOutside = (event) => {
     if (menuRef.current && !menuRef.current.contains(event.target)) {
       closeMenus();
+      closeMenusSub();
     }
   };
 
@@ -90,6 +80,7 @@ function Menu({ vertical, toogle }) {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -132,13 +123,11 @@ function Menu({ vertical, toogle }) {
       (acc, [key, value]) => {
         const groupedItems = new Set();
         Object.entries(groupedSubMenus).forEach(([subKey, subMenuArray]) => {
-
           subMenuArray.forEach((subMenu) => {
             if (subMenu.menu === key) {
               groupedItems.add(subMenu.numero);
             }
           });
-
         });
         const filteredItems = value.filter(
           (item) => !groupedItems.has(item.numero)
@@ -158,11 +147,13 @@ function Menu({ vertical, toogle }) {
       },
       {}
     );
-    
+
     setGroupedMenus(newObjects);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menus, session]);
 
   const sortedCategories = Object.keys(groupedMenus).sort();
+
   const renderMenuItems = (category) => {
     const { permissions } = session.user;
     const { user } = session;
@@ -199,23 +190,40 @@ function Menu({ vertical, toogle }) {
                 {menuItem.descripcion}
               </Link>
             </li>
-          )
-
-          }
-          {subMenus.length > 0 && (
+          )}
+          {subMenus.length > 0 &&
             subMenus.map((subMenu, idx) => (
               <li key={idx} className="position">
-                <details open={isOpenSub[subMenu.items]} onClick={() => toggleMenuSub(subMenu.title)}>
-                  <summary> {subMenu.title}</summary>
-                  <ul className=" text-black dark:text-white ">
+                <details
+                  ref={(el) => (detailsRefs.current[subMenu.title] = el)}
+                  open={!!isOpenSub[subMenu.title]}
+                >
+                  <summary
+                    onClick={(e) => {
+                      e.preventDefault();
+                      toggleMenuSub(subMenu.title);
+                    }}
+                  >
+                    {subMenu.title}
+                  </summary>
+                  <ul className="text-black dark:text-white">
                     {subMenu.items.map((subItem, subIdx) => {
                       const subLinkTo = subItem.ruta || "#";
                       return (
                         <li key={subIdx}>
                           <Link
                             href={subLinkTo}
-                            onClick={() => {
-                              closeMenusSub();
+                            onClick={(e) => {
+                              if (subLinkTo === "#") {
+                                e.preventDefault();
+                              }
+                              setIsOpenSub((prev) => ({
+                                ...prev,
+                                [subMenu.title]: false,
+                              }));
+                              if (detailsRefs.current[subMenu.title]) {
+                                detailsRefs.current[subMenu.title].open = false;
+                              }
                               if (isMobile) {
                                 toogle();
                               }
@@ -230,8 +238,7 @@ function Menu({ vertical, toogle }) {
                   </ul>
                 </details>
               </li>
-            ))
-          )}
+            ))}
         </>
       );
     });
@@ -264,8 +271,9 @@ function Menu({ vertical, toogle }) {
             {category}
           </div>
           <ul
-            className={`dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow ${isOpen[category] ? "" : "hidden"
-              }`}
+            className={`dropdown-content menu bg-base-100 rounded-box z-[1] p-2 mt-3 w-52 shadow ${
+              isOpen[category] ? "" : "hidden"
+            }`}
           >
             {renderMenuItems(category)}
           </ul>

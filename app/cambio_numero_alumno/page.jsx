@@ -84,27 +84,28 @@ function Cambio_Numero_Alumno() {
     }
     return (
         <>
-            <div className='container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y'>
-                <div className='flex flex-col justify-start p-3'>
-                    <div className='flex flex-wrap md:flex-nowrap items-start md:items-center'>
-                        <div className='order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0'>
-                            <Acciones
-                                Alta={onSubmit}
-                                home={home}
-                                animateLoading={isLoading}
-                                permiso_alta={permissions.altas}
-                            />
-                        </div>
-
-                        <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
+            <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+                <div className="w-full py-3">
+                    <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
+                        <div className="flex flex-wrap items-start md:items-center mx-auto">
+                            <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
+                                <Acciones
+                                    Alta={onSubmit}
+                                    home={home}
+                                    animateLoading={isLoading}
+                                    permiso_alta={permissions.altas}
+                                />
+                            </div>
+                            <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                             Cambio de Número Alumno.
-                        </h1>
+                            </h1>
+                        </div>
                     </div>
-                </div>
-                <div className='flex flex-col items-center h-full'>
-                    <div className='w-full max-w-4xl'>
-                        <form onSubmit={onSubmit}>
-                            <div className="flex flex-col h-[calc(100%)] space-y-4">
+                </div> 
+                <div className="w-full py-3 flex flex-col gap-y-4">
+                    <div className="max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
+                        <div className="flex flex-col max-[499px]:gap-1 gap-4">
+                            <div className="lg:w-fit md:w-fit">
                                 <BuscarCat
                                     table="alumnos"
                                     itemData={[]}
@@ -116,6 +117,8 @@ function Cambio_Numero_Alumno() {
                                     modalId="modal_alumnos1"
                                     inputWidths={{ first: "100px", second: "300px" }}
                                 />
+                            </div>
+                            <div className="lg:w-fit md:w-fit">
                                 <Inputs
                                     dataType={"int"}
                                     name={"numero_nuevo"}
@@ -131,10 +134,10 @@ function Cambio_Numero_Alumno() {
                                     maxLenght={7}
                                 />
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </div> 
         </>
     );
 }

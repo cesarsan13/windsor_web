@@ -16,9 +16,9 @@ function TablaMenu({
   permiso_baja,
 }) {
   const tableAction = (evt, formaUsuarios, accion) => {
-    setUsuario(formaUsuarios);
+    setMenu(formaUsuarios);
     setAccion(accion);
-    setCurrentId(formaUsuarios.id);
+    setCurrentId(formaUsuarios.numero);
     showModal(true);
   };
   const ActionButton = ({
