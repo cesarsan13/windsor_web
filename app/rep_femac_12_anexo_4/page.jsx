@@ -398,7 +398,7 @@ function RepFemac12Anexo() {
                         type="radio"
                         name="ordenar"
                         value="nombre"
-                        className="radio  checked:bg-blue-500"
+                        className="radio checked:text-neutral-600 dark:text-neutral-200"
                       />
                     </label>
                     <label
@@ -410,7 +410,7 @@ function RepFemac12Anexo() {
                         type="radio"
                         name="ordenar"
                         value="id"
-                        className="radio  checked:bg-blue-500"
+                        className="radio checked:text-neutral-600 dark:text-neutral-200"
                       />
                     </label>
                   </label>

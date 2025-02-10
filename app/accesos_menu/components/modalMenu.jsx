@@ -36,7 +36,7 @@ function ModalMenu({
         ? `Eliminar Menu: ${currentID}`
         : `Ver Menu: ${currentID}`
     );
-  }, [accion]);
+  }, [accion, currentID]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
