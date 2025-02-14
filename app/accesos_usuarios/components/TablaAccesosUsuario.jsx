@@ -32,10 +32,10 @@ function TablaAccesosUsuario({
                                 <tr key={item.id_punto_menu} className="hover:cursor-pointer">
                                     <th>{item.descripcion}</th>
                                     <th>{item.menu}</th>
-                                    <th>{item.t_a === 1 || item.t_a === '1' ? "Si" : "No"  }</th>
-                                    <th>{item.altas === 1 || item.altas === '1' ? "Si" : "No" }</th>
-                                    <th>{item.bajas === 1 || item.bajas === '1' ? "Si" : "No" }</th>
-                                    <th>{item.cambios === 1 || item.cambios === '1' ? "Si" : "No" }</th>
+                                    <th>{item.t_a === 1 || item.t_a === '1' ? "Si" : "No"}</th>
+                                    <th>{item.altas === 1 || item.altas === '1' ? "Si" : "No"}</th>
+                                    <th>{item.bajas === 1 || item.bajas === '1' ? "Si" : "No"}</th>
+                                    <th>{item.cambios === 1 || item.cambios === '1' ? "Si" : "No"}</th>
                                     <th>{item.impresion === 1 || item.impresion === '1' ? "Si" : "No"}</th>
                                     <th className="w-[5%] pt-[.10rem] pb-[.10rem]">
                                         <div
@@ -44,7 +44,7 @@ function TablaAccesosUsuario({
                                             onClick={(evt) => tableAction(evt, item, `Editar`)}
                                         >
                                             <Image src={iconos.editar} alt="Editar" className="block dark:hidden" />
-                                          <Image src={iconos.editar_w} alt="Editar" className="hidden dark:block" />
+                                            <Image src={iconos.editar_w} alt="Editar" className="hidden dark:block" />
                                         </div>
                                     </th>
                                 </tr>

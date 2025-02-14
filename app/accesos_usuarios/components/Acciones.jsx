@@ -4,8 +4,8 @@ import Image from 'next/image';
 import React from 'react'
 import { TbLoader3 } from 'react-icons/tb';
 
-function Acciones({ home, Buscar }) {
-    const images = [        
+function Acciones({ home }) {
+    const images = [
         {
             srcLight: iconos.salir_w,
             srcDark: iconos.salir,

@@ -1,6 +1,5 @@
 import React from "react";
 import Tooltip from "@/app/components/tooltip";
-import Button from "@/app/components/button";
 import { TbLoader3 } from "react-icons/tb";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
@@ -8,9 +7,7 @@ function Acciones({
   home,
   Alta,
   Buscar,
-  animateLoading,
   permiso_alta,
-  permiso_imprime,
 }) {
   const images = [
     {
@@ -84,7 +81,7 @@ function Acciones({
           srcDark={image.srcDark}
           tooltipTitle={image.tooltipTitle}
           onClick={image.onClick}
-          animateLoading={idx === 2 && animateLoading}
+          animateLoading={idx === 2}
           permission={image.permission}
         />
       ))}

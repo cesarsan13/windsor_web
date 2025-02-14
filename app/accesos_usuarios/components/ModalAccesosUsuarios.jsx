@@ -1,6 +1,6 @@
 import iconos from "@/app/utils/iconos";
 import Image from "next/image";
-import React, { use, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import Inputs from "./Inputs";
 
 function ModalAccesosUsuarios({
@@ -12,24 +12,18 @@ function ModalAccesosUsuarios({
   setValue
 }) {
   const [titulo, setTitulo] = useState("");
-  const [isDisabled, setIsDisabled] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
 
   useEffect(() => {
-    if (accion === "Eliminar" || accion === "ver") {
-      setIsDisabled(true);
-    }
-    if (accion === "Alta" || accion === "Editar") {
-      setIsDisabled(false);
-    }
+
     setTitulo(
       accion === "Alta"
         ? `Nueva Accesos Usuarios`
         : accion === "Editar"
-        ? `Editar Accesos Usuarios`
-        : accion === "Eliminar"
-        ? `Eliminar Accesos Usuarios`
-        : `Ver Accesos Usuarios`
+          ? `Editar Accesos Usuarios`
+          : accion === "Eliminar"
+            ? `Eliminar Accesos Usuarios`
+            : `Ver Accesos Usuarios`
     );
   }, [accion]);
 
@@ -61,12 +55,12 @@ function ModalAccesosUsuarios({
     if (todosSeleccionados && watch("todos") !== true) {
       setIsChecked(true);
     }
-    else if (!todosSeleccionados && watch("todos") !== false ){
+    else if (!todosSeleccionados && watch("todos") !== false) {
       setIsChecked(false);
     }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [watch("todos"), watch("t_a"), watch("altas"), watch("bajas"), watch("cambios"), watch("impresion"), setValue]); 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watch("todos"), watch("t_a"), watch("altas"), watch("bajas"), watch("cambios"), watch("impresion"), setValue]);
 
 
   return (
@@ -79,11 +73,10 @@ function ModalAccesosUsuarios({
             </h3>
             <div className="flex space-x-2 items-center">
               <div
-                className={`tooltip tooltip-bottom ${
-                  accion === "Ver"
+                className={`tooltip tooltip-bottom ${accion === "Ver"
                     ? "hover:cursor-not-allowed hidden"
                     : "hover:cursor-pointer"
-                }`}
+                  }`}
                 data-tip="Guardar"
               >
                 <button
@@ -117,20 +110,20 @@ function ModalAccesosUsuarios({
           </div>
           <fieldset id="fs_accesosusuario">
             <div className="container flex flex-col space-y-5">
-            <div className="form-control w-52">
-              <label className={`label cursor-pointer`}>
-                <span className="label-text">Todos</span>
-                <input
-                  name="todos"
-                  id= "todos"
-                  type="checkbox"
-                  className="toggle toggle-success"
-                  checked={isChecked}
-                  onChange={toggleCheckbox}
-                />
-              </label>
-            </div>
-              
+              <div className="form-control w-52">
+                <label className={`label cursor-pointer`}>
+                  <span className="label-text">Todos</span>
+                  <input
+                    name="todos"
+                    id="todos"
+                    type="checkbox"
+                    className="toggle toggle-success"
+                    checked={isChecked}
+                    onChange={toggleCheckbox}
+                  />
+                </label>
+              </div>
+
               <Inputs
                 Titulo={"Tiene Acceso"}
                 register={register}

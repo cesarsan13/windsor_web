@@ -26,7 +26,6 @@ function Accesos_Menu() {
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
-  const [animateLoading, setAnimateLoading] = useState(false);
   const [isLoading, setisLoading] = useState(false);
   const [currentID, setCurrentId] = useState("");
   const [busqueda, setBusqueda] = useState({ tb_id: "", tb_desc: "" });
@@ -98,9 +97,9 @@ function Accesos_Menu() {
         : true;
       const coincideNombre = tb_desc
         ? menu["descripcion"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_desc.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(tb_desc.toLowerCase())
         : true;
       return coincideNumero && coincideNombre;
     });
@@ -253,7 +252,6 @@ function Accesos_Menu() {
                 Buscar={Buscar}
                 Alta={Alta}
                 home={home}
-                animateLoading={animateLoading}
                 permiso_alta={permissions.altas}
                 permiso_imprime={permissions.impresion}
               />

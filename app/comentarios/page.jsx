@@ -144,6 +144,7 @@ const fetchComentarioStatus = async (showMesssage) => {
       return;
     }
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, status, bajas, reload_page]);
 
   const {
@@ -347,7 +348,6 @@ const fetchComentarioStatus = async (showMesssage) => {
       }
     }
     res = await guardaComentarios(session.user.token, data, accion);
-    // console.log("Res => ", res);
     if (res.status) {
       if (accion === "Alta") {
         data.numero = res.data;

@@ -17,17 +17,17 @@ function Inputs({
           name={name}
           id={name}
           type="checkbox"
-          className="toggle toggle-success"   
+          className="toggle toggle-success"
           {...register(name, {
             ...(requerido && { required: message }),
           })}
         />
       </label>
-         {errors[name] && (
-          <span className="text-red-500 text-sm mt-2">
-            {errors[name].message}
-          </span>
-        )}
+      {errors[name] && (
+        <span className="text-red-500 text-sm mt-2">
+          {errors[name].message}
+        </span>
+      )}
     </div>
   );
 }

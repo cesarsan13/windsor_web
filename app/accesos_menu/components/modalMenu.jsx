@@ -1,6 +1,5 @@
-import { soloEnteros, soloDecimales, pone_ceros } from "@/app/utils/globalfn";
+import { pone_ceros } from "@/app/utils/globalfn";
 import React from "react";
-import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import { useState, useEffect } from "react";
 import Inputs from "@/app/accesos_menu/components/Inputs";
 import Image from "next/image";
@@ -17,7 +16,6 @@ function ModalMenu({
   menusSel,
   isLoadingButton,
 }) {
-  const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
   useEffect(() => {
@@ -31,23 +29,23 @@ function ModalMenu({
       accion === "Alta"
         ? `Nuevo Menu: ${currentID}`
         : accion === "Editar"
-        ? `Editar Menu: ${currentID}`
-        : accion === "Eliminar"
-        ? `Eliminar Menu: ${currentID}`
-        : `Ver Menu: ${currentID}`
+          ? `Editar Menu: ${currentID}`
+          : accion === "Eliminar"
+            ? `Eliminar Menu: ${currentID}`
+            : `Ver Menu: ${currentID}`
     );
   }, [accion, currentID]);
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
       ? setMenu((menu) => ({
-          ...menu,
-          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-        }))
+        ...menu,
+        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+      }))
       : setMenu((menu) => ({
-          ...menu,
-          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-        }));
+        ...menu,
+        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+      }));
   };
   return (
     <dialog id="my_modal_3" className="modal">
@@ -57,11 +55,10 @@ function ModalMenu({
             <h3 className="font-bold text-lg dark:text-white">{titulo}</h3>
             <div className="flex space-x-2 items-center">
               <div
-                className={`tooltip tooltip-bottom ${
-                  accion === "Ver"
+                className={`tooltip tooltip-bottom ${accion === "Ver"
                     ? "hover:cursor-not-allowed hidden"
                     : "hover:cursor-pointer"
-                }`}
+                  }`}
                 data-tip="Guardar"
               >
                 <button
