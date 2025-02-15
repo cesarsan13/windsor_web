@@ -528,6 +528,7 @@ function Cajeros() {
         setCajero={setCajero}
         cajero={cajero}
         isLoadingButton={isLoadingButton}
+        handleSubmit={handleSubmit}
       />
       <ModalProcesarDatos
         id_modal={"my_modal_4"}

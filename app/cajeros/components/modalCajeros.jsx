@@ -1,6 +1,6 @@
 import { soloEnteros, soloDecimales, pone_ceros } from "@/app/utils/globalfn";
 import React from "react";
-import { showSwal, confirmSwal } from "@/app/utils/alerts";
+import { showSwal, confirmSwal, showSwalConfirm } from "@/app/utils/alerts";
 import { useState, useEffect } from "react";
 import Inputs from "@/app/cajeros/components/Inputs";
 import Image from "next/image";
@@ -14,8 +14,8 @@ function ModalCajeros({
   register,
   errors,
   setCajero,
-  cajero,
   isLoadingButton,
+  handleSubmit
 }) {
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
@@ -37,6 +37,7 @@ function ModalCajeros({
         : `Ver Cajero: ${currentID}`
     );
   }, [accion]);
+  
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"
@@ -49,6 +50,28 @@ function ModalCajeros({
           [evt.target.name]: pone_ceros(evt.target.value, 2, true),
         }));
   };
+
+  const VerificacionSwall =  handleSubmit(async (data) => {
+    console.log("data", data);
+    
+    const fieldsetI = document.getElementById("fs_formapago");
+    const InputF = fieldsetI.querySelectorAll("input");
+    console.log("f", fieldsetI, InputF);
+    
+
+    //Puedes poner el numero de inputs que no tienen registro, pasarlo a que sea global, mandar los valores para verificar cuando se cierra el modal y cuando se envia el formulario
+    
+    
+    const Verificacion = Object.values(data).some(valor => valor === "" || valor === null || valor === undefined);
+    if(Verificacion){
+      const confirmed = await confirmSwal("Salir", "¿Quieres salir sin guardar cambios?", "warning", "Aceptar", "Cancelar", "my_modal_3");
+      if(confirmed)
+        document.getElementById("my_modal_3").close();
+    } else {
+      document.getElementById("my_modal_3").close();
+    }
+  });
+
   return (
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box bg-base-200">
@@ -96,7 +119,7 @@ function ModalCajeros({
               <button
                 type="button"
                 className="btn btn-sm btn-circle btn-ghost bg-base-200 dark:bg-[#1d232a] text-neutral-600 dark:text-white"
-                onClick={() => document.getElementById("my_modal_3").close()}
+                onClick={VerificacionSwall}
               >
                 ✕
               </button>
@@ -125,7 +148,7 @@ function ModalCajeros({
                 className={"grow"}
                 Titulo={"Nombre: "}
                 type={"text"}
-                requerido={true}
+                requerido={false}
                 isNumero={false}
                 errors={errors}
                 register={register}
