@@ -1,3 +1,5 @@
+import {confirmSwal} from "@/app/utils/alerts";
+
 export const debounce = (func, delay) => {
   let timeoutId;
   return (...args) => {
@@ -413,3 +415,11 @@ export const validateString = (MAX_LENGTHS, key, str) => {
   
   return `${day}/${month}/${year}`;
 };
+
+export const CerrarModal = async () => {
+  const confirmed = await confirmSwal("Salir", "Cambios sin guardar. Si sales, perderás la información.", "warning", "Aceptar", "Cancelar", "my_modal_3");
+     if(confirmed)
+      return document.getElementById("my_modal_3").close();
+};
+
+

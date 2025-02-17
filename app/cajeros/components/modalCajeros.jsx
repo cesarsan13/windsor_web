@@ -1,4 +1,4 @@
-import { soloEnteros, soloDecimales, pone_ceros } from "@/app/utils/globalfn";
+import { soloEnteros, soloDecimales, pone_ceros, CerrarModal } from "@/app/utils/globalfn";
 import React from "react";
 import { showSwal, confirmSwal, showSwalConfirm } from "@/app/utils/alerts";
 import { useState, useEffect } from "react";
@@ -15,7 +15,6 @@ function ModalCajeros({
   errors,
   setCajero,
   isLoadingButton,
-  handleSubmit
 }) {
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
@@ -50,27 +49,6 @@ function ModalCajeros({
           [evt.target.name]: pone_ceros(evt.target.value, 2, true),
         }));
   };
-
-  const VerificacionSwall =  handleSubmit(async (data) => {
-    console.log("data", data);
-    
-    const fieldsetI = document.getElementById("fs_formapago");
-    const InputF = fieldsetI.querySelectorAll("input");
-    console.log("f", fieldsetI, InputF);
-    
-
-    //Puedes poner el numero de inputs que no tienen registro, pasarlo a que sea global, mandar los valores para verificar cuando se cierra el modal y cuando se envia el formulario
-    
-    
-    const Verificacion = Object.values(data).some(valor => valor === "" || valor === null || valor === undefined);
-    if(Verificacion){
-      const confirmed = await confirmSwal("Salir", "¿Quieres salir sin guardar cambios?", "warning", "Aceptar", "Cancelar", "my_modal_3");
-      if(confirmed)
-        document.getElementById("my_modal_3").close();
-    } else {
-      document.getElementById("my_modal_3").close();
-    }
-  });
 
   return (
     <dialog id="my_modal_3" className="modal">
@@ -119,7 +97,7 @@ function ModalCajeros({
               <button
                 type="button"
                 className="btn btn-sm btn-circle btn-ghost bg-base-200 dark:bg-[#1d232a] text-neutral-600 dark:text-white"
-                onClick={VerificacionSwall}
+                onClick={CerrarModal}
               >
                 ✕
               </button>
@@ -138,7 +116,7 @@ function ModalCajeros({
                 requerido={true}
                 errors={errors}
                 register={register}
-                message={"numero requerido"}
+                message={"Numero requerido"}
                 isDisabled={true}
               />
               <Inputs
@@ -152,7 +130,7 @@ function ModalCajeros({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"nombre requerido"}
+                message={"Nombre requerido"}
                 maxLenght={35}
                 isDisabled={isDisabled}
               />
@@ -167,7 +145,7 @@ function ModalCajeros({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"direccion requerida"}
+                message={"Direccion requerida"}
                 maxLenght={50}
                 isDisabled={isDisabled}
               />
@@ -182,7 +160,7 @@ function ModalCajeros({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"colonia requerida"}
+                message={"Colonia requerida"}
                 maxLenght={30}
                 isDisabled={isDisabled}
               />
@@ -197,7 +175,7 @@ function ModalCajeros({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"estado requerido"}
+                message={"Estado requerido"}
                 maxLenght={30}
                 isDisabled={isDisabled}
               />
@@ -212,7 +190,7 @@ function ModalCajeros({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"telefono requerido"}
+                message={"Telefono requerido"}
                 maxLenght={20}
                 isDisabled={isDisabled}
               />
@@ -227,7 +205,7 @@ function ModalCajeros({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"fax requerido"}
+                message={"Fax requerido"}
                 maxLenght={20}
                 isDisabled={isDisabled}
               />
@@ -242,7 +220,7 @@ function ModalCajeros({
                 isNumero={false}
                 errors={errors}
                 register={register}
-                message={"correo requerido"}
+                message={"Correo requerido"}
                 maxLenght={40}
                 isDisabled={isDisabled}
               />
