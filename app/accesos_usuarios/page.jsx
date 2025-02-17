@@ -1,8 +1,7 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Acciones from "./components/Acciones";
 import BuscarCat from "../components/BuscarCat";
-import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import TablaAccesosUsuario from "./components/TablaAccesosUsuario";
@@ -15,7 +14,6 @@ import ModalAccesosUsuarios from "./components/ModalAccesosUsuarios";
 import { confirmSwal, showSwal } from "../utils/alerts";
 
 function Accesos_Usuarios() {
-  const router = useRouter();
   const { data: session, status } = useSession();
   const [accesoUsuario, setAccesoUsuario] = useState({});
   const [usuario, setUsuario] = useState({});
@@ -24,7 +22,7 @@ function Accesos_Usuarios() {
   const [accesosUsuarios, setAccesosUsuarios] = useState([]);
   const [accesosUsuariosFiltrados, setAccesosUsuariosFiltrados] = useState([]);
   const [currentID, setCurrentId] = useState("");
-  
+
   useEffect(() => {
     if (status === "loading" || !session || !usuario.id) {
       return;
@@ -45,7 +43,6 @@ function Accesos_Usuarios() {
     handleSubmit,
     reset,
     setValue,
-    getValues,
     watch,
     formState: { errors },
   } = useForm({
@@ -71,7 +68,7 @@ function Accesos_Usuarios() {
       impresion: accesoUsuario.impresion
     });
   }, [accesoUsuario, reset]);
-  
+
   if (status === "loading") {
     return (
       <div className="container skeleton w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -121,8 +118,7 @@ function Accesos_Usuarios() {
     const { name } = event.target;
     const confirmed = await confirmSwal(
       "¿Desea continuar?",
-      `se ${
-        name === "si" ? " habilitaran " : " deshabilitaran "
+      `se ${name === "si" ? " habilitaran " : " deshabilitaran "
       } todos los permisos`,
       "info",
       "Continuar",
@@ -160,8 +156,8 @@ function Accesos_Usuarios() {
         errors={errors}
         register={register}
         onSubmit={onSubmitModal}
-        setValue = {setValue}
-        watch = {watch}
+        setValue={setValue}
+        watch={watch}
       />
       <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">

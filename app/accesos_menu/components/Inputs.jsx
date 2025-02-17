@@ -1,4 +1,4 @@
-import { soloDecimales, soloEnteros, snToBool } from "@/app/utils/globalfn";
+import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
 import React from "react";
 
 function Inputs({
@@ -16,7 +16,6 @@ function Inputs({
   isDisabled,
   handleBlur,
   arreglos,
-  getValues,
 }) {
   if (type === "select") {
     return (
@@ -97,13 +96,11 @@ function Inputs({
         >
           {Titulo}
           <input
-            // defaultValue={defaultValue}
             {...(maxLenght !== 0 && { maxLength: maxLenght })}
             name={name}
             id={name}
             type={"checkbox"}
             className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 input-xs md:input-sm  ${className}`}
-            // checked={snToBool(getValues(name))}
             {...register(name, {
               maxLength: {
                 value: maxLenght,
@@ -134,7 +131,6 @@ function Inputs({
         >
           {Titulo}
           <input
-            // defaultValue={defaultValue}
             {...(maxLenght !== 0 && { maxLength: maxLenght })}
             name={name}
             id={name}

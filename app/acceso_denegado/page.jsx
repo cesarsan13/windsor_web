@@ -1,7 +1,6 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import { Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
 import AccessDenied from "@/app/components/AccessDenied";
 
 export default function Acceso_Denegado() {

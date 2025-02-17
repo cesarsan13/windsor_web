@@ -22,7 +22,7 @@ import "jspdf-autotable";
 import * as XLSX from "xlsx";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import { debounce,permissionsComponents, chunkArray, validateString, validateInt } from "../utils/globalfn";
+import { debounce,permissionsComponents, chunkArray, validateString} from "../utils/globalfn";
 import ModalProcesarDatos from "../components/modalProcesarDatos";
 import { truncateTable, inactiveActiveBaja } from "../utils/GlobalApis";
 import BarraCarga from "../components/BarraCarga";
@@ -149,6 +149,7 @@ function Profesores() {
       return;
     }
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, status, bajas, reload_page]);
 
   const {

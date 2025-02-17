@@ -1,14 +1,10 @@
 import React from "react";
 import Tooltip from "@/app/components/tooltip";
-import { TbLoader3 } from "react-icons/tb";
 import Image from "next/image";
+import { TbLoader3 } from "react-icons/tb";
 import iconos from "@/app/utils/iconos";
-function Acciones({
-  home,
-  Alta,
-  Buscar,
-  permiso_alta,
-}) {
+
+function Acciones({ Buscar, Alta, home, Ver, procesarDatos, animateLoading, permiso_alta, permiso_imprime, es_admin }) {
   const images = [
     {
       srcLight: iconos.buscar_w,
@@ -26,6 +22,22 @@ function Acciones({
       onClick: Alta,
       permission: permiso_alta,
     },
+    //{
+    //  srcLight: iconos.vistaPrevia_w,
+    //  srcDark: iconos.vistaPrevia,
+    //  alt: "Vista previa",
+    //  tooltipTitle: "Vista previa",
+    //  onClick: Ver,
+    //  permission: permiso_imprime,
+    //},
+    //{
+    //  srcLight: iconos.procesa_w,
+    //  srcDark: iconos.procesa,
+    //  alt: "Procesar datos desde un archivo excel",
+    //  tooltipTitle: "Procesar datos desde un archivo excel.",
+    //  onClick: procesarDatos,
+    //  permission: es_admin,
+    //},
     {
       srcLight: iconos.salir_w,
       srcDark: iconos.salir,
@@ -36,14 +48,7 @@ function Acciones({
     },
   ];
 
-  const ImageTooltip = ({
-    srcLight,
-    srcDark,
-    tooltipTitle,
-    onClick,
-    animateLoading,
-    permission,
-  }) => {
+  const ImageTooltip = ({ srcLight, srcDark, tooltipTitle, onClick, animateLoading, permission }) => {
     if (!permission) return null;
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
@@ -58,6 +63,7 @@ function Acciones({
               <Image
                 src={srcDark}
                 alt={tooltipTitle}
+
                 className="w-5 h-5 md:w-6 md:h-6 block dark:hidden"
               />
               <Image
@@ -81,7 +87,7 @@ function Acciones({
           srcDark={image.srcDark}
           tooltipTitle={image.tooltipTitle}
           onClick={image.onClick}
-          animateLoading={idx === 2}
+          animateLoading={idx === 2 && animateLoading}
           permission={image.permission}
         />
       ))}
