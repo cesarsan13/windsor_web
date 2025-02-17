@@ -2,6 +2,8 @@ import React from "react";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 import { FaSpinner } from "react-icons/fa";
+import { CerrarModal } from "@/app/utils/globalfn";
+import Acciones from "@/app/Rep_Femac_2/components/Acciones";
 
 export default function ModalComponent({
   accion,
@@ -56,7 +58,7 @@ export default function ModalComponent({
               <button
                 type="button"
                 className="btn btn-sm btn-circle btn-ghost bg-base-200 dark:bg-[#1d232a] text-neutral-600 dark:text-white"
-                onClick={() => document.getElementById("my_modal_3").close()}
+                onClick={CerrarModal}
               >
                 ✕
               </button>

@@ -1,29 +1,29 @@
 import { useCallback, useRef, useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { inactiveActiveBaja } from "@/app/utils/GlobalApis";
 import { debounce, permissionsComponents } from "@/app/utils/globalfn";
 import {
-  getComentarios,
-  guardaComentarios,
-} from "@/app/utils/api/comentarios/comentarios";
+  getCajeros,
+  guardaCajero,
+  siguiente
+} from "@/app/utils/api/cajeros/cajeros";
 import { showSwal, confirmSwal, showSwalConfirm } from "@/app/utils/alerts";
-export const useCommentsABC = () => {
+export const useCajerosABC = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [formasComentarios, setFormasComentarios] = useState([]);
-  const [formaComentarios, setFormaComentarios] = useState({});
-  const [formaComentariosFiltrados, setFormaComentariosFiltrados] =
-    useState(null);
+  const [cajeros, setCajeros] = useState([]);
+  const [cajero, setCajero] = useState({});
+  const [cajerosFiltrados, setCajerosFiltrados] = useState(null);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const [isLoadingButton, setisLoadingButton] = useState(false);
   const [currentID, setCurrentId] = useState("");
-  const comentariosRef = useRef(formasComentarios);
+  const cajerosRef = useRef(cajeros);
   const [permissions, setPermissions] = useState({});
   const [titulo, setTitulo] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
@@ -31,9 +31,12 @@ export const useCommentsABC = () => {
   const [active, setActive] = useState(false);
   const [inactive, setInactive] = useState(false);
   const [busqueda, setBusqueda] = useState({
-    tb_numero: "",
-    tb_comentario1: "",
+    tb_id: "",
+    tb_desc: "",
+    tb_correo: "",
+    tb_tel: "",
   });
+
   const {
     register,
     handleSubmit,
@@ -41,51 +44,66 @@ export const useCommentsABC = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      numero: formaComentarios.numero,
-      comentario_1: formaComentarios.comentario_1,
-      comentario_2: formaComentarios.comentario_2,
-      comentario_3: formaComentarios.comentario_3,
-      generales: formaComentarios.generales,
+      numero: cajero.numero,
+      nombre: cajero.nombre,
+      direccion: cajero.direccion,
+      colonia: cajero.colonia,
+      telefono: cajero.telefono,
+      estado: cajero.estado,
+      fax: cajero.fax,
+      mail: cajero.mail,
+      clave_cajero: cajero.clave_cajero,
     },
   });
 
   useEffect(() => {
-    comentariosRef.current = formasComentarios;
-  }, [formasComentarios]);
-
+    cajerosRef.current = cajeros;
+  }, [cajeros]);
+    
   const Buscar = useCallback(() => {
-    const { tb_numero, tb_comentario1 } = busqueda;
-    if (tb_numero === "" && tb_comentario1 === "") {
-      setFormaComentariosFiltrados(comentariosRef.current);
+    const { tb_id, tb_desc, tb_correo, tb_tel } = busqueda;
+    if (tb_id === "" && tb_desc === "" && tb_correo === "" && tb_tel === "") {
+      setCajerosFiltrados(cajerosRef.current);
       return;
     }
-    const infoFiltrada = comentariosRef.current.filter((formaComentarios) => {
-      const coincideID = tb_numero
-        ? formaComentarios["numero"].toString().includes(tb_numero)
+    const infoFiltrada = cajerosRef.current.filter((cajero) => {
+      const coincideNumero = tb_id
+        ? cajero["numero"].toString().includes(tb_id)
         : true;
-      const coincideComentario1 = tb_comentario1
-        ? formaComentarios["comentario_1"]
+      const coincideNombre = tb_desc
+        ? cajero["nombre"]
             .toString()
             .toLowerCase()
-            .includes(tb_comentario1.toLowerCase())
+            .includes(tb_desc.toLowerCase())
         : true;
-      return coincideID && coincideComentario1;
+      const coincideCorreo = tb_correo
+        ? cajero["mail"]
+            .toString()
+            .toLowerCase()
+            .includes(tb_correo.toLowerCase())
+        : true;
+      const coincideTelefono = tb_tel
+        ? cajero["telefono"].toString().includes(tb_tel)
+        : true;
+      return (
+        coincideNumero && coincideNombre && coincideCorreo && coincideTelefono
+      );
     });
-    setFormaComentariosFiltrados(infoFiltrada);
+    setCajerosFiltrados(infoFiltrada);
   }, [busqueda]);
 
   const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
-  const fetchComentarioStatus = async (showMesssage) => {
-    const res = await inactiveActiveBaja(session.user.token, "comentarios");
+  const fetchCajerosStatus = async (showMesssage) => {
+    const res = await inactiveActiveBaja(session.user.token, "cajeros");
     if (res.status) {
       const { inactive, active } = res.data;
       setActive(active);
       setInactive(inactive);
       showMesssage === true
         ? showSwalConfirm(
-            "Estado de los comentarios",
-            `Comentarios activos: ${active}\nComentarios inactivos: ${inactive}`,
+            "Estado de los cajeros",
+            `Cajeros activos: ${active}\nCajeros inactivos: ${inactive}`,
             "info"
           )
         : "";
@@ -111,21 +129,22 @@ export const useCommentsABC = () => {
     const fetchData = async () => {
       setisLoading(true);
       let { token, permissions } = session.user;
-      const es_admin = session.user?.es_admin || false;
+      const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       limpiarBusqueda();
-      const data = await getComentarios(token, bajas);
-      await fetchComentarioStatus(false);
-      setFormasComentarios(data);
-      setFormaComentariosFiltrados(data);
+      const data = await getCajeros(token, bajas);
+      await fetchCajerosStatus(false);
+      setCajeros(data);
+      setCajerosFiltrados(data);
+      setisLoading(false);
       const permisos = permissionsComponents(
         es_admin,
         permissions,
         session.user.id,
         menuSeleccionado
       );
+      console.log("a", permisos);
       setPermissions(permisos);
-      setisLoading(false);
     };
     if (status === "loading" || !session) {
       return;
@@ -143,55 +162,70 @@ export const useCommentsABC = () => {
     }
     setTitulo(
       accion === "Alta"
-        ? `Nuevo Comentario`
+        ? `Nuevo Cajero: ${currentID}`
         : accion === "Editar"
-        ? `Editar Comentario: ${currentID}`
+        ? `Editar Cajero: ${currentID}`
         : accion === "Eliminar"
-        ? `Eliminar Comentario: ${currentID}`
-        : `Ver Comentario: ${currentID}`
+        ? `Eliminar Cajero: ${currentID}`
+        : `Ver Cajero: ${currentID}`
     );
-  }, [accion, currentID]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accion]);
 
   useEffect(() => {
     reset({
-      numero: formaComentarios.numero,
-      comentario_1: formaComentarios.comentario_1,
-      comentario_2: formaComentarios.comentario_2,
-      comentario_3: formaComentarios.comentario_3,
-      generales: formaComentarios.generales,
+      numero: cajero.numero,
+      nombre: cajero.nombre,
+      direccion: cajero.direccion,
+      colonia: cajero.colonia,
+      telefono: cajero.telefono,
+      estado: cajero.estado,
+      fax: cajero.fax,
+      mail: cajero.mail,
+      clave_cajero: cajero.clave_cajero,
     });
-  }, [formaComentarios, reset]);
+  }, [cajero, reset]);
 
-  const limpiarBusqueda = () => {
-    setBusqueda({ tb_numero: "", tb_comentario1: "" });
+  const limpiarBusqueda = (evt) => {
+    setBusqueda({ tb_id: "", tb_desc: "", tb_correo: "", tb_tel: "" });
   };
 
-  const Alta = async () => {
+  const Alta = async (event) => {
     setCurrentId("");
+    const { token } = session.user;
     reset({
       numero: "",
-      comentario_1: "",
-      comentario_2: "",
-      comentario_3: "",
-      generales: "",
+      nombre: "",
+      direccion: "",
+      colonia: "",
+      estado: "",
+      telefono: "",
+      fax: "",
+      mail: "",
+      clave_cajero: "",
     });
-    setFormaComentarios({ numero: "" });
+    let siguienteId = await siguiente(token);
+    siguienteId = Number(siguienteId) + 1;
+    setCurrentId(siguienteId);
+    setCajero({ numero: siguienteId });
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);
-    document.getElementById("comentario_1").focus();
+
+    document.getElementById("nombre").focus();
   };
 
   const onSubmitModal = handleSubmit(async (data) => {
-    event.preventDefault();
-    setisLoadingButton(true);
-    accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
+    event.preventDefault;
+    setisLoadingButton(true);;
+    data.id = currentID;
     let res = null;
+    
     if (accion === "Eliminar") {
       showModal(false);
       const confirmed = await confirmSwal(
         "¿Desea Continuar?",
-        "Se eliminara el comentario seleccionado",
+        "Se eliminara el cajero seleccionado",
         "warning",
         "Aceptar",
         "Cancelar"
@@ -202,44 +236,36 @@ export const useCommentsABC = () => {
         return;
       }
     }
-    res = await guardaComentarios(session.user.token, data, accion);
+
+    res = await guardaCajero(session.user.token, data, accion);
     if (res.status) {
       if (accion === "Alta") {
-        data.numero = res.data;
-        setCurrentId(data.numero);
-        const nuevaFormaComentarios = { currentID, ...data };
-        setFormasComentarios([...formasComentarios, nuevaFormaComentarios]);
+        const nuevaCajero = { currentID, ...data };
+        setCajeros([...cajeros, nuevaCajero]);
         if (!bajas) {
-          setFormaComentariosFiltrados([
-            ...formaComentariosFiltrados,
-            nuevaFormaComentarios,
-          ]);
+          setCajerosFiltrados([...cajerosFiltrados, nuevaCajero]);
         }
       }
       if (accion === "Eliminar" || accion === "Editar") {
-        const index = formasComentarios.findIndex(
-          (fp) => fp.numero === data.numero
-        );
+        const index = cajeros.findIndex((c) => c.numero === data.numero);
         if (index !== -1) {
           if (accion === "Eliminar") {
-            const fpFiltrados = formasComentarios.filter(
-              (fp) => fp.numero !== data.numero
-            );
-            setFormasComentarios(fpFiltrados);
-            setFormaComentariosFiltrados(fpFiltrados);
+            const cFiltrados = cajeros.filter((c) => c.numero !== data.numero);
+            setCajeros(cFiltrados);
+            setCajerosFiltrados(cFiltrados);
           } else {
             if (bajas) {
-              const fpFiltrados = formasComentarios.filter(
-                (fp) => fp.numero !== data.numero
+              const cFiltrados = cajeros.filter(
+                (c) => c.numero !== data.numero
               );
-              setFormasComentarios(fpFiltrados);
-              setFormaComentariosFiltrados(fpFiltrados);
+              setCajeros(cFiltrados);
+              setCajerosFiltrados(cFiltrados);
             } else {
-              const fpActualizadas = formasComentarios.map((fp) =>
-                fp.numero === currentID ? { ...fp, ...data } : fp
+              const cActualizadas = cajeros.map((c) =>
+                c.numero === currentID ? { ...c, ...data } : c
               );
-              setFormasComentarios(fpActualizadas);
-              setFormaComentariosFiltrados(fpActualizadas);
+              setCajeros(cActualizadas);
+              setCajerosFiltrados(cActualizadas);
             }
           }
         }
@@ -247,10 +273,10 @@ export const useCommentsABC = () => {
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
     } else {
-      showSwal(res.alert_title, res.alert_text, res.alert_icon, "my_modal_3");
+      showSwal(res.alert_title, res.alert_text, "error", "my_modal_3");
     }
     if (accion === "Alta" || accion === "Eliminar") {
-      await fetchComentarioStatus(false);
+      await fetchCajerosStatus(false);
     }
     setisLoadingButton(false);
   });
@@ -260,7 +286,6 @@ export const useCommentsABC = () => {
       ? document.getElementById("my_modal_3").showModal()
       : document.getElementById("my_modal_3").close();
   };
-
   const home = () => {
     router.push("/");
   };
@@ -273,11 +298,11 @@ export const useCommentsABC = () => {
     }));
   };
 
-  const tableAction = (evt, formaComentarios, accion) => {
+  const tableAction = (evt, cajero, accion) => {
     evt.preventDefault();
-    setFormaComentarios(formaComentarios);
+    setCajero(cajero);
     setAccion(accion);
-    setCurrentId(formaComentarios.numero);
+    setCurrentId(cajero.numero);
     showModal(true);
   };
 
@@ -289,7 +314,7 @@ export const useCommentsABC = () => {
     setBajas,
     limpiarBusqueda,
     handleBusquedaChange,
-    fetchComentarioStatus,
+    fetchCajerosStatus,
     setReloadPage,
     setisLoadingButton,
     tableAction,
@@ -303,10 +328,11 @@ export const useCommentsABC = () => {
     active,
     inactive,
     busqueda,
-    formaComentariosFiltrados,
+    cajerosFiltrados,
     titulo,
     reload_page,
     isDisabled,
     errors,
   };
+        
 };

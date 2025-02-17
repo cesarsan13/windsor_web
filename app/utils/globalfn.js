@@ -421,5 +421,3 @@ export const CerrarModal = async () => {
      if(confirmed)
       return document.getElementById("my_modal_3").close();
 };
-
-
