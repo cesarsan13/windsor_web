@@ -22,7 +22,7 @@ import { siguiente } from "@/app/utils/api/cajeros/cajeros";
 import "jspdf-autotable";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { ReportePDF } from "../utils/ReportesPDF";
-import { debounce, permissionsComponents, chunkArray } from "../utils/globalfn";
+import { debounce, permissionsComponents, chunkArray, VerificacionGuardar } from "../utils/globalfn";
 import { truncateTable, inactiveActiveBaja } from "../utils/GlobalApis";
 import BarraCarga from "../components/BarraCarga";
 function Cajeros() {
@@ -202,12 +202,13 @@ function Cajeros() {
     document.getElementById("nombre").focus();
   };
 
+
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
-    setisLoadingButton(true);
-    // const dataj = JSON.stringify(data);
+    setisLoadingButton(true);;
     data.id = currentID;
     let res = null;
+    
     if (accion === "Eliminar") {
       showModal(false);
       const confirmed = await confirmSwal(
@@ -222,8 +223,8 @@ function Cajeros() {
         setisLoadingButton(false);
         return;
       }
-      // showModal(true);
     }
+
     res = await guardaCajero(session.user.token, data, accion);
     if (res.status) {
       if (accion === "Alta") {
@@ -267,6 +268,7 @@ function Cajeros() {
     }
     setisLoadingButton(false);
   });
+
   const procesarDatos = () => {
     if (!session.user.es_admin) {
       showSwal(
@@ -529,6 +531,7 @@ function Cajeros() {
         cajero={cajero}
         isLoadingButton={isLoadingButton}
         handleSubmit={handleSubmit}
+        VerificacionGuardar = {VerificacionGuardar}
       />
       <ModalProcesarDatos
         id_modal={"my_modal_4"}
