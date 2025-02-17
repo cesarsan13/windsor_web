@@ -4,6 +4,7 @@ import NoData from "@/app/components/NoData";
 import React from "react";
 import iconos from "@/app/utils/iconos";
 import Image from "next/image";
+
 function TablaMenu({
   session,
   menusFiltrados,
@@ -14,20 +15,16 @@ function TablaMenu({
   setCurrentId,
   permiso_cambio,
   permiso_baja,
+  subMenu,
 }) {
-  const tableAction = (evt, formaUsuarios, accion) => {
-    setMenu(formaUsuarios);
+  const tableAction = (evt, menu, accion) => {
+    setMenu(menu);
     setAccion(accion);
-    setCurrentId(formaUsuarios.numero);
+    setCurrentId(menu.numero);
     showModal(true);
   };
-  const ActionButton = ({
-    tooltip,
-    iconDark,
-    iconLight,
-    onClick,
-    permission,
-  }) => {
+
+  const ActionButton = ({ tooltip, iconDark, iconLight, onClick, permission }) => {
     if (!permission) return null;
     return (
       <th>
@@ -43,83 +40,77 @@ function TablaMenu({
     );
   };
 
-  const ActionColumn = ({ description, permission }) => {
-    if (!permission) return null;
-    return (
-      <>
-        <th className="w-[5%] pt-[.10rem] pb-[.10rem]">{description}</th>
-      </>
-    );
-  };
   return !isLoading ? (
-    <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white  w-full lg:w-full">
+    <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-full">
       {menusFiltrados && menusFiltrados.length > 0 ? (
         <table className="table table-xs table-zebra w-full">
           <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
             <tr>
               <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
-              <td className="sm:w-[35%]">Descripción</td>
-              <td className="w-[20%]">Menu</td>
-              <ActionColumn description={"Ver"} permission={true} />
-              <ActionColumn
-                description={"Editar"}
-                permission={permiso_cambio}
-              />
-              <ActionColumn
-                description={"Eliminar"}
-                permission={permiso_baja}
-              />
+              <td className="sm:w-[25%]">Descripción</td>
+              <td className="w-[20%]">Menú</td>
+              <td className="w-[25%]">Submenú</td>
+              <td className="w-[5%]">Ver</td>
+              <td className="w-[5%]">Editar</td>
+              <td className="w-[5%]">Eliminar</td>
             </tr>
           </thead>
           <tbody>
-            {menusFiltrados.map((item) => (
-              <tr key={item.numero} className="hover:cursor-pointer">
-                <th
-                  className={
-                    typeof item.comision === "number"
-                      ? "text-left"
-                      : "text-right"
-                  }
-                >
-                  {item.numero}
-                </th>
-                <td className="w-[35%] max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap pt-[.10rem] pb-[.10rem]">
-                  {item.descripcion}
-                </td>
-                <td className="w-[20%]">{item.menu}</td>
-                <ActionButton
-                  tooltip="Ver"
-                  iconDark={iconos.ver}
-                  iconLight={iconos.ver_w}
-                  onClick={(evt) => tableAction(evt, item, "Ver")}
-                  permission={true}
-                />
-                <ActionButton
-                  tooltip="Editar"
-                  iconDark={iconos.editar}
-                  iconLight={iconos.editar_w}
-                  onClick={(evt) => tableAction(evt, item, "Editar")}
-                  permission={permiso_cambio}
-                />
-                <ActionButton
-                  tooltip="Eliminar"
-                  iconDark={iconos.eliminar}
-                  iconLight={iconos.eliminar_w}
-                  onClick={(evt) => tableAction(evt, item, "Eliminar")}
-                  permission={permiso_baja}
-                />
-              </tr>
-            ))}
+            {menusFiltrados.map((menu) => {
+              // Filtrar todos los submenús que pertenecen a este menú
+              const submenus = subMenu?.filter((sub) => sub.id_acceso === menu.numero) || [];
+
+              // Unir las descripciones con una coma
+              const submenuDescripcion = submenus.length > 0
+                ? submenus.map((sub) => sub.descripcion).join(", ")
+                : "";
+
+              return (
+                <tr key={menu.numero} className="hover:cursor-pointer">
+                  <th className="text-left">{menu.numero}</th>
+                  <td className="w-[25%]">{menu.descripcion}</td>
+                  <td className="w-[20%]">{menu.menu}</td>
+                  <td className="w-[25%]">{submenuDescripcion}</td>
+                  <td>
+                    <ActionButton
+                      tooltip="Ver"
+                      iconDark={iconos.ver}
+                      iconLight={iconos.ver_w}
+                      onClick={(evt) => tableAction(evt, menu, "Ver")}
+                      permission={true}
+                    />
+                  </td>
+                  <td>
+                    <ActionButton
+                      tooltip="Editar"
+                      iconDark={iconos.editar}
+                      iconLight={iconos.editar_w}
+                      onClick={(evt) => tableAction(evt, menu, "Editar")}
+                      permission={permiso_cambio}
+                    />
+                  </td>
+                  <td>
+                    <ActionButton
+                      tooltip="Eliminar"
+                      iconDark={iconos.eliminar}
+                      iconLight={iconos.eliminar_w}
+                      onClick={(evt) => tableAction(evt, menu, "Eliminar")}
+                      permission={permiso_baja}
+                    />
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
-      ) : menusFiltrados != null && session && menusFiltrados.length === 0 ? (
-        <NoData></NoData>
+      ) : menusFiltrados.length === 0 ? (
+        <NoData />
       ) : (
-        <Loading></Loading>
+        <Loading />
       )}
     </div>
   ) : (
-    <Loading></Loading>
+    <Loading />
   );
 }
 

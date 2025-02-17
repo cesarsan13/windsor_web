@@ -16,12 +16,14 @@ import { getMenus as getmenu } from "@/app/utils/api/menus/menus";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { debounce, permissionsComponents } from "@/app/utils/globalfn";
+import { getSubMenus } from "../utils/api/sub_menus/sub_menus";
 
 function Accesos_Menu() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [menus, setMenus] = useState([]);
   const [menu, setMenu] = useState({});
+  const [subMenu, setSubMenus] = useState(null);
   const [menusFiltrados, setMenusFiltrados] = useState(null);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
@@ -42,6 +44,8 @@ function Accesos_Menu() {
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const data = await getMenus(token, bajas);
       const dataMenu = await getmenu(token, false);
+      const subMenu = await getSubMenus(token, false);
+      setSubMenus(subMenu);
       setMenusSel(dataMenu);
       setMenus(data);
       setMenusFiltrados(data);
@@ -59,7 +63,6 @@ function Accesos_Menu() {
     }
     fetchData();
   }, [session, status, bajas]);
-
   const {
     register,
     handleSubmit,
@@ -284,6 +287,7 @@ function Accesos_Menu() {
               setCurrentId={setCurrentId}
               permiso_cambio={permissions.cambios}
               permiso_baja={permissions.bajas}
+              subMenu={subMenu}
             />
           </div>
         </div>
