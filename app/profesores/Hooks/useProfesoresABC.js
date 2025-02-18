@@ -128,19 +128,20 @@ export const useProfesoresABC = () => {
           const { token, permissions } = session.user;
           const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
           const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-          limpiarBusqueda();
+          const busqueda = limpiarBusqueda();
           const data = await getProfesores(token, bajas);
-          await fetchProfesorStatus(false, data);
+          const res = await inactiveActiveBaja(session?.user.token, "profesores")
           setProfesores(data);
           setProfesoresFiltrados(data);
-          setisLoading(false);
           const permisos = permissionsComponents(
             es_admin,
             permissions,
             session.user.id,
             menuSeleccionado
           );
+          await fetchProfesorStatus(false, res.data, busqueda);
           setPermissions(permisos);
+          setisLoading(false);
         };
         if (status === "loading" || !session) {
           return;

@@ -30,6 +30,7 @@ export const useCajerosABC = () => {
   const [reload_page, setReloadPage] = useState(false);
   const [active, setActive] = useState(false);
   const [inactive, setInactive] = useState(false);
+  const [inactiveActive, setInactiveActive] = useState([]);
   const [busqueda, setBusqueda] = useState({
     tb_id: "",
     tb_desc: "",
@@ -132,19 +133,21 @@ export const useCajerosABC = () => {
       let { token, permissions } = session.user;
       const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-      limpiarBusqueda();
+      const busqueda = limpiarBusqueda();
       const data = await getCajeros(token, bajas);
-      await fetchCajerosStatus(false, data);
+      const res = await inactiveActiveBaja(session?.user.token, "cajeros");
       setCajeros(data);
       setCajerosFiltrados(data);
-      setisLoading(false);
+      setInactiveActive(res.data);
       const permisos = permissionsComponents(
         es_admin,
         permissions,
         session.user.id,
         menuSeleccionado
       );
+      await fetchCajerosStatus(false, res.data, busqueda);
       setPermissions(permisos);
+      setisLoading(false);
     };
     if (status === "loading" || !session) {
       return;
