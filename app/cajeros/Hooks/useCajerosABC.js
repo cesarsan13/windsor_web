@@ -64,6 +64,7 @@ export const useCajerosABC = () => {
     const { tb_id, tb_desc, tb_correo, tb_tel } = busqueda;
     if (tb_id === "" && tb_desc === "" && tb_correo === "" && tb_tel === "") {
       setCajerosFiltrados(cajerosRef.current);
+      fetchCajerosStatus(false, cajerosRef.current);
       return;
     }
     const infoFiltrada = cajerosRef.current.filter((cajero) => {
@@ -90,23 +91,23 @@ export const useCajerosABC = () => {
       );
     });
     setCajerosFiltrados(infoFiltrada);
+    fetchCajerosStatus(false, infoFiltrada);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [busqueda]);
 
   const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
-  const fetchCajerosStatus = async (showMesssage) => {
-    const res = await inactiveActiveBaja(session.user.token, "cajeros");
-    if (res.status) {
-      const { inactive, active } = res.data;
-      setActive(active);
-      setInactive(inactive);
-      showMesssage === true
-        ? showSwalConfirm(
-            "Estado de los cajeros",
-            `Cajeros activos: ${active}\nCajeros inactivos: ${inactive}`,
-            "info"
-          )
-        : "";
+  const fetchCajerosStatus = async (showMesssage, cajerosFiltrados) => {
+    const active = cajerosFiltrados?.filter((c) => c.baja !== "*").length;
+    const inactive = cajerosFiltrados?.filter((c) => c.baja === "*").length;
+    setActive(active);
+    setInactive(inactive);
+    if(showMesssage){
+      showSwalConfirm(
+        "Estado de los cajeros",
+        `Cajeros activos: ${active}\nCajeros inactivos: ${inactive}`,
+        "info"
+      );
     }
   };
 
@@ -133,7 +134,7 @@ export const useCajerosABC = () => {
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       limpiarBusqueda();
       const data = await getCajeros(token, bajas);
-      await fetchCajerosStatus(false);
+      await fetchCajerosStatus(false, data);
       setCajeros(data);
       setCajerosFiltrados(data);
       setisLoading(false);
@@ -143,7 +144,6 @@ export const useCajerosABC = () => {
         session.user.id,
         menuSeleccionado
       );
-      console.log("a", permisos);
       setPermissions(permisos);
     };
     if (status === "loading" || !session) {

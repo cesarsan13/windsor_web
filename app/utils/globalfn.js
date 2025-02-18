@@ -416,8 +416,15 @@ export const validateString = (MAX_LENGTHS, key, str) => {
   return `${day}/${month}/${year}`;
 };
 
-export const CerrarModal = async () => {
-  const confirmed = await confirmSwal("Salir", "Cambios sin guardar. Si sales, perderás la información.", "warning", "Aceptar", "Cancelar", "my_modal_3");
+export const CerrarModal = async (accion) => {
+  if(accion){
+    if (accion === "Alta" || accion === "Editar"){
+      const confirmed = await confirmSwal("Salir", "Cambios sin guardar. Si sales, perderás la información.", "warning", "Aceptar", "Cancelar", "my_modal_3");
      if(confirmed)
-      return document.getElementById("my_modal_3").close();
+      document.getElementById("my_modal_3").close();
+    } else {
+      document.getElementById("my_modal_3").close();
+    }
+  }
+  return;
 };
