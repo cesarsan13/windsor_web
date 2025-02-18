@@ -13,6 +13,8 @@ export const useCommentsPdfExcel = (
   formaComentariosFiltrados,
   session,
   reload_page,
+  inactiveActive,
+  busqueda,
   fetchComentarioStatus,
   setReloadPage,
   setisLoadingButton
@@ -182,7 +184,7 @@ export const useCommentsPdfExcel = (
     let chunksProcesados = 0;
     let numeroChunks = chunks.length;
     for (let chunk of chunks) {
-      const res = await storeBatchComentarios(token, chunk);
+      await storeBatchComentarios(token, chunk);
       chunksProcesados++;
       const progreso = (chunksProcesados / numeroChunks) * 100;
       setPorcentaje(Math.round(progreso));
@@ -193,10 +195,10 @@ export const useCommentsPdfExcel = (
     setPorcentaje(0);
     showSwal("Éxito", "Los datos se han subido correctamente.", "success");
     showModalProcesa(false);
-    await fetchComentarioStatus(true);
     setTimeout(() => {
       setReloadPage(!reload_page);
     }, 3500);
+    await fetchComentarioStatus(true, inactiveActive, busqueda);
   };
 
   const handleFileChange = async (e) => {

@@ -14,7 +14,7 @@ function BarraCarga({porcentaje, cerrarTO}){
             <h3 className="font-bold text-lg mb-5 text-black dark:text-white">
               Proceso de Registros Excel
             </h3>
-            <progress value={porcentaje} max="100" class="h-6 progress bg-[#ffffff]"> </progress>
+            <progress value={porcentaje} max="100" className="h-6 progress bg-[#ffffff]"> </progress>
             <h4 className="text-center font-bold text-lg mb-5 text-slate-700 dark:text-white">
               {porcentaje}%
             </h4>
