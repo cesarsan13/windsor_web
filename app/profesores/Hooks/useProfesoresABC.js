@@ -72,6 +72,7 @@ export const useProfesoresABC = () => {
       const { tb_numero, tb_nombre } = busqueda;
       if (tb_numero === "" && tb_nombre === "") {
         setProfesoresFiltrados(profesoresRef.current);
+        fetchProfesorStatus(false, profesoresRef.current);
         return;
       }
       const infoFiltrada = profesoresRef.current.filter((profesor) => {
@@ -87,24 +88,25 @@ export const useProfesoresABC = () => {
         return coincideID && coincideNombre;
       });
       setProfesoresFiltrados(infoFiltrada);
+      fetchProfesorStatus(false, infoFiltrada);
     }, [busqueda]);
 
     const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
-    const fetchProfesorStatus = async (showMesssage) => {
-      const res = await inactiveActiveBaja(session.user.token, "profesores");
-      if (res.status) {
-        const { inactive, active } = res.data;
+    const fetchProfesorStatus = async (showMesssage, profesoresFiltrados) => {
+      //const res = await inactiveActiveBaja(session.user.token, "profesores");
+      const active = profesoresFiltrados?.filter((c) => c.baja !== "*").length;
+      const inactive = profesoresFiltrados?.filter((c) => c.baja === "*").length;
+
         setActive(active);
         setInactive(inactive);
-        showMesssage === true
-          ? showSwalConfirm(
-              "Estado de los profesores",
-              `Profesores activos: ${active}\nProfesores inactivos: ${inactive}`,
-              "info"
-            )
-          : "";
-      }
+        if(showMesssage){
+          showSwalConfirm(
+            "Estado de los profesores",
+            `Profesores activos: ${active}\nProfesores inactivos: ${inactive}`,
+            "info"
+          );
+        }
     };
 
     useEffect(() => {
@@ -130,7 +132,7 @@ export const useProfesoresABC = () => {
           const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
           limpiarBusqueda();
           const data = await getProfesores(token, bajas);
-          await fetchProfesorStatus(false);
+          await fetchProfesorStatus(false, data);
           setProfesores(data);
           setProfesoresFiltrados(data);
           setisLoading(false);
