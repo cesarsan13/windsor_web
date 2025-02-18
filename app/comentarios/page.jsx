@@ -41,6 +41,7 @@ function Comentarios() {
     reload_page,
     isDisabled,
     errors,
+    inactiveActive,
   } = useCommentsABC();
 
   const {
@@ -62,6 +63,8 @@ function Comentarios() {
     formaComentariosFiltrados,
     session,
     reload_page,
+    inactiveActive,
+    busqueda,
     fetchComentarioStatus,
     setReloadPage,
     setisLoadingButton
@@ -69,7 +72,7 @@ function Comentarios() {
 
   const { itemHeaderTable, itemDataTable, tableColumns, tableBody, modalBody } =
     useCommentsUI(tableAction, register, permissions, isDisabled, errors);
-  if (status === "loading") {
+  if (status === "loading" && !session) {
     return (
       <div className="container skeleton w-full max-w-screen-xl shadow-xl rounded-xl"></div>
     );

@@ -10,6 +10,7 @@ import {
   guardaComentarios,
 } from "@/app/utils/api/comentarios/comentarios";
 import { showSwal, confirmSwal, showSwalConfirm } from "@/app/utils/alerts";
+
 export const useCommentsABC = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -17,6 +18,7 @@ export const useCommentsABC = () => {
   const [formaComentarios, setFormaComentarios] = useState({});
   const [formaComentariosFiltrados, setFormaComentariosFiltrados] =
     useState(null);
+  const [inactiveActive, setInactiveActive] = useState([]);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
@@ -50,14 +52,42 @@ export const useCommentsABC = () => {
   });
 
   useEffect(() => {
+    const fetchData = async () => {
+      setisLoading(true);
+      let { token, permissions } = session.user;
+      const es_admin = session.user?.es_admin || false;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+      const busqueda = limpiarBusqueda();
+      const data = await getComentarios(token, bajas);
+      const res = await inactiveActiveBaja(session?.user.token, "comentarios");
+      setFormasComentarios(data);
+      setFormaComentariosFiltrados(data);
+      setInactiveActive(res.data);
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menuSeleccionado
+      );
+      await fetchComentarioStatus(false, res.data, busqueda);
+      setPermissions(permisos);
+      setisLoading(false);
+    };
+    if (status === "loading" || !session) {
+      return;
+    }
+    fetchData();
+  }, [status, bajas, reload_page]);
+
+  useEffect(() => {
     comentariosRef.current = formasComentarios;
   }, [formasComentarios]);
 
-  const Buscar = useCallback(() => {
+  const Buscar = useCallback(async () => {
     const { tb_numero, tb_comentario1 } = busqueda;
     if (tb_numero === "" && tb_comentario1 === "") {
       setFormaComentariosFiltrados(comentariosRef.current);
-      fetchComentarioStatus(false, comentariosRef.current);
+      await fetchComentarioStatus(false, inactiveActive, busqueda);
       return;
     }
     const infoFiltrada = comentariosRef.current.filter((formaComentarios) => {
@@ -73,14 +103,39 @@ export const useCommentsABC = () => {
       return coincideID && coincideComentario1;
     });
     setFormaComentariosFiltrados(infoFiltrada);
-    fetchComentarioStatus(false, infoFiltrada);
+    await fetchComentarioStatus(false, inactiveActive, busqueda);
   }, [busqueda]);
 
   const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
-  const fetchComentarioStatus = async (showMesssage, comentariosFiltrados) => {
-    const active = comentariosFiltrados?.filter((c) => c.baja !== "*").length;
-    const inactive = comentariosFiltrados?.filter((c) => c.baja === "*").length;
+  const fetchComentarioStatus = async (
+    showMesssage,
+    inactiveActive,
+    busqueda
+  ) => {
+    const { tb_numero, tb_comentario1 } = busqueda;
+    let infoFiltrada = [];
+    let active = 0;
+    let inactive = 0;
+    if (tb_numero || tb_comentario1) {
+      infoFiltrada = inactiveActive.filter((formaComentarios) => {
+        const coincideID = tb_numero
+          ? formaComentarios["numero"].toString().includes(tb_numero)
+          : true;
+        const coincideComentario1 = tb_comentario1
+          ? formaComentarios["comentario_1"]
+              .toString()
+              .toLowerCase()
+              .includes(tb_comentario1.toLowerCase())
+          : true;
+        return coincideID && coincideComentario1;
+      });
+      active = infoFiltrada.filter((c) => c.baja !== "*").length;
+      inactive = infoFiltrada.filter((c) => c.baja === "*").length;
+    } else {
+      active = inactiveActive.filter((c) => c.baja !== "*").length;
+      inactive = inactiveActive.filter((c) => c.baja === "*").length;
+    }
     setActive(active);
     setInactive(inactive);
     if (showMesssage) {
@@ -131,7 +186,6 @@ export const useCommentsABC = () => {
       return;
     }
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, bajas, reload_page]);
 
   useEffect(() => {
@@ -163,7 +217,12 @@ export const useCommentsABC = () => {
   }, [formaComentarios, reset]);
 
   const limpiarBusqueda = () => {
+    const search = {
+      tb_numero: "",
+      tb_comentario1: "",
+    };
     setBusqueda({ tb_numero: "", tb_comentario1: "" });
+    return search;
   };
 
   const Alta = async () => {
@@ -250,7 +309,8 @@ export const useCommentsABC = () => {
       showSwal(res.alert_title, res.alert_text, res.alert_icon, "my_modal_3");
     }
     if (accion === "Alta" || accion === "Eliminar") {
-      await fetchComentarioStatus(false);
+      setReloadPage(!reload_page);
+      await fetchComentarioStatus(false, inactiveActive, busqueda);
     }
     setisLoadingButton(false);
   });
@@ -266,7 +326,7 @@ export const useCommentsABC = () => {
   };
 
   const handleBusquedaChange = async (event) => {
-    event.preventDefault;
+    event.preventDefault();
     setBusqueda((estadoPrevio) => ({
       ...estadoPrevio,
       [event.target.id]: event.target.value,
@@ -308,5 +368,6 @@ export const useCommentsABC = () => {
     reload_page,
     isDisabled,
     errors,
+    inactiveActive,
   };
 };
