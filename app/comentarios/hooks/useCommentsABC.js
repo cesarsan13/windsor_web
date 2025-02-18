@@ -57,6 +57,7 @@ export const useCommentsABC = () => {
     const { tb_numero, tb_comentario1 } = busqueda;
     if (tb_numero === "" && tb_comentario1 === "") {
       setFormaComentariosFiltrados(comentariosRef.current);
+      fetchComentarioStatus(false, comentariosRef.current);
       return;
     }
     const infoFiltrada = comentariosRef.current.filter((formaComentarios) => {
@@ -72,23 +73,22 @@ export const useCommentsABC = () => {
       return coincideID && coincideComentario1;
     });
     setFormaComentariosFiltrados(infoFiltrada);
+    fetchComentarioStatus(false, infoFiltrada);
   }, [busqueda]);
 
   const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
-  const fetchComentarioStatus = async (showMesssage) => {
-    const res = await inactiveActiveBaja(session.user.token, "comentarios");
-    if (res.status) {
-      const { inactive, active } = res.data;
-      setActive(active);
-      setInactive(inactive);
-      showMesssage === true
-        ? showSwalConfirm(
-            "Estado de los comentarios",
-            `Comentarios activos: ${active}\nComentarios inactivos: ${inactive}`,
-            "info"
-          )
-        : "";
+  const fetchComentarioStatus = async (showMesssage, comentariosFiltrados) => {
+    const active = comentariosFiltrados?.filter((c) => c.baja !== "*").length;
+    const inactive = comentariosFiltrados?.filter((c) => c.baja === "*").length;
+    setActive(active);
+    setInactive(inactive);
+    if (showMesssage) {
+      showSwalConfirm(
+        "Estado de los comentarios",
+        `Comentarios activos: ${active}\nComentarios inactivos: ${inactive}`,
+        "info"
+      );
     }
   };
 
@@ -115,7 +115,7 @@ export const useCommentsABC = () => {
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       limpiarBusqueda();
       const data = await getComentarios(token, bajas);
-      await fetchComentarioStatus(false);
+      await fetchComentarioStatus(false, data);
       setFormasComentarios(data);
       setFormaComentariosFiltrados(data);
       const permisos = permissionsComponents(
@@ -265,7 +265,7 @@ export const useCommentsABC = () => {
     router.push("/");
   };
 
-  const handleBusquedaChange = (event) => {
+  const handleBusquedaChange = async (event) => {
     event.preventDefault;
     setBusqueda((estadoPrevio) => ({
       ...estadoPrevio,
