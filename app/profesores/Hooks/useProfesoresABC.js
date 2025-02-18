@@ -94,10 +94,8 @@ export const useProfesoresABC = () => {
     const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
     const fetchProfesorStatus = async (showMesssage, profesoresFiltrados) => {
-      //const res = await inactiveActiveBaja(session.user.token, "profesores");
       const active = profesoresFiltrados?.filter((c) => c.baja !== "*").length;
       const inactive = profesoresFiltrados?.filter((c) => c.baja === "*").length;
-
         setActive(active);
         setInactive(inactive);
         if(showMesssage){

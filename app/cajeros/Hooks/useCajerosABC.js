@@ -97,9 +97,9 @@ export const useCajerosABC = () => {
 
   const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
-  const fetchCajerosStatus = async (showMesssage) => {
-    const active = cajerosFiltrados?.filter((c) => c.baja !== "*").lenght;
-    const inactive = cajerosFiltrados?.filter((c) => c.baja === "*").lenght;
+  const fetchCajerosStatus = async (showMesssage, cajerosFiltrados) => {
+    const active = cajerosFiltrados?.filter((c) => c.baja !== "*").length;
+    const inactive = cajerosFiltrados?.filter((c) => c.baja === "*").length;
     setActive(active);
     setInactive(inactive);
     if(showMesssage){
@@ -144,7 +144,6 @@ export const useCajerosABC = () => {
         session.user.id,
         menuSeleccionado
       );
-      console.log("a", permisos);
       setPermissions(permisos);
     };
     if (status === "loading" || !session) {
