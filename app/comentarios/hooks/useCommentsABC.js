@@ -163,33 +163,6 @@ export const useCommentsABC = () => {
   }, [busqueda, Buscar]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setisLoading(true);
-      let { token, permissions } = session.user;
-      const es_admin = session.user?.es_admin || false;
-      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-      limpiarBusqueda();
-      const data = await getComentarios(token, bajas);
-      await fetchComentarioStatus(false, data);
-      setFormasComentarios(data);
-      setFormaComentariosFiltrados(data);
-      const permisos = permissionsComponents(
-        es_admin,
-        permissions,
-        session.user.id,
-        menuSeleccionado
-      );
-      setPermissions(permisos);
-      setisLoading(false);
-    };
-    if (status === "loading" || !session) {
-      return;
-    }
-    fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, bajas, reload_page]);
-
-  useEffect(() => {
     if (accion === "Eliminar" || accion === "Ver") {
       setIsDisabled(true);
     }
