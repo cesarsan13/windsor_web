@@ -8,7 +8,6 @@ import { debounce, permissionsComponents } from "@/app/utils/globalfn";
 import {
   getCajeros,
   guardaCajero,
-  siguiente
 } from "@/app/utils/api/cajeros/cajeros";
 import { showSwal, confirmSwal, showSwalConfirm } from "@/app/utils/alerts";
 export const useCajerosABC = () => {
@@ -230,7 +229,6 @@ export const useCajerosABC = () => {
 
   const Alta = async (event) => {
     setCurrentId("");
-    const { token } = session.user;
     reset({
       numero: "",
       nombre: "",
@@ -242,10 +240,7 @@ export const useCajerosABC = () => {
       mail: "",
       clave_cajero: "",
     });
-    let siguienteId = await siguiente(token);
-    siguienteId = Number(siguienteId) + 1;
-    setCurrentId(siguienteId);
-    setCajero({ numero: siguienteId });
+    setCajero({ numero: "" });
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);

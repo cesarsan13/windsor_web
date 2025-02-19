@@ -8,7 +8,6 @@ import { debounce, permissionsComponents } from "@/app/utils/globalfn";
 import {
     getProfesores,
     guardaProfesor,
-    siguiente
 } from "@/app/utils/api/profesores/profesores";
 import { showSwal, confirmSwal, showSwalAndWait, showSwalConfirm } from "@/app/utils/alerts";
 
@@ -248,10 +247,7 @@ export const useProfesoresABC = () => {
           email: "",
           contraseña: "",
         });
-        let siguienteId = await siguiente(token);
-        siguienteId = Number(siguienteId) + 1;
-        setCurrentId(siguienteId);
-        setProfesor({ numero: siguienteId });
+        setProfesor({ numero: "" });
         setModal(!openModal);
         setAccion("Alta");
         showModal(true);

@@ -1,6 +1,6 @@
 import { ReporteExcel } from "../../ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
-import { formatDate, formatTime, formatFecha, format_Fecha_String } from "../../globalfn";
+import { formatTime, format_Fecha_String } from "../../globalfn";
 
 export const getComentarios = async (token, baja) => {
   let url = "";
