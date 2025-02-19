@@ -177,7 +177,7 @@ export const useCommentsUI = (
             generales={generales}
           />
         </div>
-      </fieldset>
+      </fieldset> 
     );
   };
 
