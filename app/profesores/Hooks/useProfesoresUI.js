@@ -381,6 +381,7 @@ export const useProfesoresUI = (
                     message={"Contraseña requerido"}
                     maxLenght={12}
                     isDisabled={isDisabled}
+                    password={true} 
                   />
 
                 </div>

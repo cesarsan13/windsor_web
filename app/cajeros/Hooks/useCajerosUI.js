@@ -247,6 +247,7 @@ export const useCajerosUI = (
                 message={"Clave requerida"}
                 maxLenght={8}
                 isDisabled={isDisabled}
+                password={true}
               />
             </div>
           </fieldset>
