@@ -176,10 +176,10 @@ export const useCajerosPdfExcel = (
       setDataJson([]);
       showModalProcesa(false);
       showSwal("Éxito", "Los datos se han subido correctamente.", "success");
-      await fetchCajerosStatus(true, inactiveActive, busqueda);
       setTimeout(() => {
         setReloadPage(!reload_page);
-      }, 3500);    
+      }, 3500);  
+      await fetchCajerosStatus(true, inactiveActive, busqueda);  
     };
 
     const handleFileChange = async (e) => {

@@ -41,6 +41,7 @@ function Profesores() {
     reload_page,
     isDisabled,
     errors,
+    inactiveActive
   } = useProfesoresABC();
 
   const {
@@ -62,6 +63,8 @@ function Profesores() {
     profesoresFiltrados,
     session,
     reload_page,
+    inactiveActive,
+    busqueda,
     fetchProfesorStatus,
     setReloadPage,
     setisLoadingButton
