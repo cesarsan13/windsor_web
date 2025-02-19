@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useMemo } from "react";
+import { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -91,7 +91,7 @@ export const useProfesoresABC = () => {
       }
       fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session, status, bajas, reload_page]);
+  }, [status, bajas, reload_page]);
     
     useEffect(() => {
         profesoresRef.current = profesores; // Actualiza el ref cuando profesores cambia
@@ -226,7 +226,6 @@ export const useProfesoresABC = () => {
 
     const Alta = async () => {
         setCurrentId("");
-        const { token } = session.user;
         reset({
           numero: "",
           nombre: "",
@@ -341,6 +340,7 @@ export const useProfesoresABC = () => {
     };
 
     const tableAction = (evt, profesores, accion) => {
+      console.log("envia", profesores, accion);
         evt.preventDefault();
         setProfesores(profesores);
         setAccion(accion);
@@ -375,5 +375,6 @@ export const useProfesoresABC = () => {
         reload_page,
         isDisabled,
         errors,
+        inactiveActive,
     };
 };

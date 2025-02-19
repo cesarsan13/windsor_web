@@ -45,20 +45,6 @@ function Profesores() {
   } = useProfesoresABC();
 
   const {
-    itemHeaderTable,
-    itemDataTable,
-    tableColumns,
-    tableBody,
-    modalBody
-  } = useProfesoresUI( 
-    tableAction, 
-    register, 
-    permissions, 
-    isDisabled, 
-    errors
-  );
-
-  const {
     handleVerClick,
     CerrarView,
     ImprimePDF,
@@ -82,6 +68,20 @@ function Profesores() {
     fetchProfesorStatus,
     setReloadPage,
     setisLoadingButton
+  );
+
+  const {
+    itemHeaderTable,
+    itemDataTable,
+    tableColumns,
+    tableBody,
+    modalBody
+  } = useProfesoresUI( 
+    tableAction, 
+    register, 
+    permissions, 
+    isDisabled, 
+    errors
   );
 
   if (status === "loading") {
@@ -125,8 +125,8 @@ function Profesores() {
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
-        id="modalVPProfesor"
-        titulo="Vista Previa de Profesores"
+        id={"modalVPProfesor"}
+        titulo={"Vista Previa de Profesores"}
         CerrarView={CerrarView}
       />
 

@@ -78,7 +78,7 @@ export const useCommentsABC = () => {
     }
     fetchData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session, status, bajas, reload_page]);
+  }, [status, bajas, reload_page]);
 
   useEffect(() => {
     comentariosRef.current = formasComentarios;
