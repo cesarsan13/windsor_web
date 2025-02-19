@@ -249,11 +249,11 @@ function Menu({ vertical, toogle }) {
       ref={menuRef}
       className="menu menu-md dropdown-content bg-base-100 rounded-box text-black dark:text-white mt-3 w-52 p-2 shadow z-50"
     >
-      {sortedCategories.map((category) => (
-        <li key={category}>
+      {sortedCategories.map((category, index) => (
+        <li key={category + index}>
           <details open={isOpen[category]} onClick={() => toggleMenu(category)}>
             <summary>{category}</summary>
-            <ul>{renderMenuItems(category)}</ul>
+            <ul key={category}>{renderMenuItems(category)}</ul>
           </details>
         </li>
       ))}

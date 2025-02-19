@@ -16,8 +16,7 @@ export const useCommentsABC = () => {
   const { data: session, status } = useSession();
   const [formasComentarios, setFormasComentarios] = useState([]);
   const [formaComentarios, setFormaComentarios] = useState({});
-  const [formaComentariosFiltrados, setFormaComentariosFiltrados] =
-    useState(null);
+  const [formaComentariosFiltrados, setFormaComentariosFiltrados] = useState(null);
   const [inactiveActive, setInactiveActive] = useState([]);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
@@ -36,6 +35,7 @@ export const useCommentsABC = () => {
     tb_numero: "",
     tb_comentario1: "",
   });
+
   const {
     register,
     handleSubmit,
@@ -77,7 +77,8 @@ export const useCommentsABC = () => {
       return;
     }
     fetchData();
-  }, [status, bajas, reload_page]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session, status, bajas, reload_page]);
 
   useEffect(() => {
     comentariosRef.current = formasComentarios;
@@ -104,6 +105,7 @@ export const useCommentsABC = () => {
     });
     setFormaComentariosFiltrados(infoFiltrada);
     await fetchComentarioStatus(false, inactiveActive, busqueda);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [busqueda]);
 
   const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
@@ -118,7 +120,7 @@ export const useCommentsABC = () => {
     let active = 0;
     let inactive = 0;
     if (tb_numero || tb_comentario1) {
-      infoFiltrada = inactiveActive.filter((formaComentarios) => {
+      infoFiltrada = comentariosRef.current.filter((formaComentarios) => {
         const coincideID = tb_numero
           ? formaComentarios["numero"].toString().includes(tb_numero)
           : true;
@@ -133,8 +135,8 @@ export const useCommentsABC = () => {
       active = infoFiltrada.filter((c) => c.baja !== "*").length;
       inactive = infoFiltrada.filter((c) => c.baja === "*").length;
     } else {
-      active = inactiveActive.filter((c) => c.baja !== "*").length;
-      inactive = inactiveActive.filter((c) => c.baja === "*").length;
+      active = inactiveActive.active;
+      inactive = inactiveActive.inactive;
     }
     setActive(active);
     setInactive(inactive);
@@ -161,32 +163,6 @@ export const useCommentsABC = () => {
       clearTimeout(debouncedBuscar);
     };
   }, [busqueda, Buscar]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setisLoading(true);
-      let { token, permissions } = session.user;
-      const es_admin = session.user?.es_admin || false;
-      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-      limpiarBusqueda();
-      const data = await getComentarios(token, bajas);
-      await fetchComentarioStatus(false, data);
-      setFormasComentarios(data);
-      setFormaComentariosFiltrados(data);
-      const permisos = permissionsComponents(
-        es_admin,
-        permissions,
-        session.user.id,
-        menuSeleccionado
-      );
-      setPermissions(permisos);
-      setisLoading(false);
-    };
-    if (status === "loading" || !session) {
-      return;
-    }
-    fetchData();
-  }, [status, bajas, reload_page]);
 
   useEffect(() => {
     if (accion === "Eliminar" || accion === "Ver") {

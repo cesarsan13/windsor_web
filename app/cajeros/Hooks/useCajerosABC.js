@@ -58,14 +58,43 @@ export const useCajerosABC = () => {
   });
 
   useEffect(() => {
+    const fetchData = async () => {
+      setisLoading(true);
+      let { token, permissions } = session.user;
+      const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+      const buscar = limpiarBusqueda();
+      const data = await getCajeros(token, bajas);
+      const res = await inactiveActiveBaja(session?.user.token, "cajeros");
+      setCajeros(data);
+      setCajerosFiltrados(data);
+      setInactiveActive(res.data);
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menuSeleccionado
+      );
+      await fetchCajerosStatus(false, res.data, busqueda);
+      setPermissions(permisos);
+      setisLoading(false);
+    };
+    if (status === "loading" || !session) {
+      return;
+    }
+    fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status, bajas, reload_page]);
+
+  useEffect(() => {
     cajerosRef.current = cajeros;
   }, [cajeros]);
     
-  const Buscar = useCallback(() => {
+  const Buscar = useCallback(async () => {
     const { tb_id, tb_desc, tb_correo, tb_tel } = busqueda;
     if (tb_id === "" && tb_desc === "" && tb_correo === "" && tb_tel === "") {
       setCajerosFiltrados(cajerosRef.current);
-      fetchCajerosStatus(false, cajerosRef.current);
+      await fetchCajerosStatus(false, inactiveActive, busqueda);
       return;
     }
     const infoFiltrada = cajerosRef.current.filter((cajero) => {
@@ -87,20 +116,53 @@ export const useCajerosABC = () => {
       const coincideTelefono = tb_tel
         ? cajero["telefono"].toString().includes(tb_tel)
         : true;
-      return (
-        coincideNumero && coincideNombre && coincideCorreo && coincideTelefono
-      );
+      return coincideNumero && coincideNombre && coincideCorreo && coincideTelefono;
     });
     setCajerosFiltrados(infoFiltrada);
-    fetchCajerosStatus(false, infoFiltrada);
+    await fetchCajerosStatus(false, inactiveActive, busqueda);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [busqueda]);
 
   const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
-  const fetchCajerosStatus = async (showMesssage, cajerosFiltrados) => {
-    const active = cajerosFiltrados?.filter((c) => c.baja !== "*").length;
-    const inactive = cajerosFiltrados?.filter((c) => c.baja === "*").length;
+  const fetchCajerosStatus = async (
+    showMesssage, 
+    inactiveActive,
+    busqueda
+  ) => {
+    const { tb_id, tb_desc, tb_correo, tb_tel } = busqueda
+    let infoFiltrada = [];
+    let active = 0;
+    let inactive = 0;
+
+    if( tb_id || tb_desc || tb_correo || tb_tel ){
+      infoFiltrada = cajerosRef.current.filter((cajero) => {
+        const coincideNumero = tb_id
+          ? cajero["numero"].toString().includes(tb_id)
+          : true;
+        const coincideNombre = tb_desc
+          ? cajero["nombre"]
+              .toString()
+              .toLowerCase()
+              .includes(tb_desc.toLowerCase())
+          : true;
+        const coincideCorreo = tb_correo
+          ? cajero["mail"]
+              .toString()
+              .toLowerCase()
+              .includes(tb_correo.toLowerCase())
+          : true;
+        const coincideTelefono = tb_tel
+          ? cajero["telefono"].toString().includes(tb_tel)
+          : true;
+        return coincideNumero && coincideNombre && coincideCorreo && coincideTelefono;
+      });
+      active = infoFiltrada.filter((c) => c.baja !== "*").length;
+      inactive = infoFiltrada.filter((c) => c.baja === "*").length;
+    } else {
+      active = inactiveActive.active;
+      inactive = inactiveActive.inactive;
+    }
     setActive(active);
     setInactive(inactive);
     if(showMesssage){
@@ -128,35 +190,6 @@ export const useCajerosABC = () => {
   }, [busqueda, Buscar]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setisLoading(true);
-      let { token, permissions } = session.user;
-      const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
-      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-      const busqueda = limpiarBusqueda();
-      const data = await getCajeros(token, bajas);
-      const res = await inactiveActiveBaja(session?.user.token, "cajeros");
-      setCajeros(data);
-      setCajerosFiltrados(data);
-      setInactiveActive(res.data);
-      const permisos = permissionsComponents(
-        es_admin,
-        permissions,
-        session.user.id,
-        menuSeleccionado
-      );
-      await fetchCajerosStatus(false, res.data, busqueda);
-      setPermissions(permisos);
-      setisLoading(false);
-    };
-    if (status === "loading" || !session) {
-      return;
-    }
-    fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, bajas, reload_page]);
-
-  useEffect(() => {
     if (accion === "Eliminar" || accion === "Ver") {
       setIsDisabled(true);
     }
@@ -172,8 +205,8 @@ export const useCajerosABC = () => {
         ? `Eliminar Cajero: ${currentID}`
         : `Ver Cajero: ${currentID}`
     );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accion]);
+
+  }, [accion, currentID]);
 
   useEffect(() => {
     reset({
@@ -189,8 +222,10 @@ export const useCajerosABC = () => {
     });
   }, [cajero, reset]);
 
-  const limpiarBusqueda = (evt) => {
+  const limpiarBusqueda = () => {
+    const search = { tb_id: "", tb_desc: "", tb_correo: "", tb_tel: "" };
     setBusqueda({ tb_id: "", tb_desc: "", tb_correo: "", tb_tel: "" });
+    return search;
   };
 
   const Alta = async (event) => {
@@ -219,11 +254,10 @@ export const useCajerosABC = () => {
   };
 
   const onSubmitModal = handleSubmit(async (data) => {
-    event.preventDefault;
-    setisLoadingButton(true);;
-    data.id = currentID;
+    event.preventDefault();
+    setisLoadingButton(true);
+    accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
     let res = null;
-    
     if (accion === "Eliminar") {
       showModal(false);
       const confirmed = await confirmSwal(
@@ -279,7 +313,8 @@ export const useCajerosABC = () => {
       showSwal(res.alert_title, res.alert_text, "error", "my_modal_3");
     }
     if (accion === "Alta" || accion === "Eliminar") {
-      await fetchCajerosStatus(false);
+      setReloadPage(!reload_page);
+      await fetchCajerosStatus(false, inactiveActive, busqueda);
     }
     setisLoadingButton(false);
   });
@@ -294,7 +329,7 @@ export const useCajerosABC = () => {
   };
 
   const handleBusquedaChange = (event) => {
-    event.preventDefault;
+    event.preventDefault();
     setBusqueda((estadoPrevio) => ({
       ...estadoPrevio,
       [event.target.id]: event.target.value,
@@ -336,6 +371,7 @@ export const useCajerosABC = () => {
     reload_page,
     isDisabled,
     errors,
+    inactiveActive
   };
         
 };

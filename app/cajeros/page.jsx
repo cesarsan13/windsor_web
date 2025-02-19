@@ -41,6 +41,7 @@ function Cajeros() {
     reload_page,
     isDisabled,
     errors,
+    inactiveActive,
   } = useCajerosABC();
 
   const {
@@ -62,6 +63,8 @@ function Cajeros() {
     cajerosFiltrados,
     session,
     reload_page,
+    inactiveActive,
+    busqueda,
     fetchCajerosStatus,
     setReloadPage,
     setisLoadingButton
