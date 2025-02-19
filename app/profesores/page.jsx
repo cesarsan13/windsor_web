@@ -2,14 +2,14 @@
 import React from "react";
 import ModalComponent from "@/app/components/Catalogs_Components/modalComponent";
 import TableComponent from "@/app/components/Catalogs_Components/tableComponent";
-import { useProfesoresABC } from "@/app/profesores/Hooks/useProfesoresABC";
-import { useProfesoresUI } from "@/app/profesores/Hooks/useProfesoresUI";
-import { useProfesoresPdfExcel } from "@/app/profesores/Hooks/useProfesoresPdfExcel";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import Busqueda from "@/app/profesores/components/Busqueda";
 import Acciones from "@/app/profesores/components/Acciones";
 import ModalProcesarDatos from "@/app/components/modalProcesarDatos";
 import BarraCarga from "@/app/components/BarraCarga";
+import { useProfesoresABC } from "@/app/profesores/Hooks/useProfesoresABC";
+import { useProfesoresUI } from "@/app/profesores/Hooks/useProfesoresUI";
+import { useProfesoresPdfExcel } from "@/app/profesores/Hooks/useProfesoresPdfExcel";
 import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 

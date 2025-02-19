@@ -1,5 +1,5 @@
 import React from "react";
-import Inputs from "../components/Inputs";
+import Inputs from "@/app/cajeros/components/Inputs";
 import { ActionButton, ActionColumn } from "@/app/utils/GlobalComponents";
 import iconos from "@/app/utils/iconos";
 
@@ -128,19 +128,6 @@ export const useCajerosUI = (
         return(
             <fieldset id="fs_formapago">
             <div className="container flex flex-col space-y-5">
-              <Inputs
-                dataType={"int"}
-                name={"numero"}
-                tamañolabel={"w-3/6"}
-                className={"w-3/6 text-right"}
-                Titulo={"Numero: "}
-                type={"text"}
-                requerido={true}
-                errors={errors}
-                register={register}
-                message={"Numero requerido"}
-                isDisabled={true}
-              />
               <Inputs
                 dataType={"string"}
                 name={"nombre"}

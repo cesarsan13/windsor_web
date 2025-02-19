@@ -13,6 +13,8 @@ export const useCajerosPdfExcel = (
     cajerosFiltrados,
     session,
     reload_page,
+    inactiveActive,
+    busqueda,
     fetchCajerosStatus,
     setReloadPage,
     setisLoadingButton
@@ -174,7 +176,7 @@ export const useCajerosPdfExcel = (
       setDataJson([]);
       showModalProcesa(false);
       showSwal("Éxito", "Los datos se han subido correctamente.", "success");
-      await fetchCajerosStatus(true);
+      await fetchCajerosStatus(true, inactiveActive, busqueda);
       setTimeout(() => {
         setReloadPage(!reload_page);
       }, 3500);    

@@ -1,12 +1,12 @@
 "use client";
 import React from "react";
-import ModalComponent from "../components/Catalogs_Components/modalComponent";
-import TableComponent from "../components/Catalogs_Components/tableComponent";
-import Busqueda from "./components/Busqueda";
+import ModalComponent from "@/app/components/Catalogs_Components/modalComponent";
+import TableComponent from "@/app/components/Catalogs_Components/tableComponent";
+import Busqueda from "@/app/cajeros/components/Busqueda";
 import Acciones from "@/app/cajeros/components/Acciones";
 import VistaPrevia from "@/app/components/VistaPrevia";
-import ModalProcesarDatos from "../components/modalProcesarDatos";
-import BarraCarga from "../components/BarraCarga";
+import ModalProcesarDatos from "@/app/components/modalProcesarDatos";
+import BarraCarga from "@/app/components/BarraCarga";
 import { useCajerosUI } from "@/app/cajeros/Hooks/useCajerosUI";
 import { useCajerosABC } from "@/app/cajeros/Hooks/useCajerosABC";
 import { useCajerosPdfExcel } from "@/app/cajeros/Hooks/useCajerosPdfExcel";
@@ -41,6 +41,7 @@ function Cajeros() {
     reload_page,
     isDisabled,
     errors,
+    inactiveActive
   } = useCajerosABC();
 
   const {
@@ -62,6 +63,8 @@ function Cajeros() {
     cajerosFiltrados,
     session,
     reload_page,
+    busqueda,
+    inactiveActive,
     fetchCajerosStatus,
     setReloadPage,
     setisLoadingButton
