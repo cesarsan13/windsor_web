@@ -50,7 +50,7 @@ export const useCommentsABC = () => {
       generales: formaComentarios.generales,
     },
   });
-
+ 
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
