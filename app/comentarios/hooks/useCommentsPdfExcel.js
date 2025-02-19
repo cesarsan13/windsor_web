@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import {
   ImprimirPDF,
-  ImprimirExcel,
+  ImprimirExcel, 
   storeBatchComentarios,
 } from "@/app/utils/api/comentarios/comentarios";
 import { chunkArray, validateString } from "@/app/utils/globalfn";

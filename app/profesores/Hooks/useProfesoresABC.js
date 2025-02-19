@@ -1,4 +1,4 @@
-import { useCallback, useRef, useMemo } from "react";
+import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -8,6 +8,7 @@ import { debounce, permissionsComponents } from "@/app/utils/globalfn";
 import {
     getProfesores,
     guardaProfesor,
+    siguiente
 } from "@/app/utils/api/profesores/profesores";
 import { showSwal, confirmSwal, showSwalAndWait, showSwalConfirm } from "@/app/utils/alerts";
 
@@ -30,7 +31,6 @@ export const useProfesoresABC = () => {
     const [reload_page, setReloadPage] = useState(false);
     const [active, setActive] = useState(false);
     const [inactive, setInactive] = useState(false);
-    const [inactiveActive, setInactiveActive] = useState([]);
     const [busqueda, setBusqueda] = useState({
         tb_numero: "",
         tb_nombre: "",
@@ -63,45 +63,16 @@ export const useProfesoresABC = () => {
           contraseña: "",
         },
     });
-
-    useEffect(() => {
-      const fetchData = async () => {
-        setisLoading(true);
-        const { token, permissions } = session.user;
-        const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
-        const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-        const busqueda = limpiarBusqueda();
-        const data = await getProfesores(token, bajas);
-        const res = await inactiveActiveBaja(session?.user.token, "profesores")
-        setProfesores(data);
-        setProfesoresFiltrados(data);
-        setInactiveActive(res.data);
-        const permisos = permissionsComponents(
-          es_admin,
-          permissions,
-          session.user.id,
-          menuSeleccionado
-        );
-        await fetchProfesorStatus(false, res.data, busqueda);
-        setPermissions(permisos);
-        setisLoading(false);
-      };
-      if (status === "loading" || !session) {
-        return;
-      }
-      fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, bajas, reload_page]);
     
     useEffect(() => {
         profesoresRef.current = profesores; // Actualiza el ref cuando profesores cambia
     }, [profesores]);
     
-    const Buscar = useCallback(async () => {
+    const Buscar = useCallback(() => {
       const { tb_numero, tb_nombre } = busqueda;
       if (tb_numero === "" && tb_nombre === "") {
         setProfesoresFiltrados(profesoresRef.current);
-        await fetchProfesorStatus(false, inactiveActive, busqueda);
+        fetchProfesorStatus(false, profesoresRef.current);
         return;
       }
       const infoFiltrada = profesoresRef.current.filter((profesor) => {
@@ -117,40 +88,14 @@ export const useProfesoresABC = () => {
         return coincideID && coincideNombre;
       });
       setProfesoresFiltrados(infoFiltrada);
-      fetchProfesorStatus(false, inactiveActive, busqueda);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      fetchProfesorStatus(false, infoFiltrada);
     }, [busqueda]);
 
     const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
-    const fetchProfesorStatus = async (
-      showMesssage, 
-      inactiveActive,
-      busqueda
-    ) => {
-      const { tb_numero, tb_nombre } = busqueda;
-      let infoFiltrada = [];
-      let active = 0;
-      let inactive = 0;
-      if(tb_numero || tb_nombre){
-        infoFiltrada = profesoresRef.current.filter((profesor) => {
-          const coincideID = tb_numero
-            ? profesor["numero"].toString().includes(tb_numero)
-            : true;
-          const coincideNombre = tb_nombre
-            ? profesor["nombre"]
-              .toString()
-              .toLowerCase()
-              .includes(tb_nombre.toLowerCase())
-            : true;
-          return coincideID && coincideNombre;
-        });
-        active = infoFiltrada.filter((c) => c.baja !== "*").length;
-        inactive = infoFiltrada.filter((c) => c.baja === "*").length;
-      } else {
-        active = inactiveActive.active;
-        inactive = inactiveActive.inactive;
-      }
+    const fetchProfesorStatus = async (showMesssage, profesoresFiltrados) => {
+      const active = profesoresFiltrados?.filter((c) => c.baja !== "*").length;
+      const inactive = profesoresFiltrados?.filter((c) => c.baja === "*").length;
         setActive(active);
         setInactive(inactive);
         if(showMesssage){
@@ -176,6 +121,33 @@ export const useProfesoresABC = () => {
           clearTimeout(debouncedBuscar);
         };
     }, [busqueda, Buscar]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+          setisLoading(true);
+          const { token, permissions } = session.user;
+          const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
+          const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+          limpiarBusqueda();
+          const data = await getProfesores(token, bajas);
+          await fetchProfesorStatus(false, data);
+          setProfesores(data);
+          setProfesoresFiltrados(data);
+          setisLoading(false);
+          const permisos = permissionsComponents(
+            es_admin,
+            permissions,
+            session.user.id,
+            menuSeleccionado
+          );
+          setPermissions(permisos);
+        };
+        if (status === "loading" || !session) {
+          return;
+        }
+        fetchData();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [session, status, bajas, reload_page]);
 
     useEffect(() => {
         if (accion === "Eliminar" || accion === "Ver") {
@@ -219,13 +191,12 @@ export const useProfesoresABC = () => {
     }, [profesor, reset]);
 
     const limpiarBusqueda = () => {
-      const search = {tb_numero: "", tb_nombre: "" };
-      setBusqueda({ tb_numero: "", tb_nombre: "" });
-      return search;
+        setBusqueda({ tb_numero: "", tb_nombre: "" });
     };
 
-    const Alta = async () => {
+    const Alta = async (event) => {
         setCurrentId("");
+        const { token } = session.user;
         reset({
           numero: "",
           nombre: "",
@@ -246,17 +217,21 @@ export const useProfesoresABC = () => {
           email: "",
           contraseña: "",
         });
-        setProfesor({ numero: "" });
+        let siguienteId = await siguiente(token);
+        siguienteId = Number(siguienteId) + 1;
+        setCurrentId(siguienteId);
+        setProfesor({ numero: siguienteId });
         setModal(!openModal);
         setAccion("Alta");
         showModal(true);
+    
         document.getElementById("nombre").focus();
     };
 
     const onSubmitModal = handleSubmit(async (data) => {
         event.preventDefault();
         setisLoadingButton(true);
-        accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
+        data.numero = currentID;
         let res = null;
         if (accion === "Eliminar") {
           showModal(false);
@@ -309,14 +284,15 @@ export const useProfesoresABC = () => {
               }
             }
           }
-          showSwal(res.alert_title, res.alert_text, res.alert_icon);
           showModal(false);
+          showSwal(res.alert_title, res.alert_text, res.alert_icon);
         } else {
+          showModal(false);
           await showSwalAndWait(res.alert_title, res.alert_text, res.alert_icon);
+          showModal(true);
         }
         if (accion === "Alta" || accion === "Eliminar") {
-          setReloadPage(!reload_page);
-          await fetchProfesorStatus(false, inactiveActive, busqueda);
+          await fetchProfesorStatus(false);
         }
         setisLoadingButton(false);
     });
@@ -332,7 +308,6 @@ export const useProfesoresABC = () => {
     };
 
     const handleBusquedaChange = (event) => {
-      event.preventDefault();
       setBusqueda((estadoPrevio) => ({
         ...estadoPrevio,
         [event.target.id]: event.target.value,
@@ -340,7 +315,6 @@ export const useProfesoresABC = () => {
     };
 
     const tableAction = (evt, profesores, accion) => {
-      console.log("envia", profesores, accion);
         evt.preventDefault();
         setProfesores(profesores);
         setAccion(accion);
@@ -375,6 +349,5 @@ export const useProfesoresABC = () => {
         reload_page,
         isDisabled,
         errors,
-        inactiveActive,
     };
 };

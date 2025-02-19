@@ -14,8 +14,6 @@ export const useProfesoresPdfExcel = (
     profesoresFiltrados,
     session,
     reload_page,
-    inactiveActive,
-    busqueda,
     fetchProfesorStatus,
     setReloadPage,
     setisLoadingButton
@@ -251,10 +249,10 @@ export const useProfesoresPdfExcel = (
           "success"
         );
         showModalProcesa(false);
+        await fetchProfesorStatus(true);
         setTimeout(() => {
           setReloadPage(!reload_page);
         }, 3500);
-        await fetchProfesorStatus(true, inactiveActive, busqueda);
     };  
 
     const handleFileChange = async (e) => {

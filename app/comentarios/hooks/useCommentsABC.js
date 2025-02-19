@@ -16,7 +16,8 @@ export const useCommentsABC = () => {
   const { data: session, status } = useSession();
   const [formasComentarios, setFormasComentarios] = useState([]);
   const [formaComentarios, setFormaComentarios] = useState({});
-  const [formaComentariosFiltrados, setFormaComentariosFiltrados] = useState(null);
+  const [formaComentariosFiltrados, setFormaComentariosFiltrados] =
+    useState(null);
   const [inactiveActive, setInactiveActive] = useState([]);
   const [bajas, setBajas] = useState(false);
   const [openModal, setModal] = useState(false);
@@ -35,7 +36,6 @@ export const useCommentsABC = () => {
     tb_numero: "",
     tb_comentario1: "",
   });
-
   const {
     register,
     handleSubmit,
@@ -50,7 +50,7 @@ export const useCommentsABC = () => {
       generales: formaComentarios.generales,
     },
   });
-
+ 
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
@@ -77,7 +77,6 @@ export const useCommentsABC = () => {
       return;
     }
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, bajas, reload_page]);
 
   useEffect(() => {
@@ -105,7 +104,6 @@ export const useCommentsABC = () => {
     });
     setFormaComentariosFiltrados(infoFiltrada);
     await fetchComentarioStatus(false, inactiveActive, busqueda);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [busqueda]);
 
   const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
@@ -120,7 +118,7 @@ export const useCommentsABC = () => {
     let active = 0;
     let inactive = 0;
     if (tb_numero || tb_comentario1) {
-      infoFiltrada = comentariosRef.current.filter((formaComentarios) => {
+      infoFiltrada = inactiveActive.filter((formaComentarios) => {
         const coincideID = tb_numero
           ? formaComentarios["numero"].toString().includes(tb_numero)
           : true;
@@ -135,8 +133,8 @@ export const useCommentsABC = () => {
       active = infoFiltrada.filter((c) => c.baja !== "*").length;
       inactive = infoFiltrada.filter((c) => c.baja === "*").length;
     } else {
-      active = inactiveActive.active;
-      inactive = inactiveActive.inactive;
+      active = inactiveActive.filter((c) => c.baja !== "*").length;
+      inactive = inactiveActive.filter((c) => c.baja === "*").length;
     }
     setActive(active);
     setInactive(inactive);
