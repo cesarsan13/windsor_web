@@ -87,7 +87,7 @@ export const guardarActividad = async (token, accion, data) => {
   return resJson;
 };
 
-export const Imprimir = (configuracion) => {
+export const ImprimirPDF = (configuracion) => {
   const newPDF = new ReportePDF(configuracion);
   const { body } = configuracion;
   Enca1(newPDF);
