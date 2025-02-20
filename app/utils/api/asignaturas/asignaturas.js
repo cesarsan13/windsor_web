@@ -1,6 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "../../ReportesPDF";
-import { formatDate, formatTime, formatFecha, format_Fecha_String } from "../../globalfn";
+import { formatTime, format_Fecha_String } from "../../globalfn";
 
 
 export const getAsignaturas = async (token, baja) => {
@@ -61,7 +61,6 @@ export const getLastSubject = async (token) => {
   return resJson.data;
 };
 export const guardarAsinatura = async (token, data, accion, numero) => {
-  // console.log("Data a guardar: ",data);
   let url = "";
   let met = "";
   if (accion === "Alta") {
@@ -79,14 +78,13 @@ export const guardarAsinatura = async (token, data, accion, numero) => {
     url = `${process.env.DOMAIN_API}api/subject/update/${numero}`;
     met = "put";
   }
+  data.actividad = data.actividad === true ? "true" : "false";
+
   const res = await fetch(`${url}`, {
     method: met,
     body: JSON.stringify({
       numero: data.numero,
       descripcion: data.descripcion,
-      // fecha_seg: data.fecha_seg,
-      // hora_seg: data.hora_seg,
-      // cve_seg: data.cve_seg,
       baja: data.baja,
       evaluaciones: data.evaluaciones,
       actividad: data.actividad,
@@ -121,7 +119,7 @@ const Enca1 = (doc) => {
   }
 };
 
-export const Imprimir = (configuracion) => {
+export const ImprimirPDF = (configuracion) => {
   const newPDF = new ReportePDF(configuracion, "Landscape");
   const { body } = configuracion;
   Enca1(newPDF);
