@@ -1,5 +1,5 @@
 import React from "react";
-import Inputs from "@/app/comentarios/components/Inputs";
+import Inputs from "@/app/profesores/components/Inputs";
 import { ActionButton, ActionColumn } from "@/app/utils/GlobalComponents";
 import iconos from "@/app/utils/iconos";
 
@@ -381,6 +381,7 @@ export const useProfesoresUI = (
                     message={"Contraseña requerido"}
                     maxLenght={12}
                     isDisabled={isDisabled}
+                    password={true} 
                   />
 
                 </div>
@@ -394,6 +395,5 @@ export const useProfesoresUI = (
         tableColumns,
         tableBody,
         modalBody
-    };
-    
+    }; 
 };

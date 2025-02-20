@@ -8,9 +8,8 @@ import { debounce, permissionsComponents } from "@/app/utils/globalfn";
 import {
     getProfesores,
     guardaProfesor,
-    siguiente
 } from "@/app/utils/api/profesores/profesores";
-import { showSwal, confirmSwal, showSwalAndWait, showSwalConfirm } from "@/app/utils/alerts";
+import { showSwal, confirmSwal, showSwalConfirm } from "@/app/utils/alerts";
 
 export const useProfesoresABC = () => {
     const router = useRouter();
@@ -18,6 +17,7 @@ export const useProfesoresABC = () => {
     const [profesores, setProfesores] = useState([]);
     const [profesor, setProfesor] = useState({});
     const [profesoresFiltrados, setProfesoresFiltrados] = useState(null);
+    const [inactiveActive, setInactiveActive] = useState([]);
     const [bajas, setBajas] = useState(false);
     const [openModal, setModal] = useState(false);
     const [accion, setAccion] = useState("");
@@ -63,16 +63,45 @@ export const useProfesoresABC = () => {
           contraseña: "",
         },
     });
+
+    useEffect(() => {
+      const fetchData = async () => {
+        setisLoading(true);
+        const { token, permissions } = session.user;
+        const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
+        const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+        const busqueda = limpiarBusqueda();
+        const data = await getProfesores(token, bajas);
+        const res = await inactiveActiveBaja(session?.user.token, "profesores");
+        setProfesores(data);
+        setProfesoresFiltrados(data);
+        setInactiveActive(res.data);
+        const permisos = permissionsComponents(
+          es_admin,
+          permissions,
+          session.user.id,
+          menuSeleccionado
+        );
+        await fetchProfesorStatus(false, res.data, busqueda);
+        setPermissions(permisos);
+        setisLoading(false);
+      };
+      if (status === "loading" || !session) {
+        return;
+      }
+      fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status, bajas, reload_page]);
     
     useEffect(() => {
         profesoresRef.current = profesores; // Actualiza el ref cuando profesores cambia
     }, [profesores]);
     
-    const Buscar = useCallback(() => {
+    const Buscar = useCallback( async () => {
       const { tb_numero, tb_nombre } = busqueda;
       if (tb_numero === "" && tb_nombre === "") {
         setProfesoresFiltrados(profesoresRef.current);
-        fetchProfesorStatus(false, profesoresRef.current);
+        await fetchProfesorStatus(false, inactiveActive, busqueda);
         return;
       }
       const infoFiltrada = profesoresRef.current.filter((profesor) => {
@@ -88,23 +117,51 @@ export const useProfesoresABC = () => {
         return coincideID && coincideNombre;
       });
       setProfesoresFiltrados(infoFiltrada);
-      fetchProfesorStatus(false, infoFiltrada);
+      await fetchProfesorStatus(false, inactiveActive, busqueda);
+      
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [busqueda]);
 
     const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
-    const fetchProfesorStatus = async (showMesssage, profesoresFiltrados) => {
-      const active = profesoresFiltrados?.filter((c) => c.baja !== "*").length;
-      const inactive = profesoresFiltrados?.filter((c) => c.baja === "*").length;
-        setActive(active);
-        setInactive(inactive);
-        if(showMesssage){
-          showSwalConfirm(
-            "Estado de los profesores",
-            `Profesores activos: ${active}\nProfesores inactivos: ${inactive}`,
-            "info"
-          );
-        }
+    const fetchProfesorStatus = async (
+      showMesssage, 
+      inactiveActive,
+      busqueda
+    ) => {
+      const { tb_numero, tb_nombre } = busqueda;
+      let infoFiltrada = [];
+      let active = 0;
+      let inactive = 0;
+
+      if(tb_numero || tb_nombre){
+        infoFiltrada = inactiveActive.filter((profesor) => {
+          const coincideID = tb_numero
+            ? profesor["numero"].toString().includes(tb_numero)
+            : true;
+          const coincideNombre = tb_nombre
+            ? profesor["nombre"]
+              .toString()
+              .toLowerCase()
+              .includes(tb_nombre.toLowerCase())
+            : true;
+          return coincideID && coincideNombre;
+        });
+        active = infoFiltrada.filter((c) => c.baja !== "*").length;
+        inactive = infoFiltrada.filter((c) => c.baja === "*").length;
+      } else {
+        active = inactiveActive.filter((c) => c.baja !== "*").length;
+        inactive = inactiveActive.filter((c) => c.baja === "*").length;
+      }
+      setActive(active);
+      setInactive(inactive);
+      if(showMesssage){
+        showSwalConfirm(
+          "Estado de los profesores",
+          `Profesores activos: ${active}\nProfesores inactivos: ${inactive}`,
+          "info"
+        );
+      }
     };
 
     useEffect(() => {
@@ -121,33 +178,6 @@ export const useProfesoresABC = () => {
           clearTimeout(debouncedBuscar);
         };
     }, [busqueda, Buscar]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-          setisLoading(true);
-          const { token, permissions } = session.user;
-          const es_admin = session.user?.es_admin || false; // Asegúrate de que exista
-          const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-          limpiarBusqueda();
-          const data = await getProfesores(token, bajas);
-          await fetchProfesorStatus(false, data);
-          setProfesores(data);
-          setProfesoresFiltrados(data);
-          setisLoading(false);
-          const permisos = permissionsComponents(
-            es_admin,
-            permissions,
-            session.user.id,
-            menuSeleccionado
-          );
-          setPermissions(permisos);
-        };
-        if (status === "loading" || !session) {
-          return;
-        }
-        fetchData();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [session, status, bajas, reload_page]);
 
     useEffect(() => {
         if (accion === "Eliminar" || accion === "Ver") {
@@ -191,12 +221,13 @@ export const useProfesoresABC = () => {
     }, [profesor, reset]);
 
     const limpiarBusqueda = () => {
+      const search = { tb_numero: "", tb_nombre: "" };
         setBusqueda({ tb_numero: "", tb_nombre: "" });
+      return search;
     };
 
-    const Alta = async (event) => {
+    const Alta = async () => {
         setCurrentId("");
-        const { token } = session.user;
         reset({
           numero: "",
           nombre: "",
@@ -217,21 +248,17 @@ export const useProfesoresABC = () => {
           email: "",
           contraseña: "",
         });
-        let siguienteId = await siguiente(token);
-        siguienteId = Number(siguienteId) + 1;
-        setCurrentId(siguienteId);
-        setProfesor({ numero: siguienteId });
+        setProfesor({ numero: "" });
         setModal(!openModal);
         setAccion("Alta");
         showModal(true);
-    
         document.getElementById("nombre").focus();
     };
 
     const onSubmitModal = handleSubmit(async (data) => {
         event.preventDefault();
         setisLoadingButton(true);
-        data.numero = currentID;
+        accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
         let res = null;
         if (accion === "Eliminar") {
           showModal(false);
@@ -252,6 +279,8 @@ export const useProfesoresABC = () => {
         res = await guardaProfesor(session.user.token, data, accion);
         if (res.status) {
           if (accion === "Alta") {
+            data.numero = res.data;
+            setCurrentId(data.numero);
             const nuevaProfesor = { currentID, ...data };
             setProfesores([...profesores, nuevaProfesor]);
             if (!bajas) {
@@ -284,15 +313,14 @@ export const useProfesoresABC = () => {
               }
             }
           }
-          showModal(false);
           showSwal(res.alert_title, res.alert_text, res.alert_icon);
-        } else {
           showModal(false);
-          await showSwalAndWait(res.alert_title, res.alert_text, res.alert_icon);
-          showModal(true);
+        } else {
+          showSwal(res.alert_title, res.alert_text, res.alert_icon, "my_modal_3");
         }
         if (accion === "Alta" || accion === "Eliminar") {
-          await fetchProfesorStatus(false);
+          setReloadPage(!reload_page);
+          await fetchProfesorStatus(false, inactiveActive, busqueda);
         }
         setisLoadingButton(false);
     });
@@ -307,18 +335,19 @@ export const useProfesoresABC = () => {
       router.push("/");
     };
 
-    const handleBusquedaChange = (event) => {
+    const handleBusquedaChange = async (event) => {
+      event.preventDefault();
       setBusqueda((estadoPrevio) => ({
         ...estadoPrevio,
         [event.target.id]: event.target.value,
       }));
     };
 
-    const tableAction = (evt, profesores, accion) => {
+    const tableAction = (evt, profesor, accion) => {
         evt.preventDefault();
-        setProfesores(profesores);
+        setProfesor(profesor);
         setAccion(accion);
-        setCurrentId(profesores.numero);
+        setCurrentId(profesor.numero);
         showModal(true);
     };
 
@@ -349,5 +378,6 @@ export const useProfesoresABC = () => {
         reload_page,
         isDisabled,
         errors,
+        inactiveActive
     };
 };
