@@ -35,10 +35,10 @@ function Inputs({
           {...register(name, {
             ...(requerido && { required: message }),
           })}
-          {...(dataType === "int" ||
-            (dataType === "float" && {
-              onBlur: (event) => handleBlur(event, dataType),
-            }))}
+          //{...(dataType === "int" ||
+          //  (dataType === "float" && {
+          //    onBlur: (event) => handleBlur(event, dataType),
+          //  }))}
           disabled={isDisabled}
         />
       </label>
