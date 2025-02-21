@@ -1,7 +1,7 @@
-import { Elimina_Comas } from "../../globalfn";
-import { ReporteExcel } from "../../ReportesExcel";
-import { ReportePDF } from "../../ReportesPDF";
-import { formatDate, formatTime, formatFecha, format_Fecha_String } from "../../globalfn";
+import { Elimina_Comas } from "@/app/utils/globalfn";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { formatTime, format_Fecha_String } from "@/app/utils/globalfn";
 export const getFormasPago = async (token, baja) => {
   let url = "";
   baja
@@ -96,7 +96,7 @@ const Enca1 = (doc) => {
     doc.tiene_encabezado = true;
   }
 };
-export const Imprimir = (configuracion) => {
+export const ImprimirPDF = (configuracion) => {
   const orientacion = "Portrait";
   const newPDF = new ReportePDF(configuracion, orientacion);
   const { body } = configuracion;
