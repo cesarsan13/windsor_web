@@ -139,20 +139,6 @@ const modalBody = () => {
         <fieldset id="fs_productos">
             <div className="container flex flex-col space-y-5">
             <Inputs
-                dataType={"int"}
-                name={"numero"}
-                tamañolabel={"w-2/6"}
-                className={"w-3/6 text-right"}
-                Titulo={"Numero: "}
-                type={"inputNum"}
-                requerido={true}
-                errors={errors}
-                register={register}
-                maxLenght={6}
-                message={"Numero requerido"}
-                isDisabled={isDisabled}
-            />
-            <Inputs
                 dataType={"string"}
                 name={"descripcion"}
                 tamañolabel={""}

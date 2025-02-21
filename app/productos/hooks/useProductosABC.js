@@ -210,7 +210,8 @@ const limpiarBusqueda = (evt) => {
     return search;
 };
 
-const Alta = async (event) => {
+const Alta = async () => {
+    setCurrentId("");
     reset({
     numero: "",
     descripcion: "",
