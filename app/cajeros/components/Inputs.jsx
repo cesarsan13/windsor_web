@@ -1,6 +1,7 @@
 import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
 import React from "react";
 import { useState } from "react";
+import { showSwal } from "@/app/utils/alerts";
 
 function Inputs({
   Titulo,
@@ -18,6 +19,10 @@ function Inputs({
   handleBlur,
   password
 }) {
+
+  if (errors && Object.keys(errors).length > 0) {
+      showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
+  }
 
   const [mostrarContr, setMostrarContr] = useState(false);
       const mostrarContraseña = () => {
@@ -96,7 +101,7 @@ function Inputs({
           </button>
           </label>
           {errors[name] && (
-            <span className="text-red-500 text-sm mt-2">
+            <span className="text-red-500 text-sm mt-2 font-semibold">
               {errors[name].message}
             </span>
           )}
@@ -133,7 +138,7 @@ function Inputs({
         />
       </label>
       {errors[name] && (
-        <span className="text-red-500 text-sm mt-2">
+        <span className="text-red-500 text-sm mt-2 font-semibold">
           {errors[name].message}
         </span>
       )}
