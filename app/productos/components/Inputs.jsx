@@ -74,11 +74,11 @@ function Inputs({
               ...(requerido && { required: message }),  
             })}
             
-            {...(dataType === "int" ||
-              (dataType === "float" && {
-                onBlur: (event) => handleBlur(event, dataType),
-              }))}
-            disabled={isDisabled}
+            // {...(dataType === "int" ||
+            //   (dataType === "float" && {
+            //     onBlur: (event) => handleBlur(event, dataType),
+            //   }))}
+            // disabled={isDisabled}
             
           />
         </label>

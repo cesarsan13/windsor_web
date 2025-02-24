@@ -10,9 +10,9 @@ export default function TableComponent({
   tableBody,
 }) {
   return !isLoading ? (
-    <div className="overflow-y-auto mt-3 h-[calc(55vh)] md:h-[calc(65vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-full">
+    <div className="overflow-y-auto mt-3 h-[calc(60vh)] md:h-[calc(70vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-full">
       {data && data.length > 0 ? (
-        <table className="table table-xs table-zebra w-full">
+        <table className="table table-xs text-xs table-zebra w-full">
           {tableColumns()}
           {tableBody(data)}
           <tfoot />
