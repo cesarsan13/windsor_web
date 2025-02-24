@@ -8,6 +8,7 @@ import {
 import { chunkArray, validateString } from "@/app/utils/globalfn";
 import { truncateTable } from "@/app/utils/GlobalApis";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
+import { format_Fecha_String } from "@/app/utils/globalfn";
 import * as XLSX from "xlsx";
 
 export const useAlumnosPdfExcel = (

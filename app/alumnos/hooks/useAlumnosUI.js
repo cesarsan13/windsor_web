@@ -6,7 +6,7 @@ import BuscarCat from "@/app/components/BuscarCat";
 import Webcam from "react-webcam";
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { handleBlur, openFileSelector, handleFileChange } from "@/app/utils/globalfn";
+import { handleBlur, openFileSelector, handleFileChange} from "@/app/utils/globalfn";
 import { useSession } from "next-auth/react";
 export const useAlumnosUI = (
     tableAction,
@@ -33,6 +33,10 @@ export const useAlumnosUI = (
     const nameInputs4 = ["cond_2", "cond_2_nombre"];
     const webcamRef = useRef(null);
     const [isCameraOn, setIsCameraOn] = useState(false);
+
+    const handleTabs = (num) => {
+        setActiveTab(num);
+    };
 const itemHeaderTable = () => {
     return (
     <>
@@ -234,8 +238,11 @@ const tableColumns = () => {
         <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
         <tr>
         <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
-        <td className="w-[40%] pt-[.10rem] pb-[.10rem]">Nombre</td>
-        <td className="sm:table-cell pt-[.10rem] pb-[.10rem]">Grado</td>
+        <td className="w-[30%] pt-[.10rem] pb-[.10rem]">Nombre</td>
+        <td className="w:-[15%] pt-[.10rem] pb-[.10rem]">Grado</td>
+        <td className="w:-[15%] pt-[.10rem] pb-[.10rem]">Papá</td>
+        <td className="w:-[15%] pt-[.10rem] pb-[.10rem]">Mamá</td>
+        <td className="w:-[20%] pt-[.10rem] pb-[.10rem]">Contacto</td>
         < ActionColumn
             description={"Ver"}
             permission={true}
@@ -267,11 +274,19 @@ const tableBody = (data) => {
             >
             {item.numero}
             </th>
-            <td className="w-[40%] max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap pt-[.10rem] pb-[.10rem]">
+            <td className="w-[30%] max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap pt-[.10rem] pb-[.10rem]">
             {`${item.a_nombre} ${item.a_paterno} ${item.a_materno}`}
             </td>
-            <td className="sm:table-cell pt-[.10rem] pb-[.10rem] truncate">
+            <td className="w-[15%] pt-[.10rem] pb-[.10rem] truncate">
             {item.horario_1_nombre}
+            </td>
+            <td className="w-[15%] pt-[.10rem] pb-[.10rem] truncate">
+            {item.nom_padre}
+            </td><td className="w-[15%] pt-[.10rem] pb-[.10rem] truncate">
+            {item.nom_madre}
+            </td>
+            <td className="w-[20%] pt-[.10rem] pb-[.10rem]">
+            {item.celular}
             </td>
             <ActionButton
             tooltip="Ver"
@@ -777,8 +792,8 @@ const modalBody = () => {
                 setItem={setGrado}
                 token={session.user.token}
                 modalId="modal_horarios"
-                array={item.horario_1}
-                id={alumno.numero}
+                array={alumno?.horario_1}
+                id={alumno?.numero}
                 alignRight={true}
                 inputWidths={{ first: "60px", second: "380px" }}
                 accion={accion}
@@ -842,8 +857,8 @@ const modalBody = () => {
                 setItem={setcond1}
                 token={session.user.token}
                 modalId="modal_formaPago1"
-                array={formasAlumno.cond_1}
-                id={formasAlumno.cond_1}
+                array={alumno?.cond_1}
+                id={alumno?.cond_1}
                 titulo="Forma pago: "
                 alignRight={true}
                 inputWidths={{ first: "80px", second: "380px" }}
@@ -856,8 +871,8 @@ const modalBody = () => {
                 setItem={setcond2}
                 token={session.user.token}
                 modalId="modal_formaPago2"
-                array={formasAlumno.cond_2}
-                id={formasAlumno.cond_2}
+                array={alumno?.cond_2}
+                id={alumno?.cond_2}
                 titulo={"Forma pago:"}
                 alignRight={true}
                 inputWidths={{ first: "80px", second: "380px" }}

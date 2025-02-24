@@ -68,9 +68,7 @@ function ModalAlumnos({
 
 
 
-  const handleTabs = (num) => {
-    setActiveTab(num);
-  };
+
   // console.log(JSON.stringify(alumno));
 
   const checkErrorsAndSubmit = (event) => {

@@ -14,7 +14,7 @@ import {
 import { getFotoAlumno } from "@/app/utils/api/alumnos/alumnos";
 import { getHorarios } from "@/app/utils/api/horarios/horarios";
 import { showSwal, confirmSwal, showSwalConfirm } from "@/app/utils/alerts";
-import { formatFecha } from "@/app/utils/globalfn";
+import { formatFecha, poneCeros, calculaDigitoBvba, format_Fecha_String } from "@/app/utils/globalfn";
 
 export const useAlumnosABC = () => {
     const router = useRouter();
@@ -27,6 +27,7 @@ export const useAlumnosABC = () => {
     const [grado, setGrado] = useState({});
     const [cond1, setcond1] = useState({});
     const [cond2, setcond2] = useState({});
+    const [capturedImage, setCapturedImage] = useState(null);
     const [activeTab, setActiveTab] = useState(1);
     const [condicion, setcondicion] = useState(false);
     const [inactiveActive, setInactiveActive] = useState(false);
@@ -246,11 +247,11 @@ const fetchAlumnoStatus = async (
         : true;
     return coincideId && coincideDescripcion && coincideGrado;
         });
-        active = infoFiltrada.filter((c) => c.baja !== "*").length;
-        inactive = infoFiltrada.filter((c) => c.baja === "*").length;
+    active = infoFiltrada.filter((c) => c.baja !== "*").length;
+    inactive = infoFiltrada.filter((c) => c.baja === "*").length;
     } else {
-        active = inactiveActive.filter((c) => c.baja !== "*").length;
-        inactive = inactiveActive.filter((c) => c.baja === "*").length;
+    active = inactiveActive.filter((c) => c.baja !== "*").length;
+    inactive = inactiveActive.filter((c) => c.baja === "*").length;
     }
     setActive(active);
     setInactive(inactive);
@@ -713,8 +714,8 @@ const onSubmitModal = handleSubmit(async (data) => {
         document.getElementById(primerError).focus();
         setActiveTab(getTab(primerError));
     }
-    showSwal("Error", res.alert_text, "error", "my_modal_alumnos");
-    }
+    showSwal(res.alert_title, res.alert_text, res.alert_icon, "my_modal_3");
+}
     if (accion === "Alta" || accion === "Eliminar") {
         setReloadPage(!reload_page);
     await fetchAlumnoStatus(false, inactiveActive, busqueda);;
@@ -724,8 +725,8 @@ const onSubmitModal = handleSubmit(async (data) => {
 
 const showModal = (show) => {
     show
-    ? document.getElementById("my_modal_alumnos").showModal()
-    : document.getElementById("my_modal_alumnos").close();
+    ? document.getElementById("my_modal_3").showModal()
+    : document.getElementById("my_modal_3").close();
 };
 
 const home = () => {

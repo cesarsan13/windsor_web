@@ -10,10 +10,23 @@ export default function ModalComponent({
   isLoadingButton,
   titulo,
   modalBody,
+  size = "2xl", // Nuevo: Tamaño configurable, por defecto "2xl"
 }) {
+  const sizeClasses = {
+    sm: "max-w-sm",
+    md: "max-w-md",
+    lg: "max-w-lg",
+    xl: "max-w-xl",
+    "2xl": "max-w-2xl",
+    "3xl": "max-w-3xl",
+    "4xl": "max-w-4xl",
+    "5xl": "max-w-5xl",
+    full: "max-w-full",
+  };
+
   return (
     <dialog id="my_modal_3" className="modal">
-      <div className="modal-box bg-base-200">
+      <div className={`modal-box bg-base-200 ${sizeClasses[size] || "max-w-2xl"}`}>
         <form onSubmit={onSubmit}>
           <div className="sticky -top-6 flex justify-between items-center bg-transparent w-full h-10 z-10 mb-5">
             <h3 className="font-bold text-lg text-neutral-600 dark:text-white">
