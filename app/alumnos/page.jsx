@@ -72,8 +72,8 @@ function Alumnos() {
   );
 
 const { itemHeaderTable, itemDataTable, tableColumns, tableBody, modalBody} =
-  useAlumnosUI(tableAction, register, permissions, isDisabled, errors, session);
-  if (status === "loading") {
+  useAlumnosUI(tableAction, register, permissions, isDisabled, errors);
+  if (status === "loading" && !session) {
     return (
       <div className="container skeleton w-full max-w-screen-xl  shadow-xl rounded-xl "></div>
     );

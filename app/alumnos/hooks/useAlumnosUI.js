@@ -7,18 +7,18 @@ import Webcam from "react-webcam";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { handleBlur, openFileSelector, handleFileChange } from "@/app/utils/globalfn";
+import { useSession } from "next-auth/react";
 export const useAlumnosUI = (
     tableAction,
     register,
     permissions,
     isDisabled,
     errors,
-    formasAlumno,
-    session,
+    alumno,
     setcond1,
     setcond2
 ) => {
-    
+    const { data: session, status } = useSession();
     const columnasBuscaCat = ["numero", "horario"];
     const nameInputs = ["horario_1", "horario_1_nombre"];
     const nameInputs2 = ["horario_2", "horario_2_nombre"];
@@ -256,7 +256,7 @@ const tableColumns = () => {
 const tableBody = (data) => {
     return (
     <tbody>
-        {formasAlumnoFiltrados.map((item) => (
+        {data.map((item) => (
         <tr key={item.numero} className="hover:cursor-pointer">
             <th
             className={
@@ -770,15 +770,15 @@ const modalBody = () => {
             <div className="flex flex-wrap -mx-3 mb-6">
             <BuscarCat
                 table="horarios"
-                itemData={formasAlumno}
+                itemData={alumno}
                 fieldsToShow={columnasBuscaCat}
                 nameInput={nameInputs}
                 titulo={"Grado: "}
                 setItem={setGrado}
-                token={session?.user?.token}
+                token={session.user.token}
                 modalId="modal_horarios"
-                array={formasAlumno.horario_1}
-                id={formasAlumno.numero}
+                array={item.horario_1}
+                id={alumno.numero}
                 alignRight={true}
                 inputWidths={{ first: "60px", second: "380px" }}
                 accion={accion}
@@ -840,7 +840,7 @@ const modalBody = () => {
                 fieldsToShow={columnasBuscaCat1}
                 nameInput={nameInputs3}
                 setItem={setcond1}
-                token={session?.user?.token}
+                token={session.user.token}
                 modalId="modal_formaPago1"
                 array={formasAlumno.cond_1}
                 id={formasAlumno.cond_1}
@@ -854,7 +854,7 @@ const modalBody = () => {
                 fieldsToShow={columnasBuscaCat1}
                 nameInput={nameInputs4}
                 setItem={setcond2}
-                token={session?.user?.token}
+                token={session.user.token}
                 modalId="modal_formaPago2"
                 array={formasAlumno.cond_2}
                 id={formasAlumno.cond_2}
@@ -1398,5 +1398,6 @@ return {
     tableColumns,
     tableBody,
     modalBody,
+    alumno
 };
 };
