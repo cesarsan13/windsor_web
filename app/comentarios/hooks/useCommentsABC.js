@@ -77,6 +77,7 @@ export const useCommentsABC = () => {
       return;
     }
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, bajas, reload_page]);
 
   useEffect(() => {
@@ -104,6 +105,7 @@ export const useCommentsABC = () => {
     });
     setFormaComentariosFiltrados(infoFiltrada);
     await fetchComentarioStatus(false, inactiveActive, busqueda);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [busqueda]);
 
   const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
