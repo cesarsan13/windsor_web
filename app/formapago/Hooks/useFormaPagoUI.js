@@ -120,7 +120,7 @@ export const useFormaPagoUI = (
                     <Inputs
                         dataType={"string"}
                         name={"descripcion"}
-                        tamañolabel={"w-72"}
+                        tamañolabel={"w-6/6"}
                         className={"w-4/6"}
                         Titulo={"Descripcion: "}
                         type={"text"}
@@ -131,12 +131,11 @@ export const useFormaPagoUI = (
                         message={"descripcion requerid"}
                         maxLenght={50}
                         isDisabled={isDisabled}
-                        //handleBlur={handleBlur}
                     />
                     <Inputs
                         dataType={"float"}
                         name={"comision"}
-                        tamañolabel={"w-72"}
+                        tamañolabel={"w-4/6"}
                         className={"w-4/6 text-right"}
                         Titulo={"Comision:"}
                         type={"text"}
@@ -146,12 +145,11 @@ export const useFormaPagoUI = (
                         message={"comision requerid"}
                         maxLenght={5}
                         isDisabled={isDisabled}
-                       //handleBlur={handleBlur}
                     />
                     <Inputs
                         dataType={"string"}
                         name={"aplicacion"}
-                        tamañolabel={"w-72"}
+                        tamañolabel={"w-6/6"}
                         className={"w-4/6"}
                         Titulo={"Aplicacion:"}
                         type={"text"}
@@ -162,7 +160,6 @@ export const useFormaPagoUI = (
                         message={"Aplicacion requerida"}
                         maxLenght={30}
                         isDisabled={isDisabled}
-                        //handleBlur={handleBlur}
                     />
                     <Inputs
                         dataType={"string"}
@@ -178,7 +175,6 @@ export const useFormaPagoUI = (
                         message={"Cuenta Banco requerida"}
                         maxLenght={34}
                         isDisabled={isDisabled}
-                        //handleBlur={handleBlur}
                     />
                 </div>
             </fieldset>
