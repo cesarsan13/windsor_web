@@ -4,7 +4,7 @@ import Image from "next/image";
 import { TbLoader3 } from "react-icons/tb";
 import iconos from "@/app/utils/iconos";
 
-function Acciones({ Buscar, Alta, home, Ver, animateLoading,permiso_alta }) {
+function Acciones({ Buscar, Alta, home, animateLoading,permiso_alta }) {
   const images = [
     {
       srcLight: iconos.buscar_w,
@@ -22,13 +22,6 @@ function Acciones({ Buscar, Alta, home, Ver, animateLoading,permiso_alta }) {
       onClick: Alta,
       permission: permiso_alta,
     },
-    // {
-    //   srcLight: iconos.vistaPrevia_w,
-    //   srcDark: iconos.vistaPrevia,
-    //   alt: "Vista previa",
-    //   tooltipTitle: "Vista previa",
-    //   onClick: Ver,
-    // },
     {
       srcLight: iconos.salir_w,
       srcDark: iconos.salir,
