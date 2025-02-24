@@ -60,7 +60,7 @@ function Menus() {
         titulo={titulo}
         modalBody={modalBody}
       />
-      <div className="container h-[80vh] w-full max-w-screen-xl bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
+      <div className="container h-[85vh] w-full max-w-[1800px] bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">
           <div className="flex flex-wrap md:flex-nowrap items-start md:items-center">
             <div className="order-2 md:order-1 flex justify-around w-full md:w-auto md:justify-start mb-0 md:mb-0">
@@ -81,7 +81,7 @@ function Menus() {
           </div>
         </div>
         <div className="flex flex-col items-center h-full">
-          <div className="w-full max-w-4xl">
+          <div className="w-full max-w-full">
             <Busqueda
               setBajas={setBajas}
               limpiarBusqueda={limpiarBusqueda}
