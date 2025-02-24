@@ -55,9 +55,12 @@ export const useAsignaturasUI = (
             <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
             <tr>
               <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Numero</td>
-              <td className="w-[40%]">Asignatura</td>
+              <td className="w-[30%]">Asignatura</td>
+              <td className="w-[5%]">Lenguaje</td>
+              <td className="w-[10%]">Caso a Evaluar</td>
               <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Area</td>
               <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Orden</td>
+              <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Evaluaciones</td>
               < ActionColumn
                 description={"Ver"}
                 permission={true}
@@ -88,6 +91,8 @@ export const useAsignaturasUI = (
                   {item.numero}
                 </th>
                 <td>{item.descripcion}</td>
+                <td>{item.lenguaje}</td>
+                <td>{item.caso_evaluar}</td>
                 <td className={
                   typeof item.area === "number" ? "text-right" : "text-left"
                 }
@@ -96,6 +101,11 @@ export const useAsignaturasUI = (
                   typeof item.orden === "number" ? "text-right" : "text-left"
                 }
                 >{item.orden}</td>
+                <td className={
+                  typeof item.evaluaciones === "number" ? "text-right" : "text-left"
+                }>
+                  {item.evaluaciones}
+                </td>
                 <ActionButton
                   tooltip="Ver"
                   iconDark={iconos.ver}
