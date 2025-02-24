@@ -46,6 +46,7 @@ const handleVerClick = () => {
         Nombre_Reporte: "Reporte Datos Productos",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
     },
+    body: formaProductosFiltrados,
     };
     const Enca1 = (doc) => {
     if (!doc.tiene_encabezado) {
@@ -72,7 +73,8 @@ const handleVerClick = () => {
     };
     const reporte = new ReportePDF(configuracion, "Landscape");
     Enca1(reporte);
-    productosFiltrados.forEach((producto) => {
+    const {body} = configuracion;
+    body.forEach((producto) => {
     reporte.ImpPosX(producto.numero.toString(), 24, reporte.tw_ren, 0, "R");
     reporte.ImpPosX(
         producto.descripcion.toString(),

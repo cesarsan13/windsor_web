@@ -30,7 +30,7 @@ export const useAlumnosABC = () => {
     const [capturedImage, setCapturedImage] = useState(null);
     const [activeTab, setActiveTab] = useState(1);
     const [condicion, setcondicion] = useState(false);
-    const [inactiveActive, setInactiveActive] = useState(false);
+    const [inactiveActive, setInactiveActive] = useState([]);
     const [bajas, setBajas] = useState(false);
     const [openModal, setModal] = useState(false);
     const [accion, setAccion] = useState("");
