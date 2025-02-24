@@ -33,8 +33,7 @@ function ModalAlumnos({
   setcondicion,
   setGrado,
   setGrado2,
-  setcond1,
-  setcond2,
+
   files,
   setFile,
   isLoadingButton,
@@ -66,56 +65,9 @@ function ModalAlumnos({
     }
   };
 
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFile(selectedFile);
-        setcondicion(true);
-        setCapturedImage(reader.result); // La imagen en formato Base64
-      };
-      reader.readAsDataURL(selectedFile); // Convierte el archivo a Base64
-    }
-  };
 
-  const openFileSelector = () => {
-    if (inputfileref.current) {
-      inputfileref.current.click(); // Simula el clic en el input
-    }
-  };
 
-  useEffect(() => {
-    if (accion === "Eliminar" || accion === "Ver") {
-      setIsDisabled(true);
-    }
-    if (accion === "Alta" || accion === "Editar") {
-      setIsDisabled(false);
-    }
-    setTitulo(
-      accion === "Alta"
-        ? `Nuevo Alumno`
-        : accion === "Editar"
-        ? `Editar Alumno: ${currentID}`
-        : accion === "Eliminar"
-        ? `Eliminar Alumno: ${currentID}`
-        : `Ver Alumno: ${currentID}`
-    );
-    // const alj = JSON.stringify(alumno);
-    // console.log(alumno);
-  }, [accion, currentID]);
-  const handleBlur = (evt, datatype) => {
-    if (evt.target.value === "") return;
-    datatype === "int"
-      ? setAlumno((alumno) => ({
-          ...alumno,
-          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-        }))
-      : setAlumno((alumno) => ({
-          ...alumno,
-          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-        }));
-  };
+
   const handleTabs = (num) => {
     setActiveTab(num);
   };
