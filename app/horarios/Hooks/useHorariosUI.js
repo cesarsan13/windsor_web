@@ -322,6 +322,5 @@ export const useHorariosUI = (
         tableBody,
         modalBody,
         horarios,
-        control
     };
 };
