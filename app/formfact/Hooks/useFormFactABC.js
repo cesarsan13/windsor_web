@@ -215,8 +215,18 @@ export const useFormFactABC = () => {
         document.getElementById("nombre_forma").focus();
     };
 
-      const onSubmitModal = handleSubmit(async (data) => {
+    const validateBeforeSave = () => {
+      const lastInput = document.querySelector("input[name='longitud']");
+      if (lastInput && lastInput.value.trim() === "") {
+      showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
+        return false;
+      }
+      return true;
+    };
+
+    const onSubmitModal = handleSubmit(async (data) => {
         event.preventDefault;
+        if (!validateBeforeSave()) return;
         setisLoadingButton(true);
         accion === "Alta" ? (data.numero_forma = "") : (data.numero_forma = currentID);
         let res = null;

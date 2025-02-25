@@ -253,9 +253,19 @@ export const useCajerosABC = () => {
     document.getElementById("nombre").focus();
   };
 
+  const validateBeforeSave = () => {
+    const lastInput = document.querySelector("input[name='clave_cajero']");
+    if (lastInput && lastInput.value.trim() === "") {
+    showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
+      return false;
+    }
+    return true;
+};
+
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
-    setisLoadingButton(true);;
+    if (!validateBeforeSave()) return;
+    setisLoadingButton(true);
     accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
     let res = null;
     
