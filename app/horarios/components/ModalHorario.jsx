@@ -20,26 +20,7 @@ function ModalHorario({
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
-  useEffect(() => {
-    if (accion === "Eliminar" || accion === "Ver") {
-      setIsDisabled(true);
-      // accion === "Ver" &&
-      //   document.getElementById("btn_guardar").setAttribute("disabled", true);
-    }
-    if (accion === "Alta" || accion === "Editar") {
-      // alert(accion);
-      setIsDisabled(false);
-    }
-    setTitulo(
-      accion === "Alta"
-        ? `Nuevo Horario: ${currentID}`
-        : accion === "Editar"
-          ? `Editar Horario: ${currentID}`
-          : accion === "Eliminar"
-            ? `Eliminar Horario: ${currentID}`
-            : `Ver Horario: ${currentID}`
-    );
-  }, [accion]);
+
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
     datatype === "int"

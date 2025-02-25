@@ -15,12 +15,7 @@ function TablaHorarios({
   permiso_cambio,
   permiso_baja,
 }) {
-  const tableAction = (evt, horario, accion) => {
-    setHorario(horario);
-    setAccion(accion);
-    setCurrentId(horario.numero);
-    showModal(true);
-  };
+
   const ActionButton = ({ tooltip, iconDark, iconLight, onClick, permission }) => {
     if (!permission) return null;
     return (

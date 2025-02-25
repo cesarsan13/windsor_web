@@ -2,14 +2,38 @@ import React from "react";
 import { ActionButton, ActionColumn } from "@/app/utils/GlobalComponents";
 import iconos from "@/app/utils/iconos";
 import Inputs from "@/app/horarios/components/Inputs";
-
+import { useState, useEffect } from "react";
 export const useHorariosUI = (
     tableAction,
     register,
     permissions,
     isDisabled,
-    errors
+    errors,
+    horarios
 ) => {
+  const options = [
+    { value: "LU", label: "Lunes" },
+    { value: "MA", label: "Martes" },
+    { value: "MI", label: "Miércoles" },
+    { value: "JU", label: "Jueves" },
+    { value: "VI", label: "Viernes" },
+    { value: "SA", label: "Sábado" },
+    { value: "DO", label: "Domingo" },
+  ];
+  // const [selectedDias, setSelectedDias] = useState([]);
+    //   useEffect(() => {
+    //     if (horarios && horarios.dia) {
+    //       setDia(horarios.dia.split("/"));
+    //       setSelectedDias(horarios.dia.split("/"));
+    //     } else {
+    //       setDia("");
+    //       setSelectedDias("");
+    //     }
+    //   }, [horarios]);
+    // const handleSelectChange = (selectedOptions) => {
+    //   setSelectedDias(selectedOptions.map((option) => option.value).join("/"));
+    //   setDia(selectedOptions.map((option) => option.value).join("/"));
+    // };
     const itemHeaderTable = () => {
         return (
           <>
@@ -75,11 +99,11 @@ export const useHorariosUI = (
                     />
                     < ActionColumn
                       description={"Editar"}
-                      permission={permiso_cambio}
+                      permission={permissions.cambios}
                     />
                     < ActionColumn
                       description={"Eliminar"}
-                      permission={permiso_baja}
+                      permission={permissions.bajas}
                     />
                 </tr>
             </thead>
@@ -124,14 +148,14 @@ export const useHorariosUI = (
                       iconDark={iconos.editar}
                       iconLight={iconos.editar_w}
                       onClick={(evt) => tableAction(evt, item, "Editar")}
-                      permission={permiso_cambio}
+                      permission={permissions.cambios}
                     />
                     <ActionButton
                       tooltip="Eliminar"
                       iconDark={iconos.eliminar}
                       iconLight={iconos.eliminar_w}
                       onClick={(evt) => tableAction(evt, item, "Eliminar")}
-                      permission={permiso_baja}
+                      permission={permissions.bajas}
                     />
                   </tr>
                 ))}
@@ -143,7 +167,7 @@ export const useHorariosUI = (
         return (
             <fieldset id="fs_horario">
             <div className="container flex flex-col space-y-5">
-              <Inputs
+              {/* <Inputs
                 dataType={"int"}
                 name={"numero"}
                 tamañolabel={"w-3/6"}
@@ -155,7 +179,7 @@ export const useHorariosUI = (
                 register={register}
                 message={"Numero Requerido"}
                 isDisabled={true}
-              />
+              /> */}
               <Inputs
                 dataType={"int"}
                 name={"cancha"}
@@ -171,7 +195,7 @@ export const useHorariosUI = (
                 maxLenght={50}
                 isDisabled={isDisabled}
               />
-              <Inputs
+              {/* <Inputs
                 titulo={"Dias de la semana"}
                 name={"dia"}
                 Titulo={"Dias de la semana"}
@@ -184,13 +208,13 @@ export const useHorariosUI = (
                 dataType={"multi-select"}
                 type={"multi-select"}
                 options={options}
-                control={control}
+                //control={control}
                 value={options.filter((option) =>
                   selectedDias.includes(option.value)
                 )}
                 onChange={handleSelectChange}
                 isDisabled={isDisabled}
-              />
+              /> */}
               <Inputs
                 dataType={"string"}
                 name={"horario"}
@@ -294,5 +318,6 @@ export const useHorariosUI = (
         tableColumns,
         tableBody,
         modalBody,
+        horarios
     };
 };
