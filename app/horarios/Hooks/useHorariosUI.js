@@ -9,7 +9,8 @@ export const useHorariosUI = (
     permissions,
     isDisabled,
     errors,
-    horarios
+    horarios,
+    control
 ) => {
   const options = [
     { value: "LU", label: "Lunes" },
@@ -20,20 +21,22 @@ export const useHorariosUI = (
     { value: "SA", label: "Sábado" },
     { value: "DO", label: "Domingo" },
   ];
-  // const [selectedDias, setSelectedDias] = useState([]);
-    //   useEffect(() => {
-    //     if (horarios && horarios.dia) {
-    //       setDia(horarios.dia.split("/"));
-    //       setSelectedDias(horarios.dia.split("/"));
-    //     } else {
-    //       setDia("");
-    //       setSelectedDias("");
-    //     }
-    //   }, [horarios]);
-    // const handleSelectChange = (selectedOptions) => {
-    //   setSelectedDias(selectedOptions.map((option) => option.value).join("/"));
-    //   setDia(selectedOptions.map((option) => option.value).join("/"));
-    // };
+  const [selectedDias, setSelectedDias] = useState([]);
+    const [dia, setDia] = useState("");
+  
+      useEffect(() => {
+        if (horarios && horarios.dia) {
+          setDia(horarios.dia.split("/"));
+          setSelectedDias(horarios.dia.split("/"));
+        } else {
+          setDia("");
+          setSelectedDias("");
+        }
+      }, [horarios]);
+    const handleSelectChange = (selectedOptions) => {
+      setSelectedDias(selectedOptions.map((option) => option.value).join("/"));
+      setDia(selectedOptions.map((option) => option.value).join("/"));
+    };
     const itemHeaderTable = () => {
         return (
           <>
@@ -195,7 +198,7 @@ export const useHorariosUI = (
                 maxLenght={50}
                 isDisabled={isDisabled}
               />
-              {/* <Inputs
+              <Inputs
                 titulo={"Dias de la semana"}
                 name={"dia"}
                 Titulo={"Dias de la semana"}
@@ -208,13 +211,13 @@ export const useHorariosUI = (
                 dataType={"multi-select"}
                 type={"multi-select"}
                 options={options}
-                //control={control}
+                control={control}
                 value={options.filter((option) =>
                   selectedDias.includes(option.value)
                 )}
                 onChange={handleSelectChange}
                 isDisabled={isDisabled}
-              /> */}
+              />
               <Inputs
                 dataType={"string"}
                 name={"horario"}
@@ -318,6 +321,7 @@ export const useHorariosUI = (
         tableColumns,
         tableBody,
         modalBody,
-        horarios
+        horarios,
+        control
     };
 };

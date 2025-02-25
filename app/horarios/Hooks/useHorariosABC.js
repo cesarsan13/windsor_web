@@ -347,6 +347,7 @@ return {
     setisLoadingButton,
     tableAction,
     register,
+    control,
     status,
     session,
     isLoadingButton,
