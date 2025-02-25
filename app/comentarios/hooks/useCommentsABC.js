@@ -10,6 +10,7 @@ import {
   guardaComentarios,
 } from "@/app/utils/api/comentarios/comentarios";
 import { showSwal, confirmSwal, showSwalConfirm } from "@/app/utils/alerts";
+import { useEscapeWarningModal, validateBeforeSave } from "@/app/utils/globalfn";
 
 export const useCommentsABC = () => {
   const router = useRouter();
@@ -217,41 +218,11 @@ export const useCommentsABC = () => {
     document.getElementById("comentario_1").focus();
   };
 
-  useEffect(() => {
-    const handleKeyDown = async (event) => {
-      if (event.key === "Escape" && openModal) {
-        event.preventDefault();
-        showModal(false);
-        const confirmed = await confirmSwal(
-          "¿Seguro que quieres cerrar?",
-          "Si cierras perderás los cambios no guardados.",
-          "warning",
-          "Sí, cerrar",
-          "Cancelar"
-        );
-        if (!confirmed) {
-          showModal(true);
-        }
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [openModal]);
-  
-const validateBeforeSave = () => {
-    const lastInput = document.querySelector("input[name='comentario_3']");
-    if (lastInput && lastInput.value.trim() === "") {
-    showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
-      return false;
-    }
-    return true;
-};
-
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault();
-    if (!validateBeforeSave()) return;
+    if (!validateBeforeSave("comentario_3", "my_modal_3")) {
+      return;
+  }
     setisLoadingButton(true);
     accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
     let res = null;
@@ -329,6 +300,8 @@ const validateBeforeSave = () => {
       ? document.getElementById("my_modal_3").showModal()
       : document.getElementById("my_modal_3").close();
   };
+  //Para el Esc
+  useEscapeWarningModal(openModal, showModal);
 
   const home = () => {
     router.push("/");
