@@ -1,4 +1,40 @@
-import {confirmSwal} from "@/app/utils/alerts";
+import {confirmSwal, showSwal} from "@/app/utils/alerts";
+import { useEffect } from "react";
+
+export const useEscapeWarningModal = (openModal, showModal) => {
+  useEffect(() => {
+    const handleKeyDown = async (event) => {
+      if (event.key === "Escape" && openModal) {
+        event.preventDefault();
+        showModal(false);
+        const confirmed = await confirmSwal(
+          "¿Seguro que quieres cerrar?",
+          "Si cierras perderás los cambios no guardados.",
+          "warning",
+          "Sí, cerrar",
+          "Cancelar"
+        );
+        if (!confirmed) {
+          showModal(true);
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [openModal, showModal]);
+};
+
+export const validateBeforeSave = (inputName, modalId) => {
+  const input = document.querySelector(`input[name='${inputName}']`);
+  if (input && input.value.trim() === "") {
+      showSwal("Error", "Complete todos los campos requeridos", "error", modalId);
+      return false;
+  }
+  return true;
+};
 
 export const debounce = (func, delay) => {
   let timeoutId;
