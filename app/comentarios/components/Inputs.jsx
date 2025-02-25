@@ -17,10 +17,15 @@ function Inputs({
   isDisabled,
   handleBlur,
   generales,
+  arreglos,
 }) {
-
   if (errors && Object.keys(errors).length > 0) {
-    showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
+    showSwal(
+      "Error",
+      "Complete todos los campos requeridos",
+      "error",
+      "my_modal_3"
+    );
   }
 
   if (type === "toogle") {
@@ -46,6 +51,39 @@ function Inputs({
       </div>
     );
   }
+
+  if (type === "select") {
+    return (
+      <div className="flex flex-col">
+        <label
+          className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
+        >
+          {Titulo}
+          <select
+            name={name}
+            id={name}
+            className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 ${className}`}
+            {...register(name, {
+              ...(requerido && { required: message }),
+            })}
+            disabled={isDisabled}
+          >
+            {arreglos.map((option) => (
+              <option key={option.id} value={option.id}>
+                {option.descripcion}
+              </option>
+            ))}
+          </select>
+        </label>
+        {errors[name] && (
+          <span className="text-red-500 text-sm mt-2 font-semibold">
+            {errors[name].message}
+          </span>
+        )}
+      </div>
+    );
+  }
+
   if (type === "text") {
     return (
       <div className="flex flex-col">
@@ -58,7 +96,7 @@ function Inputs({
             name={name}
             id={name}
             type={type}
-            className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700  ${className}`}
+            className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 ${className}`}
             {...(dataType === "int" && { onKeyDown: soloEnteros })}
             {...(dataType === "float" && { onKeyDown: soloDecimales })}
             {...register(name, {

@@ -8,6 +8,8 @@ function Acciones({
   Alta,
   Buscar,
   permiso_alta,
+  isLoadingSearch,
+  isLoadingAdd,
 }) {
   const images = [
     {
@@ -16,6 +18,7 @@ function Acciones({
       alt: "Buscar",
       tooltipTitle: "Buscar",
       onClick: Buscar,
+      animateLoading: isLoadingAdd,
       permission: true,
     },
     {
@@ -24,6 +27,7 @@ function Acciones({
       alt: "Alta",
       tooltipTitle: "Alta",
       onClick: Alta,
+      animateLoading: isLoadingSearch,
       permission: permiso_alta,
     },
     {
@@ -32,6 +36,7 @@ function Acciones({
       alt: "Salir",
       tooltipTitle: "Salir",
       onClick: home,
+      animateLoading: false,
       permission: true,
     },
   ];
@@ -81,7 +86,7 @@ function Acciones({
           srcDark={image.srcDark}
           tooltipTitle={image.tooltipTitle}
           onClick={image.onClick}
-          animateLoading={idx === 2}
+          animateLoading={image.animateLoading}
           permission={image.permission}
         />
       ))}
