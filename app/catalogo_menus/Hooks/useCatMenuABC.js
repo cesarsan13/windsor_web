@@ -198,8 +198,18 @@ export const useCatMenuABC = () => {
         document.getElementById("nombre").focus();
     };
 
+    const validateBeforeSave = () => {
+      const lastInput = document.querySelector("input[name='nombre']");
+      if (lastInput && lastInput.value.trim() === "") {
+      showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
+        return false;
+      }
+      return true;
+  };
+
     const onSubmitModal = handleSubmit(async (data) => {
         event.preventDefault;
+        if (!validateBeforeSave()) return;
         setisLoadingButton(true);
         accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
         let res = null;
