@@ -16,37 +16,8 @@ function ModalMenu({
   menusSel,
   isLoadingButton,
 }) {
-  const [titulo, setTitulo] = useState("");
-  const [isDisabled, setIsDisabled] = useState(true);
-  useEffect(() => {
-    if (accion === "Eliminar" || accion === "Ver") {
-      setIsDisabled(true);
-    }
-    if (accion === "Alta" || accion === "Editar") {
-      setIsDisabled(false);
-    }
-    setTitulo(
-      accion === "Alta"
-        ? `Nuevo Menu: ${currentID}`
-        : accion === "Editar"
-          ? `Editar Menu: ${currentID}`
-          : accion === "Eliminar"
-            ? `Eliminar Menu: ${currentID}`
-            : `Ver Menu: ${currentID}`
-    );
-  }, [accion, currentID]);
-  const handleBlur = (evt, datatype) => {
-    if (evt.target.value === "") return;
-    datatype === "int"
-      ? setMenu((menu) => ({
-        ...menu,
-        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-      }))
-      : setMenu((menu) => ({
-        ...menu,
-        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-      }));
-  };
+
+ 
   return (
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box  bg-base-200">
@@ -89,87 +60,7 @@ function ModalMenu({
             </div>
           </div>
 
-          <fieldset id="fs_formapago">
-            <div className="container flex flex-col space-y-5">
-              <Inputs
-                dataType={"int"}
-                name={"numero"}
-                tamañolabel={"w-3/6"}
-                className={"w-3/6 text-right"}
-                Titulo={"Numero: "}
-                type={"text"}
-                requerido={true}
-                errors={errors}
-                register={register}
-                message={"numero requerido"}
-                isDisabled={true}
-              />
-              <Inputs
-                dataType={"string"}
-                name={"descripcion"}
-                tamañolabel={""}
-                className={"grow"}
-                Titulo={"Descripción: "}
-                type={"text"}
-                requerido={true}
-                isNumero={false}
-                errors={errors}
-                register={register}
-                message={"Descripcion requerido"}
-                maxLenght={100}
-                isDisabled={isDisabled}
-              />
-              <Inputs
-                dataType={"string"}
-                name={"ruta"}
-                tamañolabel={""}
-                className={"grow"}
-                Titulo={"Ruta: "}
-                type={"text"}
-                requerido={true}
-                isNumero={false}
-                errors={errors}
-                register={register}
-                message={"Ruta requerido"}
-                maxLenght={255}
-                isDisabled={isDisabled}
-              />
-              <Inputs
-                dataType={"string"}
-                name={"icono"}
-                tamañolabel={""}
-                className={"grow"}
-                Titulo={"Icono: "}
-                type={"text"}
-                requerido={true}
-                isNumero={false}
-                errors={errors}
-                register={register}
-                message={"Icono requerido"}
-                maxLenght={100}
-                isDisabled={isDisabled}
-              />
-              <Inputs
-                dataType={"string"}
-                name={"menu"}
-                tamañolabel={""}
-                className={"w-5/6"}
-                Titulo={"Menu: "}
-                type={"select"}
-                requerido={true}
-                isNumero={false}
-                errors={errors}
-                register={register}
-                message={"Menu requerido"}
-                maxLenght={100}
-                arreglos={menusSel.map((menu) => ({
-                  id: menu.id,
-                  descripcion: menu.nombre,
-                }))}
-                isDisabled={isDisabled}
-              />
-            </div>
-          </fieldset>
+         
         </form>
       </div>
     </dialog>
