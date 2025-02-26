@@ -42,6 +42,7 @@ const {
     reset,
     control,
     formState: { errors },
+    trigger,
 } = useForm({
     defaultValues: {
     numero: formaHorarios.numero,
@@ -300,7 +301,14 @@ if (accion === "Alta" || accion === "Eliminar") {
     await fetchHorariosStatus(false, inactiveActive, busqueda);
 }
 setisLoadingButton(false);
-});
+},
+async (errors) => {
+    await trigger();
+    if (Object.keys(errors).length > 0) {
+      showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
+    }
+}
+);
 
 const showModal = (show) => {
     show
