@@ -16,6 +16,7 @@ import {
   guardaSubMenu,
   updateSubMenu,
 } from "@/app/utils/api/sub_menus/sub_menus";
+import { useEscapeWarningModal, validateBeforeSave } from "@/app/utils/globalfn";
 
 export const useAccesoMenuABC = () => {
   const router = useRouter();
@@ -183,6 +184,9 @@ export const useAccesoMenuABC = () => {
   };
 
   const onSubmitModal = handleSubmit(async (data) => {
+    if (!validateBeforeSave("sub_menu", "my_modal_3")) {
+      return;
+  }
     data.numero = currentID;
     if (!data.numero) {
       console.error("Número no definido");
@@ -271,6 +275,9 @@ export const useAccesoMenuABC = () => {
       ? document.getElementById("my_modal_3").showModal()
       : document.getElementById("my_modal_3").close();
   };
+
+  //Para el Esc
+  useEscapeWarningModal(openModal, showModal);
 
   const home = () => {
     router.push("/");

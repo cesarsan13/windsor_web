@@ -12,6 +12,7 @@ import {
   getFormFact,
   guardaFormFact,
 } from "@/app/utils/api/formfact/formfact";
+import { useEscapeWarningModal, validateBeforeSave } from "@/app/utils/globalfn";
 
 export const useFormFactABC = () => {
     const router = useRouter();
@@ -215,18 +216,11 @@ export const useFormFactABC = () => {
         document.getElementById("nombre_forma").focus();
     };
 
-    const validateBeforeSave = () => {
-      const lastInput = document.querySelector("input[name='longitud']");
-      if (lastInput && lastInput.value.trim() === "") {
-      showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
-        return false;
-      }
-      return true;
-    };
-
     const onSubmitModal = handleSubmit(async (data) => {
         event.preventDefault;
-        if (!validateBeforeSave()) return;
+        if (!validateBeforeSave("longitud", "my_modal_3")) {
+          return;
+        }
         setisLoadingButton(true);
         accion === "Alta" ? (data.numero_forma = "") : (data.numero_forma = currentID);
         let res = null;
@@ -301,6 +295,9 @@ export const useFormFactABC = () => {
           ? document.getElementById("my_modal_3").showModal()
           : document.getElementById("my_modal_3").close();
     };
+
+    //Para el Esc
+    useEscapeWarningModal(openModal, showModal);
 
     const home = () => {
         router.push("/");

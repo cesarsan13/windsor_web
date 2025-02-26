@@ -10,6 +10,7 @@ import {
     guardaUsuario,
 } from "@/app/utils/api/usuarios/usuarios";
 import { showSwal, confirmSwal} from "@/app/utils/alerts";
+import { useEscapeWarningModal, validateBeforeSave } from "@/app/utils/globalfn";
 
 export const useUsuariosABC = () => {
     const router = useRouter();
@@ -214,18 +215,12 @@ export const useUsuariosABC = () => {
         document.getElementById("name").focus();
     };
 
-    const validateBeforeSave = () => {
-        const lastInput = document.querySelector("input[name='match_password']");
-        if (lastInput && lastInput.value.trim() === "") {
-        showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
-          return false;
-        }
-        return true;
-    };
-
     const onSubmitModal = handleSubmit(async (data) => {
         event.preventDefault();
-        if (!validateBeforeSave()) return;
+        if (!validateBeforeSave("match_password", "my_modal_3")) {
+            return;
+        }
+
         setisLoadingButton(true);
         accion === "Alta" ? (data.id = "") : (data.id = currentID);
         const password1 = watch("password", "");
@@ -326,6 +321,9 @@ export const useUsuariosABC = () => {
           ? document.getElementById("my_modal_3").showModal()
           : document.getElementById("my_modal_3").close();
     };
+
+    //Para el Esc
+    useEscapeWarningModal(openModal, showModal);
     
     const home = () => {
         router.push("/");

@@ -8,6 +8,7 @@ import {
     actualizaTodos,
 } from "@/app/utils/api/accesos_usuarios/accesos_usuarios";
 import { confirmSwal, showSwal } from "@/app/utils/alerts";
+import { useEscapeWarningModal, validateBeforeSave } from "@/app/utils/globalfn";
 
 export const useAccesosUsuariosABC = () => {
     const router = useRouter();
@@ -22,6 +23,7 @@ export const useAccesosUsuariosABC = () => {
     const [currentMenu, setCurrentMenu] = useState("");
     const [isLoadingButton, setisLoadingButton] = useState(false);
     const [titulo, setTitulo] = useState("");
+    const [openModal, setModal] = useState(false);
 
     const {
         register,
@@ -91,6 +93,9 @@ export const useAccesosUsuariosABC = () => {
     };
       
     const onSubmitModal = handleSubmit(async (data) => {
+      if (!validateBeforeSave("impresion", "my_modal_3")) {
+        return;
+      }
         setisLoadingButton(true);
         data.id_punto_menu = currentID;
         data.id_usuario = usuario.id;
@@ -154,6 +159,9 @@ export const useAccesosUsuariosABC = () => {
           showModal(false);
         }
     };
+
+    //Para el Esc
+    useEscapeWarningModal(true, showModal);
     
     const home = () => {
         router.push("/");

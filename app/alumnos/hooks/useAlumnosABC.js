@@ -15,6 +15,7 @@ import { getFotoAlumno } from "@/app/utils/api/alumnos/alumnos";
 import { getHorarios } from "@/app/utils/api/horarios/horarios";
 import { showSwal, confirmSwal, showSwalConfirm } from "@/app/utils/alerts";
 import { formatFecha, poneCeros, calculaDigitoBvba, format_Fecha_String } from "@/app/utils/globalfn";
+import { useEscapeWarningModal, validateBeforeSave } from "@/app/utils/globalfn";
 
 export const useAlumnosABC = () => {
     const router = useRouter();
@@ -510,18 +511,11 @@ const Alta = async () => {
     document.getElementById("a_paterno").focus();
 };
 
-const validateBeforeSave = () => {
-    const lastInput = document.querySelector("input[name='horario_1_nombre']");
-    if (lastInput && lastInput.value.trim() === "") {
-    showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
-      return false;
-    }
-    return true;
-};
-
 const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault();
-    if (!validateBeforeSave()) return;
+    if (!validateBeforeSave("horario_1_nombre", "my_modal_3")) {
+        return;
+    }
     setisLoadingButton(true);
     accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
     let res = null;
@@ -738,6 +732,9 @@ const showModal = (show) => {
     ? document.getElementById("my_modal_3").showModal()
     : document.getElementById("my_modal_3").close();
 };
+
+//Para el Esc
+useEscapeWarningModal(openModal, showModal);
 
 const home = () => {
     router.push("/");

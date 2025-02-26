@@ -12,6 +12,7 @@ import {
     getAsignaturas,
     getUltimaSecuencia
 } from '@/app/utils/api/actividades/actividades';
+import { useEscapeWarningModal, validateBeforeSave } from "@/app/utils/globalfn";
 
 export const useActividadesABC = () => {
     const router = useRouter();
@@ -229,18 +230,11 @@ export const useActividadesABC = () => {
         document.getElementById("materia").focus();
     };
 
-    const validateBeforeSave = () => {
-        const lastInput = document.querySelector("input[name='EB5']");
-        if (lastInput && lastInput.value.trim() === "") {
-        showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
-          return false;
-        }
-        return true;
-    };
-
     const onSubmitModal = handleSubmit(async (data) => {
         event.preventDefault();
-        if (!validateBeforeSave()) return;
+        if (!validateBeforeSave("EB5", "my_modal_3")) {
+            return;
+        }
         setisLoadingButton(true);
         accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
         let res = null
@@ -308,6 +302,9 @@ export const useActividadesABC = () => {
             ? document.getElementById("my_modal_3").showModal()
             : document.getElementById("my_modal_3").close();
     };
+
+    //Para el Esc
+    useEscapeWarningModal(openModal, showModal);
 
     const home = () => {
         router.push("/");

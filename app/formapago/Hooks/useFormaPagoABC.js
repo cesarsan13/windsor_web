@@ -10,6 +10,7 @@ import {
     getFormasPago,
     guardaFormaPAgo,
 } from "@/app/utils/api/formapago/formapago";
+import { useEscapeWarningModal, validateBeforeSave } from "@/app/utils/globalfn";
 
 export const useFormaPagoABC = () => {
     const router = useRouter();
@@ -212,18 +213,11 @@ export const useFormaPagoABC = () => {
         document.getElementById("descripcion").focus();
     };
 
-    const validateBeforeSave = () => {
-      const lastInput = document.querySelector("input[name='cue_banco']");
-      if (lastInput && lastInput.value.trim() === "") {
-      showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
-        return false;
-      }
-      return true;
-  };
-
     const onSubmitModal = handleSubmit(async (data) => {
         event.preventDefault;
-        if (!validateBeforeSave()) return;
+        if (!validateBeforeSave("cue_banco", "my_modal_3")) {
+          return;
+      }
         setisLoadingButton(true);
         accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
         let res = null;
@@ -296,6 +290,10 @@ export const useFormaPagoABC = () => {
           ? document.getElementById("my_modal_3").showModal()
           : document.getElementById("my_modal_3").close();
     };
+
+    //Para el Esc
+    useEscapeWarningModal(openModal, showModal);
+
 
     const home = () => {
         router.push("/");

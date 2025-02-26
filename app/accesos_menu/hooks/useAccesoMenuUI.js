@@ -1,6 +1,6 @@
 import { ActionButton } from "@/app/utils/GlobalComponents";
 import iconos from "@/app/utils/iconos";
-import Inputs from "@/app/comentarios/components/Inputs";
+import Inputs from "@/app/accesos_menu/components/Inputs";
 
 export const useAccesoMenuUI = (
   tableAction,

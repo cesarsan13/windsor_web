@@ -10,6 +10,7 @@ import {
     guardarProductos,
 } from "@/app/utils/api/productos/productos";
 import { showSwal, confirmSwal, showSwalConfirm } from "@/app/utils/alerts";
+import { useEscapeWarningModal, validateBeforeSave } from "@/app/utils/globalfn";
 
 export const useProductosABC = () => {
     const router = useRouter();
@@ -242,7 +243,9 @@ const validateBeforeSave = () => {
 
 const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
-    if (!validateBeforeSave()) return;
+    if (!validateBeforeSave("cam_precio", "my_modal_3")) {
+        return;
+    }
     setisLoadingButton(true);
     accion == "Alta" ? (data.numero = "") : (data.numero = currentID);
     let res = null;
@@ -317,6 +320,9 @@ const showModal = (show) => {
     ? document.getElementById("my_modal_3").showModal()
     : document.getElementById("my_modal_3").close();
 };
+
+//Para el Esc
+useEscapeWarningModal(openModal, showModal);
 
 const home = () => {
     router.push("/");

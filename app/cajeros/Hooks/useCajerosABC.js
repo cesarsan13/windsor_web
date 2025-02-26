@@ -10,6 +10,7 @@ import {
   guardaCajero,
 } from "@/app/utils/api/cajeros/cajeros";
 import { showSwal, confirmSwal, showSwalConfirm } from "@/app/utils/alerts";
+import { useEscapeWarningModal, validateBeforeSave } from "@/app/utils/globalfn";
 
 export const useCajerosABC = () => {
   const router = useRouter();
@@ -253,18 +254,11 @@ export const useCajerosABC = () => {
     document.getElementById("nombre").focus();
   };
 
-  const validateBeforeSave = () => {
-    const lastInput = document.querySelector("input[name='clave_cajero']");
-    if (lastInput && lastInput.value.trim() === "") {
-    showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
-      return false;
-    }
-    return true;
-};
-
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
-    if (!validateBeforeSave()) return;
+    if (!validateBeforeSave("clave_cajero", "my_modal_3")) {
+      return;
+  }
     setisLoadingButton(true);
     accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
     let res = null;
@@ -337,6 +331,10 @@ export const useCajerosABC = () => {
       ? document.getElementById("my_modal_3").showModal()
       : document.getElementById("my_modal_3").close();
   };
+
+  //Para el Esc
+  useEscapeWarningModal(openModal, showModal);
+
   const home = () => {
     router.push("/");
   };

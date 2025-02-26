@@ -10,6 +10,7 @@ import {
     guardarMenus
 } from "@/app/utils/api/menus/menus";
 import { showSwal, confirmSwal} from "@/app/utils/alerts";
+import { useEscapeWarningModal, validateBeforeSave } from "@/app/utils/globalfn";
 
 export const useCatMenuABC = () => {
     const router = useRouter();
@@ -198,18 +199,11 @@ export const useCatMenuABC = () => {
         document.getElementById("nombre").focus();
     };
 
-    const validateBeforeSave = () => {
-      const lastInput = document.querySelector("input[name='nombre']");
-      if (lastInput && lastInput.value.trim() === "") {
-      showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
-        return false;
-      }
-      return true;
-  };
-
     const onSubmitModal = handleSubmit(async (data) => {
         event.preventDefault;
-        if (!validateBeforeSave()) return;
+        if (!validateBeforeSave("nombre", "my_modal_3")) {
+          return;
+        }
         setisLoadingButton(true);
         accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
         let res = null;
@@ -278,6 +272,9 @@ export const useCatMenuABC = () => {
           ? document.getElementById("my_modal_3").showModal()
           : document.getElementById("my_modal_3").close();
     };
+
+    //Para el Esc
+    useEscapeWarningModal(openModal, showModal);
     
     const home = () => {
         router.push("/");
