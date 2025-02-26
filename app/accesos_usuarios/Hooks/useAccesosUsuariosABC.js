@@ -23,7 +23,6 @@ export const useAccesosUsuariosABC = () => {
     const [currentMenu, setCurrentMenu] = useState("");
     const [isLoadingButton, setisLoadingButton] = useState(false);
     const [titulo, setTitulo] = useState("");
-    const [openModal, setModal] = useState(false);
 
     const {
         register,
@@ -32,6 +31,7 @@ export const useAccesosUsuariosABC = () => {
         setValue,
         watch,
         formState: { errors },
+        trigger,
     } = useForm({
         defaultValues: {
           id_usuario: accesoUsuario.id_usuario,
@@ -88,7 +88,6 @@ export const useAccesosUsuariosABC = () => {
         setAccion(accion);
         setCurrentId(accesoUsuario.id_punto_menu);
         setCurrentMenu(accesoUsuario.descripcion);
-        console.log("a", accesoUsuario.descripcion);
         showModal(true);
     };
       
@@ -118,7 +117,14 @@ export const useAccesosUsuariosABC = () => {
           showModal(false);
           setisLoadingButton(false);
         }
-    });
+    },
+    async (errors) => {
+      await trigger();
+      if (Object.keys(errors).length > 0) {
+        showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
+      }
+    }
+    );
     
     const TodosSiNo = async (event) => {
         event.preventDefault();

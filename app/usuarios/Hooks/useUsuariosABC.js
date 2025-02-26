@@ -43,6 +43,7 @@ export const useUsuariosABC = () => {
         reset,
         formState: { errors },
         watch,
+        trigger,
     } = useForm({
         defaultValues: {
           id: usuario.id,
@@ -220,7 +221,6 @@ export const useUsuariosABC = () => {
         if (!validateBeforeSave("match_password", "my_modal_3")) {
             return;
         }
-
         setisLoadingButton(true);
         accion === "Alta" ? (data.id = "") : (data.id = currentID);
         const password1 = watch("password", "");
@@ -314,7 +314,14 @@ export const useUsuariosABC = () => {
             }
             setisLoadingButton(false);
         }
-    });
+    },
+    async (errors) => {
+        await trigger();
+        if (Object.keys(errors).length > 0) {
+          showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
+        }
+      }
+    );
 
     const showModal = (show) => {
         show

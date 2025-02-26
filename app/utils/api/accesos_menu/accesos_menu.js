@@ -31,7 +31,6 @@ export const guardaMenu = async (token, accion, data) => {
   if (!data.numero) {
     throw new Error("Número no definido");
   }
-  console.info(data);
   let url = "";
   let method = "";
   if (accion === "Alta") {

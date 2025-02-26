@@ -82,19 +82,6 @@ export const useAccesoMenuUI = (
       <fieldset id="fs_formapago">
         <div className="container flex flex-col space-y-5">
           <Inputs
-            dataType={"int"}
-            name={"numero"}
-            tamañolabel={"w-3/6"}
-            className={"w-3/6 text-right"}
-            Titulo={"Numero: "}
-            type={"text"}
-            requerido={true}
-            errors={errors}
-            register={register}
-            message={"numero requerido"}
-            isDisabled={true}
-          />
-          <Inputs
             dataType={"string"}
             name={"descripcion"}
             tamañolabel={""}
@@ -143,7 +130,7 @@ export const useAccesoMenuUI = (
             dataType={"string"}
             name={"menu"}
             tamañolabel={""}
-            className={"w-5/6"}
+            className={"w-full"}
             Titulo={"Menu: "}
             type={"select"}
             requerido={true}
