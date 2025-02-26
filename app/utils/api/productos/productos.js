@@ -84,20 +84,20 @@ export const guardarProductos = async (token, data, accion) => {
     met = "put";
   }
   const res = await fetch(`${url}`, {
-    method: "post",
+    method: met,
     body: JSON.stringify({
-      numero: data.numero || "",
-      descripcion: data.descripcion || "",
-      costo: data.costo || "",
-      frecuencia: data.frecuencia || "",
-      por_recargo: data.por_recargo || "",
-      aplicacion: data.aplicacion || "",
-      iva: data.iva || "",
-      cond_1: data.cond_1 || "",
-      cam_precio: data.cam_precio || "",
-      precio: data.precio || "",
-      ref: data.ref || "",
-      baja: data.baja || "",
+      numero: data.numero,
+      descripcion: data.descripcion,
+      costo: data.costo,
+      frecuencia: data.frecuencia,
+      por_recargo: data.por_recargo,
+      aplicacion: data.aplicacion,
+      iva: data.iva,
+      cond_1: data.cond_1,
+      cam_precio: data.cam_precio,
+      precio: data.precio,
+      ref: data.ref,
+      baja: data.baja,
     }),
     headers: new Headers({
       Authorization: "Bearer " + token,

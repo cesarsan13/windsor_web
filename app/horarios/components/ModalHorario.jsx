@@ -13,7 +13,6 @@ function ModalHorario({
   errors,
   setHorarios,
   horarios,
-  control,
   setDia,
   isLoadingButton,
 }) {
@@ -143,7 +142,6 @@ function ModalHorario({
                 dataType={"multi-select"}
                 type={"multi-select"}
                 options={options}
-                control={control}
                 value={options.filter((option) =>
                   selectedDias.includes(option.value)
                 )}

@@ -198,7 +198,7 @@ export const useHorariosUI = (
                 maxLenght={50}
                 isDisabled={isDisabled}
               />
-              <Inputs
+              {/* <Inputs
                 titulo={"Dias de la semana"}
                 name={"dia"}
                 Titulo={"Dias de la semana"}
@@ -217,7 +217,7 @@ export const useHorariosUI = (
                 )}
                 onChange={handleSelectChange}
                 isDisabled={isDisabled}
-              />
+              /> */}
               <Inputs
                 dataType={"string"}
                 name={"horario"}
