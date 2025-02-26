@@ -8,7 +8,8 @@ export const useFormaPagoUI = (
     register,
     permissions,
     isDisabled,
-    errors
+    errors,
+    accion
 ) => {
 
     
@@ -115,7 +116,8 @@ export const useFormaPagoUI = (
 
     const modalBody = () => {
         return (
-            <fieldset id="fs_formapago">
+            <fieldset id="fs_formapago"
+            disabled={accion === "Ver" || accion === "Eliminar" ? true : false}>
                 <div className="container flex flex-col space-y-5">
                     <Inputs
                         dataType={"string"}

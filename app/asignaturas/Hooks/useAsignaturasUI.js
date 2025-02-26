@@ -8,7 +8,8 @@ export const useAsignaturasUI = (
     register,
     permissions,
     isDisabled,
-    errors
+    errors,
+    accion
 ) => {
     const itemHeaderTable = () => {
       return (
@@ -135,7 +136,8 @@ export const useAsignaturasUI = (
 
     const modalBody = () => {
         return (
-            <fieldset id="fs_asignaturas">
+            <fieldset id="fs_asignaturas"
+            disabled={accion === "Ver" || accion === "Eliminar" ? true : false}>
             <div className="flex flex-wrap -mx-3 mb-6 px-3 gap-x-5 gap-y-5">
               <div className="flex flex-col w-full">
                 <Inputs

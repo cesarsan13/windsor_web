@@ -317,7 +317,8 @@ const tableBody = (data) => {
 
 const modalBody = () => {
     return (
-        <fieldset id="fs_alumnos">
+        <fieldset id="fs_alumnos"
+        disabled={accion === "Ver" || accion === "Eliminar" ? true : false}>
         <div role="tablist" className="tabs tabs-lifted ">
         <input
             type="radio"

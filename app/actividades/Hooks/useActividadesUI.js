@@ -10,7 +10,8 @@ export const useActividadesUI = (
     isDisabled,
     errors,
     asignaturas,
-    handleAsignaturaChange
+    handleAsignaturaChange,
+    accion
 ) => {
 
 
@@ -139,7 +140,8 @@ export const useActividadesUI = (
 
     const modalBody = () => {
         return (
-            <fieldset id='fs_actividad'>
+            <fieldset id='fs_actividad'
+            disabled={accion === "Ver" || accion === "Eliminar" ? true : false}>
                 <div className='container flex flex-col space-y-5'>
                     <Inputs
                         dataType={"int"}
@@ -152,7 +154,7 @@ export const useActividadesUI = (
                         errors={errors}
                         register={register}
                         message={"Asignatura Requerido"}
-                        isDisabled={false}
+                        isDisabled={isDisabled}
                         maxLenght={5}
                         arreglos={asignaturas}
                         onChange={handleAsignaturaChange}
@@ -167,8 +169,8 @@ export const useActividadesUI = (
                         errors={errors}
                         register={register}
                         message={"secuenciaRequerido"}
-                        isDisabled={true}
-                    />
+                        isDisabled={isDisabled}
+                        />
                     <Inputs
                         dataType={"string"}
                         name={"descripcion"}

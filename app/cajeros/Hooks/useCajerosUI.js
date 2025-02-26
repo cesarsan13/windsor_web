@@ -8,7 +8,8 @@ export const useCajerosUI = (
     register,
     permissions,
     isDisabled,
-    errors
+    errors,
+    accion
 ) => {
     const itemHeaderTable = () => {
       return (
@@ -126,7 +127,8 @@ export const useCajerosUI = (
 
     const modalBody = () => {
         return(
-            <fieldset id="fs_formapago">
+            <fieldset id="fs_formapago"
+            disabled={accion === "Ver" || accion === "Eliminar" ? true : false}>
             <div className="container flex flex-col space-y-5">
               <Inputs
                 dataType={"string"}
