@@ -64,7 +64,7 @@ export const useProductosABC = () => {
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const busqueda = limpiarBusqueda();
       const data = await getProductos(token, bajas);
-      const res = await inactiveActiveBaja(session?.user.token, "productos");
+      const res = await inactiveActiveBaja(token, "productos");
       setFormasProductos(data);
       setFormaProductosFiltrados(data);
       setInactiveActive(res.data);

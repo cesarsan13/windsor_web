@@ -32,7 +32,7 @@ export const guardaSubMenu = async (token, data) => {
 };
 
 export const updateSubMenu = async (token, data, action) => {
-  console.log(data);
+  //console.log(data);
   action === "Editar" ? (data.baja = "n") : (data.baja = "*");
   const res = await fetch(`${process.env.DOMAIN_API}api/sub-menus/update`, {
     method: "POST",
