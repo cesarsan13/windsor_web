@@ -8,7 +8,8 @@ export const useCommentsUI = (
   register,
   permissions,
   isDisabled,
-  errors
+  errors,
+  accion
 ) => {
   const generales = [
     { id: 1, descripcion: "Si" },
@@ -115,7 +116,9 @@ export const useCommentsUI = (
 
   const modalBody = () => {
     return (
-      <fieldset id="fs_comentario">
+      <fieldset id="fs_comentario"
+        dataTypedisabled={accion === "Ver"  || accion === "Eliminar" ? true : false }
+        >
         <div className="container flex flex-col space-y-5">
           <Inputs
             dataType={"string"}

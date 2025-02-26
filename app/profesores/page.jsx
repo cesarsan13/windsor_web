@@ -81,7 +81,8 @@ function Profesores() {
     register, 
     permissions, 
     isDisabled, 
-    errors
+    errors,
+    accion
   );
 
   if (status === "loading") {

@@ -70,8 +70,21 @@ function Comentarios() {
     setisLoadingButton
   );
 
-  const { itemHeaderTable, itemDataTable, tableColumns, tableBody, modalBody } =
-    useCommentsUI(tableAction, register, permissions, isDisabled, errors);
+  const { 
+    itemHeaderTable, 
+    itemDataTable, 
+    tableColumns, 
+    tableBody, 
+    modalBody } =
+    useCommentsUI(
+      tableAction, 
+      register, 
+      permissions, 
+      isDisabled, 
+      errors,
+      accion
+  );
+
   if (status === "loading" && !session) {
     return (
       <div className="container skeleton w-full max-w-screen-xl shadow-xl rounded-xl"></div>

@@ -8,7 +8,8 @@ export const useProfesoresUI = (
     register,
     permissions,
     isDisabled,
-    errors
+    errors,
+    accion,
 ) => {
     const itemHeaderTable = () => {
       return (
@@ -127,7 +128,9 @@ export const useProfesoresUI = (
 
     const modalBody = () => {
         return(
-            <fieldset id="fs_profesores">
+            <fieldset id="fs_profesores"
+              disabled={accion === "Ver"  || accion === "Eliminar" ? true : false }
+            >
                 <div className="container flex flex-col space-y-5">
                   <Inputs
                     dataType={"string"}
