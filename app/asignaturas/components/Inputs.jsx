@@ -1,6 +1,5 @@
 import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
 import React from "react";
-import { showSwal } from "@/app/utils/alerts";
 
 function Inputs({
   Titulo,
@@ -18,10 +17,6 @@ function Inputs({
   handleBlur,
   arreglos,
 }) {
-
-  if (errors && Object.keys(errors).length > 0) {
-    showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
-  }
 
   if (type === "select") {
     return (

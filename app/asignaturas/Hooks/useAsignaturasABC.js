@@ -44,6 +44,7 @@ export const useAsignaturasABC = () => {
         //setValue,
         //getValues,
         formState: { errors },
+        trigger,
       } = useForm({
         defaultValues: {
           numero: asignatura.numero,
@@ -323,7 +324,14 @@ export const useAsignaturasABC = () => {
           await fetchAsignaturaStatus(false, inactiveActive, busqueda);
         }
         setisLoadingButton(false);
-    });
+    },
+    async (errors) => {
+      await trigger();
+      if (Object.keys(errors).length > 0) {
+        showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
+      }
+    }
+  );
 
     const showModal = (show) => {
         show
