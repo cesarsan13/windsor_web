@@ -108,7 +108,10 @@ export const useFormFactUI = (
 
     const modalBody = () => {
         return (
-            <fieldset id="fs_formapago">
+            <fieldset 
+              id="fs_formapago"
+              disabled={accion === "Ver"  || accion === "Eliminar" ? true : false }
+            >
             <div className="container flex flex-col space-y-5">
               <Inputs
                 dataType={"string"}
@@ -127,12 +130,12 @@ export const useFormFactUI = (
                 //handleBlur={handleBlur}
               />
               <Inputs
-                dataType={"float"}
+                dataType={"int"}
                 name={"longitud"}
                 tamañolabel={"w-4/6"}
                 className={"rounded block w-4/6 text-right"}
                 Titulo={"Longitud: "}
-                type={"text"}
+                type={"int"}
                 requerido={true}
                 isNumero={false}
                 errors={errors}

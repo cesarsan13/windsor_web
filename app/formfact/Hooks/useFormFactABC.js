@@ -48,6 +48,7 @@ export const useFormFactABC = () => {
         handleSubmit,
         reset,
         formState: { errors },
+        trigger,
       } = useForm({
         defaultValues: {
           numero_forma: formFact.numero_forma,
@@ -288,7 +289,14 @@ export const useFormFactABC = () => {
             await fetchFormFactStatus(false, inactiveActive, busqueda);
         }
         setisLoadingButton(false);
-    });
+    },
+    async (errors) => {
+      await trigger();
+      if (Object.keys(errors).length > 0) {
+        showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
+      }
+    }
+    );
 
     const showModal = (show) => {
         show
