@@ -10,7 +10,8 @@ export const useHorariosUI = (
     isDisabled,
     errors,
     horarios,
-    control
+    control,
+    accion
 ) => {
   const options = [
     { value: "LU", label: "Lunes" },
@@ -168,7 +169,8 @@ export const useHorariosUI = (
 
     const modalBody = () => {
         return (
-            <fieldset id="fs_horario">
+            <fieldset id="fs_horario"
+            disabled={accion === "Ver" || accion === "Eliminar" ? true : false}>
             <div className="container flex flex-col space-y-5">
               {/* <Inputs
                 dataType={"int"}
