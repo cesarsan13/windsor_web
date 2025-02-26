@@ -10,7 +10,7 @@ export const useHorariosUI = (
     isDisabled,
     errors,
     horarios,
-    control
+    // control
 ) => {
   const options = [
     { value: "LU", label: "Lunes" },
@@ -211,7 +211,7 @@ export const useHorariosUI = (
                 dataType={"multi-select"}
                 type={"multi-select"}
                 options={options}
-                control={control}
+                // control={control}
                 value={options.filter((option) =>
                   selectedDias.includes(option.value)
                 )}

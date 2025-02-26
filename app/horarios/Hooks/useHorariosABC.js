@@ -40,7 +40,7 @@ const {
     register,
     handleSubmit,
     reset,
-    control,
+    // control,
     formState: { errors },
 } = useForm({
     defaultValues: {
@@ -344,7 +344,7 @@ return {
     setisLoadingButton,
     tableAction,
     register,
-    control,
+    // control,
     status,
     session,
     isLoadingButton,
