@@ -8,7 +8,8 @@ export const useFormFactUI = (
     register,
     permissions,
     isDisabled,
-    errors
+    errors,
+    accion
 ) => {
     const itemHeaderTable = () => {
         return (
