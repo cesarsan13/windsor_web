@@ -1,3 +1,41 @@
+import {confirmSwal, showSwal} from "@/app/utils/alerts";
+import { useEffect } from "react";
+
+export const useEscapeWarningModal = (openModal, showModal) => {
+  useEffect(() => {
+    const handleKeyDown = async (event) => {
+      if (event.key === "Escape" && openModal) {
+        event.preventDefault();
+        showModal(false);
+        const confirmed = await confirmSwal(
+          "¿Seguro que quieres cerrar?",
+          "Si cierras perderás los cambios no guardados.",
+          "warning",
+          "Sí, cerrar",
+          "Cancelar"
+        );
+        if (!confirmed) {
+          showModal(true);
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [openModal, showModal]);
+};
+
+export const validateBeforeSave = (inputName, modalId) => {
+  const input = document.querySelector(`input[name='${inputName}']`);
+  if (input && input.value.trim() === "") {
+      showSwal("Error", "Complete todos los campos requeridos", "error", modalId);
+      return false;
+  }
+  return true;
+};
+
 export const debounce = (func, delay) => {
   let timeoutId;
   return (...args) => {
@@ -9,6 +47,39 @@ export const debounce = (func, delay) => {
     }, delay);
   };
 };
+
+export const openFileSelector = () => {
+    if (inputfileref.current) {
+      inputfileref.current.click(); // Simula el clic en el input
+    }
+  };
+
+export const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFile(selectedFile);
+        setcondicion(true);
+        setCapturedImage(reader.result); // La imagen en formato Base64
+      };
+      reader.readAsDataURL(selectedFile); // Convierte el archivo a Base64
+    }
+  };
+
+
+export const handleBlur = (evt, datatype) => {
+    if (evt.target.value === "") return;
+    datatype === "int"
+      ? setAlumno((alumno) => ({
+          ...alumno,
+          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+        }))
+      : setAlumno((alumno) => ({
+          ...alumno,
+          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+        }));
+  };
 
 export const soloEnteros = (event) => {
   const key = event.key;
@@ -412,4 +483,17 @@ export const validateString = (MAX_LENGTHS, key, str) => {
   const year = date.getFullYear();
   
   return `${day}/${month}/${year}`;
+};
+
+export const CerrarModal = async (accion) => {
+  if(accion){
+    if (accion === "Alta" || accion === "Editar"){
+      const confirmed = await confirmSwal("Salir", "Cambios sin guardar. Si sales, perderás la información.", "warning", "Aceptar", "Cancelar", "my_modal_3");
+     if(confirmed)
+      document.getElementById("my_modal_3").close();
+    } else {
+      document.getElementById("my_modal_3").close();
+    }
+  }
+  return;
 };

@@ -30,7 +30,6 @@ export const siguiente = async (token) => {
   return resJson.data;
 };
 export const guardaCajero = async (token, data, accion) => {
-  console.log(`Data a enviar: `,data);
     let url_api = "";
     if (accion === "Alta") {
       url_api = `${process.env.DOMAIN_API}api/Cajero/store`;

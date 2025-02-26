@@ -1,6 +1,5 @@
 import React from "react";
 import Tooltip from "@/app/components/tooltip";
-import Button from "@/app/components/button";
 import { TbLoader3 } from "react-icons/tb";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
@@ -8,9 +7,9 @@ function Acciones({
   home,
   Alta,
   Buscar,
-  animateLoading,
   permiso_alta,
-  permiso_imprime,
+  isLoadingSearch,
+  isLoadingAdd,
 }) {
   const images = [
     {
@@ -19,6 +18,7 @@ function Acciones({
       alt: "Buscar",
       tooltipTitle: "Buscar",
       onClick: Buscar,
+      animateLoading: isLoadingAdd,
       permission: true,
     },
     {
@@ -27,6 +27,7 @@ function Acciones({
       alt: "Alta",
       tooltipTitle: "Alta",
       onClick: Alta,
+      animateLoading: isLoadingSearch,
       permission: permiso_alta,
     },
     {
@@ -35,6 +36,7 @@ function Acciones({
       alt: "Salir",
       tooltipTitle: "Salir",
       onClick: home,
+      animateLoading: false,
       permission: true,
     },
   ];
@@ -84,7 +86,7 @@ function Acciones({
           srcDark={image.srcDark}
           tooltipTitle={image.tooltipTitle}
           onClick={image.onClick}
-          animateLoading={idx === 2 && animateLoading}
+          animateLoading={image.animateLoading}
           permission={image.permission}
         />
       ))}

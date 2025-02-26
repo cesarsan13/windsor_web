@@ -1,5 +1,6 @@
 import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
 import React from "react";
+import { showSwal } from "@/app/utils/alerts";
 
 function Inputs({
   Titulo,
@@ -16,6 +17,11 @@ function Inputs({
   isDisabled,
   handleBlur,
 }) {
+
+  if (errors && Object.keys(errors).length > 0) {
+    showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
+  }
+
   if (type === 'inputNum') {
     return (
       <div className="flex flex-col">
@@ -44,7 +50,7 @@ function Inputs({
           />
         </label>
         {errors[name] && (
-          <span className="text-red-500 text-sm mt-2">
+          <span className="text-red-500 text-sm mt-2 font-semibold">
             {errors[name].message}
           </span>
         )}
@@ -74,16 +80,16 @@ function Inputs({
               ...(requerido && { required: message }),  
             })}
             
-            {...(dataType === "int" ||
-              (dataType === "float" && {
-                onBlur: (event) => handleBlur(event, dataType),
-              }))}
-            disabled={isDisabled}
+            // {...(dataType === "int" ||
+            //   (dataType === "float" && {
+            //     onBlur: (event) => handleBlur(event, dataType),
+            //   }))}
+            // disabled={isDisabled}
             
           />
         </label>
         {errors[name] && (
-          <span className="text-red-500 text-sm mt-2">
+          <span className="text-red-500 text-sm mt-2 font-semibold">
             {errors[name].message}
           </span>
         )}

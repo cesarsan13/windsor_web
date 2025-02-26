@@ -39,7 +39,7 @@ function ConfigReporte({
   };
   // console.log("Index:",selectedIndex)
   return (
-    <div className=" w-11/12 max-w-5xl">
+    <div className=" w-full max-w-full">
       <button
         className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
         onClick={() => document.getElementById("modal_formato").close()}
@@ -62,7 +62,7 @@ function ConfigReporte({
               <i className="fas fa-x mx-2"></i> Cerrar
             </button>
           </div>
-        <fieldset id="fs_formapago" className="flex flex-row">
+        <fieldset id="fs_formapago" className="flex flex-row justify-center">
           <div className=" overflow-y-scroll overflow-x-hidden gap-2 h-[100%] flex flex-row">
             <Sheet
               labels={labels}

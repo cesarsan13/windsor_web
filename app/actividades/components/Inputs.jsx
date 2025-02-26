@@ -18,6 +18,8 @@ function Inputs({
     arreglos,
     onChange
 }) {
+
+
     if (type === 'selectAsignatura') {
         return (
           <div className="w-full md:w-3/4 px-0.5 py-2 mb-2 md:mb-0">
@@ -54,7 +56,7 @@ function Inputs({
               </select>
             </label>
             {errors[name] && requerido && (
-              <span className="text-red-500 text-sm">{errors[name].message}</span>
+              <span className="text-red-500 text-sm font-semibold">{errors[name].message}</span>
             )}
           </div>
         );
@@ -82,7 +84,7 @@ function Inputs({
                 />
             </label>
             {errors[name] && (
-                <span className="text-red-500 text-sm mt-2">
+                <span className="text-red-500 text-sm mt-2 font-semibold">
                     {errors[name].message}
                 </span>
             )}

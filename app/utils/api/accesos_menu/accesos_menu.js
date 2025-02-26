@@ -12,6 +12,7 @@ export const getMenus = async (token, baja) => {
   const resJson = await res.json();
   return resJson.data;
 };
+
 export const siguiente = async (token) => {
   const res = await fetch(
     `${process.env.DOMAIN_API}api/accesos-menu/siguiente`,
@@ -25,7 +26,11 @@ export const siguiente = async (token) => {
   const resJson = await res.json();
   return resJson.data;
 };
+
 export const guardaMenu = async (token, accion, data) => {
+  if (!data.numero) {
+    throw new Error("Número no definido");
+  }
   let url = "";
   let method = "";
   if (accion === "Alta") {

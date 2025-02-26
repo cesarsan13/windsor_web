@@ -23,6 +23,7 @@ function Inputs({
   handleBlur,
   arreglos,
 }) {
+
   const styles = {
     control: (styles) => ({
       ...styles,
@@ -76,7 +77,9 @@ function Inputs({
           />
         </label>
         {errors[name] && requerido && (
-          <span className="text-red-500 text-sm">{errors[name].message}</span>
+          <span className="text-red-500 text-sm font-semibold">
+            {errors[name].message}
+          </span>
         )}
       </div>
     );
@@ -121,7 +124,9 @@ function Inputs({
           </select>
         </label>
         {errors[name] && requerido && (
-          <span className="text-red-500 text-sm">{errors[name].message}</span>
+          <span className="text-red-500 text-sm font-semibold">
+            {errors[name].message}
+          </span>
         )}
       </div>
     );
@@ -157,7 +162,7 @@ function Inputs({
           />
         </label>
         {errors[name] && (
-          <span className="text-red-500 text-sm mt-2">
+          <span className="text-red-500 text-sm mt-2 font-semibold">
             {errors[name].message}
           </span>
         )}

@@ -17,6 +17,9 @@ function Inputs({
   isDisabled,
   handleBlur,
 }) {
+
+
+
   return (
     <div className="flex flex-col">
       <label
@@ -35,15 +38,15 @@ function Inputs({
           {...register(name, {
             ...(requerido && { required: message }),
           })}
-          {...(dataType === "int" ||
-            (dataType === "float" && {
-              onBlur: (event) => handleBlur(event, dataType),
-            }))}
+          //{...(dataType === "int" ||
+          //  (dataType === "float" && {
+          //    onBlur: (event) => handleBlur(event, dataType),
+          //  }))}
           disabled={isDisabled}
         />
       </label>
       {errors[name] && (
-        <span className="text-red-500 text-sm mt-2">
+        <span className="text-red-500 text-sm mt-2 font-semibold">
           {errors[name].message}
         </span>
       )}

@@ -1,4 +1,4 @@
-import { soloDecimales, soloEnteros,snToBool } from "@/app/utils/globalfn";
+import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
 import React from "react";
 
 function Inputs({
@@ -16,24 +16,20 @@ function Inputs({
   isDisabled,
   handleBlur,
   arreglos,
-  getValues,
 }) {
+
   if (type === "select") {
     return (
       <div className="">
-        <label
-        // className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel}  text-black dark:text-white`}
-
-        className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
-        >
+        <label className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}>
           {Titulo}
           <select
             name={name}
             id={name}
-            className={`text-black ${
+            className={`text-black dark:text-white ${
               isDisabled
-                ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                : "bg-white"
+                ? "bg-white dark:bg-[#1d232a] dark:text-white cursor-not-allowed"
+                : "bg-white dark:bg-[#1d232a] "
             } ${className}`}            {...register(name, {
               ...(requerido && { required: message }),
             })}
@@ -48,15 +44,10 @@ function Inputs({
                 {arreglo.descripcion}
               </option>
             ))}
-            {/* <option value={"Activo"}>Activo</option>
-            <option value={"Enfermo"}>Enfermo</option>
-            <option value={"Permiso"}>Permiso</option>
-            <option value={"Cartera"}>Cartera</option>
-            <option value={"Baja"}>Baja</option> */}
           </select>
         </label>
         {errors[name] && (
-          <span className="text-red-500 text-sm mt-2">
+          <span className="text-red-500 text-sm mt-2 font-semibold">
             {errors[name].message}
           </span>
         )}
@@ -90,7 +81,7 @@ function Inputs({
           />
         </label>
         {errors[name] && (
-          <span className="text-red-500 text-sm mt-2">
+          <span className="text-red-500 text-sm mt-2 font-semibold">
             {errors[name].message}
           </span>
         )}
@@ -105,13 +96,11 @@ function Inputs({
         >
           {Titulo}
           <input
-            // defaultValue={defaultValue}
             {...(maxLenght !== 0 && { maxLength: maxLenght })}
             name={name}
             id={name}
             type={"checkbox"}
             className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700 input-xs md:input-sm  ${className}`}
-            // checked={snToBool(getValues(name))}
             {...register(name, {
               maxLength: {
                 value: maxLenght,
@@ -127,7 +116,7 @@ function Inputs({
           />
         </label>
         {errors[name] && (
-          <span className="text-red-500 text-sm mt-2">
+          <span className="text-red-500 text-sm mt-2 font-semibold">
             {errors[name].message}
           </span>
         )}
@@ -142,7 +131,6 @@ function Inputs({
         >
           {Titulo}
           <input
-            // defaultValue={defaultValue}
             {...(maxLenght !== 0 && { maxLength: maxLenght })}
             name={name}
             id={name}
@@ -165,7 +153,7 @@ function Inputs({
           />
         </label>
         {errors[name] && (
-          <span className="text-red-500 text-sm mt-2">
+          <span className="text-red-500 text-sm mt-2 font-semibold">
             {errors[name].message}
           </span>
         )}

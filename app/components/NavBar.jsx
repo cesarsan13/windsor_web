@@ -53,7 +53,7 @@ function NavBar() {
     <>
       <div className="navbar sticky top-0 h-full max-h-7 bg-base-200 dark:bg-slate-700 lg:z-50 z-[5]">
         <div className="navbar-start">
-          <div className="drawer">
+          <div className="drawer pr-5 lg:hidden">
             <input
               type="checkbox"
               id="my-drawer"

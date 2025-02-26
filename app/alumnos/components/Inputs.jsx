@@ -19,6 +19,7 @@ function Inputs({
   pattern,
   message_pattern,
 }) {
+
   if (type === "select") {
     return (
       <div className="w-full md:w-1/2 px-0.5 py-2 mb-2 md:mb-0">
@@ -47,7 +48,7 @@ function Inputs({
           </select>
         </label>
         {errors[name] && (
-          <span className="text-red-500 text-sm mt-2">
+          <span className="text-red-500 text-sm mt-2 font-semibold">
             {errors[name].message}
           </span>
         )}
@@ -86,7 +87,7 @@ function Inputs({
           />
         </label>
         {errors[name] && (
-          <span className="text-red-500 text-sm mt-2">
+          <span className="text-red-500 text-sm mt-2 font-semibold">
             {errors[name].message}
           </span>
         )}

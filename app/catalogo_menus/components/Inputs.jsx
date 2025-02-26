@@ -13,10 +13,10 @@ function Inputs({
   errors,
   tamañolabel,
   maxLenght,
-  defaultValue,
   isDisabled,
   handleBlur,
 }) {
+
   return (
     <div className="flex flex-col">
       <label
@@ -24,7 +24,6 @@ function Inputs({
       >
         {Titulo}
         <input
-          // defaultValue={defaultValue}
           {...(maxLenght !== 0 && { maxLength: maxLenght })}
           name={name}
           id={name}
@@ -47,7 +46,7 @@ function Inputs({
         />
       </label>
       {errors[name] && (
-        <span className="text-red-500 text-sm mt-2">
+        <span className="text-red-500 text-sm mt-2 font-semibold">
           {errors[name].message}
         </span>
       )}
