@@ -8,7 +8,8 @@ export const useFormFactUI = (
     register,
     permissions,
     isDisabled,
-    errors
+    errors,
+    accion
 ) => {
     const itemHeaderTable = () => {
         return (
@@ -135,7 +136,7 @@ export const useFormFactUI = (
                 tamañolabel={"w-4/6"}
                 className={"rounded block w-4/6 text-right"}
                 Titulo={"Longitud: "}
-                type={"int"}
+                type={"float"}
                 requerido={true}
                 isNumero={false}
                 errors={errors}
