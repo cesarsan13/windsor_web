@@ -26,6 +26,7 @@ export const useAlumnosABC = () => {
     const [fecha_hoy, setFechaHoy] = useState("");
     const [horarios, setHorarios] = useState(null);
     const [grado, setGrado] = useState({});
+    const [grado2, setGrado2] = useState({});
     const [cond1, setcond1] = useState({});
     const [cond2, setcond2] = useState({});
     const [capturedImage, setCapturedImage] = useState(null);
@@ -576,7 +577,7 @@ const onSubmitModal = handleSubmit(async (data) => {
     if (grado.numuero !== null && grado.numero !== undefined) {
     formData.append("horario_1", grado.numero || "");
     } else {
-    formData.append("horario_1", alumno.grupo || "");
+    formData.append("horario_1", formaAlumno.grupo || "");
     }
     formData.append("horario_2", grado2.numero || "");
     formData.append("horario_3", data.horario_3 || "");
@@ -636,7 +637,7 @@ const onSubmitModal = handleSubmit(async (data) => {
     if (grado.numuero !== null && grado.numero !== undefined) {
     formData.append("grupo", grado.numero || "");
     } else {
-    formData.append("grupo", alumno.grupo || "");
+    formData.append("grupo", formaAlumno.grupo || "");
     }
 
     if (condicion === true) {
@@ -651,7 +652,7 @@ const onSubmitModal = handleSubmit(async (data) => {
     if (grado.numuero !== null && grado.numero !== undefined) {
         return item.numero === grado.numero;
     } else {
-        return item.numero === alumno.grupo;
+        return item.numero === formaAlumno.grupo;
     }
     });
     if (typeof horario_1_nombre === "undefined") {

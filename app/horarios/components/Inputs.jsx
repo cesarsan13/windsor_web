@@ -11,6 +11,7 @@ function Inputs({
   register,
   errors,
   requerido,
+  control,
   options,
   onChange,
   value,
@@ -29,14 +30,14 @@ function Inputs({
   }
 
   const styles = {
-    // control: (styles) => ({
-    //   ...styles,
-    //   width: "100%",
-    //   minHeight: "48px",
-    //   maxWidth: "400px",
-    //   overflow: "hidden",
-    //   backgroundColor: "bg-white dark:bg-[#1d232a]",
-    // }),
+    control: (styles) => ({
+      ...styles,
+      width: "100%",
+      minHeight: "48px",
+      maxWidth: "400px",
+      overflow: "hidden",
+      backgroundColor: "bg-white dark:bg-[#1d232a]",
+    }),
     valueContainer: (styles) => ({
       ...styles,
       display: "flex",
@@ -62,7 +63,7 @@ function Inputs({
           {Titulo}
           <Controller
             name={name}
-            // control={control}
+            control={control}
             render={({ field }) => (
               <Select
                 {...field}
