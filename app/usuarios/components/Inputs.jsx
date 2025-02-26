@@ -1,7 +1,6 @@
 import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
 import React from "react";
 import { useState } from "react";
-import { showSwal } from "@/app/utils/alerts";
 
 function Inputs({
   Titulo,
@@ -17,52 +16,13 @@ function Inputs({
   maxLenght,
   isDisabled,
   handleBlur,
-  generales,
 }) {
-  if (errors && Object.keys(errors).length > 0) {
-    showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
-  }
+
   const [mostrarContr, setMostrarContr] = useState(false);
   const mostrarContraseña = () => {
     setMostrarContr(!mostrarContr);
   };
 
-  if (type === "select") {
-    return (
-      <div className="flex flex-col">
-        <label
-          className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
-          disabled={isDisabled}
-        >
-          {Titulo}
-          <select
-            name={name}
-            id={name}
-            className={`text-black  dark:text-white bg-transparent dark: ${className}`}
-            {...register(name, {
-              ...(requerido && { required: message }),
-            })}
-            disabled={isDisabled}
-          >
-            {generales.map((arreglo) => (
-              <option
-                className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]"
-                key={arreglo.id}
-                value={arreglo.id}
-              >
-                {arreglo.descripcion}
-              </option>
-            ))}
-          </select>
-        </label>
-        {errors[name] && (
-          <span className="text-red-500 text-sm mt-2 font-semibold">
-            {errors[name].message}
-          </span>
-        )}
-      </div>
-    );
-  }
   if (type === "text" || type === "email") {
     return (
       <div className="flex flex-col">

@@ -1,4 +1,3 @@
-import { showSwal } from "@/app/utils/alerts";
 import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
 import React from "react";
 
@@ -17,10 +16,6 @@ function Inputs({
   isDisabled,
   handleBlur,
 }) {
-  
-  if (errors && Object.keys(errors).length > 0) {
-    showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
-  }
 
   return (
     <div className="flex flex-col">

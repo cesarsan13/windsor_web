@@ -42,6 +42,7 @@ export const useCatMenuABC = () => {
       handleSubmit,
       reset,
       formState: { errors },
+      trigger,
     } = useForm({
       defaultValues: {
         numero: menu.numero,
@@ -265,7 +266,14 @@ export const useCatMenuABC = () => {
             await fetchMenuStatus(inactiveActive, busqueda);
         }
         setisLoadingButton(false);
-    });
+    },
+    async (errors) => {
+      await trigger();
+      if (Object.keys(errors).length > 0) {
+        showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
+      }
+    }
+  );
 
     const showModal = (show) => {
         show

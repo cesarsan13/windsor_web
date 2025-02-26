@@ -65,6 +65,7 @@ export const useAccesoMenuABC = () => {
       return;
     }
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reload_page, status, bajas]);
 
   const {
@@ -72,6 +73,7 @@ export const useAccesoMenuABC = () => {
     handleSubmit,
     reset,
     formState: { errors },
+    trigger,
   } = useForm({
     defaultValues: {
       numero: menu.numero,
@@ -263,7 +265,14 @@ export const useAccesoMenuABC = () => {
       }
     }
     setisLoadingButton(false);
-  });
+  },
+  async (errors) => {
+    await trigger();
+    if (Object.keys(errors).length > 0) {
+      showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
+    }
+  }
+);
 
   const limpiarBusqueda = (evt) => {
     evt.preventDefault();
