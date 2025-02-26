@@ -2,7 +2,6 @@ import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
 import React from "react";
 import Select from "react-select";
 import { Controller } from "react-hook-form";
-import { showSwal } from "@/app/utils/alerts";
 
 function Inputs({
   Titulo,
@@ -24,10 +23,6 @@ function Inputs({
   handleBlur,
   arreglos,
 }) {
-
-  if (errors && Object.keys(errors).length > 0) {
-    showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
-  }
 
   const styles = {
     control: (styles) => ({
