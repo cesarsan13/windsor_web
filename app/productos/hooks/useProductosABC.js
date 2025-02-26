@@ -6,345 +6,348 @@ import { useRouter } from "next/navigation";
 import { inactiveActiveBaja } from "@/app/utils/GlobalApis";
 import { debounce, permissionsComponents } from "@/app/utils/globalfn";
 import {
-    getProductos,
-    guardarProductos,
+  getProductos,
+  guardarProductos,
 } from "@/app/utils/api/productos/productos";
 import { showSwal, confirmSwal, showSwalConfirm } from "@/app/utils/alerts";
-import { useEscapeWarningModal, validateBeforeSave } from "@/app/utils/globalfn";
+import { useEscapeWarningModal } from "@/app/utils/globalfn";
 
 export const useProductosABC = () => {
-    const router = useRouter();
-    const { data: session, status } = useSession();
-    const [formasProductos, setFormasProductos] = useState([]);
-    const [formaProductos, setFormaProductos] = useState({});
-    const [formaProductosFiltrados, setFormaProductosFiltrados] = useState(null);
-    const [inactiveActive, setInactiveActive] = useState([]);
-    const [bajas, setBajas] = useState(false);
-    const [openModal, setModal] = useState(false);
-    const [accion, setAccion] = useState("");
-    const [isLoading, setisLoading] = useState(false);
-    const [isLoadingButton, setisLoadingButton] = useState(false);
-    const [currentID, setCurrentId] = useState("");
-    const productosRef = useRef(formasProductos);
-    const [permissions, setPermissions] = useState({});
-    const [titulo, setTitulo] = useState("");
-    const [isDisabled, setIsDisabled] = useState(true);
-    const [reload_page, setReloadPage] = useState(false);
-    const [active, setActive] = useState(false);
-    const [inactive, setInactive] = useState(false);
-    const [busqueda, setBusqueda] = useState({
-        tb_id: "",
-        tb_desc: "",
-    });
-const {
+  const router = useRouter();
+  const { data: session, status } = useSession();
+  const [formasProductos, setFormasProductos] = useState([]);
+  const [formaProductos, setFormaProductos] = useState({});
+  const [formaProductosFiltrados, setFormaProductosFiltrados] = useState(null);
+  const [inactiveActive, setInactiveActive] = useState([]);
+  const [bajas, setBajas] = useState(false);
+  const [openModal, setModal] = useState(false);
+  const [accion, setAccion] = useState("");
+  const [isLoading, setisLoading] = useState(false);
+  const [isLoadingButton, setisLoadingButton] = useState(false);
+  const [currentID, setCurrentId] = useState("");
+  const productosRef = useRef(formasProductos);
+  const [permissions, setPermissions] = useState({});
+  const [titulo, setTitulo] = useState("");
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [reload_page, setReloadPage] = useState(false);
+  const [active, setActive] = useState(false);
+  const [inactive, setInactive] = useState(false);
+  const [busqueda, setBusqueda] = useState({
+    tb_id: "",
+    tb_desc: "",
+  });
+  const {
     register,
     handleSubmit,
     reset,
-    watch,
-    setValue,
     formState: { errors },
-} = useForm({
+  } = useForm({
     defaultValues: {
-    numero: formaProductos.numero,
-    descripcion: formaProductos.descripcion,
-    costo: formaProductos.costo,
-    frecuencia: formaProductos.frecuencia,
-    por_recargo: formaProductos.por_recargo,
-    aplicacion: formaProductos.aplicacion,
-    iva: formaProductos.iva,
-    cond_1: formaProductos.cond_1,
-    cam_precio: formaProductos.cam_precio,
-    ref: formaProductos.ref,
+      numero: formaProductos.numero,
+      descripcion: formaProductos.descripcion,
+      costo: formaProductos.costo,
+      frecuencia: formaProductos.frecuencia,
+      por_recargo: formaProductos.por_recargo,
+      aplicacion: formaProductos.aplicacion,
+      iva: formaProductos.iva,
+      cond_1: formaProductos.cond_1,
+      cam_precio: formaProductos.cam_precio,
+      ref: formaProductos.ref,
     },
-});
+  });
 
-useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
-    setisLoading(true);
-    let { token, permissions } = session.user;
-    const es_admin = session.user?.es_admin || false;
-    const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-    const busqueda = limpiarBusqueda();
-    const data = await getProductos(token, bajas);
-    const res = await inactiveActiveBaja(session?.user.token, "productos");
-    setFormasProductos(data);
-    setFormaProductosFiltrados(data);
-    setInactiveActive(res.data);
-    const permisos = permissionsComponents(
+      setisLoading(true);
+      let { token, permissions } = session.user;
+      const es_admin = session.user?.es_admin || false;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+      const busqueda = limpiarBusqueda();
+      const data = await getProductos(token, bajas);
+      const res = await inactiveActiveBaja(session?.user.token, "productos");
+      setFormasProductos(data);
+      setFormaProductosFiltrados(data);
+      setInactiveActive(res.data);
+      const permisos = permissionsComponents(
         es_admin,
         permissions,
         session.user.id,
         menuSeleccionado
-    );
-    await fetchProductoStatus(false, res.data, busqueda);
-    setPermissions(permisos);
-    setisLoading(false);
+      );
+      await fetchProductoStatus(false, res.data, busqueda);
+      setPermissions(permisos);
+      setisLoading(false);
     };
     if (status === "loading" || !session) {
-    return;
+      return;
     }
     fetchData();
-}, [status, bajas, reload_page]);
+  }, [status, bajas, reload_page]);
 
-useEffect(() => {
+  useEffect(() => {
     productosRef.current = formasProductos;
-}, [formasProductos]);
+  }, [formasProductos]);
 
-const Buscar = useCallback(async () => {
+  const Buscar = useCallback(async () => {
     const { tb_id, tb_desc } = busqueda;
     if (tb_id === "" && tb_desc === "") {
-    setFormaProductosFiltrados(productosRef.current);
-    await fetchProductoStatus(false, inactiveActive, busqueda);
-    return;
+      setFormaProductosFiltrados(productosRef.current);
+      await fetchProductoStatus(false, inactiveActive, busqueda);
+      return;
     }
     const infoFiltrada = productosRef.current.filter((formaProductos) => {
-    const coincideId = tb_id
+      const coincideId = tb_id
         ? formaProductos["numero"].toString().includes(tb_id)
         : true;
-    const coincideDescripcion = tb_desc
+      const coincideDescripcion = tb_desc
         ? formaProductos["descripcion"]
             .toString()
             .toLowerCase()
             .includes(tb_desc.toLowerCase())
         : true;
-    return coincideId && coincideDescripcion;
+      return coincideId && coincideDescripcion;
     });
     setFormaProductosFiltrados(infoFiltrada);
     await fetchProductoStatus(false, inactiveActive, busqueda);
-}, [busqueda]);
+  }, [busqueda]);
 
-const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
+  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
 
-const fetchProductoStatus = async (
-    showMessage,
-    inactiveActive,
-    busqueda
-) => {
+  const fetchProductoStatus = async (showMessage, inactiveActive, busqueda) => {
     const { tb_id, tb_desc } = busqueda;
     let infoFiltrada = [];
     let active = 0;
     let inactive = 0;
-    if(tb_id || tb_desc) {
-        infoFiltrada = inactiveActive.filter((formaProductos) => {
-            const coincideId = tb_id
-            ? formaProductos["numero"].toString().includes(tb_id)
-            : true;
+    if (tb_id || tb_desc) {
+      infoFiltrada = inactiveActive.filter((formaProductos) => {
+        const coincideId = tb_id
+          ? formaProductos["numero"].toString().includes(tb_id)
+          : true;
         const coincideDescripcion = tb_desc
-            ? formaProductos["descripcion"]
-                .toString()
-                .toLowerCase()
-                .includes(tb_desc.toLowerCase())
-            : true;
+          ? formaProductos["descripcion"]
+              .toString()
+              .toLowerCase()
+              .includes(tb_desc.toLowerCase())
+          : true;
         return coincideId && coincideDescripcion;
-        });
-        active = infoFiltrada.filter((c) => c.baja !== "*").length;
-        inactive = infoFiltrada.filter((c) => c.baja === "*").length;
+      });
+      active = infoFiltrada.filter((c) => c.baja !== "*").length;
+      inactive = infoFiltrada.filter((c) => c.baja === "*").length;
     } else {
-        active = inactiveActive.filter((c) => c.baja !== "*").length;
-        inactive = inactiveActive.filter((c) => c.baja === "*").length;
+      active = inactiveActive.filter((c) => c.baja !== "*").length;
+      inactive = inactiveActive.filter((c) => c.baja === "*").length;
     }
     setActive(active);
     setInactive(inactive);
     if (showMessage) {
-        showSwalConfirm(
-            "Estado de los productos",
-            `Productos activos: ${active}\nProductos inactivos: ${inactive}`,
+      showSwalConfirm(
+        "Estado de los productos",
+        `Productos activos: ${active}\nProductos inactivos: ${inactive}`,
         "info"
-        );
+      );
     }
-};
+  };
 
-useEffect(() => {
+  useEffect(() => {
     debouncedBuscar();
     return () => {
-    clearTimeout(debouncedBuscar);
+      clearTimeout(debouncedBuscar);
     };
-}, [busqueda, debouncedBuscar]);
+  }, [busqueda, debouncedBuscar]);
 
-useEffect(() => {
+  useEffect(() => {
     const debouncedBuscar = debounce(Buscar, 500);
     debouncedBuscar();
     return () => {
-    clearTimeout(debouncedBuscar);
+      clearTimeout(debouncedBuscar);
     };
-}, [busqueda, Buscar]);
+  }, [busqueda, Buscar]);
 
-useEffect(() => {
+  useEffect(() => {
     if (accion === "Eliminar" || accion === "Ver") {
-    setIsDisabled(true);
+      setIsDisabled(true);
     }
     if (accion === "Alta" || accion === "Editar") {
-    setIsDisabled(false);
+      setIsDisabled(false);
     }
     setTitulo(
-    accion === "Alta"
-        ? `Nuevo Producto: ${currentID}`
+      accion === "Alta"
+        ? `Nuevo Producto`
         : accion === "Editar"
         ? `Editar Producto: ${currentID}`
         : accion === "Eliminar"
         ? `Eliminar Producto: ${currentID}`
         : `Ver Producto: ${currentID}`
     );
-}, [accion, currentID]);
+  }, [accion, currentID]);
 
-useEffect(() => {
+  useEffect(() => {
     reset({
-    numero: formaProductos.numero,
-    descripcion: formaProductos.descripcion,
-    costo: formaProductos.costo,
-    frecuencia: formaProductos.frecuencia,
-    por_recargo: formaProductos.por_recargo,
-    aplicacion: formaProductos.aplicacion,
-    iva: formaProductos.iva,
-    cond_1: formaProductos.cond_1,
-    cam_precio: formaProductos.cam_precio,
-    ref: formaProductos.ref,
+      numero: formaProductos.numero,
+      descripcion: formaProductos.descripcion,
+      costo: formaProductos.costo,
+      frecuencia: formaProductos.frecuencia,
+      por_recargo: formaProductos.por_recargo,
+      aplicacion: formaProductos.aplicacion,
+      iva: formaProductos.iva,
+      cond_1: formaProductos.cond_1,
+      cam_precio: formaProductos.cam_precio,
+      ref: formaProductos.ref,
     });
-}, [formaProductos, reset]);
+  }, [formaProductos, reset]);
 
-const limpiarBusqueda = (evt) => {
+  const limpiarBusqueda = (evt) => {
     const search = {
-        tb_id: "",
-        tb_desc: "",
+      tb_id: "",
+      tb_desc: "",
     };
     setBusqueda({ tb_id: "", tb_desc: "" });
     return search;
-};
+  };
 
-const Alta = async () => {
+  const Alta = async () => {
     setCurrentId("");
     reset({
-    numero: "",
-    descripcion: "",
-    costo: 0,
-    frecuencia: "",
-    por_recargo: 0,
-    aplicacion: "",
-    iva: 0,
-    cond_1: 0,
-    cam_precio: false,
-    ref: "",
+      numero: "",
+      descripcion: "",
+      costo: 0,
+      frecuencia: "",
+      por_recargo: 0,
+      aplicacion: "",
+      iva: 0,
+      cond_1: 0,
+      cam_precio: false,
+      ref: "",
     });
-    setFormaProductos({numero: ""});
+    setFormaProductos({ numero: "" });
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);
     document.getElementById("descripcion").focus();
-};
+  };
 
-const validateBeforeSave = () => {
+  const validateBeforeSave = () => {
     const lastInput = document.querySelector("input[name='cam_precio']");
     if (lastInput && lastInput.value.trim() === "") {
-    showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
+      showSwal(
+        "Error",
+        "Complete todos los campos requeridos",
+        "error",
+        "my_modal_3"
+      );
       return false;
     }
     return true;
-};
+  };
 
-const onSubmitModal = handleSubmit(async (data) => {
+  const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
     if (!validateBeforeSave("cam_precio", "my_modal_3")) {
-        return;
+      return;
     }
     setisLoadingButton(true);
-    accion == "Alta" ? (data.numero = "") : (data.numero = currentID);
+    accion !== "Alta" ? (data.numero = currentID) : (data.numero = data.numero);
     let res = null;
     if (accion === "Eliminar") {
-    showModal(false);
-    const confirmed = await confirmSwal(
+      showModal(false);
+      const confirmed = await confirmSwal(
         "¿Desea Continuar?",
         "Se eliminara el producto seleccionado",
         "warning",
         "Aceptar",
         "Cancelar"
-    );
-    if (!confirmed) {
+      );
+      if (!confirmed) {
         showModal(true);
         setisLoadingButton(false);
         return;
-        }
+      }
     }
-    //data.numero = num || currentID;
-    //data = await Elimina_Comas(data);
     res = await guardarProductos(session.user.token, data, accion);
     if (res.status) {
-    if (accion === "Alta") {
+      if (accion === "Alta") {
         data.numero = res.data;
         setCurrentId(data.numero);
         const nuevaFormaProductos = { currentID, ...data };
         setFormasProductos([...formasProductos, nuevaFormaProductos]);
         if (!bajas) {
-        setFormaProductosFiltrados([...formaProductosFiltrados, nuevaFormaProductos]);
+          setFormaProductosFiltrados([
+            ...formaProductosFiltrados,
+            nuevaFormaProductos,
+          ]);
         }
-    }
-    if (accion === "Eliminar" || accion === "Editar") {
-        const index = formasProductos.findIndex((fp) => fp.numero === data.numero);
+      }
+      if (accion === "Eliminar" || accion === "Editar") {
+        const index = formasProductos.findIndex(
+          (fp) => fp.numero === data.numero
+        );
         if (index !== -1) {
-        if (accion === "Eliminar") {
+          if (accion === "Eliminar") {
             const fpFiltrados = formasProductos.filter(
-            (fp) => fp.numero !== data.numero
+              (fp) => fp.numero !== data.numero
             );
             setFormasProductos(fpFiltrados);
             setFormaProductosFiltrados(fpFiltrados);
-        } else {
+          } else {
             if (bajas) {
-            const fpFiltrados = formasProductos.filter(
+              const fpFiltrados = formasProductos.filter(
                 (fp) => fp.numero !== data.numero
-            );
-            setFormasProductos(fpFiltrados);
-            setFormaProductosFiltrados(fpFiltrados);
+              );
+              setFormasProductos(fpFiltrados);
+              setFormaProductosFiltrados(fpFiltrados);
             } else {
-            const fpActualizadas = formasProductos.map((fp) =>
+              const fpActualizadas = formasProductos.map((fp) =>
                 fp.numero === currentID ? { ...fp, ...data } : fp
-            );
-            setFormasProductos(fpActualizadas);
-            setFormaProductosFiltrados(fpActualizadas);
+              );
+              setFormasProductos(fpActualizadas);
+              setFormaProductosFiltrados(fpActualizadas);
             }
+          }
         }
-        }
-    }
-    showSwal(res.alert_title, res.alert_text, res.alert_icon);
-    showModal(false);
+      }
+      showSwal(res.alert_title, res.alert_text, res.alert_icon);
+      showModal(false);
     } else {
-    showSwal(res.alert_title, res.alert_text, "error", "my_modal_3");
+      showSwal(res.alert_title, res.alert_text, "error", "my_modal_3");
+      setisLoadingButton(false);
     }
     if (accion === "Alta" || accion === "Eliminar") {
-    setReloadPage(!reload_page);
-    await fetchProductoStatus(false, inactiveActive, busqueda);
+      setReloadPage(!reload_page);
+      await fetchProductoStatus(false, inactiveActive, busqueda);
     }
     setisLoadingButton(false);
-});
+  });
 
-const showModal = (show) => {
+  const showModal = (show) => {
     show
-    ? document.getElementById("my_modal_3").showModal()
-    : document.getElementById("my_modal_3").close();
-};
+      ? document.getElementById("my_modal_3").showModal()
+      : document.getElementById("my_modal_3").close();
+  };
 
-//Para el Esc
-useEscapeWarningModal(openModal, showModal);
+  //Para el Esc
+  useEscapeWarningModal(openModal, showModal);
 
-const home = () => {
+  const home = () => {
     router.push("/");
-};
+  };
 
-const handleBusquedaChange = (event) => {
+  const handleBusquedaChange = (event) => {
     event.preventDefault;
     setBusqueda((estadoPrevio) => ({
-    ...estadoPrevio,
-    [event.target.id]: event.target.value,
+      ...estadoPrevio,
+      [event.target.id]: event.target.value,
     }));
-};
+  };
 
-const tableAction = (evt, formaProductos, accion) => {
+  const tableAction = (evt, formaProductos, accion) => {
     evt.preventDefault();
     setFormaProductos(formaProductos);
     setAccion(accion);
     setCurrentId(formaProductos.numero);
     showModal(true);
-};
+  };
 
-return {
+  return {
     onSubmitModal,
     Buscar,
     Alta,
@@ -372,5 +375,5 @@ return {
     isDisabled,
     errors,
     inactiveActive,
-};
+  };
 };

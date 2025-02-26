@@ -4,15 +4,16 @@ import { ActionButton, ActionColumn } from "@/app/utils/GlobalComponents";
 import iconos from "@/app/utils/iconos";
 import { formatNumber } from "@/app/utils/globalfn";
 export const useProductosUI = (
-    tableAction,
-    register,
-    permissions,
-    isDisabled,
-    errors
+  tableAction,
+  register,
+  permissions,
+  isDisabled,
+  errors,
+  accion
 ) => {
-const itemHeaderTable = () => {
+  const itemHeaderTable = () => {
     return (
-    <>
+      <>
         <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
         <td className="w-[40%]">Descripcion</td>
         <td className="w-[15%]">Costo</td>
@@ -24,81 +25,76 @@ const itemHeaderTable = () => {
         <td className="w-[10%]">Cambia Precio</td>
         <td className="w-[10%]">Referencia</td>
         <td className="w-[10%]">Baja</td>
-    </>
+      </>
     );
-};
+  };
 
-const itemDataTable = (item) => {
+  const itemDataTable = (item) => {
     return (
-    <>
+      <>
         <tr key={item.numero} className="hover:cursor-pointer">
-        <th
+          <th
             className={
-            typeof item.numero === "number" ? "text-left" : "text-right"
+              typeof item.numero === "number" ? "text-left" : "text-right"
             }
-        >
+          >
             {item.numero}
-        </th>
-        <td className="w-[40%] max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap pt-[.10rem] pb-[.10rem]">
+          </th>
+          <td className="w-[40%] max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap pt-[.10rem] pb-[.10rem]">
             {item.descripcion}
-        </td>
-        <td className="text-right">{formatNumber(item.costo)}</td>
-        <td className="text-left">{item.frecuencia}</td>
-        <td className="text-right">{item.por_recargo}</td>
-        <td className="text-right">{item.aplicacion}</td>
-        <td className="text-right">{item.iva}</td>
-        <td className="text-right">{item.cond_1}</td>
-        <td className="text-right">{item.cam_precio}</td>
-        <td className="text-left">{item.ref}</td>
-        <td className="text-left">{item.baja}</td>
+          </td>
+          <td className="text-right">{formatNumber(item.costo)}</td>
+          <td className="text-left">{item.frecuencia}</td>
+          <td className="text-right">{item.por_recargo}</td>
+          <td className="text-right">{item.aplicacion}</td>
+          <td className="text-right">{item.iva}</td>
+          <td className="text-right">{item.cond_1}</td>
+          <td className="text-right">{item.cam_precio}</td>
+          <td className="text-left">{item.ref}</td>
+          <td className="text-left">{item.baja}</td>
         </tr>
-    </>
+      </>
     );
-};
-const tableColumns = () => {
+  };
+  const tableColumns = () => {
     return (
-        <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
+      <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
         <tr>
-        <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
-        <td className="w-[40%]">Descripcion</td>
-        <td className="w-[15%]">Aplicacion</td>
-        <td className="w-[15%]">Costo</td>
-        <td className="w-[10%]">Recargo</td>
-        <td className="w-[10%]">Condición</td>
-        <td className="w-[10%]">IVA</td>
-        < ActionColumn
-            description={"Ver"}
-            permission={true}
-        />
-        < ActionColumn
+          <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
+          <td className="w-[40%]">Descripcion</td>
+          <td className="w-[15%]">Aplicacion</td>
+          <td className="w-[15%]">Costo</td>
+          <td className="w-[10%]">Recargo</td>
+          <td className="w-[10%]">Condición</td>
+          <td className="w-[10%]">IVA</td>
+          <ActionColumn description={"Ver"} permission={true} />
+          <ActionColumn
             description={"Editar"}
             permission={permissions.cambios}
-        />
-        < ActionColumn
+          />
+          <ActionColumn
             description={"Eliminar"}
             permission={permissions.bajas}
-        />
+          />
         </tr>
-    </thead>
+      </thead>
     );
-};
+  };
 
-const tableBody = (data) => {
+  const tableBody = (data) => {
     return (
-        <tbody>
+      <tbody>
         {data.map((item) => (
-        <tr key={item.numero} className="hover:cursor-pointer">
+          <tr key={item.numero} className="hover:cursor-pointer">
             <th
-            className={
-                typeof item.comision === "number"
-                ? "text-left"
-                : "text-right"
-            }
+              className={
+                typeof item.comision === "number" ? "text-left" : "text-right"
+              }
             >
-            {item.numero}
+              {item.numero}
             </th>
             <td className="w-[40%] max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap pt-[.10rem] pb-[.10rem]">
-            {item.descripcion}
+              {item.descripcion}
             </td>
             <td>{item.aplicacion}</td>
             <td className="text-right">{formatNumber(item.costo)}</td>
@@ -107,190 +103,192 @@ const tableBody = (data) => {
             <td className="text-right">{formatNumber(item.iva)}</td>
 
             <ActionButton
-            tooltip="Ver"
-            iconDark={iconos.ver}
-            iconLight={iconos.ver_w}
-            onClick={(evt) => tableAction(evt, item, "Ver")}
-            permission={true}
+              tooltip="Ver"
+              iconDark={iconos.ver}
+              iconLight={iconos.ver_w}
+              onClick={(evt) => tableAction(evt, item, "Ver")}
+              permission={true}
             />
             <ActionButton
-            tooltip="Editar"
-            iconDark={iconos.editar}
-            iconLight={iconos.editar_w}
-            onClick={(evt) => tableAction(evt, item, "Editar")}
-            permission={permissions.cambios}
+              tooltip="Editar"
+              iconDark={iconos.editar}
+              iconLight={iconos.editar_w}
+              onClick={(evt) => tableAction(evt, item, "Editar")}
+              permission={permissions.cambios}
             />
             <ActionButton
-            tooltip="Eliminar"
-            iconDark={iconos.eliminar}
-            iconLight={iconos.eliminar_w}
-            onClick={(evt) => tableAction(evt, item, "Eliminar")}
-            permission={permissions.bajas}
+              tooltip="Eliminar"
+              iconDark={iconos.eliminar}
+              iconLight={iconos.eliminar_w}
+              onClick={(evt) => tableAction(evt, item, "Eliminar")}
+              permission={permissions.bajas}
             />
-            
-        </tr>
+          </tr>
         ))}
-    </tbody>
+      </tbody>
     );
-};
+  };
 
-const modalBody = () => {
+  const modalBody = () => {
     return (
-        <fieldset id="fs_productos">
-            <div className="container flex flex-col space-y-5">
-            <Inputs
-                dataType={"int"}
-                name={"numero"}
-                tamañolabel={""}
-                className={"grow"}
-                Titulo={"Numero: "}
-                type={"int"}
-                requerido={true}
-                isNumero={false}
-                errors={errors}
-                register={register}
-                message={"Numero requerido"}
-                maxLenght={30}
-                isDisabled={isDisabled}
-            />
-            <Inputs
-                dataType={"string"}
-                name={"descripcion"}
-                tamañolabel={""}
-                className={"grow"}
-                Titulo={"Descripción: "}
-                type={"text"}
-                requerido={true}
-                isNumero={false}
-                errors={errors}
-                register={register}
-                message={"Descripción requerido"}
-                maxLenght={30}
-                isDisabled={isDisabled}
-            />
-            <Inputs
-                dataType={"string"}
-                name={"ref"}
-                tamañolabel={""}
-                className={"grow"}
-                Titulo={"Referencia: "}
-                type={"text"}
-                requerido={true}
-                isNumero={false}
-                errors={errors}
-                register={register}
-                message={"Referencia requerido"}
-                maxLenght={3}
-                isDisabled={isDisabled}
-            />
-            <Inputs
-                dataType={"string"}
-                name={"frecuencia"}
-                tamañolabel={""}
-                className={"grow"}
-                Titulo={"Frecuencia:"}
-                type={"text"}
-                requerido={true}
-                errors={errors}
-                register={register}
-                message={"Frecuencia requerido"}
-                maxLenght={6}
-                isDisabled={isDisabled}
-            />
-            <Inputs
-                dataType={"string"}
-                name={"aplicacion"}
-                tamañolabel={""}
-                className={"grow"}
-                Titulo={"Aplicación:"}
-                type={"text"}
-                requerido={true}
-                errors={errors}
-                register={register}
-                message={"Aplicación requerido"}
-                maxLenght={34}
-                isDisabled={isDisabled}
-            />
-            <Inputs
-                dataType={"float"}
-                name={"costo"}
-                tamañolabel={"w-3/6"}
-                className={" w-2/6 grow text-right"}
-                Titulo={"Costo:"}
-                type={"float"}
-                requerido={true}
-                errors={errors}
-                register={register}
-                message={"Costo requerido"}
-                maxLenght={10}
-                isDisabled={isDisabled}
-            />
-            <Inputs
-                dataType={"float"}
-                name={"por_recargo"}
-                tamañolabel={"w-3/6"}
-                className={" w-2/6 grow text-right"}
-                Titulo={"Recargos:"}
-                type={"float"}
-                requerido={true}
-                errors={errors}
-                register={register}
-                message={"Recargos requerido"}
-                maxLenght={10}
-                isDisabled={isDisabled}
-            />
-            <Inputs
-                dataType={"float"}
-                name={"iva"}
-                tamañolabel={"w-3/6"}
-                className={" w-2/6 grow text-right"}
-                Titulo={"IVA:"}
-                type={"float"}
-                requerido={true}
-                errors={errors}
-                register={register}
-                message={"IVA requerido"}
-                maxLenght={10}
-                isDisabled={isDisabled}
-            />
-            <Inputs
-                dataType={"int"}
-                name={"cond_1"}
-                tamañolabel={"w-3/6"}
-                className={" w-2/6 grow text-right"}
-                Titulo={"Condición:"}
-                type={"int"}
-                requerido={true}
-                errors={errors}
-                register={register}
-                message={"Condición requerido"}
-                maxLenght={10}
-                isDisabled={isDisabled}
-            />
-            <Inputs
-                dataType={"boolean"}
-                name={"cam_precio"}
-                tamañolabel={"w-3/6"}
-                className={" w-2/6 grow"}
-                Titulo={"Cambia P."}
-                type={"checkbox"}
-                requerido={false}
-                errors={errors}
-                register={register}
-                message={"Cambia precio requerido"}
-                maxLenght={1}
-                isDisabled={isDisabled}
-            />
-            </div>
-        </fieldset>
+      <fieldset
+        id="fs_productos"
+        disabled={accion === "Ver" || accion === "Eliminar" ? true : false}
+      >
+        <div className="container flex flex-col space-y-5">
+          <Inputs
+            dataType={"int"}
+            name={"numero"}
+            tamañolabel={`w-3/6 ${accion !== "Alta" ? "hidden" : ""}`}
+            className={"w-2/6 grow text-right"}
+            Titulo={"Numero: "}
+            type={"int"}
+            requerido={true}
+            isNumero={false}
+            errors={errors}
+            register={register}
+            message={"Numero requerido"}
+            maxLenght={20}
+            isDisabled={isDisabled}
+          />
+          <Inputs
+            dataType={"string"}
+            name={"descripcion"}
+            tamañolabel={""}
+            className={"grow"}
+            Titulo={"Descripción: "}
+            type={"text"}
+            requerido={true}
+            isNumero={false}
+            errors={errors}
+            register={register}
+            message={"Descripción requerido"}
+            maxLenght={30}
+            isDisabled={isDisabled}
+          />
+          <Inputs
+            dataType={"string"}
+            name={"ref"}
+            tamañolabel={""}
+            className={"grow"}
+            Titulo={"Referencia: "}
+            type={"text"}
+            requerido={true}
+            isNumero={false}
+            errors={errors}
+            register={register}
+            message={"Referencia requerido"}
+            maxLenght={3}
+            isDisabled={isDisabled}
+          />
+          <Inputs
+            dataType={"string"}
+            name={"frecuencia"}
+            tamañolabel={""}
+            className={"grow"}
+            Titulo={"Frecuencia:"}
+            type={"text"}
+            requerido={true}
+            errors={errors}
+            register={register}
+            message={"Frecuencia requerido"}
+            maxLenght={6}
+            isDisabled={isDisabled}
+          />
+          <Inputs
+            dataType={"string"}
+            name={"aplicacion"}
+            tamañolabel={""}
+            className={"grow"}
+            Titulo={"Aplicación:"}
+            type={"text"}
+            requerido={true}
+            errors={errors}
+            register={register}
+            message={"Aplicación requerido"}
+            maxLenght={34}
+            isDisabled={isDisabled}
+          />
+          <Inputs
+            dataType={"float"}
+            name={"costo"}
+            tamañolabel={"w-3/6"}
+            className={" w-2/6 grow text-right"}
+            Titulo={"Costo:"}
+            type={"float"}
+            requerido={true}
+            errors={errors}
+            register={register}
+            message={"Costo requerido"}
+            maxLenght={10}
+            isDisabled={isDisabled}
+          />
+          <Inputs
+            dataType={"float"}
+            name={"por_recargo"}
+            tamañolabel={"w-3/6"}
+            className={" w-2/6 grow text-right"}
+            Titulo={"Recargos:"}
+            type={"float"}
+            requerido={true}
+            errors={errors}
+            register={register}
+            message={"Recargos requerido"}
+            maxLenght={10}
+            isDisabled={isDisabled}
+          />
+          <Inputs
+            dataType={"float"}
+            name={"iva"}
+            tamañolabel={"w-3/6"}
+            className={" w-2/6 grow text-right"}
+            Titulo={"IVA:"}
+            type={"float"}
+            requerido={true}
+            errors={errors}
+            register={register}
+            message={"IVA requerido"}
+            maxLenght={10}
+            isDisabled={isDisabled}
+          />
+          <Inputs
+            dataType={"int"}
+            name={"cond_1"}
+            tamañolabel={"w-3/6"}
+            className={" w-2/6 grow text-right"}
+            Titulo={"Condición:"}
+            type={"int"}
+            requerido={true}
+            errors={errors}
+            register={register}
+            message={"Condición requerido"}
+            maxLenght={10}
+            isDisabled={isDisabled}
+          />
+          <Inputs
+            dataType={"boolean"}
+            name={"cam_precio"}
+            tamañolabel={"w-3/6"}
+            className={" w-2/6 grow"}
+            Titulo={"Cambia P."}
+            type={"checkbox"}
+            requerido={false}
+            errors={errors}
+            register={register}
+            message={"Cambia precio requerido"}
+            maxLenght={1}
+            isDisabled={isDisabled}
+          />
+        </div>
+      </fieldset>
     );
-};
+  };
 
-return {
+  return {
     itemHeaderTable,
     itemDataTable,
     tableColumns,
     tableBody,
     modalBody,
-};
+  };
 };
