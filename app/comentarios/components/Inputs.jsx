@@ -15,6 +15,7 @@ function Inputs({
   maxLenght,
   isDisabled,
   handleBlur,
+  onKeyDown
 }) {
 
   if (type === "toogle") {
@@ -30,6 +31,7 @@ function Inputs({
             {...register(name, {
               ...(requerido && { required: message }),
             })}
+            
           />
         </label>
         {errors[name] && (
@@ -64,6 +66,7 @@ function Inputs({
                 onBlur: (event) => handleBlur(event, dataType),
               }))}
             disabled={isDisabled}
+            onKeyDown={onKeyDown}
           />
         </label>
         {errors[name] && (
