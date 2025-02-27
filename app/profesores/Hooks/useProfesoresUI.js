@@ -11,6 +11,29 @@ export const useProfesoresUI = (
     errors,
     accion,
 ) => {
+  
+  const handleKeyDown = (evt) => {
+    if (evt.key === "Enter") {
+        evt.preventDefault(); 
+
+        const fieldset = document.getElementById("fs_profesores");
+        const inputs = Array.from(
+            fieldset.querySelectorAll("input[name='nombre'], input[name='ap_paterno'], input[name='ap_materno'], input[name='direccion'], input[name='colonia'], input[name='ciudad'], input[name='estado'], input[name='cp'], input[name='pais'], input[name='rfc'], input[name='telefono_1'], input[name='telefono_2'], input[name='fax'], input[name='celular'], input[name='email'], input[name='contraseña']")
+        );
+
+        const currentIndex = inputs.indexOf(evt.target);
+        console.log("a",currentIndex);
+        if (currentIndex !== -1) {
+            if (currentIndex < inputs.length - 1) {
+                inputs[currentIndex + 1].focus(); 
+            } else {
+                const submitButton = fieldset?.querySelector("button[type='submit']");
+                if (submitButton) submitButton.click(); 
+            }
+        }
+    }
+  };
+
     const itemHeaderTable = () => {
       return (
         <>
@@ -63,42 +86,52 @@ export const useProfesoresUI = (
       );
     };
 
-    const tableColumns = () => {
-        return(
-            <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
+    const tableColumns = (data = [] ) => {
+      const hasBajas = data.some(item => item.baja === "*");  
+      return(
+            <thead 
+              className={`sticky top-0 z-[2] ${
+              hasBajas ? "text-black" : "bg-white dark:bg-[#1d232a]"}`}
+              style={hasBajas ? { backgroundColor: "#CF2A2A" } : {}}
+            >
             <tr>
               <td className="w-[50px]">Núm.</td>
               <td className="w-[250px]">Nombre</td>
-              <td className="w-[150px]">RFC</td>
-              <td className="w-[150px]">Telefono1</td>
-              <td className="w-[200px]">Email</td>
+              <td className="w-[150px] hidden sm:table-cell">RFC</td>
+              <td className="w-[150px] hidden sm:table-cell">Telefono1</td>
+              <td className="w-[200px] hidden sm:table-cell">Email</td>
               < ActionColumn
                 description={"Ver"}
                 permission={true}
               />
-              < ActionColumn
+              {!hasBajas && < ActionColumn
                 description={"Editar"}
                 permission={permissions.cambios}
-              />
-              < ActionColumn
+              />}
+              {!hasBajas && < ActionColumn
                 description={"Eliminar"}
                 permission={permissions.bajas}
-              />
+              />}
+              {hasBajas && <ActionColumn 
+                description={"Reactivar"} 
+                permission={true} 
+              />}
             </tr>
           </thead>
         );
     };
 
-    const tableBody = (data) => {
+    const tableBody = (data = []) => {
+        const hasBajas = data.some(item => item.baja === "*");
         return(
-            <tbody>
+            <tbody style={{ backgroundColor: hasBajas ? "#CD5C5C" : "" }}>
             {data.map((item) => (
               <tr key={item.numero} className="hover:cursor-pointer">
                 <td className="text-right">{item.numero}</td>
                 <td className="text-left">{item.nombre_completo}</td>
-                <td className="text-left">{item.rfc}</td>
-                <td className="text-left">{item.telefono_1}</td>
-                <td className="text-left">{item.email}</td>
+                <td className="text-left hidden sm:table-cell">{item.rfc}</td>
+                <td className="text-left hidden sm:table-cell">{item.telefono_1}</td>
+                <td className="text-left hidden sm:table-cell">{item.email}</td>
                 <ActionButton
                   tooltip="Ver"
                   iconDark={iconos.ver}
@@ -106,20 +139,32 @@ export const useProfesoresUI = (
                   onClick={(evt) => tableAction(evt, item, "Ver")}
                   permission={true}
                 />
-                <ActionButton
-                  tooltip="Editar"
-                  iconDark={iconos.editar}
-                  iconLight={iconos.editar_w}
-                  onClick={(evt) => tableAction(evt, item, "Editar")}
-                  permission={permissions.cambios}
-                />
-                <ActionButton
-                  tooltip="Eliminar"
-                  iconDark={iconos.eliminar}
-                  iconLight={iconos.eliminar_w}
-                  onClick={(evt) => tableAction(evt, item, "Eliminar")}
-                  permission={permissions.bajas}
-                />
+                {item.baja !== "*" ? (
+                  <>
+                    <ActionButton
+                      tooltip="Editar"
+                      iconDark={iconos.editar}
+                      iconLight={iconos.editar_w}
+                      onClick={(evt) => tableAction(evt, item, "Editar")}
+                      permission={permissions.cambios}
+                    />
+                    <ActionButton
+                      tooltip="Eliminar"
+                      iconDark={iconos.eliminar}
+                      iconLight={iconos.eliminar_w}
+                      onClick={(evt) => tableAction(evt, item, "Eliminar")}
+                      permission={permissions.bajas}
+                    />
+                  </>
+                ) : (
+                  <ActionButton
+                    tooltip="Reactivar"
+                    iconDark={iconos.documento}
+                    iconLight={iconos.documento_w}
+                    onClick={(evt) => tableAction(evt, item, "Reactivar")}
+                    permission={true}
+                  />
+                )}
               </tr>
             ))}
           </tbody>
@@ -146,6 +191,9 @@ export const useProfesoresUI = (
                     message={"Nombre requerido"}
                     maxLenght={50}
                     isDisabled={isDisabled}
+                    onKeyDown={(evt) => {
+                      handleKeyDown(evt);
+                    }}
                   />
 
                   <Inputs
@@ -162,6 +210,9 @@ export const useProfesoresUI = (
                     message={"Apellido Paterno requerido"}
                     maxLenght={50}
                     isDisabled={isDisabled}
+                    onKeyDown={(evt) => {
+                      handleKeyDown(evt);
+                    }}
                   />
 
                   <Inputs
@@ -178,6 +229,9 @@ export const useProfesoresUI = (
                     message={"Apellido Materno requerido"}
                     maxLenght={50}
                     isDisabled={isDisabled}
+                    onKeyDown={(evt) => {
+                      handleKeyDown(evt);
+                    }}
                   />
 
                   <Inputs
@@ -194,6 +248,9 @@ export const useProfesoresUI = (
                     message={"Direccion requerido"}
                     maxLenght={50}
                     isDisabled={isDisabled}
+                    onKeyDown={(evt) => {
+                      handleKeyDown(evt);
+                    }}
                   />
 
                   <Inputs
@@ -210,6 +267,9 @@ export const useProfesoresUI = (
                     message={"Colonia requerido"}
                     maxLenght={50}
                     isDisabled={isDisabled}
+                    onKeyDown={(evt) => {
+                      handleKeyDown(evt);
+                    }}
                   />
 
                   <Inputs
@@ -226,6 +286,9 @@ export const useProfesoresUI = (
                     message={"Ciudad requerido"}
                     maxLenght={50}
                     isDisabled={isDisabled}
+                    onKeyDown={(evt) => {
+                      handleKeyDown(evt);
+                    }}
                   />
 
                   <Inputs
@@ -242,6 +305,9 @@ export const useProfesoresUI = (
                     message={"Estado requerido"}
                     maxLenght={20}
                     isDisabled={isDisabled}
+                    onKeyDown={(evt) => {
+                      handleKeyDown(evt);
+                    }}
                   />
 
                   <Inputs
@@ -258,6 +324,9 @@ export const useProfesoresUI = (
                     message={"CP requerido"}
                     maxLenght={6}
                     isDisabled={isDisabled}
+                    onKeyDown={(evt) => {
+                      handleKeyDown(evt);
+                    }}
                   />
 
                   <Inputs
@@ -274,6 +343,9 @@ export const useProfesoresUI = (
                     message={"Pais requerido"}
                     maxLenght={20}
                     isDisabled={isDisabled}
+                    onKeyDown={(evt) => {
+                      handleKeyDown(evt);
+                    }}
                   />
 
                   <Inputs
@@ -290,6 +362,9 @@ export const useProfesoresUI = (
                     message={"RFC requerido"}
                     maxLenght={13}
                     isDisabled={isDisabled}
+                    onKeyDown={(evt) => {
+                      handleKeyDown(evt);
+                    }}
                   />
 
                   <Inputs
@@ -306,6 +381,9 @@ export const useProfesoresUI = (
                     message={"Telefono 1 requerido"}
                     maxLenght={20}
                     isDisabled={isDisabled}
+                    onKeyDown={(evt) => {
+                      handleKeyDown(evt);
+                    }}
                   />
 
                   <Inputs
@@ -322,6 +400,9 @@ export const useProfesoresUI = (
                     message={"Telefono 2 requerido"}
                     maxLenght={20}
                     isDisabled={isDisabled}
+                    onKeyDown={(evt) => {
+                      handleKeyDown(evt);
+                    }}
                   />
 
                   <Inputs
@@ -338,6 +419,9 @@ export const useProfesoresUI = (
                     message={"Fax requerido"}
                     maxLenght={20}
                     isDisabled={isDisabled}
+                    onKeyDown={(evt) => {
+                      handleKeyDown(evt);
+                    }}
                   />
 
                   <Inputs
@@ -354,6 +438,9 @@ export const useProfesoresUI = (
                     message={"Celular requerido"}
                     maxLenght={20}
                     isDisabled={isDisabled}
+                    onKeyDown={(evt) => {
+                      handleKeyDown(evt);
+                    }}
                   />
 
                   <Inputs
@@ -370,8 +457,11 @@ export const useProfesoresUI = (
                     message={"Email requerido"}
                     maxLenght={80}
                     isDisabled={isDisabled}
+                    onKeyDown={(evt) => {
+                      handleKeyDown(evt);
+                    }}
                   />
-
+                  { accion !== "Eliminar" && (
                   <Inputs
                     dataType={"string"}
                     name={"contraseña"}
@@ -387,7 +477,8 @@ export const useProfesoresUI = (
                     maxLenght={12}
                     isDisabled={isDisabled}
                     password={true} 
-                  />
+                  /> )}
+                  
                 </div>
             </fieldset>
         );

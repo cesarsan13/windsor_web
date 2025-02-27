@@ -8,6 +8,7 @@ import { debounce, permissionsComponents } from "@/app/utils/globalfn";
 import {
     getProfesores,
     guardaProfesor,
+    guardaProfesorBaja
 } from "@/app/utils/api/profesores/profesores";
 import { showSwal, confirmSwal, showSwalConfirm } from "@/app/utils/alerts";
 import { useEscapeWarningModal, validateBeforeSave } from "@/app/utils/globalfn";
@@ -196,6 +197,8 @@ export const useProfesoresABC = () => {
             : accion === "Eliminar"
             ? `Eliminar Profesor: ${currentID}`
             : `Ver Profesor: ${currentID}`
+            ? `Reactivar Profesor: ${currentID}`
+            : accion === "Reactivar"
         );
     }, [accion, currentID]);
 
@@ -259,9 +262,6 @@ export const useProfesoresABC = () => {
 
     const onSubmitModal = handleSubmit(async (data) => {
         event.preventDefault();
-        if (!validateBeforeSave("email", "my_modal_3")) {
-          return;
-      }
         setisLoadingButton(true);
         accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
         let res = null;
@@ -358,12 +358,51 @@ export const useProfesoresABC = () => {
       }));
     };
 
+      const handleReactivar = async (evt, profesoresr) => {
+        evt.preventDefault();
+        const confirmed = await confirmSwal(
+          "¿Desea reactivar este profesor?",
+          "El profesor será reactivado y volverá a estar activo.",
+          "warning",
+          "Sí, reactivar",
+          "Cancelar"
+        );
+      
+        if (confirmed) {
+          const res = await guardaProfesor(session.user.token, { 
+            ...profesoresr, 
+            contraseña: "",
+            baja: ""
+          }, "Editar");
+      
+          if (res.status) {
+            const updatedProfesores = profesores.map((c) =>
+              c.numero === profesores.numero ? { ...c, contraseña:"", baja: "" } : c
+            );
+      
+            setProfesores(updatedProfesores);
+            setProfesoresFiltrados(updatedProfesores);
+      
+            showSwal("Reactivado", "El profesor ha sido reactivado correctamente.", "success");
+            setReloadPage((prev) => !prev);
+          } else {
+            showSwal("Error", "No se pudo reactivar el profesor.", "error");
+          }
+        }
+      };
+
     const tableAction = (evt, profesor, accion) => {
+      console.log("accion", accion);
         evt.preventDefault();
         setProfesor(profesor);
         setAccion(accion);
         setCurrentId(profesor.numero);
-        showModal(true);
+        if (accion === "Reactivar") {
+          handleReactivar(evt, profesor);
+          
+        } else {
+          showModal(true);
+        }
     };
 
     return {
