@@ -174,13 +174,14 @@ export const useCommentsABC = () => {
       setIsDisabled(false);
     }
     setTitulo(
-      accion === "Alta"
-        ? `Nuevo Comentario`
+      accion === "Alta" ? `Nuevo Comentario`
         : accion === "Editar"
         ? `Editar Comentario: ${currentID}`
         : accion === "Eliminar"
         ? `Eliminar Comentario: ${currentID}`
         : `Ver Comentario: ${currentID}`
+        ? `Reactivar Comentario: ${currentID}`
+        : accion == "Reactivar"
     );
   }, [accion, currentID]);
 
@@ -323,12 +324,49 @@ export const useCommentsABC = () => {
     }));
   };
 
+  const handleReactivar = async (evt, formaComentarios) => {
+    evt.preventDefault();
+    const confirmed = await confirmSwal(
+      "¿Desea reactivar este comentario?",
+      "El comentario será reactivado y volverá a estar activo.",
+      "warning",
+      "Sí, reactivar",
+      "Cancelar"
+    );
+  
+    if (confirmed) {
+      const res = await guardaComentarios(session.user.token, { 
+        ...formaComentarios, 
+        baja: ""
+      }, "Editar");
+  
+      if (res.status) {
+        const updatedComentarios = formasComentarios.map((c) =>
+          c.numero === formaComentarios.numero ? { ...c, baja: "" } : c
+        );
+  
+        setFormasComentarios(updatedComentarios);
+        setFormaComentariosFiltrados(updatedComentarios);
+  
+        showSwal("Reactivado", "El comentario ha sido reactivado correctamente.", "success");
+        setReloadPage((prev) => !prev);
+      } else {
+        showSwal("Error", "No se pudo reactivar el comentario.", "error");
+      }
+    }
+  };
+  
+
   const tableAction = (evt, formaComentarios, accion) => {
     evt.preventDefault();
     setFormaComentarios(formaComentarios);
     setAccion(accion);
     setCurrentId(formaComentarios.numero);
-    showModal(true);
+    if (accion === "Reactivar") {
+      handleReactivar(evt, formaComentarios);
+    } else {
+      showModal(true);
+    }  
   };
 
   return {

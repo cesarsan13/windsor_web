@@ -44,49 +44,37 @@ export const useCommentsUI = (
     );
   };
 
-  const tableColumns = () => {
+  const tableColumns = (data = []) => {
+    const hasBajas = data.some(item => item.baja === "*");
     return (
-      <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
+      <thead   className={`sticky top-0 z-[2] ${
+        hasBajas ? "text-black" : "bg-white dark:bg-[#1d232a]"
+      }`}
+      style={hasBajas ? { backgroundColor: "#CF2A2A" } : {}}>
         <tr>
           <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
           <td className="w-[45%]">Comentario 1</td>
           <td className="w-[25%] hidden sm:table-cell">Comentario 2</td>
           <td className="w-[25%] hidden sm:table-cell">Comentario 3</td>
           <ActionColumn description={"Ver"} permission={true} />
-          <ActionColumn
-            description={"Editar"}
-            permission={permissions.cambios}
-          />
-          <ActionColumn
-            description={"Eliminar"}
-            permission={permissions.bajas}
-          />
+          {!hasBajas && <ActionColumn description={"Editar"} permission={permissions.cambios} />}
+          {!hasBajas && <ActionColumn description={"Eliminar"} permission={permissions.bajas}/>}
+          {hasBajas && <ActionColumn description={"Reactivar"} permission={true} />}
         </tr>
       </thead>
     );
   };
 
-  const tableBody = (data) => {
+  const tableBody = (data = []) => {
+    const hasBajas = data.some(item => item.baja === "*");
     return (
-      <tbody>
+      <tbody style={{ backgroundColor: hasBajas ? "#CD5C5C" : "" }}>
         {data.map((item) => (
           <tr key={item.numero} className="hover:cursor-pointer">
-            <th
-              className={
-                typeof item.comision === "number" ? "text-left" : "text-right"
-              }
-            >
-              {item.numero}
-            </th>
-            <td className="w-[45%]"> {item.comentario_1} </td>
-            <td className="w-[25%] hidden sm:table-cell">
-              {" "}
-              {item.comentario_2}{" "}
-            </td>
-            <td className="w-[25%] hidden sm:table-cell">
-              {" "}
-              {item.comentario_3}{" "}
-            </td>
+            <th className="text-left">{item.numero}</th>
+            <td className="w-[45%]">{item.comentario_1}</td>
+            <td className="w-[25%] hidden sm:table-cell">{item.comentario_2}</td>
+            <td className="w-[25%] hidden sm:table-cell">{item.comentario_3}</td>
             <ActionButton
               tooltip="Ver"
               iconDark={iconos.ver}
@@ -94,25 +82,38 @@ export const useCommentsUI = (
               onClick={(evt) => tableAction(evt, item, "Ver")}
               permission={true}
             />
-            <ActionButton
-              tooltip="Editar"
-              iconDark={iconos.editar}
-              iconLight={iconos.editar_w}
-              onClick={(evt) => tableAction(evt, item, "Editar")}
-              permission={permissions.cambios}
-            />
-            <ActionButton
-              tooltip="Eliminar"
-              iconDark={iconos.eliminar}
-              iconLight={iconos.eliminar_w}
-              onClick={(evt) => tableAction(evt, item, "Eliminar")}
-              permission={permissions.bajas}
-            />
+            {item.baja !== "*" ? (
+              <>
+                <ActionButton
+                  tooltip="Editar"
+                  iconDark={iconos.editar}
+                  iconLight={iconos.editar_w}
+                  onClick={(evt) => tableAction(evt, item, "Editar")}
+                  permission={permissions.cambios}
+                />
+                <ActionButton
+                  tooltip="Eliminar"
+                  iconDark={iconos.eliminar}
+                  iconLight={iconos.eliminar_w}
+                  onClick={(evt) => tableAction(evt, item, "Eliminar")}
+                  permission={permissions.bajas}
+                />
+              </>
+            ) : (
+              <ActionButton
+                tooltip="Reactivar"
+                iconDark={iconos.documento}
+                iconLight={iconos.documento_w}
+                onClick={(evt) => tableAction(evt, item, "Reactivar")}
+                permission={true}
+              />
+            )}
           </tr>
         ))}
       </tbody>
     );
   };
+  
 
   const modalBody = () => {
     return (

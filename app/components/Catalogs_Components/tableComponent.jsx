@@ -13,7 +13,7 @@ export default function TableComponent({
     <div className="overflow-y-auto mt-3 h-[calc(60vh)] md:h-[calc(70vh)] text-black bg-white dark:bg-[#1d232a] dark:text-white w-full lg:w-full">
       {data && data.length > 0 ? (
         <table className="table table-xs text-xs table-zebra w-full">
-          {tableColumns()}
+          {tableColumns(data)}
           {tableBody(data)}
           <tfoot />
         </table>
