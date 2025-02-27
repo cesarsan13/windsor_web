@@ -59,6 +59,7 @@ export const useCommentsUI = (
           <ActionColumn description={"Ver"} permission={true} />
           {!hasBajas && <ActionColumn description={"Editar"} permission={permissions.cambios} />}
           {!hasBajas && <ActionColumn description={"Eliminar"} permission={permissions.bajas}/>}
+          {hasBajas && <ActionColumn description={"Reactivar"} permission={true} />}
         </tr>
       </thead>
     );
@@ -68,42 +69,51 @@ export const useCommentsUI = (
     const hasBajas = data.some(item => item.baja === "*");
     return (
       <tbody style={{ backgroundColor: hasBajas ? "#CD5C5C" : "" }}>
-      {data.map((item) => (
-        <tr key={item.numero} className="hover:cursor-pointer">
-          <th className="text-left">{item.numero}</th>
-          <td className="w-[45%]">{item.comentario_1}</td>
-          <td className="w-[25%] hidden sm:table-cell">{item.comentario_2}</td>
-          <td className="w-[25%] hidden sm:table-cell">{item.comentario_3}</td>
-          <ActionButton
-            tooltip="Ver"
-            iconDark={iconos.ver}
-            iconLight={iconos.ver_w}
-            onClick={(evt) => tableAction(evt, item, "Ver")}
-            permission={true}
-          />
-          {item.baja !== "*" && (
-            <>
+        {data.map((item) => (
+          <tr key={item.numero} className="hover:cursor-pointer">
+            <th className="text-left">{item.numero}</th>
+            <td className="w-[45%]">{item.comentario_1}</td>
+            <td className="w-[25%] hidden sm:table-cell">{item.comentario_2}</td>
+            <td className="w-[25%] hidden sm:table-cell">{item.comentario_3}</td>
+            <ActionButton
+              tooltip="Ver"
+              iconDark={iconos.ver}
+              iconLight={iconos.ver_w}
+              onClick={(evt) => tableAction(evt, item, "Ver")}
+              permission={true}
+            />
+            {item.baja !== "*" ? (
+              <>
+                <ActionButton
+                  tooltip="Editar"
+                  iconDark={iconos.editar}
+                  iconLight={iconos.editar_w}
+                  onClick={(evt) => tableAction(evt, item, "Editar")}
+                  permission={permissions.cambios}
+                />
+                <ActionButton
+                  tooltip="Eliminar"
+                  iconDark={iconos.eliminar}
+                  iconLight={iconos.eliminar_w}
+                  onClick={(evt) => tableAction(evt, item, "Eliminar")}
+                  permission={permissions.bajas}
+                />
+              </>
+            ) : (
               <ActionButton
-                tooltip="Editar"
-                iconDark={iconos.editar}
-                iconLight={iconos.editar_w}
-                onClick={(evt) => tableAction(evt, item, "Editar")}
-                permission={permissions.cambios}
+                tooltip="Reactivar"
+                iconDark={iconos.documento}
+                iconLight={iconos.documento_w}
+                onClick={(evt) => tableAction(evt, item, "Reactivar")}
+                permission={true}
               />
-              <ActionButton
-                tooltip="Eliminar"
-                iconDark={iconos.eliminar}
-                iconLight={iconos.eliminar_w}
-                onClick={(evt) => tableAction(evt, item, "Eliminar")}
-                permission={permissions.bajas}
-              />
-            </>
-          )}
-        </tr>
-      ))}
-    </tbody>
-      );
-    };
+            )}
+          </tr>
+        ))}
+      </tbody>
+    );
+  };
+  
 
   const modalBody = () => {
     return (
