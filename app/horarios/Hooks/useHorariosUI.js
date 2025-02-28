@@ -15,6 +15,8 @@ export const useHorariosUI = (
   setDia
 ) => {
 
+  const [sinZebra, setSinZebra] = useState(false);
+
   const handleKeyDown = (evt) => {
     if (evt.key === "Enter") {
         evt.preventDefault(); 
@@ -140,6 +142,7 @@ export const useHorariosUI = (
 
     const tableBody = (data = []) => {
       const hasBajas = data.some(item => item.baja === "*");
+      setSinZebra(hasBajas);
         return (
             <tbody style={{ backgroundColor: hasBajas ? "#CD5C5C" : "" }}>
                 {data.map((item) => (
@@ -372,5 +375,6 @@ export const useHorariosUI = (
       tableColumns, 
       tableBody, 
       modalBody,
+      sinZebra
     };
 };

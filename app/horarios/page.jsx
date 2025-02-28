@@ -76,8 +76,8 @@ function Horarios() {
     setisLoadingButton
   );
   
-  const { itemHeaderTable, itemDataTable, tableColumns, tableBody, modalBody} = 
-    useHorariosUI(tableAction, register, control, permissions, isDisabled, errors, accion,formaHorarios, setDia); //horarios,
+  const { itemHeaderTable, itemDataTable, tableColumns, tableBody, modalBody, sinZebra} = 
+    useHorariosUI(tableAction, register, control, permissions, isDisabled, errors, accion,formaHorarios, setDia);
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -163,6 +163,7 @@ function Horarios() {
                   isLoading={isLoading}
                   tableColumns={tableColumns}
                   tableBody={tableBody}
+                  sinZebra={sinZebra}
                 />
             ))}
           </div>
