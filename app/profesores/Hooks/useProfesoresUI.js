@@ -174,7 +174,7 @@ export const useProfesoresUI = (
     const modalBody = () => {
         return(
             <fieldset id="fs_profesores"
-              disabled={accion === "Ver"  || accion === "Eliminar" ? true : false }
+              dataTypedisabled={accion === "Ver"  || accion === "Eliminar" ? true : false }
             >
                 <div className="container flex flex-col space-y-5">
                   <Inputs

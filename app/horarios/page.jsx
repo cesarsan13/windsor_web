@@ -12,10 +12,12 @@ import { useHorariosPdfExcel } from "./Hooks/useHorariosPdfExcel";
 import { useHorariosUI } from "./Hooks/useHorariosUI";
 import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
+import { useState } from "react";
 
 
 
 function Horarios() {
+  const [dia, setDia] = useState("");
   const {
     onSubmitModal,
     Buscar,
@@ -45,7 +47,8 @@ function Horarios() {
     isDisabled,
     errors,
     inactiveActive,
-  } = useHorariosABC();
+    formaHorarios,
+  } = useHorariosABC(dia);
   
   const {
     handleVerClick,
@@ -73,8 +76,8 @@ function Horarios() {
     setisLoadingButton
   );
   
-  const { itemHeaderTable, itemDataTable, tableColumns, tableBody, modalBody } = 
-    useHorariosUI(tableAction, register, control, permissions, isDisabled, errors);
+  const { itemHeaderTable, itemDataTable, tableColumns, tableBody, modalBody} = 
+    useHorariosUI(tableAction, register, control, permissions, isDisabled, errors, accion,formaHorarios, setDia); //horarios,
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -82,7 +85,7 @@ function Horarios() {
   }
   return (
     <>
-          <BarraCarga
+      <BarraCarga
         porcentaje={porcentaje}
         cerrarTO={cerrarTO}
       />

@@ -22,8 +22,9 @@ function Inputs({
   isDisabled,
   handleBlur,
   arreglos,
+  onKeyDown
 }) {
-
+  const isDarkMode = document.documentElement.classList.contains("dark");
   const styles = {
     control: (styles) => ({
       ...styles,
@@ -31,7 +32,8 @@ function Inputs({
       minHeight: "48px",
       maxWidth: "400px",
       overflow: "hidden",
-      backgroundColor: "bg-white dark:bg-[#1d232a]",
+      backgroundColor: isDarkMode ? "#1d232a" : "#ffffff",
+      color: isDarkMode ? "#ffffff" : "#1d232a",
     }),
     valueContainer: (styles) => ({
       ...styles,
@@ -39,22 +41,30 @@ function Inputs({
       flexWrap: "nowrap",
       overflowX: "auto",
       maxWidth: "100%",
+      backgroundColor: isDarkMode ? "#1d232a" : "#ffffff",
+      color: isDarkMode ? "#ffffff" : "#1d232a",
     }),
     multiValue: (styles) => ({
       ...styles,
       borderRadius: "4px",
       fontSize: "16px",
+      backgroundColor: isDarkMode ? "#1d232a" : "#ffffff",
+      color: isDarkMode ? "#ffffff" : "#1d232a",
     }),
     multiValueLabel: (styles) => ({
       ...styles,
       fontSize: "14px",
+      backgroundColor: isDarkMode ? "#1d232a" : "#ffffff",
+      color: isDarkMode ? "#ffffff" : "#1d232a",
     }),
   };
+
+
 
   if (type === "multi-select") {
     return (
       <div className="flex flex-col">
-        <label className={tamañolabel}>
+        <label htmlFor={name} className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}>
           {Titulo}
           <Controller
             name={name}
@@ -64,16 +74,18 @@ function Inputs({
                 {...field}
                 closeMenuOnSelect={false}
                 isMulti
+                styles={styles}
                 isDisabled={isDisabled}
                 options={options}
                 className={className}
                 classNamePrefix="react-select"
                 value={value}
                 onChange={onChange}
-                styles={styles}
+                
                 placeholder={"Días"}
               />
             )}
+            onKeyDown={onKeyDown}
           />
         </label>
         {errors[name] && requerido && (
@@ -87,7 +99,7 @@ function Inputs({
 
   if (type === "select") {
     return (
-      <div className="w-full md:w-1/2 px-0.5 py-2 mb-2 md:mb-0">
+      <div className="flex flex-col">
         <label
           htmlFor={name}
           className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
@@ -97,14 +109,15 @@ function Inputs({
             name={name}
             className={`text-black dark:text-white ${
               isDisabled
-                ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                : "bg-white"
+                ? "bg-white dark:bg-[#1d232a] dark:text-white cursor-not-allowed"
+                : "bg-white dark:bg-[#1d232a] "
             } ${className}`}
             id={name}
             {...register(name, {
               ...(requerido && { required: message }),
             })}
             disabled={isDisabled}
+            onKeyDown={onKeyDown}
           >
             <option
               value=""
@@ -159,6 +172,7 @@ function Inputs({
                 onBlur: (event) => handleBlur(event, dataType),
               }))}
             disabled={isDisabled}
+            onKeyDown={onKeyDown}
           />
         </label>
         {errors[name] && (
