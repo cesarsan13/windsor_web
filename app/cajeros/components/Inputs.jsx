@@ -16,7 +16,8 @@ function Inputs({
   maxLenght,
   isDisabled,
   handleBlur,
-  password
+  password,
+  onKeyDown
 }) {
 
   const [mostrarContr, setMostrarContr] = useState(false);
@@ -51,6 +52,7 @@ function Inputs({
                   onBlur: (event) => handleBlur(event, dataType),
                 }))}
               disabled={isDisabled}
+              onKeyDown={onKeyDown}
             />
             <button
             type="button"
@@ -130,6 +132,7 @@ function Inputs({
               onBlur: (event) => handleBlur(event, dataType),
             }))}
           disabled={isDisabled}
+          onKeyDown={onKeyDown}
         />
       </label>
       {errors[name] && (

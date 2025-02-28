@@ -11,6 +11,28 @@ export const useCajerosUI = (
     errors,
     accion
 ) => {
+
+  const handleKeyDown = (evt) => {
+    if (evt.key === "Enter") {
+        evt.preventDefault(); 
+
+        const fieldset = document.getElementById("fs_formapago");
+        const inputs = Array.from(
+            fieldset.querySelectorAll("input[name='nombre'], input[name='direccion'], input[name='colonia'], input[name='estado'], input[name='telefono'], input[name='fax'], input[name='mail'],input[name='clave_cajero']")
+        );
+
+        const currentIndex = inputs.indexOf(evt.target);
+        if (currentIndex !== -1) {
+            if (currentIndex < inputs.length - 1) {
+                inputs[currentIndex + 1].focus(); 
+            } else {
+                const submitButton = fieldset?.querySelector("button[type='submit']");
+                if (submitButton) submitButton.click(); 
+            }
+        }
+    }
+  };
+
     const itemHeaderTable = () => {
       return (
         <>
@@ -56,31 +78,31 @@ export const useCajerosUI = (
       );
     };
 
-    const tableColumns = () => {
+    const tableColumns = (data = []) => {
+      const hasBajas = data.some(item => item.baja === "*");
         return(
-            <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
+          <thead   className={`sticky top-0 z-[2] ${
+            hasBajas ? "text-black" : "bg-white dark:bg-[#1d232a]"
+          }`}
+          style={hasBajas ? { backgroundColor: "#CF2A2A" } : {}}>
               <tr>
                 <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
                 <td className="sm:w-[35%]">Nombre</td>
                 <td className="w-[20%]">Telefono</td>
                 <td className="w-[30%]">Correo</td>
                 <ActionColumn description={"Ver"} permission={true} />
-                <ActionColumn
-                  description={"Editar"}
-                  permission={permissions.cambios}
-                />
-                <ActionColumn
-                  description={"Eliminar"}
-                  permission={permissions.bajas}
-                />
+                {!hasBajas && <ActionColumn description={"Editar"} permission={permissions.cambios} />}
+                {!hasBajas && <ActionColumn description={"Eliminar"} permission={permissions.bajas}/>}
+                {hasBajas && <ActionColumn description={"Reactivar"} permission={true} />}
               </tr>
             </thead>
         );
     };
 
-    const tableBody = (data) => {
+    const tableBody = (data = []) => {
+      const hasBajas = data.some(item => item.baja === "*");
         return(
-            <tbody>
+          <tbody style={{ backgroundColor: hasBajas ? "#CD5C5C" : "" }}>
               {data.map((item) => (
                 <tr key={item.numero} className="hover:cursor-pointer">
                   <th
@@ -105,20 +127,32 @@ export const useCajerosUI = (
                     onClick={(evt) => tableAction(evt, item, "Ver")}
                     permission={true}
                   />
-                  <ActionButton
-                    tooltip="Editar"
-                    iconDark={iconos.editar}
-                    iconLight={iconos.editar_w}
-                    onClick={(evt) => tableAction(evt, item, "Editar")}
-                    permission={permissions.cambios}
-                  />
-                  <ActionButton
-                    tooltip="Eliminar"
-                    iconDark={iconos.eliminar}
-                    iconLight={iconos.eliminar_w}
-                    onClick={(evt) => tableAction(evt, item, "Eliminar")}
-                    permission={permissions.bajas}
-                  />
+ {item.baja !== "*" ? (
+              <>
+                <ActionButton
+                  tooltip="Editar"
+                  iconDark={iconos.editar}
+                  iconLight={iconos.editar_w}
+                  onClick={(evt) => tableAction(evt, item, "Editar")}
+                  permission={permissions.cambios}
+                />
+                <ActionButton
+                  tooltip="Eliminar"
+                  iconDark={iconos.eliminar}
+                  iconLight={iconos.eliminar_w}
+                  onClick={(evt) => tableAction(evt, item, "Eliminar")}
+                  permission={permissions.bajas}
+                />
+              </>
+            ) : (
+              <ActionButton
+                tooltip="Reactivar"
+                iconDark={iconos.documento}
+                iconLight={iconos.documento_w}
+                onClick={(evt) => tableAction(evt, item, "Reactivar")}
+                permission={true}
+              />
+            )}
                 </tr>
               ))}
             </tbody>
@@ -144,6 +178,9 @@ export const useCajerosUI = (
                 message={"Nombre requerido"}
                 maxLenght={35}
                 isDisabled={isDisabled}
+                onKeyDown={(evt) => {
+                  handleKeyDown(evt);
+                }}
               />
               <Inputs
                 dataType={"string"}
@@ -159,6 +196,9 @@ export const useCajerosUI = (
                 message={"Direccion requerida"}
                 maxLenght={50}
                 isDisabled={isDisabled}
+                onKeyDown={(evt) => {
+                  handleKeyDown(evt);
+                }}
               />
               <Inputs
                 dataType={"string"}
@@ -174,6 +214,9 @@ export const useCajerosUI = (
                 message={"Colonia requerida"}
                 maxLenght={30}
                 isDisabled={isDisabled}
+                onKeyDown={(evt) => {
+                  handleKeyDown(evt);
+                }}
               />
               <Inputs
                 dataType={"string"}
@@ -189,6 +232,9 @@ export const useCajerosUI = (
                 message={"Estado requerido"}
                 maxLenght={30}
                 isDisabled={isDisabled}
+                onKeyDown={(evt) => {
+                  handleKeyDown(evt);
+                }}
               />
               <Inputs
                 dataType={"string"}
@@ -204,6 +250,9 @@ export const useCajerosUI = (
                 message={"Telefono requerido"}
                 maxLenght={20}
                 isDisabled={isDisabled}
+                onKeyDown={(evt) => {
+                  handleKeyDown(evt);
+                }}
               />
               <Inputs
                 dataType={"string"}
@@ -219,6 +268,9 @@ export const useCajerosUI = (
                 message={"Fax requerido"}
                 maxLenght={20}
                 isDisabled={isDisabled}
+                onKeyDown={(evt) => {
+                  handleKeyDown(evt);
+                }}
               />
               <Inputs
                 dataType={"string"}
@@ -234,6 +286,9 @@ export const useCajerosUI = (
                 message={"Correo requerido"}
                 maxLenght={40}
                 isDisabled={isDisabled}
+                onKeyDown={(evt) => {
+                  handleKeyDown(evt);
+                }}
               />
               <Inputs
                 dataType={"string"}
@@ -250,6 +305,9 @@ export const useCajerosUI = (
                 maxLenght={8}
                 isDisabled={isDisabled}
                 password={true}
+                onKeyDown={(evt) => {
+                  handleKeyDown(evt);
+                }}
               />
             </div>
           </fieldset>

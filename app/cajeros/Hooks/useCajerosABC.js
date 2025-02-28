@@ -208,6 +208,8 @@ export const useCajerosABC = () => {
         : accion === "Eliminar"
         ? `Eliminar Cajero: ${currentID}`
         : `Ver Cajero: ${currentID}`
+        ? `Reactivar Cajero: ${currentID}`
+        : accion == "Reactivar"
     );
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accion, currentID]);
@@ -355,12 +357,48 @@ export const useCajerosABC = () => {
     }));
   };
 
+    const handleReactivar = async (evt, formaCajeros) => {
+      evt.preventDefault();
+      const confirmed = await confirmSwal(
+        "¿Desea reactivar este comentario?",
+        "El comentario será reactivado y volverá a estar activo.",
+        "warning",
+        "Sí, reactivar",
+        "Cancelar"
+      );
+    
+      if (confirmed) {
+        const res = await guardaCajero(session.user.token, { 
+          ...formaCajeros, 
+          baja: ""
+        }, "Editar");
+    
+        if (res.status) {
+          const updatedCajeros = cajeros.map((c) =>
+            c.numero === formaCajeros.numero ? { ...c, baja: "" } : c
+          );
+    
+          setCajeros(updatedCajeros);
+          setCajerosFiltrados(updatedCajeros);
+    
+          showSwal("Reactivado", "El cajero ha sido reactivado correctamente.", "success");
+          setReloadPage((prev) => !prev);
+        } else {
+          showSwal("Error", "No se pudo reactivar el cajero.", "error");
+        }
+      }
+    };
+
   const tableAction = (evt, cajero, accion) => {
     evt.preventDefault();
     setCajero(cajero);
     setAccion(accion);
     setCurrentId(cajero.numero);
-    showModal(true);
+    if (accion === "Reactivar") {
+      handleReactivar(evt, cajero);
+    } else {
+      showModal(true);
+    }  
   };
 
   return {

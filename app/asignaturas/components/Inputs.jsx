@@ -16,6 +16,7 @@ function Inputs({
   isDisabled,
   handleBlur,
   arreglos,
+  onKeyDown
 }) {
 
   if (type === "select") {
@@ -34,6 +35,7 @@ function Inputs({
               ...(requerido && { required: message }),
             })}
             disabled={isDisabled}
+            onKeyDown={onKeyDown}
           >
             {arreglos.map((arreglo) => (
               <option
@@ -78,6 +80,7 @@ function Inputs({
               onBlur: handleBlur,
             })}
             disabled={isDisabled}
+            onKeyDown={onKeyDown}
           />
         </label>
         {errors[name] && (
@@ -113,6 +116,7 @@ function Inputs({
                 onBlur: (event) => handleBlur(event, dataType),
               }))}
             disabled={isDisabled}
+            onKeyDown={onKeyDown}
           />
         </label>
         {errors[name] && (
@@ -150,6 +154,7 @@ function Inputs({
                 onBlur: (event) => handleBlur(event, dataType),
               }))}
             disabled={isDisabled}
+            onKeyDown={onKeyDown}
           />
         </label>
         {errors[name] && (

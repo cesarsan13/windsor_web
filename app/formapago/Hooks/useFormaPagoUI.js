@@ -12,6 +12,26 @@ export const useFormaPagoUI = (
     accion
 ) => {
 
+    const handleKeyDown = (evt) => {
+        if (evt.key === "Enter") {
+            evt.preventDefault(); 
+    
+            const fieldset = document.getElementById("fs_formapago");
+            const inputs = Array.from(
+                fieldset.querySelectorAll("input[name='descripcion'], input[name='comision'], input[name='aplicacion'], input[name='cue_banco']")
+            );
+    
+            const currentIndex = inputs.indexOf(evt.target);
+            if (currentIndex !== -1) {
+                if (currentIndex < inputs.length - 1) {
+                    inputs[currentIndex + 1].focus(); 
+                } else {
+                    const submitButton = fieldset?.querySelector("button[type='submit']");
+                    if (submitButton) submitButton.click(); 
+                }
+            }
+        }
+    };
     
     const itemHeaderTable = () => {
         return (
@@ -27,59 +47,56 @@ export const useFormaPagoUI = (
     };
 
     const itemDataTable = (item) => {
-      return (
+    return (
         <>
-          <tr key={item.numero} className="hover:cursor-pointer">
+        <tr key={item.numero} className="hover:cursor-pointer">
             <th
-              className={
+            className={
                 typeof item.numero === "number"
-                  ? "text-left"
-                  : "text-right"
-              }
+                ? "text-left"
+                : "text-right"
+            }
             >
-              {item.numero}
+            {item.numero}
             </th>
             <td className="w-[40%] max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap pt-[.10rem] pb-[.10rem]">
-              {item.descripcion}
+            {item.descripcion}
             </td>
             <td className="text-right">{item.comision}</td>
             <td className="text-left">{item.aplicacion}</td>
             <td className="text-right">{item.cue_banco}</td>
             <td className="text-left">{item.baja}</td>
-          </tr>
+        </tr>
         </>
-      );
+    );
     };
 
-    const tableColumns = () => {
+    const tableColumns = (data = []) => {
+        const hasBajas = data.some(item => item.baja === "*");
         return (
-            <thead className="sticky top-0 bg-white dark:bg-[#1d232a]">
+            <thead   className={`sticky top-0 z-[2] ${
+                hasBajas ? "text-black" : "bg-white dark:bg-[#1d232a]"
+            }`}
+            style={hasBajas ? { backgroundColor: "#CF2A2A" } : {}}>
                 <tr>
                     <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
                     <td className="w-[50%]">Descripcion</td>
                     <td className="w-[8%]">Comision</td>
                     <td className="w-[15%]">Aplicacion</td>
                     <td className="w-[20%]">Cuenta Banco</td>
-                    < ActionColumn
-                        description={"Ver"}
-                        permission={true}
-                    />
-                    < ActionColumn
-                        description={"Editar"}
-                        permission={permissions.cambios}
-                    />
-                    < ActionColumn
-                        description={"Eliminar"}
-                        permission={permissions.bajas}
-                    />
-                </tr>
+                    <ActionColumn description={"Ver"} permission={true} />
+                    {!hasBajas && <ActionColumn description={"Editar"} permission={permissions.cambios} />}
+                    {!hasBajas && <ActionColumn description={"Eliminar"} permission={permissions.bajas}/>}
+                    {hasBajas && <ActionColumn description={"Reactivar"} permission={true} />}
+                    </tr>
             </thead>
         );
     };
 
-    const tableBody = (data) => {
+    const tableBody = (data = []) => {
+        const hasBajas = data.some(item => item.baja === "*");
         return (
-            <tbody>
+            <tbody style={{ backgroundColor: hasBajas ? "#CD5C5C" : "" }}>
                 {data.map((item) => (
                     <tr key={item.numero} className="hover:cursor-pointer">
                         <th className={"text-right"}>{item.numero}</th>
@@ -94,25 +111,37 @@ export const useFormaPagoUI = (
                             onClick={(evt) => tableAction(evt, item, "Ver")}
                             permission={true}
                         />
-                        <ActionButton
+                        {item.baja !== "*" ? (
+                            <>
+                            <ActionButton
                             tooltip="Editar"
                             iconDark={iconos.editar}
                             iconLight={iconos.editar_w}
                             onClick={(evt) => tableAction(evt, item, "Editar")}
                             permission={permissions.cambios}
-                        />
-                        <ActionButton
+                            />
+                            <ActionButton
                             tooltip="Eliminar"
                             iconDark={iconos.eliminar}
                             iconLight={iconos.eliminar_w}
                             onClick={(evt) => tableAction(evt, item, "Eliminar")}
                             permission={permissions.bajas}
-                        />
-                  </tr>
-                ))}
-            </tbody>
-        );
-    };
+                            />
+                            </>
+                            ) : (
+                            <ActionButton
+                            tooltip="Reactivar"
+                            iconDark={iconos.documento}
+                            iconLight={iconos.documento_w}
+                            onClick={(evt) => tableAction(evt, item, "Reactivar")}
+                            permission={true}
+                            />
+                            )}
+                            </tr>
+                        ))}
+                        </tbody>
+                        );
+                    };
 
     const modalBody = () => {
         return (
@@ -133,6 +162,9 @@ export const useFormaPagoUI = (
                         message={"descripcion requerid"}
                         maxLenght={50}
                         isDisabled={isDisabled}
+                        onKeyDown={(evt) => {
+                            handleKeyDown(evt);
+                        }}
                     />
                     <Inputs
                         dataType={"float"}
@@ -147,6 +179,9 @@ export const useFormaPagoUI = (
                         message={"comision requerid"}
                         maxLenght={5}
                         isDisabled={isDisabled}
+                        onKeyDown={(evt) => {
+                            handleKeyDown(evt);
+                        }}
                     />
                     <Inputs
                         dataType={"string"}
@@ -162,6 +197,9 @@ export const useFormaPagoUI = (
                         message={"Aplicacion requerida"}
                         maxLenght={30}
                         isDisabled={isDisabled}
+                        onKeyDown={(evt) => {
+                            handleKeyDown(evt);
+                        }}
                     />
                     <Inputs
                         dataType={"string"}
@@ -177,6 +215,9 @@ export const useFormaPagoUI = (
                         message={"Cuenta Banco requerida"}
                         maxLenght={34}
                         isDisabled={isDisabled}
+                        onKeyDown={(evt) => {
+                            handleKeyDown(evt);
+                        }}
                     />
                 </div>
             </fieldset>
