@@ -17,6 +17,8 @@ function Inputs({
   isDisabled,
   handleBlur,
   password,
+  onKeyDown,
+  hidden
 }) {
 
   const [mostrarContr, setMostrarContr] = useState(false);
@@ -26,7 +28,7 @@ function Inputs({
 
   if(password === true){
     return (
-      <div className="flex flex-col">
+      <div className="flex flex-col" hidden={hidden}>
         <label
           className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
         >
@@ -47,6 +49,7 @@ function Inputs({
                 onBlur: (event) => handleBlur(event, dataType),
               }))}
             disabled={isDisabled}
+            onKeyDown={onKeyDown}
           />
           <button
             type="button"
@@ -122,6 +125,7 @@ function Inputs({
               onBlur: (event) => handleBlur(event, dataType),
             }))}
           disabled={isDisabled}
+          onKeyDown={onKeyDown}
         />
       </label>
       {errors[name] && (

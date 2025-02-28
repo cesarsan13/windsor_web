@@ -56,20 +56,20 @@ function RelacionDeRecivos() {
       return;
     }
     fetchData();
-  }, [session, status]);
+  }, [status]);
 
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
     return new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1)
       .toISOString()
-      .split('T')[0];
+      .split("T")[0];
   };
 
   const getUltimoDiaDelMes = () => {
     const fechaActual = new Date();
     return new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0)
       .toISOString()
-      .split('T')[0];
+      .split("T")[0];
   };
 
   useEffect(() => {
@@ -199,7 +199,12 @@ function RelacionDeRecivos() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading} permiso_imprime={permissions.impresion} />
+                <Acciones
+                  home={home}
+                  Ver={handleVerClick}
+                  isLoading={animateLoading}
+                  permiso_imprime={permissions.impresion}
+                />
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Relación de Recibos
@@ -294,7 +299,6 @@ function RelacionDeRecivos() {
                   isDisabled={false}
                   setValue={setFacturaIni}
                 />
-
               </div>
               <div className="lg:w-fit md:w-fit">
                 <Inputs
@@ -349,8 +353,10 @@ function RelacionDeRecivos() {
               <div className="flex flex-row max-[499px]:gap-1 gap-4">
                 <div className="lg:w-fit md:w-fit">
                   <div className="tooltip " data-tip="Tomar Fechas">
-                    <label htmlFor="ch_tomaFechas"
-                      className="label cursor-pointer flex justify-start space-x-2">
+                    <label
+                      htmlFor="ch_tomaFechas"
+                      className="label cursor-pointer flex justify-start space-x-2"
+                    >
                       <input
                         id="ch_tomaFechas"
                         type="checkbox"

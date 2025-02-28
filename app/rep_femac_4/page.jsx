@@ -66,16 +66,10 @@ function Rep_femac_4() {
         const rutaUser = "user_Credencial.png";
         let imagenUrl;
 
-        if(alumno.ruta_foto === " " || alumno.ruta_foto === "" ){
-          imagenUrl = await getFotoAlumno(
-            session.user.token,
-            rutaUser
-          );
+        if (alumno.ruta_foto === " " || alumno.ruta_foto === "") {
+          imagenUrl = await getFotoAlumno(session.user.token, rutaUser);
         } else {
-          imagenUrl = await getFotoAlumno(
-            session.user.token,
-            alumno.ruta_foto
-          );
+          imagenUrl = await getFotoAlumno(session.user.token, alumno.ruta_foto);
         }
         if (imagenUrl) {
           setCapturedImage(imagenUrl);
@@ -121,7 +115,7 @@ function Rep_femac_4() {
       return;
     }
     fetchData();
-  }, [session, status]);
+  }, [status]);
 
   const {
     register,
@@ -174,7 +168,7 @@ function Rep_femac_4() {
         credencial?.alumno?.fecha_nac || formatFecha(fecha_hoy)
       ),
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [credencial, reset]);
 
   const ImprimeExcel = async () => {
@@ -412,7 +406,9 @@ function Rep_femac_4() {
                     </div>
                     <div className="w-1/3">
                       <h2 className="text-center text-xl mb-2 text-black dark:text-white">
-                        {condicion ? "Imagen Seleccionada:" : "Foto del Alumno:"}
+                        {condicion
+                          ? "Imagen Seleccionada:"
+                          : "Foto del Alumno:"}
                       </h2>
                     </div>
                   </div>

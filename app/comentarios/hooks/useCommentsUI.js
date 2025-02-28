@@ -16,6 +16,27 @@ export const useCommentsUI = (
     { id: 0, descripcion: "No" },
   ];
 
+  const handleKeyDown = (evt) => {
+    if (evt.key === "Enter") {
+        evt.preventDefault(); 
+
+        const fieldset = document.getElementById("fs_comentario");
+        const inputs = Array.from(
+            fieldset.querySelectorAll("input[name='comentario_1'], input[name='comentario_2'], input[name='comentario_3'], input[name='generales']")
+        );
+
+        const currentIndex = inputs.indexOf(evt.target);
+        if (currentIndex !== -1) {
+            if (currentIndex < inputs.length - 1) {
+                inputs[currentIndex + 1].focus(); 
+            } else {
+                const submitButton = fieldset?.querySelector("button[type='submit']");
+                if (submitButton) submitButton.click(); 
+            }
+        }
+    }
+  };
+
   const itemHeaderTable = () => {
     return (
       <>
@@ -135,6 +156,9 @@ export const useCommentsUI = (
             message={"Comentario requerido"}
             maxLenght={50}
             isDisabled={isDisabled}
+            onKeyDown={(evt) => {
+              handleKeyDown(evt);
+            }}
           />
           <Inputs
             dataType={"string"}
@@ -150,6 +174,9 @@ export const useCommentsUI = (
             message={"Comentario requerido"}
             maxLenght={50}
             isDisabled={isDisabled}
+            onKeyDown={(evt) => {
+              handleKeyDown(evt);
+            }}
           />
           <Inputs
             dataType={"string"}
@@ -165,6 +192,9 @@ export const useCommentsUI = (
             message={"Comentario requerido"}
             maxLenght={50}
             isDisabled={isDisabled}
+            onKeyDown={(evt) => {
+              handleKeyDown(evt);
+            }}
           />
           <Inputs
             name={"generales"}
@@ -179,6 +209,9 @@ export const useCommentsUI = (
             message={"General requerido"}
             isDisabled={isDisabled}
             generales={generales}
+            //onKeyDown={(evt) => {
+            //  handleKeyDown(evt);
+            //}}
           />
         </div>
       </fieldset> 

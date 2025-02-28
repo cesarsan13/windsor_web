@@ -10,7 +10,7 @@ import {
   guardaComentarios,
 } from "@/app/utils/api/comentarios/comentarios";
 import { showSwal, confirmSwal, showSwalConfirm } from "@/app/utils/alerts";
-import { useEscapeWarningModal, validateBeforeSave } from "@/app/utils/globalfn";
+import { useEscapeWarningModal } from "@/app/utils/globalfn";
 
 export const useCommentsABC = () => {
   const router = useRouter();
@@ -222,9 +222,6 @@ export const useCommentsABC = () => {
 
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault();
-    if (!validateBeforeSave("comentario_3", "my_modal_3")) {
-      return;
-  }
     setisLoadingButton(true);
     accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
     let res = null;
@@ -356,7 +353,6 @@ export const useCommentsABC = () => {
     }
   };
   
-
   const tableAction = (evt, formaComentarios, accion) => {
     evt.preventDefault();
     setFormaComentarios(formaComentarios);

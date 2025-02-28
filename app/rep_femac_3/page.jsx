@@ -39,7 +39,12 @@ function Rep_Femac_3() {
       const { token, permissions } = session.user;
       const es_admin = session.user.es_admin;
       const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
-      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado)
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menu_seleccionado
+      );
       setPermissions(permisos);
       setToken(token);
       //const data = await getAlumnosPorMes(token, horario, sOrdenar);
@@ -47,7 +52,7 @@ function Rep_Femac_3() {
       setisLoading(false);
     };
     fetchData();
-  }, [session, status, horario, sOrdenar]);
+  }, [status, horario, sOrdenar]);
 
   const home = () => {
     router.push("/");
@@ -105,8 +110,11 @@ function Rep_Femac_3() {
         document.getElementById("modalVPRepFemac3").close();
       }, 500);
     } else {
-
-      const data = await getAlumnosPorMes(session.user.token, horario, sOrdenar);
+      const data = await getAlumnosPorMes(
+        session.user.token,
+        horario,
+        sOrdenar
+      );
       setFormaRepDosSel(data.data);
 
       const configuracion = {
@@ -237,7 +245,12 @@ function Rep_Femac_3() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading} permiso_imprime = {permissions.impresion}/>
+                <Acciones
+                  home={home}
+                  Ver={handleVerClick}
+                  isLoading={animateLoading}
+                  permiso_imprime={permissions.impresion}
+                />
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Reporte Lista de Alumnos por Clase Mensual

@@ -45,4 +45,9 @@ body {
   animation: blink 5s infinite;
 }
 
-
+.table :where(th, td){
+  font-size: 11px !important;
+  line-height: 13px !important;
+  padding-top: 0.25rem !important;
+  padding-bottom: 0.25rem !important;
+}

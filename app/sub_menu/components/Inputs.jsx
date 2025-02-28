@@ -1,5 +1,6 @@
 import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
 import React from "react";
+import { showSwal } from "@/app/utils/alerts";
 
 function Inputs({
   Titulo,
@@ -16,27 +17,42 @@ function Inputs({
   isDisabled,
   handleBlur,
   arreglos,
-  onKeyDown
 }) {
+
+  if (errors && Object.keys(errors).length > 0) {
+      showSwal(
+        "Error",
+        "Complete todos los campos requeridos",
+        "error",
+        "my_modal_3"
+      );
+  }
 
   if (type === "select") {
     return (
       <div className="">
-        <label className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}>
+        <label
+          htmlFor={name}
+          className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
+        >
           {Titulo}
           <select
             name={name}
             id={name}
+            
             className={`text-black dark:text-white ${
               isDisabled
                 ? "bg-white dark:bg-[#1d232a] dark:text-white cursor-not-allowed"
                 : "bg-white dark:bg-[#1d232a] "
-            } ${className}`}            {...register(name, {
+            } ${className}`} 
+            
+            {...register(name, {
               ...(requerido && { required: message }),
             })}
-            disabled={isDisabled}
-            onKeyDown={onKeyDown}
           >
+            <option value="" className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]">
+              Seleccione una opción
+            </option>
             {arreglos.map((arreglo) => (
               <option
                 className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]"
@@ -48,10 +64,8 @@ function Inputs({
             ))}
           </select>
         </label>
-        {errors[name] && (
-          <span className="text-red-500 text-sm mt-2 font-semibold">
-            {errors[name].message}
-          </span>
+        {errors[name] && requerido && (
+          <span className="text-red-500 text-sm font-semibold">{errors[name].message}</span>
         )}
       </div>
     );
@@ -60,7 +74,7 @@ function Inputs({
     return (
       <div className="flex flex-col">
         <label
-        className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel}  text-black dark:text-white`}
+          className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel}  text-black dark:text-white`}
         >
           {Titulo}
           <input
@@ -80,7 +94,6 @@ function Inputs({
               onBlur: handleBlur,
             })}
             disabled={isDisabled}
-            onKeyDown={onKeyDown}
           />
         </label>
         {errors[name] && (
@@ -91,9 +104,9 @@ function Inputs({
       </div>
     );
   }
-  else if(type === 'checkbox'){
+  else if (type === 'checkbox') {
     return (
-    <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full">
         <label
           className={`input input-bordered  md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
         >
@@ -116,7 +129,6 @@ function Inputs({
                 onBlur: (event) => handleBlur(event, dataType),
               }))}
             disabled={isDisabled}
-            onKeyDown={onKeyDown}
           />
         </label>
         {errors[name] && (
@@ -126,7 +138,7 @@ function Inputs({
         )}
       </div>
     );
-  } 
+  }
   else {
     return (
       <div className="flex flex-col w-full">
@@ -154,7 +166,6 @@ function Inputs({
                 onBlur: (event) => handleBlur(event, dataType),
               }))}
             disabled={isDisabled}
-            onKeyDown={onKeyDown}
           />
         </label>
         {errors[name] && (

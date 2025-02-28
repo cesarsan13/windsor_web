@@ -50,7 +50,7 @@ function Rep_Femac_13() {
       setPermissions(permisos);
     };
     fetchData();
-  }, [session, status, horario, sOrdenar]);
+  }, [status, horario, sOrdenar]);
 
   const handleCheckChange = (event) => {
     ssetordenar(event.target.value);
@@ -76,7 +76,6 @@ function Rep_Femac_13() {
         document.getElementById("modalVPRepFemac13").close();
       }, 500);
     } else {
-
       const data = await getRepASem(session.user.token, horario, sOrdenar);
       setFormaRepASem(data.data);
 

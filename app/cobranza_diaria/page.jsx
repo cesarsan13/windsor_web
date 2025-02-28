@@ -50,7 +50,7 @@ function Cobranza_Diaria() {
     }
     const fetchData = async () => {};
     fetchData();
-  }, [session, status]);
+  }, [status]);
   const {
     register,
     handleSubmit,
