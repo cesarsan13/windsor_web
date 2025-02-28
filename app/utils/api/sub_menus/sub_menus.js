@@ -1,4 +1,4 @@
-export const getSubMenus = async (token, baja) => {
+export const getSubMenusApi = async (token, baja) => {
   let url = "";
   baja
     ? (url = `${process.env.DOMAIN_API}api/sub-menus/baja`)
@@ -13,14 +13,11 @@ export const getSubMenus = async (token, baja) => {
   return resJson.data;
 };
 
-export const guardaSubMenu = async (token, data) => {
+export const saveSubMenuApi = async (token, data) => {
+  data.baja = "n";
   const res = await fetch(`${process.env.DOMAIN_API}api/sub-menus`, {
     method: "POST",
-    body: JSON.stringify({
-      id_acceso: data.numero,
-      descripcion: data.sub_menu,
-      baja: "n",
-    }),
+    body: JSON.stringify(data),
     headers: new Headers({
       Authorization: "Bearer " + token,
       xescuela: localStorage.getItem("xescuela"),
@@ -31,16 +28,11 @@ export const guardaSubMenu = async (token, data) => {
   return resJson;
 };
 
-export const updateSubMenu = async (token, data, action) => {
-  console.log(data);
+export const updateSubMenuApi = async (token, data, action) => {
   action === "Editar" ? (data.baja = "n") : (data.baja = "*");
   const res = await fetch(`${process.env.DOMAIN_API}api/sub-menus/update`, {
     method: "POST",
-    body: JSON.stringify({
-      id_acceso: data.numero,
-      descripcion: data.sub_menu,
-      baja: data.baja,
-    }),
+    body: JSON.stringify(data),
     headers: new Headers({
       Authorization: "Bearer " + token,
       xescuela: localStorage.getItem("xescuela"),

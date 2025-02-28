@@ -7,7 +7,7 @@ import {
   formatDate_NewDate,
   format_Fecha_String,
   permissionsComponents,
-  formatNumber
+  formatNumber,
 } from "../utils/globalfn";
 import BuscarCat from "../components/BuscarCat";
 import { useSession } from "next-auth/react";
@@ -56,17 +56,21 @@ function RepFemac12Anexo() {
       .split("T")[0];
   };
 
-
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
     }
-    let { permissions } = session.user
-    const es_admin = session.user.es_admin
+    let { permissions } = session.user;
+    const es_admin = session.user.es_admin;
     const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-    const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado)
-    setPermissions(permisos)
-  }, [session, status])
+    const permisos = permissionsComponents(
+      es_admin,
+      permissions,
+      session.user.id,
+      menuSeleccionado
+    );
+    setPermissions(permisos);
+  }, [status]);
 
   useEffect(() => {
     setFecha1(getPrimerDiaDelMes());
@@ -204,25 +208,27 @@ function RepFemac12Anexo() {
         let alu_Ant;
         let alumno;
         console.log(data);
-        await Promise.all(data.map(async (dato) => {
-          if (alu_Ant !== dato.alumno) {
-            alumno = dato.nombre;
-          }
-          const importe =
-            dato.cantidad * dato.precio_unitario -
-            dato.cantidad * dato.precio_unitario * (dato.descuento / 100);
-          const datos = {
-            recibo: dato.recibo,
-            fecha: dato.fecha,
-            articulo: parseInt(dato.articulo),
-            documento: dato.documento,
-            alumno: dato.alumno,
-            nombre: alumno,
-            importe: importe,
-          };
-          await insertTrabRepCobr(token, datos);
-          alu_Ant = dato.alumno;
-        }));
+        await Promise.all(
+          data.map(async (dato) => {
+            if (alu_Ant !== dato.alumno) {
+              alumno = dato.nombre;
+            }
+            const importe =
+              dato.cantidad * dato.precio_unitario -
+              dato.cantidad * dato.precio_unitario * (dato.descuento / 100);
+            const datos = {
+              recibo: dato.recibo,
+              fecha: dato.fecha,
+              articulo: parseInt(dato.articulo),
+              documento: dato.documento,
+              alumno: dato.alumno,
+              nombre: alumno,
+              importe: importe,
+            };
+            await insertTrabRepCobr(token, datos);
+            alu_Ant = dato.alumno;
+          })
+        );
         const dataTrabRepCobr = await getTrabRepCob(token, sOrdenar);
         let Art_Ant = "";
         let tot_art = 0;
@@ -233,8 +239,20 @@ function RepFemac12Anexo() {
             tot_art = 0;
           }
           if (trabRep.articulo !== Art_Ant) {
-            reporte.ImpPosX((trabRep.articulo ?? "").toString(), 24, reporte.tw_ren, 0, "R");
-            reporte.ImpPosX((trabRep.descripcion ?? "").toString(), 43, reporte.tw_ren, 0, "L");
+            reporte.ImpPosX(
+              (trabRep.articulo ?? "").toString(),
+              24,
+              reporte.tw_ren,
+              0,
+              "R"
+            );
+            reporte.ImpPosX(
+              (trabRep.descripcion ?? "").toString(),
+              43,
+              reporte.tw_ren,
+              0,
+              "L"
+            );
             Enca1(reporte);
             if (reporte.tw_ren >= reporte.tw_endRen) {
               reporte.pageBreak();
@@ -243,16 +261,34 @@ function RepFemac12Anexo() {
           }
           reporte.ImpPosX(
             (trabRep.alumno ?? "").toString() +
-            "-" +
-            calculaDigitoBvba((trabRep.alumno ?? "").toString()),
+              "-" +
+              calculaDigitoBvba((trabRep.alumno ?? "").toString()),
             24,
             reporte.tw_ren,
             0,
             "R"
           );
-          reporte.ImpPosX((trabRep.nombre ?? "").toString(), 38, reporte.tw_ren, 0, "L");
-          reporte.ImpPosX(formatNumber(trabRep.importe ?? 0), 138, reporte.tw_ren, 0, "R");
-          reporte.ImpPosX((trabRep.fecha ?? "").toString(), 168, reporte.tw_ren, 0, "L");
+          reporte.ImpPosX(
+            (trabRep.nombre ?? "").toString(),
+            38,
+            reporte.tw_ren,
+            0,
+            "L"
+          );
+          reporte.ImpPosX(
+            formatNumber(trabRep.importe ?? 0),
+            138,
+            reporte.tw_ren,
+            0,
+            "R"
+          );
+          reporte.ImpPosX(
+            (trabRep.fecha ?? "").toString(),
+            168,
+            reporte.tw_ren,
+            0,
+            "L"
+          );
           Enca1(reporte);
           if (reporte.tw_ren >= reporte.tw_endRen) {
             reporte.pageBreak();
@@ -264,7 +300,13 @@ function RepFemac12Anexo() {
         });
         Cambia_Articulo(reporte, tot_art);
         reporte.ImpPosX("TOTAL GENERAL: ", 98, reporte.tw_ren, 0, "L");
-        reporte.ImpPosX(formatNumber(total_general), 148, reporte.tw_ren, 0, "R");
+        reporte.ImpPosX(
+          formatNumber(total_general),
+          148,
+          reporte.tw_ren,
+          0,
+          "R"
+        );
         setTimeout(() => {
           const pdfData = reporte.doc.output("datauristring");
           setPdfData(pdfData);
@@ -313,7 +355,12 @@ function RepFemac12Anexo() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading} permiso_imprime={permissions.impresion} />
+                <Acciones
+                  home={home}
+                  Ver={handleVerClick}
+                  isLoading={animateLoading}
+                  permiso_imprime={permissions.impresion}
+                />
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Reporte de Cobranza por Productos

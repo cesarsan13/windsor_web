@@ -12,11 +12,14 @@ import {
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import { getMenus as getmenu } from "@/app/utils/api/menus/menus";
 import {
-  getSubMenus,
-  guardaSubMenu,
-  updateSubMenu,
+  getSubMenusApi,
+  // guardaSubMenu,
+  // updateSubMenu,
 } from "@/app/utils/api/sub_menus/sub_menus";
-import { useEscapeWarningModal, validateBeforeSave } from "@/app/utils/globalfn";
+import {
+  useEscapeWarningModal,
+  validateBeforeSave,
+} from "@/app/utils/globalfn";
 
 export const useAccesoMenuABC = () => {
   const router = useRouter();
@@ -37,7 +40,7 @@ export const useAccesoMenuABC = () => {
   const [titulo, setTitulo] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoadingButton, setisLoadingButton] = useState(false);
-  const [reload_page, setReloadPage] = useState(false);
+  // const [reload_page, setReloadPage] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,7 +50,7 @@ export const useAccesoMenuABC = () => {
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const data = await getMenus(token, bajas);
       const dataMenu = await getmenu(token, false);
-      const subMenu = await getSubMenus(token, false);
+      const subMenu = await getSubMenusApi(token, false);
       setSubMenus(subMenu);
       setMenusSel(dataMenu);
       setMenus(data);
@@ -65,7 +68,7 @@ export const useAccesoMenuABC = () => {
       return;
     }
     fetchData();
-  }, [reload_page, status, bajas]);
+  }, [status, bajas]);
 
   const {
     register,
@@ -79,7 +82,6 @@ export const useAccesoMenuABC = () => {
       descripcion: menu.descripcion,
       icono: menu.icono,
       menu: menu.menu,
-      sub_menu: menu.sub_menu,
     },
   });
 
@@ -173,25 +175,21 @@ export const useAccesoMenuABC = () => {
     document.getElementById("descripcion").focus();
   };
 
-  const saveSubMenu = async (token, data) => {
-    let res = null;
-    if (data.sub_menu) {
-      accion === "Alta"
-        ? (res = await guardaSubMenu(token, data))
-        : (res = await updateSubMenu(token, data, accion));
-      setReloadPage(!reload_page);
-    }
-  };
+  // const saveSubMenu = async (token, data) => {
+  //   let res = null;
+  //   if (data.sub_menu) {
+  //     accion === "Alta"
+  //       ? (res = await guardaSubMenu(token, data))
+  //       : (res = await updateSubMenu(token, data, accion));
+  //     setReloadPage(!reload_page);
+  //   }
+  // };
 
   const onSubmitModal = handleSubmit(async (data) => {
     if (!validateBeforeSave("sub_menu", "my_modal_3")) {
       return;
-  }
-    data.numero = currentID;
-    if (!data.numero) {
-      console.error("Número no definido");
-      return;
     }
+    data.numero = currentID;
     let res = null;
     setisLoadingButton(true);
     if (accion === "Eliminar") {
@@ -209,7 +207,7 @@ export const useAccesoMenuABC = () => {
       }
     }
     res = await guardaMenu(session.user.token, accion, data);
-    await saveSubMenu(session.user.token, data);
+    // await saveSubMenu(session.user.token, data);
     if (res.status) {
       if (accion === "Alta") {
         const nuevoMenu = { currentID, ...data };

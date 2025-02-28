@@ -17,7 +17,11 @@ import Busqueda from "@/app/clases/components/Busqueda";
 import ModalClases from "@/app/clases/components/modalClases";
 import { ReportePDF } from "../utils/ReportesPDF";
 import { showSwal, confirmSwal, showSwalAndWait } from "../utils/alerts";
-import { debounce, obtenerFechaYHoraActual, permissionsComponents } from "../utils/globalfn";
+import {
+  debounce,
+  obtenerFechaYHoraActual,
+  permissionsComponents,
+} from "../utils/globalfn";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 
 function Clases() {
@@ -56,21 +60,26 @@ function Clases() {
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
-      let {token, permissions} = session.user;
+      let { token, permissions } = session.user;
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const es_admin = session.user.es_admin;
       const data = await getClases(token, bajas);
       setClases(data);
       setClasesFiltrados(data);
       setisLoading(false);
-      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
-      setPermissions(permisos)
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menuSeleccionado
+      );
+      setPermissions(permisos);
     };
     if (status === "loading" || !session) {
       return;
     }
     fetchData();
-  }, [session, status, bajas]);
+  }, [status, bajas]);
 
   const Buscar = useCallback(() => {
     const { tb_grupo, tb_materia, tb_profesor } = busqueda;
@@ -80,13 +89,22 @@ function Clases() {
     }
     const infoFiltrada = clasesRef.current.filter((clase) => {
       const coincideGrupo = tb_grupo
-        ? clase["grupo_descripcion"]?.toString().toLowerCase().includes(tb_grupo.toLowerCase())
+        ? clase["grupo_descripcion"]
+            ?.toString()
+            .toLowerCase()
+            .includes(tb_grupo.toLowerCase())
         : true;
       const coincideMateria = tb_materia
-        ? clase["materia_descripcion"]?.toString().toLowerCase().includes(tb_materia.toLowerCase())
+        ? clase["materia_descripcion"]
+            ?.toString()
+            .toLowerCase()
+            .includes(tb_materia.toLowerCase())
         : true;
       const coincideProfesor = tb_profesor
-        ? clase["profesor_nombre"]?.toString().toLowerCase().includes(tb_profesor.toLowerCase())
+        ? clase["profesor_nombre"]
+            ?.toString()
+            .toLowerCase()
+            .includes(tb_profesor.toLowerCase())
         : true;
       return coincideGrupo && coincideMateria && coincideProfesor;
     });
@@ -137,8 +155,6 @@ function Clases() {
     });
   }, [clase, reset]);
 
-
-
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
     setBusqueda({ tb_grupo: "", tb_materia: "", tb_profesor: "" });
@@ -150,7 +166,7 @@ function Clases() {
   // }, [limpiaBusCat]);
   const Alta = async (event) => {
     setCurrentId("");
-    setContador(prevCount => prevCount + 1); // Cambia la clave para re-renderizar los buscat
+    setContador((prevCount) => prevCount + 1); // Cambia la clave para re-renderizar los buscat
     reset({
       grupo: "",
       materia: "",
@@ -165,7 +181,7 @@ function Clases() {
     });
     setModal(!openModal);
     setAccion("Alta");
-    showModal(true);    
+    showModal(true);
     // setMateria({numero:"",descripcion:""});
     // setProfesor({numero:"",nombre:""});
     // setGrado({numero:"",horario:""});
@@ -173,7 +189,7 @@ function Clases() {
     // Forzar un renderizado
     setMateria({});
     setProfesor({});
-    setGrado({});    
+    setGrado({});
     document.getElementById("lunes").focus();
   };
 
@@ -181,10 +197,10 @@ function Clases() {
     setMateria({});
     setProfesor({});
     setGrado({});
-};
+  };
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault();
-    if (!currentID) {      
+    if (!currentID) {
       const claseExistente = clases.find(
         (clase) =>
           clase.grupo === data.grupo &&
@@ -252,7 +268,9 @@ function Clases() {
               setClasesFiltrados(cFiltrados);
             } else {
               const cActualizadas = clases.map((c) =>
-                c.grupo === data.grupo && c.materia === data.materia ? { ...c, ...data } : c
+                c.grupo === data.grupo && c.materia === data.materia
+                  ? { ...c, ...data }
+                  : c
               );
               setClases(cActualizadas);
               setClasesFiltrados(cActualizadas);
@@ -266,9 +284,15 @@ function Clases() {
     } else {
       setisLoadingButton(false);
       showModal(false);
-      await showSwalAndWait(res.alert_title, res.alert_text, res.alert_icon, 8000);
+      await showSwalAndWait(
+        res.alert_title,
+        res.alert_text,
+        res.alert_icon,
+        8000
+      );
       showModal(true);
-    };6
+    }
+    6;
   });
 
   const showModal = (show) => {
@@ -361,16 +385,76 @@ function Clases() {
     const reporte = new ReportePDF(configuracion, orientacion);
     Enca1(reporte);
     clasesFiltrados.forEach((clase) => {
-      reporte.ImpPosX(clase.grupo_descripcion?.toString() ?? "", 14, reporte.tw_ren, 12, "L");
-      reporte.ImpPosX(clase.materia_descripcion?.toString() ?? "", 50, reporte.tw_ren, 20, "L");
-      reporte.ImpPosX(clase.profesor_nombre?.toString() ?? "", 95, reporte.tw_ren, 35, "L");
-      reporte.ImpPosX(clase.lunes?.toString() ?? "", 180, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.martes?.toString() ?? "", 195, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.miercoles?.toString() ?? "", 210, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.jueves?.toString() ?? "", 230, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.viernes?.toString() ?? "", 245, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.sabado?.toString() ?? "", 260, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(clase.domingo?.toString() ?? "", 275, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(
+        clase.grupo_descripcion?.toString() ?? "",
+        14,
+        reporte.tw_ren,
+        12,
+        "L"
+      );
+      reporte.ImpPosX(
+        clase.materia_descripcion?.toString() ?? "",
+        50,
+        reporte.tw_ren,
+        20,
+        "L"
+      );
+      reporte.ImpPosX(
+        clase.profesor_nombre?.toString() ?? "",
+        95,
+        reporte.tw_ren,
+        35,
+        "L"
+      );
+      reporte.ImpPosX(
+        clase.lunes?.toString() ?? "",
+        180,
+        reporte.tw_ren,
+        0,
+        "L"
+      );
+      reporte.ImpPosX(
+        clase.martes?.toString() ?? "",
+        195,
+        reporte.tw_ren,
+        0,
+        "L"
+      );
+      reporte.ImpPosX(
+        clase.miercoles?.toString() ?? "",
+        210,
+        reporte.tw_ren,
+        0,
+        "L"
+      );
+      reporte.ImpPosX(
+        clase.jueves?.toString() ?? "",
+        230,
+        reporte.tw_ren,
+        0,
+        "L"
+      );
+      reporte.ImpPosX(
+        clase.viernes?.toString() ?? "",
+        245,
+        reporte.tw_ren,
+        0,
+        "L"
+      );
+      reporte.ImpPosX(
+        clase.sabado?.toString() ?? "",
+        260,
+        reporte.tw_ren,
+        0,
+        "L"
+      );
+      reporte.ImpPosX(
+        clase.domingo?.toString() ?? "",
+        275,
+        reporte.tw_ren,
+        0,
+        "L"
+      );
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRenH) {
         reporte.pageBreakH();
@@ -383,7 +467,7 @@ function Clases() {
       setPdfPreview(true);
       showModalVista(true);
       setAnimateLoading(false);
-    }, 500)
+    }, 500);
   };
 
   const showModalVista = (show) => {
@@ -402,7 +486,7 @@ function Clases() {
     return (
       <div className="container skeleton w-full max-w-screen-xl shadow-xl rounded-xl"></div>
     );
-  };
+  }
   return (
     <>
       <ModalClases

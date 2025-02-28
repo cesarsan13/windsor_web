@@ -14,7 +14,7 @@ import {
   buscaDocumento,
   validarClaveCajero,
   buscarArticulo,
-  storeBatchDetallePedido
+  storeBatchDetallePedido,
 } from "@/app/utils/api/pagos1/pagos1";
 import ModalProcesarDatos from "../components/modalProcesarDatos";
 import { getFormasPago } from "@/app/utils/api/formapago/formapago";
@@ -36,7 +36,7 @@ import TablaPagos1 from "@/app/pagos1/components/tablaPagos1";
 import ModalPagoImprime from "@/app/pagos1/components/modalPagosImprime";
 import ModalRecargos from "@/app/pagos1/components/modalRecargos";
 import ModalParciales from "@/app/pagos1/components/modalParciales";
-import { showSwal, showSwalAndWait, confirmSwal} from "@/app/utils/alerts";
+import { showSwal, showSwalAndWait, confirmSwal } from "@/app/utils/alerts";
 import Swal from "sweetalert2";
 import * as XLSX from "xlsx";
 function Pagos_1() {
@@ -77,8 +77,8 @@ function Pagos_1() {
   const columnasBuscaCat2 = ["numero", "comentario_1"];
   const [permissions, setPermissions] = useState({});
 
-  const [dataJson, setDataJson] = useState([]); 
-  const [reload_page, setReloadPage] = useState(false)
+  const [dataJson, setDataJson] = useState([]);
+  const [reload_page, setReloadPage] = useState(false);
 
   const {
     register,
@@ -208,7 +208,7 @@ function Pagos_1() {
       setisLoading(false);
     };
     fetchData();
-  }, [session, status, validar, cargado, setValue]);
+  }, [status, validar, cargado, setValue]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -824,62 +824,62 @@ function Pagos_1() {
   };
   const procesarDatos = () => {
     //showModalProcesa(true);
-    document.getElementById("my_modal_detalle_pedido").showModal()
-  }
+    document.getElementById("my_modal_detalle_pedido").showModal();
+  };
 
   const buttonProcess = async () => {
-      event.preventDefault();
-      setisLoadingButton(true);
-      const { token } = session.user;
-      const chunks = chunkArray(dataJson, 20);
-      for (let chunk of chunks) {
-        await storeBatchDetallePedido(token, chunk)
-      }
-      setDataJson([]);
-      document.getElementById("my_modal_detalle_pedido").close();
-      showSwal("Éxito", "Los datos se han subido correctamente.", "success");
-      setReloadPage(!reload_page);
-      setisLoadingButton(false);
-    };  
+    event.preventDefault();
+    setisLoadingButton(true);
+    const { token } = session.user;
+    const chunks = chunkArray(dataJson, 20);
+    for (let chunk of chunks) {
+      await storeBatchDetallePedido(token, chunk);
+    }
+    setDataJson([]);
+    document.getElementById("my_modal_detalle_pedido").close();
+    showSwal("Éxito", "Los datos se han subido correctamente.", "success");
+    setReloadPage(!reload_page);
+    setisLoadingButton(false);
+  };
 
   const handleFileChange = async (e) => {
-      const confirmed = await confirmSwal(
-        "¿Desea Continuar?",
-        "Asegúrate de que las columnas del archivo de excel coincidan exactamente con las columnas de la tabla en la base de datos.",
-        "warning",
-        "Aceptar",
-        "Cancelar",
-        "my_modal_detalle_pedido"
-      );
-      if (!confirmed) {
-        return;
-      }
-      const selectedFile = e.target.files[0];
-      if (selectedFile) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const data = new Uint8Array(event.target.result);
-          const workbook = XLSX.read(data, { type: "array" });
-          const sheetName = workbook.SheetNames[0];
-          const worksheet = workbook.Sheets[sheetName];
-          const jsonData = XLSX.utils.sheet_to_json(worksheet);
-          const convertedData = jsonData.map(item => ({
-            recibo: parseInt(item.Recibo || 0),
-            alumno: parseInt(item.Alumno || 0),
-            articulo: parseInt(item.Articulo || 0),
-            documento: parseInt(item.Documento || 0),
-            fecha: (fechaFormatExcel(item.Fecha) || ""),
-            cantidad: parseInt(item.Cantidad || 0),
-            precio_unitario: parseFloat(item.Precio_Unitario || 0),
-            descuento: parseInt(item.Descuento || 0),
-            iva: parseFloat(item.IVA || 0),
-            numero_factura: parseInt(item.Numero_Factura || 0),
-          }));
-          setDataJson(convertedData);
-        };
-        reader.readAsArrayBuffer(selectedFile);
-      }
-    };
+    const confirmed = await confirmSwal(
+      "¿Desea Continuar?",
+      "Asegúrate de que las columnas del archivo de excel coincidan exactamente con las columnas de la tabla en la base de datos.",
+      "warning",
+      "Aceptar",
+      "Cancelar",
+      "my_modal_detalle_pedido"
+    );
+    if (!confirmed) {
+      return;
+    }
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        const convertedData = jsonData.map((item) => ({
+          recibo: parseInt(item.Recibo || 0),
+          alumno: parseInt(item.Alumno || 0),
+          articulo: parseInt(item.Articulo || 0),
+          documento: parseInt(item.Documento || 0),
+          fecha: fechaFormatExcel(item.Fecha) || "",
+          cantidad: parseInt(item.Cantidad || 0),
+          precio_unitario: parseFloat(item.Precio_Unitario || 0),
+          descuento: parseInt(item.Descuento || 0),
+          iva: parseFloat(item.IVA || 0),
+          numero_factura: parseInt(item.Numero_Factura || 0),
+        }));
+        setDataJson(convertedData);
+      };
+      reader.readAsArrayBuffer(selectedFile);
+    }
+  };
 
   const itemHeaderTable = () => {
     return (
@@ -904,9 +904,7 @@ function Pagos_1() {
         <tr key={item.recibo} className="hover:cursor-pointer">
           <th
             className={
-              typeof item.recibo === "number"
-                ? "text-left"
-                : "text-right"
+              typeof item.recibo === "number" ? "text-left" : "text-right"
             }
           >
             {item.recibo}

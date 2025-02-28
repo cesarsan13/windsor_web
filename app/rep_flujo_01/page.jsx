@@ -5,7 +5,13 @@ import { useRouter } from "next/navigation";
 import Inputs from "./components/Inputs";
 import { useForm } from "react-hook-form";
 import Acciones from "./components/Acciones";
-import { Fecha_de_Ctod, formatDate, permissionsComponents, formatFecha, formatNumber} from "../utils/globalfn";
+import {
+  Fecha_de_Ctod,
+  formatDate,
+  permissionsComponents,
+  formatFecha,
+  formatNumber,
+} from "../utils/globalfn";
 import {
   DocumentosCobranza,
   ImprimirExcel,
@@ -39,15 +45,20 @@ function Rep_Flujo_01() {
       const { token, permissions } = session.user;
       const es_admin = session.user.es_admin;
       const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
-      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado);
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menu_seleccionado
+      );
       setPermissions(permisos);
-      
+
       //const fecha_ciclo = Fecha_de_Ctod(fecha_ini, -63);
       //const data = await DocumentosCobranza(token, fecha_ciclo, fecha_fin);
       //setDataDocumentoCobranza(data);
     };
     fetchData();
-  }, [session, status, fecha_ini, fecha_fin]);
+  }, [status, fecha_ini, fecha_fin]);
 
   if (status === "loading") {
     return (
@@ -64,8 +75,12 @@ function Rep_Flujo_01() {
     setAnimateLoading(true);
 
     const fecha_ciclo = Fecha_de_Ctod(fecha_ini, -63);
-      const data = await DocumentosCobranza(session.user.token, fecha_ciclo, fecha_fin);
-      setDataDocumentoCobranza(data);
+    const data = await DocumentosCobranza(
+      session.user.token,
+      fecha_ciclo,
+      fecha_fin
+    );
+    setDataDocumentoCobranza(data);
 
     const configuracion = {
       Encabezado: {
@@ -121,10 +136,10 @@ function Rep_Flujo_01() {
     for (Pos_Act = 1; Pos_Act <= 8; Pos_Act++) {
       Tw_TGe[Pos_Act] = 0;
     }
-    Tw_Per[1] = (fecha_ini.slice(0, 7)).replace(/-/g, "/");
-    Tw_Per[12] = (fecha_fin.slice(0, 7)).replace(/-/g, "/");
+    Tw_Per[1] = fecha_ini.slice(0, 7).replace(/-/g, "/");
+    Tw_Per[12] = fecha_fin.slice(0, 7).replace(/-/g, "/");
     let adiciona;
-    
+
     documentosCobranza.forEach((documento) => {
       const alumno = alumnos.find((alu) => alu.numero === documento.alumno);
       if (alumno) {
@@ -161,14 +176,18 @@ function Rep_Flujo_01() {
             }
           }
         }
-        if (Pos_Act < 13) { 
+        if (Pos_Act < 13) {
           if (documento.ref.toString().toUpperCase() === "COL") {
             Tw_Col[Pos_Act][1] = Number(Tw_Col[Pos_Act][1]) + documento.importe;
-            Tw_Col[Pos_Act][2] = Number(Tw_Col[Pos_Act][2]) + documento.importe * (documento.descuento / 100);
-          } 
+            Tw_Col[Pos_Act][2] =
+              Number(Tw_Col[Pos_Act][2]) +
+              documento.importe * (documento.descuento / 100);
+          }
           if (documento.ref.toString().toUpperCase() === "INS") {
             Tw_Col[Pos_Act][3] = Number(Tw_Col[Pos_Act][3]) + documento.importe;
-            Tw_Col[Pos_Act][4] = Number(Tw_Col[Pos_Act][4]) + documento.importe * (documento.descuento / 100);
+            Tw_Col[Pos_Act][4] =
+              Number(Tw_Col[Pos_Act][4]) +
+              documento.importe * (documento.descuento / 100);
           }
           if (documento.ref.toString().toUpperCase() === "REC") {
             Tw_Col[Pos_Act][4] = Number(Tw_Col[Pos_Act][4]) + documento.importe;
@@ -176,12 +195,13 @@ function Rep_Flujo_01() {
           if (documento.ref.toString().toUpperCase() == "TAL") {
             Tw_Col[Pos_Act][5] = Number(Tw_Col[Pos_Act][5]) + documento.importe;
           }
-          Tw_Col[Pos_Act][8] = Number(Tw_Col[Pos_Act][8]) + documento.importe_pago;
+          Tw_Col[Pos_Act][8] =
+            Number(Tw_Col[Pos_Act][8]) + documento.importe_pago;
         }
       }
     });
     let imp_total;
-    for(Pos_Act = 0; Pos_Act <= 13; Pos_Act++) {
+    for (Pos_Act = 0; Pos_Act <= 13; Pos_Act++) {
       imp_total =
         Number(Tw_Col[Pos_Act][1]) -
         Number(Tw_Col[Pos_Act][2]) +
@@ -197,13 +217,37 @@ function Rep_Flujo_01() {
       Tw_TGe[7] = Number(Tw_TGe[7]) + Number(imp_total);
       Tw_TGe[8] = Number(Tw_TGe[8]) + Number(Tw_Col[Pos_Act][8]);
       reporte.ImpPosX(Tw_Per[Pos_Act].toString(), 14, reporte.tw_ren);
-      reporte.ImpPosX(formatNumber(Tw_Col[Pos_Act][1].toString()), 34, reporte.tw_ren);
-      reporte.ImpPosX(formatNumber(Tw_Col[Pos_Act][2].toString()), 54, reporte.tw_ren);
-      reporte.ImpPosX(formatNumber(Tw_Col[Pos_Act][3].toString()), 74, reporte.tw_ren);
-      reporte.ImpPosX(formatNumber(Tw_Col[Pos_Act][4].toString()), 94, reporte.tw_ren);
-      reporte.ImpPosX(formatNumber(Tw_Col[Pos_Act][5].toString()), 114, reporte.tw_ren);
+      reporte.ImpPosX(
+        formatNumber(Tw_Col[Pos_Act][1].toString()),
+        34,
+        reporte.tw_ren
+      );
+      reporte.ImpPosX(
+        formatNumber(Tw_Col[Pos_Act][2].toString()),
+        54,
+        reporte.tw_ren
+      );
+      reporte.ImpPosX(
+        formatNumber(Tw_Col[Pos_Act][3].toString()),
+        74,
+        reporte.tw_ren
+      );
+      reporte.ImpPosX(
+        formatNumber(Tw_Col[Pos_Act][4].toString()),
+        94,
+        reporte.tw_ren
+      );
+      reporte.ImpPosX(
+        formatNumber(Tw_Col[Pos_Act][5].toString()),
+        114,
+        reporte.tw_ren
+      );
       reporte.ImpPosX(formatNumber(imp_total.toString()), 134, reporte.tw_ren);
-      reporte.ImpPosX(formatNumber(Tw_Col[Pos_Act][8].toString()), 154, reporte.tw_ren);
+      reporte.ImpPosX(
+        formatNumber(Tw_Col[Pos_Act][8].toString()),
+        154,
+        reporte.tw_ren
+      );
       const sum = Number(imp_total) - Number(Tw_Col[Pos_Act][8].toString());
       reporte.ImpPosX(formatNumber(sum.toString()), 174, reporte.tw_ren);
       Enca1(reporte);
@@ -293,20 +337,20 @@ function Rep_Flujo_01() {
                 <Acciones
                   home={home}
                   Ver={handleVerClick}
-                  isLoading = {animateLoading}
-                  permiso_imprime = {permissions.impresion}
+                  isLoading={animateLoading}
+                  permiso_imprime={permissions.impresion}
                 />
               </div>
-                <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
-                  Reporte Adeudos Pendientes
-                </h1>
+              <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
+                Reporte Adeudos Pendientes
+              </h1>
             </div>
           </div>
         </div>
         <div className="w-full py-3 flex flex-col gap-y-4">
           <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
-            <div className="flex flex-row max-[300px]:gap-1 gap-4 justify-center" >
-                <Inputs
+            <div className="flex flex-row max-[300px]:gap-1 gap-4 justify-center">
+              <Inputs
                 name={"fecha_ini"}
                 tamañolabel={""}
                 //className={"rounded block grow"}
@@ -320,9 +364,9 @@ function Rep_Flujo_01() {
                 conteClassName="lg:w-fit md:w-fit"
                 labelClassName="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full"
                 inputClassName="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700"
-                />
+              />
 
-                <Inputs
+              <Inputs
                 name={"fecha_fin"}
                 tamañolabel={""}
                 //className={"rounded block grow "}
@@ -336,13 +380,13 @@ function Rep_Flujo_01() {
                 conteClassName="lg:w-fit md:w-fit"
                 labelClassName="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full"
                 inputClassName="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700"
-                />
+              />
             </div>
           </div>
           <div className="flex flex-row ">
             <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
               <div className="flex space-x-4 justify-center">
-              <label className="flex items-center space-x-2 dark:text-white text-black">
+                <label className="flex items-center space-x-2 dark:text-white text-black">
                   <input
                     type="radio"
                     name="options"

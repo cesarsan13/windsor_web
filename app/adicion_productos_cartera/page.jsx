@@ -10,50 +10,55 @@ import {
   actualizarCartera,
   procesoCartera,
 } from "@/app/utils/api/adicion_productos_cartera/adicion_productos_cartera";
-import { showSwal} from "@/app/utils/alerts";
-import {permissionsComponents } from "../utils/globalfn";
+import { showSwal } from "@/app/utils/alerts";
+import { permissionsComponents } from "../utils/globalfn";
 
 function Adicion_Productos_Cartera() {
-    const router = useRouter();
-    const { data: session, status } = useSession();
-    const [articulo, setArticulos] = useState("");
-    const [cond_ant, setCondAnt] = useState("");
-    const [isLoading, setisLoading] = useState(false);
-    const [isLoading2, setisLoading2] = useState(false);
-    const [permissions, setPermissions] = useState({});
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, "0");
-    const dd = String(today.getDate()).padStart(2, "0");
-    const date = `${yyyy}-${mm}-${dd}`;
-    
-    useEffect(() => {
-        const fetchData = async () => {
-            const {permissions} = session.user;
-            const es_admin = session.user.es_admin;
-            const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
-            const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado)            
-            setPermissions(permisos);
-        }
-        if (status === "loading" || !session) {
-            return;
-          }
-        fetchData();
-    }, [session, status]);
-    
-    const {
-        register,
-        handleSubmit,
-        watch,
-        reset,
-        formState: { errors },
-    } = useForm({
-        defaultValues: {
-            fecha: date,
-            periodo: 0,
-            cond_1:0
-        },
-    });
+  const router = useRouter();
+  const { data: session, status } = useSession();
+  const [articulo, setArticulos] = useState("");
+  const [cond_ant, setCondAnt] = useState("");
+  const [isLoading, setisLoading] = useState(false);
+  const [isLoading2, setisLoading2] = useState(false);
+  const [permissions, setPermissions] = useState({});
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
+  const date = `${yyyy}-${mm}-${dd}`;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { permissions } = session.user;
+      const es_admin = session.user.es_admin;
+      const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menu_seleccionado
+      );
+      setPermissions(permisos);
+    };
+    if (status === "loading" || !session) {
+      return;
+    }
+    fetchData();
+  }, [status]);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      fecha: date,
+      periodo: 0,
+      cond_1: 0,
+    },
+  });
   const ActRef = handleSubmit(async (data) => {
     const { token } = session.user;
     setisLoading(true);
@@ -62,15 +67,15 @@ function Adicion_Productos_Cartera() {
       setisLoading(false);
       return;
     } else {
-    const res = await actualizarCartera(token);
-    if (res.status) {
-      showSwal(res.alert_title, res.alert_text, res.alert_icon);
-      setCondAnt(res.data);
-    } else {
-      showSwal(res.alert_title, res.alert_text, res.alert_icon);
+      const res = await actualizarCartera(token);
+      if (res.status) {
+        showSwal(res.alert_title, res.alert_text, res.alert_icon);
+        setCondAnt(res.data);
+      } else {
+        showSwal(res.alert_title, res.alert_text, res.alert_icon);
+      }
+      setisLoading(false);
     }
-    setisLoading(false);
-  }
   });
 
   const onSubmitProceso = handleSubmit(async (data) => {
@@ -117,34 +122,34 @@ function Adicion_Productos_Cartera() {
     router.push("/");
   };
 
-    if (status === "loading") {
-        return (
-            <div className="container skeleton w-full max-w-screen-xl shadow-xl rounded-xl"></div>
-        );
-    }
+  if (status === "loading") {
     return (
-     <>
-        <div className='flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12'>
-          <div className='w-full p-3'>
-            <div className='flex flex-col justify-start p-3 max-[600px]:p-0'>
-              <div className="flex flex-wrap items-start md:items-center mx-auto">
-                <div className='order-2 md:order-1 flex justify-between w-full md:w-auto mb-0'>
-                    <Acciones
-                        isLoadingRef={isLoading}
-                        isLoadingProc={isLoading2}
-                        BRef={ActRef}
-                        Bproceso={onSubmitProceso}
-                        home={home}
-                        permiso_alta={permissions.altas}
-                    />
-                </div>
-                <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
-                  Proceso de Adición a Cobranza.
-                </h1>
+      <div className="container skeleton w-full max-w-screen-xl shadow-xl rounded-xl"></div>
+    );
+  }
+  return (
+    <>
+      <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+        <div className="w-full p-3">
+          <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
+            <div className="flex flex-wrap items-start md:items-center mx-auto">
+              <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
+                <Acciones
+                  isLoadingRef={isLoading}
+                  isLoadingProc={isLoading2}
+                  BRef={ActRef}
+                  Bproceso={onSubmitProceso}
+                  home={home}
+                  permiso_alta={permissions.altas}
+                />
               </div>
+              <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
+                Proceso de Adición a Cobranza.
+              </h1>
             </div>
           </div>
-          <div className="flex flex-col  items-center h-full w-full">
+        </div>
+        <div className="flex flex-col  items-center h-full w-full">
           <div className="w-full max-w-2xl">
             <div class="min-[639px]:flex min-[639px]:space-x-4">
               <BuscarCat

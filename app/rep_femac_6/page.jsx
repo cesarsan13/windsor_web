@@ -76,7 +76,7 @@ function Rep_Femac_6() {
       setPermissions(permisos);
     };
     fetchData();
-  }, [session, status, cajero, fechaFin, fechaIni]);
+  }, [status, cajero, fechaFin, fechaIni]);
 
   if (status === "loading") {
     return (
