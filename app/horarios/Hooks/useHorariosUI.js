@@ -204,13 +204,13 @@ export const useHorariosUI = (
             <fieldset id="fs_horario"
             dataTypedisabled={accion === "Ver"  || accion === "Eliminar" ? true : false }>
             <div className="container flex flex-col space-y-5">
-              <div className="flex w-full md:w-full gap-4">
+              <div className="flex w-full gap-0 items-start">
                 <Inputs
                   id={"cancha"}
                   dataType={"int"}
                   name={"cancha"}
-                  tamañolabel={"w-6/6 "}
-                  className={"w-5/6 text-right"}
+                  tamañolabel={"w-4/6 "}
+                  className={"w-3/5 text-right"}
                   Titulo={"Cancha: "}
                   type={"text"}
                   requerido={true}
@@ -224,14 +224,28 @@ export const useHorariosUI = (
                     handleKeyDown(evt);
                   }}
                 />
+                <Inputs
+                dataType={"string"}
+                name={"salon"}
+                tamañolabel={"w-4/6"}
+                className={"w-3/5"}
+                Titulo={"Salón: "}
+                type={"text"}
+                requerido={true}
+                isNumero={false}
+                errors={errors}
+                register={register}
+                message={"Salón Requerido"}
+                maxLenght={10}
+                isDisabled={isDisabled}
+              />
                 </div>
-                <div className="flex w-full md:w-full gap-4">
                 <Inputs
                   id={"dia"}
                   titulo={"Dias de la semana"}
                   name={"dia"}
                   Titulo={"Dias de la semana"}
-                  tamañolabel={"W-6/6 input input-bordered flex items-center gap-3 grow text-black dark:text-white"}
+                  tamañolabel={"W-6/6 input input-bordered flex items-center gap-1 grow text-black dark:text-white"}
                   message={"dia requerido"}
                   register={register}
                   className={`W-6/6 fyo8m-select p-1.0 grow ${isDisabled ? "bg-white dark:bg-[#1d232a] cursor-not-allowed" : "bg-white dark:bg-[#1d232a]"}`}
@@ -247,15 +261,13 @@ export const useHorariosUI = (
                   onChange={handleSelectChange}
                   isDisabled={isDisabled}
                 />
-                
-              </div>
-              <div className="flex w-full md:w-full gap-4">
+              
               <Inputs
                   id={"horario"}
                   dataType={"string"}
                   name={"horario"}
                   tamañolabel={"w-6/6"}
-                  className={"w-6/6"}
+                  className={"w-5/6"}
                   Titulo={"Horario: "}
                   type={"text"}
                   requerido={true}
@@ -269,25 +281,6 @@ export const useHorariosUI = (
                     handleKeyDown(evt);
                   }}
               />
-              <Inputs
-                dataType={"int"}
-                name={"max_niños"}
-                tamañolabel={"w-6/6"}
-                className={"w-6/6 text-right"}
-                Titulo={"Max Niños: "}
-                type={"text"}
-                requerido={true}
-                isNumero={false}
-                errors={errors}
-                register={register}
-                message={"Max Niños Requerido"}
-                maxLenght={50}
-                isDisabled={isDisabled}
-                onKeyDown={(evt) => {
-                  handleKeyDown(evt);
-                }}
-              />
-              </div>
               <div className="flex w-full md:w-full gap-4">
               <Inputs
                 Titulo={"Sexo"}
@@ -311,9 +304,30 @@ export const useHorariosUI = (
               />
               <Inputs
                 dataType={"int"}
+                name={"max_niños"}
+                tamañolabel={"w-6/6"}
+                className={"w-6/6 text-right"}
+                Titulo={"Max Niños: "}
+                type={"text"}
+                requerido={true}
+                isNumero={false}
+                errors={errors}
+                register={register}
+                message={"Max Niños Requerido"}
+                maxLenght={50}
+                isDisabled={isDisabled}
+                onKeyDown={(evt) => {
+                  handleKeyDown(evt);
+                }}
+              />
+              </div>
+              <div className="flex w-full md:w-full gap-4">
+              
+              <Inputs
+                dataType={"int"}
                 name={"edad_ini"}
                 tamañolabel={"w-6/6"}
-                className={"w-4/5 text-right"}
+                className={"w-3/5 text-right"}
                 Titulo={"Edad Ini: "}
                 type={"text"}
                 requerido={true}
@@ -327,14 +341,12 @@ export const useHorariosUI = (
                   handleKeyDown(evt);
                 }}
               />
-              
-              </div>
-              <div className="flex w-full md:w-full gap-4">
+
               <Inputs
                 dataType={"int"}
                 name={"edad_fin"}
                 tamañolabel={"w-6/6"}
-                className={"w-4/5 text-right"}
+                className={"w-3/5 text-right"}
                 Titulo={"Edad Fin: "}
                 type={"text"}
                 requerido={true}
@@ -347,21 +359,6 @@ export const useHorariosUI = (
                 onKeyDown={(evt) => {
                   handleKeyDown(evt);
                 }}
-              />
-              <Inputs
-                dataType={"string"}
-                name={"salon"}
-                tamañolabel={"w-6/6"}
-                className={"w-6/6"}
-                Titulo={"Salón: "}
-                type={"text"}
-                requerido={true}
-                isNumero={false}
-                errors={errors}
-                register={register}
-                message={"Salón Requerido"}
-                maxLenght={10}
-                isDisabled={isDisabled}
               />
               </div>
             </div>

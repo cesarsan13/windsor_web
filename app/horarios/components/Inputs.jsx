@@ -40,7 +40,7 @@ function Inputs({
       display: "flex",
       flexWrap: "nowrap",
       overflowX: "auto",
-      maxWidth: "100%",
+      maxWidth: "80%",
       backgroundColor: isDarkMode ? "#1d232a" : "#ffffff",
       color: isDarkMode ? "#ffffff" : "#1d232a",
     }),
