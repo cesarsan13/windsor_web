@@ -1,5 +1,5 @@
-"use client"
-import React from "react"
+"use client";
+import React from "react";
 import { useRouter } from "next/navigation";
 import Acciones from "./components/Acciones";
 import {
@@ -21,7 +21,7 @@ import { permissionsComponents } from "../utils/globalfn";
 function RepBecas() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [sOrdenar, ssetordenar] = useState('nombre');
+  const [sOrdenar, ssetordenar] = useState("nombre");
   const [formaBecas, setFormaBecas] = useState([]);
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
@@ -38,19 +38,24 @@ function RepBecas() {
     }
     const fetchData = async () => {
       setisLoading(true);
-      const { token } = session.user
-      let { permissions } = session.user
-      const es_admin = session.user.es_admin
+      const { token } = session.user;
+      let { permissions } = session.user;
+      const es_admin = session.user.es_admin;
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado)
-      setPermissions(permisos)
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menuSeleccionado
+      );
+      setPermissions(permisos);
       const data = await getBecas(token, horario1, horario2, sOrdenar);
       // console.log(data);
       setFormaBecas(data.data);
       setisLoading(false);
-    }
-    fetchData()
-  }, [session, status, horario1, horario2, sOrdenar]);
+    };
+    fetchData();
+  }, [status, horario1, horario2, sOrdenar]);
   const home = () => {
     router.push("/");
   };
@@ -58,7 +63,6 @@ function RepBecas() {
     setPdfPreview(false);
     setPdfData("");
     document.getElementById("modalVPRepWBecas").close();
-
   };
 
   const ImprimePDF = () => {
@@ -69,9 +73,9 @@ function RepBecas() {
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
       body: formaBecas,
-    }
-    ImprimirPDF(configuracion)
-  }
+    };
+    ImprimirPDF(configuracion);
+  };
   const ImprimeExcel = () => {
     const configuracion = {
       Encabezado: {
@@ -88,22 +92,25 @@ function RepBecas() {
         { header: "Colegiatura", dataKey: "descuento" },
         { header: "Descuento", dataKey: "costo_final" },
       ],
-      nombre: "ReporteBecas"
-    }
-    ImprimirExcel(configuracion)
-  }
+      nombre: "ReporteBecas",
+    };
+    ImprimirExcel(configuracion);
+  };
   const handleCheckChange = (event) => {
     ssetordenar(event.target.value);
-  }
+  };
 
   const handleVerClick = () => {
-    setAnimateLoading(true)
+    setAnimateLoading(true);
     // console.log(formaBecas);
     if (horario1.numero === undefined && horario2.numero == undefined) {
-      showSwal("Oppss!", "Para imprimir, mínimo debe estar seleccionado un Alumno", "error");
-      setAnimateLoading(false)
+      showSwal(
+        "Oppss!",
+        "Para imprimir, mínimo debe estar seleccionado un Alumno",
+        "error"
+      );
+      setAnimateLoading(false);
     } else {
-
       const configuracion = {
         Encabezado: {
           Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -138,9 +145,21 @@ function RepBecas() {
       body.forEach((reporte1) => {
         reporte.ImpPosX(reporte1.numero.toString(), 15, reporte.tw_ren);
         reporte.ImpPosX(reporte1.alumno.toString(), 25, reporte.tw_ren);
-        reporte.ImpPosX(reporte1.grado === null ? "" : reporte1.grado.toString(), 115, reporte.tw_ren);
-        reporte.ImpPosX(reporte1.colegiatura.toString().substring(0, 4), 160, reporte.tw_ren);
-        reporte.ImpPosX(reporte1.descuento.toString().substring(4, 2), 190, reporte.tw_ren);
+        reporte.ImpPosX(
+          reporte1.grado === null ? "" : reporte1.grado.toString(),
+          115,
+          reporte.tw_ren
+        );
+        reporte.ImpPosX(
+          reporte1.colegiatura.toString().substring(0, 4),
+          160,
+          reporte.tw_ren
+        );
+        reporte.ImpPosX(
+          reporte1.descuento.toString().substring(4, 2),
+          190,
+          reporte.tw_ren
+        );
         reporte.ImpPosX(reporte1.costo_final.toString(), 210, reporte.tw_ren);
         //reporte.ImpPosX(reporte1.Saldo.toString(),155, reporte.tw_ren);
         Enca1(reporte);
@@ -154,15 +173,15 @@ function RepBecas() {
         setPdfData(pdfData);
         setPdfPreview(true);
         showModalVista(true);
-        setAnimateLoading(false)
-      }, 500)
+        setAnimateLoading(false);
+      }, 500);
     }
   };
   const showModalVista = (show) => {
     show
       ? document.getElementById("modalVPRepWBecas").showModal()
       : document.getElementById("modalVPRepWBecas").close();
-  }
+  };
 
   if (status === "loading") {
     return (
@@ -193,8 +212,8 @@ function RepBecas() {
                   home={home}
                   isLoading={animateLoading}
                   permiso_imprime={permissions.impresion}
-                  CerrarView={CerrarView}>
-                </Acciones>
+                  CerrarView={CerrarView}
+                ></Acciones>
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Reporte de Becas.
@@ -230,7 +249,7 @@ function RepBecas() {
             </div>
           </div>
         </div>
-      </div>      
+      </div>
     </>
   );
 }

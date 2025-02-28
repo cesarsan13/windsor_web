@@ -7,7 +7,7 @@ import {
   getEstadisticasTotales,
   getCumpleañosMes,
   getConsultasInscripcion,
-  getConsultasInsXMes
+  getConsultasInsXMes,
 } from "@/app/utils/api/estadisticas/estadisticas";
 import { getAlumnoXHorario } from "@/app/utils/api/horarios/horarios";
 import { getDataSex } from "@/app/utils/api/alumnos/alumnos";
@@ -16,7 +16,9 @@ const menu2 = require("@/public/home_movil.jpg");
 const CardsHome = React.lazy(() => import("@/app/components/CardsHome"));
 const BarChart = React.lazy(() => import("@/app/components/BarChart"));
 const PieChart = React.lazy(() => import("@/app/components/PieChart"));
-const CardInscritos = React.lazy(() => import("@/app/components/CardInscritos"));
+const CardInscritos = React.lazy(() =>
+  import("@/app/components/CardInscritos")
+);
 import { formatNumber } from "@/app/utils/globalfn";
 const CumpleañerosView = React.lazy(() =>
   import("@/app/components/Cumpleañeros/Cumpleañeros")
@@ -49,20 +51,20 @@ export default function Home() {
   const [mesActualNum, setMesActualNum] = useState("");
   const [añoActual, setAñoActual] = useState("");
   let [mesSelect, setMesSelect] = useState("");
-  const [adeudos, setAdeudos] = useState([]); 
+  const [adeudos, setAdeudos] = useState([]);
   useEffect(() => {
-    if (status === "loading" || !session || dataLoaded) { 
+    if (status === "loading" || !session || dataLoaded) {
       return;
     }
     const fetchChart = async () => {
-      setisLoading(true); 
+      setisLoading(true);
 
-      // Crear una nueva fecha 
+      // Crear una nueva fecha
       const fecha = new Date();
       // Obtener el nombre del mes en español
       const nombreMes = fecha.toLocaleString("es-ES", { month: "long" });
       // Capitalizar la primera letra
-      setMesActual(nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1)); 
+      setMesActual(nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1));
 
       // Los meses comienzan desde 0, así que sumamos 1
       const mes = fecha.getMonth() + 1;
@@ -71,16 +73,17 @@ export default function Home() {
       setAñoActual(año);
 
       const { token } = session.user;
-      const [res, dataAlHor, DataAlSex, cumpleañerosMes, Adeudos] = await Promise.all([
-        getEstadisticasTotales(token),
-        getAlumnoXHorario(token),
-        getDataSex(token),
-        getCumpleañosMes(token),
-        Documentos(token, formatDate(fecha).replace(/\//g, "-"), false)
-      ]);
+      const [res, dataAlHor, DataAlSex, cumpleañerosMes, Adeudos] =
+        await Promise.all([
+          getEstadisticasTotales(token),
+          getAlumnoXHorario(token),
+          getDataSex(token),
+          getCumpleañosMes(token),
+          Documentos(token, formatDate(fecha).replace(/\//g, "-"), false),
+        ]);
       // const fechaHoy = formatDate(fecha).replace(/\//g, "-")
       // const AdeudosMes = Adeudos.documentos.filter((adeudo)=>adeudo.fecha === fechaHoy)
-      setAdeudos(Adeudos)
+      setAdeudos(Adeudos);
       // console.log(res);
       // console.log("alumnsInscritos => ",alumnsInscritos);
       const totalEstudiantes = res.promedio_alumnos_por_curso.reduce(
@@ -104,7 +107,7 @@ export default function Home() {
       setDataLoaded(true);
     };
     fetchChart();
-  }, [session, status]);
+  }, [status]);
 
   if (status === "loading" || isLoading === true) {
     return (
@@ -178,17 +181,15 @@ export default function Home() {
                 </div> */}
 
                 <CardInscritos
-                    titulo={`Total de Alumnos`}
-                    value={totalAlumnosXMes}
-                    descripcion={`Importe Generado.`}
-                    valueImp={totalImporteXmes}
-                    setItem={setMesSelect}
-                    mes={mesActual}
-                  />
+                  titulo={`Total de Alumnos`}
+                  value={totalAlumnosXMes}
+                  descripcion={`Importe Generado.`}
+                  valueImp={totalImporteXmes}
+                  setItem={setMesSelect}
+                  mes={mesActual}
+                />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4  justify-items-center">
-
-              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4  justify-items-center"></div>
             </div>
           </div>
           <SliderControl

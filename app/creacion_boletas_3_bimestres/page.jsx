@@ -75,7 +75,7 @@ function CreacionBoletas3Bimestre() {
     }
     const fetchData = async () => {
       let newCombo = [];
-      
+
       for (let i = 2050; i >= 1970; i--) {
         const fechasRango = `${i}-${i + 1}`;
         newCombo.push({
@@ -83,22 +83,27 @@ function CreacionBoletas3Bimestre() {
           descripcion: fechasRango,
         });
       }
-      
+
       setCiclo(newCombo);
     };
     fetchData();
-  }, [session, status]);
+  }, [status]);
 
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
     }
     const fetchData = async () => {
-      let {token, permissions} = session.user;
+      let { token, permissions } = session.user;
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const es_admin = session.user.es_admin;
-      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
-      setPermissions(permisos)
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menuSeleccionado
+      );
+      setPermissions(permisos);
       let x;
       const datos = await getDatosPorGrupo(
         session.user.token,
@@ -313,7 +318,7 @@ function CreacionBoletas3Bimestre() {
       calcularLugares(alumnos_in, "Ingles");
     };
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [grupo.numero]);
 
   const calcularLugares = async (alumnos_prop, tipo) => {

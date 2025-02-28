@@ -145,7 +145,7 @@ export const useAccesoMenuUI = (
             }))}
             isDisabled={isDisabled}
           />
-          <Inputs
+          {/* <Inputs
             dataType={"string"}
             name={"sub_menu"}
             tamañolabel={""}
@@ -159,7 +159,7 @@ export const useAccesoMenuUI = (
             message={"Sub Menu requerido"}
             maxLenght={100}
             isDisabled={isDisabled}
-          />
+          /> */}
         </div>
       </fieldset>
     );

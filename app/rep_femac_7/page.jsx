@@ -45,7 +45,7 @@ function Repo_Femac_7() {
       return;
     }
     fetchData();
-  }, [session, status]);
+  }, [status]);
 
   const home = () => {
     router.push("/");
@@ -131,7 +131,7 @@ function Repo_Femac_7() {
       let nom_grupo = "";
       let grupo_ant = "";
       let grupo_act = "";
-      
+
       for (const dato of data) {
         if (dato.horario_1 > 0) {
           grupo_act = dato.horario_1;
@@ -158,7 +158,7 @@ function Repo_Femac_7() {
               }),
             }
           );
-          if (res.status ===400) break;
+          if (res.status === 400) break;
           grupo_ant = grupo_act;
         }
       }
@@ -174,7 +174,7 @@ function Repo_Femac_7() {
     let saldoTotal = 0; // Inicializa saldoTotal a 0
     const data = await Documentos(token, fecha, grupoAlumno);
     const documentos = data.documentos;
-    const indeces = data.indeces;  
+    const indeces = data.indeces;
     const alumnos = data.alumnos;
     documentos.forEach((doc, index) => {
       grupo_act = doc.grupo;
@@ -205,12 +205,24 @@ function Repo_Femac_7() {
         nombre = data.nombre;
         reporte.ImpPosX(nombre.toString(), 28, reporte.tw_ren, 0, "L");
         reporte.ImpPosX(doc.producto.toString(), 122, reporte.tw_ren, 0, "R");
-        reporte.ImpPosX(doc.descripcion.toString(), 128, reporte.tw_ren, 0, "L");
+        reporte.ImpPosX(
+          doc.descripcion.toString(),
+          128,
+          reporte.tw_ren,
+          0,
+          "L"
+        );
         reporte.ImpPosX(doc.fecha.toString(), 208, reporte.tw_ren, 0, "L");
         saldo = doc.importe - doc.importe * (doc.descuento / 100);
         saldoTotal += saldo;
         total_General += saldo;
-        reporte.ImpPosX(saldo.toFixed(2).toString(), 243, reporte.tw_ren, 0, "R");
+        reporte.ImpPosX(
+          saldo.toFixed(2).toString(),
+          243,
+          reporte.tw_ren,
+          0,
+          "R"
+        );
 
         const isLastRecordForAlumno =
           index === documentos.length - 1 ||
@@ -221,13 +233,15 @@ function Repo_Femac_7() {
             saldoTotal.toFixed(2).toString(),
             264,
             reporte.tw_ren,
-            0, "R"
+            0,
+            "R"
           );
           reporte.ImpPosX(
             data.telefono1?.toString() ?? "",
             268,
             reporte.tw_ren,
-            0, "L"
+            0,
+            "L"
           );
           saldoTotal = 0;
           reporte.nextRow(5);
@@ -285,7 +299,12 @@ function Repo_Femac_7() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading} permiso_imprime={permissions.impresion} />
+                <Acciones
+                  home={home}
+                  Ver={handleVerClick}
+                  isLoading={animateLoading}
+                  permiso_imprime={permissions.impresion}
+                />
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Reporte Adeudos Pendientes

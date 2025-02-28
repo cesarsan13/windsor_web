@@ -11,7 +11,7 @@ import { getCajeros } from "@/app/utils/api/cajeros/cajeros";
 import { getFormasPago } from "@/app/utils/api/formapago/formapago";
 import {
   getAsignaturas,
-  getAsignaturasCasoOtro
+  getAsignaturasCasoOtro,
 } from "@/app/utils/api/asignaturas/asignaturas";
 import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
 import { getComentarios } from "@/app/utils/api/comentarios/comentarios";
@@ -20,6 +20,7 @@ import { getClasesBuscaCat } from "@/app/utils/api/clases/clases";
 import { loadGlobalVariables, globalVariables } from "@/app/utils/globalfn";
 import { getProfesores } from "../utils/api/profesores/profesores";
 import { getUsuarios } from "../utils/api/usuarios/usuarios";
+import { getMenus } from "@/app/utils/api/accesos_menu/accesos_menu";
 
 function BuscarCat({
   deshabilitado = false,
@@ -129,8 +130,12 @@ function BuscarCat({
             setTiutloInput(["numero", "descripcion"]);
             break;
           case "usuarios":
-            fetchedData = await getUsuarios(token, false)
+            fetchedData = await getUsuarios(token, false);
             setTiutloInput(["numero", "nombre"]);
+            break;
+          case "menus":
+            fetchedData = await getMenus(token, false);
+            setTiutloInput(["numero", "descripcion"]);
             break;
         }
         setData(fetchedData);
@@ -258,8 +263,9 @@ function BuscarCat({
                       e.preventDefault();
                     }
                   }}
-                  className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${alignRight ? "text-right" : ""
-                    } `}
+                  className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none ${
+                    alignRight ? "text-right" : ""
+                  } `}
                   style={{ width: inputWidths.first }}
                 />
               </label>
