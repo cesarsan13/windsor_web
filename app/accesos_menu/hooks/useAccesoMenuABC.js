@@ -69,7 +69,7 @@ export const useAccesoMenuABC = () => {
     }
     fetchData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reload_page, status, bajas]);
+  }, [status, bajas]);
 
   const {
     register,
