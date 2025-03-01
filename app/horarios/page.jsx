@@ -139,7 +139,7 @@ function Horarios() {
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Horarios
             </h1>
-            <h3 className="ml-auto order-3">{`Horarios activos: ${
+            <h3 className="ml-auto order-3 text-black dark:text-white">{`Horarios activos: ${
               active || 0
             }\nHorarios inactivos: ${inactive || 0}`}</h3>
           </div>

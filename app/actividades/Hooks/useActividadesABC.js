@@ -107,7 +107,7 @@ export const useActividadesABC = () => {
         }
         const infoFiltrada = actividadesRef.current.filter((actividad) => {
             const coincideId = tb_id 
-                ? actividad["materia"].toString().toLowerCase().includes(tb_id.toLowerCase()) 
+                ? actividad["materia"].toString().includes(tb_id) 
                 : true;
             const coincideDescripcion = tb_desc 
                 ? actividad["descripcion"].toString().toLowerCase().includes(tb_desc.toLowerCase()) 
@@ -131,9 +131,9 @@ export const useActividadesABC = () => {
         let active = 0;
         let inactive = 0;
         if(tb_id || tb_desc){
-            infoFiltrada = actividadesRef.current.filter((actividad) => {
+            infoFiltrada = inactiveActive.filter((actividad) => {
                 const coincideId = tb_id 
-                    ? actividad["materia"].toString().toLowerCase().includes(tb_id.toLowerCase()) 
+                    ? actividad["materia"].toString().includes(tb_id) 
                     : true;
                 const coincideDescripcion = tb_desc 
                     ? actividad["descripcion"].toString().toLowerCase().includes(tb_desc.toLowerCase()) 
@@ -187,6 +187,8 @@ export const useActividadesABC = () => {
             : accion === "Eliminar"
             ? `Eliminar Actividad ${currentID}`
             : `Ver Actividad ${currentID}`
+            ? `Reactivar Horario: ${currentID}`
+            : accion == "Reactivar"
         );
     }, [accion, currentID]);
 
@@ -233,9 +235,6 @@ export const useActividadesABC = () => {
 
     const onSubmitModal = handleSubmit(async (data) => {
         event.preventDefault();
-        if (!validateBeforeSave("EB5", "my_modal_3")) {
-            return;
-        }
         setisLoadingButton(true);
         accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
         let res = null
@@ -319,19 +318,57 @@ export const useActividadesABC = () => {
     };
 
     const handleBusquedaChange = async (event) => {
-        event.preventDefault;
+        event.preventDefault();
         setBusqueda((estadoPrevio) => ({
             ...estadoPrevio,
             [event.target.id]: event.target.value,
         }));
     };
 
+    const handleReactivar = async (evt, actividadesr) => {
+        evt.preventDefault();
+        const confirmed = await confirmSwal(
+          "¿Desea reactivar esta actividad?",
+          "La actividad será reactivada y volverá a estar activo.",
+          "warning",
+          "Sí, reactivar",
+          "Cancelar"
+        );
+      
+        if (confirmed) {
+          const res = await guardarActividad(session.user.token, { 
+            ...actividadesr, 
+            baja: ""
+          }, "Editar");
+          console.log("a", res);
+      
+          if (res.status) {
+            const updatedActividades = formasHorarios.map((c) =>
+              c.materia === actividadesr.materia ? { ...c, baja: "" } : c
+            );
+      
+            setActividades(updatedActividades);
+            setActividadesFiltradas(updatedActividades);
+      
+            showSwal("Reactivado", "La Actividad ha sido reactivada correctamente.", "success");
+            setReloadPage((prev) => !prev);
+          } else {
+            showSwal("Error", "No se pudo reactivar la Actividad.", "error");
+          }
+        }
+    };
+    
+
     const tableAction = (evt, actividad, accion) => {
         evt.preventDefault();
         setActividad(actividad);
         setAccion(accion);
         setCurrentId(actividad.materia);
-        showModal(true);
+        if (accion === "Reactivar") {
+            handleReactivar(evt, actividad);
+        } else {
+            showModal(true);
+        }  
     };
 
     const materia = watch("materia");
