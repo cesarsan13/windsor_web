@@ -36,7 +36,8 @@ function Menus() {
   const{
     tableColumns,
     tableBody,
-    modalBody
+    modalBody,
+    sinZebra
   } = useCatMenuUI(
     tableAction,
     register,
@@ -99,6 +100,7 @@ function Menus() {
                   isLoading={isLoading}
                   tableColumns={tableColumns}
                   tableBody={tableBody}
+                  sinZebra={sinZebra}
                 />
               ))}
           </div>
