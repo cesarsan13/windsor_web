@@ -2,6 +2,7 @@ import React from "react";
 import Inputs from "@/app/actividades/components/Inputs";
 import { ActionButton, ActionColumn } from "@/app/utils/GlobalComponents";
 import iconos from "@/app/utils/iconos";
+import { useState } from "react";
 
 export const useActividadesUI = (
     tableAction,
@@ -14,7 +15,29 @@ export const useActividadesUI = (
     accion
 ) => {
 
+  const [sinZebra, setSinZebra] = useState(false);
 
+  const handleKeyDown = (evt) => {
+    if (evt.key === "Enter") {
+        evt.preventDefault(); 
+
+        const fieldset = document.getElementById("fs_actividad");
+        const modalForm = document.getElementById("modal_form");
+        const inputs = Array.from(
+            fieldset.querySelectorAll("input[name='secuencia'], input[name='descripcion'], input[name='EB1'], input[name='EB2'], input[name='EB3'], input[name='EB4'], input[name='EB5']")
+        );
+
+        const currentIndex = inputs.indexOf(evt.target);
+        if (currentIndex !== -1) {
+            if (currentIndex < inputs.length - 1) {
+                inputs[currentIndex + 1].focus(); 
+            } else {
+                const submitButton = modalForm?.querySelector("button[type='submit']");
+                if (submitButton) submitButton.click(); 
+            }
+        }
+    }
+  };
     
 
     const itemHeaderTable = () => {
@@ -61,38 +84,38 @@ export const useActividadesUI = (
         );
     };
 
-    const tableColumns = () => {
+    const tableColumns = (data = []) => {
+      const hasBajas = data.some(item => item.baja === "*");
         return (
-            <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
+            <thead className={`sticky top-0 z-[2] ${
+              hasBajas ? "text-black" : "bg-white dark:bg-[#1d232a]"}`}
+              style={hasBajas ? { backgroundColor: "#CF2A2A" } : {}}>
             <tr>
               <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Asignatura</td>
               <td className="w-[10%]">Descripción</td>
               <th className="w-[5%]">Actividad</th>
-              <th className="w-[10%]">Bim 1</th>
-              <th className="w-[10%]">Bim 2</th>
-              <th className="w-[10%]">Bim 3</th>
-              <th className="w-[10%]">Bim 4</th>
-              <th className="w-[10%]">Bim 5</th>
+              <th className="w-[10%] hidden sm:table-cell">Bim 1</th>
+              <th className="w-[10%] hidden sm:table-cell">Bim 2</th>
+              <th className="w-[10%] hidden sm:table-cell">Bim 3</th>
+              <th className="w-[10%] hidden sm:table-cell">Bim 4</th>
+              <th className="w-[10%] hidden sm:table-cell">Bim 5</th>
               < ActionColumn
                 description={"Ver"}
                 permission={true}
               />
-              < ActionColumn
-                description={"Editar"}
-                permission={permissions.cambios}
-              />
-              < ActionColumn
-                description={"Eliminar"}
-                permission={permissions.bajas}
-              />
+              {!hasBajas && <ActionColumn description={"Editar"} permission={permissions.cambios} />}
+              {!hasBajas && <ActionColumn description={"Eliminar"} permission={permissions.bajas}/>}
+              {hasBajas && <ActionColumn description={"Reactivar"} permission={true} />}
             </tr>
           </thead>
         );
     };
 
-    const tableBody = (data) => {
+    const tableBody = (data = []) => {
+      const hasBajas = data.some(item => item.baja === "*");
+      setSinZebra(hasBajas);
         return (
-            <tbody>
+            <tbody style={{ backgroundColor: hasBajas ? "#CD5C5C" : "" }}>
             {data.map((item, index) => (
               <tr key={index}>
                 <th
@@ -106,11 +129,11 @@ export const useActividadesUI = (
                 </th>
                 <td>{item.matDescripcion}</td>
                 <td>{item.descripcion}</td>
-                <td className="text-right">{item.EB1}</td>
-                <td className="text-right">{item.EB2}</td>
-                <td className="text-right">{item.EB3}</td>
-                <td className="text-right">{item.EB4}</td>
-                <td className="text-right">{item.EB5}</td>
+                <td className="text-right hidden sm:table-cell">{item.EB1}</td>
+                <td className="text-right hidden sm:table-cell">{item.EB2}</td>
+                <td className="text-right hidden sm:table-cell">{item.EB3}</td>
+                <td className="text-right hidden sm:table-cell">{item.EB4}</td>
+                <td className="text-right hidden sm:table-cell">{item.EB5}</td>
                 <ActionButton
                   tooltip="Ver"
                   iconDark={iconos.ver}
@@ -118,20 +141,32 @@ export const useActividadesUI = (
                   onClick={(evt) => tableAction(evt, item, "Ver")}
                   permission={true}
                 />
-                <ActionButton
-                  tooltip="Editar"
-                  iconDark={iconos.editar}
-                  iconLight={iconos.editar_w}
-                  onClick={(evt) => tableAction(evt, item, "Editar")}
-                  permission={permissions.cambios}
-                />
-                <ActionButton
-                  tooltip="Eliminar"
-                  iconDark={iconos.eliminar}
-                  iconLight={iconos.eliminar_w}
-                  onClick={(evt) => tableAction(evt, item, "Eliminar")}
-                  permission={permissions.bajas}
-                />
+                {item.baja !== "*" ? (
+                  <>
+                    <ActionButton
+                      tooltip="Editar"
+                      iconDark={iconos.editar}
+                      iconLight={iconos.editar_w}
+                      onClick={(evt) => tableAction(evt, item, "Editar")}
+                      permission={permissions.cambios}
+                    />
+                    <ActionButton
+                      tooltip="Eliminar"
+                      iconDark={iconos.eliminar}
+                      iconLight={iconos.eliminar_w}
+                      onClick={(evt) => tableAction(evt, item, "Eliminar")}
+                      permission={permissions.bajas}
+                    />
+                  </>
+                ) : (
+                  <ActionButton
+                    tooltip="Reactivar"
+                    iconDark={iconos.documento}
+                    iconLight={iconos.documento_w}
+                    onClick={(evt) => tableAction(evt, item, "Reactivar")}
+                    permission={true}
+                  />
+                )}
               </tr>
             ))}
           </tbody>
@@ -141,7 +176,7 @@ export const useActividadesUI = (
     const modalBody = () => {
         return (
             <fieldset id='fs_actividad'
-            disabled={accion === "Ver" || accion === "Eliminar" ? true : false}>
+            dataTypedisabled={accion === "Ver"  || accion === "Eliminar" ? true : false }>
                 <div className='container flex flex-col space-y-5'>
                     <Inputs
                         dataType={"int"}
@@ -170,6 +205,9 @@ export const useActividadesUI = (
                         register={register}
                         message={"secuenciaRequerido"}
                         isDisabled={isDisabled}
+                        onKeyDown={(evt) => {
+                          handleKeyDown(evt);
+                        }}
                         />
                     <Inputs
                         dataType={"string"}
@@ -183,6 +221,9 @@ export const useActividadesUI = (
                         message={"Descripcion requerido"}
                         maxLenght={30}
                         errors={errors}
+                        onKeyDown={(evt) => {
+                          handleKeyDown(evt);
+                        }}
                     />
                     <Inputs
                         dataType={"int"}
@@ -195,6 +236,9 @@ export const useActividadesUI = (
                         register={register}
                         message={"EB1 Requerido"}
                         isDisabled={isDisabled}
+                        onKeyDown={(evt) => {
+                          handleKeyDown(evt);
+                        }}
                     />
                     <Inputs
                         dataType={"int"}
@@ -207,6 +251,9 @@ export const useActividadesUI = (
                         register={register}
                         message={"EB2 Requerido"}
                         isDisabled={isDisabled}
+                        onKeyDown={(evt) => {
+                          handleKeyDown(evt);
+                        }}
                     />
                     <Inputs
                         dataType={"int"}
@@ -219,6 +266,9 @@ export const useActividadesUI = (
                         register={register}
                         message={"EB3 Requerido"}
                         isDisabled={isDisabled}
+                        onKeyDown={(evt) => {
+                          handleKeyDown(evt);
+                        }}
                     />
                     <Inputs
                         dataType={"int"}
@@ -231,6 +281,9 @@ export const useActividadesUI = (
                         register={register}
                         message={"EB4 Requerido"}
                         isDisabled={isDisabled}
+                        onKeyDown={(evt) => {
+                          handleKeyDown(evt);
+                        }}
                     />
                     <Inputs
                         dataType={"int"}
@@ -243,6 +296,9 @@ export const useActividadesUI = (
                         register={register}
                         message={"EB5 Requerido"}
                         isDisabled={isDisabled}
+                        onKeyDown={(evt) => {
+                          handleKeyDown(evt);
+                        }}
                     />
                 </div>
             </fieldset>
@@ -255,6 +311,7 @@ export const useActividadesUI = (
         tableColumns,
         tableColumns,
         tableBody,
-        modalBody
+        modalBody,
+        sinZebra
     };
 };

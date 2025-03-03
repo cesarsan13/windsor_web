@@ -78,7 +78,8 @@ function Actividades() {
         itemDataTable,
         tableColumns,
         tableBody,
-        modalBody
+        modalBody,
+        sinZebra
     } = useActividadesUI(
         tableAction,
         register,
@@ -154,7 +155,7 @@ function Actividades() {
                         <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
                             Actividades
                         </h1>
-                        <h3 className="ml-auto order-3">{`Actividades Activas: ${
+                        <h3 className="ml-auto order-3 text-black dark:text-white">{`Actividades Activas: ${
                           active || 0
                         }\nActividades Inactivas: ${inactive || 0}`}</h3>
                     </div>
@@ -177,6 +178,7 @@ function Actividades() {
                                 isLoading={isLoading}
                                 tableColumns={tableColumns}
                                 tableBody={tableBody}
+                                sinZebra={sinZebra}
                             />
                         ))}
                     </div>

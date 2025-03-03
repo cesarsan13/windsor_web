@@ -22,7 +22,7 @@ export const useCommentsUI = (
 
         const fieldset = document.getElementById("fs_comentario");
         const inputs = Array.from(
-            fieldset.querySelectorAll("input[name='comentario_1'], input[name='comentario_2'], input[name='comentario_3'], input[name='generales']")
+            fieldset.querySelectorAll("input[name='comentario_1'], input[name='comentario_2'], input[name='comentario_3']") //input[name='generales']
         );
 
         const currentIndex = inputs.indexOf(evt.target);
