@@ -178,6 +178,8 @@ export const useProductosABC = () => {
         : accion === "Eliminar"
         ? `Eliminar Producto: ${currentID}`
         : `Ver Producto: ${currentID}`
+        ? `Reactivar Horario: ${currentID}`
+        : accion == "Reactivar"
     );
   }, [accion, currentID]);
 
@@ -339,12 +341,48 @@ export const useProductosABC = () => {
     }));
   };
 
+    const handleReactivar = async (evt, formaProductos) => {
+      evt.preventDefault();
+      const confirmed = await confirmSwal(
+        "¿Desea reactivar este prodcuto?",
+        "El producto será reactivado y volverá a estar activo.",
+        "warning",
+        "Sí, reactivar",
+        "Cancelar"
+      );
+    
+      if (confirmed) {
+        const res = await guardarProductos(session.user.token, { 
+          ...formaProductos, 
+          baja: ""
+        }, "Editar");
+    
+        if (res.status) {
+          const updatedProductos = formasProductos.map((c) =>
+            c.numero === formaProductos.numero ? { ...c, baja: "" } : c
+          );
+    
+          setFormasProductos(updatedProductos);
+          setFormaProductosFiltrados(updatedProductos);
+    
+          showSwal("Reactivado", "El producto ha sido reactivado correctamente.", "success");
+          setReloadPage((prev) => !prev);
+        } else {
+          showSwal("Error", "No se pudo reactivar el producto.", "error");
+        }
+      }
+    };
+
   const tableAction = (evt, formaProductos, accion) => {
     evt.preventDefault();
     setFormaProductos(formaProductos);
     setAccion(accion);
     setCurrentId(formaProductos.numero);
-    showModal(true);
+    if (accion === "Reactivar") {
+      handleReactivar(evt, formaProductos);
+    } else {
+      showModal(true);
+    }  
   };
 
   return {

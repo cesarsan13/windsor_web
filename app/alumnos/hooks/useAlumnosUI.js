@@ -33,10 +33,35 @@ export const useAlumnosUI = (
     const nameInputs4 = ["cond_2", "cond_2_nombre"];
     const webcamRef = useRef(null);
     const [isCameraOn, setIsCameraOn] = useState(false);
+  const [sinZebra, setSinZebra] = useState(false);
 
     const handleTabs = (num) => {
         setActiveTab(num);
     };
+
+    const handleKeyDown = (evt) => {
+        if (evt.key === "Enter") {
+            evt.preventDefault(); 
+    
+            const fieldset = document.getElementById("fs_alumnos");
+            if (!fieldset) return;
+    
+            // Seleccionar todos los inputs dentro del fieldset (excepto los de tipo checkbox, radio y button)
+            const inputs = Array.from(fieldset.querySelectorAll(
+                "input:not([type='checkbox']):not([type='radio']):not([type='button']):not([type='date']), textarea"
+            ));    
+            const currentIndex = inputs.indexOf(evt.target);
+            if (currentIndex !== -1) {
+                if (currentIndex < inputs.length - 1) {
+                    inputs[currentIndex + 1].focus(); 
+                } else {
+                    const submitButton = fieldset.querySelector("button[type='submit']");
+                    if (submitButton) submitButton.click(); 
+                }
+            }
+        }
+    };
+
 const itemHeaderTable = () => {
     return (
     <>
@@ -233,36 +258,36 @@ const itemDataTable = (item) => {
     );
 };
 
-const tableColumns = () => {
+const tableColumns = (data = []) => {
+    const hasBajas = data.some(item => item.baja === "*");
     return (
-        <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
-        <tr>
+        <thead className={`sticky top-0 z-[2] ${
+            hasBajas ? "text-black" : "bg-white dark:bg-[#1d232a]"}`}
+            style={hasBajas ? { backgroundColor: "#CF2A2A" } : {}}>
+                <tr>
         <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
         <td className="w-[30%] pt-[.10rem] pb-[.10rem]">Nombre</td>
-        <td className="w:-[15%] pt-[.10rem] pb-[.10rem]">Grado</td>
-        <td className="w:-[15%] pt-[.10rem] pb-[.10rem]">Papá</td>
-        <td className="w:-[15%] pt-[.10rem] pb-[.10rem]">Mamá</td>
-        <td className="w:-[20%] pt-[.10rem] pb-[.10rem]">Contacto</td>
+        <td className="hidden sm:table-cell w:-[15%] pt-[.10rem] pb-[.10rem]">Grado</td>
+        <td className="hidden sm:table-cell w:-[15%] pt-[.10rem] pb-[.10rem]">Papá</td>
+        <td className="hidden sm:table-cell w:-[15%] pt-[.10rem] pb-[.10rem]">Mamá</td>
+        <td className="hidden sm:table-cell w:-[20%] pt-[.10rem] pb-[.10rem]">Contacto</td>
         < ActionColumn
             description={"Ver"}
             permission={true}
         />
-        < ActionColumn
-            description={"Editar"}
-            permission={permissions.cambios}
-        />
-        < ActionColumn
-            description={"Eliminar"}
-            permission={permissions.bajas}
-        />
-        </tr>
+        {!hasBajas && <ActionColumn description={"Editar"} permission={permissions.cambios} />}
+        {!hasBajas && <ActionColumn description={"Eliminar"} permission={permissions.bajas}/>}
+        {hasBajas && <ActionColumn description={"Reactivar"} permission={true} />}
+    </tr>
     </thead>
     );
 };
 
-const tableBody = (data) => {
+const tableBody = (data = []) => {
+    const hasBajas = data.some(item => item.baja === "*");
+    setSinZebra(hasBajas);
     return (
-    <tbody>
+        <tbody style={{ backgroundColor: hasBajas ? "#CD5C5C" : "" }}>
         {data.map((item) => (
         <tr key={item.numero} className="hover:cursor-pointer">
             <th
@@ -277,15 +302,15 @@ const tableBody = (data) => {
             <td className="w-[30%] max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap pt-[.10rem] pb-[.10rem]">
             {`${item.a_nombre} ${item.a_paterno} ${item.a_materno}`}
             </td>
-            <td className="w-[15%] pt-[.10rem] pb-[.10rem] truncate">
+            <td className="hidden sm:table-cell w-[15%] pt-[.10rem] pb-[.10rem] truncate">
             {item.horario_1_nombre}
             </td>
-            <td className="w-[15%] pt-[.10rem] pb-[.10rem] truncate">
+            <td className="hidden sm:table-cell w-[15%] pt-[.10rem] pb-[.10rem] truncate">
             {item.nom_padre}
-            </td><td className="w-[15%] pt-[.10rem] pb-[.10rem] truncate">
+            </td><td className="hidden sm:table-cell w-[15%] pt-[.10rem] pb-[.10rem] truncate">
             {item.nom_madre}
             </td>
-            <td className="w-[20%] pt-[.10rem] pb-[.10rem]">
+            <td className="hidden sm:table-cell w-[20%] pt-[.10rem] pb-[.10rem]">
             {item.celular}
             </td>
             <ActionButton
@@ -295,26 +320,37 @@ const tableBody = (data) => {
             onClick={(evt) => tableAction(evt, item, "Ver")}
             permission={true}
             />
-            <ActionButton
-            tooltip="Editar"
-            iconDark={iconos.editar}
-            iconLight={iconos.editar_w}
-            onClick={(evt) => tableAction(evt, item, "Editar")}
-            permission={permissions.cambios}
-            />
-            <ActionButton
-            tooltip="Eliminar"
-            iconDark={iconos.eliminar}
-            iconLight={iconos.eliminar_w}
-            onClick={(evt) => tableAction(evt, item, "Eliminar")}
-            permission={permissions.bajas}
-            />
-        </tr>
-        ))}
-    </tbody>
-    );
-};
-
+            {item.baja !== "*" ? (
+                    <>
+                        <ActionButton
+                        tooltip="Editar"
+                        iconDark={iconos.editar}
+                        iconLight={iconos.editar_w}
+                        onClick={(evt) => tableAction(evt, item, "Editar")}
+                        permission={permissions.cambios}
+                        />
+                        <ActionButton
+                        tooltip="Eliminar"
+                        iconDark={iconos.eliminar}
+                        iconLight={iconos.eliminar_w}
+                        onClick={(evt) => tableAction(evt, item, "Eliminar")}
+                        permission={permissions.bajas}
+                        />
+                    </>
+                    ) : (
+                    <ActionButton
+                        tooltip="Reactivar"
+                        iconDark={iconos.documento}
+                        iconLight={iconos.documento_w}
+                        onClick={(evt) => tableAction(evt, item, "Reactivar")}
+                        permission={true}
+                    />
+                    )}
+                </tr>
+                ))}
+            </tbody>
+        );
+    };
 const modalBody = () => {
     return (
         <fieldset id="fs_alumnos"
@@ -365,6 +401,9 @@ const modalBody = () => {
                 maxLenght={50}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"string"}
@@ -381,6 +420,9 @@ const modalBody = () => {
                 maxLenght={50}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"string"}
@@ -397,6 +439,9 @@ const modalBody = () => {
                 maxLenght={50}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"string"}
@@ -505,6 +550,9 @@ const modalBody = () => {
                 maxLenght={50}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"int"}
@@ -521,6 +569,9 @@ const modalBody = () => {
                 maxLenght={15}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"int"}
@@ -537,6 +588,9 @@ const modalBody = () => {
                 maxLenght={15}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"int"}
@@ -553,6 +607,9 @@ const modalBody = () => {
                 maxLenght={15}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"int"}
@@ -569,6 +626,9 @@ const modalBody = () => {
                 maxLenght={255}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"int"}
@@ -585,6 +645,9 @@ const modalBody = () => {
                 maxLenght={20}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             </div>
         </div>
@@ -619,6 +682,9 @@ const modalBody = () => {
                 maxLenght={255}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"string"}
@@ -635,6 +701,9 @@ const modalBody = () => {
                 maxLenght={100}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"string"}
@@ -651,6 +720,9 @@ const modalBody = () => {
                 maxLenght={100}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"string"}
@@ -667,6 +739,9 @@ const modalBody = () => {
                 maxLenght={100}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"string"}
@@ -683,6 +758,9 @@ const modalBody = () => {
                 maxLenght={6}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"string"}
@@ -833,6 +911,9 @@ const modalBody = () => {
                 maxLenght={50}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"double"}
@@ -849,6 +930,9 @@ const modalBody = () => {
                 maxLenght={12}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             </div>
             <BuscarCat
@@ -912,6 +996,9 @@ const modalBody = () => {
                 maxLenght={50}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"int"}
@@ -928,6 +1015,9 @@ const modalBody = () => {
                 maxLenght={15}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"int"}
@@ -944,6 +1034,9 @@ const modalBody = () => {
                 maxLenght={15}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"int"}
@@ -960,6 +1053,9 @@ const modalBody = () => {
                 maxLenght={15}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"string"}
@@ -976,6 +1072,9 @@ const modalBody = () => {
                 maxLenght={20}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"string"}
@@ -992,6 +1091,9 @@ const modalBody = () => {
                 maxLenght={50}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"string"}
@@ -1008,6 +1110,9 @@ const modalBody = () => {
                 maxLenght={100}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"string"}
@@ -1024,6 +1129,9 @@ const modalBody = () => {
                 maxLenght={50}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"int"}
@@ -1040,6 +1148,9 @@ const modalBody = () => {
                 maxLenght={15}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"int"}
@@ -1056,6 +1167,9 @@ const modalBody = () => {
                 maxLenght={15}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             </div>
         </div>
@@ -1090,6 +1204,9 @@ const modalBody = () => {
                 maxLenght={30}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"string"}
@@ -1110,6 +1227,9 @@ const modalBody = () => {
                 /^([A-ZÑ&]{3,4})\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])[A-Z\d]{2}[A-Z\d]{1}$/i
                 }
                 message_pattern={"Formato de RFC Inválido"}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"string"}
@@ -1126,6 +1246,9 @@ const modalBody = () => {
                 maxLenght={255}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"string"}
@@ -1142,6 +1265,9 @@ const modalBody = () => {
                 maxLenght={100}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"string"}
@@ -1158,6 +1284,9 @@ const modalBody = () => {
                 maxLenght={100}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"string"}
@@ -1174,6 +1303,9 @@ const modalBody = () => {
                 maxLenght={100}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"int"}
@@ -1190,6 +1322,9 @@ const modalBody = () => {
                 maxLenght={6}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             </div>
         </div>
@@ -1224,6 +1359,9 @@ const modalBody = () => {
                 maxLenght={100}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"int"}
@@ -1240,6 +1378,9 @@ const modalBody = () => {
                 maxLenght={15}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"int"}
@@ -1256,6 +1397,9 @@ const modalBody = () => {
                 maxLenght={15}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"int"}
@@ -1272,6 +1416,9 @@ const modalBody = () => {
                 maxLenght={15}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"string"}
@@ -1288,6 +1435,9 @@ const modalBody = () => {
                 maxLenght={100}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"int"}
@@ -1304,6 +1454,9 @@ const modalBody = () => {
                 maxLenght={15}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"int"}
@@ -1320,6 +1473,9 @@ const modalBody = () => {
                 maxLenght={15}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"int"}
@@ -1336,6 +1492,9 @@ const modalBody = () => {
                 maxLenght={15}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"string"}
@@ -1352,6 +1511,9 @@ const modalBody = () => {
                 maxLenght={100}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"int"}
@@ -1368,6 +1530,9 @@ const modalBody = () => {
                 maxLenght={15}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"int"}
@@ -1384,6 +1549,9 @@ const modalBody = () => {
                 maxLenght={15}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             <Inputs
                 dataType={"int"}
@@ -1400,6 +1568,9 @@ const modalBody = () => {
                 maxLenght={15}
                 isDisabled={isDisabled}
                 handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                }}
             />
             </div>
         </div>
@@ -1414,6 +1585,7 @@ return {
     tableColumns,
     tableBody,
     modalBody,
-    alumno
+    alumno,
+    sinZebra
 };
 };
