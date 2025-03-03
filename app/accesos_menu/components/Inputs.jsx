@@ -16,6 +16,7 @@ function Inputs({
   isDisabled,
   handleBlur,
   arreglos,
+  onKeyDown
 }) {
 
   if (type === "select") {
@@ -86,6 +87,7 @@ function Inputs({
                 onBlur: (event) => handleBlur(event, dataType),
               }))}
             disabled={isDisabled}
+            onKeyDown={onKeyDown}
           />
         </label>
         {errors[name] && (

@@ -284,8 +284,6 @@ export const useProfesoresABC = () => {
         res = await guardaProfesor(session.user.token, data, accion);
         if (res.status) {
           if (accion === "Alta") {
-            data.numero = res.data;
-            setCurrentId(data.numero);
             const nuevaProfesor = { currentID, ...data };
             setProfesores([...profesores, nuevaProfesor]);
             if (!bajas) {

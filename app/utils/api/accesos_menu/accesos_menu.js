@@ -13,24 +13,7 @@ export const getMenus = async (token, baja) => {
   return resJson.data;
 };
 
-export const siguiente = async (token) => {
-  const res = await fetch(
-    `${process.env.DOMAIN_API}api/accesos-menu/siguiente`,
-    {
-      headers: new Headers({
-        Authorization: "Bearer " + token,
-        xescuela: localStorage.getItem("xescuela"),
-      }),
-    }
-  );
-  const resJson = await res.json();
-  return resJson.data;
-};
-
 export const guardaMenu = async (token, accion, data) => {
-  if (!data.numero) {
-    throw new Error("Número no definido");
-  }
   let url = "";
   let method = "";
   if (accion === "Alta") {

@@ -312,7 +312,7 @@ export const useCatMenuABC = () => {
     
         if (res.status) {
           const updatedmenus = menus.map((c) =>
-            c.numero === menus.numero ? { ...c, contraseña:"", baja: "" } : c
+            c.numero === menus.numero ? { ...c, baja: "" } : c
           );
     
           setMenus(updatedmenus);
