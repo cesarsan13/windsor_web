@@ -392,7 +392,6 @@ export const useProfesoresABC = () => {
       };
 
     const tableAction = (evt, profesor, accion) => {
-      console.log("accion", accion);
         evt.preventDefault();
         setProfesor(profesor);
         setAccion(accion);

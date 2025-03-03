@@ -74,7 +74,8 @@ function FormFact() {
     itemDataTable,
     tableColumns,
     tableBody,
-    modalBody
+    modalBody,
+    sinZebra
   } = useFormFactUI(
     tableAction,
     register,
@@ -136,7 +137,7 @@ function FormFact() {
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-16">
               Formas Facturas
             </h1>
-            <h3 className="ml-auto order-3">{`Formas activas: ${active || 0}\nFormas inactivas: ${inactive || 0}`}</h3>
+            <h3 className="ml-auto order-3 text-black dark:text-white">{`Formas activas: ${active || 0}\nFormas inactivas: ${inactive || 0}`}</h3>
           </div>
         </div>
 
@@ -168,6 +169,7 @@ function FormFact() {
                 isLoading={isLoading}
                 tableColumns={tableColumns}
                 tableBody={tableBody}
+                sinZebra={sinZebra}
               />
             )}
           </div>
