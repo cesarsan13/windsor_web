@@ -221,7 +221,7 @@ export const useCatMenuABC = () => {
             return;
           }
         }
-        res = await guardarMenus(session.user.token, accion, data);
+        res = await guardarMenus(session.user.token, data, accion);
         if (res.status) {
           if (accion === "Alta") {
             data.numero = res.data;
@@ -307,7 +307,6 @@ export const useCatMenuABC = () => {
       if (confirmed) {
         const res = await guardarMenus(session.user.token, { 
           ...menusr, 
-          contraseña: "",
           baja: ""
         }, "Editar");
     

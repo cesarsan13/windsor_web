@@ -24,7 +24,7 @@ export const siguiente = async (token) => {
     const resJson = await res.json();
     return resJson.data;
 };
-export const guardarMenus = async (token, accion, data) => {
+export const guardarMenus = async (token, data, accion) => {
     let url = "";
     let method = '';
     if (accion === "Alta") {
@@ -32,17 +32,16 @@ export const guardarMenus = async (token, accion, data) => {
         method = 'POST';
         data.baja = "";
     }
-    if (accion === "Eliminar" || accion === "Editar") {
+    if (accion === "Eliminar" || accion === "Editar" || accion ===  "Reactivar") {
         if (accion === "Eliminar") {
             data.baja = "*";
         } else {
             data.baja = "";
         }
         url = `${process.env.DOMAIN_API}api/menu/update`;
-        method = 'PUT'
+        method = 'POST'
     }
-    // console.log('URL', url);
-    // console.log('metodo', method);
+
     const res = await fetch(`${url}`, {
         method: method,
         body: JSON.stringify({

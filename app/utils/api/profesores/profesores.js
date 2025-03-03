@@ -168,9 +168,6 @@ export const getContraseñaProfe = async (token, grupo, materia) => {
 };
 
 export const storeBatchProfesores = async (token, data) => {
-    
-    console.log("data", data);
-
     let url = `${process.env.DOMAIN_API}api/profesores/Batch`;
     const res = await fetch(url, {
       method: "POST",
