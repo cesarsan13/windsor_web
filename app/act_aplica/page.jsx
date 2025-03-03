@@ -35,7 +35,7 @@ function Act_Aplica() {
             setisLoading(false)
         }
         fetchData()
-    }, [session, status])
+    }, [ status])
     const {
         register,
         handleSubmit,

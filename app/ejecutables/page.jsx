@@ -16,7 +16,7 @@ export default function Ejecutables() {
   const [ejecutables, setEjecutables] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   const [loadingButton, setLoadingButton] = useState(null);
-  
+
   useEffect(() => {
     const fetchExe = async () => {
       const { token } = session.user;
@@ -27,7 +27,7 @@ export default function Ejecutables() {
       return;
     }
     fetchExe();
-  }, [session, status]);
+  }, [status]);
 
   const ejecutarExe = async (event, item) => {
     event.preventDefault();

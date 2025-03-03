@@ -11,6 +11,28 @@ export const useAsignaturasUI = (
     errors,
     accion
 ) => {
+
+  const handleKeyDown = (evt) => {
+    if (evt.key === "Enter") {
+        evt.preventDefault(); 
+
+        const fieldset = document.getElementById("fs_asignaturas");
+        const inputs = Array.from(
+            fieldset.querySelectorAll("input[name='descripcion'], input[name='lenguaje'], input[name='caso_evaluar'], input[name='area'], input[name='orden'], input[name='evaluaciones'], input[name='actividad']")
+        );
+
+        const currentIndex = inputs.indexOf(evt.target);
+        if (currentIndex !== -1) {
+            if (currentIndex < inputs.length - 1) {
+                inputs[currentIndex + 1].focus(); 
+            } else {
+                const submitButton = fieldset?.querySelector("button[type='submit']");
+                if (submitButton) submitButton.click(); 
+            }
+        }
+    }
+  };
+
     const itemHeaderTable = () => {
       return (
         <>
@@ -51,10 +73,14 @@ export const useAsignaturasUI = (
       );
     };
 
-    const tableColumns = () => {
+    const tableColumns = (data = []) => {
+      const hasBajas = data.some(item => item.baja === "*");
         return (
-            <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
-            <tr>
+          <thead   className={`sticky top-0 z-[2] ${
+            hasBajas ? "text-black" : "bg-white dark:bg-[#1d232a]"
+          }`}
+          style={hasBajas ? { backgroundColor: "#CF2A2A" } : {}}>            
+          <tr>
               <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Numero</td>
               <td className="w-[30%]">Asignatura</td>
               <td className="w-[5%]">Lenguaje</td>
@@ -62,26 +88,19 @@ export const useAsignaturasUI = (
               <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Area</td>
               <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Orden</td>
               <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Evaluaciones</td>
-              < ActionColumn
-                description={"Ver"}
-                permission={true}
-              />
-              < ActionColumn
-                description={"Editar"}
-                permission={permissions.cambios}
-              />
-              < ActionColumn
-                description={"Eliminar"}
-                permission={permissions.bajas}
-              />
-            </tr>
+              <ActionColumn description={"Ver"} permission={true} />
+              {!hasBajas && <ActionColumn description={"Editar"} permission={permissions.cambios} />}
+              {!hasBajas && <ActionColumn description={"Eliminar"} permission={permissions.bajas}/>}
+              {hasBajas && <ActionColumn description={"Reactivar"} permission={true} />}
+        </tr>
           </thead>
         );
     };
 
-    const tableBody = (data) => {
+    const tableBody = (data = []) => {
+      const hasBajas = data.some(item => item.baja === "*");
         return (
-            <tbody>
+          <tbody style={{ backgroundColor: hasBajas ? "#CD5C5C" : "" }}>
             {data.map((item) => (
               <tr key={item.numero} className="hover:cursor-pointer">
                 <th
@@ -114,6 +133,8 @@ export const useAsignaturasUI = (
                   onClick={(evt) => tableAction(evt, item, "Ver")}
                   permission={true}
                 />
+                {item.baja !== "*" ? (
+              <>
                 <ActionButton
                   tooltip="Editar"
                   iconDark={iconos.editar}
@@ -128,11 +149,21 @@ export const useAsignaturasUI = (
                   onClick={(evt) => tableAction(evt, item, "Eliminar")}
                   permission={permissions.bajas}
                 />
-              </tr>
-            ))}
-          </tbody>
-        );
-    };
+              </>
+            ) : (
+              <ActionButton
+                tooltip="Reactivar"
+                iconDark={iconos.documento}
+                iconLight={iconos.documento_w}
+                onClick={(evt) => tableAction(evt, item, "Reactivar")}
+                permission={true}
+              />
+            )}
+          </tr>
+        ))}
+      </tbody>
+    );
+  };
 
     const modalBody = () => {
         return (
@@ -155,12 +186,15 @@ export const useAsignaturasUI = (
                   maxLenght={100}
                   isDisabled={isDisabled}
                   //handleBlur={handleBlur}
+                  onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                  }}
                 />
               </div>
               <div className="flex flex-col w-full">
                 <Inputs
                   dataType={"string"}
-                  name={"lenguaje"}
+                  name={"descripcion"}
                   tamañolabel={"w-full"}
                   className={`fyo8m-select p-1.5 grow `} //${isDisabled ? "bg-gray-200 text-gray-500 cursor-not-allowed" : "bg-white"}
                   Titulo={"Lenguaje: "}
@@ -177,6 +211,9 @@ export const useAsignaturasUI = (
                     { id: "ESPAÑOL", descripcion: "ESPAÑOL" },
                     { id: "INGLÉS", descripcion: "INGLÉS" },
                   ]}
+                  onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                  }}
                 />
               </div>
               <div className="flex flex-col w-full">
@@ -199,6 +236,9 @@ export const useAsignaturasUI = (
                     { id: "CALIFICACIÓN", descripcion: "CALIFICACIÓN" },
                     { id: "OTRO", descripcion: "OTRO" },
                   ]}
+                  onKeyDown={(evt) => {
+                    handleKeyDown(evt);
+                  }}
                 />
               </div>
               <div className="flex flex-row w-full gap-x-5">
@@ -224,6 +264,9 @@ export const useAsignaturasUI = (
                       { id: 3, descripcion: 3 },
                       { id: 4, descripcion: 4 },
                     ]}
+                    onKeyDown={(evt) => {
+                      handleKeyDown(evt);
+                    }}
                   />
                 </div>
                 <div className="flex flex-col w-3/6 gap-x-5">
@@ -241,6 +284,9 @@ export const useAsignaturasUI = (
                     message={"Orden requerido"}
                     isDisabled={isDisabled}
                     //handleBlur={handleBlurOut}
+                    onKeyDown={(evt) => {
+                      handleKeyDown(evt);
+                    }}
                   />
                 </div>
 
@@ -262,6 +308,9 @@ export const useAsignaturasUI = (
                     message={"Evaluaciones requerida"}
                     isDisabled={isDisabled}
                     //handleBlur={handleBlurOut}
+                    onKeyDown={(evt) => {
+                      handleKeyDown(evt);
+                    }}
                   />
                 </div>
                 <div className="flex flex-col max-[420px]:w-full w-3/6">

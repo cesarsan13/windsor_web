@@ -46,7 +46,12 @@ function AlumnosPorClase() {
       const { token, permissions } = session.user;
       const es_admin = session.user.es_admin;
       const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
-      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menu_seleccionado)
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menu_seleccionado
+      );
       setPermissions(permisos);
       //const data = await getreportAlumn(
       //  token,
@@ -58,7 +63,7 @@ function AlumnosPorClase() {
       //setAlumnosFiltrados(data);
     };
     fetchData();
-  }, [session, status, bajas, selectedOption, alumno1V, alumno2V]);
+  }, [status, bajas, selectedOption, alumno1V, alumno2V]);
 
   const ImprimePDF = async () => {
     const configuracion = {
@@ -239,7 +244,12 @@ function AlumnosPorClase() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading} permiso_imprime = {permissions.impresion}/>
+                <Acciones
+                  home={home}
+                  Ver={handleVerClick}
+                  isLoading={animateLoading}
+                  permiso_imprime={permissions.impresion}
+                />
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Relación General de Alumnos
@@ -249,38 +259,40 @@ function AlumnosPorClase() {
         </div>
         <div className="w-full py-3 flex flex-col gap-y-4">
           {/* Fila del formulario de la pagina */}
-          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4  w-1/2 mx-auto ">{/*min-[1920px]:w-1/4*/}
-              <div className="flex min-[1920px]:flex-row flex-col min-[1920px]:space-x-4">
-                <BuscarCat
-                  table="alumnos"
-                  fieldsToShow={["numero", "nombre_completo"]}
-                  nameInput={["numero", "nombre_completo"]}
-                  titulo={"Alumno Inicio: "}
-                  setItem={setAlumnos1}
-                  token={session.user.token}
-                  modalId="modal_alumnos1"
-                  alignRight={true}
-                  inputWidths={{ first: "100px", second: "300px" }}
-                  descClassName="md:mt-0 w-full"
-                  contClassName="flex flex-row md:flex-row justify-start gap-2 sm:flex-row w-full"
-                />
-                <BuscarCat
-                  table="alumnos"
-                  fieldsToShow={["numero", "nombre_completo"]}
-                  nameInput={["numero", "nombre_completo"]}
-                  titulo={"Alumno Fin:"}
-                  setItem={setAlumnos2}
-                  token={session.user.token}
-                  modalId="modal_alumnos2"
-                  alignRight={true}
-                  inputWidths={{ first: "100px", second: "300px" }}
-                  descClassName="md:mt-0 w-full"
-                  contClassName="flex flex-row md:flex-row justify-start gap-2 sm:flex-row w-full"
-                />
-              </div>
+          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4  w-1/2 mx-auto ">
+            {/*min-[1920px]:w-1/4*/}
+            <div className="flex min-[1920px]:flex-row flex-col min-[1920px]:space-x-4">
+              <BuscarCat
+                table="alumnos"
+                fieldsToShow={["numero", "nombre_completo"]}
+                nameInput={["numero", "nombre_completo"]}
+                titulo={"Alumno Inicio: "}
+                setItem={setAlumnos1}
+                token={session.user.token}
+                modalId="modal_alumnos1"
+                alignRight={true}
+                inputWidths={{ first: "100px", second: "300px" }}
+                descClassName="md:mt-0 w-full"
+                contClassName="flex flex-row md:flex-row justify-start gap-2 sm:flex-row w-full"
+              />
+              <BuscarCat
+                table="alumnos"
+                fieldsToShow={["numero", "nombre_completo"]}
+                nameInput={["numero", "nombre_completo"]}
+                titulo={"Alumno Fin:"}
+                setItem={setAlumnos2}
+                token={session.user.token}
+                modalId="modal_alumnos2"
+                alignRight={true}
+                inputWidths={{ first: "100px", second: "300px" }}
+                descClassName="md:mt-0 w-full"
+                contClassName="flex flex-row md:flex-row justify-start gap-2 sm:flex-row w-full"
+              />
+            </div>
           </div>
           <div className="flex flex-row">
-            <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 w-1/2 mx-auto ">{/*min-[1920px]:w-1/4*/}
+            <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 w-1/2 mx-auto ">
+              {/*min-[1920px]:w-1/4*/}
               <div className="flex space-x-4">
                 <label className="text-black dark:text-white flex flex-row md:flex-row space-x-4">
                   <span className="text-black dark:text-white flex items-center gap-3">

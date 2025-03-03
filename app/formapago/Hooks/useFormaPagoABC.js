@@ -176,6 +176,8 @@ export const useFormaPagoABC = () => {
             : accion === "Eliminar"
             ? `Eliminar Forma de Pago: ${currentID}`
             : `Ver Forma de Pago: ${currentID}`
+            ? `Reactivar Comentario: ${currentID}`
+            : accion == "Reactivar"
         );
     }, [accion, currentID]);
 
@@ -314,12 +316,48 @@ export const useFormaPagoABC = () => {
         }));
     };
 
+      const handleReactivar = async (evt, formaPago) => {
+        evt.preventDefault();
+        const confirmed = await confirmSwal(
+          "¿Desea reactivar esta forma de pago?",
+          "La forma de pago será reactivada y volverá a estar activa.",
+          "warning",
+          "Sí, reactivar",
+          "Cancelar"
+        );
+      
+        if (confirmed) {
+          const res = await guardaFormaPAgo(session.user.token, { 
+            ...formaPago, 
+            baja: ""
+          }, "Editar");
+      
+          if (res.status) {
+            const updatedFormasPago = formasPago.map((c) =>
+              c.numero === formaPago.numero ? { ...c, baja: "" } : c
+            );
+      
+            setFormasPago(updatedFormasPago);
+            setFormaPagosFiltrados(updatedFormasPago);
+      
+            showSwal("Reactivado", "La forma de pago ha sido reactivada correctamente.", "success");
+            setReloadPage((prev) => !prev);
+          } else {
+            showSwal("Error", "No se pudo reactivar la forma de pago.", "error");
+          }
+        }
+      };
+
     const tableAction = (evt, formaPago, accion) => {
         evt.preventDefault();
         setFormaPago(formaPago);
         setAccion(accion);
         setCurrentId(formaPago.numero);
-        showModal(true);
+        if (accion === "Reactivar") {
+          handleReactivar(evt, formaPago);
+        } else {
+          showModal(true);
+        }  
     };
     
     return{

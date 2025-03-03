@@ -26,7 +26,6 @@ export const useCommentsUI = (
         );
 
         const currentIndex = inputs.indexOf(evt.target);
-        console.log("a",currentIndex);
         if (currentIndex !== -1) {
             if (currentIndex < inputs.length - 1) {
                 inputs[currentIndex + 1].focus(); 

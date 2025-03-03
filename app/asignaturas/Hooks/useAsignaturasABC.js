@@ -186,6 +186,8 @@ export const useAsignaturasABC = () => {
             : accion === "Eliminar"
             ? `Eliminar Asignatura: ${currentID}`
             : `Ver Asignatura: ${currentID}`
+            ? `Reactivar Asignatura: ${currentID}`
+            : accion == "Reactivar"
         );
       }, [accion, currentID]);
 
@@ -320,7 +322,7 @@ export const useAsignaturasABC = () => {
           showSwal(res.alert_title, res.alert_text, "error", "my_modal_3");
         }
         if (accion === "Alta" || accion === "Eliminar") {
-            setReloadPage(!setReloadPage);
+            setReloadPage(!reload_page);
           await fetchAsignaturaStatus(false, inactiveActive, busqueda);
         }
         setisLoadingButton(false);
@@ -354,13 +356,49 @@ export const useAsignaturasABC = () => {
         }));
     };
 
+      const handleReactivar = async (evt, formaAsignaturas) => {
+        evt.preventDefault();
+        const confirmed = await confirmSwal(
+          "¿Desea reactivar esta asignatura?",
+          "La asignatura será reactivada y volverá a estar activa.",
+          "warning",
+          "Sí, reactivar",
+          "Cancelar"
+        );
+      
+        if (confirmed) {
+          const res = await guardarAsinatura(session.user.token, { 
+            ...formaAsignaturas, 
+            baja: ""
+          }, "Editar", formaAsignaturas.numero);
+      
+          if (res.status) {
+            const updatedAsignaturas = asignaturas.map((c) =>
+              c.numero === formaAsignaturas.numero ? { ...c, baja: "" } : c
+            );
+      
+            setAsignaturas(updatedAsignaturas);
+            setAsignaturasFiltrados(updatedAsignaturas);
+      
+            showSwal("Reactivado", "La asignatura ha sido reactivada correctamente.", "success");
+            setReloadPage((prev) => !prev);
+          } else {
+            showSwal("Error", "No se pudo reactivar la asignatura.", "error");
+          }
+        }
+      };
+
     const tableAction = (evt, asignatura, accion) => {
         evt.preventDefault();
         asignatura.actividad = snToBool(asignatura.actividad);
         setAsignatura(asignatura);
         setAccion(accion);
         setCurrentId(asignatura.numero);
-        showModal(true);
+        if (accion === "Reactivar") {
+          handleReactivar(evt, asignatura);
+        } else {
+          showModal(true);
+        }  
     };
 
     return{

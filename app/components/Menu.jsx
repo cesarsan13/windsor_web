@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation"; // Para redirección
 import { useSession } from "next-auth/react";
 import { getMenus } from "@/app/utils/api/accesos_menu/accesos_menu";
-import { getSubMenus } from "../utils/api/sub_menus/sub_menus";
+import { getSubMenusApi } from "@/app/utils/api/sub_menus/sub_menus";
 
 function Menu({ vertical, toogle }) {
   const { data: session, status } = useSession();
@@ -23,7 +23,7 @@ function Menu({ vertical, toogle }) {
       const { token } = session.user;
       const [fetchedMenus, subMenus] = await Promise.all([
         getMenus(token, false),
-        getSubMenus(token, false),
+        getSubMenusApi(token, false),
       ]);
       setMenus(fetchedMenus);
       setSubMenus(subMenus);
@@ -33,9 +33,8 @@ function Menu({ vertical, toogle }) {
       }, {});
       setIsOpen(initialOpenState);
     };
-
     fetchMenus();
-  }, [session, status]);
+  }, [status]);
 
   const toggleMenu = (menu) => {
     setIsOpen((prev) => {

@@ -1,4 +1,4 @@
-import {confirmSwal, showSwal} from "@/app/utils/alerts";
+import { confirmSwal, showSwal } from "@/app/utils/alerts";
 import { useEffect } from "react";
 
 export const useEscapeWarningModal = (openModal, showModal) => {
@@ -30,8 +30,8 @@ export const useEscapeWarningModal = (openModal, showModal) => {
 export const validateBeforeSave = (inputName, modalId) => {
   const input = document.querySelector(`input[name='${inputName}']`);
   if (input && input.value.trim() === "") {
-      showSwal("Error", "Complete todos los campos requeridos", "error", modalId);
-      return false;
+    showSwal("Error", "Complete todos los campos requeridos", "error", modalId);
+    return false;
   }
   return true;
 };
@@ -49,37 +49,36 @@ export const debounce = (func, delay) => {
 };
 
 export const openFileSelector = () => {
-    if (inputfileref.current) {
-      inputfileref.current.click(); // Simula el clic en el input
-    }
-  };
+  if (inputfileref.current) {
+    inputfileref.current.click(); // Simula el clic en el input
+  }
+};
 
 export const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFile(selectedFile);
-        setcondicion(true);
-        setCapturedImage(reader.result); // La imagen en formato Base64
-      };
-      reader.readAsDataURL(selectedFile); // Convierte el archivo a Base64
-    }
-  };
-
+  const selectedFile = e.target.files[0];
+  if (selectedFile) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFile(selectedFile);
+      setcondicion(true);
+      setCapturedImage(reader.result); // La imagen en formato Base64
+    };
+    reader.readAsDataURL(selectedFile); // Convierte el archivo a Base64
+  }
+};
 
 export const handleBlur = (evt, datatype) => {
-    if (evt.target.value === "") return;
-    datatype === "int"
-      ? setAlumno((alumno) => ({
-          ...alumno,
-          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-        }))
-      : setAlumno((alumno) => ({
-          ...alumno,
-          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-        }));
-  };
+  if (evt.target.value === "") return;
+  datatype === "int"
+    ? setAlumno((alumno) => ({
+        ...alumno,
+        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+      }))
+    : setAlumno((alumno) => ({
+        ...alumno,
+        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+      }));
+};
 
 export const soloEnteros = (event) => {
   const key = event.key;
@@ -288,7 +287,6 @@ export const formatNumberDecimalOne = (num) => {
   });
 };
 
-
 export const Elimina_Comas = (data) => {
   const convertir = (value) => {
     let valueConvertido = value;
@@ -415,47 +413,52 @@ export const RegresaCalificacionRedondeo = (twxCalifica, txwRedondea0) => {
     resultado = txwEnt / 10;
   }
   return resultado;
-}
+};
 
 export const obtenerFechaYHoraActual = () => {
   const date = new Date();
-  const dia = String(date.getDate()).padStart(2, '0');
-  const mes = String(date.getMonth() + 1).padStart(2, '0');
+  const dia = String(date.getDate()).padStart(2, "0");
+  const mes = String(date.getMonth() + 1).padStart(2, "0");
   const año = date.getFullYear();
-  const hor = String(date.getHours()).padStart(2, '0');
-  const min = String(date.getMinutes()).padStart(2, '0');
-  const seg = String(date.getSeconds()).padStart(2, '0');
+  const hor = String(date.getHours()).padStart(2, "0");
+  const min = String(date.getMinutes()).padStart(2, "0");
+  const seg = String(date.getSeconds()).padStart(2, "0");
   const fecha = `${dia}${mes}${año}`;
   const hora = `${hor}${min}${seg}`;
   return { fecha, hora };
 };
 
-
 export const aDec = (value) => {
   return isNaN(value) ? 0 : Number(value);
-}
+};
 
-export const permissionsComponents = (es_admin, permissions, id_usuario, id_punto_menu) => {
+export const permissionsComponents = (
+  es_admin,
+  permissions,
+  id_usuario,
+  id_punto_menu
+) => {
   const permisos = es_admin
     ? {
-      id_punto_menu: id_punto_menu,
-      id_usuario: id_usuario,
-      altas: true,
-      bajas: true,
-      cambios: true,
-      impresion: true,
-    }
+        id_punto_menu: id_punto_menu,
+        id_usuario: id_usuario,
+        altas: true,
+        bajas: true,
+        cambios: true,
+        impresion: true,
+      }
     : permissions.find(
-      (per) => per.id_punto_menu === id_punto_menu && per.id_usuario === id_usuario
-    );
+        (per) =>
+          per.id_punto_menu === id_punto_menu && per.id_usuario === id_usuario
+      );
   return permisos;
-}
+};
 
 export const PoneCeros = (importe, longitud) => {
   const trabajoString = String(importe).trim();
   const cerosFaltantes = longitud - trabajoString.length;
   return "0".repeat(cerosFaltantes) + trabajoString;
-}
+};
 
 export const chunkArray = (array, size) => {
   const result = [];
@@ -473,24 +476,30 @@ export const validateString = (MAX_LENGTHS, key, str) => {
   return str;
 };
 
- //Formateo para las fechas en los excel (OBLIGATORIO)
- export const fechaFormatExcel = (fechaS) => {
+//Formateo para las fechas en los excel (OBLIGATORIO)
+export const fechaFormatExcel = (fechaS) => {
   const date = new Date((fechaS - 25567 - 1) * 86400 * 1000);
 
   // Formatear la fecha en dd/mm/yyyy
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0"); // Meses comienzan desde 0
   const year = date.getFullYear();
-  
+
   return `${day}/${month}/${year}`;
 };
 
 export const CerrarModal = async (accion) => {
-  if(accion){
-    if (accion === "Alta" || accion === "Editar"){
-      const confirmed = await confirmSwal("Salir", "Cambios sin guardar. Si sales, perderás la información.", "warning", "Aceptar", "Cancelar", "my_modal_3");
-     if(confirmed)
-      document.getElementById("my_modal_3").close();
+  if (accion) {
+    if (accion === "Alta" || accion === "Editar") {
+      const confirmed = await confirmSwal(
+        "Salir",
+        "Cambios sin guardar. Si sales, perderás la información.",
+        "warning",
+        "Aceptar",
+        "Cancelar",
+        "my_modal_3"
+      );
+      if (confirmed) document.getElementById("my_modal_3").close();
     } else {
       document.getElementById("my_modal_3").close();
     }
