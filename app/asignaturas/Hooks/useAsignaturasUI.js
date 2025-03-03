@@ -2,6 +2,7 @@ import React from "react";
 import Inputs from "@/app/asignaturas/components/Inputs";
 import { ActionButton, ActionColumn } from "@/app/utils/GlobalComponents";
 import iconos from "@/app/utils/iconos";
+import { useState } from "react";
 
 export const useAsignaturasUI = (
     tableAction,
@@ -11,6 +12,8 @@ export const useAsignaturasUI = (
     errors,
     accion
 ) => {
+
+  const [sinZebra, setSinZebra] = useState(false);
 
   const handleKeyDown = (evt) => {
     if (evt.key === "Enter") {
@@ -99,6 +102,7 @@ export const useAsignaturasUI = (
 
     const tableBody = (data = []) => {
       const hasBajas = data.some(item => item.baja === "*");
+      setSinZebra(hasBajas);
         return (
           <tbody style={{ backgroundColor: hasBajas ? "#CD5C5C" : "" }}>
             {data.map((item) => (
@@ -344,6 +348,7 @@ export const useAsignaturasUI = (
         tableColumns,
         tableBody,
         modalBody,
+        sinZebra
     };
 
 };

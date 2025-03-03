@@ -75,7 +75,9 @@ function Comentarios() {
     itemDataTable, 
     tableColumns, 
     tableBody, 
-    modalBody } =
+    modalBody,
+    sinZebra 
+  } =
     useCommentsUI(
       tableAction, 
       register, 
@@ -169,6 +171,7 @@ function Comentarios() {
                   isLoading={isLoading}
                   tableColumns={tableColumns}
                   tableBody={tableBody}
+                  sinZebra={sinZebra}
                 />
               ))}
           </div>

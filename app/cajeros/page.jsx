@@ -75,7 +75,8 @@ function Cajeros() {
     itemDataTable, 
     tableColumns, 
     tableBody, 
-    modalBody 
+    modalBody,
+    sinZebra
   } = useCajerosUI(
     tableAction, 
     register, 
@@ -150,7 +151,7 @@ function Cajeros() {
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Cajeros
             </h1>
-            <h3 className="ml-auto order-3">{`Cajeros activos: ${
+            <h3 className="ml-auto text-black dark:text-white order-3">{`Cajeros activos: ${
               active || 0
             }\nCajeros inactivos: ${inactive || 0}`}</h3>
           </div>
@@ -175,6 +176,7 @@ function Cajeros() {
                   isLoading={isLoading}
                   tableColumns={tableColumns}
                   tableBody={tableBody}
+                  sinZebra={sinZebra}
                 />
               ))}
           </div>

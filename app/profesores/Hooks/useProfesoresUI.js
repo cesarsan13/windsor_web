@@ -2,6 +2,7 @@ import React from "react";
 import Inputs from "@/app/profesores/components/Inputs";
 import { ActionButton, ActionColumn } from "@/app/utils/GlobalComponents";
 import iconos from "@/app/utils/iconos";
+import { useState } from "react";
 
 export const useProfesoresUI = (
     tableAction,
@@ -11,6 +12,8 @@ export const useProfesoresUI = (
     errors,
     accion,
 ) => {
+
+  const [sinZebra, setSinZebra] = useState(false);
   
   const handleKeyDown = (evt) => {
     if (evt.key === "Enter") {
@@ -123,6 +126,7 @@ export const useProfesoresUI = (
 
     const tableBody = (data = []) => {
         const hasBajas = data.some(item => item.baja === "*");
+        setSinZebra(hasBajas);
         return(
             <tbody style={{ backgroundColor: hasBajas ? "#CD5C5C" : "" }}>
             {data.map((item) => (
@@ -489,6 +493,7 @@ export const useProfesoresUI = (
         itemDataTable,
         tableColumns,
         tableBody,
-        modalBody
+        modalBody,
+        sinZebra
     }; 
 };
