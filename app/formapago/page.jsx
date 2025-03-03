@@ -75,7 +75,8 @@ function FormaPago(){
     itemDataTable,
     tableColumns,
     tableBody,
-    modalBody
+    modalBody,
+    sinZebra
   } = useFormaPagoUI(
     tableAction,
     register,
@@ -148,7 +149,7 @@ function FormaPago(){
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Formas de Pago
             </h1>
-            <h3 className="ml-auto order-3">{`Formas de Pago activas: ${
+            <h3 className="ml-auto order-3  text-black dark:text-white">{`Formas de Pago activas: ${
               active || 0
             }\nFormas de Pago inactivas: ${inactive || 0}`}</h3>
           </div>
@@ -173,6 +174,7 @@ function FormaPago(){
                   isLoading={isLoading}
                   tableColumns={tableColumns}
                   tableBody={tableBody}
+                  sinZebra={sinZebra}
                 />
             ))}
           </div>

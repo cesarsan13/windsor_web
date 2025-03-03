@@ -76,6 +76,7 @@ function Asignaturas() {
     tableColumns,
     tableBody,
     modalBody,
+    sinZebra
   } = useAsignaturasUI(
     tableAction,
     register,
@@ -148,7 +149,7 @@ function Asignaturas() {
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Asignaturas
             </h1>
-            <h3 className="ml-auto order-3">{`Asignatuas activas: ${
+            <h3 className="ml-auto order-3  text-black dark:text-white">{`Asignatuas activas: ${
               active || 0
             }\nAsignaturas inactivas: ${inactive || 0}`}</h3>
           </div>
@@ -172,6 +173,7 @@ function Asignaturas() {
                   isLoading={isLoading}
                   tableColumns={tableColumns}
                   tableBody={tableBody}
+                  sinZebra={sinZebra}
                 />
               ))}
           </div>

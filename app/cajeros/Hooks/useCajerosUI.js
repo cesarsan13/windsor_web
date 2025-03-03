@@ -2,6 +2,7 @@ import React from "react";
 import Inputs from "@/app/cajeros/components/Inputs";
 import { ActionButton, ActionColumn } from "@/app/utils/GlobalComponents";
 import iconos from "@/app/utils/iconos";
+import { useState } from "react";
 
 export const useCajerosUI = (
     tableAction,
@@ -11,6 +12,7 @@ export const useCajerosUI = (
     errors,
     accion
 ) => {
+  const [sinZebra, setSinZebra] = useState(false);
 
   const handleKeyDown = (evt) => {
     if (evt.key === "Enter") {
@@ -101,6 +103,7 @@ export const useCajerosUI = (
 
     const tableBody = (data = []) => {
       const hasBajas = data.some(item => item.baja === "*");
+      setSinZebra(hasBajas);
         return(
           <tbody style={{ backgroundColor: hasBajas ? "#CD5C5C" : "" }}>
               {data.map((item) => (
@@ -127,32 +130,32 @@ export const useCajerosUI = (
                     onClick={(evt) => tableAction(evt, item, "Ver")}
                     permission={true}
                   />
- {item.baja !== "*" ? (
-              <>
-                <ActionButton
-                  tooltip="Editar"
-                  iconDark={iconos.editar}
-                  iconLight={iconos.editar_w}
-                  onClick={(evt) => tableAction(evt, item, "Editar")}
-                  permission={permissions.cambios}
-                />
-                <ActionButton
-                  tooltip="Eliminar"
-                  iconDark={iconos.eliminar}
-                  iconLight={iconos.eliminar_w}
-                  onClick={(evt) => tableAction(evt, item, "Eliminar")}
-                  permission={permissions.bajas}
-                />
-              </>
-            ) : (
-              <ActionButton
-                tooltip="Reactivar"
-                iconDark={iconos.documento}
-                iconLight={iconos.documento_w}
-                onClick={(evt) => tableAction(evt, item, "Reactivar")}
-                permission={true}
-              />
-            )}
+                  {item.baja !== "*" ? (
+                    <>
+                      <ActionButton
+                        tooltip="Editar"
+                        iconDark={iconos.editar}
+                        iconLight={iconos.editar_w}
+                        onClick={(evt) => tableAction(evt, item, "Editar")}
+                        permission={permissions.cambios}
+                      />
+                      <ActionButton
+                        tooltip="Eliminar"
+                        iconDark={iconos.eliminar}
+                        iconLight={iconos.eliminar_w}
+                        onClick={(evt) => tableAction(evt, item, "Eliminar")}
+                        permission={permissions.bajas}
+                      />
+                    </>
+                  ) : (
+                    <ActionButton
+                      tooltip="Reactivar"
+                      iconDark={iconos.documento}
+                      iconLight={iconos.documento_w}
+                      onClick={(evt) => tableAction(evt, item, "Reactivar")}
+                      permission={true}
+                    />
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -320,5 +323,6 @@ export const useCajerosUI = (
         tableColumns,
         tableBody,
         modalBody,
+        sinZebra
     };
 };
