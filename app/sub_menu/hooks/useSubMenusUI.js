@@ -1,7 +1,8 @@
-import { ActionButton } from "@/app/utils/GlobalComponents";
 import iconos from "@/app/utils/iconos";
 import Inputs from "@/app/accesos_menu/components/Inputs";
 import BuscarCat from "@/app/components/BuscarCat";
+import { ActionButton, ActionColumn } from "@/app/utils/GlobalComponents";
+import { useState } from "react";
 
 export const useSubMenusUI = (
   tableAction,
@@ -12,70 +13,99 @@ export const useSubMenusUI = (
   errors,
   subMenu,
   currentAction,
-  session
+  session,
+  accion
 ) => {
   const columnasBuscaCat = ["numero", "descripcion"];
   const nameInputs = ["numero", "descripcion"];
+  const [sinZebra, setSinZebra] = useState(false);
 
-  const tableColumns = () => {
+  const tableColumns = (data = []) => {
+    const hasBajas = data.some(item => item.baja === "*"); 
     return (
-      <thead>
+      <thead
+        className={`sticky top-0 z-[2] ${
+        hasBajas ? "text-black" : "bg-white dark:bg-[#1d232a]"}`}
+        style={hasBajas ? { backgroundColor: "#CF2A2A" } : {}}
+      >
         <tr>
-          <th className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</th>
-          <th className="sm:w-[5%]">ID Acceso</th>
-          <th className="sm:w-[20%]">Sub Menú</th>
-          <th className="sm:w-[20%]">Menú Descripción</th>
-          <th className="sm:w-[20%]">Menú</th>
-          <th className="sm:w-[20%]">Menú Ruta</th>
-          <th className="w-[5%]">Ver</th>
-          <th className="w-[5%]">Editar</th>
-          <th className="w-[5%]">Eliminar</th>
+          <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
+          <td className="sm:w-[5%] hidden sm:table-cell">ID Acceso</td>
+          <td className="sm:w-[20%]">Sub Menú</td>
+          <td className="sm:w-[20%]">Menú Descripción</td>
+          <td className="sm:w-[20%] hidden sm:table-cell">Menú</td>
+          <td className="sm:w-[20%] hidden sm:table-cell">Menú Ruta</td>
+          < ActionColumn
+            description={"Ver"}
+            permission={true}
+          />
+          {!hasBajas && < ActionColumn
+            description={"Editar"}
+            permission={permissions.cambios}
+          />}
+          {!hasBajas && < ActionColumn
+            description={"Eliminar"}
+            permission={permissions.bajas}
+          />}
+          {hasBajas && <ActionColumn 
+            description={"Reactivar"} 
+            permission={true} 
+          />}
         </tr>
       </thead>
     );
   };
 
-  const tableBody = (data) => {
+  const tableBody = (data = []) => {
+    const hasBajas = data.some(item => item.baja === "*");
+    setSinZebra(hasBajas);
     return (
-      <tbody>
+      <tbody style={{ backgroundColor: hasBajas ? "#CD5C5C" : "" }}>
         {data.map((row) => (
           <tr
             key={`${row.numero}-${row.id_acceso}`}
             className="hover:cursor-pointer"
           >
-            <th className="text-left">{row.numero}</th>
-            <th className="text-left">{row.id_acceso}</th>
+            <td className="text-left">{row.numero}</td>
+            <td className="text-left hidden sm:table-cell">{row.id_acceso}</td>
             <td className="w-[20%]">{row.descripcion}</td>
             <td className="w-[20%]">{row.menu_descripcion}</td>
-            <td className="w-[20%]">{row.menu}</td>
-            <td className="w-[20%]">{row.menu_ruta}</td>
-            <td>
+            <td className="w-[20%] hidden sm:table-cell">{row.menu}</td>
+            <td className="w-[20%] hidden sm:table-cell">{row.menu_ruta}</td>
+            <ActionButton
+              tooltip="Ver"
+              iconDark={iconos.ver}
+              iconLight={iconos.ver_w}
+              onClick={(evt) => tableAction(evt, row, "Ver")}
+              permission={true}
+            />
+            {row.baja !== "*" ? (
+              <>
+                <ActionButton
+                  tooltip="Editar"
+                  iconDark={iconos.editar}
+                  iconLight={iconos.editar_w}
+                  onClick={(evt) => tableAction(evt, row, "Editar")}
+                  permission={permissions.cambios}
+                />
+
+                <ActionButton
+                  tooltip="Eliminar"
+                  iconDark={iconos.eliminar}
+                  iconLight={iconos.eliminar_w}
+                  onClick={(evt) => tableAction(evt, row, "Eliminar")}
+                  permission={permissions.bajas}
+                />
+              </>
+            ) : (
               <ActionButton
-                tooltip="Ver"
-                iconDark={iconos.ver}
-                iconLight={iconos.ver_w}
-                onClick={(evt) => tableAction(evt, row, "Ver")}
+                tooltip="Reactivar"
+                iconDark={iconos.documento}
+                iconLight={iconos.documento_w}
+                onClick={(evt) => tableAction(evt, row, "Reactivar")}
                 permission={true}
               />
-            </td>
-            <td>
-              <ActionButton
-                tooltip="Editar"
-                iconDark={iconos.editar}
-                iconLight={iconos.editar_w}
-                onClick={(evt) => tableAction(evt, row, "Editar")}
-                permission={permissions.cambios}
-              />
-            </td>
-            <td>
-              <ActionButton
-                tooltip="Eliminar"
-                iconDark={iconos.eliminar}
-                iconLight={iconos.eliminar_w}
-                onClick={(evt) => tableAction(evt, row, "Eliminar")}
-                permission={permissions.bajas}
-              />
-            </td>
+            )}   
           </tr>
         ))}
       </tbody>
@@ -84,7 +114,7 @@ export const useSubMenusUI = (
 
   const modalBody = () => {
     return (
-      <fieldset id="fs_formapago">
+      <fieldset id="fs_SubMenus">
         <div className="container flex flex-col space-y-5">
           <Inputs
             dataType={"string"}
@@ -113,7 +143,6 @@ export const useSubMenusUI = (
             alignRight={true}
             inputWidths={{ first: "60px", second: "380px" }}
             accion={currentAction}
-            // deshabilitado={isDisabled}
           />
         </div>
       </fieldset>
@@ -124,5 +153,6 @@ export const useSubMenusUI = (
     tableColumns,
     tableBody,
     modalBody,
+    sinZebra
   };
 };
