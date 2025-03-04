@@ -47,7 +47,7 @@ body {
 
 .table :where(th, td){
   font-size: 11px !important;
-  line-height: 13px !important;
-  padding-top: 0.25rem !important;
-  padding-bottom: 0.25rem !important;
+  line-height: 11px !important;
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
 }
