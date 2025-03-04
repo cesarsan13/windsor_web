@@ -53,13 +53,15 @@ function Usuarios() {
   const{
     tableColumns,
     tableBody,
-    modalBody
+    modalBody,
+    sinZebra
   } = useUsuariosUI(
     tableAction,
     register,
     permissions,
     isDisabled,
-    errors
+    errors,
+    accion
   );
 
   if (status === "loading" && !session) {
@@ -131,6 +133,7 @@ function Usuarios() {
               isLoading={isLoading}
               tableColumns={tableColumns}
               tableBody={tableBody}
+              sinZebra={sinZebra}
             />
           ))}
           </div>
