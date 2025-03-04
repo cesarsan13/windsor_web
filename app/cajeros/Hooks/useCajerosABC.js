@@ -208,8 +208,6 @@ export const useCajerosABC = () => {
         : accion === "Eliminar"
         ? `Eliminar Cajero: ${currentID}`
         : `Ver Cajero: ${currentID}`
-        ? `Reactivar Cajero: ${currentID}`
-        : accion == "Reactivar"
     );
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accion, currentID]);

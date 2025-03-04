@@ -197,8 +197,6 @@ export const useProfesoresABC = () => {
             : accion === "Eliminar"
             ? `Eliminar Profesor: ${currentID}`
             : `Ver Profesor: ${currentID}`
-            ? `Reactivar Profesor: ${currentID}`
-            : accion === "Reactivar"
         );
     }, [accion, currentID]);
 

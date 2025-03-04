@@ -188,8 +188,6 @@ useEffect(() => {
         : accion === "Eliminar"
         ? `Eliminar Horario: ${currentID}`
         : `Ver Horario: ${currentID}`
-        ? `Reactivar Horario: ${currentID}`
-        : accion == "Reactivar"
     );
 }, [accion, currentID]);
 

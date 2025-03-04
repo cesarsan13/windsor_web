@@ -178,8 +178,6 @@ export const useProductosABC = () => {
         : accion === "Eliminar"
         ? `Eliminar Producto: ${currentID}`
         : `Ver Producto: ${currentID}`
-        ? `Reactivar Horario: ${currentID}`
-        : accion == "Reactivar"
     );
   }, [accion, currentID]);
 

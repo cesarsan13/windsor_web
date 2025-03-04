@@ -464,7 +464,7 @@ export const useProfesoresUI = (
                       handleKeyDown(evt);
                     }}
                   />
-                  { accion !== "Eliminar" && (
+                  { accion === "Editar" && (
                   <Inputs
                     dataType={"string"}
                     name={"contraseña"}

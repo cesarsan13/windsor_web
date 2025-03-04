@@ -187,8 +187,6 @@ export const useActividadesABC = () => {
             : accion === "Eliminar"
             ? `Eliminar Actividad ${currentID}`
             : `Ver Actividad ${currentID}`
-            ? `Reactivar Horario: ${currentID}`
-            : accion == "Reactivar"
         );
     }, [accion, currentID]);
 

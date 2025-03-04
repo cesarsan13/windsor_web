@@ -186,8 +186,6 @@ export const useFormFactABC = () => {
             : accion === "Eliminar"
             ? `Eliminar Factura: ${currentID}`
             : `Ver Factura: ${currentID}`
-            ? `Reactivar Horario: ${currentID}`
-            : accion == "Reactivar"
         );
     }, [accion, currentID]);
 

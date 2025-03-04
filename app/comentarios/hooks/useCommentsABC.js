@@ -180,8 +180,6 @@ export const useCommentsABC = () => {
         : accion === "Eliminar"
         ? `Eliminar Comentario: ${currentID}`
         : `Ver Comentario: ${currentID}`
-        ? `Reactivar Comentario: ${currentID}`
-        : accion == "Reactivar"
     );
   }, [accion, currentID]);
 
