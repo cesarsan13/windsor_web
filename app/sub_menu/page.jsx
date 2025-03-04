@@ -13,7 +13,6 @@ export default function Sub_Menus() {
     tableAction,
     addSubMenu,
     register,
-    setInactive,
     clearSearch,
     handleSearchingChange,
     Search,
@@ -31,8 +30,11 @@ export default function Sub_Menus() {
     isLoadingButton,
     searching,
     subMenu,
+    active,
+    inactive,
+    setBajas
   } = useSubMenusABC();
-  const { tableColumns, tableBody, modalBody } = useSubMenusUI(
+  const { tableColumns, tableBody, modalBody, sinZebra } = useSubMenusUI(
     tableAction,
     register,
     setMenu,
@@ -74,12 +76,15 @@ export default function Sub_Menus() {
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Accesos Sub Menus.
             </h1>
+            <h3 className="ml-auto order-3 text-black dark:text-white">{`Sub Menu activos: ${
+              active || 0
+            }\nSub Menu inactivos: ${inactive || 0}`}</h3>
           </div>
         </div>
         <div className="flex flex-col items-center h-full">
           <div className="w-full max-w-full">
             <Busqueda
-              setBajas={setInactive}
+              setBajas={setBajas}
               limpiarBusqueda={clearSearch}
               Buscar={Search}
               handleBusquedaChange={handleSearchingChange}
@@ -94,6 +99,7 @@ export default function Sub_Menus() {
                 isLoading={isLoading}
                 tableColumns={tableColumns}
                 tableBody={tableBody}
+                sinZebra={sinZebra}
               />
             )}
           </div>
