@@ -268,6 +268,7 @@ const tableColumns = (data = []) => {
         <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
         <td className="w-[30%] pt-[.10rem] pb-[.10rem]">Nombre</td>
         <td className="hidden sm:table-cell w:-[15%] pt-[.10rem] pb-[.10rem]">Grado</td>
+        <td className="hidden sm:table-cell w:-[15%] pt-[.10rem] pb-[.10rem]">Fecha Nac</td>
         <td className="hidden sm:table-cell w:-[15%] pt-[.10rem] pb-[.10rem]">Papá</td>
         <td className="hidden sm:table-cell w:-[15%] pt-[.10rem] pb-[.10rem]">Mamá</td>
         <td className="hidden sm:table-cell w:-[20%] pt-[.10rem] pb-[.10rem]">Contacto</td>
@@ -306,8 +307,12 @@ const tableBody = (data = []) => {
             {item.horario_1_nombre}
             </td>
             <td className="hidden sm:table-cell w-[15%] pt-[.10rem] pb-[.10rem] truncate">
+            {item.fecha_nac}
+            </td>
+            <td className="hidden sm:table-cell w-[15%] pt-[.10rem] pb-[.10rem] truncate">
             {item.nom_padre}
-            </td><td className="hidden sm:table-cell w-[15%] pt-[.10rem] pb-[.10rem] truncate">
+            </td>
+            <td className="hidden sm:table-cell w-[15%] pt-[.10rem] pb-[.10rem] truncate">
             {item.nom_madre}
             </td>
             <td className="hidden sm:table-cell w-[20%] pt-[.10rem] pb-[.10rem]">
