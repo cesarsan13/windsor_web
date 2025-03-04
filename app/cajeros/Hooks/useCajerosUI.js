@@ -19,6 +19,7 @@ export const useCajerosUI = (
         evt.preventDefault(); 
 
         const fieldset = document.getElementById("fs_formapago");
+        const form = fieldset?.closest("form");
         const inputs = Array.from(
             fieldset.querySelectorAll("input[name='nombre'], input[name='direccion'], input[name='colonia'], input[name='estado'], input[name='telefono'], input[name='fax'], input[name='mail'],input[name='clave_cajero']")
         );
@@ -28,7 +29,7 @@ export const useCajerosUI = (
             if (currentIndex < inputs.length - 1) {
                 inputs[currentIndex + 1].focus(); 
             } else {
-                const submitButton = fieldset?.querySelector("button[type='submit']");
+                const submitButton = form?.querySelector("button[type='submit']");
                 if (submitButton) submitButton.click(); 
             }
         }
