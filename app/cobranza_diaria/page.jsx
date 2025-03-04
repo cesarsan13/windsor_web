@@ -92,7 +92,6 @@ function Cobranza_Diaria() {
     event.preventDefault;
     setRecibo(event.target.value);
   };
-  // console.log("cheque", cheque)
   const buscar = async () => {
     setisLoading(true);
     const { token, permissions } = session.user;

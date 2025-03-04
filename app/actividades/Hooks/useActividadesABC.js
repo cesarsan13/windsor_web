@@ -340,7 +340,6 @@ export const useActividadesABC = () => {
             ...actividadesr, 
             baja: ""
           }, "Editar");
-          console.log("a", res);
       
           if (res.status) {
             const updatedActividades = formasHorarios.map((c) =>

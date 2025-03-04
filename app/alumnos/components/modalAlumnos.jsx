@@ -66,11 +66,6 @@ function ModalAlumnos({
   };
 
 
-
-
-
-  // console.log(JSON.stringify(alumno));
-
   const checkErrorsAndSubmit = (event) => {
     event.preventDefault();
     handleSubmit(

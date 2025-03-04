@@ -207,7 +207,6 @@ function RepFemac12Anexo() {
         );
         let alu_Ant;
         let alumno;
-        console.log(data);
         await Promise.all(
           data.map(async (dato) => {
             if (alu_Ant !== dato.alumno) {
@@ -316,7 +315,7 @@ function RepFemac12Anexo() {
         }, 500);
       }
     } catch (e) {
-      console.error(e);
+
     }
   };
 
