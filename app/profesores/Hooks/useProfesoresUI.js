@@ -460,11 +460,12 @@ export const useProfesoresUI = (
                     message={"Email requerido"}
                     maxLenght={80}
                     isDisabled={isDisabled}
+                    email={true}
                     onKeyDown={(evt) => {
                       handleKeyDown(evt);
                     }}
                   />
-                  { accion === "Editar" && (
+                  { (accion === "Editar" || accion === "Alta") && (
                   <Inputs
                     dataType={"string"}
                     name={"contraseña"}

@@ -18,7 +18,8 @@ function Inputs({
   handleBlur,
   password,
   onKeyDown,
-  hidden
+  hidden,
+  email
 }) {
 
   const [mostrarContr, setMostrarContr] = useState(false);
@@ -102,39 +103,77 @@ function Inputs({
       </div>
     );
 
-  }
-  return (
-    <div className="flex flex-col">
-      <label
-        className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
-      >
-        {Titulo}
-        <input
-          {...(maxLenght !== 0 && { maxLength: maxLenght })}
-          name={name}
-          id={name}
-          type={type}
-          className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700  ${className}`}
-          {...(dataType === "int" && { onKeyDown: soloEnteros })}
-          {...(dataType === "float" && { onKeyDown: soloDecimales })}
-          {...register(name, {
-            ...(requerido && { required: message }),
-          })}
-          {...(dataType === "int" ||
-            (dataType === "float" && {
-              onBlur: (event) => handleBlur(event, dataType),
-            }))}
-          disabled={isDisabled}
-          onKeyDown={onKeyDown}
-        />
-      </label>
-      {errors[name] && (
-        <span className="text-red-500 text-sm mt-2 font-semibold">
-          {errors[name].message}
-        </span>
-      )}
-    </div>
-  );
+  } else if (email === true){
+    return (
+      <div className="flex flex-col">
+        <label
+          className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
+        >
+          {Titulo}
+          <input
+            {...(maxLenght !== 0 && { maxLength: maxLenght })}
+            name={name}
+            id={name}
+            type={type}
+            className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700  ${className}`}
+            {...(dataType === "int" && { onKeyDown: soloEnteros })}
+            {...(dataType === "float" && { onKeyDown: soloDecimales })}
+            {...register(name, {
+              ...(requerido && { required: message }),
+              pattern: {
+                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                message: "Formato de correo inválido",
+              }
+            })}
+            {...(dataType === "int" ||
+              (dataType === "float" && {
+                onBlur: (event) => handleBlur(event, dataType),
+              }))}
+            disabled={isDisabled}
+            onKeyDown={onKeyDown}
+          />
+        </label>
+        {errors[name] && (
+          <span className="text-red-500 text-sm mt-2 font-semibold">
+            {errors[name].message}
+          </span>
+        )}
+      </div>
+    );
+  } else {
+    return (
+      <div className="flex flex-col">
+        <label
+          className={`input input-bordered input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
+        >
+          {Titulo}
+          <input
+            {...(maxLenght !== 0 && { maxLength: maxLenght })}
+            name={name}
+            id={name}
+            type={type}
+            className={`text-black dark:text-white border-b-2 border-slate-300 dark:border-slate-700  ${className}`}
+            {...(dataType === "int" && { onKeyDown: soloEnteros })}
+            {...(dataType === "float" && { onKeyDown: soloDecimales })}
+            {...register(name, {
+              ...(requerido && { required: message }),
+            })}
+            {...(dataType === "int" ||
+              (dataType === "float" && {
+                onBlur: (event) => handleBlur(event, dataType),
+              }))}
+            disabled={isDisabled}
+            onKeyDown={onKeyDown}
+          />
+        </label>
+        {errors[name] && (
+          <span className="text-red-500 text-sm mt-2 font-semibold">
+            {errors[name].message}
+          </span>
+        )}
+      </div>
+    );
+  };
 }
 
 export default Inputs;
