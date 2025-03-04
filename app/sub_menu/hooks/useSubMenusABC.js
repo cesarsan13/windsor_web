@@ -250,11 +250,12 @@ export const useSubMenusABC = () => {
 
   useEffect(() => {
     if(reloadFullPage === true){
-      router.push("/sub_menu");
+      setTimeout(() => {
+        window.location.reload();
+      }, 2505);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reloadFullPage]);
-
 
   const onSubmitModal = handleSubmit(async (data) => {
     try {
@@ -265,17 +266,17 @@ export const useSubMenusABC = () => {
       const res = executeAction
         ? await executeAction(token, data)
         : { status: false };
+      setReloadFullPage(!reloadFullPage);
       setIsLoadingButton(false);
       if (!res.delete) {
-        router.reaload();
         return;
       }
       showModal(false);
       const showAlert = res.status ? showSwal : showSwalAndWait;
       await showAlert(res.alert_title, res.alert_text, res.alert_icon);
+      setReloadFullPage(!reloadFullPage);
       if (!res.status) {
         showModal(true);
-        router.reaload();
       }
     } catch (error) {
       setIsLoadingButton(false);
