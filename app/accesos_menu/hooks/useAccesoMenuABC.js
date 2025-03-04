@@ -13,13 +13,12 @@ import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import { getMenus as getmenu } from "@/app/utils/api/menus/menus";
 import {
   getSubMenusApi,
-  // guardaSubMenu,
-  // updateSubMenu,
 } from "@/app/utils/api/sub_menus/sub_menus";
 import {
   useEscapeWarningModal,
   validateBeforeSave,
 } from "@/app/utils/globalfn";
+import { inactiveActiveBaja } from "@/app/utils/GlobalApis";
 
 export const useAccesoMenuABC = () => {
   const router = useRouter();
@@ -40,36 +39,10 @@ export const useAccesoMenuABC = () => {
   const [titulo, setTitulo] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
   const [isLoadingButton, setisLoadingButton] = useState(false);
-  // const [reload_page, setReloadPage] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setisLoading(true);
-      const { token, permissions } = session.user;
-      const es_admin = session.user.es_admin;
-      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-      const data = await getMenus(token, bajas);
-      const dataMenu = await getmenu(token, false);
-      const subMenu = await getSubMenusApi(token, false);
-      setSubMenus(subMenu);
-      setMenusSel(dataMenu);
-      setMenus(data);
-      setMenusFiltrados(data);
-      const permisos = permissionsComponents(
-        es_admin,
-        permissions,
-        session.user.id,
-        menuSeleccionado
-      );
-      setPermissions(permisos);
-      setisLoading(false);
-    };
-    if (status === "loading" || !session) {
-      return;
-    }
-    fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, bajas]);
+  const [inactiveActive, setInactiveActive] = useState([]);
+  const [reload_page, setReloadPage] = useState(false);
+  const [active, setActive] = useState(false);
+  const [inactive, setInactive] = useState(false);
 
   const {
     register,
@@ -88,6 +61,115 @@ export const useAccesoMenuABC = () => {
   });
 
   useEffect(() => {
+    const fetchData = async () => {
+      setisLoading(true);
+      const { token, permissions } = session.user;
+      const es_admin = session.user.es_admin;
+      const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
+      const busqueda = limpiarBusqueda();
+      const data = await getMenus(token, bajas);
+      const dataMenu = await getmenu(token, false);
+      const subMenu = await getSubMenusApi(token, false);
+      const res = await inactiveActiveBaja(session?.user.token, "accesos_menu");
+      setSubMenus(subMenu);
+      setMenusSel(dataMenu);
+      setMenus(data);
+      setMenusFiltrados(data);
+      setInactiveActive(res.data);
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menuSeleccionado
+      );
+      await fetchAccesoMenuStatus(res.data, busqueda);
+      setPermissions(permisos);
+      setisLoading(false);
+    };
+    if (status === "loading" || !session) {
+      return;
+    }
+    fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status, bajas, reload_page]);
+
+  useEffect(() => {
+    menuRef.current = menus;
+  }, [menus]);
+
+  const Buscar = useCallback(async () => {
+    const { tb_id, tb_desc } = busqueda;
+    if (tb_id === "" && tb_desc === "") {
+      setMenusFiltrados(menuRef.current);
+      await fetchAccesoMenuStatus(inactiveActive, busqueda);
+      return;
+    }
+    const infoFiltrada = menuRef.current.filter((menu) => {
+      const coincideNumero = tb_id
+        ? menu["numero"].toString().includes(tb_id)
+        : true;
+      const coincideNombre = tb_desc
+        ? menu["descripcion"]
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
+        : true;
+      return coincideNumero && coincideNombre;
+    });
+    setMenusFiltrados(infoFiltrada);
+    await fetchAccesoMenuStatus(inactiveActive, busqueda);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [busqueda]);
+
+  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
+
+  const fetchAccesoMenuStatus = async (
+    inactiveActive,
+    busqueda
+  ) => {
+    const { tb_id, tb_desc } = busqueda;
+    let infoFiltrada = [];
+    let active = 0;
+    let inactive = 0;
+    if(tb_id || tb_desc){
+      infoFiltrada = inactiveActive.filter((menu) => {
+        const coincideID = tb_id
+          ? menu["numero"].toString().includes(tb_id)
+          : true;
+        const coincidedesc = tb_desc
+          ? menu["descripcion"]
+            .toString()
+            .toLowerCase()
+            .includes(tb_desc.toLowerCase())
+          : true;
+        return coincideID && coincidedesc;
+      });
+      active = infoFiltrada.filter((c) => c.baja !== "*").length;
+      inactive = infoFiltrada.filter((c) => c.baja === "*").length;
+    } else {
+      active = inactiveActive.filter((c) => c.baja !== "*").length;
+      inactive = inactiveActive.filter((c) => c.baja === "*").length;
+    }
+    setActive(active);
+    setInactive(inactive);
+  };
+
+  useEffect(() => {
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar);
+    };
+  }, [busqueda, debouncedBuscar]);
+
+  useEffect(() => {
+    const debouncedBuscar = debounce(Buscar, 500);
+    debouncedBuscar();
+    return () => {
+      clearTimeout(debouncedBuscar);
+    };
+  }, [busqueda, Buscar]);
+
+  useEffect(() => {
     if (accion === "Eliminar" || accion === "Ver") {
       setIsDisabled(true);
     }
@@ -96,12 +178,14 @@ export const useAccesoMenuABC = () => {
     }
     setTitulo(
       accion === "Alta"
-        ? `Nuevo Menu: ${currentID}`
+        ? `Nuevo Menu`
         : accion === "Editar"
         ? `Editar Menu: ${currentID}`
         : accion === "Eliminar"
         ? `Eliminar Menu: ${currentID}`
         : `Ver Menu: ${currentID}`
+        ? `Reactivar Profesor: ${currentID}`
+        : accion === "Reactivar"
     );
   }, [accion, currentID]);
 
@@ -122,43 +206,14 @@ export const useAccesoMenuABC = () => {
     });
   }, [menu, reset, subMenu]);
 
-  useEffect(() => {
-    menuRef.current = menus;
-  }, [menus]);
+  const limpiarBusqueda = () => {
+    const search = { tb_id: "", tb_desc: "" };
+    setBusqueda({ tb_id: "", tb_desc: "" });
+    return search;
+  };
 
-  const Buscar = useCallback(() => {
-    const { tb_id, tb_desc } = busqueda;
-    if (tb_id === "" && tb_desc === "") {
-      setMenusFiltrados(menuRef.current);
-      return;
-    }
-    const infoFiltrada = menuRef.current.filter((menu) => {
-      const coincideNumero = tb_id
-        ? menu["numero"].toString().includes(tb_id)
-        : true;
-      const coincideNombre = tb_desc
-        ? menu["descripcion"]
-            .toString()
-            .toLowerCase()
-            .includes(tb_desc.toLowerCase())
-        : true;
-      return coincideNumero && coincideNombre;
-    });
-    setMenusFiltrados(infoFiltrada);
-  }, [busqueda]);
-
-  const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
-
-  useEffect(() => {
-    debouncedBuscar();
-    return () => {
-      clearTimeout(debouncedBuscar);
-    };
-  }, [busqueda, debouncedBuscar]);
-
-  const Alta = async (event) => {
+  const Alta = async () => {
     setCurrentId("");
-    const { token } = session.user;
     reset({
       numero: "",
       ruta: "",
@@ -167,33 +222,18 @@ export const useAccesoMenuABC = () => {
       menu: "",
       sub_menu: "",
     });
-    let siguienteId = await siguiente(token);
-    siguienteId = Number(siguienteId) + 1;
-    setCurrentId(siguienteId);
-    setMenu({ numero: siguienteId });
+    setMenu({ numero: "" });
     setModal(!openModal);
     setAccion("Alta");
     showModal(true);
     document.getElementById("descripcion").focus();
   };
 
-  // const saveSubMenu = async (token, data) => {
-  //   let res = null;
-  //   if (data.sub_menu) {
-  //     accion === "Alta"
-  //       ? (res = await guardaSubMenu(token, data))
-  //       : (res = await updateSubMenu(token, data, accion));
-  //     setReloadPage(!reload_page);
-  //   }
-  // };
-
   const onSubmitModal = handleSubmit(async (data) => {
-    if (!validateBeforeSave("sub_menu", "my_modal_3")) {
-      return;
-    }
-    data.numero = currentID;
-    let res = null;
+    event.preventDefault();
     setisLoadingButton(true);
+    accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
+    let res = null;
     if (accion === "Eliminar") {
       showModal(false);
       const confirmed = await confirmSwal(
@@ -205,11 +245,11 @@ export const useAccesoMenuABC = () => {
       );
       if (!confirmed) {
         showModal(true);
+        setisLoadingButton(false);
         return;
       }
     }
     res = await guardaMenu(session.user.token, accion, data);
-    // await saveSubMenu(session.user.token, data);
     if (res.status) {
       if (accion === "Alta") {
         const nuevoMenu = { currentID, ...data };
@@ -242,26 +282,13 @@ export const useAccesoMenuABC = () => {
       }
       showSwal(res.alert_title, res.alert_text, res.alert_icon);
       showModal(false);
-      setisLoadingButton(false);
     } else {
-      showModal(false);
-      const confirmed = await confirmSwal(
-        res.alert_title,
-        res.alert_text,
-        res.alert_icon,
-        "Aceptar",
-        "Cancelar"
-      );
-      if (!confirmed) {
-        showModal(true);
-        setisLoadingButton(false);
-        return;
-      } else {
-        showModal(true);
-        setisLoadingButton(false);
-        return;
-      }
+      showSwal(res.alert_title, res.alert_text, res.alert_icon, "my_modal_3");
     }
+    if (accion === "Alta" || accion === "Eliminar") {
+      setReloadPage(!reload_page);
+      await fetchAccesoMenuStatus(inactiveActive, busqueda);
+    };
     setisLoadingButton(false);
   },
   async (errors) => {
@@ -271,11 +298,6 @@ export const useAccesoMenuABC = () => {
     }
   }
 );
-
-  const limpiarBusqueda = (evt) => {
-    evt.preventDefault();
-    setBusqueda({ tb_id: "", tb_desc: "" });
-  };
 
   const showModal = (show) => {
     show
@@ -290,11 +312,43 @@ export const useAccesoMenuABC = () => {
     router.push("/");
   };
 
-  const handleBusquedaChange = (event) => {
+  const handleBusquedaChange = async (event) => {
+    event.preventDefault();
     setBusqueda((estadoPrevio) => ({
       ...estadoPrevio,
       [event.target.id]: event.target.value,
     }));
+  };
+
+  const handleReactivar = async (evt, MenuAccesor) => {
+    evt.preventDefault();
+    const confirmed = await confirmSwal(
+      "¿Desea reactivar este Acceso del Menu?",
+      "El Acceso del Menu será reactivado y volverá a estar activo.",
+      "warning",
+      "Sí, reactivar",
+      "Cancelar"
+    );
+  
+    if (confirmed) {
+      const res = await guardaMenu(session.user.token, "Editar", { 
+        ...MenuAccesor,
+        baja: ""
+      })
+  
+      if (res.status) {
+        const cActualizadas = menus.map((c) =>
+          c.numero === menus.numero ? { ...c, baja: "" } : c
+        );
+        setMenus(cActualizadas);
+        setMenusFiltrados(cActualizadas);
+
+        showSwal("Reactivado", "El Acceso del Menu ha sido reactivado correctamente.", "success");
+        setReloadPage((prev) => !prev);
+      } else {
+        showSwal("Error", "No se pudo reactivar el Acceso del Menu.", "error");
+      }
+    }
   };
 
   const tableAction = (evt, menu, accion) => {
@@ -302,7 +356,12 @@ export const useAccesoMenuABC = () => {
     setMenu(menu);
     setAccion(accion);
     setCurrentId(menu.numero);
-    showModal(true);
+    if (accion === "Reactivar") {
+      handleReactivar(evt, menu);
+      
+    } else {
+      showModal(true);
+    }
   };
 
   return {
@@ -328,5 +387,7 @@ export const useAccesoMenuABC = () => {
     isDisabled,
     titulo,
     isLoadingButton,
+    active,
+    inactive,
   };
 };

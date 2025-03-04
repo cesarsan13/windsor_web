@@ -3,6 +3,7 @@ import Inputs from "@/app/productos/components/Inputs";
 import { ActionButton, ActionColumn } from "@/app/utils/GlobalComponents";
 import iconos from "@/app/utils/iconos";
 import { formatNumber } from "@/app/utils/globalfn";
+import { useState } from "react";
 export const useProductosUI = (
   tableAction,
   register,
@@ -11,6 +12,28 @@ export const useProductosUI = (
   errors,
   accion
 ) => {
+  const [sinZebra, setSinZebra] = useState(false);
+  const handleKeyDown = (evt) => {
+    if (evt.key === "Enter") {
+        evt.preventDefault(); 
+
+        const fieldset = document.getElementById("fs_productos");
+        const inputs = Array.from(
+            fieldset.querySelectorAll("input[name='numero'], input[name='descripcion'], input[name='ref'], input[name='frecuencia'], input[name='aplicacion'], input[name='costo'], input[name='por_recargo'], input[name='iva'], input[name='cond_1'], input[name='cam_precio']")
+        );
+
+        const currentIndex = inputs.indexOf(evt.target);
+        if (currentIndex !== -1) {
+            if (currentIndex < inputs.length - 1) {
+                inputs[currentIndex + 1].focus(); 
+            } else {
+                const submitButton = fieldset?.querySelector("button[type='submit']");
+                if (submitButton) submitButton.click(); 
+            }
+        }
+    }
+  };
+
   const itemHeaderTable = () => {
     return (
       <>
@@ -56,10 +79,13 @@ export const useProductosUI = (
       </>
     );
   };
-  const tableColumns = () => {
+  const tableColumns = (data = []) => {
+    const hasBajas = data.some(item => item.baja === "*");
     return (
-      <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
-        <tr>
+        <thead className={`sticky top-0 z-[2] ${
+          hasBajas ? "text-black" : "bg-white dark:bg-[#1d232a]"}`}
+          style={hasBajas ? { backgroundColor: "#CF2A2A" } : {}}>        
+          <tr>
           <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
           <td className="w-[40%]">Descripcion</td>
           <td className="w-[15%]">Aplicacion</td>
@@ -68,22 +94,19 @@ export const useProductosUI = (
           <td className="w-[10%]">Condición</td>
           <td className="w-[10%]">IVA</td>
           <ActionColumn description={"Ver"} permission={true} />
-          <ActionColumn
-            description={"Editar"}
-            permission={permissions.cambios}
-          />
-          <ActionColumn
-            description={"Eliminar"}
-            permission={permissions.bajas}
-          />
+          {!hasBajas && <ActionColumn description={"Editar"} permission={permissions.cambios} />}
+          {!hasBajas && <ActionColumn description={"Eliminar"} permission={permissions.bajas}/>}
+          {hasBajas && <ActionColumn description={"Reactivar"} permission={true} />}
         </tr>
       </thead>
     );
   };
 
-  const tableBody = (data) => {
+  const tableBody = (data = []) => {
+    const hasBajas = data.some(item => item.baja === "*");
+    setSinZebra(hasBajas);
     return (
-      <tbody>
+      <tbody style={{ backgroundColor: hasBajas ? "#CD5C5C" : "" }}>
         {data.map((item) => (
           <tr key={item.numero} className="hover:cursor-pointer">
             <th
@@ -109,25 +132,37 @@ export const useProductosUI = (
               onClick={(evt) => tableAction(evt, item, "Ver")}
               permission={true}
             />
-            <ActionButton
-              tooltip="Editar"
-              iconDark={iconos.editar}
-              iconLight={iconos.editar_w}
-              onClick={(evt) => tableAction(evt, item, "Editar")}
-              permission={permissions.cambios}
-            />
-            <ActionButton
-              tooltip="Eliminar"
-              iconDark={iconos.eliminar}
-              iconLight={iconos.eliminar_w}
-              onClick={(evt) => tableAction(evt, item, "Eliminar")}
-              permission={permissions.bajas}
-            />
-          </tr>
-        ))}
-      </tbody>
-    );
-  };
+          {item.baja !== "*" ? (
+                      <>
+                        <ActionButton
+                          tooltip="Editar"
+                          iconDark={iconos.editar}
+                          iconLight={iconos.editar_w}
+                          onClick={(evt) => tableAction(evt, item, "Editar")}
+                          permission={permissions.cambios}
+                        />
+                        <ActionButton
+                          tooltip="Eliminar"
+                          iconDark={iconos.eliminar}
+                          iconLight={iconos.eliminar_w}
+                          onClick={(evt) => tableAction(evt, item, "Eliminar")}
+                          permission={permissions.bajas}
+                        />
+                      </>
+                    ) : (
+                      <ActionButton
+                        tooltip="Reactivar"
+                        iconDark={iconos.documento}
+                        iconLight={iconos.documento_w}
+                        onClick={(evt) => tableAction(evt, item, "Reactivar")}
+                        permission={true}
+                      />
+                    )}
+                  </tr>
+                ))}
+            </tbody>
+        );
+    };
 
   const modalBody = () => {
     return (
@@ -150,6 +185,9 @@ export const useProductosUI = (
             message={"Numero requerido"}
             maxLenght={20}
             isDisabled={isDisabled}
+            onKeyDown={(evt) => {
+              handleKeyDown(evt);
+            }}
           />
           <Inputs
             dataType={"string"}
@@ -165,6 +203,9 @@ export const useProductosUI = (
             message={"Descripción requerido"}
             maxLenght={30}
             isDisabled={isDisabled}
+            onKeyDown={(evt) => {
+              handleKeyDown(evt);
+            }}
           />
           <Inputs
             dataType={"string"}
@@ -180,6 +221,9 @@ export const useProductosUI = (
             message={"Referencia requerido"}
             maxLenght={3}
             isDisabled={isDisabled}
+            onKeyDown={(evt) => {
+              handleKeyDown(evt);
+            }}
           />
           <Inputs
             dataType={"string"}
@@ -194,6 +238,9 @@ export const useProductosUI = (
             message={"Frecuencia requerido"}
             maxLenght={6}
             isDisabled={isDisabled}
+            onKeyDown={(evt) => {
+              handleKeyDown(evt);
+            }}
           />
           <Inputs
             dataType={"string"}
@@ -208,6 +255,9 @@ export const useProductosUI = (
             message={"Aplicación requerido"}
             maxLenght={34}
             isDisabled={isDisabled}
+            onKeyDown={(evt) => {
+              handleKeyDown(evt);
+            }}
           />
           <Inputs
             dataType={"float"}
@@ -222,6 +272,9 @@ export const useProductosUI = (
             message={"Costo requerido"}
             maxLenght={10}
             isDisabled={isDisabled}
+            onKeyDown={(evt) => {
+              handleKeyDown(evt);
+            }}
           />
           <Inputs
             dataType={"float"}
@@ -236,6 +289,9 @@ export const useProductosUI = (
             message={"Recargos requerido"}
             maxLenght={10}
             isDisabled={isDisabled}
+            onKeyDown={(evt) => {
+              handleKeyDown(evt);
+            }}
           />
           <Inputs
             dataType={"float"}
@@ -250,6 +306,9 @@ export const useProductosUI = (
             message={"IVA requerido"}
             maxLenght={10}
             isDisabled={isDisabled}
+            onKeyDown={(evt) => {
+              handleKeyDown(evt);
+            }}
           />
           <Inputs
             dataType={"int"}
@@ -264,6 +323,9 @@ export const useProductosUI = (
             message={"Condición requerido"}
             maxLenght={10}
             isDisabled={isDisabled}
+            onKeyDown={(evt) => {
+              handleKeyDown(evt);
+            }}
           />
           <Inputs
             dataType={"boolean"}
@@ -290,5 +352,6 @@ export const useProductosUI = (
     tableColumns,
     tableBody,
     modalBody,
+    sinZebra
   };
 };

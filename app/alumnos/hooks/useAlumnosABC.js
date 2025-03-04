@@ -297,6 +297,8 @@ useEffect(() => {
         : accion === "Eliminar"
         ? `Eliminar Alumno: ${currentID}`
         : `Ver Alumno: ${currentID}`
+        ? `Reactivar Alumno: ${currentID}`
+        : accion == "Reactivar"
     );
 }, [accion, currentID]);
 
@@ -757,6 +759,41 @@ const handleBusquedaChange = (event) => {
     }));
 };
 
+const handleReactivar = async (evt, formaAlumnos) => {
+    evt.preventDefault();
+    const confirmed = await confirmSwal(
+    "¿Desea reactivar este alumno?",
+    "El alumno será reactivado y volverá a estar activo.",
+    "warning",
+    "Sí, reactivar",
+    "Cancelar"
+    );
+    const formData = new FormData();
+    Object.keys(formaAlumnos).forEach((key) => {
+        formData.append(key, formaAlumnos[key] ?? "");
+        });
+    formData.append("baja", "");
+    formData.append("estatus", "Activo");
+    if (confirmed) {
+    const res = await guardarAlumnos(session.user.token, formData, "Editar", formaAlumnos.numero);
+
+
+    if (res.status) {
+        const updatedAlumnos = formasAlumnos.map((c) =>
+        c.numero === formaAlumnos.numero ? { ...c, baja: "" } : c
+        );
+
+        setFormasAlumnos(updatedAlumnos);
+        setFormaAlumnosFiltrados(updatedAlumnos);
+
+        showSwal("Reactivado", "El alumno ha sido reactivado correctamente.", "success");
+        setReloadPage((prev) => !prev);
+    } else {
+        showSwal("Error", "No se pudo reactivar el alumno.", "error");
+    }
+    }
+};
+
 const tableAction = async (evt, formaAlumnos, accion) => {
     evt.preventDefault();
     const imagenUrl = await getFotoAlumno(session.user.token, formaAlumnos.ruta_foto);
@@ -770,7 +807,11 @@ const tableAction = async (evt, formaAlumnos, accion) => {
     setFormaAlumno(formaAlumnos);
     setAccion(accion);
     setCurrentId(formaAlumnos.numero);
-    showModal(true);
+    if (accion === "Reactivar") {
+        handleReactivar(evt, formaAlumnos);
+    } else {
+        showModal(true);
+    }      
     setcondicion(false);
 };
 

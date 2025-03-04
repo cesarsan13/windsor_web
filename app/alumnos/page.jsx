@@ -71,7 +71,7 @@ function Alumnos() {
     setisLoadingButton
   );
 
-const { itemHeaderTable, itemDataTable, tableColumns, tableBody, modalBody} =
+const { itemHeaderTable, itemDataTable, tableColumns, tableBody, modalBody, sinZebra} =
   useAlumnosUI(tableAction, register, permissions, isDisabled, errors);
   if (status === "loading" && !session) {
     return (
@@ -159,6 +159,7 @@ const { itemHeaderTable, itemDataTable, tableColumns, tableBody, modalBody} =
                   isLoading={isLoading}
                   tableColumns={tableColumns}
                   tableBody={tableBody}
+                  sinZebra={sinZebra}
                 />
               ))}
           </div>

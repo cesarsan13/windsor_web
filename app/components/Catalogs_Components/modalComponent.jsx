@@ -27,7 +27,7 @@ export default function ModalComponent({
   return (
     <dialog id="my_modal_3" className="modal">
       <div className={`modal-box bg-base-200 ${sizeClasses[size] || "max-w-2xl"}`}>
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} id="modal_form">
           <div className="sticky -top-6 flex justify-between items-center bg-transparent w-full h-10 z-10 mb-5">
             <h3 className="font-bold text-lg text-neutral-600 dark:text-white">
               {titulo}

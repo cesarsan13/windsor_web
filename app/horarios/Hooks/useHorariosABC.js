@@ -12,7 +12,9 @@ import {
 import { showSwal, confirmSwal, showSwalConfirm } from "@/app/utils/alerts";
 import { useEscapeWarningModal, validateBeforeSave } from "@/app/utils/globalfn";
 
-export const useHorariosABC = () => {
+export const useHorariosABC = (
+    dia
+) => {
     const router = useRouter();
     const { data: session, status } = useSession();
     const [formasHorarios, setFormasHorarios] = useState([]);
@@ -32,6 +34,7 @@ export const useHorariosABC = () => {
     const [reload_page, setReloadPage] = useState(false);
     const [active, setActive] = useState(false);
     const [inactive, setInactive] = useState(false);
+    //const [dia, setDia] = useState("");
     const [busqueda, setBusqueda] = useState({ 
         tb_id: "",
         tb_desc: "",
@@ -69,7 +72,12 @@ useEffect(() => {
     setFormasHorarios(data);
     setFormaHorariosFiltrados(data);
     setInactiveActive(res.data);
-    const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
+    const permisos = permissionsComponents(
+        es_admin, 
+        permissions, 
+        session.user.id,
+        menuSeleccionado
+    );
     await fetchHorariosStatus(false, res.data, busqueda);
     setPermissions(permisos);
     setisLoading(false);
@@ -180,6 +188,8 @@ useEffect(() => {
         : accion === "Eliminar"
         ? `Eliminar Horario: ${currentID}`
         : `Ver Horario: ${currentID}`
+        ? `Reactivar Horario: ${currentID}`
+        : accion == "Reactivar"
     );
 }, [accion, currentID]);
 
@@ -228,9 +238,6 @@ const Alta = async () => {
 
 const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault;
-    if (!validateBeforeSave("salon", "my_modal_3")) {
-        return;
-    }
     setisLoadingButton(true);
     accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
     let res = null;
@@ -256,51 +263,51 @@ const onSubmitModal = handleSubmit(async (data) => {
     }
     res = await guardarHorario(session.user.token, data, accion);
     if (res.status) {
-    if (accion === "Alta") {
-        data.numero = res.data;
-        setCurrentId(data.numero);
-        const nuevaFormaHorario = { currentID, ...data };
-        setFormasHorarios([...formasHorarios, nuevaFormaHorario]);
-        if (!bajas) {
-        setFormaHorariosFiltrados([...formaHorariosFiltrados, nuevaFormaHorario]);
-        }
-    }
-    if (accion === "Eliminar" || accion === "Editar") {
-        const index = formasHorarios.findIndex((fp) => fp.numero === data.numero);
-        if (index !== -1) {
-        if (accion === "Eliminar") {
-            const fpFiltrados = formasHorarios.filter(
-            (fp) => fp.numero !== data.numero
-            );
-            setFormasHorarios(fpFiltrados);
-            setFormaHorariosFiltrados(fpFiltrados);
-        } else {
-            if (bajas) {
-            const fpFiltrados = formasHorarios.filter(
-                (fp) => fp.numero !== data.numero
-            );
-            setFormasHorarios(fpFiltrados);
-            setFormaHorariosFiltrados(fpFiltrados);
-            } else {
-            const fpActualizadas = formasHorarios.map((fp) =>
-                fp.numero === currentID ? { ...fp, ...data } : fp
-            );
-            setFormasHorarios(fpActualizadas);
-            setFormaHorariosFiltrados(fpActualizadas);
+        if (accion === "Alta") {
+            data.numero = res.data;
+            setCurrentId(data.numero);
+            const nuevaFormaHorario = { currentID, ...data };
+            setFormasHorarios([...formasHorarios, nuevaFormaHorario]);
+            if (!bajas) {
+            setFormaHorariosFiltrados([...formaHorariosFiltrados, nuevaFormaHorario]);
             }
         }
+        if (accion === "Eliminar" || accion === "Editar") {
+            const index = formasHorarios.findIndex((fp) => fp.numero === data.numero);
+            if (index !== -1) {
+                if (accion === "Eliminar") {
+                    const fpFiltrados = formasHorarios.filter(
+                    (fp) => fp.numero !== data.numero
+                    );
+                    setFormasHorarios(fpFiltrados);
+                    setFormaHorariosFiltrados(fpFiltrados);
+                } else {
+                    if (bajas) {
+                    const fpFiltrados = formasHorarios.filter(
+                        (fp) => fp.numero !== data.numero
+                    );
+                    setFormasHorarios(fpFiltrados);
+                    setFormaHorariosFiltrados(fpFiltrados);
+                    } else {
+                    const fpActualizadas = formasHorarios.map((fp) =>
+                        fp.numero === currentID ? { ...fp, ...data } : fp
+                    );
+                    setFormasHorarios(fpActualizadas);
+                    setFormaHorariosFiltrados(fpActualizadas);
+                    }
+                }
+            }
+        }
+        showSwal(res.alert_title, res.alert_text, res.alert_icon);
+        showModal(false);
+    } else {
+        showSwal(res.alert_title, res.alert_text, "error", "my_modal_3");
     }
-}
-showSwal(res.alert_title, res.alert_text, res.alert_icon);
-showModal(false);
-} else {
-showSwal(res.alert_title, res.alert_text, "error", "my_modal_3");
-}
-if (accion === "Alta" || accion === "Eliminar") {
-    setReloadPage(!reload_page);
-    await fetchHorariosStatus(false, inactiveActive, busqueda);
-}
-setisLoadingButton(false);
+    if (accion === "Alta" || accion === "Eliminar") {
+        setReloadPage(!reload_page);
+        await fetchHorariosStatus(false, inactiveActive, busqueda);
+    }
+    setisLoadingButton(false);
 },
 async (errors) => {
     await trigger();
@@ -331,12 +338,48 @@ const handleBusquedaChange = async (event) => {
     }));
 };
 
+const handleReactivar = async (evt, horariosr) => {
+    evt.preventDefault();
+    const confirmed = await confirmSwal(
+      "¿Desea reactivar este horario?",
+      "El horario será reactivado y volverá a estar activo.",
+      "warning",
+      "Sí, reactivar",
+      "Cancelar"
+    );
+  
+    if (confirmed) {
+      const res = await guardarHorario(session.user.token, { 
+        ...horariosr, 
+        baja: ""
+      }, "Editar");
+  
+      if (res.status) {
+        const updatedHorarios = formasHorarios.map((c) =>
+          c.numero === horariosr.numero ? { ...c, baja: "" } : c
+        );
+  
+        setFormasHorarios(updatedHorarios);
+        setFormaHorariosFiltrados(updatedHorarios);
+  
+        showSwal("Reactivado", "El horario ha sido reactivado correctamente.", "success");
+        setReloadPage((prev) => !prev);
+      } else {
+        showSwal("Error", "No se pudo reactivar el horario.", "error");
+      }
+    }
+};
+
 const tableAction = (evt, formaHorarios, accion) => {
     evt.preventDefault();
     setFormaHorarios(formaHorarios);
     setAccion(accion);
     setCurrentId(formaHorarios.numero);
-    showModal(true);
+    if (accion === "Reactivar") {
+        handleReactivar(evt, formaHorarios);
+    } else {
+        showModal(true);
+    }  
 };
 
 return {
@@ -368,5 +411,6 @@ return {
     isDisabled,
     errors,
     inactiveActive,
+    formaHorarios,
 };
 };

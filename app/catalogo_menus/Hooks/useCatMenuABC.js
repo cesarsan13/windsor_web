@@ -170,6 +170,8 @@ export const useCatMenuABC = () => {
             : accion === "Eliminar"
             ? `Eliminar Menu: ${currentID}`
             : `Ver Menu: ${currentID}`
+            ? `Reactivar Profesor: ${currentID}`
+            : accion === "Reactivar"
         );
     }, [accion, currentID]);
 
@@ -188,7 +190,6 @@ export const useCatMenuABC = () => {
 
     const Alta = async () => {
         setCurrentId("");
-        const { token } = session.user;
         reset({
           numero: "",
           nombre: "",
@@ -202,9 +203,6 @@ export const useCatMenuABC = () => {
 
     const onSubmitModal = handleSubmit(async (data) => {
         event.preventDefault;
-        if (!validateBeforeSave("nombre", "my_modal_3")) {
-          return;
-        }
         setisLoadingButton(true);
         accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
         let res = null;
@@ -223,7 +221,7 @@ export const useCatMenuABC = () => {
             return;
           }
         }
-        res = await guardarMenus(session.user.token, accion, data);
+        res = await guardarMenus(session.user.token, data, accion);
         if (res.status) {
           if (accion === "Alta") {
             data.numero = res.data;
@@ -289,11 +287,43 @@ export const useCatMenuABC = () => {
     };
     
     const handleBusquedaChange = async (event) => {
-        event.preventDefault;
+        event.preventDefault();
         setBusqueda((estadoPrevio) => ({
           ...estadoPrevio,
           [event.target.id]: event.target.value,
         }));
+    };
+
+    const handleReactivar = async (evt, menusr) => {
+      evt.preventDefault();
+      const confirmed = await confirmSwal(
+        "¿Desea reactivar este Menu?",
+        "El Menu será reactivado y volverá a estar activo.",
+        "warning",
+        "Sí, reactivar",
+        "Cancelar"
+      );
+    
+      if (confirmed) {
+        const res = await guardarMenus(session.user.token, { 
+          ...menusr, 
+          baja: ""
+        }, "Editar");
+    
+        if (res.status) {
+          const updatedmenus = menus.map((c) =>
+            c.numero === menus.numero ? { ...c, baja: "" } : c
+          );
+    
+          setMenus(updatedmenus);
+          setMenusFiltrados(updatedmenus);
+    
+          showSwal("Reactivado", "El Menu ha sido reactivado correctamente.", "success");
+          setReloadPage((prev) => !prev);
+        } else {
+          showSwal("Error", "No se pudo reactivar el Menu.", "error");
+        }
+      }
     };
 
     const tableAction = (evt, menu, accion) => {
@@ -301,7 +331,12 @@ export const useCatMenuABC = () => {
         setMenu(menu);
         setAccion(accion);
         setCurrentId(menu.numero);
-        showModal(true);
+        if (accion === "Reactivar") {
+          handleReactivar(evt, menu);
+          
+        } else {
+          showModal(true);
+        }
     };
 
     return {

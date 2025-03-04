@@ -70,7 +70,7 @@ function Productos() {
     setisLoadingButton
   );
 
-  const { itemHeaderTable, itemDataTable, tableColumns, tableBody, modalBody } =
+  const { itemHeaderTable, itemDataTable, tableColumns, tableBody, modalBody, sinZebra } =
     useProductosUI(tableAction, register, permissions, isDisabled, errors, accion);
   if (status === "loading" && !session) {
     return (
@@ -154,6 +154,7 @@ function Productos() {
                   isLoading={isLoading}
                   tableColumns={tableColumns}
                   tableBody={tableBody}
+                  sinZebra={sinZebra}
                 />
               ))}
           </div>

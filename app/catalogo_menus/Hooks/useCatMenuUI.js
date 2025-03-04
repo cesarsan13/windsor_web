@@ -2,6 +2,7 @@ import React from "react";
 import Inputs from "@/app/catalogo_menus/components/Inputs";
 import { ActionButton, ActionColumn } from "@/app/utils/GlobalComponents";
 import iconos from "@/app/utils/iconos";
+import { useState } from "react";
 
 export const useCatMenuUI = (
     tableAction,
@@ -11,9 +12,36 @@ export const useCatMenuUI = (
     errors
 ) => {
 
-    const tableColumns = () => {
+    const [sinZebra, setSinZebra] = useState(false);
+      
+      const handleKeyDown = (evt) => {
+        if (evt.key === "Enter") {
+            evt.preventDefault(); 
+    
+            const fieldset = document.getElementById("fs_menu");
+            const inputs = Array.from(
+                fieldset.querySelectorAll("input[name='nombre']")
+            );
+    
+            const currentIndex = inputs.indexOf(evt.target);
+            if (currentIndex !== -1) {
+                if (currentIndex < inputs.length - 1) {
+                    inputs[currentIndex + 1].focus(); 
+                } else {
+                    const submitButton = fieldset?.querySelector("button[type='submit']");
+                    if (submitButton) submitButton.click(); 
+                }
+            }
+        }
+      };
+
+    const tableColumns = (data = [] ) => {
+        const hasBajas = data.some(item => item.baja === "*");
         return (
-            <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
+            <thead className={`sticky top-0 z-[2] ${
+                hasBajas ? "text-black" : "bg-white dark:bg-[#1d232a]"}`}
+                style={hasBajas ? { backgroundColor: "#CF2A2A" } : {}}
+            >
                 <tr>
                     <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
                     <td className="sm:w-[35%]">Nombre</td>
@@ -21,22 +49,28 @@ export const useCatMenuUI = (
                         description={"Ver"} 
                         permission={true} 
                     />
-                    <ActionColumn
+                    {!hasBajas && <ActionColumn
                     description={"Editar"}
                     permission={permissions.cambios}
-                    />
-                    <ActionColumn
+                    /> }
+                    {!hasBajas && <ActionColumn
                         description={"Eliminar"}
                         permission={permissions.bajas}
-                    />
+                    />}
+                    {hasBajas && <ActionColumn 
+                        description={"Reactivar"} 
+                        permission={true} 
+                    />}
                 </tr>
             </thead>
         );
     };    
 
-    const tableBody = (data) => {
+    const tableBody = (data = []) => {
+        const hasBajas = data.some(item => item.baja === "*");
+        setSinZebra(hasBajas);
         return (
-            <tbody>
+            <tbody style={{ backgroundColor: hasBajas ? "#CD5C5C" : "" }}>
                 {data.map((item) => (
                     <tr key={item.numero} className="hover:cursor-pointer">
                         <th
@@ -58,20 +92,32 @@ export const useCatMenuUI = (
                             onClick={(evt) => tableAction(evt, item, "Ver")}
                             permission={true}
                         />
-                        <ActionButton
-                            tooltip="Editar"
-                            iconDark={iconos.editar}
-                            iconLight={iconos.editar_w}
-                            onClick={(evt) => tableAction(evt, item, "Editar")}
-                            permission={permissions.cambios}
-                        />
-                        <ActionButton
-                            tooltip="Eliminar"
-                            iconDark={iconos.eliminar}
-                            iconLight={iconos.eliminar_w}
-                            onClick={(evt) => tableAction(evt, item, "Eliminar")}
-                            permission={permissions.bajas}
-                        />
+                        {item.baja !== "*" ? (
+                            <>
+                                <ActionButton
+                                    tooltip="Editar"
+                                    iconDark={iconos.editar}
+                                    iconLight={iconos.editar_w}
+                                    onClick={(evt) => tableAction(evt, item, "Editar")}
+                                    permission={permissions.cambios}
+                                />
+                                <ActionButton
+                                    tooltip="Eliminar"
+                                    iconDark={iconos.eliminar}
+                                    iconLight={iconos.eliminar_w}
+                                    onClick={(evt) => tableAction(evt, item, "Eliminar")}
+                                    permission={permissions.bajas}
+                                />
+                            </>
+                        ) : (
+                            <ActionButton
+                              tooltip="Reactivar"
+                              iconDark={iconos.documento}
+                              iconLight={iconos.documento_w}
+                              onClick={(evt) => tableAction(evt, item, "Reactivar")}
+                              permission={true}
+                            />
+                        )}
                     </tr>
                 ))}
           </tbody>
@@ -96,6 +142,9 @@ export const useCatMenuUI = (
                     message={"Nombre requerido"}
                     maxLenght={80}
                     isDisabled={isDisabled}
+                    onKeyDown={(evt) => {
+                        handleKeyDown(evt);
+                    }}
                   />
                 </div>
             </fieldset>
@@ -105,6 +154,7 @@ export const useCatMenuUI = (
     return{
         tableColumns,
         tableBody,
-        modalBody
+        modalBody,
+        sinZebra
     };
 };

@@ -284,8 +284,6 @@ export const useProfesoresABC = () => {
         res = await guardaProfesor(session.user.token, data, accion);
         if (res.status) {
           if (accion === "Alta") {
-            data.numero = res.data;
-            setCurrentId(data.numero);
             const nuevaProfesor = { currentID, ...data };
             setProfesores([...profesores, nuevaProfesor]);
             if (!bajas) {
@@ -392,7 +390,6 @@ export const useProfesoresABC = () => {
       };
 
     const tableAction = (evt, profesor, accion) => {
-      console.log("accion", accion);
         evt.preventDefault();
         setProfesor(profesor);
         setAccion(accion);

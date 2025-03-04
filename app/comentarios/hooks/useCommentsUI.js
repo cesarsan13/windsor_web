@@ -2,6 +2,7 @@ import React from "react";
 import Inputs from "@/app/comentarios/components/Inputs";
 import { ActionButton, ActionColumn } from "@/app/utils/GlobalComponents";
 import iconos from "@/app/utils/iconos";
+import { useState } from "react";
 
 export const useCommentsUI = (
   tableAction,
@@ -11,6 +12,9 @@ export const useCommentsUI = (
   errors,
   accion
 ) => {
+
+  const [sinZebra, setSinZebra] = useState(false);
+
   const generales = [
     { id: 1, descripcion: "Si" },
     { id: 0, descripcion: "No" },
@@ -22,7 +26,7 @@ export const useCommentsUI = (
 
         const fieldset = document.getElementById("fs_comentario");
         const inputs = Array.from(
-            fieldset.querySelectorAll("input[name='comentario_1'], input[name='comentario_2'], input[name='comentario_3'], input[name='generales']")
+            fieldset.querySelectorAll("input[name='comentario_1'], input[name='comentario_2'], input[name='comentario_3']") //input[name='generales']
         );
 
         const currentIndex = inputs.indexOf(evt.target);
@@ -88,6 +92,7 @@ export const useCommentsUI = (
 
   const tableBody = (data = []) => {
     const hasBajas = data.some(item => item.baja === "*");
+    setSinZebra(hasBajas);
     return (
       <tbody style={{ backgroundColor: hasBajas ? "#CD5C5C" : "" }}>
         {data.map((item) => (
@@ -224,5 +229,6 @@ export const useCommentsUI = (
     tableColumns,
     tableBody,
     modalBody,
+    sinZebra
   };
 };

@@ -2,6 +2,7 @@ import React from "react";
 import Inputs from "@/app/formfact/components/Inputs";
 import { ActionButton, ActionColumn } from "@/app/utils/GlobalComponents";
 import iconos from "@/app/utils/iconos";
+import { useState } from "react";
 
 export const useFormFactUI = (
     tableAction,
@@ -11,6 +12,30 @@ export const useFormFactUI = (
     errors,
     accion
 ) => {
+
+  const [sinZebra, setSinZebra] = useState(false);
+
+  const handleKeyDown = (evt) => {
+    if (evt.key === "Enter") {
+        evt.preventDefault(); 
+
+        const fieldset = document.getElementById("fs_formaFactura");
+        const inputs = Array.from(
+            fieldset.querySelectorAll("input[name='nombre_forma'], input[name='longitud']")
+        );
+
+        const currentIndex = inputs.indexOf(evt.target);
+        if (currentIndex !== -1) {
+            if (currentIndex < inputs.length - 1) {
+                inputs[currentIndex + 1].focus(); 
+            } else {
+                const submitButton = fieldset?.querySelector("button[type='submit']");
+                if (submitButton) submitButton.click(); 
+            }
+        }
+    }
+  };
+
     const itemHeaderTable = () => {
         return (
           <>
@@ -37,41 +62,50 @@ export const useFormFactUI = (
         );
     };
 
-    const tableColumns = () => {
+    const tableColumns = (data = []) => {
+        const hasBajas = data.some(item => item.baja === "*");
         return (
-            <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
+            <thead className={`sticky top-0 z-[2] ${
+              hasBajas ? "text-black" : "bg-white dark:bg-[#1d232a]"}`}
+              style={hasBajas ? { backgroundColor: "#CF2A2A" } : {}}>
                 <tr>
                     <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
                     <td className="w-[60%]">Nombre</td>
-                    <td className="w-[40%]">Longitud</td>
+                    <td className="w-[40%] hidden sm:table-cell">Longitud</td>
                     < ActionColumn
                         description={"Ver"}
                         permission={true}
                     />
-                    < ActionColumn
+                    {!hasBajas && <ActionColumn
                         description={"Editar"}
                         permission={permissions.cambios}
-                    />
-                    < ActionColumn
+                    />}
+                    {!hasBajas && <ActionColumn
                         description={"Eliminar"}
                         permission={permissions.bajas}
-                    />
-                    < ActionColumn
+                    />}
+                    {!hasBajas && <ActionColumn
                         description={"A. Formato"}
                         permission={permissions.cambios}
-                    />
+                    />}
+                    {hasBajas && <ActionColumn 
+                      description={"Reactivar"}
+                      permission={true} 
+                    />}
                 </tr>
             </thead>
         );
     };
 
-    const tableBody = (data) => {
+    const tableBody = (data = []) => {
+      const hasBajas = data.some(item => item.baja === "*");
+      setSinZebra(hasBajas);
         return (
-            <tbody>
+            <tbody style={{ backgroundColor: hasBajas ? "#CD5C5C" : "" }}>
               {data.map((item) => (
                 <tr key={item.numero} className="hover:cursor-pointer">
                   <th className="text-left">{item.numero_forma}</th>
-                  <td className="text-left w-50">{item.nombre_forma}</td>
+                  <td className="text-left w-50 hidden sm:table-cell">{item.nombre_forma}</td>
                   <td>{item.longitud}</td>
                   <ActionButton
                   tooltip="Ver"
@@ -80,27 +114,39 @@ export const useFormFactUI = (
                   onClick={(evt) => tableAction(evt, item, "Ver")}
                   permission={true}
                 />
-                <ActionButton
-                  tooltip="Editar"
-                  iconDark={iconos.editar}
-                  iconLight={iconos.editar_w}
-                  onClick={(evt) => tableAction(evt, item, "Editar")}
-                  permission={permissions.cambios}
-                />
-                <ActionButton
-                  tooltip="Eliminar"
-                  iconDark={iconos.eliminar}
-                  iconLight={iconos.eliminar_w}
-                  onClick={(evt) => tableAction(evt, item, "Eliminar")}
-                  permission={permissions.bajas}
-                />
-                <ActionButton
-                  tooltip="A. Formato"
-                  iconDark={iconos.actualizar_formato}
-                  iconLight={iconos.actualizar_formato_w}
-                  onClick={(evt) => tableAction(evt, item, "ActualizaFormato")}
-                  permission={permissions.cambios}
-                />
+                {item.baja !== "*" ? (
+                  <>
+                    <ActionButton
+                      tooltip="Editar"
+                      iconDark={iconos.editar}
+                      iconLight={iconos.editar_w}
+                      onClick={(evt) => tableAction(evt, item, "Editar")}
+                      permission={permissions.cambios}
+                    />
+                    <ActionButton
+                      tooltip="Eliminar"
+                      iconDark={iconos.eliminar}
+                      iconLight={iconos.eliminar_w}
+                      onClick={(evt) => tableAction(evt, item, "Eliminar")}
+                      permission={permissions.bajas}
+                    />
+                    <ActionButton
+                      tooltip="A. Formato"
+                      iconDark={iconos.actualizar_formato}
+                      iconLight={iconos.actualizar_formato_w}
+                      onClick={(evt) => tableAction(evt, item, "ActualizaFormato")}
+                      permission={permissions.cambios}
+                    />
+                  </>
+                ) : (
+                  <ActionButton
+                    tooltip="Reactivar"
+                    iconDark={iconos.documento}
+                    iconLight={iconos.documento_w}
+                    onClick={(evt) => tableAction(evt, item, "Reactivar")}
+                    permission={true}
+                  />
+                )}
                 </tr>
               ))}
             </tbody>
@@ -110,8 +156,8 @@ export const useFormFactUI = (
     const modalBody = () => {
         return (
             <fieldset 
-              id="fs_formapago"
-              disabled={accion === "Ver"  || accion === "Eliminar" ? true : false }
+              id="fs_formaFactura"
+              dataTypedisabled={accion === "Ver"  || accion === "Eliminar" ? true : false }
             >
             <div className="container flex flex-col space-y-5">
               <Inputs
@@ -129,6 +175,9 @@ export const useFormFactUI = (
                 maxLenght={30}
                 isDisabled={isDisabled}
                 //handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                  handleKeyDown(evt);
+                }}
               />
               <Inputs
                 dataType={"int"}
@@ -145,6 +194,9 @@ export const useFormFactUI = (
                 maxLenght={7}
                 isDisabled={isDisabled}
                 //handleBlur={handleBlur}
+                onKeyDown={(evt) => {
+                  handleKeyDown(evt);
+                }}
               />
             </div>
           </fieldset>
@@ -156,7 +208,8 @@ export const useFormFactUI = (
         itemDataTable,
         tableColumns,
         tableBody,
-        modalBody
+        modalBody,
+        sinZebra
     };
 
 };

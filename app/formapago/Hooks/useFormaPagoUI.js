@@ -2,6 +2,7 @@ import { ActionButton, ActionColumn } from "@/app/utils/GlobalComponents";
 import iconos from "@/app/utils/iconos";
 import React from "react";
 import Inputs from "@/app/formapago/components/Inputs";
+import { useState } from "react";
 
 export const useFormaPagoUI = (
     tableAction,
@@ -11,6 +12,8 @@ export const useFormaPagoUI = (
     errors,
     accion
 ) => {
+
+    const [sinZebra, setSinZebra] = useState(false);
 
     const handleKeyDown = (evt) => {
         if (evt.key === "Enter") {
@@ -95,6 +98,7 @@ export const useFormaPagoUI = (
 
     const tableBody = (data = []) => {
         const hasBajas = data.some(item => item.baja === "*");
+        setSinZebra(hasBajas);
         return (
             <tbody style={{ backgroundColor: hasBajas ? "#CD5C5C" : "" }}>
                 {data.map((item) => (
@@ -229,6 +233,7 @@ export const useFormaPagoUI = (
         itemDataTable,
         tableColumns,
         tableBody,
-        modalBody
+        modalBody,
+        sinZebra
     };
 };

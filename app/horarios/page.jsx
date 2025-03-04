@@ -12,10 +12,12 @@ import { useHorariosPdfExcel } from "./Hooks/useHorariosPdfExcel";
 import { useHorariosUI } from "./Hooks/useHorariosUI";
 import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
+import { useState } from "react";
 
 
 
 function Horarios() {
+  const [dia, setDia] = useState("");
   const {
     onSubmitModal,
     Buscar,
@@ -45,7 +47,8 @@ function Horarios() {
     isDisabled,
     errors,
     inactiveActive,
-  } = useHorariosABC();
+    formaHorarios,
+  } = useHorariosABC(dia);
   
   const {
     handleVerClick,
@@ -73,8 +76,8 @@ function Horarios() {
     setisLoadingButton
   );
   
-  const { itemHeaderTable, itemDataTable, tableColumns, tableBody, modalBody } = 
-    useHorariosUI(tableAction, register, control, permissions, isDisabled, errors);
+  const { itemHeaderTable, itemDataTable, tableColumns, tableBody, modalBody, sinZebra} = 
+    useHorariosUI(tableAction, register, control, permissions, isDisabled, errors, accion,formaHorarios, setDia);
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -82,7 +85,7 @@ function Horarios() {
   }
   return (
     <>
-          <BarraCarga
+      <BarraCarga
         porcentaje={porcentaje}
         cerrarTO={cerrarTO}
       />
@@ -136,7 +139,7 @@ function Horarios() {
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Horarios
             </h1>
-            <h3 className="ml-auto order-3">{`Horarios activos: ${
+            <h3 className="ml-auto order-3 text-black dark:text-white">{`Horarios activos: ${
               active || 0
             }\nHorarios inactivos: ${inactive || 0}`}</h3>
           </div>
@@ -160,6 +163,7 @@ function Horarios() {
                   isLoading={isLoading}
                   tableColumns={tableColumns}
                   tableBody={tableBody}
+                  sinZebra={sinZebra}
                 />
             ))}
           </div>

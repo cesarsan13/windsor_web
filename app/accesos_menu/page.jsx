@@ -31,15 +31,18 @@ function Accesos_Menu() {
     isDisabled,
     titulo,
     isLoadingButton,
+    active,
+    inactive,
   } = useAccesoMenuABC();
-  const { tableColumns, tableBody, modalBody } = useAccesoMenuUI(
+  const { tableColumns, tableBody, modalBody, sinZebra } = useAccesoMenuUI(
     tableAction,
     register,
     subMenu,
     permissions,
     isDisabled,
     errors,
-    menussel
+    menussel,
+    accion
   );
   if (status === "loading" && !session) {
     return (
@@ -71,6 +74,9 @@ function Accesos_Menu() {
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Accesos Menu.
             </h1>
+            <h3 className="ml-auto order-3 text-black dark:text-white">{`Accesos Menu activos: ${
+              active || 0
+            }\nAccesos Menu inactivos: ${inactive || 0}`}</h3>
           </div>
         </div>
         <div className="flex flex-col items-center h-full">
@@ -91,6 +97,7 @@ function Accesos_Menu() {
                 isLoading={isLoading}
                 tableColumns={tableColumns}
                 tableBody={tableBody}
+                sinZebra={sinZebra}
               />
             )}
           </div>

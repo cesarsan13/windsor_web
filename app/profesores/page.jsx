@@ -75,7 +75,8 @@ function Profesores() {
     itemDataTable,
     tableColumns,
     tableBody,
-    modalBody
+    modalBody,
+    sinZebra
   } = useProfesoresUI( 
     tableAction, 
     register, 
@@ -151,7 +152,7 @@ function Profesores() {
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
               Profesores.
             </h1>
-            <h3 className="ml-auto order-3">{`Profesores activos: ${
+            <h3 className="ml-auto order-3  text-black dark:text-white">{`Profesores activos: ${
               active || 0
             }\nProfesores inactivos: ${inactive || 0}`}</h3>
           </div>
@@ -177,6 +178,7 @@ function Profesores() {
                     isLoading={isLoading}
                     tableColumns={tableColumns}
                     tableBody={tableBody}
+                    sinZebra={sinZebra}
                   />
                 ))}
           </div>

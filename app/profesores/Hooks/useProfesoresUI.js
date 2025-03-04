@@ -2,6 +2,7 @@ import React from "react";
 import Inputs from "@/app/profesores/components/Inputs";
 import { ActionButton, ActionColumn } from "@/app/utils/GlobalComponents";
 import iconos from "@/app/utils/iconos";
+import { useState } from "react";
 
 export const useProfesoresUI = (
     tableAction,
@@ -11,6 +12,8 @@ export const useProfesoresUI = (
     errors,
     accion,
 ) => {
+
+  const [sinZebra, setSinZebra] = useState(false);
   
   const handleKeyDown = (evt) => {
     if (evt.key === "Enter") {
@@ -22,7 +25,6 @@ export const useProfesoresUI = (
         );
 
         const currentIndex = inputs.indexOf(evt.target);
-        console.log("a",currentIndex);
         if (currentIndex !== -1) {
             if (currentIndex < inputs.length - 1) {
                 inputs[currentIndex + 1].focus(); 
@@ -123,6 +125,7 @@ export const useProfesoresUI = (
 
     const tableBody = (data = []) => {
         const hasBajas = data.some(item => item.baja === "*");
+        setSinZebra(hasBajas);
         return(
             <tbody style={{ backgroundColor: hasBajas ? "#CD5C5C" : "" }}>
             {data.map((item) => (
@@ -174,7 +177,7 @@ export const useProfesoresUI = (
     const modalBody = () => {
         return(
             <fieldset id="fs_profesores"
-              disabled={accion === "Ver"  || accion === "Eliminar" ? true : false }
+              dataTypedisabled={accion === "Ver"  || accion === "Eliminar" ? true : false }
             >
                 <div className="container flex flex-col space-y-5">
                   <Inputs
@@ -489,6 +492,7 @@ export const useProfesoresUI = (
         itemDataTable,
         tableColumns,
         tableBody,
-        modalBody
+        modalBody,
+        sinZebra
     }; 
 };

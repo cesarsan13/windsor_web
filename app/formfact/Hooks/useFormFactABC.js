@@ -186,6 +186,8 @@ export const useFormFactABC = () => {
             : accion === "Eliminar"
             ? `Eliminar Factura: ${currentID}`
             : `Ver Factura: ${currentID}`
+            ? `Reactivar Horario: ${currentID}`
+            : accion == "Reactivar"
         );
     }, [accion, currentID]);
 
@@ -219,9 +221,6 @@ export const useFormFactABC = () => {
 
     const onSubmitModal = handleSubmit(async (data) => {
         event.preventDefault;
-        if (!validateBeforeSave("longitud", "my_modal_3")) {
-          return;
-        }
         setisLoadingButton(true);
         accion === "Alta" ? (data.numero_forma = "") : (data.numero_forma = currentID);
         let res = null;
@@ -311,7 +310,7 @@ export const useFormFactABC = () => {
         router.push("/");
     };
     
-    const handleBusquedaChange = (event) => {
+    const handleBusquedaChange = async (event) => {
         event.preventDefault;
         setBusqueda((estadoPrevio) => ({
           ...estadoPrevio,
@@ -325,16 +324,49 @@ export const useFormFactABC = () => {
         setLabels(facturas);
     };
 
+    const handleReactivar = async (evt, formfactr) => {
+        evt.preventDefault();
+        const confirmed = await confirmSwal(
+          "¿Desea reactivar esta Forma Factura?",
+          "La Forma Factura será reactivado y volverá a estar activo.",
+          "warning",
+          "Sí, reactivar",
+          "Cancelar"
+        );
+      
+        if (confirmed) {
+          const res = await guardaFormFact(session.user.token, { 
+            ...formfactr, 
+            baja: ""
+          }, "Editar");
+      
+          if (res.status) {
+            const updatedFormFact = formFacts.map((c) =>
+              c.numero === formfactr.numero ? { ...c, baja: "" } : c
+            );
+            setFormFacts(updatedFormFact);
+            setFormFactsFiltrados(updatedFormFact);
+      
+            showSwal("Reactivado", "La Forma Factura ha sido reactivada correctamente.", "success");
+            setReloadPage((prev) => !prev);
+          } else {
+            showSwal("Error", "No se pudo reactivar la Forma Factura.", "error");
+          }
+        }
+    };
+
     const tableAction = (evt, formFact, accion) => {
         evt.preventDefault();
         setFormFact(formFact);
         setAccion(accion);
         setCurrentId(formFact.numero_forma);
-        if (accion !== "ActualizaFormato") {
-          showModal(true);
-        } else {
+        if (accion === "ActualizaFormato") {
           fetchFacturasFormato(formFact.numero_forma);
           setShowSheet(true);
+        } else if (accion === "Reactivar"){
+          handleReactivar(evt, formFact);
+        } else {
+          showModal(true);
         }
     };
 
