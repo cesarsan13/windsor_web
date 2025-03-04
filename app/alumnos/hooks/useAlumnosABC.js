@@ -770,9 +770,10 @@ const handleReactivar = async (evt, formaAlumnos) => {
     );
     const formData = new FormData();
     Object.keys(formaAlumnos).forEach((key) => {
-        formData.append(key, formaAlumnos[key]);
-    });
+        formData.append(key, formaAlumnos[key] ?? "");
+        });
     formData.append("baja", "");
+    formData.append("estatus", "Activo");
     if (confirmed) {
     const res = await guardarAlumnos(session.user.token, formData, "Editar", formaAlumnos.numero);
 
