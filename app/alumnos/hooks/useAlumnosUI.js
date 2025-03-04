@@ -44,6 +44,7 @@ export const useAlumnosUI = (
             evt.preventDefault(); 
     
             const fieldset = document.getElementById("fs_alumnos");
+            const form = fieldset?.closest("form");
             if (!fieldset) return;
     
             // Seleccionar todos los inputs dentro del fieldset (excepto los de tipo checkbox, radio y button)
@@ -55,7 +56,7 @@ export const useAlumnosUI = (
                 if (currentIndex < inputs.length - 1) {
                     inputs[currentIndex + 1].focus(); 
                 } else {
-                    const submitButton = fieldset.querySelector("button[type='submit']");
+                    const submitButton = form.querySelector("button[type='submit']");
                     if (submitButton) submitButton.click(); 
                 }
             }
