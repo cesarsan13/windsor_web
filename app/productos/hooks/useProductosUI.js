@@ -18,6 +18,7 @@ export const useProductosUI = (
         evt.preventDefault(); 
 
         const fieldset = document.getElementById("fs_productos");
+        const form = fieldset?.closest("form");
         const inputs = Array.from(
             fieldset.querySelectorAll("input[name='numero'], input[name='descripcion'], input[name='ref'], input[name='frecuencia'], input[name='aplicacion'], input[name='costo'], input[name='por_recargo'], input[name='iva'], input[name='cond_1'], input[name='cam_precio']")
         );
@@ -27,7 +28,7 @@ export const useProductosUI = (
             if (currentIndex < inputs.length - 1) {
                 inputs[currentIndex + 1].focus(); 
             } else {
-                const submitButton = fieldset?.querySelector("button[type='submit']");
+                const submitButton = form?.querySelector("button[type='submit']");
                 if (submitButton) submitButton.click(); 
             }
         }
@@ -340,6 +341,9 @@ export const useProductosUI = (
             message={"Cambia precio requerido"}
             maxLenght={1}
             isDisabled={isDisabled}
+            onKeyDown={(evt) => {
+              handleKeyDown(evt);
+            }}
           />
         </div>
       </fieldset>
