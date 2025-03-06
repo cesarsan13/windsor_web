@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 
 export const guardaRegistro = async (data) => {
   const res = await fetch(`${process.env.DOMAIN_API}api/register`, {
@@ -7,6 +6,7 @@ export const guardaRegistro = async (data) => {
       name: data.name,
       nombre: data.nombre,
       email: data.email,
+      password: data.password,
     }),
     headers: new Headers({
       "Content-Type": "application/json",
