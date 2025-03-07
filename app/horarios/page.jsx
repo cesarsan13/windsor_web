@@ -130,8 +130,8 @@ function Horarios() {
                 animateLoading={animateLoading}
                 Ver={handleVerClick}
                 procesarDatos={procesarDatos}
-                permiso_alta={permissions.altas || false}
-                permiso_imprime={permissions.impresion|| false}
+                permiso_alta={permissions.altas}
+                permiso_imprime={permissions.impresion}
                 es_admin={session?.user?.es_admin || false}
               />
             </div>

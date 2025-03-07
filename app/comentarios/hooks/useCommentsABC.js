@@ -52,7 +52,7 @@ export const useCommentsABC = () => {
       generales: formaComentarios.generales,
     },
   });
- 
+
   useEffect(() => {
     const fetchData = async () => {
       setisLoading(true);
@@ -79,7 +79,7 @@ export const useCommentsABC = () => {
       return;
     }
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, bajas, reload_page]);
 
   useEffect(() => {
@@ -107,7 +107,7 @@ export const useCommentsABC = () => {
     });
     setFormaComentariosFiltrados(infoFiltrada);
     await fetchComentarioStatus(false, inactiveActive, busqueda);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [busqueda]);
 
   const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
@@ -174,7 +174,8 @@ export const useCommentsABC = () => {
       setIsDisabled(false);
     }
     setTitulo(
-      accion === "Alta" ? `Nuevo Comentario`
+      accion === "Alta"
+        ? `Nuevo Comentario`
         : accion === "Editar"
         ? `Editar Comentario: ${currentID}`
         : accion === "Eliminar"
@@ -218,85 +219,91 @@ export const useCommentsABC = () => {
     document.getElementById("comentario_1").focus();
   };
 
-  const onSubmitModal = handleSubmit(async (data) => {
-    event.preventDefault();
-    setisLoadingButton(true);
-    accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
-    let res = null;
-    if (accion === "Eliminar") {
-      showModal(false);
-      const confirmed = await confirmSwal(
-        "¿Desea Continuar?",
-        "Se eliminara el comentario seleccionado",
-        "warning",
-        "Aceptar",
-        "Cancelar"
-      );
-      if (!confirmed) {
-        showModal(true);
-        setisLoadingButton(false);
-        return;
-      }
-    }
-    res = await guardaComentarios(session.user.token, data, accion);
-    if (res.status) {
-      if (accion === "Alta") {
-        data.numero = res.data;
-        setCurrentId(data.numero);
-        const nuevaFormaComentarios = { currentID, ...data };
-        setFormasComentarios([...formasComentarios, nuevaFormaComentarios]);
-        if (!bajas) {
-          setFormaComentariosFiltrados([
-            ...formaComentariosFiltrados,
-            nuevaFormaComentarios,
-          ]);
+  const onSubmitModal = handleSubmit(
+    async (data) => {
+      event.preventDefault();
+      setisLoadingButton(true);
+      accion === "Alta" ? (data.numero = "") : (data.numero = currentID);
+      let res = null;
+      if (accion === "Eliminar") {
+        showModal(false);
+        const confirmed = await confirmSwal(
+          "¿Desea Continuar?",
+          "Se eliminara el comentario seleccionado",
+          "warning",
+          "Aceptar",
+          "Cancelar"
+        );
+        if (!confirmed) {
+          showModal(true);
+          setisLoadingButton(false);
+          return;
         }
       }
-      if (accion === "Eliminar" || accion === "Editar") {
-        const index = formasComentarios.findIndex(
-          (fp) => fp.numero === data.numero
-        );
-        if (index !== -1) {
-          if (accion === "Eliminar") {
-            const fpFiltrados = formasComentarios.filter(
-              (fp) => fp.numero !== data.numero
-            );
-            setFormasComentarios(fpFiltrados);
-            setFormaComentariosFiltrados(fpFiltrados);
-          } else {
-            if (bajas) {
+      res = await guardaComentarios(session.user.token, data, accion);
+      if (res.status) {
+        if (accion === "Alta") {
+          data.numero = res.data;
+          setCurrentId(data.numero);
+          const nuevaFormaComentarios = { currentID, ...data };
+          setFormasComentarios([...formasComentarios, nuevaFormaComentarios]);
+          if (!bajas) {
+            setFormaComentariosFiltrados([
+              ...formaComentariosFiltrados,
+              nuevaFormaComentarios,
+            ]);
+          }
+        }
+        if (accion === "Eliminar" || accion === "Editar") {
+          const index = formasComentarios.findIndex(
+            (fp) => fp.numero === data.numero
+          );
+          if (index !== -1) {
+            if (accion === "Eliminar") {
               const fpFiltrados = formasComentarios.filter(
                 (fp) => fp.numero !== data.numero
               );
               setFormasComentarios(fpFiltrados);
               setFormaComentariosFiltrados(fpFiltrados);
             } else {
-              const fpActualizadas = formasComentarios.map((fp) =>
-                fp.numero === currentID ? { ...fp, ...data } : fp
-              );
-              setFormasComentarios(fpActualizadas);
-              setFormaComentariosFiltrados(fpActualizadas);
+              if (bajas) {
+                const fpFiltrados = formasComentarios.filter(
+                  (fp) => fp.numero !== data.numero
+                );
+                setFormasComentarios(fpFiltrados);
+                setFormaComentariosFiltrados(fpFiltrados);
+              } else {
+                const fpActualizadas = formasComentarios.map((fp) =>
+                  fp.numero === currentID ? { ...fp, ...data } : fp
+                );
+                setFormasComentarios(fpActualizadas);
+                setFormaComentariosFiltrados(fpActualizadas);
+              }
             }
           }
         }
+        showSwal(res.alert_title, res.alert_text, res.alert_icon);
+        showModal(false);
+      } else {
+        showSwal(res.alert_title, res.alert_text, res.alert_icon, "my_modal_3");
       }
-      showSwal(res.alert_title, res.alert_text, res.alert_icon);
-      showModal(false);
-    } else {
-      showSwal(res.alert_title, res.alert_text, res.alert_icon, "my_modal_3");
+      if (accion === "Alta" || accion === "Eliminar") {
+        setReloadPage(!reload_page);
+        await fetchComentarioStatus(false, inactiveActive, busqueda);
+      }
+      setisLoadingButton(false);
+    },
+    async (errors) => {
+      await trigger();
+      if (Object.keys(errors).length > 0) {
+        showSwal(
+          "Error",
+          "Complete todos los campos requeridos",
+          "error",
+          "my_modal_3"
+        );
+      }
     }
-    if (accion === "Alta" || accion === "Eliminar") {
-      setReloadPage(!reload_page);
-      await fetchComentarioStatus(false, inactiveActive, busqueda);
-    }
-    setisLoadingButton(false);
-  },
-  async (errors) => {
-    await trigger();
-    if (Object.keys(errors).length > 0) {
-      showSwal("Error", "Complete todos los campos requeridos", "error", "my_modal_3");
-    }
-  }
   );
 
   const showModal = (show) => {
@@ -328,29 +335,37 @@ export const useCommentsABC = () => {
       "Sí, reactivar",
       "Cancelar"
     );
-  
+
     if (confirmed) {
-      const res = await guardaComentarios(session.user.token, { 
-        ...formaComentarios, 
-        baja: ""
-      }, "Editar");
-  
+      const res = await guardaComentarios(
+        session.user.token,
+        {
+          ...formaComentarios,
+          baja: "",
+        },
+        "Editar"
+      );
+
       if (res.status) {
         const updatedComentarios = formasComentarios.map((c) =>
           c.numero === formaComentarios.numero ? { ...c, baja: "" } : c
         );
-  
+
         setFormasComentarios(updatedComentarios);
         setFormaComentariosFiltrados(updatedComentarios);
-  
-        showSwal("Reactivado", "El comentario ha sido reactivado correctamente.", "success");
+
+        showSwal(
+          "Reactivado",
+          "El comentario ha sido reactivado correctamente.",
+          "success"
+        );
         setReloadPage((prev) => !prev);
       } else {
         showSwal("Error", "No se pudo reactivar el comentario.", "error");
       }
     }
   };
-  
+
   const tableAction = (evt, formaComentarios, accion) => {
     evt.preventDefault();
     setFormaComentarios(formaComentarios);
@@ -360,7 +375,7 @@ export const useCommentsABC = () => {
       handleReactivar(evt, formaComentarios);
     } else {
       showModal(true);
-    }  
+    }
   };
 
   return {
