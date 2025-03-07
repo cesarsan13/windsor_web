@@ -1,14 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 
 export default function CodigoPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const email = searchParams.get("email");
-  const xEscuela = searchParams.get("xEscuela");
+  const [email, setEmail] = useState(null);
+  const [xEscuela, setXEscuela] = useState(null);
   const [error, setError] = useState(null);
   const {
     register,
@@ -17,10 +16,16 @@ export default function CodigoPage() {
   } = useForm();
 
   useEffect(() => {
-    if (!email || !xEscuela) {
-      router.push("/auth/login");
+    const urlParams = new URLSearchParams(window.location.search);
+    const paramsEmail = urlParams.get("email");
+    const paramsXEscuela = urlParams.get("xEscuela");
+    if (!paramsEmail || !paramsXEscuela) {
+      router.replace("/auth/login");
+    } else {
+      setEmail(paramsEmail);
+      setXEscuela(paramsXEscuela);
     }
-  }, [email, xEscuela, router]);
+  }, [router]);
 
   const onSubmit = handleSubmit(async (data) => {
     setError(null);
