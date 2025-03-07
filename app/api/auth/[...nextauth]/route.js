@@ -27,7 +27,6 @@ export const authOptions = {
         resjson.data.token = resjson.token;
         
         resjson.data.xescuela = credentials.xescuela;
-        // console.log("hola ",resjson.data);
 
         return resjson.data;
       },

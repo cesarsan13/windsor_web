@@ -31,7 +31,6 @@ export const siguiente = async (token) => {
   return resJson.data;
 };
 export const guardaComentarios = async (token, data, accion) => {
-  console.log("aa", accion);
   const generales = data.generales === true ? '1' : '0'
   let url_api = "";
   if (accion === "Alta") {

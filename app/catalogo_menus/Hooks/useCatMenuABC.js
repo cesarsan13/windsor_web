@@ -170,8 +170,6 @@ export const useCatMenuABC = () => {
             : accion === "Eliminar"
             ? `Eliminar Menu: ${currentID}`
             : `Ver Menu: ${currentID}`
-            ? `Reactivar Profesor: ${currentID}`
-            : accion === "Reactivar"
         );
     }, [accion, currentID]);
 

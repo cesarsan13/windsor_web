@@ -187,8 +187,6 @@ export const useActividadesABC = () => {
             : accion === "Eliminar"
             ? `Eliminar Actividad ${currentID}`
             : `Ver Actividad ${currentID}`
-            ? `Reactivar Horario: ${currentID}`
-            : accion == "Reactivar"
         );
     }, [accion, currentID]);
 
@@ -340,7 +338,6 @@ export const useActividadesABC = () => {
             ...actividadesr, 
             baja: ""
           }, "Editar");
-          console.log("a", res);
       
           if (res.status) {
             const updatedActividades = formasHorarios.map((c) =>

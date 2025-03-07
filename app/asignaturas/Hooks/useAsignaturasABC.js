@@ -186,8 +186,6 @@ export const useAsignaturasABC = () => {
             : accion === "Eliminar"
             ? `Eliminar Asignatura: ${currentID}`
             : `Ver Asignatura: ${currentID}`
-            ? `Reactivar Asignatura: ${currentID}`
-            : accion == "Reactivar"
         );
       }, [accion, currentID]);
 

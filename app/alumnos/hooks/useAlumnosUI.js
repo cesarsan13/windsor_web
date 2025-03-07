@@ -44,6 +44,7 @@ export const useAlumnosUI = (
             evt.preventDefault(); 
     
             const fieldset = document.getElementById("fs_alumnos");
+            const form = fieldset?.closest("form");
             if (!fieldset) return;
     
             // Seleccionar todos los inputs dentro del fieldset (excepto los de tipo checkbox, radio y button)
@@ -55,7 +56,7 @@ export const useAlumnosUI = (
                 if (currentIndex < inputs.length - 1) {
                     inputs[currentIndex + 1].focus(); 
                 } else {
-                    const submitButton = fieldset.querySelector("button[type='submit']");
+                    const submitButton = form.querySelector("button[type='submit']");
                     if (submitButton) submitButton.click(); 
                 }
             }
@@ -398,7 +399,7 @@ const modalBody = () => {
                 className={"grow"}
                 Titulo={"A. Paterno: "}
                 type={"text"}
-                requerido={true}
+                requerido={accion == "Alta" || accion == "Editar" ? true : false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -417,7 +418,7 @@ const modalBody = () => {
                 className={"rounded block grow"}
                 Titulo={"A. Materno: "}
                 type={"text"}
-                requerido={true}
+                requerido={accion == "Alta" || accion == "Editar" ? true : false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -436,7 +437,7 @@ const modalBody = () => {
                 className={"rounded block grow"}
                 Titulo={"Nombre: "}
                 type={"text"}
-                requerido={true}
+                requerido={accion == "Alta" || accion == "Editar" ? true : false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -455,7 +456,7 @@ const modalBody = () => {
                 className={"fyo8m-select p-1.5 grow bg-[#ffffff] "}
                 Titulo={"Estatus: "}
                 type={"select"}
-                requerido={true}
+                requerido={accion == "Alta" || accion == "Editar" ? true : false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -478,7 +479,7 @@ const modalBody = () => {
                 className={"rounded block grow"}
                 Titulo={"Fecha nacimiento: "}
                 type={"date"}
-                requerido={true}
+                requerido={accion == "Alta" || accion == "Editar" ? true : false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -494,7 +495,7 @@ const modalBody = () => {
                 className={"rounded block grow"}
                 Titulo={"Fecha inscripción: "}
                 type={"date"}
-                requerido={true}
+                requerido={accion == "Alta" || accion == "Editar" ? true : false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -510,7 +511,7 @@ const modalBody = () => {
                 className={"rounded block grow"}
                 Titulo={"Fecha baja: "}
                 type={"date"}
-                requerido={false}
+                requerido={accion == "Alta" || accion == "Editar" ? true : false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -526,7 +527,7 @@ const modalBody = () => {
                 className={"fyo8m-select p-1.5 grow bg-[#ffffff] "}
                 Titulo={"Sexo: "}
                 type={"select"}
-                requerido={true}
+                requerido={accion == "Alta" || accion == "Editar" ? true : false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -547,7 +548,7 @@ const modalBody = () => {
                 className={"rounded block grow"}
                 Titulo={"Escuela: "}
                 type={"text"}
-                requerido={true}
+                requerido={accion == "Alta" || accion == "Editar" ? true : false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -566,7 +567,7 @@ const modalBody = () => {
                 className={"rounded block grow text-left"}
                 Titulo={"Tels: "}
                 type={"text"}
-                requerido={true}
+                requerido={accion == "Alta" || accion == "Editar" ? true : false}
                 isNumero={true}
                 errors={errors}
                 register={register}
@@ -585,7 +586,7 @@ const modalBody = () => {
                 className={"rounded block grow text-left"}
                 Titulo={"Tel (opcional)"}
                 type={"text"}
-                requerido={false}
+                requerido={accion == "Alta" || accion == "Editar" ? true : false}
                 isNumero={true}
                 errors={errors}
                 register={register}
@@ -604,7 +605,7 @@ const modalBody = () => {
                 className={"rounded block grow text-left"}
                 Titulo={"Celular: "}
                 type={"text"}
-                requerido={true}
+                requerido={accion == "Alta" || accion == "Editar" ? true : false}
                 isNumero={true}
                 errors={errors}
                 register={register}
@@ -623,7 +624,7 @@ const modalBody = () => {
                 className={"rounded block grow"}
                 Titulo={"Matricula: "}
                 type={"text"}
-                requerido={false}
+                requerido={accion == "Alta" || accion == "Editar" ? true : false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -642,7 +643,7 @@ const modalBody = () => {
                 className={"rounded block grow text-right"}
                 Titulo={"Referencia: "}
                 type={"text"}
-                requerido={false}
+                requerido={accion == "Alta" || accion == "Editar" ? true : false}
                 isNumero={true}
                 errors={errors}
                 register={register}
@@ -679,7 +680,7 @@ const modalBody = () => {
                 className={"rounded block grow"}
                 Titulo={"Direccion: "}
                 type={"text"}
-                requerido={true}
+                requerido={accion == "Alta" || accion == "Editar" ? true : false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -698,7 +699,7 @@ const modalBody = () => {
                 className={"rounded block grow"}
                 Titulo={"Colonia: "}
                 type={"text"}
-                requerido={true}
+                requerido={accion == "Alta" || accion == "Editar" ? true : false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -717,7 +718,7 @@ const modalBody = () => {
                 className={"rounded block grow"}
                 Titulo={"Ciudad: "}
                 type={"text"}
-                requerido={true}
+                requerido={accion == "Alta" || accion == "Editar" ? true : false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -736,7 +737,7 @@ const modalBody = () => {
                 className={"rounded block grow"}
                 Titulo={"Estado: "}
                 type={"text"}
-                requerido={true}
+                requerido={accion == "Alta" || accion == "Editar" ? true : false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -755,7 +756,7 @@ const modalBody = () => {
                 className={"rounded block grow text-left"}
                 Titulo={"CP: "}
                 type={"text"}
-                requerido={true}
+                requerido={accion == "Alta" || accion == "Editar" ? true : false}
                 isNumero={true}
                 errors={errors}
                 register={register}
@@ -774,7 +775,7 @@ const modalBody = () => {
                 className={"rounded block grow"}
                 Titulo={"Email: "}
                 type={"text"}
-                requerido={true}
+                requerido={accion == "Alta" || accion == "Editar" ? true : false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -908,7 +909,7 @@ const modalBody = () => {
                 className={"rounded block grow"}
                 Titulo={"Ciclo escolar: "}
                 type={"text"}
-                requerido={false}
+                requerido={accion == "Alta" || accion == "Editar" ? true : false}
                 isNumero={false}
                 errors={errors}
                 register={register}
@@ -1231,7 +1232,7 @@ const modalBody = () => {
                 pattern={
                 /^([A-ZÑ&]{3,4})\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])[A-Z\d]{2}[A-Z\d]{1}$/i
                 }
-                message_pattern={"Formato de RFC Inválido"}
+                message_pattern={accion !== "Baja" ? "Formato de RFC Inválido" : ""}
                 onKeyDown={(evt) => {
                     handleKeyDown(evt);
                 }}

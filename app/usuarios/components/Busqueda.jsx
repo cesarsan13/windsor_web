@@ -10,12 +10,27 @@ function Busqueda({
   handleBusquedaChange,
   busqueda,
 }) {
+  
   const handleKeyDown = (evt) => {
-    if (evt.key !== "Enter") return;
-    Buscar();
+    if (evt.key === "Enter") {
+        evt.preventDefault(); 
+        const div = document.getElementById("div_busqueda");
+        const inputs = Array.from(
+            div.querySelectorAll("input[id='tb_id'], input[id='tb_name']")
+        );
+        const currentIndex = inputs.indexOf(evt.target);
+        if (currentIndex !== -1) {
+            if (currentIndex < inputs.length - 1) {
+                inputs[currentIndex + 1].focus(); 
+            } else {
+              Buscar();
+            }
+        }
+    }
   };
+
   return (
-    <div className="grid grid-cols-5 md:grid-cols-12 gap-2">
+    <div className="grid grid-cols-5 md:grid-cols-12 gap-2" id="div_busqueda">
       <div className="col-span-1 md:col-span-1/2">
         <input
           id="tb_id"

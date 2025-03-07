@@ -218,9 +218,6 @@ export const useUsuariosABC = () => {
 
     const onSubmitModal = handleSubmit(async (data) => {
         event.preventDefault();
-        if (!validateBeforeSave("match_password", "my_modal_3")) {
-            return;
-        }
         setisLoadingButton(true);
         accion === "Alta" ? (data.id = "") : (data.id = currentID);
         const password1 = watch("password", "");
@@ -344,12 +341,47 @@ export const useUsuariosABC = () => {
         }));
     };
 
+    const handleReactivar = async (evt, usuarior) => {
+      evt.preventDefault();
+      const confirmed = await confirmSwal(
+        "¿Desea reactivar este Usuario?",
+        "El Usuario será reactivado y volverá a estar activo.",
+        "warning",
+        "Sí, reactivar",
+        "Cancelar"
+      );
+    
+      if (confirmed) {
+        const res = await guardaUsuario(session.user.token, { 
+          ...usuarior,
+          numero_prop: 1, 
+          baja: ""
+        }, "Editar");
+    
+        if (res.status) {
+          const updateUsuario = usuarios.map((c) =>
+            c.id === usuarios.id ? { ...c, numero_prop: 1, baja: "" } : c
+          );
+          setUsuarios(updateUsuario);
+          setUsuariosFiltrados(updateUsuario);
+          showSwal("Reactivado", "El Usuario ha sido reactivado correctamente.", "success");
+          setReloadPage((prev) => !prev);
+        } else {
+          showSwal("Error", "No se pudo reactivar el Usuario.", "error");
+        }
+      }
+    };
+
     const tableAction = (evt, usuario, accion) => {
         evt.preventDefault();
         setUsuario(usuario);
         setAccion(accion);
         setCurrentId(usuario.id);
-        showModal(true);
+        if (accion === "Reactivar") {
+          handleReactivar(evt, usuario);
+        } else {
+          showModal(true);
+        }
     };
 
 

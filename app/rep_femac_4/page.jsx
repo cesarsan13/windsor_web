@@ -1,14 +1,9 @@
 "use client";
-import { React, useRef } from "react";
+import { React } from "react";
 import { useRouter } from "next/navigation";
 import Acciones from "@/app/rep_femac_4/components/Acciones";
 import Inputs from "@/app/rep_femac_4/components/Inputs";
-import {
-  calculaDigitoBvba,
-  formatFecha,
-  format_Fecha_String,
-  permissionsComponents,
-} from "@/app/utils/globalfn";
+import { formatFecha, permissionsComponents } from "@/app/utils/globalfn";
 import { useForm } from "react-hook-form";
 import {
   getCredencialFormato,
@@ -31,25 +26,15 @@ function Rep_femac_4() {
   const { data: session, status } = useSession();
   const [formato, setFormato] = useState([]);
   const [alumno, setAlumno] = useState({});
-  const [telefonos, setTelefonos] = useState("");
   const [credencial, setCredencial] = useState(null);
   const [fecha_hoy, setFechaHoy] = useState("");
   const [capturedImage, setCapturedImage] = useState(null);
-  const inputfileref = useRef(null);
-  const [files, setFile] = useState(null);
   const [condicion, setcondicion] = useState(false);
-
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
-
   const [permissions, setPermissions] = useState({});
 
-  const fetchFacturasFormato = async (id) => {
-    const { token } = session.user;
-    const facturas = await getCredencialFormato(token, id);
-    setLabels(facturas);
-  };
   useEffect(() => {
     const fetchData = async () => {
       const formData = new FormData();
@@ -59,24 +44,13 @@ function Rep_femac_4() {
       if (alumno && Object.keys(alumno).length > 0) {
         const data = await getCredencialAlumno(token, formData);
         setCredencial(data);
-        //const imagenUrl = await getFotoAlumno(
-        //  session.user.token,
-        //  alumno.ruta_foto
-        //);
-        const rutaUser = "user_Credencial.png";
-        let imagenUrl;
-
-        if (alumno.ruta_foto === " " || alumno.ruta_foto === "") {
-          imagenUrl = await getFotoAlumno(session.user.token, rutaUser);
-        } else {
+        let imagenUrl = null;
+        if (alumno.ruta_foto && alumno.ruta_foto.trim() !== "") {
           imagenUrl = await getFotoAlumno(session.user.token, alumno.ruta_foto);
         }
-        if (imagenUrl) {
-          setCapturedImage(imagenUrl);
-        }
+        setCapturedImage(imagenUrl);
       }
       const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
-
       const permisos = permissionsComponents(
         es_admin,
         permissions,
@@ -90,11 +64,13 @@ function Rep_femac_4() {
     }
     fetchData();
   }, [alumno, session, status]);
+
   useEffect(() => {
     let fecha_hoy = new Date();
     const fechaFormateada = fecha_hoy.toISOString().split("T")[0];
     setFechaHoy(fechaFormateada);
   }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       const { token } = session.user;
@@ -108,7 +84,7 @@ function Rep_femac_4() {
         menuSeleccionado
       );
       setPermissions(permisos);
-      const formato = await getCredencialFormato(token, 3);
+      const formato = await getCredencialFormato(token, 1);
       setFormato(formato);
     };
     if (status === "loading" || !session) {
@@ -119,11 +95,7 @@ function Rep_femac_4() {
 
   const {
     register,
-    handleSubmit,
     reset,
-    watch,
-    setValue,
-    getValues,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -138,7 +110,6 @@ function Rep_femac_4() {
       ciclo_escolar: credencial?.alumno.ciclo_escolar || "",
       direccion: credencial?.alumno.direccion || "",
       colonia: credencial?.alumno.colonia || "",
-      // telefono:credencial?.alumno?.telefono1 || ""+" "+credencial?.alumno?.telefono2 || "",
       telefono1: credencial?.alumno.telefono1 || "",
       telefono2: credencial?.alumno.telefono2 || "",
       cp: credencial?.alumno?.cp || "",
@@ -147,6 +118,7 @@ function Rep_femac_4() {
       ),
     },
   });
+
   useEffect(() => {
     reset({
       cancha_1: credencial?.cancha_1 || "",
@@ -160,7 +132,6 @@ function Rep_femac_4() {
       ciclo_escolar: credencial?.alumno.ciclo_escolar || "",
       direccion: credencial?.alumno.direccion || "",
       colonia: credencial?.alumno.colonia || "",
-      // telefono:credencial?.alumno?.telefono1 || ""+" "+credencial?.alumno?.telefono2 || "",
       telefono1: credencial?.alumno.telefono1 || "",
       telefono2: credencial?.alumno.telefono2 || "",
       cp: credencial?.alumno?.cp || "",
@@ -168,47 +139,8 @@ function Rep_femac_4() {
         credencial?.alumno?.fecha_nac || formatFecha(fecha_hoy)
       ),
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [credencial, reset]);
 
-  const ImprimeExcel = async () => {
-    alumnosFiltrados = await formaImprime();
-    const configuracion = {
-      Encabezado: {
-        Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: "Reporte Altas Bajas de Alumnos por Periodo",
-        Nombre_Usuario: `Usuario: ${session.user.name}`,
-      },
-      body: alumnosFiltrados,
-      columns: [
-        { header: "No.", dataKey: "numero" },
-        { header: "Nombre", dataKey: "nombre_completo" },
-        { header: "Dia", dataKey: "dia" },
-        { header: "Mes", dataKey: "mes" },
-        { header: "Año", dataKey: "año" },
-      ],
-      nombre: "Reporte Altas Bajas Alumnos por Periodo",
-    };
-    ImprimirExcel(configuracion);
-  };
-
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFile(selectedFile);
-        setcondicion(true);
-        setCapturedImage(reader.result); // La imagen en formato Base64
-      };
-      reader.readAsDataURL(selectedFile); // Convierte el archivo a Base64
-    }
-  };
-  const openFileSelector = () => {
-    if (inputfileref.current) {
-      inputfileref.current.click(); // Simula el clic en el input
-    }
-  };
   const home = () => {
     router.push("/");
   };
@@ -216,7 +148,6 @@ function Rep_femac_4() {
   const handleVerClick = async () => {
     setAnimateLoading(true);
     cerrarModalVista();
-
     if (credencial === null || credencial === undefined) {
       showSwal(
         "Oppss!",
@@ -230,11 +161,9 @@ function Rep_femac_4() {
         document.getElementById("modalVRep4").close();
       }, 500);
     } else {
-      // const imagenUrl = await getFotoAlumno(session.user.token, credencial.alumno.ruta_foto);
-
       const configuracion = {
         Encabezado: {
-          Nombre_Aplicacion: "Sistema de Control Escolas",
+          Nombre_Aplicacion: "Sistema de Control Escolar",
           Nombre_Reporte: "Credencial del Alumno",
           Nombre_Usuario: `Usuario: ${session.user.name}`,
         },
@@ -245,10 +174,16 @@ function Rep_femac_4() {
       const conY = 0.4;
       const reporte = new ReportePDF(configuracion, "landscape");
       let doc = reporte.getDoc();
-      doc.addImage(capturedImage, "PNG", 10, 10, 80, 80);
+      if (
+        capturedImage &&
+        typeof capturedImage === "string" &&
+        capturedImage.startsWith("data:image/png;base64,")
+      ) {
+        doc.addImage(capturedImage, "PNG", 10, 10, 80, 80);
+      }
       formato.forEach((formato) => {
         switch (formato.descripcion_campo) {
-          case "No. Alumno":
+          case "NUM. ALUMNO":
             reporte.ImpPosX(
               credencial.alumno.numero.toString(),
               formato.columna_impresion * conX,
@@ -257,7 +192,7 @@ function Rep_femac_4() {
               "R"
             );
             break;
-          case "Ciclo escolar":
+          case "CICLO ESCOLAR":
             reporte.ImpPosX(
               credencial.alumno.ciclo_escolar.toString(),
               formato.columna_impresion * conX,
@@ -266,7 +201,7 @@ function Rep_femac_4() {
               "L"
             );
             break;
-          case "Fecha nacimiento":
+          case "FECHA NACIMIENTO":
             reporte.ImpPosX(
               credencial.alumno.fecha_nac.toString(),
               formato.columna_impresion * conX,
@@ -275,7 +210,7 @@ function Rep_femac_4() {
               "L"
             );
             break;
-          case "Nombre":
+          case "NOMBRE":
             reporte.ImpPosX(
               credencial.alumno.nombre.toString(),
               formato.columna_impresion * conX,
@@ -284,7 +219,7 @@ function Rep_femac_4() {
               "L"
             );
             break;
-          case "Dirección":
+          case "DIRECCIÓN":
             reporte.ImpPosX(
               credencial.alumno.direccion.toString(),
               formato.columna_impresion * conX,
@@ -293,7 +228,7 @@ function Rep_femac_4() {
               "L"
             );
             break;
-          case "Colonia":
+          case "COLONIA":
             reporte.ImpPosX(
               credencial.alumno.colonia.toString(),
               formato.columna_impresion * conX,
@@ -313,6 +248,7 @@ function Rep_femac_4() {
       }, 500);
     }
   };
+
   const imprimePDF = () => {
     const configuracion = {
       Encabezado: {
@@ -332,11 +268,13 @@ function Rep_femac_4() {
       ? document.getElementById("modalVRep4").showModal()
       : document.getElementById("modalVRep4").close();
   };
+
   const cerrarModalVista = () => {
     setPdfPreview(false);
     setPdfData("");
     document.getElementById("modalVRep4").close();
   };
+
   const CerrarView = () => {
     setPdfPreview(false);
     setPdfData("");
@@ -345,7 +283,7 @@ function Rep_femac_4() {
 
   if (status === "loading") {
     return (
-      <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
+      <div className="container skeleton w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
     );
   }
   return (
@@ -360,7 +298,6 @@ function Rep_femac_4() {
       />
       <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-1">
-          {/* Fila de la cabecera de la pagina */}
           <div className="flex flex-col justify-start p-2 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
@@ -378,27 +315,18 @@ function Rep_femac_4() {
           </div>
         </div>
 
-        {/* Fila del formulario de la pagina */}
         <div className=" overflow-y-auto w-full py-3 flex flex-col gap-y-2 mb-2 ">
           <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto">
             <div className="col-span-3 md:col-span-full lg:col-span-full">
               <div className="w-full max-[400px]:w-1/2 max-[600px]:w-full max-[768px]:w-full h-1/3">
-                {/*<input
-                  type="file"
-                  name="imagen"
-                  onChange={handleFileChange}
-                  ref={inputfileref}
-                  style={{ display: "none" }}
-                  className="ml-4 btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white font-bold px-4 rounded"
-                />*/}
-                {(capturedImage || files) && (
+                {capturedImage && capturedImage.startsWith("http") && (
                   <div className="flex items-center">
                     <div className="w-1/3 pl-1 p-0">
                       <Image
                         src={
                           condicion ? URL.createObjectURL(files) : capturedImage
                         }
-                        alt="Imagen"
+                        alt="Imagen del alumno"
                         width={48}
                         height={48}
                         className="w-full object-contain mx-auto my-1 pr-4"
@@ -452,7 +380,6 @@ function Rep_femac_4() {
                       maxLength={15}
                       dataType={"int"}
                       isDisabled={false}
-                      // setValue={setFacturaIni}
                       style={{ with: "100px" }}
                     />
                   </div>
@@ -469,7 +396,6 @@ function Rep_femac_4() {
                       maxLength={15}
                       dataType={"string"}
                       isDisabled={false}
-                      // setValue={setFacturaFin}
                       style={{ with: "300px" }}
                     />
                   </div>
@@ -494,7 +420,6 @@ function Rep_femac_4() {
                       maxLength={15}
                       dataType={"int"}
                       isDisabled={false}
-                      // setValue={setFacturaIni}
                       style={{ with: "100px" }}
                     />
                   </div>
@@ -511,7 +436,6 @@ function Rep_femac_4() {
                       maxLength={15}
                       dataType={"string"}
                       isDisabled={false}
-                      // setValue={setFacturaFin}
                       style={{ with: "300px" }}
                     />
                   </div>
@@ -536,7 +460,6 @@ function Rep_femac_4() {
                       maxLength={15}
                       dataType={"int"}
                       isDisabled={false}
-                      // setValue={setFacturaIni}
                       style={{ with: "100px" }}
                     />
                   </div>
@@ -553,7 +476,6 @@ function Rep_femac_4() {
                       maxLength={15}
                       dataType={"string"}
                       isDisabled={false}
-                      // setValue={setFacturaFin}
                       style={{ with: "300px" }}
                     />
                   </div>
@@ -578,7 +500,6 @@ function Rep_femac_4() {
                       maxLength={15}
                       dataType={"int"}
                       isDisabled={false}
-                      // setValue={setFacturaIni}
                       style={{ with: "100px" }}
                     />
                   </div>
@@ -595,7 +516,6 @@ function Rep_femac_4() {
                       register={register}
                       maxLength={15}
                       isDisabled={false}
-                      // setValue={setFacturaFin}
                       style={{ with: "300px" }}
                     />
                   </div>
@@ -620,7 +540,6 @@ function Rep_femac_4() {
                       register={register}
                       maxLength={15}
                       isDisabled={false}
-                      // setValue={setFacturaIni}
                       style={{ with: "100px" }}
                     />
                   </div>
@@ -645,7 +564,6 @@ function Rep_femac_4() {
                       register={register}
                       maxLength={15}
                       isDisabled={false}
-                      // setValue={setFacturaIni}
                       style={{ with: "100px" }}
                     />
                   </div>
@@ -670,7 +588,6 @@ function Rep_femac_4() {
                       register={register}
                       maxLength={15}
                       isDisabled={false}
-                      // setValue={setFacturaIni}
                       style={{ with: "100px" }}
                     />
                   </div>
@@ -695,7 +612,6 @@ function Rep_femac_4() {
                       register={register}
                       maxLength={15}
                       isDisabled={false}
-                      // setValue={setFacturaIni}
                       style={{ with: "100px" }}
                     />
                   </div>
@@ -720,7 +636,6 @@ function Rep_femac_4() {
                       register={register}
                       maxLength={15}
                       isDisabled={false}
-                      // setValue={setFacturaIni}
                       style={{ with: "100px" }}
                     />
                   </div>
@@ -745,7 +660,6 @@ function Rep_femac_4() {
                       register={register}
                       maxLength={15}
                       isDisabled={false}
-                      // setValue={setFacturaIni}
                       style={{ with: "100px" }}
                     />
                   </div>
@@ -759,7 +673,6 @@ function Rep_femac_4() {
                 <Inputs
                   name={"fecha_nac"}
                   tamañolabel={""}
-                  // className={"rounded block grow"}
                   Titulo={"Fecha Nac."}
                   dataType={"string"}
                   type={"date"}

@@ -19,6 +19,7 @@ export const useCatMenuUI = (
             evt.preventDefault(); 
     
             const fieldset = document.getElementById("fs_menu");
+            const form = fieldset?.closest("form");
             const inputs = Array.from(
                 fieldset.querySelectorAll("input[name='nombre']")
             );
@@ -28,7 +29,7 @@ export const useCatMenuUI = (
                 if (currentIndex < inputs.length - 1) {
                     inputs[currentIndex + 1].focus(); 
                 } else {
-                    const submitButton = fieldset?.querySelector("button[type='submit']");
+                    const submitButton = form?.querySelector("button[type='submit']");
                     if (submitButton) submitButton.click(); 
                 }
             }

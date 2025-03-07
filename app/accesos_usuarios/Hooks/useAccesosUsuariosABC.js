@@ -89,7 +89,6 @@ export const useAccesosUsuariosABC = () => {
     setAccion(accion);
     setCurrentId(accesoUsuario.id_punto_menu);
     setCurrentMenu(accesoUsuario.descripcion);
-    console.log("a", accesoUsuario.descripcion);
     showModal(true);
   };
 

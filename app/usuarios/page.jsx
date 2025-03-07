@@ -6,8 +6,8 @@ import Busqueda from "@/app/usuarios/components/Busqueda";
 import Acciones from "@/app/usuarios/components/Acciones";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { useUsuariosABC } from "@/app/usuarios/Hooks/useUsuariosABC";
-import { useUsuariosPdfExcel } from "/app/usuarios/Hooks/useUsuariosPdfExcel";
-import { useUsuariosUI } from "/app/usuarios/Hooks/useUsuariosUI";
+import { useUsuariosPdfExcel } from "@/app/usuarios/Hooks/useUsuariosPdfExcel";
+import { useUsuariosUI } from "@/app/usuarios/Hooks/useUsuariosUI";
 import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 
@@ -53,13 +53,15 @@ function Usuarios() {
   const{
     tableColumns,
     tableBody,
-    modalBody
+    modalBody,
+    sinZebra
   } = useUsuariosUI(
     tableAction,
     register,
     permissions,
     isDisabled,
-    errors
+    errors,
+    accion
   );
 
   if (status === "loading" && !session) {
@@ -131,6 +133,7 @@ function Usuarios() {
               isLoading={isLoading}
               tableColumns={tableColumns}
               tableBody={tableBody}
+              sinZebra={sinZebra}
             />
           ))}
           </div>

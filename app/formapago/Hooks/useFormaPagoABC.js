@@ -176,8 +176,6 @@ export const useFormaPagoABC = () => {
             : accion === "Eliminar"
             ? `Eliminar Forma de Pago: ${currentID}`
             : `Ver Forma de Pago: ${currentID}`
-            ? `Reactivar Comentario: ${currentID}`
-            : accion == "Reactivar"
         );
     }, [accion, currentID]);
 

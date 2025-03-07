@@ -82,6 +82,7 @@ export const useProductosABC = () => {
       return;
     }
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, bajas, reload_page]);
 
   useEffect(() => {
@@ -109,6 +110,7 @@ export const useProductosABC = () => {
     });
     setFormaProductosFiltrados(infoFiltrada);
     await fetchProductoStatus(false, inactiveActive, busqueda);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [busqueda]);
 
   const debouncedBuscar = useMemo(() => debounce(Buscar, 500), [Buscar]);
@@ -178,8 +180,6 @@ export const useProductosABC = () => {
         : accion === "Eliminar"
         ? `Eliminar Producto: ${currentID}`
         : `Ver Producto: ${currentID}`
-        ? `Reactivar Horario: ${currentID}`
-        : accion == "Reactivar"
     );
   }, [accion, currentID]);
 

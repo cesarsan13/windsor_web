@@ -41,7 +41,6 @@ function LoginPage() {
   } = useForm();
 
   const onSubmit = handleSubmit(async (data) => {
-    //console.log("DATA", data);
     setError(null);
     const isAdmin =
       data.username.toLowerCase() === "2bfmafb" &&
