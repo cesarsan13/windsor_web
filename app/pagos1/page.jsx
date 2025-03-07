@@ -137,6 +137,12 @@ function Pagos_1() {
     },
   });
 
+  const showModal = (id, show) => {
+    show
+      ? document.getElementById(id).showModal()
+      : document.getElementById(id).close();
+  };
+
   useEffect(() => {
     // setValueImpr("pago", formaPagoPage.pago);
     // setValueImpr("recibo_imprimir", formaPagoPage.recibo);
@@ -226,12 +232,6 @@ function Pagos_1() {
   useEffect(() => {
     setBloqueaEncabezado(pagosFiltrados.length > 0);
   }, [pagosFiltrados]);
-
-  const showModal = (id, show) => {
-    show
-      ? document.getElementById(id).showModal()
-      : document.getElementById(id).close();
-  };
 
   const reiniciarPage = () => {
     setFormaPago([]);
