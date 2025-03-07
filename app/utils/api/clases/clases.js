@@ -37,7 +37,7 @@ export const getClases = async (token, baja) => {
 export const guardaClase = async (token, data, accion) => {
   let url_api = "";
   if (accion === "Alta") {
-    url_api = `${process.env.DOMAIN_API}api/clase/`;
+    url_api = `${process.env.DOMAIN_API}api/saveClase`;
     data.baja = "";
   }
   if (accion === "Eliminar" || accion === "Editar") {
@@ -46,29 +46,31 @@ export const guardaClase = async (token, data, accion) => {
     } else {
       data.baja = "";
     }
-    url_api = `${process.env.DOMAIN_API}api/clase/updateClases/`;
+    url_api = `${process.env.DOMAIN_API}api/updateClase`;
   }
 
   const res = await fetch(`${url_api}`, {
     method: "post",
     body: JSON.stringify({
-      materia: data.materia,
+      baja: data.baja,
+      domingo: data.domingo,
       grupo: data.grupo,
-      profesor: data.profesor,
+      jueves: data.jueves,
       lunes: data.lunes,
       martes: data.martes,
+      materia: data.materia,
       miercoles: data.miercoles,
-      jueves: data.jueves,
-      viernes: data.viernes,
+      profesor: data.profesor,
       sabado: data.sabado,
-      domingo: data.domingo,
-      baja: data.baja,
+      viernes: data.viernes,    
     }),
     headers: new Headers({
       Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
       xescuela: localStorage.getItem("xescuela"),
     }),
   });
+
   const resJson = await res.json();
   return resJson;
 };

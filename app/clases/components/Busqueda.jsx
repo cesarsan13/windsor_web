@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
+import React from "react";
+import { soloEnteros } from "@/app/utils/globalfn";
 import iconos from "@/app/utils/iconos";
 import Image from "next/image";
 
@@ -11,8 +11,21 @@ function Busqueda({
   busqueda,
 }) {
   const handleKeyDown = (evt) => {
-    if (evt.key !== "Enter") return;
-    Buscar();
+    if (evt.key === "Enter") {
+      evt.preventDefault(); 
+      const div = document.getElementById("div_busqueda");
+      const inputs = Array.from(
+        div.querySelectorAll("input[id='tb_id'], input[id='tb_desc']")
+      );
+      const currentIndex = inputs.indexOf(evt.target);
+      if (currentIndex !== -1) {
+        if (currentIndex < inputs.length - 1) {
+          inputs[currentIndex + 1].focus(); 
+        } else {
+          Buscar();
+        }
+      }
+    }
   };
   
   return (
