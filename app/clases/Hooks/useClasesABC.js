@@ -210,12 +210,12 @@ export const useClasesABC = (
         }
         setTitulo(
           accion === "Alta"
-            ? `Nueva Clase ${currentID}`
+            ? `Nueva Clase `
             : accion === "Editar"
-              ? `Editar Clase: ${currentID}`
+              ? `Editar Clase`
               : accion === "Eliminar"
-                ? `Eliminar Clase: ${currentID}`
-                : `Ver Clase: ${currentID}`
+                ? `Eliminar Clase`
+                : `Ver Clase `
         );
     }, [accion, currentID]);
 
