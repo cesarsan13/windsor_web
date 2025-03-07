@@ -8,6 +8,7 @@ import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 import Link from "next/link";
+import { loginApi } from "@/app/utils/api/login/login";
 function LoginPage() {
   const { session } = useSession();
   const router = useRouter();
@@ -27,10 +28,8 @@ function LoginPage() {
       setEmpresas(resJson.data);
     };
     fetchData();
-    // Quitar scroll en el body al cargar la página
     document.body.style.overflow = "hidden";
     return () => {
-      // Restaurar el scroll en el body al salir de la página
       document.body.style.overflow = "auto";
     };
   }, []);
@@ -42,28 +41,19 @@ function LoginPage() {
 
   const onSubmit = handleSubmit(async (data) => {
     setError(null);
-    const isAdmin =
-      data.username.toLowerCase() === "2bfmafb" &&
-      data.password.toLowerCase() === "2bfmafb";
-    const missingEscuela = !data.xEscuela;
-    if (isAdmin) {
-      return router.push("/proyectos");
-    }
-    if (missingEscuela) {
-      return setError("Debe seleccionar una escuela.");
-    }
+    if (!data.xEscuela) return setError("Debe seleccionar una escuela.");
     try {
-      const res = await signIn("credentials", {
+      const res = await loginApi({
         email: data.username,
         password: data.password,
         xescuela: data.xEscuela,
-        redirect: false,
       });
-
-      if (res.error) {
+      if (!res.status) {
         setError(res.error);
       } else {
-        return router.push("/");
+        router.push(
+          `/auth/codigo?email=${data.username}&xEscuela=${data.xEscuela}`
+        );
       }
     } catch {
       setError("Hubo un problema al iniciar sesión.");
