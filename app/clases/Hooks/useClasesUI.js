@@ -92,7 +92,7 @@ export const useClasesUI = (
         return (
             <tbody style={{ backgroundColor: hasBajas ? "#CD5C5C" : "" }}>
                 {data.map((item) => (
-                    <tr>
+                    <tr key={item.grupo} className="hover:cursor-pointer">
                         <td className="w-[21%]" > {item.grupo_descripcion} </td>
                         <td className="w-[21%]"> {item.materia_descripcion} </td>
                         <td className="w-[21%] hidden sm:table-cell "> {item.profesor_nombre}</td>
