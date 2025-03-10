@@ -433,10 +433,11 @@ export const aDec = (value) => {
 
 export const permissionsComponents = (
   es_admin,
-  permissions,
+  permissions = [],
   id_usuario,
   id_punto_menu
 ) => {
+  const permissionsArray = Array.isArray(permissions) ? permissions : [];
   const permisos = es_admin
     ? {
         id_punto_menu: id_punto_menu,
@@ -446,10 +447,20 @@ export const permissionsComponents = (
         cambios: true,
         impresion: true,
       }
-    : permissions.find(
+    : permissionsArray.find(
         (per) =>
           per.id_punto_menu === id_punto_menu && per.id_usuario === id_usuario
       );
+  if (!permisos) {
+    return {
+      id_punto_menu: id_punto_menu,
+      id_usuario: id_usuario,
+      altas: false,
+      bajas: false,
+      cambios: false,
+      impresion: false,
+    };
+  }
   return permisos;
 };
 

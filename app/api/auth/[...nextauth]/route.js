@@ -15,19 +15,20 @@ export const authOptions = {
 
       async authorize(credentials, request) {
         const { csrfToken, ...data } = credentials;
-        const res = await fetch(`${process.env.DOMAIN_API}api/login`, {
-          method: "POST",
-          body: JSON.stringify(data),
-          headers: new Headers({ "Content-Type": "application/json" }),
-        });
+        const res = await fetch(
+          `${process.env.DOMAIN_API}api/codigo-verificar`,
+          {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: new Headers({ "Content-Type": "application/json" }),
+          }
+        );
         const resjson = await res.json();
-        const { status,message } = resjson;        
-        if (!status) throw new Error(message.errorInfo ? message.errorInfo : message);
-
+        const { status, message } = resjson;
+        if (!status)
+          throw new Error(message.errorInfo ? message.errorInfo : message);
         resjson.data.token = resjson.token;
-        
         resjson.data.xescuela = credentials.xescuela;
-
         return resjson.data;
       },
     }),
