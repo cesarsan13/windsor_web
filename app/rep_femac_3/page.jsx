@@ -36,7 +36,7 @@ function Rep_Femac_3() {
     }
     const fetchData = async () => {
       setisLoading(true);
-      let { token, permissions } = session.user;
+      const { token, permissions } = session.user;
       const es_admin = session.user?.es_admin || false;
       const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
       const permisos = permissionsComponents(
