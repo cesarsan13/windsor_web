@@ -50,6 +50,7 @@ function Rep_Femac_13() {
       setPermissions(permisos);
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, horario, sOrdenar]);
 
   const handleCheckChange = (event) => {

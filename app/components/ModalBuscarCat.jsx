@@ -22,7 +22,7 @@ function ModalBuscarCat({
       [field]: value,
     }));
   };
-
+  
   const handleSearch = () => {
     const filtered = data.filter((item) => {
       return fieldsToShow.every((field) => {

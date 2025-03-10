@@ -65,6 +65,7 @@ function RecibosPagos() {
       // setHorarios(dataH);
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   // const calculateSaldo = (item) => {

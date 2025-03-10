@@ -58,6 +58,7 @@ function Rep_Flujo_01() {
       //setDataDocumentoCobranza(data);
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, fecha_ini, fecha_fin]);
 
   if (status === "loading") {

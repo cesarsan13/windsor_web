@@ -36,8 +36,8 @@ function Rep_Femac_3() {
     }
     const fetchData = async () => {
       setisLoading(true);
-      const { token, permissions } = session.user;
-      const es_admin = session.user.es_admin;
+      let { token, permissions } = session.user;
+      const es_admin = session.user?.es_admin || false;
       const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
       const permisos = permissionsComponents(
         es_admin,
@@ -52,6 +52,7 @@ function Rep_Femac_3() {
       setisLoading(false);
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, horario, sOrdenar]);
 
   const home = () => {
@@ -266,7 +267,7 @@ function Rep_Femac_3() {
                 <BuscarCat
                   table={"horarios"}
                   titulo={"Horario: "}
-                  token={token}
+                  token={session.user.token}
                   nameInput={["horario_1", "horario_1_nombre"]}
                   fieldsToShow={["numero", "horario"]}
                   setItem={setHorario}

@@ -153,18 +153,21 @@ function Pagos_1() {
       quien_paga: "",
       recibo_imprimir: formaPagoPage.recibo,
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formaPagoPage]);
 
   useEffect(() => {
     if (cantidad_producto === "") {
       setValue("cantidad_producto", formatNumber(1));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cantidad_producto]);
 
   useEffect(() => {
     reset({
       recargo: 0,
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [muestraRecargos]);
 
   useEffect(() => {
@@ -172,6 +175,7 @@ function Pagos_1() {
       monto_parcial: 0,
       clave_acceso: "",
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [muestraParciales]);
 
   useEffect(() => {
@@ -214,6 +218,7 @@ function Pagos_1() {
       setisLoading(false);
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, validar, cargado, setValue]);
 
   useEffect(() => {
@@ -791,7 +796,6 @@ function Pagos_1() {
   };
 
   const tableSelect = (evt, item) => {
-    // console.log(item);
     const nuevoPago = {
       numero_producto: item.paquete,
       descripcion: item.nombre_producto,

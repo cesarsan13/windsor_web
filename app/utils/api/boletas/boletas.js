@@ -33,7 +33,6 @@ export const getActividadMateria = async (token, numero) => {
 };
 
 export const getEvaluacionMateria = async (token, data, materia, grupo_nombre) => {
-    // console.log('evaluacion', materia, grupo_nombre);
     let url = `${process.env.DOMAIN_API}api/proceso/boleta-evaluacion`;
     const res = await fetch(url, {
         method: "POST",
@@ -53,7 +52,6 @@ export const getEvaluacionMateria = async (token, data, materia, grupo_nombre) =
 };
 
 export const getAreas = async (token, data, materia) => {
-    // console.log('areas', materia);
     let url = `${process.env.DOMAIN_API}api/proceso/boleta-areas`;
     const res = await fetch(url, {
         method: "POST",
@@ -73,7 +71,6 @@ export const getAreas = async (token, data, materia) => {
 };
 
 export const getAreasOtros = async (token, data, materia) => {
-    // console.log('area otros', materia);
     let url = `${process.env.DOMAIN_API}api/proceso/bleta-areas-otroso`;
     const res = await fetch(url, {
         method: "POST",
@@ -161,7 +158,6 @@ export const ImprimirPDF = (configuracion) => {
         newPDF.ImpPosX(`ESPAÑOL`, 150, newPDF.tw_ren, 0, "L");
     } else { newPDF.ImpPosX(`INGLES`, 150, newPDF.tw_ren, 0, "L"); }
     newPDF.nextRow(4);
-    // console.log(body);
     const data = body.map((boleta) => [
         // { content: boleta.numero?.toString() ?? "", styles: { halign: 'right' } },
         boleta.descripcion.toString(),

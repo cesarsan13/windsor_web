@@ -87,6 +87,7 @@ function CreacionBoletas3Bimestre() {
       setCiclo(newCombo);
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   useEffect(() => {

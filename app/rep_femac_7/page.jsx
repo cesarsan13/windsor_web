@@ -45,6 +45,7 @@ function Repo_Femac_7() {
       return;
     }
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   const home = () => {

@@ -70,6 +70,7 @@ function RepFemac12Anexo() {
       menuSeleccionado
     );
     setPermissions(permisos);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   useEffect(() => {

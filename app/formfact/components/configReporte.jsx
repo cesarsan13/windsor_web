@@ -37,7 +37,6 @@ function ConfigReporte({
     setSelectedIndex(null);
     setLabels([]);
   };
-  // console.log("Index:",selectedIndex)
   return (
     <div className=" w-full max-w-full">
       <button

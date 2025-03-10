@@ -74,7 +74,6 @@ function AltasBajasAlumnos() {
     cerrarModalVista();
     const { token } = session.user;
     const res = await getConsultasInscripcion(token);
-    // console.log("response", res);
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
@@ -90,7 +89,6 @@ function AltasBajasAlumnos() {
     };
     setTimeout(async () => {
       const pdfData = await verImprimir(configuracion);
-    //   console.log("pdfData => ",pdfData);
       setPdfData(pdfData);
       setPdfPreview(true);
       showModalVista(true);

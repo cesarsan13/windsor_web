@@ -56,7 +56,6 @@ export const guardaCajero = async (token, data, accion) => {
     // fec_cambio: data.fec_cambio,
     clave_cajero: data.clave_cajero
   });
-  // console.log(`Data a enviar: `,data_env);
     const res = await fetch(`${url_api}`, {
       method: "post",
       body:data_env,

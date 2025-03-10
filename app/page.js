@@ -84,8 +84,6 @@ export default function Home() {
       // const fechaHoy = formatDate(fecha).replace(/\//g, "-")
       // const AdeudosMes = Adeudos.documentos.filter((adeudo)=>adeudo.fecha === fechaHoy)
       setAdeudos(Adeudos);
-      // console.log(res);
-      // console.log("alumnsInscritos => ",alumnsInscritos);
       const totalEstudiantes = res.promedio_alumnos_por_curso.reduce(
         (acc, cur) => acc + cur.total_estudiantes,
         0
@@ -107,6 +105,7 @@ export default function Home() {
       setDataLoaded(true);
     };
     fetchChart();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   if (status === "loading" || isLoading === true) {

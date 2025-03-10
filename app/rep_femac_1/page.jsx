@@ -63,6 +63,7 @@ function AlumnosPorClase() {
       //setAlumnosFiltrados(data);
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, bajas, selectedOption, alumno1V, alumno2V]);
 
   const ImprimePDF = async () => {

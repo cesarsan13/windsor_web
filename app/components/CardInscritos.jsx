@@ -11,7 +11,6 @@ function CardsHome({ titulo, value, descripcion, valueImp, mes/*,setItem*/ }) {
     // const handleChange = (event) => {
     //     setItem(event.target.value);
     //     setMesSeleccionado(event.target.value); // Actualiza el estado con el valor seleccionado
-    //     console.log("Mes seleccionado:", event.target.value); // Opcional: Verificar en consola
     // };
 
     return (

@@ -55,6 +55,7 @@ function RepBecas() {
       setisLoading(false);
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, horario1, horario2, sOrdenar]);
   const home = () => {
     router.push("/");

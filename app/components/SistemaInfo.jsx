@@ -28,6 +28,7 @@ function SistemaInfo() {
     };
 
     fetchDatos();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   // Si no hay sesión, no mostrar información

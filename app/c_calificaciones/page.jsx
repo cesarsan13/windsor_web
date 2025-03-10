@@ -167,6 +167,7 @@ function C_Calificaciones() {
       }
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [materia]);
 
   useEffect(() => {
@@ -195,6 +196,7 @@ function C_Calificaciones() {
       }
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [grupo.numero]);
 
   const validar = async (grupo, materia, contraseña) => {

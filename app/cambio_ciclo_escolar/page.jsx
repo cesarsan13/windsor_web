@@ -40,6 +40,7 @@ function Cambio_Ciclo_Escolar() {
       setPermissions(permisos);
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
   const {
     register,

@@ -44,6 +44,7 @@ function ModalC_Otras({
             ? `Eliminar ${materiaDesc}: ${currentID}`
             : `Ver ${materiaDesc}: ${currentID}`
     );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accion, currentID]);
 
   useEffect(() => {
@@ -57,6 +58,7 @@ function ModalC_Otras({
             ? `Eliminar ${materiaDesc}: ${num}`
             : `Ver ${materiaDesc}: ${num}`
     );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [num]);
 
   const handleBlurOut = (evt, datatype) => {

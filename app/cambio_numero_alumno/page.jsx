@@ -42,6 +42,7 @@ function Cambio_Numero_Alumno() {
       return;
     }
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   const onSubmit = handleSubmit(async (data) => {

@@ -108,6 +108,7 @@ function P_Boletas() {
       setisLoadingGrupos(false);
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [grupo, status]);
 
   useEffect(() => {

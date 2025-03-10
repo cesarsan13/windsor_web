@@ -34,6 +34,7 @@ function Menu({ vertical, toogle }) {
       setIsOpen(initialOpenState);
     };
     fetchMenus();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   const toggleMenu = (menu) => {

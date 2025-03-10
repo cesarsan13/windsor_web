@@ -16,7 +16,7 @@ function PropertyPage({
   changeSelectedLabel,
   arreglo
 }) {
-  // console.log("property: ",propertyData)
+
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -85,6 +85,7 @@ function PropertyPage({
     const selectLabels = document.getElementById("idlabel");
     selectLabels.selectedIndex = selectedIndex;
     setSelectedLabel(selectedIndex);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedIndex, labels, reset]);
 
   const setSelectedLabel = (idx) => {
@@ -134,11 +135,9 @@ function PropertyPage({
   };
   const handleKeyDown = async (evt) => {
     if (evt.key === 'Enter') {
-      // console.log("entra");
       const { name } = evt.target;
       const resultado = [...labels];
       let value = await getValueInput(evt);
-      // console.log(value);
       const redondea = 10;
       value = roundToNearest(value, redondea);
       resultado[selectedIndex] = {
@@ -146,7 +145,7 @@ function PropertyPage({
         [name]: value,
       };
       setLabels(resultado);
-    } else { /*console.log("no entra");*/ }
+    } else { }
   };
   const handleCancelarClick = (evt) => {
     evt.preventDefault();

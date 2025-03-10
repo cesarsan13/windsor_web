@@ -58,6 +58,7 @@ function BuscarCat({
       setValue(nameInput[0], "");
       setValue(nameInput[1], "");
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accion, contador]);
 
   useEffect(() => {
@@ -159,6 +160,7 @@ function BuscarCat({
       }
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [table, token, id, array, idBusqueda]);
 
   const inputValue = watch(nameInput[0]);

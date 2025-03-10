@@ -62,6 +62,7 @@ function Act_Cobranza() {
       setPermissions(permisos);
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
   const {
     register,
@@ -108,6 +109,7 @@ function Act_Cobranza() {
     if (alumno.numero) {
       documentosAlumno(alumno.numero);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alumno]);
   const Alta = async (event) => {
     if (!currentID) {

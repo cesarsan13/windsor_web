@@ -76,6 +76,7 @@ function Rep_Femac_6() {
       setPermissions(permisos);
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, cajero, fechaFin, fechaIni]);
 
   if (status === "loading") {
@@ -124,10 +125,9 @@ function Rep_Femac_6() {
       ],
       nombre: "Reporte de Cobranza_",
     };
-    // console.log("hohoho", configuracion);
     ImprimirExcel(configuracion, cajero.numero);
   };
-  //   console.log(cajero);
+
   const handleVerClick = () => {
     setAnimateLoading(true);
     cerrarModalVista();
@@ -259,8 +259,7 @@ function Rep_Femac_6() {
             Tw_Pago[Tw_count][2] = tipoPago.descripcion1;
             break;
           }
-          //   console.log("tipo_pago_1", Tw_Pago[Tw_count][0]);
-          //   console.log("importe_pago_1", Tw_Pago[Tw_count][1]);
+
         }
         for (let Tw_count = 0; Tw_count < 20; Tw_count++) {
           if (tipoPago.tipo_pago_2 === 0) break;
@@ -275,8 +274,7 @@ function Rep_Femac_6() {
             Tw_Pago[Tw_count][2] = tipoPago.descripcion2;
             break;
           }
-          //   console.log("tipo_pago_2", Tw_Pago[Tw_count][0]);
-          //   console.log("importe_pago_2", Tw_Pago[Tw_count][1]);
+
         }
       });
       let total_tipo_pago = 0;

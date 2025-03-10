@@ -44,6 +44,7 @@ function Adicion_Productos_Cartera() {
       return;
     }
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   const {

@@ -40,7 +40,6 @@ export const getConsultasInscripcion = async (token) => {
 
 export const getConsultasInsXMes = async (token) => {
   let url = `${process.env.DOMAIN_API}api/reportes/rep_inscritos_mes`
-  // console.log(`Data a enviar => `,formData);
   const res = await fetch(url, {
       // method: "POST",
       // body: formData,
@@ -67,7 +66,6 @@ export const getConsultasInsXMes = async (token) => {
 //   // const fecha_ini = format_Fecha_String(configuracion.fecha_ini)
 //   // const fecha_fin = format_Fecha_String(configuracion.fecha_fin)   
 //   const fecha =  configuracion.Fecha;
-//   console.log("Fecha a buscar => ",fecha);
 //   // Enca1(newPDF);
 //   Alumnos.forEach((alumno) => {
 //       let det_inscripcion = 0;
@@ -83,8 +81,6 @@ export const getConsultasInsXMes = async (token) => {
 //           // detalle.alumno === alumno.numero &&
 //           // detalle.fecha >= fecha_ini &&
 //           // detalle.fecha <= fecha_fin
-//           console.log("Si busca por fecha")
-//           console.log(`Comparando añoDetalle ${añoDetalle} con añoB ${añoB}\nmesDetalle ${mesDetalle} con mesB ${mesB}`);
 //           return detalle.alumno === alumno.numero && añoDetalle === añoB && mesDetalle === mesB;
 //         }
 //       );
@@ -95,12 +91,11 @@ export const getConsultasInsXMes = async (token) => {
 //                   producto.numero === detalle.articulo
 //               );
 //               if (productoEncontrado) {
-//                   console.log('no entro');
 //                   si_inscrito = true;
 //                   si_suma = true;
 //                   det_inscripcion += detalle.precio_unitario * detalle.cantidad;
 //                   total_inscripcion += detalle.precio_unitario * detalle.cantidad;
-//               } else { console.log('no entro'); };
+//               } else { };
 //               fecha_inscripcion = detalle.fecha;
 //           });
 //           if (si_suma) {

@@ -60,6 +60,7 @@ export const useAccesosUsuariosABC = () => {
       setisLoading(false);
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, usuario]);
 
   useEffect(() => {
