@@ -108,7 +108,6 @@ function TablaC_Otras({
               <td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>
               <td className="w-[40%]">Alumno</td>
               <td className="w-[10%] text-right hidden sm:table-cell">{aignatura_nombre}</td>
-              {/* <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Editar</th> */}
               < ActionColumn
                 description={"Editar"}
                 permission={permiso_cambio}
@@ -170,14 +169,6 @@ function TablaC_Otras({
                       onClick={(evt) => tableAction(evt, item, "Editar")}
                       permission={permiso_cambio}
                     />
-                    // <div
-                    //   className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
-                    //   data-tip={`Editar`}
-                    //   onClick={(evt) => tableAction(evt, item, "Editar")}
-                    // >
-                    //   <Image src={iconos.editar} alt="Editar" className="block dark:hidden" />
-                    //   <Image src={iconos.editar_w} alt="Editar" className="hidden dark:block" />
-                    // </div>
                   )}
                 </th>
               </tr>

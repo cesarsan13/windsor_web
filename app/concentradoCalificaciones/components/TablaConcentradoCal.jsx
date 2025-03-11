@@ -72,8 +72,6 @@ function TablaConcentradoCal({
                     }); 
                 }
             }
-            //const sum = isNaN(sumatoria) ? 0 : sumatoria;
-            //const calMat = (sum / evaluaciones).toFixed(1);
             const sum = isNaN(sumatoria) || sumatoria === null ? 0 : sumatoria;
             const calMat = (isNaN(sum) || evaluaciones === 0 || evaluaciones === null || isNaN(evaluaciones)) ? (0).toFixed(1) : (sum / evaluaciones).toFixed(1);
             if (materia.area === 1) {
@@ -153,8 +151,6 @@ function TablaConcentradoCal({
                                     <td className="text-left">{alumno.nombre}</td>
                                     {materiasReg.map((materia, idx) => {
                                         if (idx === indexEspañol) {
-                                            //alumnoData.push((datosEspanol / contadorEspanol).toFixed(1));
-                                            //alumnoDataExcel.push((datosEspanol / contadorEspanol).toFixed(1));
                                             const promedioEspanol = datosEspanol / contadorEspanol;
                                             if (!isNaN(promedioEspanol)) {
                                                 alumnoData.push(promedioEspanol.toFixed(1));
@@ -163,16 +159,12 @@ function TablaConcentradoCal({
 
                                         }
                                         if (idx === indexIngles) {
-                                            //alumnoData.push((datosIngles / contadorIngles).toFixed(1));
-                                            //alumnoDataExcel.push((datosIngles / contadorIngles).toFixed(1));
                                             const promedioIngles = datosIngles / contadorIngles;
                                             if (!isNaN(promedioIngles)) {
                                                 alumnoData.push(promedioIngles.toFixed(1));
                                                 alumnoDataExcel.push(promedioIngles.toFixed(1));
                                             }
                                         }
-                                        //alumnoData.push(calcularCalificaciones(alumno.numero, materia.numero));
-                                        //alumnoDataExcel.push(calcularCalificaciones(alumno.numero, materia.numero));
                                         const calificacion = calcularCalificaciones(alumno.numero, materia.numero);
                                         if (!isNaN(calificacion)) {
                                             alumnoData.push(calificacion);

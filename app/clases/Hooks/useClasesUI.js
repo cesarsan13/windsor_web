@@ -66,7 +66,6 @@ export const useClasesUI = (
           }`}
           style={hasBajas ? { backgroundColor: "#CF2A2A" } : {}}>
             <tr>
-                {/*<td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>*/}
                 <td className="w-[21%]">Grupo</td>
                 <td className="w-[21%]">Materia</td>
                 <td className="w-[21%] hidden sm:table-cell">Profesor</td>

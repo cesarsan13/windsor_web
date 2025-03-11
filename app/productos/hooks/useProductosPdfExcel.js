@@ -202,7 +202,6 @@ export const useProductosPdfExcel = (
         "Éxito",
         "Todos los productos se insertaron correctamente.",
         "success"
-        // "my_modal_4"
       );
       showModalProcesa(false);
     }

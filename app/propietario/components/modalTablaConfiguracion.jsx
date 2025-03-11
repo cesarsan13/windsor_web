@@ -3,8 +3,8 @@ import { getConfiguracion, siguienteConfiguracion, createConfiguracion, updateCo
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import TablaConfiguracion from "./TablaConfiguracion";
-import Acciones from "./AccionesConfig";
+import TablaConfiguracion from "@/app/propietario/components/TablaConfiguracion";
+import Acciones from "@/app/propietario/components/AccionesConfig";
 import ModalConfiguracion from "@/app/propietario/components/modalConfiguracion";
 import { useForm } from "react-hook-form";
 import { showSwal } from "@/app/utils/alerts";
@@ -17,7 +17,6 @@ function ModalTablaConfiguracion({
   const [datasConfiguracion, setDatasConfiguracion] = useState([]);
   const [dataConfiguracion, setDataConfiguracion] = useState({});
   const [dataConfiguracionFiltrados, setDataConfiguracionFiltrados] = useState(null);
-  const [isLoadingAlta, setIsLoadingAlta] = useState(false);
   const [accion, setAccion] = useState("");
   const [currentID, setCurrentId] = useState("");
   const [isLoadingButton, setisLoadingButton] = useState(false);
@@ -34,7 +33,6 @@ function ModalTablaConfiguracion({
       const {token} = session.user;
       const data = await getConfiguracion(token);
       setDatasConfiguracion(data);
-      //setDataConfiguracion(data);
       setDataConfiguracionFiltrados(data);
       setisLoading(false);
     };
@@ -87,8 +85,6 @@ function ModalTablaConfiguracion({
       ? document.getElementById("modal_Configuracion").showModal()
       : document.getElementById("modal_Configuracion").close();
   };
-
-  
 
   const onSubmitModal = handleSubmit(async (data) => {
     setisLoadingButton(true);

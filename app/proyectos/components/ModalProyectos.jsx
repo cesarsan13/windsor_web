@@ -18,7 +18,7 @@ function ModalProyectos({
   baseSeleccionada,
   showModal,
 }) {
-  const [error, setError] = useState(null);
+
   const [titulo, setTitulo] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);

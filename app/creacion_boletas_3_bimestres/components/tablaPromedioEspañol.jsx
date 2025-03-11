@@ -1,14 +1,10 @@
 "use client";
 import Loading from "@/app/components/loading";
 import NoData from "@/app/components/NoData";
-import Image from "next/image";
-import iconos from "@/app/utils/iconos";
 import React from "react";
 function TablaPromedioEspañol({
     session,
     promediosEsFiltrados,
-    promediosEspañolAr2,
-    promediosEspañolAr3,
     isLoading,
 }) {
     return !isLoading ? (

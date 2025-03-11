@@ -1,8 +1,6 @@
-import { useSession } from "next-auth/react";
-import { ReportePDF } from "../../ReportesPDF";
-import { ReporteExcel } from "../../ReportesExcel";
-import { formatDate, formatTime, formatFecha, format_Fecha_String } from "../../globalfn";
-
+import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
+import { formatTime, format_Fecha_String } from "@/app/utils/globalfn";
 
 export const getCajeros = async (token, baja) => {
   let url = "";
@@ -29,6 +27,7 @@ export const siguiente = async (token) => {
   const resJson = await res.json();
   return resJson.data;
 };
+
 export const guardaCajero = async (token, data, accion) => {
     let url_api = "";
     if (accion === "Alta") {
@@ -53,7 +52,6 @@ export const guardaCajero = async (token, data, accion) => {
     fax: data.fax,
     mail: data.mail,
     baja: data.baja,
-    // fec_cambio: data.fec_cambio,
     clave_cajero: data.clave_cajero
   });
     const res = await fetch(`${url_api}`, {
@@ -102,6 +100,7 @@ export const guardaCajero = async (token, data, accion) => {
       doc.tiene_encabezado = true;
     }
   };
+
   export const Imprimir = (configuracion) => {
     const newPDF = new ReportePDF(configuracion);
     const { body } = configuracion;
@@ -128,6 +127,7 @@ export const guardaCajero = async (token, data, accion) => {
 
   newPDF.guardaReporte(`Cajeros_${dateStr}${timeStr}`);
   };
+  
   export const ImprimirExcel = (configuracion)=>{
     const newExcel = new ReporteExcel(configuracion)
     const {columns} = configuracion

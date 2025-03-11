@@ -378,20 +378,6 @@ const modalBody = () => {
             }`}
         >
             <div className="flex flex-wrap -mx-3 mb-6 px-3">
-            {/* <Inputs
-                dataType={"int"}
-                name={"numero"}
-                tamañolabel={""}
-                className={"rounded block grow text-right"}
-                Titulo={"Numero: "}
-                type={"text"}
-                requerido={accion === "Alta" ? false : true}
-                errors={errors}
-                register={register}
-                message={"id Requerido"}
-                isDisabled={accion === "Alta" ? !isDisabled : isDisabled}
-                handleBlur={handleBlur}
-            /> */}
             <Inputs
                 dataType={"string"}
                 name={"a_paterno"}

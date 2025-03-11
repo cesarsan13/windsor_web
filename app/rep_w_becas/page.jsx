@@ -1,22 +1,21 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import Acciones from "./components/Acciones";
+import Acciones from "@/app/rep_w_becas/components/Acciones";
 import {
   ImprimirPDF,
   ImprimirExcel,
   getBecas,
-} from "../utils/api/rep_w_becas/rep_w_becas";
+} from "@/app/utils/api/rep_w_becas/rep_w_becas";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "jspdf-autotable";
-import BuscarCat from "../components/BuscarCat";
-import VistaPrevia from "../components/VistaPrevia";
+import BuscarCat from "@/app/components/BuscarCat";
+import VistaPrevia from "@/app/components/VistaPrevia";
 import { showSwal } from "@/app/utils/alerts";
-import { permissionsComponents } from "../utils/globalfn";
+import { permissionsComponents } from "@/app/utils/globalfn";
 
 function RepBecas() {
   const router = useRouter();
@@ -50,7 +49,6 @@ function RepBecas() {
       );
       setPermissions(permisos);
       const data = await getBecas(token, horario1, horario2, sOrdenar);
-      // console.log(data);
       setFormaBecas(data.data);
       setisLoading(false);
     };
@@ -103,7 +101,6 @@ function RepBecas() {
 
   const handleVerClick = () => {
     setAnimateLoading(true);
-    // console.log(formaBecas);
     if (horario1.numero === undefined && horario2.numero == undefined) {
       showSwal(
         "Oppss!",
@@ -142,7 +139,6 @@ function RepBecas() {
         }
       };
       Enca1(reporte);
-      // console.log(body);
       body.forEach((reporte1) => {
         reporte.ImpPosX(reporte1.numero.toString(), 15, reporte.tw_ren);
         reporte.ImpPosX(reporte1.alumno.toString(), 25, reporte.tw_ren);
@@ -162,7 +158,6 @@ function RepBecas() {
           reporte.tw_ren
         );
         reporte.ImpPosX(reporte1.costo_final.toString(), 210, reporte.tw_ren);
-        //reporte.ImpPosX(reporte1.Saldo.toString(),155, reporte.tw_ren);
         Enca1(reporte);
         if (reporte.tw_ren >= reporte.tw_endRenH) {
           reporte.pageBreakH();

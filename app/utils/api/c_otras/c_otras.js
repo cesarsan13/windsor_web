@@ -136,6 +136,7 @@ export const ImprimirPDF = (configuracion) => {
   });
   newPDF.guardaReporte("Calificaciones");
 };
+
 export const ImprimirExcel = (configuracion) => {
   const newExcel = new ReporteExcel(configuracion);
   const { columns } = configuracion;
@@ -161,6 +162,7 @@ export const getMateriasGrupo = async (token, grupo) => {
   const resJson = await res.json();
   return resJson.data;
 };
+
 export const getCalificaciones = async (
   token,
   grupo,

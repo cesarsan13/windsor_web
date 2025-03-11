@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import Acciones from "./components/Acciones";
-import BuscarCat from "../components/BuscarCat";
+import Acciones from "@/app/accesos_usuarios/components/Acciones";
+import BuscarCat from "@/app/components/BuscarCat";
 import ModalComponent from "@/app/components/Catalogs_Components/modalComponent";
 import TableComponent from "@/app/components/Catalogs_Components/tableComponent";
 import { useAccesosUsuariosABC } from "@/app/accesos_usuarios/Hooks/useAccesosUsuariosABC";

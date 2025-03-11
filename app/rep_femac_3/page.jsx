@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Acciones from "@/app/rep_femac_3/components/Acciones";
-import VistaPrevia from "../components/VistaPrevia";
+import VistaPrevia from "@/app/components/VistaPrevia";
 import {
   getAlumnosPorMes,
   Imprimir,
@@ -12,10 +12,9 @@ import { useSession } from "next-auth/react";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "jspdf-autotable";
-import BuscarCat from "../components/BuscarCat";
+import BuscarCat from "@/app/components/BuscarCat";
 import { showSwal } from "@/app/utils/alerts";
-import { animator } from "chart.js";
-import { permissionsComponents } from "../utils/globalfn";
+import { permissionsComponents } from "@/app/utils/globalfn";
 
 function Rep_Femac_3() {
   const router = useRouter();
@@ -47,8 +46,6 @@ function Rep_Femac_3() {
       );
       setPermissions(permisos);
       setToken(token);
-      //const data = await getAlumnosPorMes(token, horario, sOrdenar);
-      //setFormaRepDosSel(data.data);
       setisLoading(false);
     };
     fetchData();

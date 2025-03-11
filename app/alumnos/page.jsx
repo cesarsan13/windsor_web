@@ -1,15 +1,15 @@
 "use client";
 import React from "react";
-import ModalComponent from "../components/Catalogs_Components/modalComponent";
-import TableComponent from "../components/Catalogs_Components/tableComponent";
+import ModalComponent from "@/app/components/Catalogs_Components/modalComponent";
+import TableComponent from "@/app/components/Catalogs_Components/tableComponent";
 import Busqueda from "@/app/alumnos/components/Busqueda";
 import Acciones from "@/app/alumnos/components/Acciones";
 import VistaPrevia from "@/app/components/VistaPrevia";
-import ModalProcesarDatos from "../components/modalProcesarDatos";
-import BarraCarga from "../components/BarraCarga";
-import { useAlumnosABC } from "./hooks/useAlumnosABC";
-import { useAlumnosPdfExcel } from "./hooks/useAlumnosPdfExcel";
-import { useAlumnosUI } from "./hooks/useAlumnosUI";
+import ModalProcesarDatos from "@/app/components/modalProcesarDatos";
+import BarraCarga from "@/app/components/BarraCarga";
+import { useAlumnosABC } from "@/app/alumnos/hooks/useAlumnosABC";
+import { useAlumnosPdfExcel } from "@/app/alumnos/hooks/useAlumnosPdfExcel";
+import { useAlumnosUI } from "@/app/alumnos/hooks/useAlumnosUI";
 import "jspdf-autotable"
 import "@react-pdf-viewer/core/lib/styles/index.css"
 

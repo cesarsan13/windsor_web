@@ -1,8 +1,6 @@
-import { calculaDigitoBvba } from "../../globalfn";
-import { ReporteExcel } from "../../ReportesExcel";
-import { ReportePDF } from "../../ReportesPDF";
-import { formatDate, formatTime, formatFecha, format_Fecha_String, formatNumber } from "../../globalfn";
-
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { calculaDigitoBvba, formatTime, format_Fecha_String, formatNumber } from "@/app/utils/globalfn";
 
 export const getDetallePedido = async (
   token,
@@ -217,8 +215,6 @@ export const ImprimirExcel = async (
   dataTrabRepCobr.forEach((trabRep) => {
     if (trabRep.articulo !== Art_Ant && Art_Ant !== "") {
       Cambia_Articulo_Excel(tot_art, data1);
-      // newExcel.addData(data1);
-      // data1.pop()
       tot_art = 0;
     }
     if (trabRep.articulo !== Art_Ant) {
@@ -228,8 +224,6 @@ export const ImprimirExcel = async (
         importe: "",
         fecha: "",
       });
-      // newExcel.addData(data1);
-      // data1.pop()
     }
     data1.push({
       alumno:
@@ -238,8 +232,6 @@ export const ImprimirExcel = async (
       importe: formatNumber(trabRep.importe),
       fecha: trabRep.fecha,
     });
-    // newExcel.addData(data1);
-    // data1.pop
     tot_art = tot_art + trabRep.importe;
     total_general = total_general + trabRep.importe;
     Art_Ant = trabRep.articulo;
@@ -251,7 +243,6 @@ export const ImprimirExcel = async (
     importe: formatNumber(total_general),
     fecha: "",
   });
-  // newExcel.addData(data1);
   newExcel.addData(data1);
   const date = new Date();
   const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)

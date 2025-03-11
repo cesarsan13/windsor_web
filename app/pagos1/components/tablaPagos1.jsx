@@ -1,7 +1,7 @@
 "use client";
 import Loading from "@/app/components/loading";
 import NoData from "@/app/components/NoData";
-import React, { useState } from "react";
+import React from "react";
 import iconos from "@/app/utils/iconos";
 import Image from "next/image";
 import { formatNumber } from "@/app/utils/globalfn";
@@ -75,7 +75,6 @@ function TablaPagos1({
             <thead className="sticky top-0 bg-white dark:bg-[#1d232a] z-[2]">
               <tr>
                 <th className="w-[5%]"></th>
-                {/* <td className="hidden">Clave</td> */}
                 <td className="w-[35%]">Descripción</td>
                 <td className="w-[5%]">Documento</td>
                 <td className="w-[5%] text-right">Cantidad</td>
@@ -133,21 +132,6 @@ function TablaPagos1({
               ))}
             </tbody>
             <tfoot />
-            {/* <tfoot>
-              <tr>
-                <th></th>
-                <td className="hidden">Clave</td>
-                <td>Descripción</td>
-                <td>Documento</td>
-                <td>Cantidad</td>
-                <td>Precio</td>
-                <td>Descuento</td>
-                <td>Neto</td>
-                <td>Total</td>
-                <td>Alumno</td>
-                <th>Acciones</th>
-              </tr>
-            </tfoot> */}
           </table>
         ) : pagosFiltrados != null && session && pagosFiltrados.length === 0 ? (
           <NoData></NoData>

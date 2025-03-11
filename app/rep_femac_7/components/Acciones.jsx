@@ -1,6 +1,5 @@
 import React from 'react'
 import Tooltip from "@/app/components/tooltip";
-import Button from "@/app/components/button";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 import { TbLoader3 } from "react-icons/tb"; // Icono de carga
@@ -40,7 +39,6 @@ function Acciones({ home, Ver, isLoading, permiso_imprime }) {
                             <Image
                                 src={srcDark}
                                 alt={tooltipTitle}
-
                                 className="w-5 h-5 md:w-6 md:h-6 block dark:hidden"
                             />
                             <Image

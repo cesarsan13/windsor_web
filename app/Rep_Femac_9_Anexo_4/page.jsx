@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import Acciones from "./components/Acciones";
-import Inputs from "./components/Inputs";
+import Acciones from "@/app/Rep_Femac_9_Anexo_4/components/Acciones";
+import Inputs from "@/app/Rep_Femac_9_Anexo_4/components/Inputs";
 import { useForm } from "react-hook-form";
 import {
   getRelaciondeFacturas,
@@ -14,9 +14,9 @@ import { useSession } from "next-auth/react";
 import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import { formatNumber } from "../utils/globalfn";
-import VistaPrevia from "../components/VistaPrevia";
-import { permissionsComponents } from "../utils/globalfn";
+import { formatNumber } from "@/app/utils/globalfn";
+import VistaPrevia from "@/app/components/VistaPrevia";
+import { permissionsComponents } from "@/app/utils/globalfn";
 
 function RelaciondeFacturas() {
   const router = useRouter();
@@ -340,7 +340,6 @@ function RelaciondeFacturas() {
                   <input
                     name={"fecha_cobro_ini"}
                     tamañolabel={""}
-                    // className={"rounded block grow"}
                     Titulo={"Fecha Inicial: "}
                     type={"date"}
                     errors={errors}
@@ -359,7 +358,6 @@ function RelaciondeFacturas() {
                   <input
                     name={"fecha_cobro_fin"}
                     tamañolabel={""}
-                    // className={"rounded block grow"}
                     Titulo={"Fecha Final: "}
                     type={"date"}
                     errors={errors}

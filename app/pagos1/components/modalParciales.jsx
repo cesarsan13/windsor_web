@@ -1,22 +1,17 @@
 "use client";
 import React from "react";
 import Inputs from "@/app/pagos1/components/Inputs";
-import BuscarCat from "@/app/components/BuscarCat";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 function ModalParciales({
-    session,
     register,
     errors,
     handleModalClick,
-    setProductos1,
-    accionB,
     btnParciales,
     handleBlur,
     handleKeyDown,
 }) {
-    const nameInputs3 = ["numero_producto", "descripcion"];
-    const columnasBuscaCat3 = ["numero", "descripcion"];
+
     const Guardar = (evt) => {
         handleModalClick(evt);
         btnParciales(evt);

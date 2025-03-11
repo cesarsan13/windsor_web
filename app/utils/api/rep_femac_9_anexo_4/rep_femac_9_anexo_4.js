@@ -1,8 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import { format_Fecha_String, formatNumber } from "../../globalfn";
-import { formatDate, formatTime, formatFecha } from "../../globalfn";
-
+import { format_Fecha_String, formatNumber, formatTime } from "@/app/utils/globalfn";
 
 export const getRelaciondeFacturas = async (token, tomaFecha, tomaCanceladas, fecha_cobro_ini, fecha_cobro_fin, factura_ini, factura_fin) => {
     factura_ini = (factura_ini === '' || factura_ini === undefined) ? 0 : factura_ini;

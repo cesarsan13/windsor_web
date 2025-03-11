@@ -1,8 +1,5 @@
 import BuscarCat from '@/app/components/BuscarCat'
-import Tooltip from '@/app/components/tooltip';
 import { soloDecimales, soloEnteros } from '@/app/utils/globalfn'
-import iconos from '@/app/utils/iconos';
-import Image from 'next/image';
 import React from 'react'
 
 function Busqueda({

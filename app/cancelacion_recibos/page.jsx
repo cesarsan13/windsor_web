@@ -6,8 +6,8 @@ import Acciones from "@/app/cancelacion_recibos/components/Acciones";
 import { useSession } from "next-auth/react";
 import Inputs from "@/app/cancelacion_recibos/components/Inputs";
 import { procesoCartera } from "@/app/utils/api/cancelacion_recibo/cancelacion_recibo";
-import { showSwal, confirmSwal } from "@/app/utils/alerts";
-import { format_Fecha_String, permissionsComponents } from "../utils/globalfn";
+import { showSwal } from "@/app/utils/alerts";
+import { permissionsComponents } from "@/app/utils/globalfn";
 
 function Cancelacion_Recibo() {
     const router = useRouter();

@@ -1,5 +1,5 @@
-import { ReporteExcel } from "../../ReportesExcel";
-import { ReportePDF } from "../../ReportesPDF";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
 
 export const getUsuarios = async (token, baja) => {
   let url = "";

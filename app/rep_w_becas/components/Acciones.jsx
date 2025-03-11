@@ -1,6 +1,5 @@
 import React from "react";
 import Tooltip from "@/app/components/tooltip";
-import Button from "@/app/components/button";
 import iconos from "@/app/utils/iconos";
 import Image from "next/image";
 import { TbLoader3 } from "react-icons/tb";

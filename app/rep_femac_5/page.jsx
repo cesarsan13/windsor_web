@@ -10,7 +10,7 @@ import {
   Imprimir,
   ImprimirExcel,
 } from "@/app/utils/api/rep_femac_5/rep_femac_5";
-import VistaPrevia from "../components/VistaPrevia";
+import VistaPrevia from "@/app/components/VistaPrevia";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { showSwal } from "@/app/utils/alerts";

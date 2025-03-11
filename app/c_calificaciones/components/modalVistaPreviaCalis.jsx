@@ -17,8 +17,6 @@ function ModalVistaPreviaCalis({ pdfPreview, pdfData, PDF, Excel }) {
         setIsModalOpen(pdfPreview && !isEmptyDataPDF);
     }, [pdfPreview, pdfData]);
 
-    // if (!isModalOpen) return; // No renderizar nada si el modal no debe abrirse
-
     return (
         <dialog id="modalVPCali" className="modal">
             <div className="modal-box w-full max-w-4xl h-full">

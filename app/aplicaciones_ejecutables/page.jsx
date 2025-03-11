@@ -3,21 +3,19 @@ import React, { useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { showSwal, confirmSwal, showSwalConfirm } from "../utils/alerts";
+import { showSwal, confirmSwal } from "@/app/utils/alerts";
 import {
   debounce,
   permissionsComponents,
-  chunkArray,
-  validateString,
 } from "@/app/utils/globalfn";
 import {
   getAplicaciones,
   guardaEjecutables,
-} from "../utils/api/aplicaciones_ejecutables/aplicaciones_ejecutables";
-import TablaAplicaciones from "./components/tablaAplicaciones";
-import ModalAplicaciones from "./components/ModalAplicaciones";
-import Busqueda from "./components/Busqueda";
-import Acciones from "./components/acciones";
+} from "@/app/utils/api/aplicaciones_ejecutables/aplicaciones_ejecutables";
+import TablaAplicaciones from "@/app/aplicaciones_ejecutables/components/tablaAplicaciones";
+import ModalAplicaciones from "@/app/aplicaciones_ejecutables/components/ModalAplicaciones";
+import Busqueda from "@/app/aplicaciones_ejecutables/components/Busqueda";
+import Acciones from "@/app/aplicaciones_ejecutables/components/acciones";
 import { useForm } from "react-hook-form";
 
 function Aplicaciones_Ejecutables() {

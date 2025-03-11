@@ -1,4 +1,3 @@
-import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
 import React from "react";
 
 function Inputs({
@@ -6,20 +5,14 @@ function Inputs({
   name,
   type,
   requerido,
-  dataType,
   className,
   message,
   errors,
   tamañolabel,
-  maxLenght,
   isDisabled,
-  handleBlur,
   register,
   arreglos
 }) {
-
-
-
 
   if (type === 'select') {
     return (

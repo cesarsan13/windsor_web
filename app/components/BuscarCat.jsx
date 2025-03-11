@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ModalBuscarCat from "./ModalBuscarCat";
+import ModalBuscarCat from "@/app/components/ModalBuscarCat";
 import { FaSpinner } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { getProductos } from "@/app/utils/api/productos/productos";
@@ -18,8 +18,8 @@ import { getComentarios } from "@/app/utils/api/comentarios/comentarios";
 import { getGrupos } from "@/app/utils/api/grupos/grupos";
 import { getClasesBuscaCat } from "@/app/utils/api/clases/clases";
 import { loadGlobalVariables, globalVariables } from "@/app/utils/globalfn";
-import { getProfesores } from "../utils/api/profesores/profesores";
-import { getUsuarios } from "../utils/api/usuarios/usuarios";
+import { getProfesores } from "@/app/utils/api/profesores/profesores";
+import { getUsuarios } from "@/app/utils/api/usuarios/usuarios";
 import { getMenus } from "@/app/utils/api/accesos_menu/accesos_menu";
 
 function BuscarCat({

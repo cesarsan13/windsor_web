@@ -1,15 +1,15 @@
 "use client";
 import React from "react";
-import ModalComponent from "../components/Catalogs_Components/modalComponent";
-import TableComponent from "../components/Catalogs_Components/tableComponent";
+import ModalComponent from "@/app/components/Catalogs_Components/modalComponent";
+import TableComponent from "@/app/components/Catalogs_Components/tableComponent";
 import Busqueda from "@/app/productos/components/Busqueda";
 import Acciones from "@/app/productos/components/Acciones";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import ModalProcesarDatos from "@/app/components/modalProcesarDatos";
 import BarraCarga from "@/app/components/BarraCarga";
-import { useProductosABC } from "./hooks/useProductosABC";
-import { useProductosPdfExcel } from "./hooks/useProductosPdfExcel";
-import { useProductosUI } from "./hooks/useProductosUI";
+import { useProductosABC } from "@/app/productos/hooks/useProductosABC";
+import { useProductosPdfExcel } from "@/app/productos/hooks/useProductosPdfExcel";
+import { useProductosUI } from "@/app/productos/hooks/useProductosUI";
 import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 

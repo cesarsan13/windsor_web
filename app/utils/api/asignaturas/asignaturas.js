@@ -1,7 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
-import { ReportePDF } from "../../ReportesPDF";
-import { formatTime, format_Fecha_String } from "../../globalfn";
-
+import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { formatTime, format_Fecha_String } from "@/app/utils/globalfn";
 
 export const getAsignaturas = async (token, baja) => {
   let url = "";
@@ -60,6 +59,7 @@ export const getLastSubject = async (token) => {
   const resJson = await res.json();
   return resJson.data;
 };
+
 export const guardarAsinatura = async (token, data, accion, numero) => {
   let url = "";
   let met = "";

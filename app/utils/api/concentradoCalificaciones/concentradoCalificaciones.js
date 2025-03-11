@@ -1,5 +1,5 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
-import { ReporteExcelCC } from "./ReportesExcelCC";
+import { ReporteExcelCC } from "@/app/utils/api/concentradoCalificaciones/ReportesExcelCC";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import {formatDate, formatTime} from "@/app/utils/globalfn"
 
@@ -155,7 +155,6 @@ export const ImprimirPDF = (configuracion, resultadoEnc, fecha_hoy) => {
     newPDF.guardaReporte(`ConcentradoCalificaciones_${dateStr.replaceAll("/","")}${timeStr.replaceAll(":","")}`);
   };
 
-
   export const ImprimirPDFDetalle = (configuracion, resultadoEnc, fecha_hoy, alumno) => {
     const newPDF = new ReportePDF(configuracion, "Portrait");
     const {body} = configuracion;
@@ -185,7 +184,6 @@ export const ImprimirPDF = (configuracion, resultadoEnc, fecha_hoy) => {
             newPDF.pageBreak();
             Enca1(newPDF);
         }
-        //Object.entries(mat).forEach(([materia, mat], index) => {
         mat[0].forEach((mat) => {
             newPDF.ImpPosX(mat.descripcion.toString(),posicionBodyMat, newPDF.tw_ren, 10);
             posicionBodyMat+= incrementoX;

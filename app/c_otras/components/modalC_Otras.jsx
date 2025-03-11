@@ -23,7 +23,6 @@ function ModalC_Otras({
   getValues,
   materiaDesc
 }) {
-  // const { getValues } = useForm();
   const [error, setError] = useState(null);
   const [titulo, setTitulo] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);

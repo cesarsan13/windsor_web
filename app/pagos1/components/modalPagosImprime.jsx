@@ -1,9 +1,8 @@
-import { Elimina_Comas, formatNumber, pone_ceros } from "@/app/utils/globalfn";
+import { Elimina_Comas, pone_ceros } from "@/app/utils/globalfn";
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Inputs from "@/app/pagos1/components/Inputs";
 import BuscarCat from "@/app/components/BuscarCat";
-import { useForm } from "react-hook-form";
 import { showSwalAndWait } from "@/app/utils/alerts";
 import { format_Fecha_String } from "@/app/utils/globalfn";
 import Image from "next/image";
@@ -30,7 +29,7 @@ function ModalPagoImprime({
   errorsImpr,
   accionB,
 }) {
-  const [error, setError] = useState(null);
+
   const columnasBuscaCat = ["numero", "descripcion"];
   const nameInputs = ["numero", "descripcion"];
   const [Handlepago, setPago] = useState([]);
@@ -41,7 +40,6 @@ function ModalPagoImprime({
   const onSubmitModal = handleSumbitImpr(async (data) => {
     try {
       const { token } = session.user;
-      let newData;
       let res;
       if (formaPagoPage.recibo <= 0) {
         showModal("my_modal_4", false);
@@ -112,7 +110,6 @@ function ModalPagoImprime({
         comentario_ad: formaPagoPage.comentario_ad || "",
       };
       res = await guardaEcabYCobrD(token, postNewData);
-      // if (res.status) {
       const pagoFiltrado = formaImprime(data);
       const encaPago = formaEnca(data);
       const configuracion = {
@@ -286,13 +283,11 @@ function ModalPagoImprime({
                       register={registerImpr}
                       message={"Referencia requerido"}
                       isDisabled={false}
-                      // handleBlur={handleBlur}
                       maxLength={8}
                     />
                   </label>
                 </div>
               </div>
-              {/*  */}
               <Inputs
                 tipoInput={""}
                 dataType={"string"}
@@ -325,22 +320,6 @@ function ModalPagoImprime({
                 handleBlur={handleBlur}
                 maxLength={10}
               />
-              {/* <Inputs
-                tipoInput={""}
-                dataType={"int"}
-                name={"num_copias "}
-                tamañolabel={""}
-                className={`grow text-right`}
-                Titulo={"Número de Copias: "}
-                type={"text"}
-                requerido={false}
-                errors={errors}
-                register={registerImpr}
-                message={"num_copias requerido"}
-                isDisabled={false}
-                handleBlur={handleBlur}
-                maxLength={5}
-              /> */}
             </div>
           </fieldset>
         </form>

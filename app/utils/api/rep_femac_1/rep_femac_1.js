@@ -1,8 +1,7 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { calculaDigitoBvba } from "@/app/utils/globalfn";
-import { formatDate, formatTime, formatFecha, format_Fecha_String } from "../../globalfn";
-
+import { formatTime, format_Fecha_String } from "@/app/utils/globalfn";
 
 export const getreportAlumn = async (token, baja, tipoOrden, alumnos1, alumnos2) => {
   const res = await fetch(`${process.env.DOMAIN_API}api/students/report`, {
@@ -23,7 +22,6 @@ export const getreportAlumn = async (token, baja, tipoOrden, alumnos1, alumnos2)
   const resJson = await res.json();
   return resJson.data;
 }
-
 
 const Enca1 = (doc) => {
   if (!doc.tiene_encabezado) {

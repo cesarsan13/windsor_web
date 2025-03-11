@@ -1,22 +1,21 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import Acciones from "./components/Acciones";
+import Acciones from "@/app/Rep_Femac_2/components/Acciones";
 import {
   ImprimirPDF,
   ImprimirExcel,
   getRepDosSel,
-} from "../utils/api/Rep_Femac_2/Rep_Femac_2";
+} from "@/app/utils/api/Rep_Femac_2/Rep_Femac_2";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "jspdf-autotable";
-import BuscarCat from "../components/BuscarCat";
+import BuscarCat from "@/app/components/BuscarCat";
 import { showSwal } from "@/app/utils/alerts";
-import VistaPrevia from "../components/VistaPrevia";
-import { permissionsComponents } from "../utils/globalfn";
+import VistaPrevia from "@/app/components/VistaPrevia";
+import { permissionsComponents } from "@/app/utils/globalfn";
 function AlumnosPorClase() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -47,8 +46,6 @@ function AlumnosPorClase() {
         menu_seleccionado
       );
       setPermissions(permisos);
-      //const data = await getRepDosSel(token, horario1, horario2, sOrdenar);
-      //setFormaRepDosSel(data.data);
       setisLoading(false);
     };
     fetchData();
@@ -308,7 +305,6 @@ function AlumnosPorClase() {
         <div className="w-full py-3 flex flex-col gap-y-4 mb-3">
           {/* Fila del formulario de la pagina */}
           <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4  w-1/2 mx-auto ">
-            {/*min-[1920px]:w-1/4*/}
             <div className="flex min-[1920px]:flex-row flex-col min-[1920px]:space-x-4 space-y-2">
               <BuscarCat
                 table="horarios"
@@ -346,7 +342,6 @@ function AlumnosPorClase() {
           </div>
           <div className="flex flex-row">
             <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 w-1/2 mx-auto ">
-              {/*min-[1920px]:w-1/4*/}
               <div className="flex space-x-4">
                 <label className="text-black dark:text-white flex flex-row gap-3 md:flex-row">
                   <span className="text-black dark:text-white">

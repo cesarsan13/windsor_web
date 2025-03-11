@@ -1,29 +1,29 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import TablaCobranzaDiaria from "./components/tablaCobranzaDiaria";
+import TablaCobranzaDiaria from "@/app/cobranza_diaria/components/tablaCobranzaDiaria";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import Acciones from "./components/acciones";
-import Busqueda from "./components/busqueda";
+import Acciones from "@/app/cobranza_diaria/components/acciones";
+import Busqueda from "@/app/cobranza_diaria/components/busqueda";
 import {
   Elimina_Comas,
   format_Fecha_String,
   formatDate,
   formatNumber,
   permissionsComponents,
-} from "../utils/globalfn";
+} from "@/app/utils/globalfn";
 import {
   getCobranzaDiaria,
   guardarCobranzaDiaria,
   Imprimir,
   ImprimirExcel,
-} from "../utils/api/cobranzaDiaria/cobranzaDiaria";
-import ModalCobranzaDiaria from "./components/modalCobranzaDiaria";
+} from "@/app/utils/api/cobranzaDiaria/cobranzaDiaria";
+import ModalCobranzaDiaria from "@/app/cobranza_diaria/components/modalCobranzaDiaria";
 import { useForm } from "react-hook-form";
-import { showSwal } from "../utils/alerts";
+import { showSwal } from "@/app/utils/alerts";
 import { getFormasPago } from "@/app/utils/api/formapago/formapago";
-import { ReportePDF } from "../utils/ReportesPDF";
-import ModalVistaPreviaCobranzaDiaria from "./components/modalVistaPreviaCobranzaDiaria";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
+import ModalVistaPreviaCobranzaDiaria from "@/app/cobranza_diaria/components/modalVistaPreviaCobranzaDiaria";
 
 function Cobranza_Diaria() {
   const router = useRouter();
@@ -136,7 +136,6 @@ function Cobranza_Diaria() {
     data.recibo = currentID;
     data.importe = Elimina_Comas(data.importe);
     const res = await guardarCobranzaDiaria(session.user.token, data);
-    // data.importe = formatNumber(data.importe)
     if (res.status) {
       if (accion === "Editar") {
         const index = cobranzaDiaria.findIndex((fp) => fp.recibo === currentID);

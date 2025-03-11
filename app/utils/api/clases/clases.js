@@ -1,7 +1,7 @@
-import { useSession } from "next-auth/react";
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { obtenerFechaYHoraActual } from "@/app/utils/globalfn";
+
 export const getClasesBuscaCat = async (token, grupo) => {
   let url = `${process.env.DOMAIN_API}api/proceso/busca-cat`;
   const res = await fetch(url, {
@@ -97,6 +97,7 @@ const Enca1 = (doc) => {
     doc.tiene_encabezado = true;
   }
 };
+
 export const Imprimir = (configuracion) => {
   const orientacion = "Landscape";
   const newPDF = new ReportePDF(configuracion, orientacion);
@@ -122,6 +123,7 @@ export const Imprimir = (configuracion) => {
   const { fecha, hora } = obtenerFechaYHoraActual();
   newPDF.guardaReporte(`Reporte_Clases_${fecha}${hora}`);
 };
+
 export const ImprimirExcel = (configuracion) => {
   const newExcel = new ReporteExcel(configuracion)
   const { columns } = configuracion

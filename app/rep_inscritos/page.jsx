@@ -2,7 +2,6 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import Acciones from "@/app/rep_inscritos/components/Acciones";
-import Inputs from "@/app/rep_inscritos/components/Inputs";
 import { useForm } from "react-hook-form";
 import {
   getConsultasInscripcion,
@@ -13,10 +12,8 @@ import {
 import { formatDate, permissionsComponents } from "@/app/utils/globalfn";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { showSwal } from "@/app/utils/alerts";
-import BuscarCat from "@/app/components/BuscarCat";
 import "jspdf-autotable";
-import VistaPrevia from "../components/VistaPrevia";
+import VistaPrevia from "@/app/components/VistaPrevia";
 
 function AltasBajasAlumnos() {
   const router = useRouter();
@@ -25,7 +22,6 @@ function AltasBajasAlumnos() {
   const dateStr = formatDate(date);
   let [fecha_ini, setFecha_ini] = useState(dateStr.replace(/\//g, "-"));
   let [fecha_fin, setFecha_fin] = useState(dateStr.replace(/\//g, "-"));
-  let [alumnosFiltrados, setAlumnosFiltrados] = useState([]);
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [isLoading, setisLoading] = useState(false);
@@ -53,8 +49,6 @@ function AltasBajasAlumnos() {
   useEffect(() => {
     setFecha_ini(getPrimerDiaDelMes());
     setFecha_fin(getUltimoDiaDelMes());
-    // setFecha_ini(fecha_ini);
-    // setFecha_fin(fecha_fin);
   }, []);
 
   useEffect(()=>{
@@ -208,7 +202,6 @@ function AltasBajasAlumnos() {
                   <input
                     name={"fecha_ini"}
                     tamañolabel={""}
-                    // className={"rounded block grow"}
                     Titulo={"Fecha Inicial: "}
                     type={"date"}
                     errors={errors}
@@ -227,7 +220,6 @@ function AltasBajasAlumnos() {
                   <input
                     name={"fecha_fin"}
                     tamañolabel={""}
-                    // className={"rounded block grow"}
                     Titulo={"Fecha Final: "}
                     type={"date"}
                     errors={errors}

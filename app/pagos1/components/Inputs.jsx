@@ -13,7 +13,6 @@ function Inputs({
   tamañolabel,
   maxLenght,
   isDisabled,
-  setValue,
   handleBlur,
   eventInput,
   valueInput,
@@ -36,7 +35,6 @@ function Inputs({
             className={`text-black dark:text-white ${className}`}
             disabled={isDisabled}
             onFocus={(e) => e.target.select()}
-          // onChange={(event) => setValue(event.target.value)}
           />
         </label>
         {errors[name] && (
@@ -89,7 +87,6 @@ function Inputs({
             onFocus={(e) => e.target.select()}
             className={`grow dark:text-neutral-200 join-item input-xs md:input-sm border-b-2 border-slate-300 dark:border-slate-700 text-neutral-600 rounded-r-none  ${className}`}
             disabled={isDisabled}
-            // onKeyDown={soloEnteros}
             onKeyDown={(evt) => eventInput(evt)}
             onBlurCapture={(event) => handleBlur(event, type)}
             onClick={onClick}

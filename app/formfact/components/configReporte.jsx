@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import Sheet from "./sheet";
+import Sheet from "@/app/formfact/components/sheet";
 import PropertyPage from "@/app/formfact/components/PropertyPage";
 function ConfigReporte({
   labels,

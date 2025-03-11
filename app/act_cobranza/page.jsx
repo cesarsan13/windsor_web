@@ -1,34 +1,29 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Acciones from "./components/Acciones";
-import BuscarCat from "../components/BuscarCat";
+import Acciones from "@/app/act_cobranza/components/Acciones";
 import { useSession } from "next-auth/react";
-import { getAlumnos } from "../utils/api/alumnos/alumnos";
-import TablaActCobranzaAlumnos from "./components/tablaActCobranzaAlumnos";
-import TablaDocumentosCobranza from "./components/tablaDocumentosCobranza";
+import TablaDocumentosCobranza from "@/app/act_cobranza/components/tablaDocumentosCobranza";
 import {
   getDocumentosAlumno,
   guardarActCobranza,
-} from "../utils/api/act_cobranza/act_cobranza";
-import { confirmSwal, showSwal, showSwalAndWait } from "../utils/alerts";
-import ModalActCobranza from "./components/ModalActCobranza";
+} from "@/app/utils/api/act_cobranza/act_cobranza";
+import { confirmSwal, showSwal } from "@/app/utils/alerts";
+import ModalActCobranza from "@/app/act_cobranza/components/ModalActCobranza";
 import { useForm } from "react-hook-form";
 import {
   Elimina_Comas,
   formatFecha,
   formatNumber,
-  poneCeros,
   permissionsComponents,
-} from "../utils/globalfn";
+} from "@/app/utils/globalfn";
 import { useRouter } from "next/navigation";
-import Busqueda from "./components/Busqueda";
-import { getProductos } from "../utils/api/productos/productos";
+import Busqueda from "@/app/act_cobranza/components/Busqueda";
+import { getProductos } from "@/app/utils/api/productos/productos";
 
 function Act_Cobranza() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [isLoadingDocumentos, setisLoadingDocumentos] = useState(false);
-  // const [alumnosFiltrados, setAlumnosFiltrados] = useState([])
   const [alumno, setAlumno] = useState({});
   const [productos, setProductos] = useState([]);
   const [accion, setAccion] = useState("");
@@ -244,16 +239,12 @@ function Act_Cobranza() {
   };
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
-    // setDocumento((documento)=>({
-    //     ...documento,
-    //     [evt.target.name]:formatNumber(evt.target.value, 2)
-    // }))
-    setValue(evt.target.name, formatNumber(evt.target.value, 2));
-  };
-  const handleInputClick = (evt) => {
-    evt.preventDefault();
-    evt.target.select();
-  };
+      setValue(evt.target.name, formatNumber(evt.target.value, 2));
+    };
+    const handleInputClick = (evt) => {
+      evt.preventDefault();
+      evt.target.select();
+    };
   return (
     <>
       <ModalActCobranza

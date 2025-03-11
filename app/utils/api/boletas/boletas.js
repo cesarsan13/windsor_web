@@ -159,7 +159,6 @@ export const ImprimirPDF = (configuracion) => {
     } else { newPDF.ImpPosX(`INGLES`, 150, newPDF.tw_ren, 0, "L"); }
     newPDF.nextRow(4);
     const data = body.map((boleta) => [
-        // { content: boleta.numero?.toString() ?? "", styles: { halign: 'right' } },
         boleta.descripcion.toString(),
         { content: boleta.bimestre1.toString(), styles: { halign: 'right' } },
         { content: boleta.bimestre2?.toString() ?? "", styles: { halign: 'right' } },
@@ -168,7 +167,6 @@ export const ImprimirPDF = (configuracion) => {
     ]);
     newPDF.generateTable(header, data);
     newPDF.nextRow(50);
-    // newPDF.ImpPosX("--------------------------------", 200, newPDF.tw_ren, 0, "L");]
     newPDF.printLineZ()
     newPDF.nextRow(6);
     newPDF.ImpPosX("NOMBRE Y FIRMA DEL PADRE O TUTOR", 200, newPDF.tw_ren, 0, "L");

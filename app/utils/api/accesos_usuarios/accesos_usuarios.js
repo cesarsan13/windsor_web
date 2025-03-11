@@ -15,6 +15,7 @@ export const getAccesosUsuarios = async (token, data) => {
   const resJson = await res.json();
   return resJson.data;
 };
+
 export const guardaAccesosUsuarios = async (token, data) => {
   let url = "";
   url = `${process.env.DOMAIN_API}api/accesoUsuario/update`;
@@ -38,6 +39,7 @@ export const guardaAccesosUsuarios = async (token, data) => {
   const resJson = await res.json();
   return resJson;
 };
+
 export const actualizaTodos = async (token, data) => {
   let url = "";
   url = `${process.env.DOMAIN_API}api/accesoUsuario/actualizaTodo`;

@@ -176,7 +176,6 @@ function PropertyPage({
   };
 
   const handleLabelChange = (evt) => {
-    // const index = evt.target.selectedOptions[0].attributes["data-key"].value;
     setSelectedIndex(evt.target.value);
   };
 
@@ -302,10 +301,8 @@ function PropertyPage({
                   arreglos={Object.entries(propertyData.fuente).map(([key,fuente])=>(
                     {id:fuente,descripcion:fuente}
                   ))}
-                  // data={propertyData.fuente}
                   idlabel={labels[selectedIndex].font_nombre}
                   handleChange={handleChange}
-                //defaultValue={formaPago.id}
                 />
                 <Inputs
                   dataType={"int"}
@@ -320,8 +317,6 @@ function PropertyPage({
                   message={"Tamaño requerido"}
                   isDisabled={false}
                   onChange={handleChange}
-                  // handleChange={handleChange}
-                  // handleKeyDown={handleChange}
                 />
                 <div className="flex flex-col space-y-2">
                   <Inputs
@@ -417,7 +412,6 @@ function PropertyPage({
                   ))}
                   idlabel={labels[selectedIndex].numero_archivo}
                   data={propertyData.campo}
-                //defaultValue={formaPago.id}
                 />
                 <Inputs
                   dataType={"string"}
@@ -436,7 +430,6 @@ function PropertyPage({
                   ))}
                   idlabel={labels[selectedIndex].formato}
                   data={propertyData.formato}
-                //defaultValue={formaPago.id}
                 />
                 <Inputs
                   dataType={"string"}
@@ -454,7 +447,6 @@ function PropertyPage({
                     {id:key,descripcion:area}
                   ))}
                   idlabel={labels[selectedIndex].tipo_campo}
-                //defaultValue={formaPago.id}
                 />
               </div>
             </div>

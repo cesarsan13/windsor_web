@@ -1,13 +1,11 @@
-import { soloEnteros, soloDecimales, pone_ceros } from "@/app/utils/globalfn";
 import React from "react";
 import { showSwalAndWait } from "@/app/utils/alerts";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import Inputs from "@/app/pagos1/components/Inputs";
 import BuscarCat from "@/app/components/BuscarCat";
-import { useForm } from "react-hook-form";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
-import { FaSpinner } from "react-icons/fa";
+
 function ModalCajeroPago({
   session,
   validarClaveCajero,

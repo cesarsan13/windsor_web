@@ -54,7 +54,6 @@ function Acciones({ Buscar, Alta, home, Ver, procesarDatos, isLoading, permiso_a
     if (!permission) return null;
     return (
       <Tooltip Titulo={tooltipTitle} posicion="tooltip-bottom">
-        {/* <Image src={src} alt={tooltipTitle} onClick={onClick} className="w-5 h-5 md:w-6 md:h-6"/> */}
         <button
           className="w-6 h-5 bg-transparent hover:bg-transparent border-none shadow-none text-black dark:text-white rounded-lg"
           onClick={onClick}
@@ -84,7 +83,6 @@ function Acciones({ Buscar, Alta, home, Ver, procesarDatos, isLoading, permiso_a
   return (
     <div className="grid grid-flow-col gap-5 justify-around w-full">
       {images.map((image, idx) => (
-        // <ImageTooltip key={idx} src={image.src} {...image} />
         <ImageTooltip key={idx}
           srcLight={image.srcLight}
           srcDark={image.srcDark}

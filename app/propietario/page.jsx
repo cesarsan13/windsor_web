@@ -5,15 +5,14 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { showSwal } from "@/app/utils/alerts";
 import Acciones from "@/app/propietario/components/Acciones";
-import Inputs from "./components/Inputs";
-import { getPropietario, updatePropietario } from "../utils/api/propietario/propietario";
-import ModalTablaConfiguracion from "./components/modalTablaConfiguracion";
-import Loading from "../components/loading";
+import Inputs from "@/app/propietario/components/Inputs";
+import { getPropietario, updatePropietario } from "@/app/utils/api/propietario/propietario";
+import ModalTablaConfiguracion from "@/app/propietario/components/modalTablaConfiguracion";
+import Loading from "@/app/components/loading";
 
 function Propietario() {
     const router = useRouter();
     const { data: session, status } = useSession();
-
     const [propietarioInfo, setPropietarioInfo] = useState([]);
     const [isLoading, setisLoading] = useState(false);
 
@@ -95,12 +94,10 @@ function Propietario() {
                         <div className="flex flex-wrap items-start md:items-center mx-auto">  
                             <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
                             <Acciones
-                                  home={home}
-                                  Configuracion={Configuracion}
-                                  Guardar={Guardar}
-                                  //isLoadingFind={isLoadingFind}
-                                  //isLoadingPDF={isLoadingPDF}
-                                />
+                                home={home}
+                                Configuracion={Configuracion}
+                                Guardar={Guardar}
+                            />
                             </div>
                             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">
                                 Propietario

@@ -214,9 +214,6 @@ export const useCommentsUI = (
             message={"General requerido"}
             isDisabled={isDisabled}
             generales={generales}
-            //onKeyDown={(evt) => {
-            //  handleKeyDown(evt);
-            //}}
           />
         </div>
       </fieldset> 

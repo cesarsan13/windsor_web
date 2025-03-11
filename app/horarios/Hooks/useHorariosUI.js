@@ -49,7 +49,6 @@ export const useHorariosUI = (
     { value: "DO", label: "Domingo" },
   ];
   const [selectedDias, setSelectedDias] = useState([]);
-  //const [dia, setDia] = useState("");
   
       useEffect(() => {
         if (formaHorarios && formaHorarios.dia) {
@@ -205,7 +204,7 @@ export const useHorariosUI = (
             <fieldset id="fs_horario"
             dataTypedisabled={accion === "Ver"  || accion === "Eliminar" ? true : false }>
             <div className="container flex flex-col space-y-5">
-              <div className="flex w-full flex-col md:flex-row gap-4 md:gap-0 items-start"> {/*flex w-full gap-0 items-start */}
+              <div className="flex w-full flex-col md:flex-row gap-4 md:gap-0 items-start">
                 <Inputs
                   id={"cancha"}
                   dataType={"int"}
@@ -282,7 +281,7 @@ export const useHorariosUI = (
                     handleKeyDown(evt);
                   }}
               />
-              <div className="flex w-full xl:gap-4 flex-col gap-4 md:flex-row md:gap-0 items-start"> {/*flex w-full md:w-full gap-4 */}
+              <div className="flex w-full xl:gap-4 flex-col gap-4 md:flex-row md:gap-0 items-start">
               <Inputs
                 Titulo={"Sexo"}
                 name={"sexo"}
@@ -322,7 +321,7 @@ export const useHorariosUI = (
                 }}
               />
               </div>
-              <div className="flex w-full xl:gap-4 flex-col gap-4 md:flex-row  md:gap-0 items-start">{/* flex w-full md:w-full gap-4 */}
+              <div className="flex w-full xl:gap-4 flex-col gap-4 md:flex-row  md:gap-0 items-start">
               
               <Inputs
                 dataType={"int"}

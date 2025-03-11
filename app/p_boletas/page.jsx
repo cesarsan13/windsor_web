@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Acciones from "./components/Acciones";
-import Busqueda from "./components/Busqueda";
+import Acciones from "@/app/p_boletas/components/Acciones";
+import Busqueda from "@/app/p_boletas/components/Busqueda";
 import { useSession } from "next-auth/react";
-import TablaCalificaciones from "./components/tablaCalificaciones";
+import TablaCalificaciones from "@/app/p_boletas/components/tablaCalificaciones";
 import {
   conversion,
   getCalificaciones,
@@ -11,13 +11,12 @@ import {
   getLugaresArea1,
   getMateriasGrupo,
   Imprimir,
-} from "../utils/api/calificaciones/calificaciones";
-import { getHorariosXAlumno } from "../utils/api/horarios/horarios";
-import { showSwal } from "../utils/alerts";
+} from "@/app/utils/api/calificaciones/calificaciones";
+import { showSwal } from "@/app/utils/alerts";
 import { useRouter } from "next/navigation";
-import { ReportePDF } from "../utils/ReportesPDF";
-import ModalVistaPreviaPBoletas from "./components/modalVistaPreviaPBoletas";
-import { permissionsComponents } from "../utils/globalfn";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
+import ModalVistaPreviaPBoletas from "@/app/p_boletas/components/modalVistaPreviaPBoletas";
+import { permissionsComponents } from "@/app/utils/globalfn";
 
 function P_Boletas() {
   const currentYear = new Date().getFullYear();
@@ -142,7 +141,6 @@ function P_Boletas() {
     let sumatoria = 0;
     let evaluaciones = 0;
     let calificaciones = [];
-    let sumaPromedio = "";
     dataMaterias.map((materia) => {
       for (let bi = 1; bi <= bimestre; bi++) {
         sumatoria = 0;

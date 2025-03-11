@@ -12,18 +12,11 @@ import BuscarCat from "@/app/components/BuscarCat";
 import TablaPromedioEspañol from "@/app/creacion_boletas_3_bimestres/components/tablaPromedioEspañol";
 import {
   getBoletas3,
-  getActividadMateria,
-  getEvaluacionMateria,
-  getAreasOtros,
-  getAreas,
   getDatosPorGrupo,
   ImprimirPDF,
 } from "@/app/utils/api/boletas/boletas";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import {
-  setGlobalVariable,
-  globalVariables,
-  loadGlobalVariables,
   formatNumberDecimalOne,
 } from "@/app/utils/globalfn";
 import ModalVistaPreviaBoleta3 from "@/app/creacion_boletas_3_bimestres/components/ModalVistaPreviaBoletas3";
@@ -763,7 +756,6 @@ function CreacionBoletas3Bimestre() {
         for (let i = 0; i < clases.length; i++) {
           clases.map(function (val) {
             let calificacion_table = 0;
-            // });
             try {
               const materiaKey = val.numero;
               if (!materiasMap[materiaKey]) {
@@ -965,7 +957,6 @@ function CreacionBoletas3Bimestre() {
           });
         }
       }
-      // if (asignacion === "asig_español") {
       desplegarPromedioLugar(
         datosEspañol,
         "Español",
@@ -975,7 +966,6 @@ function CreacionBoletas3Bimestre() {
         false,
         ""
       );
-      // } else {
       desplegarPromedioLugar(
         datosIngles,
         "Ingles",
@@ -986,7 +976,6 @@ function CreacionBoletas3Bimestre() {
         ""
       );
     }
-    // }
     setisLoadingFind(false);
   });
 
@@ -1314,11 +1303,8 @@ function CreacionBoletas3Bimestre() {
       const materiasMap = {};
       for (let a = 1; a <= data.bimestre; a++) {
         for (let i = 0; i < clases.length; i++) {
-          // const batch = dat.slice(i, i + rango);
-          // const promises = batch.map(async (val) => {
           clases.map(function (val) {
             let calificacion_table = 0;
-            // });
             try {
               const materiaKey = val.numero;
               if (!materiasMap[materiaKey]) {

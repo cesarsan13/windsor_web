@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
+import React from "react";
+import { soloEnteros } from "@/app/utils/globalfn";
 import iconos from "@/app/utils/iconos";
 import Image from "next/image";
 

@@ -2,27 +2,25 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import Acciones from "./components/Acciones";
-import BuscarCat from "../components/BuscarCat";
+import Acciones from "@/app/Rep_Femac_6/components/Acciones";
+import BuscarCat from "@/app/components/BuscarCat";
 import { useRouter } from "next/navigation";
 import {
   Cobranza,
   Imprimir,
   ImprimirExcel,
-} from "../utils/api/Rep_Femac_6/Rep_Femac_6";
+} from "@/app/utils/api/Rep_Femac_6/Rep_Femac_6";
 import {
   formatDate,
   formatNumber,
   permissionsComponents,
-} from "../utils/globalfn";
-import { ReportePDF } from "../utils/ReportesPDF";
-import { Worker, Viewer } from "@react-pdf-viewer/core";
-import VistaPrevia from "../components/VistaPrevia";
-import Swal from "sweetalert2"; // Importa SweetAlert2
+} from "@/app/utils/globalfn";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
+import VistaPrevia from "@/app/components/VistaPrevia";
+import Swal from "sweetalert2";
 
 function Rep_Femac_6() {
   const date = new Date();
-  const dateStr = formatDate(date);
   const router = useRouter();
   const { data: session, status } = useSession();
   const [cajero, setCajero] = useState({});

@@ -26,8 +26,6 @@ function ModalProcesarDatos({
     };
     const resetModal = () => {
         setDataJson([]);
-        // const fileInput = document.getElementById('excel_file');
-        // fileInput.value = "";
         document.getElementById(id_modal).close();
     }
     return (

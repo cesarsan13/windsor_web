@@ -14,7 +14,6 @@ export const procesoCartera = async (token, data) => {
     const res = await fetch(`${process.env.DOMAIN_API}api/cartera/proceso`, {
         method: 'POST',
         body: JSON.stringify({
-            // cond_ant: data.cond_ant,
             fecha: data.fecha,
             cond_1: data.cond_1,
             periodo: data.periodo,

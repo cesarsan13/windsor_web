@@ -1,10 +1,8 @@
 
 
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import { useSession } from "next-auth/react";
-import Inputs from "@/app/concentradoCalificaciones/components/InputMateria";
 import Acciones from "@/app/concentradoCalificaciones/components/AccionesDetalle";
-import { useForm } from "react-hook-form";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import {formatDate, formatTime} from "@/app/utils/globalfn"
 import {
@@ -15,7 +13,7 @@ import {
 } from "@/app/utils/api/concentradoCalificaciones/concentradoCalificaciones";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { showSwal } from "@/app/utils/alerts";
-import {RegresaCalificacionRedondeo, aDec} from "@/app/utils/globalfn";
+import {RegresaCalificacionRedondeo} from "@/app/utils/globalfn";
 import Loading from "@/app/components/loading";
 
 function Modal_Detalles_Actividades({

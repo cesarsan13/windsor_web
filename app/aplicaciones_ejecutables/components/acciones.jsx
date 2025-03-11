@@ -22,22 +22,6 @@ function Acciones({ Buscar, Alta, home, Ver, procesarDatos, animateLoading, perm
       onClick: Alta,
       permission: permiso_alta,
     },
-    //{
-    //  srcLight: iconos.vistaPrevia_w,
-    //  srcDark: iconos.vistaPrevia,
-    //  alt: "Vista previa",
-    //  tooltipTitle: "Vista previa",
-    //  onClick: Ver,
-    //  permission: permiso_imprime,
-    //},
-    //{
-    //  srcLight: iconos.procesa_w,
-    //  srcDark: iconos.procesa,
-    //  alt: "Procesar datos desde un archivo excel",
-    //  tooltipTitle: "Procesar datos desde un archivo excel.",
-    //  onClick: procesarDatos,
-    //  permission: es_admin,
-    //},
     {
       srcLight: iconos.salir_w,
       srcDark: iconos.salir,

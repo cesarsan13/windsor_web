@@ -1,6 +1,5 @@
 import React from 'react'
 import Tooltip from "@/app/components/tooltip";
-import Button from "@/app/components/button";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 function Acciones({ home, Alta, permiso_alta}) {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import {
     ImprimirPDF,

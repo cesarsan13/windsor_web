@@ -106,7 +106,6 @@ function LoginPage() {
           name="xEscuela"
           className="p-3 rounded block text-slate-400 w-full"
           {...register("xEscuela", {
-            // required: "Seleccione una Escuela",
             onChange: (evt) => handleChange(evt),
           })}
         >

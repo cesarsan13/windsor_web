@@ -1,6 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
-import { ReportePDF } from "../../ReportesPDF";
-import { formatDate, formatFecha, formatTime } from "../../globalfn";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { formatDate, formatTime } from "@/app/utils/globalfn";
 
 export const getProductos = async (token, baja) => {
   let url = "";

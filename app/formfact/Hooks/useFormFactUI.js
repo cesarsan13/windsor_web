@@ -175,7 +175,6 @@ export const useFormFactUI = (
                 message={"Nombre requerido"}
                 maxLenght={30}
                 isDisabled={isDisabled}
-                //handleBlur={handleBlur}
                 onKeyDown={(evt) => {
                   handleKeyDown(evt);
                 }}
@@ -194,7 +193,6 @@ export const useFormFactUI = (
                 message={"Longitud requerido"}
                 maxLenght={7}
                 isDisabled={isDisabled}
-                //handleBlur={handleBlur}
                 onKeyDown={(evt) => {
                   handleKeyDown(evt);
                 }}

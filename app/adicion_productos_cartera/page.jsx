@@ -4,14 +4,14 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import Acciones from "@/app/adicion_productos_cartera/components/Acciones";
 import { useSession } from "next-auth/react";
-import BuscarCat from "../components/BuscarCat";
+import BuscarCat from "@/app/components/BuscarCat";
 import Inputs from "@/app/adicion_productos_cartera/components/Inputs";
 import {
   actualizarCartera,
   procesoCartera,
 } from "@/app/utils/api/adicion_productos_cartera/adicion_productos_cartera";
 import { showSwal } from "@/app/utils/alerts";
-import { permissionsComponents } from "../utils/globalfn";
+import { permissionsComponents } from "@/app/utils/globalfn";
 
 function Adicion_Productos_Cartera() {
   const router = useRouter();

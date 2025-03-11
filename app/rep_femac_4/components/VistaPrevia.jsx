@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Tooltip from "@/app/components/tooltip";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import Image from "next/image";

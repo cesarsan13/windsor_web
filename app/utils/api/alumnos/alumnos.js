@@ -1,6 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import { format_Fecha_String, formatTime } from "../../globalfn";
+import { format_Fecha_String, formatTime } from "@/app/utils/globalfn";
 
 export const getDataSex = async (token) => {
   let url = "";
@@ -199,7 +199,6 @@ export const getTab = (nombre_campo) => {
     case "telefono1":
     case "celular":
       return 1;
-      // setActiveTab(1);
       break;
     case "direccion": // campo en el tab 'Generales'
     case "colonia":

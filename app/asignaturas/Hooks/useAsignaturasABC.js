@@ -40,9 +40,6 @@ export const useAsignaturasABC = () => {
         register,
         handleSubmit,
         reset,
-        //watch,
-        //setValue,
-        //getValues,
         formState: { errors },
         trigger,
       } = useForm({
@@ -275,7 +272,6 @@ export const useAsignaturasABC = () => {
             return;
           }
         }
-        //data.numero = num || currentID;
         data = await Elimina_Comas(data);
         res = await guardarAsinatura(session.user.token, data, accion, data.numero);
     

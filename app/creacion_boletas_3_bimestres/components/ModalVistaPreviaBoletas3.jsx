@@ -1,11 +1,11 @@
 'use client'
 import Tooltip from '@/app/components/tooltip';
-import { SpecialZoomLevel, Viewer, Worker } from '@react-pdf-viewer/core'
+import { Viewer, Worker } from '@react-pdf-viewer/core'
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import iconos from '@/app/utils/iconos';
 import "@react-pdf-viewer/core/lib/styles/index.css";
-function ModalVistaPreviaBoleta3({ pdfPreview, pdfData, PDF, Excel }) {
+function ModalVistaPreviaBoleta3({ pdfPreview, pdfData, PDF}) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     useEffect(() => {
         const isEmptyDataPDF = Object.keys(pdfData || {}).length === 0 && (pdfData || {}).constructor === Object;
@@ -40,15 +40,6 @@ function ModalVistaPreviaBoleta3({ pdfPreview, pdfData, PDF, Excel }) {
                             />
                         </button>
                     </Tooltip>
-                    {/* <Tooltip Titulo={"Imprimir Excel"} posicion={"tooltip-top"}>
-                        <button
-                            className="bg-transparent over:bg-slate-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-white rounded-lg btn"
-                            onClick={Excel}
-                        >
-                            <span className="hidden sm:inline">Generar Excel</span>
-                            <Image src={iconos.excel} alt="Excel" className="w-5 h-5 md:w-6 md:h-6" />
-                        </button>
-                    </Tooltip> */}
                 </div>
                 {pdfPreview && pdfData && (
                     <div className='mt-4'>

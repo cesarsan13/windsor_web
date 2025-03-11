@@ -1,6 +1,6 @@
-import { formatDate, formatTime } from "../../globalfn";
-import { ReporteExcel } from "../../ReportesExcel";
-import { ReportePDF } from "../../ReportesPDF";
+import { formatDate, formatTime } from "@/app/utils/globalfn";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
 
 export const getAlumnoXHorario = async (token) => {
   let url = "";

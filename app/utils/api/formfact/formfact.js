@@ -1,5 +1,3 @@
-import { useSession } from "next-auth/react";
-
 export const getFormFact = async (token, baja) => {
   let url = "";
   baja
@@ -15,6 +13,7 @@ export const getFormFact = async (token, baja) => {
   const resJson = await res.json();
   return resJson.data;
 };
+
 export const siguiente = async (token) => {
   const res = await fetch(`${process.env.DOMAIN_API}api/FormFact/siguiente`, {
     headers: {
@@ -25,6 +24,7 @@ export const siguiente = async (token) => {
   const resJson = await res.json();
   return resJson.data;
 };
+
 export const guardaFormFact = async (token, data, accion) => {
   let url_api = "";
   if (accion === "Alta") {

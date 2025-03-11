@@ -384,7 +384,6 @@ export const useUsuariosABC = () => {
         }
     };
 
-
     return{
         onSubmitModal,
         Buscar,

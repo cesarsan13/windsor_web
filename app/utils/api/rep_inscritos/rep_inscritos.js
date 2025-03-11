@@ -1,8 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import { format_Fecha_String, formatNumber } from "@/app/utils/globalfn";
-import { formatDate, formatTime, formatFecha } from "../../globalfn";
-
+import { format_Fecha_String, formatNumber, formatTime } from "@/app/utils/globalfn";
 
 export const getConsultasInscripcion = async (token) => {
     let url = `${process.env.DOMAIN_API}api/reportes/rep_inscritos`
@@ -216,13 +214,7 @@ export const ImprimirExcel = (configuracion) => {
             }
         }
     });
-    //newBody.push({
-    //    numero: '',
-    //    nombre: '',
-    //    horario: '',
-    //    fecha_inscripcion: `Total: ${formatNumber(total_inscripcion) || '0.00'}`,
-    //    det_inscripcion: `Total: ${alumnos || '0'}`,
-    //});
+
     newBody.push({
         numero: '',
         nombre: '',

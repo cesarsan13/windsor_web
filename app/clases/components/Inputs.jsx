@@ -13,7 +13,6 @@ function Inputs({
   errors,
   tamañolabel,
   maxLenght,
-  defaultValue,
   isDisabled,
   handleBlur,
   
@@ -25,7 +24,6 @@ function Inputs({
       > 
         {Titulo}
         <input
-          // defaultValue={defaultValue}
           {...(maxLenght !== 0 && { maxLength: maxLenght })}
           name={name}
           id={name}

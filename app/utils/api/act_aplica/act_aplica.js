@@ -1,6 +1,6 @@
-import { formatNumber } from "../../globalfn";
-import { ReporteExcel } from "../../ReportesExcel";
-import { ReportePDF } from "../../ReportesPDF";
+import { formatNumber } from "@/app/utils/globalfn";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
 
 export const getAplicaciones1 = async (token) => {
   let url = `${process.env.DOMAIN_API}api/aplicacion1`;
@@ -13,6 +13,7 @@ export const getAplicaciones1 = async (token) => {
   const resJson = await res.json();
   return resJson.data;
 };
+
 export const siguiente = async (token) => {
   const res = await fetch(
     `${process.env.DOMAIN_API}api/aplicacion1/siguiente`,
@@ -26,6 +27,7 @@ export const siguiente = async (token) => {
   const resJson = await res.json();
   return resJson.data;
 };
+
 export const guradaAplicacion1 = async (token, data, accion) => {
   let url = "";
   if (accion === "Alta") {
@@ -78,6 +80,7 @@ const Enca1 = (doc) => {
     doc.tiene_encabezado = true;
   }
 };
+
 export const Imprimir = async (configuracion) => {
   const newPDF = new ReportePDF(configuracion);
   const { body } = configuracion;

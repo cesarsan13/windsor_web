@@ -1,7 +1,6 @@
 import React from "react";
 import Tooltip from "@/app/components/tooltip";
 import Image from "next/image";
-import { TbLoader3 } from "react-icons/tb";
 import iconos from "@/app/utils/iconos";
 
 function Acciones({ Buscar, Alta, home}) {

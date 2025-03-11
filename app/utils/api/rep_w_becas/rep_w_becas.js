@@ -1,6 +1,6 @@
-import { ReporteExcel } from "../../ReportesExcel";
-import { ReportePDF } from "../../ReportesPDF";
-import { formatDate, formatTime, formatFecha, format_Fecha_String } from "../../globalfn";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { formatTime, format_Fecha_String } from "@/app/utils/globalfn";
 
 
 export const getBecas = async (token, alumno1, alumno2, orden) => {

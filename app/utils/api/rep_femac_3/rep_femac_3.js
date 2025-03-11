@@ -1,8 +1,6 @@
-import { ReportePDF } from "../../ReportesPDF";
-import { ReporteExcel } from "../../ReportesExcel";
-import { formatDate, formatTime, formatFecha, format_Fecha_String } from "../../globalfn";
-
-
+import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
+import { formatTime, format_Fecha_String } from "@/app/utils/globalfn";
 
 export const getAlumnosPorMes = async (token, horario, orden) => {
   horario = (horario === undefined || Object.keys(horario).length === 0) ? '' : horario;
