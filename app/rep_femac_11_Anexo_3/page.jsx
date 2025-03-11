@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import Acciones from "@/rep_femac_11_Anexo_3/components/Acciones";
+import Acciones from "@/app/rep_femac_11_Anexo_3/components/Acciones";
 import { calculaDigitoBvba, formatNumber } from "@/app/utils/globalfn";
 import { useForm } from "react-hook-form";
 import {

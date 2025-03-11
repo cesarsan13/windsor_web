@@ -17,7 +17,7 @@ import {
   ImprimirPDF,
   insertTrabRepCobr,
 } from "@/app/utils/api/rep_femac_12_anexo_4/rep_femac_12_anexo";
-import { ReportePDF } from "@/utils/ReportesPDF";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { useEffect } from "react";
