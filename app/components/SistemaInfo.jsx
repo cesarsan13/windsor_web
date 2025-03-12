@@ -1,8 +1,8 @@
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
-import { getCicloEscolar } from "../utils/api/cambio_ciclo_escolar/cambio_ciclo_escolar";
-import { getPropietario } from "../utils/api/propietario/propietario";
-import { formatDate } from "../utils/globalfn";
+import { getCicloEscolar } from "@/app/utils/api/cambio_ciclo_escolar/cambio_ciclo_escolar";
+import { getPropietario } from "@/app/utils/api/propietario/propietario";
+import { formatDate } from "@/app/utils/globalfn";
 
 function SistemaInfo() {
   const { data: session, status } = useSession();
@@ -28,6 +28,7 @@ function SistemaInfo() {
     };
 
     fetchDatos();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   // Si no hay sesión, no mostrar información

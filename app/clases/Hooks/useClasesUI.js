@@ -66,7 +66,6 @@ export const useClasesUI = (
           }`}
           style={hasBajas ? { backgroundColor: "#CF2A2A" } : {}}>
             <tr>
-                {/*<td className="sm:w-[5%] pt-[.5rem] pb-[.5rem]">Núm.</td>*/}
                 <td className="w-[21%]">Grupo</td>
                 <td className="w-[21%]">Materia</td>
                 <td className="w-[21%] hidden sm:table-cell">Profesor</td>
@@ -80,7 +79,7 @@ export const useClasesUI = (
                 <ActionColumn description={"Ver"} permission={true} />
                 {!hasBajas && <ActionColumn description={"Editar"} permission={permissions.cambios} />}
                 {!hasBajas && <ActionColumn description={"Eliminar"} permission={permissions.bajas}/>}
-                {hasBajas && <ActionColumn description={"Reactivar"} permission={true} />}
+                {hasBajas && <ActionColumn description={"Reactivar"} permission={permissions.cambios} />}
             </tr>
           </thead>
         );
@@ -133,7 +132,7 @@ export const useClasesUI = (
                             iconDark={iconos.documento}
                             iconLight={iconos.documento_w}
                             onClick={(evt) => tableAction(evt, item, "Reactivar")}
-                            permission={true}
+                            permission={permissions.cambios}
                           />
                         )}
                     </tr>

@@ -1,8 +1,6 @@
-import { ReporteExcel } from "../../ReportesExcel";
-import { ReportePDF } from "../../ReportesPDF";
-import { formatDate, formatTime, formatFecha, format_Fecha_String } from "../../globalfn";
-
-
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { formatTime, format_Fecha_String } from "@/app/utils/globalfn";
 
 export const getRepDosSel = async (token, horario1, horario2, orden) => {
   horario1 = (horario1 === undefined || Object.keys(horario1).length === 0) ? '' : horario1;
@@ -24,7 +22,6 @@ export const getRepDosSel = async (token, horario1, horario2, orden) => {
   const resJson = await res.json();
   return resJson.data;
 }
-
 
 //Para imprimir
 const Enca1 = (doc) => {
@@ -84,7 +81,6 @@ export const ImprimirPDF = (configuracion) => {
 
   newPDF.guardaReporte(`Lista_Alumnos_Por_Clase${dateStr}${timeStr}`);
 };
-
 
 export const ImprimirExcel = (configuracion) => {
   const newExcel = new ReporteExcel(configuracion)

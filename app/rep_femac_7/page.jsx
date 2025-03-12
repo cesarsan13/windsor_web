@@ -1,18 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Acciones from "./components/Acciones";
-import { formatDate, permissionsComponents } from "../utils/globalfn";
+import Acciones from "@/app/Rep_Femac_7/components/Acciones";
+import { formatDate, permissionsComponents } from "@/app/utils/globalfn";
 import {
   Documentos,
   grupo_cobranza,
   Imprimir,
   ImprimirExcel,
-} from "../utils/api/Rep_Femac_7/Rep_Femac_7";
+} from "@/app/utils/api/Rep_Femac_7/Rep_Femac_7";
 import { useSession } from "next-auth/react";
-import { ReportePDF } from "../utils/ReportesPDF";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import VistaPrevia from "../components/VistaPrevia";
+import VistaPrevia from "@/app/components/VistaPrevia";
 
 function Repo_Femac_7() {
   const date = new Date();
@@ -45,6 +45,7 @@ function Repo_Femac_7() {
       return;
     }
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   const home = () => {
@@ -128,7 +129,6 @@ function Repo_Femac_7() {
     if (grupoAlumno) {
       const data = await grupo_cobranza(token);
       let num_Ord = 0;
-      let nom_grupo = "";
       let grupo_ant = "";
       let grupo_act = "";
 
@@ -372,7 +372,6 @@ function Repo_Femac_7() {
                     Imprimir Grupo, Alumno
                   </span>
                 </label>
-                {/* </label> */}
               </div>
             </div>
           </div>

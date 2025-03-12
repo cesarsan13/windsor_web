@@ -1,8 +1,6 @@
-import { ReporteExcel } from "../../ReportesExcel";
-import { ReportePDF } from "../../ReportesPDF";
-import { calculaDigitoBvba, format_Fecha_String } from "../../globalfn";
-import { formatDate, formatTime, formatFecha, formatNumber } from "../../globalfn";
-
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { calculaDigitoBvba, format_Fecha_String, formatTime, formatNumber } from "@/app/utils/globalfn";
 
 export const getReporteCobranzaporAlumno = async (token, fecha_ini, fecha_fin, alumno_ini,
     alumno_fin, cajero_ini, cajero_fin, tomaFechas) => {
@@ -140,7 +138,6 @@ export const ImprimirPDF = (configuracion, fecha_ini, fecha_fin, cajero_ini, caj
         }
         newPDF.ImpPosX(reporte2.articulo.toString(),15, newPDF.tw_ren, 0 , "L");
         newPDF.ImpPosX(reporte2.descripcion.toString(),30, newPDF.tw_ren, 0 , "L");
-        // newPDF.ImpPosX(reporte2.numero_doc.toString(),70, newPDF.tw_ren, 0 , "R");
         newPDF.ImpPosX(reporte2.numero_doc.toString(),87, newPDF.tw_ren, 0 , "R");
         newPDF.ImpPosX(reporte2.fecha.toString(),90, newPDF.tw_ren, 0 , "L");
         newPDF.ImpPosX(formatNumber(reporte2.importe),122, newPDF.tw_ren, 0 , "R");

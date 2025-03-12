@@ -1,6 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
-import { ReportePDF } from "../../ReportesPDF";
-import { formatDate, formatFecha, formatTime } from "../../globalfn";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { formatDate, formatTime } from "@/app/utils/globalfn";
 
 export const getProductos = async (token, baja) => {
   let url = "";
@@ -158,7 +158,6 @@ export const Imprimir = (configuracion) => {
   const date = new Date();
   const dateStr = formatDate(date);
   const timeStr = formatTime(date);
-  // console.log("dateStr:",dateStr," timeStr:",timeStr)
   newPDF.guardaReporte(
     `Productos_${dateStr.replaceAll("/", "")}_${timeStr.replaceAll(":", "")}`
   );

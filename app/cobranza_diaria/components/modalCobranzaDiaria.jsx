@@ -1,7 +1,7 @@
 import iconos from '@/app/utils/iconos';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
-import Inputs from './Inputs';
+import Inputs from '@/app/cobranza_diaria/components/Inputs';
 
 
 function ModalCobranzaDiaria({
@@ -20,11 +20,8 @@ function ModalCobranzaDiaria({
     useEffect(() => {
         if (accion === "Eliminar" || accion === "Ver") {
             setIsDisabled(true);
-            // accion === "Ver" &&
-            //   document.getElementById("btn_guardar").setAttribute("disabled", true);
         }
         if (accion === "Alta" || accion === "Editar") {
-            // alert(accion);
             setIsDisabled(false);
         }
         setTitulo(

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Acciones from "@/app/rep_femac_3/components/Acciones";
-import VistaPrevia from "../components/VistaPrevia";
+import VistaPrevia from "@/app/components/VistaPrevia";
 import {
   getAlumnosPorMes,
   Imprimir,
@@ -12,10 +12,9 @@ import { useSession } from "next-auth/react";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "jspdf-autotable";
-import BuscarCat from "../components/BuscarCat";
+import BuscarCat from "@/app/components/BuscarCat";
 import { showSwal } from "@/app/utils/alerts";
-import { animator } from "chart.js";
-import { permissionsComponents } from "../utils/globalfn";
+import { permissionsComponents } from "@/app/utils/globalfn";
 
 function Rep_Femac_3() {
   const router = useRouter();
@@ -37,7 +36,7 @@ function Rep_Femac_3() {
     const fetchData = async () => {
       setisLoading(true);
       const { token, permissions } = session.user;
-      const es_admin = session.user.es_admin;
+      const es_admin = session.user?.es_admin || false;
       const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
       const permisos = permissionsComponents(
         es_admin,
@@ -47,11 +46,10 @@ function Rep_Femac_3() {
       );
       setPermissions(permisos);
       setToken(token);
-      //const data = await getAlumnosPorMes(token, horario, sOrdenar);
-      //setFormaRepDosSel(data.data);
       setisLoading(false);
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, horario, sOrdenar]);
 
   const home = () => {
@@ -266,7 +264,7 @@ function Rep_Femac_3() {
                 <BuscarCat
                   table={"horarios"}
                   titulo={"Horario: "}
-                  token={token}
+                  token={session.user.token}
                   nameInput={["horario_1", "horario_1_nombre"]}
                   fieldsToShow={["numero", "horario"]}
                   setItem={setHorario}

@@ -2,18 +2,17 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Acciones from "@/app/rep_femac_13/components/Acciones";
-import VistaPrevia from "../components/VistaPrevia";
+import VistaPrevia from "@/app/components/VistaPrevia";
 import {
   getRepASem,
   ImprimirExcel,
-} from "../utils/api/Rep_Femac_13/Rep_Femac_13";
+} from "@/app/utils/api/Rep_Femac_13/Rep_Femac_13";
 import { useSession } from "next-auth/react";
 import "jspdf-autotable";
-import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import BuscarCat from "../components/BuscarCat";
-import { formatDate, permissionsComponents } from "../utils/globalfn";
+import BuscarCat from "@/app/components/BuscarCat";
+import { formatDate, permissionsComponents } from "@/app/utils/globalfn";
 import { showSwal } from "@/app/utils/alerts";
 
 function Rep_Femac_13() {
@@ -25,7 +24,6 @@ function Rep_Femac_13() {
   const dateStr = formatDate(date);
   const [fecha, setFecha] = useState(dateStr.replace(/\//g, "-"));
   const [FormaRepASem, setFormaRepASem] = useState([]);
-  const [Formahorario, setFormahorario] = useState([]);
   const [horario, setHorario] = useState({});
   const [sOrdenar, ssetordenar] = useState("nombre");
   const [animateLoading, setAnimateLoading] = useState(false);
@@ -39,8 +37,6 @@ function Rep_Femac_13() {
       const { token, permissions } = session.user;
       const es_admin = session.user.es_admin;
       const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
-      //const data = await getRepASem(token, horario, sOrdenar);
-      //setFormaRepASem(data.data);
       const permisos = permissionsComponents(
         es_admin,
         permissions,
@@ -50,6 +46,7 @@ function Rep_Femac_13() {
       setPermissions(permisos);
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, horario, sOrdenar]);
 
   const handleCheckChange = (event) => {

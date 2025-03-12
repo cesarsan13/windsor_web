@@ -4,14 +4,13 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import Acciones from "@/app/cambio_ciclo_escolar/components/Acciones";
 import { useSession } from "next-auth/react";
-import BuscarCat from "../components/BuscarCat";
 import Inputs from "@/app/cambio_ciclo_escolar/components/Inputs";
 import {
   cambiarCicloEscolar,
   getCicloEscolar,
 } from "@/app/utils/api/cambio_ciclo_escolar/cambio_ciclo_escolar";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
-import { permissionsComponents } from "../utils/globalfn";
+import { permissionsComponents } from "@/app/utils/globalfn";
 
 function Cambio_Ciclo_Escolar() {
   const router = useRouter();
@@ -40,6 +39,7 @@ function Cambio_Ciclo_Escolar() {
       setPermissions(permisos);
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
   const {
     register,

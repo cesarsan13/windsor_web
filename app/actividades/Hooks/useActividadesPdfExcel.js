@@ -27,16 +27,9 @@ export const useActividadesPdfExcel = (
     const [cerrarTO, setCerrarTO] = useState(false);
     const [dataJson, setDataJson] = useState([]);
     const MAX_LENGTHS = {
-        //materia: 11,
-        //secuencia: 11,
         matDescripcion: 100, 
         descripcion: 30,
         evaluaciones: 11,
-        //EB1: 11,
-        //EB2: 11,
-        //EB3: 11,
-        //EB4: 11,
-        //EB5: 11,
         baja: 1
     };
 

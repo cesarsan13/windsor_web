@@ -16,7 +16,7 @@ import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { calculaDigitoBvba, permissionsComponents } from "@/app/utils/globalfn";
-import VistaPrevia from "../components/VistaPrevia";
+import VistaPrevia from "@/app/components/VistaPrevia";
 
 function AlumnosPorClase() {
   const router = useRouter();
@@ -53,16 +53,9 @@ function AlumnosPorClase() {
         menu_seleccionado
       );
       setPermissions(permisos);
-      //const data = await getreportAlumn(
-      //  token,
-      //  bajas,
-      //  selectedOption,
-      //  alumno1V,
-      //  alumno2V
-      //);
-      //setAlumnosFiltrados(data);
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, bajas, selectedOption, alumno1V, alumno2V]);
 
   const ImprimePDF = async () => {
@@ -115,7 +108,6 @@ function AlumnosPorClase() {
         setPdfPreview(false);
         setPdfData("");
         setAnimateLoading(false);
-        //document.getElementById("modalVRep6").close();
       }, 500);
     } else {
       const data = await getreportAlumn(
@@ -260,7 +252,6 @@ function AlumnosPorClase() {
         <div className="w-full py-3 flex flex-col gap-y-4">
           {/* Fila del formulario de la pagina */}
           <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4  w-1/2 mx-auto ">
-            {/*min-[1920px]:w-1/4*/}
             <div className="flex min-[1920px]:flex-row flex-col min-[1920px]:space-x-4">
               <BuscarCat
                 table="alumnos"
@@ -292,7 +283,6 @@ function AlumnosPorClase() {
           </div>
           <div className="flex flex-row">
             <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 w-1/2 mx-auto ">
-              {/*min-[1920px]:w-1/4*/}
               <div className="flex space-x-4">
                 <label className="text-black dark:text-white flex flex-row md:flex-row space-x-4">
                   <span className="text-black dark:text-white flex items-center gap-3">

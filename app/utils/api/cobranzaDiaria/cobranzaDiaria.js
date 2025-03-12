@@ -1,6 +1,6 @@
-import { formatNumber } from "../../globalfn";
-import { ReporteExcel } from "../../ReportesExcel";
-import { ReportePDF } from "../../ReportesPDF";
+import { formatNumber } from "@/app/utils/globalfn";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
 
 export const getCobranzaDiaria = async (
   token,

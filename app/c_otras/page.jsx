@@ -19,7 +19,7 @@ import { showSwal } from "@/app/utils/alerts";
 import ModalVistaPreviaC_Otras from "@/app/c_otras/components/modalVistaPreviaC_Otras";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import { permissionsComponents } from "../utils/globalfn";
+import { permissionsComponents } from "@/app/utils/globalfn";
 import "jspdf-autotable";
 
 function C_Otras() {

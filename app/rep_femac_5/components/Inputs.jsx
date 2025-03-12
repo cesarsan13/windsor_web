@@ -1,4 +1,3 @@
-import { soloDecimales, soloEnteros } from "@/app/utils/globalfn";
 import React from "react";
 
 function Inputs({
@@ -6,7 +5,6 @@ function Inputs({
   name,
   type,
   errors,
-  tamañolabel,
   maxLength,
   isDisabled,
   setValue,

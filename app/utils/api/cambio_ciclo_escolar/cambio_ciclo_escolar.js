@@ -15,6 +15,7 @@ export const cambiarCicloEscolar = async (token, data) => {
   const resJson = await res.json();
   return resJson;
 };
+
 export const getCicloEscolar = async (token) => {
   const res = await fetch(
     `${process.env.DOMAIN_API}api/students/cicloEscolar`,

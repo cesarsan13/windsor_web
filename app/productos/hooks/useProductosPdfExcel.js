@@ -202,7 +202,6 @@ export const useProductosPdfExcel = (
         "Éxito",
         "Todos los productos se insertaron correctamente.",
         "success"
-        // "my_modal_4"
       );
       showModalProcesa(false);
     }
@@ -234,7 +233,7 @@ export const useProductosPdfExcel = (
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
-        // console.log(jsonData);
+
         const convertedData = jsonData.map((item) => {
           return {
             numero: String(item.Numero || 0).trim(),

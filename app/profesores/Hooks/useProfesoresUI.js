@@ -116,7 +116,7 @@ export const useProfesoresUI = (
               />}
               {hasBajas && <ActionColumn 
                 description={"Reactivar"} 
-                permission={true} 
+                permission={permissions.cambios} 
               />}
             </tr>
           </thead>
@@ -165,7 +165,7 @@ export const useProfesoresUI = (
                     iconDark={iconos.documento}
                     iconLight={iconos.documento_w}
                     onClick={(evt) => tableAction(evt, item, "Reactivar")}
-                    permission={true}
+                    permission={permissions.cambios}
                   />
                 )}
               </tr>

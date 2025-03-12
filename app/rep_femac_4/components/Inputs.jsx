@@ -13,14 +13,8 @@ function Inputs({
   isDisabled,
   className,
   requerido,
-  setValue,
-  value,
-  conteClassName="flex flex-col",
-  labelClassName="input input-bordered input-md text-black dark:text-white flex items-center gap-3",
-  inputClassName="text-black dark:text-white"
 }) {
   return (
-    // <div className="w-full md:w-full px-0.5 py-2 mb-2 md:mb-0">
     <div className="w-full md:w-full px-0.5  md:mb-0">
       <label
         className={`input input-bordered input-sm md:input-md flex items-center gap-3 ${tamañolabel} text-black dark:text-white`}
@@ -40,9 +34,6 @@ function Inputs({
               value: maxLength,
               message: `El campo ${name} no puede tener más de ${maxLength} caracteres`,
             },
-            // ...(pattern && {
-            //   pattern: { value: pattern, message: message_pattern },
-            // }),
             ...(requerido && { required: message }),
           })}
           {...(dataType === "int" ||

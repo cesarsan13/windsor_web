@@ -1,6 +1,5 @@
-import { ReporteExcel } from "../../ReportesExcel";
-import { formatDate, formatTime, formatFecha, format_Fecha_String } from "../../globalfn";
-
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
+import {  formatTime, format_Fecha_String } from "@/app/utils/globalfn";
 
 export const getRepASem = async (token, horario, orden) => {
   horario = (horario === undefined || Object.keys(horario).length === 0) ? '' : horario;

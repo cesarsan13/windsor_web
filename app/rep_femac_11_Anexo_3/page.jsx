@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import Acciones from "./components/Acciones";
-import { calculaDigitoBvba, formatNumber } from "../utils/globalfn";
+import Acciones from "@/app/rep_femac_11_Anexo_3/components/Acciones";
+import { calculaDigitoBvba, formatNumber } from "@/app/utils/globalfn";
 import { useForm } from "react-hook-form";
 import {
   getReporteCobranzaporAlumno,
@@ -16,8 +16,9 @@ import { showSwal } from "@/app/utils/alerts";
 import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import VistaPrevia from "../components/VistaPrevia";
-import { permissionsComponents } from "../utils/globalfn";
+import VistaPrevia from "@/app/components/VistaPrevia";
+import { permissionsComponents } from "@/app/utils/globalfn";
+
 function CobranzaPorAlumno() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -33,7 +34,6 @@ function CobranzaPorAlumno() {
   const [FormaRepCobranzaporAlumno, setFormaReporteCobranzaporAlumno] = useState([]);
   const [animateLoading, setAnimateLoading] = useState(false);
   const [permissions, setPermissions] = useState({});
-
 
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
@@ -62,17 +62,6 @@ function CobranzaPorAlumno() {
       let { token, permissions } = session.user;
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const es_admin = session.user.es_admin;
-      //const data = await getReporteCobranzaporAlumno(
-      //  token,
-      //  fecha_ini,
-      //  fecha_fin,
-      //  alumno_ini.numero,
-      //  alumno_fin.numero,
-      //  cajero_ini.numero,
-      //  cajero_fin.numero,
-      //  tomaFechas
-      //);
-      //setFormaReporteCobranzaporAlumno(data);
       const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
       setPermissions(permisos)
     };
@@ -245,7 +234,6 @@ function CobranzaPorAlumno() {
         
         reporte.ImpPosX(reporte2.articulo.toString(), 15, reporte.tw_ren, 0 , "L");
         reporte.ImpPosX(reporte2.descripcion.toString(), 30, reporte.tw_ren,0,"L");
-        // reporte.ImpPosX(reporte2.numero_doc.toString(), 70, reporte.tw_ren,"R");
         reporte.ImpPosX(reporte2.numero_doc.toString(), 87, reporte.tw_ren, 0 , "R");
         reporte.ImpPosX(reporte2.fecha.toString(), 90, reporte.tw_ren,0,"L");
         reporte.ImpPosX(formatNumber(reporte2.importe), 122, reporte.tw_ren, 0 , "R");
@@ -258,7 +246,6 @@ function CobranzaPorAlumno() {
           "L"
         );
         reporte.ImpPosX(tipoPago2.toString(), 163, reporte.tw_ren,0,"L");
-        // reporte.ImpPosX(reporte2.nombre.toString(), 183, reporte.tw_ren);
         reporte.ImpPosX(nombre.toString(), 183, reporte.tw_ren,0,"L");
   
         Enca1(reporte);

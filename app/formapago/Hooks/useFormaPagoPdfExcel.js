@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import {
-    ImprimirPDF,
     ImprimirExcel,
     storeBatchTipoCobro,
 } from "@/app/utils/api/formapago/formapago";
@@ -29,7 +28,6 @@ export const useFormaPagoPdfExcel = (
     const [dataJson, setDataJson] = useState([]); 
     const MAX_LENGTHS = {
         descripcion: 50,
-        //comision: "",
         aplicacion: 30,
         cue_banco: 34,
         baja: 1

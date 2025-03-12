@@ -4,11 +4,11 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import Acciones from "@/app/cambio_numero_alumno/components/Acciones";
 import { useSession } from "next-auth/react";
-import BuscarCat from "../components/BuscarCat";
+import BuscarCat from "@/app/components/BuscarCat";
 import Inputs from "@/app/cambio_numero_alumno/components/Inputs";
 import { cambiarIdAlumno } from "@/app/utils/api/cambio_numero_alumno/cambio_numero_alumno";
 import { showSwal, confirmSwal } from "@/app/utils/alerts";
-import { permissionsComponents } from "../utils/globalfn";
+import { permissionsComponents } from "@/app/utils/globalfn";
 function Cambio_Numero_Alumno() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -42,6 +42,7 @@ function Cambio_Numero_Alumno() {
       return;
     }
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   const onSubmit = handleSubmit(async (data) => {

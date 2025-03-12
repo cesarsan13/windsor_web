@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import TablaDoc from "@/app/pagos1/components/tablaDoc";
 
 function ModalDocTabla({ session, docFiltrados, isLoading, tableSelect }) {

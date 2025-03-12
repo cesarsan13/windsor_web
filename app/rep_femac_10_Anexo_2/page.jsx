@@ -1,20 +1,20 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import Acciones from "./components/Acciones";
-import { calculaDigitoBvba, formatDate } from "../utils/globalfn";
+import Acciones from "@/app/rep_femac_10_Anexo_2/components/Acciones";
+import { calculaDigitoBvba } from "@/app/utils/globalfn";
 import { useForm } from "react-hook-form";
-import { getReporteEstadodeCuenta, ImprimirExcel, ImprimirPDF } from "../utils/api/rep_femac_10_Anexo_2/rep_femac_10_Anexo_2";
-import { formatNumber } from "../utils/globalfn";
+import { getReporteEstadodeCuenta, ImprimirExcel, ImprimirPDF } from "@/app/utils/api/rep_femac_10_Anexo_2/rep_femac_10_Anexo_2";
+import { formatNumber } from "@/app/utils/globalfn";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import BuscarCat from "@/app/components/BuscarCat";
 import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import VistaPrevia from "../components/VistaPrevia";
-import { permissionsComponents } from "../utils/globalfn";
-import { showSwal } from "../utils/alerts";
+import VistaPrevia from "@/app/components/VistaPrevia";
+import { permissionsComponents } from "@/app/utils/globalfn";
+import { showSwal } from "@/app/utils/alerts";
 
 function EstadodeCuenta() {
   const router = useRouter();
@@ -58,15 +58,6 @@ function EstadodeCuenta() {
       let { token, permissions } = session.user;
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const es_admin = session.user.es_admin;
-      //const data = await getReporteEstadodeCuenta(
-      //  token,
-      //  fecha_ini,
-      //  fecha_fin,
-      //  alumno_ini.numero,
-      //  alumno_fin.numero,
-      //  tomaFechas
-      //);
-      //setFormaReporteEstadodeCuenta(data);
       const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
       setPermissions(permisos);
     };
@@ -184,7 +175,6 @@ function EstadodeCuenta() {
 
     Enca1(reporte);
     body.forEach((reporte2) => {
-      let tipoPago2 = " ";
       let documento = "0";
 
       if (reporte2.numero_doc === null || reporte2.numero_doc == "") {
@@ -367,7 +357,6 @@ function EstadodeCuenta() {
                   <input
                     name={"fecha_ini"}
                     tamañolabel={""}
-                    // className={"rounded  block grow"}
                     Titulo={"Fecha Inicial: "}
                     type={"date"}
                     errors={errors}
@@ -386,7 +375,6 @@ function EstadodeCuenta() {
                   <input
                     name={"fecha_fin"}
                     tamañolabel={""}
-                    // className={"rounded block grow "}
                     Titulo={"Fecha Final: "}
                     type={"date"}
                     errors={errors}

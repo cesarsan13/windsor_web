@@ -1,8 +1,6 @@
 import * as ExcelJS from "exceljs";
 import {
-  formatDate,
   formatTime,
-  formatFecha,
   format_Fecha_String,
 } from "@/app/utils/globalfn";
 

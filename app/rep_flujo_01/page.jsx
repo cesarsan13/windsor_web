@@ -2,31 +2,28 @@
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Inputs from "./components/Inputs";
+import Inputs from "@/app/rep_flujo_01/components/Inputs";
 import { useForm } from "react-hook-form";
-import Acciones from "./components/Acciones";
+import Acciones from "@/app/rep_flujo_01/components/Acciones";
 import {
   Fecha_de_Ctod,
-  formatDate,
   permissionsComponents,
-  formatFecha,
   formatNumber,
-} from "../utils/globalfn";
+} from "@/app/utils/globalfn";
 import {
   DocumentosCobranza,
   ImprimirExcel,
   ImprimirPDF,
-} from "../utils/api/rep_flujo_01/rep_flujo_01";
-import VistaPrevia from "../components/VistaPrevia";
-import { ReportePDF } from "../utils/ReportesPDF";
+} from "@/app/utils/api/rep_flujo_01/rep_flujo_01";
+import VistaPrevia from "@/app/components/VistaPrevia";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
 
 function Rep_Flujo_01() {
   const date = new Date();
-
   const router = useRouter();
   const { data: session, status } = useSession();
-  let [fecha_ini, setFecha_ini] = useState(date.toISOString().split("T")[0]); //date.toISOString().split("T")[0]
-  let [fecha_fin, setFecha_fin] = useState(date.toISOString().split("T")[0]); //date.toISOString().split("T")[0]
+  let [fecha_ini, setFecha_ini] = useState(date.toISOString().split("T")[0]); 
+  let [fecha_fin, setFecha_fin] = useState(date.toISOString().split("T")[0]); 
   const [selectedOption, setSelectedOption] = useState("sin_deudores");
   const [dataDocumentoCobranza, setDataDocumentoCobranza] = useState([]);
   const [pdfPreview, setPdfPreview] = useState(false);
@@ -53,11 +50,9 @@ function Rep_Flujo_01() {
       );
       setPermissions(permisos);
 
-      //const fecha_ciclo = Fecha_de_Ctod(fecha_ini, -63);
-      //const data = await DocumentosCobranza(token, fecha_ciclo, fecha_fin);
-      //setDataDocumentoCobranza(data);
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, fecha_ini, fecha_fin]);
 
   if (status === "loading") {
@@ -353,7 +348,6 @@ function Rep_Flujo_01() {
               <Inputs
                 name={"fecha_ini"}
                 tamañolabel={""}
-                //className={"rounded block grow"}
                 Titulo={"Fecha Inicial: "}
                 type={"date"}
                 errors={errors}
@@ -369,7 +363,6 @@ function Rep_Flujo_01() {
               <Inputs
                 name={"fecha_fin"}
                 tamañolabel={""}
-                //className={"rounded block grow "}
                 Titulo={"Fecha Final: "}
                 type={"date"}
                 errors={errors}

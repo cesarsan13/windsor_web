@@ -1,5 +1,3 @@
-import { siguiente } from "../accesos_menu/accesos_menu";
-
 export const getPropietario = async (token) => {
     let url = `${process.env.DOMAIN_API}api/propietario`;
     const res = await fetch(url, {

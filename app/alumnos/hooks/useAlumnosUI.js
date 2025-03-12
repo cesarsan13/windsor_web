@@ -279,7 +279,7 @@ const tableColumns = (data = []) => {
         />
         {!hasBajas && <ActionColumn description={"Editar"} permission={permissions.cambios} />}
         {!hasBajas && <ActionColumn description={"Eliminar"} permission={permissions.bajas}/>}
-        {hasBajas && <ActionColumn description={"Reactivar"} permission={true} />}
+        {hasBajas && <ActionColumn description={"Reactivar"} permission={permissions.cambios} />}
     </tr>
     </thead>
     );
@@ -349,7 +349,7 @@ const tableBody = (data = []) => {
                         iconDark={iconos.documento}
                         iconLight={iconos.documento_w}
                         onClick={(evt) => tableAction(evt, item, "Reactivar")}
-                        permission={true}
+                        permission={permissions.cambios}
                     />
                     )}
                 </tr>
@@ -378,20 +378,6 @@ const modalBody = () => {
             }`}
         >
             <div className="flex flex-wrap -mx-3 mb-6 px-3">
-            {/* <Inputs
-                dataType={"int"}
-                name={"numero"}
-                tamañolabel={""}
-                className={"rounded block grow text-right"}
-                Titulo={"Numero: "}
-                type={"text"}
-                requerido={accion === "Alta" ? false : true}
-                errors={errors}
-                register={register}
-                message={"id Requerido"}
-                isDisabled={accion === "Alta" ? !isDisabled : isDisabled}
-                handleBlur={handleBlur}
-            /> */}
             <Inputs
                 dataType={"string"}
                 name={"a_paterno"}

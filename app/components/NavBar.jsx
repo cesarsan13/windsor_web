@@ -4,7 +4,7 @@ import Link from "next/link";
 import Menu from "@/app/components/Menu";
 import { useSession, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
-import SistemaInfo from "./SistemaInfo";
+import SistemaInfo from "@/app/components/SistemaInfo";
 
 function NavBar() {
   const { data: session, status } = useSession();

@@ -1,10 +1,7 @@
-import iconos from '@/app/utils/iconos';
-import Image from 'next/image';
-import React, { useState } from 'react'
-import ListView from './ListView';
+import React from 'react'
+import ListView from '@/app/components/Adeudos/ListView';
 
 function Adeudos({ adeudos, mesActual }) {
-    const [adeudoView, setAdeudoView] = useState(false);
     return (
         <div className='w-full card  bg-transparent  items-center p-5 mb-4'>
             <div className='w-full sticky top-0 flex justify-center my-4'>

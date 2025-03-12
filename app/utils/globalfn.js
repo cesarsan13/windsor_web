@@ -109,7 +109,6 @@ export const soloDecimales = (event) => {
     return;
   }
   if (keyCode === 8) {
-    // Backspace
     return;
   }
   // Permitir punto decimal (.) con lógica específica
@@ -333,7 +332,6 @@ export const Fecha_AMD = (Tw_Fecha) => {
 };
 
 export const snToBool = (string) => {
-  // console.log("Valor SN => ", string);
   if (string == "Si" || string == true) {
     return true;
   } else {

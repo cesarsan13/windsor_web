@@ -1,8 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import { calculaDigitoBvba, formatNumber } from "@/app/utils/globalfn";
-import { formatDate, formatTime, formatFecha, format_Fecha_String } from "../../globalfn";
-
+import { formatTime, formatNumber, format_Fecha_String } from "@/app/utils/globalfn";
 
 export const getRelaciondeRecibos = async (
   token,

@@ -3,32 +3,28 @@ import React from "react";
 import { useState } from "react";
 import {
   calculaDigitoBvba,
-  formatDate,
-  formatDate_NewDate,
-  format_Fecha_String,
   permissionsComponents,
   formatNumber,
-} from "../utils/globalfn";
-import BuscarCat from "../components/BuscarCat";
+} from "@/app/utils/globalfn";
+import BuscarCat from "@/app/components/BuscarCat";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Acciones from "./components/Acciones";
+import Acciones from "@/app/rep_femac_12_anexo_4/components/Acciones";
 import {
   getDetallePedido,
   getTrabRepCob,
   ImprimirExcel,
   ImprimirPDF,
   insertTrabRepCobr,
-} from "../utils/api/rep_femac_12_anexo_4/rep_femac_12_anexo";
-import { ReportePDF } from "../utils/ReportesPDF";
+} from "@/app/utils/api/rep_femac_12_anexo_4/rep_femac_12_anexo";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import VistaPrevia from "../components/VistaPrevia";
+import VistaPrevia from "@/app/components/VistaPrevia";
 import { useEffect } from "react";
-import { showSwal } from "../utils/alerts";
+import { showSwal } from "@/app/utils/alerts";
 
 function RepFemac12Anexo() {
   const date = new Date();
-  const dateStr = formatDate(date);
   const router = useRouter();
   const { data: session, status } = useSession();
   const [fecha1, setFecha1] = useState("");
@@ -70,6 +66,7 @@ function RepFemac12Anexo() {
       menuSeleccionado
     );
     setPermissions(permisos);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   useEffect(() => {

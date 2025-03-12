@@ -1,8 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import { format_Fecha_String, formatNumber } from "@/app/utils/globalfn";
-import { formatDate, formatTime, formatFecha } from "../../globalfn";
-
+import { format_Fecha_String, formatNumber, formatTime } from "@/app/utils/globalfn";
 
 export const getConsultasInscripcion = async (token) => {
     let url = `${process.env.DOMAIN_API}api/reportes/rep_inscritos`
@@ -64,12 +62,11 @@ export const verImprimir = async (configuracion) => {
                     producto.numero === detalle.articulo
                 );
                 if (productoEncontrado.length > 0) {
-                    // console.log('entro');
                     si_inscrito = true;
                     si_suma = true;
                     det_inscripcion += detalle.precio_unitario * detalle.cantidad;
                     total_inscripcion += detalle.precio_unitario * detalle.cantidad;
-                } else { /*console.log('no entro');*/ };
+                } else {  };
                 fecha_inscripcion = detalle.fecha;
             });
             if (si_suma) {
@@ -130,12 +127,11 @@ export const Imprimir = (configuracion) => {
                     producto.numero === detalle.articulo
                 );
                 if (productoEncontrado.length > 0) {
-                    // console.log('no entro');
                     si_inscrito = true;
                     si_suma = true;
                     det_inscripcion += detalle.precio_unitario * detalle.cantidad;
                     total_inscripcion += detalle.precio_unitario * detalle.cantidad;
-                } else { /*console.log('no entro');*/ };
+                } else { };
                 fecha_inscripcion = detalle.fecha;
             });
             if (si_suma) {
@@ -191,7 +187,6 @@ export const ImprimirExcel = (configuracion) => {
             detalle.fecha >= fecha_ini &&
             detalle.fecha <= fecha_fin
         );
-        // console.log("detalleEncontrado=>",detalleEncontrado);
         if (detalleEncontrado.length > 0) {
             detalleEncontrado.forEach((detalle) => {
                 const productoEncontrado = bodyProductos.filter(producto =>
@@ -219,13 +214,7 @@ export const ImprimirExcel = (configuracion) => {
             }
         }
     });
-    //newBody.push({
-    //    numero: '',
-    //    nombre: '',
-    //    horario: '',
-    //    fecha_inscripcion: `Total: ${formatNumber(total_inscripcion) || '0.00'}`,
-    //    det_inscripcion: `Total: ${alumnos || '0'}`,
-    //});
+
     newBody.push({
         numero: '',
         nombre: '',

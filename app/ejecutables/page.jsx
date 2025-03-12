@@ -27,6 +27,7 @@ export default function Ejecutables() {
       return;
     }
     fetchExe();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   const ejecutarExe = async (event, item) => {

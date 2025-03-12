@@ -2,27 +2,25 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import Acciones from "./components/Acciones";
-import BuscarCat from "../components/BuscarCat";
+import Acciones from "@/app/Rep_Femac_6/components/Acciones";
+import BuscarCat from "@/app/components/BuscarCat";
 import { useRouter } from "next/navigation";
 import {
   Cobranza,
   Imprimir,
   ImprimirExcel,
-} from "../utils/api/Rep_Femac_6/Rep_Femac_6";
+} from "@/app/utils/api/Rep_Femac_6/Rep_Femac_6";
 import {
   formatDate,
   formatNumber,
   permissionsComponents,
-} from "../utils/globalfn";
-import { ReportePDF } from "../utils/ReportesPDF";
-import { Worker, Viewer } from "@react-pdf-viewer/core";
-import VistaPrevia from "../components/VistaPrevia";
-import Swal from "sweetalert2"; // Importa SweetAlert2
+} from "@/app/utils/globalfn";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
+import VistaPrevia from "@/app/components/VistaPrevia";
+import Swal from "sweetalert2";
 
 function Rep_Femac_6() {
   const date = new Date();
-  const dateStr = formatDate(date);
   const router = useRouter();
   const { data: session, status } = useSession();
   const [cajero, setCajero] = useState({});
@@ -76,6 +74,7 @@ function Rep_Femac_6() {
       setPermissions(permisos);
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, cajero, fechaFin, fechaIni]);
 
   if (status === "loading") {
@@ -124,10 +123,9 @@ function Rep_Femac_6() {
       ],
       nombre: "Reporte de Cobranza_",
     };
-    // console.log("hohoho", configuracion);
     ImprimirExcel(configuracion, cajero.numero);
   };
-  //   console.log(cajero);
+
   const handleVerClick = () => {
     setAnimateLoading(true);
     cerrarModalVista();
@@ -259,8 +257,7 @@ function Rep_Femac_6() {
             Tw_Pago[Tw_count][2] = tipoPago.descripcion1;
             break;
           }
-          //   console.log("tipo_pago_1", Tw_Pago[Tw_count][0]);
-          //   console.log("importe_pago_1", Tw_Pago[Tw_count][1]);
+
         }
         for (let Tw_count = 0; Tw_count < 20; Tw_count++) {
           if (tipoPago.tipo_pago_2 === 0) break;
@@ -275,8 +272,7 @@ function Rep_Femac_6() {
             Tw_Pago[Tw_count][2] = tipoPago.descripcion2;
             break;
           }
-          //   console.log("tipo_pago_2", Tw_Pago[Tw_count][0]);
-          //   console.log("importe_pago_2", Tw_Pago[Tw_count][1]);
+
         }
       });
       let total_tipo_pago = 0;

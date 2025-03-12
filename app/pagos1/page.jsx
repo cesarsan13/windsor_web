@@ -4,7 +4,6 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import ModalCajeroPago from "@/app/pagos1/components/modalCajeroPago";
 import ModalDocTabla from "@/app/pagos1/components/modalDocTabla";
-// import ModalNuevoRegistro from "@/app/pagos1/components/ModalNuevoRegistro";
 import Acciones from "@/app/pagos1/components/Acciones";
 import { useForm } from "react-hook-form";
 import {
@@ -16,7 +15,7 @@ import {
   buscarArticulo,
   storeBatchDetallePedido,
 } from "@/app/utils/api/pagos1/pagos1";
-import ModalProcesarDatos from "../components/modalProcesarDatos";
+import ModalProcesarDatos from "@/app/components/modalProcesarDatos";
 import { getFormasPago } from "@/app/utils/api/formapago/formapago";
 import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
 import {
@@ -144,8 +143,6 @@ function Pagos_1() {
   };
 
   useEffect(() => {
-    // setValueImpr("pago", formaPagoPage.pago);
-    // setValueImpr("recibo_imprimir", formaPagoPage.recibo);
     resetImpr({
       pago: formaPagoPage.pago,
       pago_2: "0.00",
@@ -153,18 +150,21 @@ function Pagos_1() {
       quien_paga: "",
       recibo_imprimir: formaPagoPage.recibo,
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formaPagoPage]);
 
   useEffect(() => {
     if (cantidad_producto === "") {
       setValue("cantidad_producto", formatNumber(1));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cantidad_producto]);
 
   useEffect(() => {
     reset({
       recargo: 0,
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [muestraRecargos]);
 
   useEffect(() => {
@@ -172,6 +172,7 @@ function Pagos_1() {
       monto_parcial: 0,
       clave_acceso: "",
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [muestraParciales]);
 
   useEffect(() => {
@@ -214,6 +215,7 @@ function Pagos_1() {
       setisLoading(false);
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, validar, cargado, setValue]);
 
   useEffect(() => {
@@ -791,7 +793,6 @@ function Pagos_1() {
   };
 
   const tableSelect = (evt, item) => {
-    // console.log(item);
     const nuevoPago = {
       numero_producto: item.paquete,
       descripcion: item.nombre_producto,
@@ -817,14 +818,6 @@ function Pagos_1() {
     setPagos((prevPagos) => [...prevPagos, ...nuevoPagoArray]);
     setPagosFiltrados((prevPagos) => [...prevPagos, ...nuevoPagoArray]);
     document.getElementById("my_modal_5").close();
-  };
-  const handleInputClick = (evt) => {
-    evt.preventDefault();
-    evt.target.select();
-  };
-  const procesarDatos = () => {
-    //showModalProcesa(true);
-    document.getElementById("my_modal_detalle_pedido").showModal();
   };
 
   const buttonProcess = async () => {
@@ -945,21 +938,7 @@ function Pagos_1() {
         //clase para mover al tamaño del modal a preferencia (max-w-4xl)
         classModal={"modal-box w-full max-w-4xl h-full bg-base-200"}
       />
-      {/* <ModalNuevoRegistro
-        session={session}
-        productos1={productos1}
-        setProductos1={setProductos1}
-        register={register}
-        errors={errors}
-        accionB={accionB}
-        colorInput={colorInput}
-        precio_base={precio_base}
-        handleKeyDown={handleKeyDown}
-        handleBlur={handleBlur}
-        handleInputClick={handleInputClick}
-        handleEnterKey={handleEnterKey}
-        handleModalClick={handleModalClick}
-      /> */}
+
       <ModalRecargos
         register={register}
         errors={errors}
@@ -1029,7 +1008,6 @@ function Pagos_1() {
                 Recargos={Recargos}
                 Parciales={Parciales}
                 Alta={Alta}
-                //procesarDatos={procesarDatos}
                 muestraRecargos={muestraRecargos}
                 muestraParciales={muestraParciales}
                 muestraImpresion={muestraImpresion}

@@ -61,7 +61,6 @@ function Inputs({
         >
           {Titulo}
           <input
-            // defaultValue={defaultValue}
             {...(maxLenght !== 0 && { maxLength: maxLenght })}
             name={name}
             id={name}
@@ -76,12 +75,6 @@ function Inputs({
               },
               ...(requerido && { required: message }),  
             })}
-            
-            // {...(dataType === "int" ||
-            //   (dataType === "float" && {
-            //     onBlur: (event) => handleBlur(event, dataType),
-            //   }))}
-            // disabled={isDisabled}
             onKeyDown={onKeyDown}
 
           />

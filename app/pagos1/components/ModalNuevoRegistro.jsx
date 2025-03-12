@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Inputs from "@/app/pagos1/components/Inputs";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import BuscarCat from "@/app/components/BuscarCat";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
@@ -17,7 +17,6 @@ function ModalNuevoRegistro({
   handleKeyDown,
   handleBlur,
   handleInputClick,
-  handleEnterKey,
   handleModalClick,
 }) {
   const nameInputs3 = ["numero_producto", "descripcion"];
@@ -63,15 +62,6 @@ function ModalNuevoRegistro({
             </button>
           </div>
         </div>
-        {/* <button
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-          onClick={() =>
-            document.getElementById("modal_nuevo_registro").close()
-          }
-        >
-          ✕
-        </button>
-        <h3 className="font-bold text-lg mb-5">Añadir Nuevo Pago</h3> */}
         <fieldset id="fs_pagoimprime">
           <div className="container flex flex-col ">
             <div className="grid grid-flow-row gap-3">

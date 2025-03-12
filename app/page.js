@@ -6,7 +6,6 @@ import Image from "next/image";
 import {
   getEstadisticasTotales,
   getCumpleañosMes,
-  getConsultasInscripcion,
   getConsultasInsXMes,
 } from "@/app/utils/api/estadisticas/estadisticas";
 import { getAlumnoXHorario } from "@/app/utils/api/horarios/horarios";
@@ -29,9 +28,9 @@ const AdeudosView = React.lazy(() =>
 const SliderControl = React.lazy(() =>
   import("@/app/components/SliderControl")
 );
-import iconos from "./utils/iconos";
-import { Documentos } from "./utils/api/Rep_Femac_7/Rep_Femac_7";
-import { formatDate } from "./utils/globalfn";
+import iconos from "@/app/utils/iconos";
+import { Documentos } from "@/app/utils/api/Rep_Femac_7/Rep_Femac_7";
+import { formatDate } from "@/app/utils/globalfn";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -81,11 +80,7 @@ export default function Home() {
           getCumpleañosMes(token),
           Documentos(token, formatDate(fecha).replace(/\//g, "-"), false),
         ]);
-      // const fechaHoy = formatDate(fecha).replace(/\//g, "-")
-      // const AdeudosMes = Adeudos.documentos.filter((adeudo)=>adeudo.fecha === fechaHoy)
       setAdeudos(Adeudos);
-      // console.log(res);
-      // console.log("alumnsInscritos => ",alumnsInscritos);
       const totalEstudiantes = res.promedio_alumnos_por_curso.reduce(
         (acc, cur) => acc + cur.total_estudiantes,
         0
@@ -107,6 +102,7 @@ export default function Home() {
       setDataLoaded(true);
     };
     fetchChart();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   if (status === "loading" || isLoading === true) {
@@ -168,17 +164,6 @@ export default function Home() {
                   adeudos={adeudos}
                   mesActual={mesActual}
                 ></AdeudosView>
-                {/* <div className="grid gap-4 w-full card  items-center p-5 mb-4">
-                  <div className="card w-full h-full bg-base-100 shadow-lg rounded-lg">
-                    Hola
-                  </div>
-                  <div className="card w-full h-full bg-base-100 shadow-lg rounded-lg">
-                    mudno
-                  </div>
-                  <div className="card w-full h-full bg-base-100 shadow-lg rounded-lg">
-                    .
-                  </div>
-                </div> */}
 
                 <CardInscritos
                   titulo={`Total de Alumnos`}

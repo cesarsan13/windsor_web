@@ -1,11 +1,9 @@
 import React from 'react'
 import Tooltip from "@/app/components/tooltip";
-import Button from "@/app/components/button";
 import { TbLoader3 } from "react-icons/tb";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
-import { permission } from 'process';
-function Acciones({ home, Alta, Buscar, Ver, isLoadingFind, isLoadingPDF, BoletasGrupo, isLoadingImprime, permiso_imprime }) {
+function Acciones({ home, Buscar, Ver, isLoadingFind, isLoadingPDF, BoletasGrupo, isLoadingImprime, permiso_imprime }) {
   const images = [
     {
       srcLight: iconos.buscar_w,

@@ -1,7 +1,6 @@
-import { format_Fecha_String, formatNumber } from "../../globalfn";
-import { ReporteExcel } from "../../ReportesExcel";
-import { ReportePDF } from "../../ReportesPDF";
-import { formatDate, formatTime, formatFecha} from "../../globalfn";
+import { format_Fecha_String, formatNumber, formatTime } from "@/app/utils/globalfn";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
 
 export const ImprimirExcel = (configuracion, cajero) => {
   const newExcel = new ReporteExcel(configuracion);
@@ -18,12 +17,6 @@ export const ImprimirExcel = (configuracion, cajero) => {
     let total_productos = 0;
     let productos = [];
 
-    // Agregar un objeto de ejemplo al arreglo
-    // productos.push({
-    //   articulo: "",
-    //   descripcion: "",
-    //   precio_unitario: 0.0,
-    // });
     body1.forEach((producto) => {
       if (atr_ant !== producto.articulo && atr_ant !== 0) {
         productos.push({
@@ -66,12 +59,6 @@ export const ImprimirExcel = (configuracion, cajero) => {
   if (body2.length > 0) {
     let tipo_pago = [];
 
-    // Agregar un objeto de ejemplo al arreglo
-    // tipo_pago.push({
-    //   tipo_pago: "",
-    //   descripcion: "",
-    //   importe: 0.0,
-    // });
     for (let Tw_count = 0; Tw_count < 20; Tw_count++) {
       Tw_Pago[Tw_count][0] = 0;
       Tw_Pago[Tw_count][1] = 0;
@@ -156,11 +143,7 @@ export const ImprimirExcel = (configuracion, cajero) => {
     let cajero_desc_ant = "";
     let total_cajero = 0;
     let cajeros = [];
-    // cajeros.push({
-    //   cajero: "",
-    //   descripcion: "",
-    //   importe: 0.0,
-    // });
+
     body3.forEach((cajero) => {
       if (cajero_ant !== cajero.cajero && cajero_ant !== 0) {
         cajeros.push({
@@ -329,7 +312,6 @@ export const Imprimir = (configuracion, cajero) => {
         Enca1(newPDF);
       }
     }
-    // newPDF.nextRow(5);
     newPDF.ImpPosX("Total Tipo Pago", 34, newPDF.tw_ren, 0,"L");
     newPDF.ImpPosX(formatNumber(total_tipo_pago), 166, newPDF.tw_ren, 0,"R");
     newPDF.nextRow(15);

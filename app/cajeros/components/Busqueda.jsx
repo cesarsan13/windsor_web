@@ -58,7 +58,6 @@ function Busqueda({
           value={busqueda.tb_desc}
         />
       </div>
-      {/*  */}
       <div className="col-span-2 md:col-span-2 sm:col-span-1">
         <input
           id="tb_tel"

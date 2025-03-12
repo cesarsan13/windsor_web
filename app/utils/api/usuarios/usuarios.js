@@ -1,5 +1,5 @@
-import { ReporteExcel } from "../../ReportesExcel";
-import { ReportePDF } from "../../ReportesPDF";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
 
 export const getUsuarios = async (token, baja) => {
   let url = "";
@@ -65,7 +65,6 @@ export const ImprimirExcel = (configuracion) => {
 }
 
 export const updateContraseña = async (data, $id) => {
-  //console.log(data);
   let url = `${process.env.DOMAIN_API}api/usuario/update-password/` + $id;
   const res = await fetch(url, {
     method: "POST",
@@ -81,7 +80,6 @@ export const updateContraseña = async (data, $id) => {
       xescuela: localStorage.getItem("xescuela"),
     },
   });
-  // console.log(res);
   const resJson = await res.json();
   return resJson;
 };
@@ -101,7 +99,6 @@ export const guardaUsuario = async (token, data, accion) => {
       url_api = `${process.env.DOMAIN_API}api/usuario/update`;
     }
   }
-  // console.log(data);
   const res = await fetch(`${url_api}`, {
     method: "POST",
     body: JSON.stringify({

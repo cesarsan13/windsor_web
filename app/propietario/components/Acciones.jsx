@@ -1,10 +1,9 @@
 import React from 'react'
 import Tooltip from "@/app/components/tooltip";
-import Button from "@/app/components/button";
 import { TbLoader3 } from "react-icons/tb";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
-function Acciones({ home, Configuracion, Guardar, isLoadingFind, isLoadingPDF}) { 
+function Acciones({ home, Configuracion, Guardar}) { 
   const images = [
     { 
       srcLight: iconos.procesa_w,
@@ -12,7 +11,6 @@ function Acciones({ home, Configuracion, Guardar, isLoadingFind, isLoadingPDF}) 
       alt: "Configuracion", 
       tooltipTitle: "Configuracion", 
       onClick: Configuracion,
-      //isLoading: isLoadingFind
       isLoading: false
     },
     { 
@@ -21,7 +19,6 @@ function Acciones({ home, Configuracion, Guardar, isLoadingFind, isLoadingPDF}) 
       alt: 'Guardar', 
       tooltipTitle: 'Guardar', 
       onClick: Guardar,
-      //isLoading: isLoadingPDF
       isLoading: false
     },
     { 

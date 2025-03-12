@@ -94,7 +94,7 @@ export const useAsignaturasUI = (
               <ActionColumn description={"Ver"} permission={true} />
               {!hasBajas && <ActionColumn description={"Editar"} permission={permissions.cambios} />}
               {!hasBajas && <ActionColumn description={"Eliminar"} permission={permissions.bajas}/>}
-              {hasBajas && <ActionColumn description={"Reactivar"} permission={true} />}
+              {hasBajas && <ActionColumn description={"Reactivar"} permission={permissions.cambios} />}
         </tr>
           </thead>
         );
@@ -160,7 +160,7 @@ export const useAsignaturasUI = (
                 iconDark={iconos.documento}
                 iconLight={iconos.documento_w}
                 onClick={(evt) => tableAction(evt, item, "Reactivar")}
-                permission={true}
+                permission={permissions.cambios}
               />
             )}
           </tr>
@@ -189,7 +189,6 @@ export const useAsignaturasUI = (
                   message={"Descripción requerida"}
                   maxLenght={100}
                   isDisabled={isDisabled}
-                  //handleBlur={handleBlur}
                   onKeyDown={(evt) => {
                     handleKeyDown(evt);
                   }}
@@ -200,7 +199,7 @@ export const useAsignaturasUI = (
                   dataType={"string"}
                   name={"descripcion"}
                   tamañolabel={"w-full"}
-                  className={`fyo8m-select p-1.5 grow `} //${isDisabled ? "bg-gray-200 text-gray-500 cursor-not-allowed" : "bg-white"}
+                  className={`fyo8m-select p-1.5 grow `} 
                   Titulo={"Lenguaje: "}
                   type={"select"}
                   requerido={true}
@@ -210,7 +209,6 @@ export const useAsignaturasUI = (
                   message={"Lenguaje requerido"}
                   maxLenght={15}
                   isDisabled={isDisabled}
-                  //handleBlur={handleBlur}
                   arreglos={[
                     { id: "ESPAÑOL", descripcion: "ESPAÑOL" },
                     { id: "INGLÉS", descripcion: "INGLÉS" },
@@ -235,7 +233,6 @@ export const useAsignaturasUI = (
                   message={"Caso a Evaluar requerido"}
                   maxLenght={15}
                   isDisabled={isDisabled}
-                  //handleBlur={handleBlur}
                   arreglos={[
                     { id: "CALIFICACIÓN", descripcion: "CALIFICACIÓN" },
                     { id: "OTRO", descripcion: "OTRO" },
@@ -261,7 +258,6 @@ export const useAsignaturasUI = (
                     message={"Area requerida"}
                     maxLenght={15}
                     isDisabled={isDisabled}
-                    //handleBlur={handleBlur}
                     arreglos={[
                       { id: 1, descripcion: 1 },
                       { id: 2, descripcion: 2 },
@@ -287,7 +283,6 @@ export const useAsignaturasUI = (
                     maxLenght={6}
                     message={"Orden requerido"}
                     isDisabled={isDisabled}
-                    //handleBlur={handleBlurOut}
                     onKeyDown={(evt) => {
                       handleKeyDown(evt);
                     }}
@@ -311,7 +306,6 @@ export const useAsignaturasUI = (
                     maxLenght={6}
                     message={"Evaluaciones requerida"}
                     isDisabled={isDisabled}
-                    //handleBlur={handleBlurOut}
                     onKeyDown={(evt) => {
                       handleKeyDown(evt);
                     }}
@@ -331,8 +325,6 @@ export const useAsignaturasUI = (
                     message={"Evaluación por Actividades requerida"}
                     maxLenght={5}
                     isDisabled={isDisabled}
-                    //handleBlur={handleBlur}
-                    //getValues={getValues}
                   />
                 </div>
               </div>

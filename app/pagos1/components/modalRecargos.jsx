@@ -1,8 +1,6 @@
 "use client";
 import React from "react";
 import Inputs from "@/app/pagos1/components/Inputs";
-import Button from "@/app/components/button";
-import Tooltip from "@/app/components/tooltip";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
 function ModalRecargos({
@@ -106,13 +104,6 @@ function ModalRecargos({
                                             handleBlur={handleBlur}
                                             handleKeyDown={handleKeyDown}
                                         />
-                                        {/* <Tooltip Titulo={"Adiciona"} posicion={"tooltip-top"}>
-                                            <Button
-                                                icono={"fa-solid fa-circle-plus"}
-                                                onClick={btnRecargo}
-                                                className="rounded-r"
-                                            ></Button>
-                                        </Tooltip> */}
                                     </div>
                                 </div>
                             </div>

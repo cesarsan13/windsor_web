@@ -91,6 +91,7 @@ function Rep_femac_4() {
       return;
     }
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   const {
@@ -139,6 +140,7 @@ function Rep_femac_4() {
         credencial?.alumno?.fecha_nac || formatFecha(fecha_hoy)
       ),
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [credencial, reset]);
 
   const home = () => {

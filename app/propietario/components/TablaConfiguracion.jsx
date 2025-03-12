@@ -14,7 +14,7 @@ function TablaConfiguracion({
   setAccion,
   setCurrentId
 }) {
-  const tableAction = async (evt, formaConfiguracion, accion) => {
+  const tableAction = async ( formaConfiguracion, accion) => {
     setDataConfiguracion(formaConfiguracion);
     setAccion(accion);
     setCurrentId(formaConfiguracion.numero_configuracion);
@@ -33,7 +33,6 @@ function TablaConfiguracion({
               <td className="sm:table-cell pt-[.10rem] pb-[.10rem]">Texto</td>
               <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Ver</th>
               <th className="w-[5%] pt-[.10rem] pb-[.10rem]">Editar</th>
-              {/*<th className="w-[5%] pt-[.10rem] pb-[.10rem]">Eliminar</th>*/}
             </tr>
           </thead>
           <tbody>
@@ -78,16 +77,6 @@ function TablaConfiguracion({
                     <Image src={iconos.editar_w} alt="Editar" className="hidden dark:block" />
                   </div>
                 </th>
-                {/*<th className="w-[5%] pt-[.10rem] pb-[.10rem]">
-                  <div
-                    className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
-                    data-tip={`Eliminar`}
-                    onClick={(evt) => tableAction(evt, item, "Eliminar")}
-                  >
-                    <Image src={iconos.eliminar} alt="Eliminar" className="block dark:hidden" />
-                    <Image src={iconos.eliminar_w} alt="Eliminar" className="hidden dark:block" />
-                  </div>
-                </th>*/}
               </tr>
             ))}
           </tbody>

@@ -16,18 +16,14 @@ function ModalAplicaciones({
     isLoadingButton,
 }) {
 
-    const [error, setError] = useState(null);
     const [titulo, setTitulo] = useState("");
     const [isDisabled, setIsDisabled] = useState(true);
 
     useEffect(() => {
         if (accion === "Eliminar" || accion === "Ver") {
           setIsDisabled(true);
-          // accion === "Ver" &&
-          //   document.getElementById("btn_guardar").setAttribute("disabled", true);
         }
         if (accion === "Alta" || accion === "Editar") {
-          // alert(accion);
           setIsDisabled(false);
         }
         setTitulo(
@@ -60,7 +56,6 @@ function ModalAplicaciones({
           <div className="modal-box bg-base-200">
             <form onSubmit={onSubmit}>
               <div className="sticky -top-6 flex justify-between items-center bg-transparent w-full h-10 z-10 mb-5">
-                {/* bg-white */}
                 <h3 className="font-bold text-lg text-neutral-600 dark:text-white">
                   {titulo}
                 </h3>

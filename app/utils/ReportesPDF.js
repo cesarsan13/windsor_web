@@ -1,7 +1,6 @@
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import {
-  format_Fecha_String,
   formatDate,
   formatTime,
 } from "@/app/utils/globalfn";
@@ -300,7 +299,6 @@ export class ReportePDF {
       body: data, // Datos de la tabla
       startY: this.tw_ren + 10, // Posición Y donde empieza la tabla
       theme: "plain", // Tema de la tabla
-      // headStyles: { fillColor: [255, 255, 255],textColor: [0, 0, 0]  }, // Estilos para la cabecera
       styles: { fontSize: 10, lineWidth: 0.5, lineColor: [211, 211, 211] }, // Estilos generales
       margin: { top: 10 },
       didDrawPage: (data) => {

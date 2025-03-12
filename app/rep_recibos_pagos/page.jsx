@@ -23,10 +23,8 @@ function RecibosPagos() {
   const { data: session, status } = useSession();
   const [alumnoIni, setAlumnoIni] = useState({});
   const [alumnoFin, setAlumnoFin] = useState({});
-  // const [alumnosFiltrados, setAlumnosFiltrados] = useState([]);
   const [docsCobranza, setDocsCobranza] = useState([]);
   const [alumnos, setAlumnos] = useState([]);
-  // const [horarios, setHorarios] = useState([]);
   const [sinDeudores, setSinDeudores] = useState(false);
   const [grupoAlumno, setGrupoAlumno] = useState(false);
   const [pdfPreview, setPdfPreview] = useState(false);
@@ -57,23 +55,12 @@ function RecibosPagos() {
       const { token } = session.user;
       const [dataA] = await Promise.all([
         getAlumnos(token, false),
-        // getCobranza(token),
-        // getHorarios(token, false)
       ]);
       setAlumnos(dataA);
-      // setDocsCobranza(dataC);
-      // setHorarios(dataH);
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
-
-  // const calculateSaldo = (item) => {
-  //     const importe = parseFloat(item.importe) || 0;
-  //     const importePago = parseFloat(item.importe_pago) || 0;
-  //     const descuento = parseFloat(item.descuento) || 0;
-  //     const saldo = (importe - importePago) - (importe * (descuento / 100));
-  //     return formatNumber(saldo);
-  // };
 
   const handleVerClick = async () => {
     setAnimateLoading(true);
@@ -330,7 +317,6 @@ function RecibosPagos() {
                     alignRight={true}
                     inputWidths={{ first: "100px", second: "400px" }}
                     descClassName="md:mt-0 w-full"
-                    //contClassName="flex flex-row md:flex-row justify-start gap-2 sm:flex-row w-full"
                   />
                 </div>
               </div>
@@ -347,7 +333,6 @@ function RecibosPagos() {
                     alignRight={true}
                     inputWidths={{ first: "100px", second: "400px" }}
                     descClassName="md:mt-0 w-full"
-                    //contClassName="flex flex-row md:flex-row justify-start gap-2 sm:flex-row w-full"
                   />
                 </div>
               </div>

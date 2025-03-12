@@ -16,7 +16,7 @@ function PropertyPage({
   changeSelectedLabel,
   arreglo
 }) {
-  // console.log("property: ",propertyData)
+
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -85,6 +85,7 @@ function PropertyPage({
     const selectLabels = document.getElementById("idlabel");
     selectLabels.selectedIndex = selectedIndex;
     setSelectedLabel(selectedIndex);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedIndex, labels, reset]);
 
   const setSelectedLabel = (idx) => {
@@ -134,11 +135,9 @@ function PropertyPage({
   };
   const handleKeyDown = async (evt) => {
     if (evt.key === 'Enter') {
-      // console.log("entra");
       const { name } = evt.target;
       const resultado = [...labels];
       let value = await getValueInput(evt);
-      // console.log(value);
       const redondea = 10;
       value = roundToNearest(value, redondea);
       resultado[selectedIndex] = {
@@ -146,7 +145,7 @@ function PropertyPage({
         [name]: value,
       };
       setLabels(resultado);
-    } else { /*console.log("no entra");*/ }
+    } else { }
   };
   const handleCancelarClick = (evt) => {
     evt.preventDefault();
@@ -177,7 +176,6 @@ function PropertyPage({
   };
 
   const handleLabelChange = (evt) => {
-    // const index = evt.target.selectedOptions[0].attributes["data-key"].value;
     setSelectedIndex(evt.target.value);
   };
 
@@ -303,10 +301,8 @@ function PropertyPage({
                   arreglos={Object.entries(propertyData.fuente).map(([key,fuente])=>(
                     {id:fuente,descripcion:fuente}
                   ))}
-                  // data={propertyData.fuente}
                   idlabel={labels[selectedIndex].font_nombre}
                   handleChange={handleChange}
-                //defaultValue={formaPago.id}
                 />
                 <Inputs
                   dataType={"int"}
@@ -321,8 +317,6 @@ function PropertyPage({
                   message={"Tamaño requerido"}
                   isDisabled={false}
                   onChange={handleChange}
-                  // handleChange={handleChange}
-                  // handleKeyDown={handleChange}
                 />
                 <div className="flex flex-col space-y-2">
                   <Inputs
@@ -418,7 +412,6 @@ function PropertyPage({
                   ))}
                   idlabel={labels[selectedIndex].numero_archivo}
                   data={propertyData.campo}
-                //defaultValue={formaPago.id}
                 />
                 <Inputs
                   dataType={"string"}
@@ -437,7 +430,6 @@ function PropertyPage({
                   ))}
                   idlabel={labels[selectedIndex].formato}
                   data={propertyData.formato}
-                //defaultValue={formaPago.id}
                 />
                 <Inputs
                   dataType={"string"}
@@ -455,7 +447,6 @@ function PropertyPage({
                     {id:key,descripcion:area}
                   ))}
                   idlabel={labels[selectedIndex].tipo_campo}
-                //defaultValue={formaPago.id}
                 />
               </div>
             </div>

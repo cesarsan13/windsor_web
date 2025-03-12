@@ -34,7 +34,6 @@ export const useHorariosABC = (
     const [reload_page, setReloadPage] = useState(false);
     const [active, setActive] = useState(false);
     const [inactive, setInactive] = useState(false);
-    //const [dia, setDia] = useState("");
     const [busqueda, setBusqueda] = useState({ 
         tb_id: "",
         tb_desc: "",

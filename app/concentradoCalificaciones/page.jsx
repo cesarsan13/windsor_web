@@ -9,7 +9,6 @@ import {
   formatDate,
   formatTime,
   RegresaCalificacionRedondeo,
-  aDec,
   permissionsComponents,
 } from "@/app/utils/globalfn";
 import {
@@ -24,7 +23,7 @@ import {
   getActividadesDetalles,
 } from "@/app/utils/api/concentradoCalificaciones/concentradoCalificaciones";
 import Inputs from "@/app/concentradoCalificaciones/components/Inputs";
-import Modal_Detalles_Actividades from "./components/modalDetallesActividades";
+import Modal_Detalles_Actividades from "@/app/concentradoCalificaciones/components/modalDetallesActividades";
 import Acciones from "@/app/concentradoCalificaciones/components/Acciones";
 import BuscarCat from "@/app/components/BuscarCat";
 import TablaConcentradoCal from "@/app/concentradoCalificaciones/components/TablaConcentradoCal";
@@ -75,6 +74,7 @@ function ConcentradoCalificaciones() {
       return;
     }
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   const {
@@ -257,7 +257,6 @@ function ConcentradoCalificaciones() {
         const calMat = (sumatoria / evaluaciones).toFixed(1);
         return evaluaciones === 0 ? 0 : calMat;
       } else {
-        //let cal = RegresaCalificacionRedondeo(Number(resActividadE[0].calificacion), "N");
         let cal = RegresaCalificacionRedondeo(Number(0), "N");
         return cal.toFixed(1);
       }

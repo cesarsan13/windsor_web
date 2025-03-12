@@ -36,7 +36,6 @@ import "jspdf-autotable";
 function C_Calificaciones() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [openModal, setModal] = useState(false);
   const [accion, setAccion] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const [isLoading2, setisLoading2] = useState(false);
@@ -52,16 +51,12 @@ function C_Calificaciones() {
   const [isDisabled3, setIsDisabled3] = useState(false);
   const [actividades, setActividades] = useState([]);
   const [evaluacion, setEvaluacion] = useState([]);
-
   const [bimestreSelected, setBimestreSelected] = useState([]);
   const [actividadSelected, setActividadesSelected] = useState([]);
   const [evaluacionSelected, setEvaluacionSelected] = useState([]);
   const [asignaturaSelected, setAsignaturaSelected] = useState([]);
-
   const [isLoadingPDF, setisLoadingPDF] = useState(false);
-
   const [permissions, setPermissions] = useState({});
-
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const {
@@ -104,7 +99,6 @@ function C_Calificaciones() {
       let res = null,
         res2 = null,
         res3 = null;
-      // let vg_area = '', vg_actividad = '', vg_caso_evaluar = '';
       const { token, permissions } = session.user;
       const es_admin = session.user.es_admin;
       if (materia !== "") {
@@ -129,16 +123,12 @@ function C_Calificaciones() {
           setIsDisabled3(false);
         }
 
-        // if (vg_actividad === 'Si') {
         res2 = await getActividadSecuencia(token, materia);
         if (res2.status) {
           setIsDisabled2(true);
           setActividades(res2.data);
         }
-        // else {
-        //     showSwal('Error', 'No hay actividades para esta materia', 'error');
-        // }
-        // } else {
+
         res3 = await getMateriaEvaluacion(token, materia);
         if (res3.status) {
           const Cb_Evaluacion = [];
@@ -151,10 +141,7 @@ function C_Calificaciones() {
           setIsDisabled3(true);
           setEvaluacion(Cb_Evaluacion);
         }
-        // else {
-        //     showSwal('Error', 'No hay evaluación para esta materia', 'error');
-        // }
-        // }
+
         const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
 
         const permisos = permissionsComponents(
@@ -167,6 +154,7 @@ function C_Calificaciones() {
       }
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [materia]);
 
   useEffect(() => {
@@ -195,6 +183,7 @@ function C_Calificaciones() {
       }
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [grupo.numero]);
 
   const validar = async (grupo, materia, contraseña) => {
@@ -311,8 +300,6 @@ function C_Calificaciones() {
         setCalificacionesFiltrados(newData);
       } else {
         showSwal("Error", "No se pudieron obtener las calificaciones", "error");
-        // setCalificaciones([]);
-        // setCalificacionesFiltrados([]);
       }
       setisLoading2(false);
     } else {
@@ -399,10 +386,6 @@ function C_Calificaciones() {
       showModalVista(true);
       setisLoadingPDF(false);
     }, 500);
-    // const pdfData = reporte.doc.output("datauristring");
-    // setPdfData(pdfData);
-    // setPdfPreview(true);
-    // showModalVista(true);
   };
 
   const showModalVista = (show) => {
@@ -592,22 +575,6 @@ function C_Calificaciones() {
                 isDisabled={false}
                 maxLenght={255}
               />
-
-              {/* <Inputs
-                                dataType={"string"}
-                                name={"promedio_grupo"}
-                                tamañolabel={"w-full md:w-1/2"}
-                                className={"w-full md:w-1/2 text-right"}
-                                Titulo={"Prom. del Grupo: "}
-                                type={"text"}
-                                requerido={false}
-                                errors={errors}
-                                register={register}
-                                message={"Prom. del Grupo Requerido"}
-                                isDisabled={true}
-                                maxLenght={255}
-                            /> */}
-
               <div className="flex flex-col items-center h-full">
                 <div className="w-full max-w-4xl">
                   <TablaCalificaciones

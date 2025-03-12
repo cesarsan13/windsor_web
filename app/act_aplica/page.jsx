@@ -1,16 +1,16 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import Acciones from './components/acciones'
+import Acciones from '@/app/act_aplica/components/acciones'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { getAplicaciones1, guradaAplicacion1, siguiente, Imprimir, ImprimirExcel } from '../utils/api/act_aplica/act_aplica'
+import { getAplicaciones1, guradaAplicacion1, siguiente, Imprimir, ImprimirExcel } from '@/app/utils/api/act_aplica/act_aplica'
 import { useForm } from 'react-hook-form'
-import TablaAplicacion1 from './components/tablaAplicacion1'
-import ModalAplicacion1 from './components/modalAplicacion1'
-import { Elimina_Comas, formatFecha, formatNumber } from '../utils/globalfn'
-import { confirmSwal, showSwal } from '../utils/alerts'
-import ModalVistaPreviaActAplica from './components/modalVistaPreviaActAplica'
-import { ReportePDF } from '../utils/ReportesPDF'
+import TablaAplicacion1 from '@/app/act_aplica/components/tablaAplicacion1'
+import ModalAplicacion1 from '@/app/act_aplica/components/modalAplicacion1'
+import { Elimina_Comas, formatFecha, formatNumber } from '@/app/utils/globalfn'
+import { confirmSwal, showSwal } from '@/app/utils/alerts'
+import ModalVistaPreviaActAplica from '@/app/act_aplica/components/modalVistaPreviaActAplica'
+import { ReportePDF } from '@/app/utils/ReportesPDF'
 
 function Act_Aplica() {
     const router = useRouter()
@@ -35,6 +35,7 @@ function Act_Aplica() {
             setisLoading(false)
         }
         fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ status])
     const {
         register,

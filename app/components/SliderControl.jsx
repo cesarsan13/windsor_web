@@ -1,5 +1,5 @@
 import React from "react";
-import ButtonSlider from "./ButtonSlider";
+import ButtonSlider from "@/app/components/ButtonSlider";
 
 function SliderControl({ text1, text2, ref1, ref2 }) {
   return (

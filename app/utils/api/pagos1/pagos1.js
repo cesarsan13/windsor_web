@@ -97,15 +97,7 @@ function formatFecha(fecha) {
   return `${año}-${mes}-${dia}`;
 }
 
-// function formatFechaEnca(fecha) {
-//   if (!fecha) return 0;
-//   const [dia, mes, año] = fecha.split("-");
-//   return `${año}/${mes}/${dia}`;
-// }
-
 export const guardarDetallePedido = async (token, data) => {
-  // const fechaIniFormateada = formatFecha(data.fecha);
-  // data.fecha = fechaIniFormateada;
   let url = `${process.env.DOMAIN_API}api/pagos1/guardar-detalle-pedido`;
   const res = await fetch(url, {
     method: "POST",
@@ -131,8 +123,6 @@ export const guardarDetallePedido = async (token, data) => {
 };
 
 export const guardaEcabYCobrD = async (token, data) => {
-  // const fechaIniFormateada = formatFecha(data.fecha);
-  // data.fecha = fechaIniFormateada;
   let url = `${process.env.DOMAIN_API}api/pagos1/guarda-EncabYCobrD`;
   const res = await fetch(url, {
     method: "POST",
@@ -242,7 +232,6 @@ export const verImprimir = async (configuracion) => {
 };
 
 const Enca1 = (doc, body) => {
-  // const fecha = formatFechaEnca(body.fecha);
   if (!doc.tiene_encabezado) {
     doc.imprimeEncabezadoPrincipalP(body, body.fecha);
     doc.nextRow(12);

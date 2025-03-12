@@ -34,20 +34,6 @@ function ModalConfiguracion({
     );
   }, [accion, currentID]);
 
-
-  const handleBlur = (evt, datatype) => {
-    if (evt.target.value === "") return;
-    datatype === "int"
-      ? setDataConfiguracion((configuracion) => ({
-          ...configuracion,
-          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-        }))
-      : setDataConfiguracion((configuracion) => ({
-          ...configuracion,
-          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-        }));
-  };
-
   return (
     <dialog id="modal_Configuracion" className="modal">
       <div className="modal-box bg-base-200 max-w-2xl">

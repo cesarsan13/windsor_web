@@ -14,8 +14,8 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import BuscarCat from "@/app/components/BuscarCat";
 import "jspdf-autotable";
-import VistaPrevia from "../components/VistaPrevia";
-import { permissionsComponents } from "../utils/globalfn";
+import VistaPrevia from "@/app/components/VistaPrevia";
+import { permissionsComponents } from "@/app/utils/globalfn";
 
 function RelacionDeRecivos() {
   const router = useRouter();
@@ -56,6 +56,7 @@ function RelacionDeRecivos() {
       return;
     }
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   const getPrimerDiaDelMes = () => {
@@ -154,10 +155,6 @@ function RelacionDeRecivos() {
       showModalVista(true);
       setAnimateLoading(false);
     }, 500);
-    // const pdfData = await verImprimir(configuracion);
-    // setPdfData(pdfData);
-    // setPdfPreview(true);
-    // showModalVista(true);
   };
 
   const showModalVista = (show) => {
@@ -222,7 +219,6 @@ function RelacionDeRecivos() {
                   <input
                     name={"fecha_ini"}
                     tamañolabel={""}
-                    // className={"rounded  block grow"}
                     Titulo={"Fecha Inicial: "}
                     type={"date"}
                     errors={errors}
@@ -241,7 +237,6 @@ function RelacionDeRecivos() {
                   <input
                     name={"fecha_fin"}
                     tamañolabel={""}
-                    // className={"rounded block grow "}
                     Titulo={"Fecha Final: "}
                     type={"date"}
                     errors={errors}

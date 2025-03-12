@@ -40,7 +40,6 @@ function Inputs({
                   }
                 })}
                 disabled={isDisabled}
-                // onChange={(e) => onChange && onChange(e)}
               >
                 <option value="" className="bg-transparent text-black dark:text-white dark:bg-[#1d232a]">
                   Seleccione una opción

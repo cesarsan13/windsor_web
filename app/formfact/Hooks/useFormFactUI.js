@@ -91,7 +91,7 @@ export const useFormFactUI = (
                     />}
                     {hasBajas && <ActionColumn 
                       description={"Reactivar"}
-                      permission={true} 
+                      permission={permissions.cambios} 
                     />}
                 </tr>
             </thead>
@@ -145,7 +145,7 @@ export const useFormFactUI = (
                     iconDark={iconos.documento}
                     iconLight={iconos.documento_w}
                     onClick={(evt) => tableAction(evt, item, "Reactivar")}
-                    permission={true}
+                    permission={permissions.cambios}
                   />
                 )}
                 </tr>
@@ -175,7 +175,6 @@ export const useFormFactUI = (
                 message={"Nombre requerido"}
                 maxLenght={30}
                 isDisabled={isDisabled}
-                //handleBlur={handleBlur}
                 onKeyDown={(evt) => {
                   handleKeyDown(evt);
                 }}
@@ -194,7 +193,6 @@ export const useFormFactUI = (
                 message={"Longitud requerido"}
                 maxLenght={7}
                 isDisabled={isDisabled}
-                //handleBlur={handleBlur}
                 onKeyDown={(evt) => {
                   handleKeyDown(evt);
                 }}

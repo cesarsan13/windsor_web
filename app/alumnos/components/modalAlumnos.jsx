@@ -555,21 +555,6 @@ function ModalAlumnos({
                     </>
                   )}
                   <div className="bottom-0 left-0 w-full flex justify-center mb-4">
-                    {/* <button
-                      type="button"
-                      onClick={toggleCamera}
-                      className="btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white font-bold px-4 rounded"
-                    >
-                      {isCameraOn ? "Apagar cámara" : "Encender cámara"}
-                    </button> */}
-                    {/* <button
-                      type="button"
-                      onClick={capture}
-                      disabled={!isCameraOn}
-                      className="ml-4 btn hover:bg-transparent border-none shadow-md bg-transparent hover:bg-slate-200 dark:hover:bg-neutral-700 text-black dark:text-white font-bold px-4 rounded"
-                    >
-                      Capturar Foto
-                    </button> */}
                     <button
                       type="button"
                       onClick={openFileSelector}
@@ -604,21 +589,6 @@ function ModalAlumnos({
                       />
                     </div>
                   )}
-
-                  {/*{capturedImage && (
-                    <div className="bottom-0 left-0 w-full">
-                      <h2 className="text-center text-xl mb-2">
-                        Foto Capturada:
-                      </h2>
-                      <Image
-                        src={condicion ? capturedImage : capturedImage}
-                        alt="Captured"
-                        width={80}
-                        height={80}
-                        className="w-full object-contain mx-auto my-4"
-                      />
-                    </div>
-                  )}*/}
                 </div>
               </div>
 

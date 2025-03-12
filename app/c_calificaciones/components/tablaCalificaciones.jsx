@@ -181,14 +181,6 @@ function TablaCalificaciones({
                                             onClick={(evt) => tableAction(evt, item, "Editar")}
                                             permission={permiso_cambio}
                                         />
-                                        // <div
-                                        //     className="kbd pt-1 tooltip tooltip-left hover:cursor-pointer bg-transparent hover:bg-transparent text-black border-none shadow-none dark:text-white w-5 h-5 md:w-[1.80rem] md:h-[1.80rem] content-center"
-                                        //     data-tip={`Editar`}
-                                        //     onClick={(evt) => tableAction(evt, item, "Editar")}
-                                        // >
-                                        //     <Image src={iconos.editar_w} alt="Editar" className="hidden dark:block" />
-                                        //     <Image src={iconos.editar} alt="Editar" className="block dark:hidden" />
-                                        // </div>
                                     )}
                                 </th>
                             </tr>

@@ -1,5 +1,5 @@
-import { ReporteExcel } from "../../ReportesExcel";
-import { ReportePDF } from "../../ReportesPDF";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
+import { ReportePDF } from "@/app/utils/ReportesPDF";
 
 export const getActividadSecuencia = async (token, materia) => {
   let url = `${process.env.DOMAIN_API}api/proceso/actividad-secuencia`
@@ -32,6 +32,7 @@ export const getActividades = async (token, baja) => {
   const resJson = await res.json();
   return resJson.data;
 };
+
 export const getUltimaSecuencia = async (token, materia) => {
   const res = await fetch(
     `${process.env.DOMAIN_API}api/actividades/ultimaSecuencia`,
@@ -50,6 +51,7 @@ export const getUltimaSecuencia = async (token, materia) => {
   const resJson = await res.json();
   return resJson;
 };
+
 export const guardarActividad = async (token, accion, data) => {
   let url = "";
   if (accion === "Alta") {
@@ -118,6 +120,7 @@ const Enca1 = (doc) => {
     doc.tiene_encabezado = true;
   }
 };
+
 export const ImprimirExcel = (configuracion) => {
   const newExcel = new ReporteExcel(configuracion)
   const { columns } = configuracion
@@ -127,6 +130,7 @@ export const ImprimirExcel = (configuracion) => {
   newExcel.addData(body);
   newExcel.guardaReporte(nombre)
 }
+
 export const getAsignaturas = async (token, baja) => {
   let url = "";
   baja

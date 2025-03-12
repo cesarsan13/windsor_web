@@ -2,7 +2,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { showSwal } from "../utils/alerts";
+import { showSwal } from "@/app/utils/alerts";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";

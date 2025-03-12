@@ -1,6 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import { formatDate, formatTime } from "../../globalfn";
+import { formatDate, formatTime } from "@/app/utils/globalfn";
 
 export const getProcesoCalificaciones = async (token, data) => {
   let url = `${process.env.DOMAIN_API}api/proceso/calificaciones-get`;
