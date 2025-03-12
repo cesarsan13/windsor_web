@@ -27,7 +27,6 @@ function Rep_Femac_3() {
   const [isLoading, setisLoading] = useState(false);
   const [animateLoading, setAnimateLoading] = useState(false);
   const [horario, setHorario] = useState({});
-  const [token, setToken] = useState("");
   const [permissions, setPermissions] = useState({});
 
   useEffect(() => {
@@ -36,7 +35,7 @@ function Rep_Femac_3() {
     }
     const fetchData = async () => {
       setisLoading(true);
-      const { token, permissions } = session.user;
+      const { permissions } = session.user;
       const es_admin = session.user.es_admin;
       const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
       const permisos = permissionsComponents(
@@ -46,7 +45,6 @@ function Rep_Femac_3() {
         menu_seleccionado
       );
       setPermissions(permisos);
-      setToken(token);
       //const data = await getAlumnosPorMes(token, horario, sOrdenar);
       //setFormaRepDosSel(data.data);
       setisLoading(false);
@@ -228,6 +226,12 @@ function Rep_Femac_3() {
     setPdfData("");
     document.getElementById("modalVPRepFemac3").close();
   };
+
+  if (status === "loading" && !session) {
+    return (
+      <div className="container skeleton w-full max-w-screen-xl shadow-xl rounded-xl"></div>
+    );
+  }
   return (
     <>
       <VistaPrevia
@@ -266,7 +270,7 @@ function Rep_Femac_3() {
                 <BuscarCat
                   table={"horarios"}
                   titulo={"Horario: "}
-                  token={token}
+                  token={session.user.token}
                   nameInput={["horario_1", "horario_1_nombre"]}
                   fieldsToShow={["numero", "horario"]}
                   setItem={setHorario}
