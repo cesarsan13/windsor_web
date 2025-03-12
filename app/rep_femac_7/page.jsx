@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Acciones from "@/app/rep_Femac_7/components/Acciones";
+import Acciones from "@/app/rep_femac_7/components/Acciones";
 import { formatDate, permissionsComponents } from "@/app/utils/globalfn";
 import {
   Documentos,

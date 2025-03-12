@@ -264,7 +264,7 @@ function Rep_Femac_3() {
                 <BuscarCat
                   table={"horarios"}
                   titulo={"Horario: "}
-                  token={session.user.token}
+                  token={session.user?.token}
                   nameInput={["horario_1", "horario_1_nombre"]}
                   fieldsToShow={["numero", "horario"]}
                   setItem={setHorario}

@@ -2,7 +2,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import Acciones from "@/app/rep_Femac_6/components/Acciones";
+import Acciones from "@/app/rep_femac_6/components/Acciones";
 import BuscarCat from "@/app/components/BuscarCat";
 import { useRouter } from "next/navigation";
 import {
