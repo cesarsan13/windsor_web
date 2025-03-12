@@ -267,7 +267,7 @@ function Rep_Femac_3() {
           <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
             <div className="col-span-full md:col-span-full lg:col-span-full">
               <div className="w-full">
-                {/* <BuscarCat
+                <BuscarCat
                   table={"horarios"}
                   titulo={"Horario: "}
                   token={session.user.token}
@@ -276,7 +276,7 @@ function Rep_Femac_3() {
                   setItem={setHorario}
                   modalId={"modal_horarios"}
                   descClassName="md:mt-0 w-full"
-                /> */}
+                />
               </div>
             </div>
           </div>
