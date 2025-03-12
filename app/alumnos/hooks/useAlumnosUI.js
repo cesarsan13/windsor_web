@@ -279,7 +279,7 @@ const tableColumns = (data = []) => {
         />
         {!hasBajas && <ActionColumn description={"Editar"} permission={permissions.cambios} />}
         {!hasBajas && <ActionColumn description={"Eliminar"} permission={permissions.bajas}/>}
-        {hasBajas && <ActionColumn description={"Reactivar"} permission={true} />}
+        {hasBajas && <ActionColumn description={"Reactivar"} permission={permissions.cambios} />}
     </tr>
     </thead>
     );
@@ -349,7 +349,7 @@ const tableBody = (data = []) => {
                         iconDark={iconos.documento}
                         iconLight={iconos.documento_w}
                         onClick={(evt) => tableAction(evt, item, "Reactivar")}
-                        permission={true}
+                        permission={permissions.cambios}
                     />
                     )}
                 </tr>

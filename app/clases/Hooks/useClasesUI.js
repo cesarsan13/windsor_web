@@ -79,7 +79,7 @@ export const useClasesUI = (
                 <ActionColumn description={"Ver"} permission={true} />
                 {!hasBajas && <ActionColumn description={"Editar"} permission={permissions.cambios} />}
                 {!hasBajas && <ActionColumn description={"Eliminar"} permission={permissions.bajas}/>}
-                {hasBajas && <ActionColumn description={"Reactivar"} permission={true} />}
+                {hasBajas && <ActionColumn description={"Reactivar"} permission={permissions.cambios} />}
             </tr>
           </thead>
         );
@@ -132,7 +132,7 @@ export const useClasesUI = (
                             iconDark={iconos.documento}
                             iconLight={iconos.documento_w}
                             onClick={(evt) => tableAction(evt, item, "Reactivar")}
-                            permission={true}
+                            permission={permissions.cambios}
                           />
                         )}
                     </tr>
