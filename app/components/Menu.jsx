@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation"; // Para redirección
 import { useSession } from "next-auth/react";
 import { getMenus } from "@/app/utils/api/accesos_menu/accesos_menu";
 import { getSubMenusApi } from "@/app/utils/api/sub_menus/sub_menus";
@@ -33,7 +34,6 @@ function Menu({ vertical, toogle }) {
       setIsOpen(initialOpenState);
     };
     fetchMenus();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   const toggleMenu = (menu) => {

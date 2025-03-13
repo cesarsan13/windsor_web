@@ -10,6 +10,7 @@ export default function Inputs({
   type,
   opciones,
   handleChange,
+  className, // Agregado para aceptar clases personalizadas
 }) {
   return type === "text" ||
     type === "email" ||
@@ -24,7 +25,7 @@ export default function Inputs({
       <input
         type={type}
         name={name}
-        className="p-3 rounded block text-slate-400 w-full"
+        className={`p-3 rounded block text-slate-400 w-full ${className || ""}`} // Se agrega className
         placeholder={titulo}
         {...register(name, {
           ...(requerido && { required: message }),
@@ -42,7 +43,7 @@ export default function Inputs({
       </label>
       <select
         name={name}
-        className="p-3 rounded block text-slate-400 w-full"
+        className={`p-3 rounded block text-slate-400 w-full ${className || ""}`} // Se agrega className
         {...register(name, {
           ...(requerido && { required: message }),
           onChange: (evt) => handleChange && handleChange(evt),
