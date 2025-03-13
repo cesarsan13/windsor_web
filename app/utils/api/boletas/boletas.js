@@ -10,6 +10,7 @@ export const getBoletas3 = async (token, grupo) => {
         headers: new Headers({
             Authorization: "Bearer " + token,
             xescuela: localStorage.getItem("xescuela"),
+            "Content-Type": "application/json",
           }),
     });
     const resJson = await res.json();
@@ -26,6 +27,7 @@ export const getActividadMateria = async (token, numero) => {
         headers: new Headers({
             Authorization: "Bearer " + token,
             xescuela: localStorage.getItem("xescuela"),
+            "Content-Type": "application/json",
           }),
     });
     const resJson = await res.json();
@@ -45,6 +47,7 @@ export const getEvaluacionMateria = async (token, data, materia, grupo_nombre) =
         headers: new Headers({
             Authorization: "Bearer " + token,
             xescuela: localStorage.getItem("xescuela"),
+            "Content-Type": "application/json",
           }),
     });
     const resJson = await res.json();
@@ -64,6 +67,7 @@ export const getAreas = async (token, data, materia) => {
         headers: new Headers({
             Authorization: "Bearer " + token,
             xescuela: localStorage.getItem("xescuela"),
+            "Content-Type": "application/json",
           }),
     });
     const resJson = await res.json();
@@ -83,6 +87,7 @@ export const getAreasOtros = async (token, data, materia) => {
         headers: new Headers({
             Authorization: "Bearer " + token,
             xescuela: localStorage.getItem("xescuela"),
+            "Content-Type": "application/json",
           }),
     });
     const resJson = await res.json();
@@ -101,6 +106,7 @@ export const getDatosPorGrupo = async (token, grupo, grupo_nombre, ordenAlfabeti
         headers: new Headers({
             Authorization: "Bearer " + token,
             xescuela: localStorage.getItem("xescuela"),
+            "Content-Type": "application/json",
           }),
     });
     const resJson = await res.json();
