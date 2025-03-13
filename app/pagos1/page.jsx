@@ -38,6 +38,7 @@ import ModalParciales from "@/app/pagos1/components/modalParciales";
 import { showSwal, showSwalAndWait, confirmSwal } from "@/app/utils/alerts";
 import Swal from "sweetalert2";
 import * as XLSX from "xlsx";
+import ModalNuevoRegistro from "@/app/pagos1/components/ModalNuevoRegistro";
 function Pagos_1() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -150,21 +151,21 @@ function Pagos_1() {
       quien_paga: "",
       recibo_imprimir: formaPagoPage.recibo,
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formaPagoPage]);
 
   useEffect(() => {
     if (cantidad_producto === "") {
       setValue("cantidad_producto", formatNumber(1));
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cantidad_producto]);
 
   useEffect(() => {
     reset({
       recargo: 0,
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [muestraRecargos]);
 
   useEffect(() => {
@@ -172,7 +173,7 @@ function Pagos_1() {
       monto_parcial: 0,
       clave_acceso: "",
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [muestraParciales]);
 
   useEffect(() => {
@@ -215,7 +216,7 @@ function Pagos_1() {
       setisLoading(false);
     };
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, validar, cargado, setValue]);
 
   useEffect(() => {
@@ -916,6 +917,11 @@ function Pagos_1() {
     );
   };
 
+  const handleInputClick = (evt) => {
+    evt.preventDefault();
+    evt.target.select();
+  };
+
   if (status === "loading") {
     return (
       <div className="container skeleton w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -923,6 +929,21 @@ function Pagos_1() {
   }
   return (
     <>
+      <ModalNuevoRegistro
+        session={session}
+        productos1={productos1}
+        setProductos1={setProductos1}
+        register={register}
+        errors={errors}
+        accionB={accionB} 
+        colorInput={colorInput}
+        precio_base={precio_base}
+        handleKeyDown={handleKeyDown}
+        handleBlur={handleBlur}
+        handleInputClick={handleInputClick}
+        handleEnterKey={handleEnterKey}
+        handleModalClick={handleModalClick}
+      />
       <ModalProcesarDatos
         id_modal={"my_modal_detalle_pedido"}
         session={session}

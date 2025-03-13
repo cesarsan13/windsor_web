@@ -1,4 +1,8 @@
-import { formatNumber } from "@/app/utils/globalfn";
+import {
+  formatTime,
+  format_Fecha_String,
+  formatNumber,
+} from "@/app/utils/globalfn";
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 
@@ -21,6 +25,7 @@ export const getCobranzaDiaria = async (
     headers: new Headers({
       Authorization: "Bearer " + token,
       xescuela: localStorage.getItem("xescuela"),
+      "Content-Type": "application/json",
     }),
   });
   const resJson = await res.json();
@@ -39,6 +44,7 @@ export const guardarCobranzaDiaria = async (token, data) => {
     headers: new Headers({
       Authorization: "Bearer " + token,
       xescuela: localStorage.getItem("xescuela"),
+      "Content-Type": "application/json",
     }),
   });
   const resJson = await res.json();
@@ -86,7 +92,13 @@ export const Imprimir = (configuracion) => {
       0,
       "R"
     );
-    newPDF.ImpPosX(cobranza.referencia_1.toString(), 58, newPDF.tw_ren, 0, "L");
+    newPDF.ImpPosX(
+      cobranza.referencia_1?.toString() ?? "",
+      58,
+      newPDF.tw_ren,
+      0,
+      "L"
+    );
     newPDF.ImpPosX(cobranza.tipo_pago_2.toString(), 113, newPDF.tw_ren, 0, "R");
     newPDF.ImpPosX(
       formatNumber(cobranza.importe_pago_2.toString(), 2),
@@ -96,7 +108,7 @@ export const Imprimir = (configuracion) => {
       "R"
     );
     newPDF.ImpPosX(
-      cobranza.referencia_2.toString(),
+      cobranza.referencia_2?.toString() ?? "",
       138,
       newPDF.tw_ren,
       0,
@@ -186,13 +198,25 @@ export const Imprimir = (configuracion) => {
       Enca1(newPDF);
     }
   });
-  newPDF.guardaReporte(`Cobranza Diaria`);
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+  newPDF.guardaReporte(`Cobranza Diaria_${dateStr}${timeStr}`);
 };
 
-export const ImprimirExcel =(configuracion)=>{
-  const newExcel = new ReporteExcel(configuracion)
-  const {columns,body,nombre}=configuracion
-  newExcel.setColumnas(columns)
+export const ImprimirExcel = (configuracion) => {
+  const newExcel = new ReporteExcel(configuracion);
+  const { columns, body, nombre } = configuracion;
+  newExcel.setColumnas(columns);
   newExcel.addData(body);
-  newExcel.guardaReporte(nombre)
-}
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+  newExcel.guardaReporte(`${nombre}${dateStr}${timeStr}`);
+};

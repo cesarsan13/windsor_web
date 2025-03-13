@@ -23,7 +23,7 @@ import { useForm } from "react-hook-form";
 import { showSwal } from "@/app/utils/alerts";
 import { getFormasPago } from "@/app/utils/api/formapago/formapago";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import ModalVistaPreviaCobranzaDiaria from "@/app/cobranza_diaria/components/modalVistaPreviaCobranzaDiaria";
+import VistaPrevia from "@/app/components/VistaPrevia";
 
 function Cobranza_Diaria() {
   const router = useRouter();
@@ -50,7 +50,7 @@ function Cobranza_Diaria() {
     }
     const fetchData = async () => {};
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
   const {
     register,
@@ -239,7 +239,7 @@ function Cobranza_Diaria() {
         "R"
       );
       reporte.ImpPosX(
-        cobranza.referencia_1.toString(),
+        cobranza.referencia_1?.toString() ?? "",
         58,
         reporte.tw_ren,
         0,
@@ -260,7 +260,7 @@ function Cobranza_Diaria() {
         "R"
       );
       reporte.ImpPosX(
-        cobranza.referencia_2.toString(),
+        cobranza.referencia_2?.toString() ?? "",
         138,
         reporte.tw_ren,
         0,
@@ -378,6 +378,11 @@ function Cobranza_Diaria() {
   const home = () => {
     router.push("/");
   };
+  const CerrarView = () => {
+    setPdfPreview(false);
+    setPdfData("");
+    document.getElementById("modalVPCobranzaDiaria").close();
+  };
   const act_aplica = () => {
     router.push("/act_aplica");
   };
@@ -483,13 +488,23 @@ function Cobranza_Diaria() {
     };
     ImprimirExcel(configuracion);
   };
+
   return (
     <>
-      <ModalVistaPreviaCobranzaDiaria
+      {/* <ModalVistaPreviaCobranzaDiaria
         pdfData={pdfData}
         pdfPreview={pdfPreview}
         PDF={PDF}
         Excel={ImprimeExcel}
+      /> */}
+      <VistaPrevia
+        id={"modalVPCobranzaDiaria"}
+        titulo={"Vista Previa de Cobranza Diaria"}
+        pdfPreview={pdfPreview}
+        pdfData={pdfData}
+        PDF={PDF}
+        Excel={ImprimeExcel}
+        CerrarView={CerrarView}
       />
       <ModalCobranzaDiaria
         accion={accion}
