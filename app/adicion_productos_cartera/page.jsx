@@ -108,9 +108,6 @@ function Adicion_Productos_Cartera() {
     }
   });
 
-  // useEffect(() => {
-  //     cond_1 = articulo.cond_1;
-  //   }, [articulo]);
   useEffect(() => {
     reset({
       cond_1: articulo.cond_1 || 0,
