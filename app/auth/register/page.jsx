@@ -14,12 +14,17 @@ function Register() {
   const [empresas, setEmpresas] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordCriteria, setPasswordCriteria] = useState({
+    length: false,
+    uppercase: false,
+    lowercase: false,
+    number: false,
+    specialChar: false,
+  });
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
   const toggleConfirmPasswordVisibility = () => setShowConfirmPassword(!showConfirmPassword);
 
-
-  
   const handleChange = (evt) => {
     evt.preventDefault();
     const { value } = evt.target;
@@ -30,7 +35,7 @@ function Register() {
     register,
     handleSubmit,
     formState: { errors },
-    watch
+    watch,
   } = useForm();
 
   useEffect(() => {
@@ -41,6 +46,25 @@ function Register() {
     };
     fetchData();
   }, []);
+
+  const validatePassword = (password) => {
+    const length = password.length >= 8;
+    const uppercase = /[A-Z]/.test(password);
+    const lowercase = /[a-z]/.test(password);
+    const number = /[0-9]/.test(password);
+    const specialChar = /[^A-Za-z0-9]/.test(password);
+
+    setPasswordCriteria({ length, uppercase, lowercase, number, specialChar });
+  };
+
+  useEffect(() => {
+    const subscription = watch((data) => {
+      if (data.password) {
+        validatePassword(data.password);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
 
   const onSubmit = handleSubmit(async (data) => {
     event.preventDefault();
@@ -239,6 +263,15 @@ function Register() {
             )}
           </button>
         </div>
+        <div className="w-full pl-4 mt-2">
+            <ul className="text-sm">            
+            <li className={passwordCriteria.length ? "text-green-500" : "text-red-500"}>Mínimo 8 caracteres</li>
+            <li className={passwordCriteria.uppercase ? "text-green-500" : "text-red-500"}>Mínimo una mayúscula</li>
+            <li className={passwordCriteria.lowercase ? "text-green-500" : "text-red-500"}>Mínimo una minúscula</li>
+            <li className={passwordCriteria.number ? "text-green-500" : "text-red-500"}>Mínimo un número</li>
+            <li className={passwordCriteria.specialChar ? "text-green-500" : "text-red-500"}>Mínimo un carácter especial</li>
+          </ul>
+          </div>
 
         <button className="w-full bg-blue-700 text-white p-3 rounded-lg mt-6 hover:bg-blue-900">
           Crear cuenta
