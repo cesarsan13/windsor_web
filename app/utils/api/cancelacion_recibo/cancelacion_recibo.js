@@ -8,6 +8,7 @@ export const procesoCartera = async (token, data) => {
         headers: new Headers({
             Authorization: "Bearer " + token,
             xescuela: localStorage.getItem("xescuela"),
+            "Content-Type": "application/json",
           }),
     });
     const resJson = await res.json();

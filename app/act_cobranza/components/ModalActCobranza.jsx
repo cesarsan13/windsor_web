@@ -2,7 +2,7 @@ import BuscarCat from '@/app/components/BuscarCat';
 import iconos from '@/app/utils/iconos';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
-import Inputs from './Inputs';
+import Inputs from '@/app/act_cobranza/components/Inputs';
 
 function ModalActCobranza({
     accion,
@@ -15,7 +15,6 @@ function ModalActCobranza({
     handleBlur,
     handleInputClick
 }) {
-    const [error, setError] = useState(null);
     const [titulo, setTitulo] = useState("");
     const [isDisabled, setIsDisabled] = useState(true);    
     useEffect(() => {
@@ -79,18 +78,19 @@ function ModalActCobranza({
                     <fieldset id='fs_actcobranza'>
                         <div className='container flex flex-col space-y-5'>
                             <BuscarCat
-                                nameInput={["producto", "nombre_producto"]}
+                                deshabilitado={accion === "Ver" || accion === "Eliminar" || accion === "Editar"}
+                                table="productos"
                                 fieldsToShow={["numero", "descripcion"]}
-                                titulo={"Productos"}
-                                table={"productos"}
-                                modalId={"modal_actcobranza"}
+                                nameInput={["producto", "nombre_producto"]}
                                 setItem={setProducto}
                                 token={session.user.token}
-                                array={documento.producto}
-                                accion={accion}
+                                modalId="modal_actcobranza"
+                                array={1}
+                                id={documento.producto}
+                                titulo="Productos"
                                 alignRight={true}
-                                deshabilitado={accion === "Ver" ||accion === "Eliminar" || accion === "Editar"}
-                            ></BuscarCat>
+                                accion={accion}
+                            />  
                             <Inputs
                                 dataType={"int"}
                                 name={"numero_doc"}

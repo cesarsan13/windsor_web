@@ -38,6 +38,7 @@ function Act_Cobranza() {
     tb_id: "",
     tb_desc: "",
   });
+
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
@@ -59,6 +60,7 @@ function Act_Cobranza() {
     fetchData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
+
   const {
     register,
     handleSubmit,
@@ -75,6 +77,7 @@ function Act_Cobranza() {
       descuento: documento.descuento,
     },
   });
+
   useEffect(() => {
     reset({
       producto: documento.producto,
@@ -84,13 +87,7 @@ function Act_Cobranza() {
       descuento: formatNumber(documento.descuento, 2),
     });
   }, [documento, reset]);
-  const documentosAlumno = async (id) => {
-    setisLoadingDocumentos(true);
-    const { token } = session.user;
-    const data = await getDocumentosAlumno(token, id);
-    setDocumentos(data);
-    setisLoadingDocumentos(false);
-  };
+
   useEffect(() => {
     const documentosAlumno = async (id) => {
       setCurrentId(id);
@@ -106,6 +103,7 @@ function Act_Cobranza() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alumno]);
+
   const Alta = async (event) => {
     if (!currentID) {
       showSwal("INFO", "Debe seleccionar a un alumno", "info");
@@ -122,16 +120,19 @@ function Act_Cobranza() {
     setAccion("Alta");
     showModal(true);
   };
+
   const showModal = (show) => {
     show
       ? document.getElementById("my_modal_3").showModal()
       : document.getElementById("my_modal_3").close();
   };
+
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
     );
   }
+
   const onSubmitModal = handleSubmit(async (data) => {
     event.preventDefault();
     if (accion === "Alta") {
@@ -203,9 +204,11 @@ function Act_Cobranza() {
       showModal(false);
     }
   });
+
   const home = () => {
     router.push("/");
   };
+
   const handleBusquedaChange = (event) => {
     event.preventDefault;
     setBusqueda((estadoPrevio) => ({
@@ -213,10 +216,12 @@ function Act_Cobranza() {
       [event.target.id]: event.target.value,
     }));
   };
+
   const limpiarBusqueda = (evt) => {
     evt.preventDefault;
     setBusqueda({ tb_id: "", tb_desc: "" });
   };
+
   const Buscar = () => {
     const { tb_id, tb_desc } = busqueda;
     if (tb_id === "" && tb_desc === "") {
@@ -237,14 +242,17 @@ function Act_Cobranza() {
     });
     setDocumentosFiltrados(infoFiltrada);
   };
+
   const handleBlur = (evt, datatype) => {
     if (evt.target.value === "") return;
       setValue(evt.target.name, formatNumber(evt.target.value, 2));
-    };
-    const handleInputClick = (evt) => {
-      evt.preventDefault();
-      evt.target.select();
-    };
+  };
+
+  const handleInputClick = (evt) => {
+    evt.preventDefault();
+    evt.target.select();
+  };
+
   return (
     <>
       <ModalActCobranza
