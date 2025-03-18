@@ -18,6 +18,7 @@ export const getProcesoCalificaciones = async (token, data) => {
     }),
     headers: new Headers({
       Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
       xescuela: localStorage.getItem("xescuela"),
     }),
   });
@@ -34,6 +35,7 @@ export const getProcesoCalificacionesAlumnos = async (token, data) => {
     }),
     headers: new Headers({
       Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
       xescuela: localStorage.getItem("xescuela"),
     }),
   });
@@ -56,6 +58,7 @@ export const guardarProcesoCalificaciones = async (token, data, data2) => {
     }),
     headers: new Headers({
       Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
       xescuela: localStorage.getItem("xescuela"),
     }),
   });
@@ -73,6 +76,7 @@ export const getCalificacionesAlumnos = async (token, grupo) => {
     }),
     headers: new Headers({
       Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
       xescuela: localStorage.getItem("xescuela"),
     }),
   });
@@ -89,6 +93,7 @@ export const getMateriasGrupo = async (token, grupo) => {
     }),
     headers: new Headers({
       Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
       xescuela: localStorage.getItem("xescuela"),
     }),
   });
@@ -104,6 +109,7 @@ export const getCalificaciones = async (token, grupo) => {
     }),
     headers: new Headers({
       Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
       xescuela: localStorage.getItem("xescuela"),
     }),
   });
