@@ -29,7 +29,6 @@ function ModalPagoImprime({
   errorsImpr,
   accionB,
 }) {
-
   const columnasBuscaCat = ["numero", "descripcion"];
   const nameInputs = ["numero", "descripcion"];
   const [Handlepago, setPago] = useState([]);
@@ -74,24 +73,22 @@ function ModalPagoImprime({
       }
       setisLoading(true);
       const fecha_page = format_Fecha_String(formaPagoPage.fecha);
-      await Promise.all(
-        pagosFiltrados.map(async (pago) => {
-          const pagoUnitF = Elimina_Comas(pago.precio_base);
-          const newData = {
-            recibo: data.recibo_imprimir || 0,
-            alumno: pago.alumno || 0,
-            fecha: fecha_page || "",
-            articulo: parseInt(pago.numero_producto) || 0,
-            cantidad: pago.cantidad_producto || 0,
-            precio_unitario: pagoUnitF || 0,
-            descuento: pago.descuento || 0,
-            documento: pago.documento || 0,
-            total_general: totalFormat || 0,
-          };
-          return await guardarDetallePedido(token, newData);
-        })
-      );
+      const newPagos = pagosFiltrados.map(async (pago) => {
+        const pagoUnitF = Elimina_Comas(pago.precio_base);
+        return {
+          recibo: data.recibo_imprimir || 0,
+          alumno: pago.alumno || 0,
+          fecha: fecha_page || "",
+          articulo: parseInt(pago.numero_producto) || 0,
+          cantidad: pago.cantidad_producto || 0,
+          precio_unitario: pagoUnitF || 0,
+          descuento: pago.descuento || 0,
+          documento: pago.documento || 0,
+          total_general: totalFormat || 0,
+        };
+      });
 
+      await guardarDetallePedido(token, newPagos);
       const postNewData = {
         recibo: data.recibo_imprimir || 0,
         alumno: alumnos1.numero || 0,
@@ -170,13 +167,13 @@ function ModalPagoImprime({
     if (evt.target.value === "") return;
     datatype === "int"
       ? setPago((alumno) => ({
-        ...alumno,
-        [evt.target.name]: pone_ceros(evt.target.value, 0, true),
-      }))
+          ...alumno,
+          [evt.target.name]: pone_ceros(evt.target.value, 0, true),
+        }))
       : setPago((alumno) => ({
-        ...alumno,
-        [evt.target.name]: pone_ceros(evt.target.value, 2, true),
-      }));
+          ...alumno,
+          [evt.target.name]: pone_ceros(evt.target.value, 2, true),
+        }));
   };
 
   return (
