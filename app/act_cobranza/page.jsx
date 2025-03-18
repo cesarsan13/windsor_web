@@ -46,7 +46,7 @@ function Act_Cobranza() {
       const { token, permissions } = session.user;
       const es_admin = session.user.es_admin;
       const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
-      const dataProducto = await getProductos(token, true);
+      const dataProducto = await getProductos(token, false);
       setProductos(dataProducto);
       const permisos = permissionsComponents(
         es_admin,
