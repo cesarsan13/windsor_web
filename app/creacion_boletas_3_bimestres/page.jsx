@@ -18,11 +18,12 @@ import {
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import {
   formatNumberDecimalOne,
+  permissionsComponents
 } from "@/app/utils/globalfn";
 import ModalVistaPreviaBoleta3 from "@/app/creacion_boletas_3_bimestres/components/ModalVistaPreviaBoletas3";
 import TablaPromedioIngles from "@/app/creacion_boletas_3_bimestres/components/tablaPromedioIngles";
 import { getAlumnos } from "@/app/utils/api/alumnos/alumnos";
-import { permissionsComponents } from "@/app/utils/globalfn";
+
 function CreacionBoletas3Bimestre() {
   const router = useRouter();
   const { data: session, status } = useSession();
