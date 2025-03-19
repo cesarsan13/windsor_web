@@ -1,14 +1,12 @@
 import Loading from "@/app/components/loading";
 import NoData from "@/app/components/NoData";
 import { showSwal } from "@/app/utils/alerts";
-import { getProductos } from "@/app/utils/api/productos/productos";
 import { formatNumber } from "@/app/utils/globalfn";
 import iconos from "@/app/utils/iconos";
 import Image from "next/image";
 import React from "react";
 
 function TablaDocumentosCobranza({
-  session,
   documentos,
   isLoading,
   showModal,
@@ -95,7 +93,7 @@ function TablaDocumentosCobranza({
           </thead>
           <tbody>
             {documentos.map((item) => (
-              <tr key={item.numero} className="hover:cursor-pointer">
+              <tr key={item.producto} className="hover:cursor-pointer">
                 <ActionButton
                   tooltip="Ver"
                   iconDark={iconos.ver}

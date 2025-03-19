@@ -1,3 +1,5 @@
+import { format_Fecha_String } from "@/app/utils/globalfn";
+
 export const getDocumentosAlumno = async (token, alumno_id) => {
   const res = await fetch(
     `${process.env.DOMAIN_API}api/act-cobranza/doc-alumno`,
@@ -19,23 +21,24 @@ export const getDocumentosAlumno = async (token, alumno_id) => {
 
 export const guardarActCobranza = async (token,accion,data)=>{
   let url = "";
-  if (accion==="Alta"){
+  if (accion ==="Alta"){
     url = `${process.env.DOMAIN_API}api/act-cobranza/post`
   }
-  if(accion==="Eliminar"||accion==="Editar"){
-    if(accion==="Eliminar"){
+  if(accion ==="Eliminar"|| accion ==="Editar"){
+    if(accion ==="Eliminar"){
       url = `${process.env.DOMAIN_API}api/act-cobranza/delete`
     } else{
       url = `${process.env.DOMAIN_API}api/act-cobranza/update`
     }
   }
+  const fecha = format_Fecha_String(data.fecha);
   const res = await fetch(`${url}`,{
     method:"post",
     body:JSON.stringify({
       alumno:data.alumno,
-      producto:data.producto,
+      producto:String(data.producto),
       numero_doc:data.numero_doc,
-      fecha:data.fecha,
+      fecha:fecha,
       importe:data.importe,
       descuento:data.descuento
     }),

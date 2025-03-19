@@ -15,6 +15,7 @@ import {
   formatFecha,
   formatNumber,
   permissionsComponents,
+  format_Fecha_String
 } from "@/app/utils/globalfn";
 import { useRouter } from "next/navigation";
 import Busqueda from "@/app/act_cobranza/components/Busqueda";
@@ -172,7 +173,7 @@ function Act_Cobranza() {
           (fp) =>
             fp.numero_doc === data.numero_doc &&
             fp.producto === data.producto &&
-            fp.fecha === data.fecha
+            fp.fecha === format_Fecha_String(data.fecha)
         );
         if (index !== -1) {
           if (accion === "Eliminar") {
@@ -180,7 +181,7 @@ function Act_Cobranza() {
               (fp) =>
                 fp.numero_doc !== data.numero_doc ||
                 fp.producto !== data.producto ||
-                fp.fecha !== data.fecha
+                fp.fecha !== format_Fecha_String(data.fecha)
             );
             setDocumentos(actDocFiltrados);
             setDocumentosFiltrados(actDocFiltrados);
@@ -188,7 +189,7 @@ function Act_Cobranza() {
             const actDocActualizadas = documentos.map((fp) =>
               fp.numero_doc === data.numero_doc &&
               fp.producto === data.producto &&
-              fp.fecha === data.fecha
+              fp.fecha === format_Fecha_String(data.fecha)
                 ? { ...fp, ...data }
                 : fp
             );
