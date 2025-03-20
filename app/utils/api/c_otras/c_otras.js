@@ -1,5 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { format_Fecha_String, formatTime } from "../../globalfn";
 
 export const getProcesoCalificaciones = async (token, data) => {
   let url = `${process.env.DOMAIN_API}api/proceso/calificaciones-get`;
@@ -18,6 +19,7 @@ export const getProcesoCalificaciones = async (token, data) => {
     headers: new Headers({
       Authorization: "Bearer " + token,
       xescuela: localStorage.getItem("xescuela"),
+      "Content-Type": "application/json",
     }),
   });
   const resJson = await res.json();
@@ -34,6 +36,7 @@ export const getProcesoCalificacionesAlumnos = async (token, data) => {
     headers: new Headers({
       Authorization: "Bearer " + token,
       xescuela: localStorage.getItem("xescuela"),
+      "Content-Type": "application/json",
     }),
   });
   const resJson = await res.json();
@@ -56,6 +59,7 @@ export const guardarProcesoCalificaciones = async (token, data, data2) => {
     headers: new Headers({
       Authorization: "Bearer " + token,
       xescuela: localStorage.getItem("xescuela"),
+      "Content-Type": "application/json",
     }),
   });
   const resJson = await res.json();
@@ -76,6 +80,7 @@ export const getProcesoTareasTrabajosPendientes = async (token, data) => {
     headers: new Headers({
       Authorization: "Bearer " + token,
       xescuela: localStorage.getItem("xescuela"),
+      "Content-Type": "application/json",
     }),
   });
   const resJson = await res.json();
@@ -96,6 +101,7 @@ export const guardarC_Otras = async (token, data, data2) => {
     headers: new Headers({
       Authorization: "Bearer " + token,
       xescuela: localStorage.getItem("xescuela"),
+      "Content-Type": "application/json",
     }),
   });
   const resJson = await res.json();
@@ -122,7 +128,7 @@ const Enca1 = (doc) => {
 export const ImprimirPDF = (configuracion) => {
   const orientacion = "Landscape";
   const newPDF = new ReportePDF(configuracion, orientacion);
-  const { body } = configuracion;
+  const { body, grupo } = configuracion;
   Enca1(newPDF);
   body.forEach((otra) => {
     newPDF.ImpPosX(otra.numero.toString(), 25, newPDF.tw_ren, 0, "R");
@@ -134,17 +140,33 @@ export const ImprimirPDF = (configuracion) => {
       Enca1(newPDF);
     }
   });
-  newPDF.guardaReporte("Calificaciones");
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+  newPDF.guardaReporte(
+    `Calificaciones_${grupo.horario || "Sin Grupo"}_${dateStr}${timeStr}`
+  );
 };
 
 export const ImprimirExcel = (configuracion) => {
   const newExcel = new ReporteExcel(configuracion);
   const { columns } = configuracion;
-  const { body } = configuracion;
+  const { body, grupo } = configuracion;
   const { nombre } = configuracion;
   newExcel.setColumnas(columns);
   newExcel.addData(body);
-  newExcel.guardaReporte(nombre);
+  const date = new Date();
+  const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
+  const timeStr = formatTime(date).replace(/:/g, "");
+  newExcel.guardaReporte(
+    `${nombre}_${grupo.horario || "Sin Grupo"}_${dateStr}${timeStr}`
+  );
 };
 
 export const getMateriasGrupo = async (token, grupo) => {
@@ -157,6 +179,7 @@ export const getMateriasGrupo = async (token, grupo) => {
     headers: new Headers({
       Authorization: "Bearer " + token,
       xescuela: localStorage.getItem("xescuela"),
+      "Content-Type": "application/json",
     }),
   });
   const resJson = await res.json();
@@ -182,6 +205,7 @@ export const getCalificaciones = async (
     headers: new Headers({
       Authorization: "Bearer " + token,
       xescuela: localStorage.getItem("xescuela"),
+      "Content-Type": "application/json",
     }),
   });
   const resJson = await res.json();
