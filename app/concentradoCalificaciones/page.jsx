@@ -37,9 +37,7 @@ function ConcentradoCalificaciones() {
   const [grupo, setGrupo] = useState({ numero: 0 });
   const [isLoading, setisLoading] = useState(false);
   const [materiasEncabezado, setMateriasEncabezado] = useState({});
-  const [calificacionesTodosAlumnos, setCalificacionesTodosAlumnos] = useState(
-    {}
-  );
+  const [calificacionesTodosAlumnos, setCalificacionesTodosAlumnos] = useState({});
   const [materiasReg, setMateriasReg] = useState({});
   const [actividadesReg, setActividadesReg] = useState({});
   const [alumnoReg, setAlumnoReg] = useState({});
@@ -170,7 +168,7 @@ function ConcentradoCalificaciones() {
         if (!doc.tiene_encabezado) {
           doc.imprimeEncabezadoPrincipalHConcentradoCal();
           doc.nextRow(12);
-          doc.ImpPosX("Num.", 14, doc.tw_ren);
+          doc.ImpPosX("Num.", 9, doc.tw_ren);
           resultadoEnc.forEach((desc) => {
             doc.ImpPosX(desc.descripcion, posicionX, doc.tw_ren, 3);
             posicionX += incrementoX;
@@ -186,7 +184,7 @@ function ConcentradoCalificaciones() {
       };
       Enca1(reporte);
       body.forEach((arreglo2, index) => {
-        let posicionBody = 14;
+        let posicionBody = 9;
         arreglo2.forEach((valor, idx) => {
           reporte.ImpPosX(valor, posicionBody, reporte.tw_ren, 4);
           posicionBody += incrementoX;

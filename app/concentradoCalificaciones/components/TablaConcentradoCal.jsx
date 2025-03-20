@@ -26,6 +26,10 @@ function TablaConcentradoCal({
     let contadorIngles = 0;
     let datosEspanol = 0;
     let datosIngles = 0;
+    let SumCalEspanol = 0;
+    let SumCalIngles = 0;
+    let SumMatEspanol = 0;
+    let SumMatIngles = 0;
 
     const tableAction = async (evt, alumno, accion) => {
         showModal(true);
@@ -144,14 +148,19 @@ function TablaConcentradoCal({
                             let nom = (alumno.nombre).toString();
                             let alumnoData = [num];
                             let alumnoDataExcel = [num, nom];
+                            SumCalEspanol = 0 ;
+                            SumCalIngles = 0;
+                            SumMatEspanol = 0;
+                            SumMatIngles = 0; 
                         
                             const alumnoRow = (
                                 <tr key={alumno.numero}>
                                     <td className="text-right">{alumno.numero}</td>
                                     <td className="text-left">{alumno.nombre}</td>
+                                    
                                     {materiasReg.map((materia, idx) => {
                                         if (idx === indexEspañol) {
-                                            const promedioEspanol = datosEspanol / contadorEspanol;
+                                            const promedioEspanol = SumCalEspanol / SumMatEspanol;
                                             if (!isNaN(promedioEspanol)) {
                                                 alumnoData.push(promedioEspanol.toFixed(1));
                                                 alumnoDataExcel.push(promedioEspanol.toFixed(1));
@@ -159,7 +168,7 @@ function TablaConcentradoCal({
 
                                         }
                                         if (idx === indexIngles) {
-                                            const promedioIngles = datosIngles / contadorIngles;
+                                            const promedioIngles = SumCalIngles / SumMatIngles;
                                             if (!isNaN(promedioIngles)) {
                                                 alumnoData.push(promedioIngles.toFixed(1));
                                                 alumnoDataExcel.push(promedioIngles.toFixed(1));
@@ -170,22 +179,30 @@ function TablaConcentradoCal({
                                             alumnoData.push(calificacion);
                                             alumnoDataExcel.push(calificacion);
                                         }
+                                        if(materia.area === 1){
+                                            SumCalEspanol += Number(calificacion);
+                                            SumMatEspanol ++;
+                                        }
+                                        if(materia.area === 4){
+                                            SumCalIngles += Number(calificacion);
+                                            SumMatIngles ++;
+                                        }
                                         return (
                                             <React.Fragment key={materia.numero}>
-                                                {idx === indexEspañol && !isNaN((datosEspanol / contadorEspanol).toFixed(1)) && (
+                                                {idx === indexEspañol && !isNaN((SumCalEspanol / SumMatEspanol).toFixed(1)) && (
                                                     <td className="text-right font-semibold">
-                                                        {(datosEspanol / contadorEspanol).toFixed(1)} 
+                                                        {(SumCalEspanol / SumMatEspanol).toFixed(1)} 
                                                     </td>
                                                 )}
-                                               {idx === indexIngles && !isNaN((datosIngles / contadorIngles).toFixed(1)) && (
+
+                                                {idx === indexIngles && !isNaN((SumCalIngles / SumMatIngles).toFixed(1)) && (
                                                     <td className="text-right font-semibold">
-                                                        {(datosIngles / contadorIngles).toFixed(1)} 
+                                                        {(SumCalIngles / SumMatIngles).toFixed(1)}
                                                     </td>
                                                 )}
                                                 {!isNaN(calcularCalificaciones(alumno.numero, materia.numero)) && (
                                                     <td className="text-right">{calcularCalificaciones(alumno.numero, materia.numero)}</td>
                                                 )}
-                                                
                                             </React.Fragment>
                                         );
                                     })}
