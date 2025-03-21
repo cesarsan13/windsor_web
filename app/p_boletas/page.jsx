@@ -183,28 +183,20 @@ function P_Boletas() {
                   
                   let cpa = califAct.reduce(
                     (acc, calificacion) => acc + parseFloat(calificacion.calificacion), 0)
-                
-                  //if (cpa > 0) {
-                    const EB = actividad[i][`EB${bi}`];
-                    sumatoria += cpa / EB;
-                    console.log("sumatoria", sumatoria, actividad[i].materia);
-                    //evaluaciones += 1;
-                  //}
-                  ////});
+                  const EB = actividad[i][`EB${bi}`];
+                  sumatoria += cpa / EB;
                 }
                 evaluaciones = actividad.length;
               }
-                calificacion = parseFloat(sumatoria / evaluaciones )
-                console.log("prom", calificacion);
+              calificacion = parseFloat(sumatoria / evaluaciones )
             }
-                if (sumatoria === 0 || evaluaciones === 0) {
-                  calificacion = 0.0;
-                } else {
-                  if (calificacion < 5.0) {
-                    calificacion= 5.0;
-                  } 
-                }
-            //} 
+            if (sumatoria === 0 || evaluaciones === 0) {
+              calificacion = 0.0;
+            } else {
+              if (calificacion < 5.0) {
+                calificacion= 5.0;
+              } 
+            }
           } else {
             const calif = dataCalificaciones.calificaciones.find(
               (calif) =>
