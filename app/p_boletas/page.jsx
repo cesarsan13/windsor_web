@@ -16,7 +16,7 @@ import { showSwal } from "@/app/utils/alerts";
 import { useRouter } from "next/navigation";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import ModalVistaPreviaPBoletas from "@/app/p_boletas/components/modalVistaPreviaPBoletas";
-import { permissionsComponents } from "@/app/utils/globalfn";
+import { formatNumberDecimalOne, permissionsComponents } from "@/app/utils/globalfn";
 
 function P_Boletas() {
   const currentYear = new Date().getFullYear();
@@ -30,6 +30,7 @@ function P_Boletas() {
   const [lugaresArea1, setLugaresArea1] = useState([]);
   const [lugaresArea4, setLugaresArea4] = useState([]);
   const [bimestre, setBimestre] = useState("");
+  const [isLoadingBusqueda, setisLoadingBusqueda] = useState(false);
   const [isLoading, setisLoading] = useState(false);
   const [checkPromedio, setCheckPromedio] = useState(false);
   const [checkCaliLetra, setCheckCaliLetra] = useState(false);
@@ -48,7 +49,6 @@ function P_Boletas() {
       return;
     }
     const fetchData = async () => {
-      setisLoadingGrupos(true);
       const { token, permissions } = session.user;
       const es_admin = session.user.es_admin;
       const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
@@ -59,52 +59,50 @@ function P_Boletas() {
         menu_seleccionado
       );
       setPermissions(permisos);
-      const datos = await getCalificacionesAlumnos(token, grupo);
-      if (datos.length === 0) {
-        setisLoadingGrupos(false);
-        return;
-      }
-      let alumnosArea1 = datos.alumnos.map((alumno) => {
-        return {
-          ...alumno,
-          1: "",
-          2: "",
-          3: "",
-          4: "",
-          5: "",
-          6: "",
-        };
-      });
-      let alumnosArea4 = datos.alumnos.map((alumno) => {
-        return {
-          ...alumno,
-          1: "",
-          2: "",
-          3: "",
-          4: "",
-          5: "",
-          6: "",
-        };
-      });
-      const calificaciones = datos.calificaciones;
-      const actividades = datos.actividades;
-      const materiasArea1 = datos.materiasArea1;
-      const materiasArea4 = datos.materiasArea4;
-      const lugaresArea1 = getLugaresArea1(
-        calificaciones,
-        actividades,
-        materiasArea1,
-        alumnosArea1
-      );
-      const lugaresArea4 = getLugaresArea1(
-        calificaciones,
-        actividades,
-        materiasArea4,
-        alumnosArea4
-      );
-      setLugaresArea1(lugaresArea1);
-      setLugaresArea4(lugaresArea4);
-      setisLoadingGrupos(false);
+
+      if(grupo.length === undefined){
+        const datos = await getCalificacionesAlumnos(token, grupo);
+        let alumnosArea1 = datos.alumnos.map((alumno) => {
+          return {
+            ...alumno,
+            1: "",
+            2: "",
+            3: "",
+            4: "",
+            5: "",
+            6: "",
+          };
+        });
+        let alumnosArea4 = datos.alumnos.map((alumno) => {
+          return {
+            ...alumno,
+            1: "",
+            2: "",
+            3: "",
+            4: "",
+            5: "",
+            6: "",
+          };
+        });
+        const calificaciones = datos.calificaciones;
+        const actividades = datos.actividades;
+        const materiasArea1 = datos.materiasArea1;
+        const materiasArea4 = datos.materiasArea4;
+        const lugaresArea1 = getLugaresArea1(
+          calificaciones,
+          actividades,
+          materiasArea1,
+          alumnosArea1
+        );
+        const lugaresArea4 = getLugaresArea1(
+          calificaciones,
+          actividades,
+          materiasArea4,
+          alumnosArea4
+        );
+        setLugaresArea1(lugaresArea1);
+        setLugaresArea4(lugaresArea4);
+    }
     };
     fetchData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -116,6 +114,7 @@ function P_Boletas() {
     }
   }, [bimestre]);
 
+  //EMPIEZA BUSCAR
   const Bus = async () => {
     if (!grupo.numero) {
       showSwal("Error", "Debe seleccionar un grupo.", "error");
@@ -132,17 +131,18 @@ function P_Boletas() {
       showSwal("Error", "El bimestre debe de ser entre 1 y 5.", "error");
       return;
     }
-    setisLoading(true);
+    setisLoadingBusqueda(true);
     const { token } = session.user;
     const [dataMaterias, dataCalificaciones] = await Promise.all([
       getMateriasGrupo(token, grupo.numero),
       getCalificaciones(token, grupo.horario),
     ]);
-    let sumatoria = 0;
-    let evaluaciones = 0;
+    
     let calificaciones = [];
     dataMaterias.map((materia) => {
       for (let bi = 1; bi <= bimestre; bi++) {
+        let sumatoria = 0;
+        let evaluaciones = 0;
         sumatoria = 0;
         evaluaciones = 0;
         let calificacion = 0;
@@ -151,7 +151,7 @@ function P_Boletas() {
         );
         if (mat) {
           if (materia.area === 1 || materia.area === 4) {
-            if (mat.actividad === "no") {
+            if (mat.actividad === "No") {
               const calif = dataCalificaciones.calificaciones.find(
                 (calif) =>
                   calif.grupo === materia.horario &&
@@ -166,37 +166,45 @@ function P_Boletas() {
                 sumatoria = calif.calificacion;
                 evaluaciones = mat.evaluaciones;
               }
-            } else {
+            } else if (mat.actividad === "Si"){
               const actividad = dataCalificaciones.actividades.filter(
                 (act) => act.materia === mat.numero
               );
-              actividad.map((act) => {
-                const califAct = dataCalificaciones.calificaciones.find(
-                  (calAct) =>
-                    calAct.alumno === alumnosHorario.numero &&
-                    calAct.materia === mat.numero &&
-                    calAct.bimestre === bi &&
-                    calAct.actividad === act.secuencia &&
-                    calAct.unidad <= act[`EB${bi}`]
-                );
-                let cpa = califAct?.calificacion || 0;
-                if (cpa > 0) {
-                  const EB = act[`EB${bi}`];
-                  sumatoria += cpa / EB;
-                  evaluaciones += 1;
+              if(actividad.length > 0){
+                for(let i = 0; i < actividad.length; i++){
+                  const califAct = dataCalificaciones.calificaciones.filter(
+                    (calAct) =>
+                      calAct.alumno === alumnosHorario.numero &&
+                      calAct.materia === mat.numero &&
+                      calAct.bimestre === bi &&
+                      calAct.actividad === actividad[i].secuencia &&
+                      calAct.unidad <= actividad[i][`EB${bi}`]
+                  );
+                  
+                  let cpa = califAct.reduce(
+                    (acc, calificacion) => acc + parseFloat(calificacion.calificacion), 0)
+                
+                  //if (cpa > 0) {
+                    const EB = actividad[i][`EB${bi}`];
+                    sumatoria += cpa / EB;
+                    console.log("sumatoria", sumatoria, actividad[i].materia);
+                    //evaluaciones += 1;
+                  //}
+                  ////});
                 }
-              });
-              if (sumatoria === 0 || evaluaciones === 0) {
-                calificacion = 0.0;
-              } else {
-                calificacion = sumatoria / evaluaciones;
-                if (calificacion < 5.0) {
-                  calificacion = 5.0;
-                } else {
-                  calificacion = sumatoria / evaluaciones || 0;
-                }
+                evaluaciones = actividad.length;
               }
+                calificacion = parseFloat(sumatoria / evaluaciones )
+                console.log("prom", calificacion);
             }
+                if (sumatoria === 0 || evaluaciones === 0) {
+                  calificacion = 0.0;
+                } else {
+                  if (calificacion < 5.0) {
+                    calificacion= 5.0;
+                  } 
+                }
+            //} 
           } else {
             const calif = dataCalificaciones.calificaciones.find(
               (calif) =>
@@ -206,9 +214,9 @@ function P_Boletas() {
                 calif.bimestre === bi
             );
             if (!calif) {
-              calificacion = 0;
+              calificacion = 0.0;
             } else {
-              calificacion = Number(calif.calificacion) || 0;
+              calificacion = Number(calif.calificacion) || 0.0;
             }
           }
         }
@@ -401,8 +409,10 @@ function P_Boletas() {
         return calificacion;
       });
     }
-    setisLoading(false);
+    setisLoadingBusqueda(false);
   };
+  //TERMINA BUSCAR
+
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -417,6 +427,7 @@ function P_Boletas() {
     router.push("/");
   };
   const handleVerClick = () => {
+    setisLoading(true);
     setCaliAlum(true);
     if (!grupo.numero) {
       showSwal("Error", "Debe seleccionar un grupo.", "error");
@@ -987,12 +998,15 @@ function P_Boletas() {
     setPdfData(pdfData);
     setPdfPreview(true);
     showModalVista(true);
+    setisLoading(false);
   };
+
   const showModalVista = (show) => {
     show
       ? document.getElementById("modalVPAlumno").showModal()
       : document.getElementById("modalVPAlumno").close();
   };
+
   const PDF = async () => {
     setisLoadingGrupos(true);
     setCaliAlum(false);
@@ -1997,6 +2011,7 @@ function P_Boletas() {
                 BoletasGrupo={PDF}
                 isLoadingBoletasGrupo={isLoadingGrupos}
                 isLoadingVistaPrevia={isLoading}
+                isLoadingBusqueda = {isLoadingBusqueda}
                 permiso_imprime={permissions.impresion}
               />
             </div>
