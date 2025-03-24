@@ -19,8 +19,8 @@ function TablaCalificaciones({ isLoading, Calificaciones }) {
             </tr>
           </thead>
           <tbody>
-            {Calificaciones.map((item) => (
-              <tr key={item.numero} className="hover:cursor-pointer">
+            {Calificaciones.map((item, index) => (
+              <tr key={`${item.numero}-${index}`} className="hover:cursor-pointer">
                 <td>{item.materia}</td>
                 <td>{item.EB1}</td>
                 <td>{item.EB2}</td>

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import React from 'react'
 import { TbLoader3 } from 'react-icons/tb';
 
-function Acciones({ Buscar, home, Ver, BoletasGrupo, isLoadingBoletasGrupo, isLoadingVistaPrevia, permiso_imprime }) {
+function Acciones({ Buscar, home, Ver, BoletasGrupo, isLoadingBoletasGrupo, isLoadingVistaPrevia, permiso_imprime, isLoadingBusqueda }) {
     const images = [
         {
             srcLight: iconos.buscar_w,
@@ -12,7 +12,7 @@ function Acciones({ Buscar, home, Ver, BoletasGrupo, isLoadingBoletasGrupo, isLo
             alt: 'Buscar',
             tooltipTitle: 'Buscar',
             onClick: Buscar,
-            isLoading: false,
+            isLoading: isLoadingBusqueda,
             permission: true
         },
         {
