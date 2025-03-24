@@ -6,19 +6,20 @@ import React, {
   useRef,
   useMemo,
 } from "react";
-import { showSwal } from "@/app/utils/alerts";
+import { showSwal, confirmSwal } from "../utils/alerts";
 import { useForm } from "react-hook-form";
 import { debounce } from "@/app/utils/globalfn";
 import { useRouter } from "next/navigation";
 import Acciones from "@/app/proyectos/components/Acciones";
 import Busqueda from "@/app/proyectos/components/Busqueda";
 import TablaProyectos from "@/app/proyectos/components/TablaProyectos";
-import ModalProyectos from "@/app/proyectos/components/ModalProyectos";
+import ModalProyectos from "./components/ModalProyectos";
+import { useSession } from "next-auth/react";
 import {
   guardaProyectos,
   getProyectos,
   siguiente,
-} from "@/app/utils/api/proyectos/proyectos";
+} from "../utils/api/proyectos/proyectos";
 
 function Proyectos() {
   const router = useRouter();

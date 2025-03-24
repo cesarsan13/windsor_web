@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Loading from "@/app/components/loading";
 import NoData from "@/app/components/NoData";
 import Image from "next/image";
@@ -14,7 +14,7 @@ function TablaProyectos({
   setAccion,
   setCurrentId,
 }) {
-  const tableAction = ( formaBD, accion) => {
+  const tableAction = (evt, formaBD, accion) => {
     setBasesDeDatos(formaBD);
     setAccion(accion);
     setCurrentId(formaBD.id);
