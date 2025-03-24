@@ -26,7 +26,7 @@ import {
   ImprimirPDF,
   ImprimirExcel,
 } from "@/app/utils/api/calificaciones/calificaciones";
-import { showSwal, confirmSwal } from "@/app/utils/alerts";
+import { showSwal } from "@/app/utils/alerts";
 import ModalVistaPreviaCalis from "@/app/c_calificaciones/components/modalVistaPreviaCalis";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { getClasesBuscaCat } from "@/app/utils/api/clases/clases";
@@ -323,19 +323,19 @@ function C_Calificaciones() {
       },
       body: calificacionesFiltrados,
     };
-    const orientacion = "Landscape";
+    const orientacion = "Portrait";
     const reporte = new ReportePDF(configuracion, orientacion);
     const { body } = configuracion;
     const Enca1 = (doc) => {
       if (!doc.tiene_encabezado) {
-        doc.imprimeEncabezadoPrincipalH();
+        doc.imprimeEncabezadoPrincipalV();
         doc.nextRow(12);
         doc.ImpPosX("Numero", 15, doc.tw_ren);
         doc.ImpPosX("Alumno", 30, doc.tw_ren);
         doc.ImpPosX("Unidad", 140, doc.tw_ren);
         doc.ImpPosX("Calificación", 170, doc.tw_ren);
         doc.nextRow(4);
-        doc.printLineH();
+        doc.printLineV();
         doc.nextRow(4);
         doc.tiene_encabezado = true;
       } else {
@@ -410,7 +410,7 @@ function C_Calificaciones() {
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: "Reporte de Comentarios",
+        Nombre_Reporte: "Reporte de Clificaciones",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
 
@@ -492,7 +492,7 @@ function C_Calificaciones() {
                 itemData={[]}
                 fieldsToShow={["numero", "horario"]}
                 nameInput={["numero", "horario"]}
-                titulo={"Asignatura: "}
+                titulo={"Grupo: "}
                 setItem={setGrupo}
                 token={session.user.token}
                 modalId="modal_horario1"

@@ -160,6 +160,7 @@ export const getContraseñaProfe = async (token, grupo, materia) => {
         }),
         headers: {
             Authorization: `Bearer ${token}`,
+            xescuela: localStorage.getItem("xescuela"),
             'Content-Type': 'application/json',
         },
     });

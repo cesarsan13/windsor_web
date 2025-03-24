@@ -11,6 +11,7 @@ export const getClasesBuscaCat = async (token, grupo) => {
     }),
     headers: new Headers({
       Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
       xescuela: localStorage.getItem("xescuela"),
     }),
   });
@@ -27,6 +28,7 @@ export const getClases = async (token, baja) => {
   const res = await fetch(url, {
     headers: new Headers({
       Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
       xescuela: localStorage.getItem("xescuela"),
     }),
   });

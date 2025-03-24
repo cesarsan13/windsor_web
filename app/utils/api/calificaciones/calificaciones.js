@@ -301,7 +301,38 @@ const Enca1 = (doc, checkBoletaKinder, cicloFechas) => {
       "L"
     );
     doc.nextRow(4);
+    doc.ImpPosX(
+      "Id.",
+      25,
+      doc.tw_ren,
+      0,
+      "R"
+    );
+    doc.ImpPosX(
+      "Nombre",
+      30,
+      doc.tw_ren,
+      0,
+      "L"
+    );
+    doc.ImpPosX(
+      "Unidad",
+      150,
+      doc.tw_ren,
+      0,
+      "R"
+    );
+    doc.ImpPosX(
+      "Calificacion",
+      183,
+      doc.tw_ren,
+      0,
+      "R"
+    );
+    doc.nextRow(4);
     doc.printLineV();
+    doc.nextRow(4);
+    
     doc.tiene_encabezado = true;
   } else {
     doc.nextRow(6);
@@ -756,7 +787,7 @@ export const Imprimir = (configuracion) => {
 };
 
 export const ImprimirPDF = (configuracion) => {
-  const orientacion = "Landscape";
+  const orientacion = "Portrait";
   const newPDF = new ReportePDF(configuracion, orientacion);
   const { body } = configuracion;
   Enca1(newPDF);
