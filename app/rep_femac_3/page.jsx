@@ -49,7 +49,7 @@ function Rep_Femac_3() {
       setisLoading(false);
     };
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, horario, sOrdenar]);
 
   const home = () => {
@@ -69,13 +69,22 @@ function Rep_Femac_3() {
   };
 
   const ImprimeExcel = () => {
+    const newBody = FormaRepDosSel.filter((item) => item.Nombre_1 !== "").map(
+      (item) => ({
+        Num_Renglon: item.Num_Renglon,
+        Numero_1: item.Numero_1,
+        Nombre_1: item.Nombre_1,
+        Año_Nac_1: item.Año_Nac_1,
+        Mes_Nac_1: item.Mes_Nac_1,
+      })
+    );
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte de Alumnos por clase mensual",
         Nombre_Usuario: `${session.user.name}`,
       },
-      body: FormaRepDosSel,
+      body: newBody,
       columns: [
         { header: "No.", dataKey: "Num_Renglon" },
         { header: "No. 1", dataKey: "Numero_1" },
@@ -146,8 +155,10 @@ function Rep_Femac_3() {
       };
 
       Enca1(reporte);
-
+      console.log(body);
       body.forEach((reporte1) => {
+        if (reporte1.Nombre_1 === "") return;
+
         reporte.ImpPosX(
           reporte1.Num_Renglon.toString() !== "0"
             ? reporte1.Num_Renglon.toString()
