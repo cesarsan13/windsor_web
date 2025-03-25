@@ -237,6 +237,7 @@ function C_Otras() {
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
       body: c_OtrasFiltrados,
+      grupo: grupo,
     };
     ImprimirPDF(configuracion);
   };
@@ -245,10 +246,11 @@ function C_Otras() {
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: "Calificaciones",
+        Nombre_Reporte: `Calificaciones`,
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
       body: c_OtrasFiltrados,
+      grupo: grupo,
       columns: [
         { header: "Numero", dataKey: "numero" },
         { header: "Alumno", dataKey: "nombre" },

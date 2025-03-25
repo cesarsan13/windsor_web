@@ -48,24 +48,8 @@ export const debounce = (func, delay) => {
   };
 };
 
-export const openFileSelector = () => {
-  if (inputfileref.current) {
-    inputfileref.current.click(); // Simula el clic en el input
-  }
-};
 
-export const handleFileChange = (e) => {
-  const selectedFile = e.target.files[0];
-  if (selectedFile) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFile(selectedFile);
-      setcondicion(true);
-      setCapturedImage(reader.result); // La imagen en formato Base64
-    };
-    reader.readAsDataURL(selectedFile); // Convierte el archivo a Base64
-  }
-};
+
 
 export const handleBlur = (evt, datatype) => {
   if (evt.target.value === "") return;

@@ -22,8 +22,11 @@ export const authOptions = {
         });
         const resjson = await res.json();
         const { status,message } = resjson;        
-        if (!status) throw new Error(message.errorInfo ? message.errorInfo : message);
-
+        if (!status) {
+          //console.log("Error en login:", resjson); // Depuración
+          const errorMessage = message?.errorInfo || message || "Error desconocido en el servidor";
+          throw new Error(errorMessage);
+        }
         resjson.data.token = resjson.token;
         
         resjson.data.xescuela = credentials.xescuela;

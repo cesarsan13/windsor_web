@@ -6,7 +6,7 @@ import BuscarCat from "@/app/components/BuscarCat";
 import Webcam from "react-webcam";
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { handleBlur, openFileSelector, handleFileChange} from "@/app/utils/globalfn";
+import { handleBlur, handleFileChange} from "@/app/utils/globalfn";
 import { useSession } from "next-auth/react";
 export const useAlumnosUI = (
     tableAction,
@@ -16,7 +16,7 @@ export const useAlumnosUI = (
     errors,
     alumno,
     setcond1,
-    setcond2
+    setcond2,
 ) => {
     const { data: session, status } = useSession();
     const columnasBuscaCat = ["numero", "horario"];
@@ -24,6 +24,7 @@ export const useAlumnosUI = (
     const nameInputs2 = ["horario_2", "horario_2_nombre"];
     const [activeTab, setActiveTab] = useState(1);
     const [accion, setAccion] = useState("");
+    const [condicion, setcondicion] = useState(false);
     const inputfileref = useRef(null);
     const [capturedImage, setCapturedImage] = useState(null);
     const [files, setFile] = useState(null);
@@ -35,6 +36,23 @@ export const useAlumnosUI = (
     const [isCameraOn, setIsCameraOn] = useState(false);
   const [sinZebra, setSinZebra] = useState(false);
 
+const openFileSelector = () => {
+    if (inputfileref.current) {
+      inputfileref.current.click(); // Simula el clic en el input
+    }
+  };
+   const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFile(selectedFile);
+        setcondicion(true);
+        setCapturedImage(reader.result); // La imagen en formato Base64
+      };
+      reader.readAsDataURL(selectedFile); // Convierte el archivo a Base64
+    }
+  };
     const handleTabs = (num) => {
         setActiveTab(num);
     };
