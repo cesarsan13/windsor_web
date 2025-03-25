@@ -4,12 +4,15 @@ import { formatTime, format_Fecha_String } from "@/app/utils/globalfn";
 export const getFotoAlumno = async (token, imagen) => {
   let url = `${process.env.DOMAIN_API}api/students/imagen/${imagen}`;
   const res = await fetch(url, {
+    method: "get",
     headers: {
       Authorization: `Bearer ${token}`,
+      'Content-Type': "application/json",
       xescuela: localStorage.getItem("xescuela"),
     },
   });
   const blob = await res.blob();
+  console.log("img", URL.createObjectURL(blob));
   return URL.createObjectURL(blob);
 };
 
@@ -18,8 +21,10 @@ export const getCredencialFormato = async (token, id) => {
   url = `${process.env.DOMAIN_API}api/facturasformato/${id}`;
 
   const res = await fetch(url, {
+    method: "get",
     headers: {
       Authorization: `Bearer ${token}`,
+      'Content-Type': "application/json",
       xescuela: localStorage.getItem("xescuela"),
     },
   });
@@ -36,6 +41,7 @@ export const getCredencialAlumno = async (token, formData) => {
     body: formData,
     headers: new Headers({
       Authorization: "Bearer " + token,
+
       xescuela: localStorage.getItem("xescuela"),
     }),
   });
@@ -66,6 +72,7 @@ export const Imprimir = (configuracion) => {
   const reporte = new ReportePDF(configuracion, "landscape");
   let doc = reporte.getDoc();
   const { body, formato, imagen } = configuracion;
+  console.log("datos", body, formato, imagen);
   if (
     imagen &&
     typeof imagen === "string" &&
@@ -76,6 +83,7 @@ export const Imprimir = (configuracion) => {
   const conX = 0.4;
   const conY = 0.4;
   formato.forEach((formato) => {
+    
     switch (formato.descripcion_campo) {
       case "No. Alumno":
         reporte.ImpPosX(
@@ -139,5 +147,5 @@ export const Imprimir = (configuracion) => {
     .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
   const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
   const timeStr = formatTime(date).replace(/:/g, "");
-  reporte.guardaReporte(`Credencial_Alumno_${dateStr}${timeStr}`);
+  reporte.guardaReporte(`Credencial_Alumno_${body.alumno.nombre}_${dateStr}${timeStr}`);
 };

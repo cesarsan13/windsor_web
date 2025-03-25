@@ -48,6 +48,7 @@ function Rep_femac_4() {
         if (alumno.ruta_foto && alumno.ruta_foto.trim() !== "") {
           imagenUrl = await getFotoAlumno(session.user.token, alumno.ruta_foto);
         }
+        console.log("capimg", imagenUrl);
         setCapturedImage(imagenUrl);
       }
       const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
@@ -84,7 +85,7 @@ function Rep_femac_4() {
         menuSeleccionado
       );
       setPermissions(permisos);
-      const formato = await getCredencialFormato(token, 1);
+      const formato = await getCredencialFormato(token, 3);
       setFormato(formato);
     };
     if (status === "loading" || !session) {
@@ -185,7 +186,7 @@ function Rep_femac_4() {
       }
       formato.forEach((formato) => {
         switch (formato.descripcion_campo) {
-          case "NUM. ALUMNO":
+          case "No. Alumno":
             reporte.ImpPosX(
               credencial.alumno.numero.toString(),
               formato.columna_impresion * conX,
@@ -194,7 +195,7 @@ function Rep_femac_4() {
               "R"
             );
             break;
-          case "CICLO ESCOLAR":
+          case "Ciclo escolar":
             reporte.ImpPosX(
               credencial.alumno.ciclo_escolar.toString(),
               formato.columna_impresion * conX,
@@ -203,7 +204,7 @@ function Rep_femac_4() {
               "L"
             );
             break;
-          case "FECHA NACIMIENTO":
+          case "Fecha nacimiento":
             reporte.ImpPosX(
               credencial.alumno.fecha_nac.toString(),
               formato.columna_impresion * conX,
@@ -212,7 +213,7 @@ function Rep_femac_4() {
               "L"
             );
             break;
-          case "NOMBRE":
+          case "Nombre":
             reporte.ImpPosX(
               credencial.alumno.nombre.toString(),
               formato.columna_impresion * conX,
@@ -221,7 +222,7 @@ function Rep_femac_4() {
               "L"
             );
             break;
-          case "DIRECCIÓN":
+          case "Dirección":
             reporte.ImpPosX(
               credencial.alumno.direccion.toString(),
               formato.columna_impresion * conX,
@@ -230,7 +231,7 @@ function Rep_femac_4() {
               "L"
             );
             break;
-          case "COLONIA":
+          case "Colonia":
             reporte.ImpPosX(
               credencial.alumno.colonia.toString(),
               formato.columna_impresion * conX,

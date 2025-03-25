@@ -87,6 +87,7 @@ function ConcentradoCalificaciones() {
       : document.getElementById("DetallesActividades").close();
   };
 
+  //EMPIEZA BUSCAR
   const Buscar = handleSubmit(async (data) => {
     if (grupo.numero === 0 && data.bimestre === "0") {
       showSwal("Error", "Debes de seleccionar el Grupo y el Bimestre", "error");
@@ -115,6 +116,7 @@ function ConcentradoCalificaciones() {
       setisLoadingFind(false);
     }
   });
+  //TERMINA BUSCAR
 
   const eliminarArreglosDuplicados = (arr) => {
     const arreglosUnicos = [];
