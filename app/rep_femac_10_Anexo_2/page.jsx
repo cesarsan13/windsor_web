@@ -30,7 +30,6 @@ function EstadodeCuenta() {
   const [animateLoading, setAnimateLoading] = useState(false);
   const [permissions, setPermissions] = useState({});
 
-
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
     return new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1)
@@ -55,7 +54,7 @@ function EstadodeCuenta() {
       return;
     }
     const fetchData = async () => {
-      let { token, permissions } = session.user;
+      let { permissions } = session.user;
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const es_admin = session.user.es_admin;
       const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
@@ -96,52 +95,40 @@ function EstadodeCuenta() {
         setAnimateLoading(false);
       }, 500);
     } else {
-    const data = await getReporteEstadodeCuenta(
-      session.user.token,
-      fecha_ini,
-      fecha_fin,
-      alumno_ini.numero,
-      alumno_fin.numero,
-      tomaFechas
-    );
-    setFormaReporteEstadodeCuenta(data);
+      const data = await getReporteEstadodeCuenta(
+        session.user.token,
+        fecha_ini,
+        fecha_fin,
+        alumno_ini.numero,
+        alumno_fin.numero,
+        tomaFechas
+      );
+      setFormaReporteEstadodeCuenta(data);
 
-    const configuracion = {
-      Encabezado: {
-        Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: "Reporte Estado de Cuenta",
-        Nombre_Usuario: `Usuario: ${session.user.name}`,
-      },
-      body: data,
-    };
+      const configuracion = {
+        Encabezado: {
+          Nombre_Aplicacion: "Sistema de Control Escolar",
+          Nombre_Reporte: "Reporte Estado de Cuenta",
+          Nombre_Usuario: `Usuario: ${session.user.name}`,
+        },
+        body: data,
+      };
 
-    const reporte = new ReportePDF(configuracion);
-    const { body } = configuracion;
-    const Enca1 = (doc) => {
-      if (!doc.tiene_encabezado) {
-        doc.imprimeEncabezadoPrincipalV();
-        doc.nextRow(8);
-        if (tomaFechas === true) {
-          if (fecha_fin == "") {
-            doc.ImpPosX(
-              `Reporte del ${fecha_ini} `,
-              15,
-              doc.tw_ren,
-              0,
-              "L"
-            ),
+      const reporte = new ReportePDF(configuracion);
+      const { body } = configuracion;
+      const Enca1 = (doc) => {
+        if (!doc.tiene_encabezado) {
+          doc.imprimeEncabezadoPrincipalV();
+          doc.nextRow(8);
+          if (tomaFechas === true) {
+            if (fecha_fin == "") {
+              doc.ImpPosX(`Reporte del ${fecha_ini} `, 15, doc.tw_ren, 0, "L"),
               doc.nextRow(5);
-          } else {
-            doc.ImpPosX(
-              `Reporte del ${fecha_ini} al ${fecha_fin}`,
-              15,
-              doc.tw_ren,
-              0,
-              "L"
-            ),
+            } else {
+              doc.ImpPosX(`Reporte del ${fecha_ini} al ${fecha_fin}`, 15, doc.tw_ren, 0, "L"),
               doc.nextRow(5);
+            }
           }
-        }
           doc.nextRow(5);
           doc.ImpPosX("No.", 15, doc.tw_ren, 0, "L"),
           doc.ImpPosX("Nombre", 30, doc.tw_ren, 0, "L"),
@@ -156,85 +143,83 @@ function EstadodeCuenta() {
           doc.ImpPosX("Importe", 165, doc.tw_ren, 0, "L"),
           doc.ImpPosX("Recibo", 185, doc.tw_ren, 0, "L"),
           doc.nextRow(4);
-        doc.printLineV();
-        doc.nextRow(4);
-        doc.tiene_encabezado = true;
-      } else {
-        doc.nextRow(6);
-        doc.tiene_encabezado = true;
-      }
-    };
-    let alumno_Ant = "";
-    let total_importe = 0;
-    let total_general = 0;
+          doc.printLineV();
+          doc.nextRow(4);
+          doc.tiene_encabezado = true;
+        } else {
+          doc.nextRow(6);
+          doc.tiene_encabezado = true;
+        }
+      };
+      let alumno_Ant = "";
+      let total_importe = 0;
+      let total_general = 0;
 
-    const Cambia_Alumno = (doc, total_importe) => {
-      doc.ImpPosX(`TOTAL: ${formatNumber(total_importe)}` || "", 176, doc.tw_ren, 0, "R");
-      doc.nextRow(8);
-    };
+      const Cambia_Alumno = (doc, total_importe) => {
+        doc.ImpPosX(`TOTAL: ${total_importe !=0 ? formatNumber(total_importe) : "0.0"}` || "", 170, doc.tw_ren, 0, "R");
+        doc.nextRow(8);
+      };
 
-    Enca1(reporte);
-    body.forEach((reporte2) => {
-      let documento = "0";
+      Enca1(reporte);
+      body.forEach((reporte2) => {
+        let tipoPago2 = " ";
+        let documento = "0";
 
-      if (reporte2.numero_doc === null || reporte2.numero_doc == "") {
-        documento = "0";
-      } else {
-        documento = reporte2.numero_doc;
-      }
-      if (reporte2.desc_Tipo_Pago_2 === null) {
-        tipoPago2 = " ";
-      } else {
-        tipoPago2 = reporte2.desc_Tipo_Pago_2;
-      }
+        if (reporte2.numero_doc === null || reporte2.numero_doc == "") {
+          documento = "0";
+        } else {
+          documento = reporte2.numero_doc;
+        }
 
-      if (reporte2.id_al !== alumno_Ant && alumno_Ant !== "") {
-        Cambia_Alumno(reporte, total_importe);
-        total_importe = 0;
-      }
+        if (reporte2.desc_Tipo_Pago_2 === null) {
+          tipoPago2 = " ";
+        } else {
+          tipoPago2 = reporte2.desc_Tipo_Pago_2;
+        }
 
-      if (reporte2.id_al !== alumno_Ant && reporte2.id_al != null) {
-        reporte.ImpPosX(reporte2.id_al + "-" + calculaDigitoBvba(reporte2.id_al.toString()), 15, reporte.tw_ren, 0, "L");
-        reporte.ImpPosX(reporte2.nom_al.toString(), 30, reporte.tw_ren, 0, "L");
-        reporte.ImpPosX(reporte2.horario_nom.toString(), 100, reporte.tw_ren, 0, "L");
-        reporte.ImpPosX(reporte2.fecha_nac_al.toString(), 135, reporte.tw_ren, 0, "L");
-        reporte.ImpPosX(reporte2.fecha_ins_al.toString(), 155, reporte.tw_ren, 0, "L");
+        if (reporte2.id_al !== alumno_Ant && alumno_Ant !== "") {
+          Cambia_Alumno(reporte, total_importe);
+          total_importe = 0;
+        }
+
+        if (reporte2.id_al !== alumno_Ant && reporte2.id_al != null) {
+          reporte.ImpPosX(reporte2.id_al + "-" + calculaDigitoBvba(reporte2.id_al.toString()), 15, reporte.tw_ren, 0, "L");
+          reporte.ImpPosX(reporte2.nom_al.toString(), 30, reporte.tw_ren, 0, "L");
+          reporte.ImpPosX(reporte2.horario_nom.toString(), 100, reporte.tw_ren, 0, "L");
+          reporte.ImpPosX(reporte2.fecha_nac_al.toString(), 135, reporte.tw_ren, 0, "L");
+          reporte.ImpPosX(reporte2.fecha_ins_al.toString(), 155, reporte.tw_ren, 0, "L");
+          Enca1(reporte);
+          if (reporte.tw_ren >= reporte.tw_endRen) {
+            reporte.pageBreak();
+            Enca1(reporte);
+          }
+        }
+        reporte.ImpPosX(documento, 33, reporte.tw_ren, 0, "R");
+        reporte.ImpPosX(reporte2.articulo != null ? reporte2.articulo.toString() : " ", 49, reporte.tw_ren, 0, "R");
+        reporte.ImpPosX(reporte2.descripcion != null ? reporte2.descripcion.toString() : " ", 53, reporte.tw_ren, 0, "L");
+
+        reporte.ImpPosX(reporte2.fecha != null ? reporte2.fecha.toString() : " ", 130, reporte.tw_ren, 0, "L");
+        reporte.ImpPosX(formatNumber(reporte2.importe), 165, reporte.tw_ren, 0, "R");
+        reporte.ImpPosX(reporte2.recibo != null ? reporte2.recibo.toString() : " ", 195, reporte.tw_ren, 0, "R");
+
         Enca1(reporte);
         if (reporte.tw_ren >= reporte.tw_endRen) {
           reporte.pageBreak();
           Enca1(reporte);
         }
-      }
-      reporte.ImpPosX(documento, 33, reporte.tw_ren, 0, "R");
-      reporte.ImpPosX(reporte2.articulo.toString(), 49, reporte.tw_ren, 0, "R");
-      reporte.ImpPosX(reporte2.descripcion.toString(), 53, reporte.tw_ren, 0, "L");
-      
-      reporte.ImpPosX(reporte2.fecha.toString(), 130, reporte.tw_ren, 0, "L");
-      reporte.ImpPosX(formatNumber(reporte2.importe), 176, reporte.tw_ren, 0, "R");
-      reporte.ImpPosX(reporte2.recibo.toString(), 195, reporte.tw_ren, 0, "R");
-
-      Enca1(reporte);
-      if (reporte.tw_ren >= reporte.tw_endRen) {
-        reporte.pageBreak();
-        Enca1(reporte);
-      }
-      total_importe = total_importe + reporte2.importe;
-      total_general = total_general + reporte2.importe;
-      alumno_Ant = reporte2.id_al;
-    });
-    Cambia_Alumno(reporte, total_importe);
-    reporte.ImpPosX(
-      `TOTAL IMPORTE: ${formatNumber(total_general)}` || "",
-      176, reporte.tw_ren, 0, "R"
-    );
-
-    setTimeout(() => {
-      const pdfData = reporte.doc.output("datauristring");
-      setPdfData(pdfData);
-      setPdfPreview(true);
-      showModalVista(true);
-      setAnimateLoading(false);
-    }, 500);
+        total_importe = total_importe + reporte2.importe;
+        total_general = total_general + reporte2.importe;
+        alumno_Ant = reporte2.id_al;
+      });
+      Cambia_Alumno(reporte, total_importe);
+      reporte.ImpPosX(`TOTAL IMPORTE: ${total_general != 0 ? formatNumber(total_general) : "0.0"}` || "", 135, reporte.tw_ren, 0, "L");
+      setTimeout(() => {
+        const pdfData = reporte.doc.output("datauristring");
+        setPdfData(pdfData);
+        setPdfPreview(true);
+        showModalVista(true);
+        setAnimateLoading(false);
+      }, 500);
     }
   };
 
@@ -243,16 +228,19 @@ function EstadodeCuenta() {
       ? document.getElementById("modalVPRepFemac10Anexo2").showModal()
       : document.getElementById("modalVPRepFemac10Anexo2").close();
   };
+
   const cerrarModalVista = () => {
     setPdfPreview(false);
     setPdfData("");
     document.getElementById("modalVPRepFemac10Anexo2").close();
   };
+
   const CerrarView = () => {
     setPdfPreview(false);
     setPdfData("");
     document.getElementById("modalVPRepFemac10Anexo2").close();
   };
+
   const ImprimePDF = async () => {
     const configuracion = {
       Encabezado: {
@@ -319,21 +307,21 @@ function EstadodeCuenta() {
 
   if (status === "loading") {
     return (
-      <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
+      <div className="container skeleton w-full max-w-screen-xl  shadow-xl rounded-xl"></div>
     );
   }
   return (
     <>
       <VistaPrevia
         id={"modalVPRepFemac10Anexo2"}
-        titulo={"Vista Previa de Relacin Estado de Cuenta"}
+        titulo={"Vista Previa de Relacion Estado de Cuenta"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
       />
-<div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
+      <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">
           {/* Fila de la cabecera de la pagina */}
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
