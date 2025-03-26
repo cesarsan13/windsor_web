@@ -7,13 +7,11 @@ export const getFotoAlumno = async (token, imagen) => {
     method: "get",
     headers: {
       Authorization: `Bearer ${token}`,
-      'Content-Type': "application/json",
       xescuela: localStorage.getItem("xescuela"),
     },
   });
   const blob = await res.blob();
-  console.log("img", URL.createObjectURL(blob));
-  return URL.createObjectURL(blob);
+  return blob;
 };
 
 export const getCredencialFormato = async (token, id) => {
@@ -41,7 +39,6 @@ export const getCredencialAlumno = async (token, formData) => {
     body: formData,
     headers: new Headers({
       Authorization: "Bearer " + token,
-
       xescuela: localStorage.getItem("xescuela"),
     }),
   });
@@ -49,36 +46,18 @@ export const getCredencialAlumno = async (token, formData) => {
   return resJson.data;
 };
 
-const Enca1 = (doc) => {
-  if (!doc.tiene_encabezado) {
-    doc.imprimeEncabezadoPrincipalV();
-    doc.nextRow(12);
-    doc.ImpPosX("No", 15, doc.tw_ren);
-    doc.ImpPosX("Nombre", 35, doc.tw_ren);
-    doc.ImpPosX("Dia", 170, doc.tw_ren);
-    doc.ImpPosX("Mes", 180, doc.tw_ren);
-    doc.ImpPosX("Año", 190, doc.tw_ren);
-    doc.nextRow(4);
-    doc.printLineV();
-    doc.nextRow(4);
-    doc.tiene_encabezado = true;
-  } else {
-    doc.nextRow(6);
-    doc.tiene_encabezado = true;
-  }
-};
-
 export const Imprimir = (configuracion) => {
   const reporte = new ReportePDF(configuracion, "landscape");
   let doc = reporte.getDoc();
   const { body, formato, imagen } = configuracion;
-  console.log("datos", body, formato, imagen);
+  const match = imagen.match(/^data:image\/([a-zA-Z0-9]+);base64,/);
+  const valorMatch = match ? match[1] : null;
   if (
     imagen &&
     typeof imagen === "string" &&
-    imagen.startsWith("data:image/png;base64,")
+    imagen.startsWith(`data:image/${valorMatch};base64,`)
   ) {
-    doc.addImage(imagen, "PNG", 10, 10, 80, 80);
+    doc.addImage(imagen, valorMatch, 10, 10, 80, 80);
   }
   const conX = 0.4;
   const conY = 0.4;

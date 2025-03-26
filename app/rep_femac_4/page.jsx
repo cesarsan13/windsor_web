@@ -29,7 +29,6 @@ function Rep_femac_4() {
   const [credencial, setCredencial] = useState(null);
   const [fecha_hoy, setFechaHoy] = useState("");
   const [capturedImage, setCapturedImage] = useState(null);
-  const [condicion, setcondicion] = useState(false);
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
@@ -48,8 +47,12 @@ function Rep_femac_4() {
         if (alumno.ruta_foto && alumno.ruta_foto.trim() !== "") {
           imagenUrl = await getFotoAlumno(session.user.token, alumno.ruta_foto);
         }
-        console.log("capimg", imagenUrl);
-        setCapturedImage(imagenUrl);
+        const base64Image = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(imagenUrl);
+        });
+        setCapturedImage(base64Image);
       }
       const menu_seleccionado = Number(localStorage.getItem("puntoMenu"));
       const permisos = permissionsComponents(
@@ -165,11 +168,6 @@ function Rep_femac_4() {
       }, 500);
     } else {
       const configuracion = {
-        Encabezado: {
-          Nombre_Aplicacion: "Sistema de Control Escolar",
-          Nombre_Reporte: "Credencial del Alumno",
-          Nombre_Usuario: `Usuario: ${session.user.name}`,
-        },
         body: credencial,
         formato: formato,
       };
@@ -177,12 +175,15 @@ function Rep_femac_4() {
       const conY = 0.4;
       const reporte = new ReportePDF(configuracion, "landscape");
       let doc = reporte.getDoc();
+      const match = capturedImage.match(/^data:image\/([a-zA-Z0-9]+);base64,/);
+      const valorMatch = match ? match[1] : null;
       if (
         capturedImage &&
-        typeof capturedImage === "string" &&
-        capturedImage.startsWith("data:image/png;base64,")
+        typeof capturedImage === "string" 
+        &&
+        capturedImage.startsWith(`data:image/${valorMatch};base64,`)
       ) {
-        doc.addImage(capturedImage, "PNG", 10, 10, 80, 80);
+        doc.addImage(capturedImage, valorMatch, 10, 10, 80, 80);
       }
       formato.forEach((formato) => {
         switch (formato.descripcion_campo) {
@@ -254,11 +255,6 @@ function Rep_femac_4() {
 
   const imprimePDF = () => {
     const configuracion = {
-      Encabezado: {
-        Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: "Credencial del Alumno",
-        Nombre_Usuario: `Usuario: ${session.user.name}`,
-      },
       body: credencial,
       formato: formato,
       imagen: capturedImage,
@@ -322,24 +318,21 @@ function Rep_femac_4() {
           <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto">
             <div className="col-span-3 md:col-span-full lg:col-span-full">
               <div className="w-full max-[400px]:w-1/2 max-[600px]:w-full max-[768px]:w-full h-1/3">
-                {capturedImage && capturedImage.startsWith("http") && (
+                {capturedImage && (
+                  
                   <div className="flex items-center">
                     <div className="w-1/3 pl-1 p-0">
                       <Image
-                        src={
-                          condicion ? URL.createObjectURL(files) : capturedImage
-                        }
+                        src={capturedImage.startsWith("data:image") ? capturedImage : ""}
                         alt="Imagen del alumno"
-                        width={48}
-                        height={48}
+                        width={30}
+                        height={30}
                         className="w-full object-contain mx-auto my-1 pr-4"
                       />
                     </div>
                     <div className="w-1/3">
                       <h2 className="text-center text-xl mb-2 text-black dark:text-white">
-                        {condicion
-                          ? "Imagen Seleccionada:"
-                          : "Foto del Alumno:"}
+                          Foto del Alumno:
                       </h2>
                     </div>
                   </div>
