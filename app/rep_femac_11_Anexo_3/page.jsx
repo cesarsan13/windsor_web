@@ -59,7 +59,7 @@ function CobranzaPorAlumno() {
       return;
     }
     const fetchData = async () => {
-      let { token, permissions } = session.user;
+      let { permissions } = session.user;
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const es_admin = session.user.es_admin;
       const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
@@ -101,8 +101,7 @@ function CobranzaPorAlumno() {
         setAnimateLoading(false);
         document.getElementById("modalVPRepFemac11Anexo3").close();
       }, 500);
-    }else{
-
+    } else {
       const data = await getReporteCobranzaporAlumno(
         session.user.token,
         fecha_ini,
@@ -132,38 +131,20 @@ function CobranzaPorAlumno() {
           doc.nextRow(8);
           if (tomaFechas === true) {
             if (fecha_fin == "") {
-              doc.ImpPosX(
-                `Reporte de cobranza del ${fecha_ini} `,
-                15,
-                doc.tw_ren
-              ),
-                doc.nextRow(5);
+              doc.ImpPosX(`Reporte de cobranza del ${fecha_ini} `, 15, doc.tw_ren),
+              doc.nextRow(5);
             } else {
-              doc.ImpPosX(
-                `Reporte de cobranza del ${fecha_ini} al ${fecha_fin}`,
-                15,
-                doc.tw_ren
-              ),
-                doc.nextRow(5);
+              doc.ImpPosX(`Reporte de cobranza del ${fecha_ini} al ${fecha_fin}`, 15, doc.tw_ren),
+              doc.nextRow(5);
             }
           }
-  
           if (cajero_fin.numero === undefined) {
-            doc.ImpPosX(
-              `Cajero seleccionado: ${cajero_ini.numero} `,
-              15,
-              doc.tw_ren
-            ),
-              doc.nextRow(10);
+            doc.ImpPosX(`Cajero seleccionado: ${cajero_ini.numero} `, 15, doc.tw_ren),
+            doc.nextRow(10);
           } else {
-            doc.ImpPosX(
-              `Cajeros seleccionado de ${cajero_ini.numero} al ${cajero_fin.numero}`,
-              15,
-              doc.tw_ren
-            ),
-              doc.nextRow(10);
+            doc.ImpPosX(`Cajeros seleccionado de ${cajero_ini.numero} al ${cajero_fin.numero}`, 15, doc.tw_ren),
+            doc.nextRow(10);
           }
-  
           doc.ImpPosX("No.", 15, doc.tw_ren),
           doc.ImpPosX("Nombre", 40, doc.tw_ren),
           doc.nextRow(5);
@@ -200,9 +181,9 @@ function CobranzaPorAlumno() {
         let tipoPago2 = " ";
         let nombre = " ";
   
-        if(reporte2.nombre === null){
+        if (reporte2.nombre === null) {
           nombre = " ";
-        }else{
+        } else {
           nombre = reporte2.nombre;
         }
         if (reporte2.desc_Tipo_Pago_2 === null) {
@@ -210,20 +191,12 @@ function CobranzaPorAlumno() {
         } else {
           tipoPago2 = reporte2.desc_Tipo_Pago_2;
         }
-  
         if (reporte2.id_al !== alumno_Ant && alumno_Ant !== "") {
           Cambia_Alumno(reporte, total_importe);
           total_importe = 0;
         }
-  
         if (reporte2.id_al !== alumno_Ant && reporte2.id_al != null) {
-          reporte.ImpPosX(
-            reporte2.id_al + "-" + calculaDigitoBvba(reporte2.id_al.toString()),
-            25,
-            reporte.tw_ren,
-            0,
-            "R"
-          );
+          reporte.ImpPosX(reporte2.id_al + "-" + calculaDigitoBvba(reporte2.id_al.toString()), 25, reporte.tw_ren, 0, "R");
           reporte.ImpPosX(reporte2.nom_al.toString(), 40, reporte.tw_ren);
           Enca1(reporte);
           if (reporte.tw_ren >= reporte.tw_endRen) {
@@ -238,13 +211,7 @@ function CobranzaPorAlumno() {
         reporte.ImpPosX(reporte2.fecha.toString(), 90, reporte.tw_ren,0,"L");
         reporte.ImpPosX(formatNumber(reporte2.importe), 122, reporte.tw_ren, 0 , "R");
         reporte.ImpPosX(reporte2.recibo.toString(), 140, reporte.tw_ren, 0 , "R");
-        reporte.ImpPosX(
-          reporte2.desc_Tipo_Pago_1.toString(),
-          143,
-          reporte.tw_ren,
-          0,
-          "L"
-        );
+        reporte.ImpPosX(reporte2.desc_Tipo_Pago_1.toString(), 143, reporte.tw_ren, 0, "L");
         reporte.ImpPosX(tipoPago2.toString(), 163, reporte.tw_ren,0,"L");
         reporte.ImpPosX(nombre.toString(), 183, reporte.tw_ren,0,"L");
   
@@ -259,13 +226,7 @@ function CobranzaPorAlumno() {
       });
       Cambia_Alumno(reporte, total_importe);
   
-      reporte.ImpPosX(
-        `TOTAL IMPORTE: ${(formatNumber(total_general))}` || "",
-        122,
-        reporte.tw_ren,
-        0,
-        "R"
-      );
+      reporte.ImpPosX(`TOTAL IMPORTE: ${(formatNumber(total_general))}` || "", 122, reporte.tw_ren, 0, "R");
       setTimeout(() => {
         const pdfData = reporte.doc.output("datauristring");
         setPdfData(pdfData);
@@ -273,9 +234,7 @@ function CobranzaPorAlumno() {
         showModalVista(true);
         setAnimateLoading(false);
       }, 500);
-
     }
-    
   };
 
   const showModalVista = (show) => {
@@ -283,11 +242,13 @@ function CobranzaPorAlumno() {
       ? document.getElementById("modalVPRepFemac11Anexo3").showModal()
       : document.getElementById("modalVPRepFemac11Anexo3").close();
   };
+
   const cerrarModalVista = () => {
     setPdfPreview(false);
     setPdfData("");
     document.getElementById("modalVPRepFemac11Anexo3").close();
   };
+
   const ImprimePDF = async () => {
     const configuracion = {
       Encabezado: {
@@ -317,7 +278,6 @@ function CobranzaPorAlumno() {
         detallefecha = `Reporte de cobranza del ${fecha_ini} al ${fecha_fin}`;
       }
     }
-
     if (cajero_fin.numero === undefined) {
       detallecajero = `Cajero seleccionado: ${cajero_ini.numero}`;
     } else {
@@ -360,16 +320,19 @@ function CobranzaPorAlumno() {
       tomaFechas
     );
   };
+
   const CerrarView = () => {
     setPdfPreview(false);
     setPdfData("");
     document.getElementById("modalVPRepFemac11Anexo3").close();
   };
+
   if (status === "loading") {
     return (
-      <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
+      <div className="container skeleton w-full max-w-screen-xl shadow-xl rounded-xl"></div>
     );
   }
+
   return (
     <>
       <VistaPrevia
@@ -436,7 +399,6 @@ function CobranzaPorAlumno() {
                 </label>
               </div>
             </div>
-            
           </div>
           <div className="flex flex-row">
             <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
@@ -473,40 +435,40 @@ function CobranzaPorAlumno() {
               </div>
               <div className="col-span-full md:col-span-full lg:col-span-full">
                 <div className="w-full">
-                <BuscarCat
-                  table="cajeros"
-                  itemData={[]}
-                  fieldsToShow={["numero", "nombre"]}
-                  nameInput={["numero", "nombre"]}
-                  titulo={"Cajero Inicio: "}
-                  setItem={setCajeroIni}
-                  token={session.user.token}
-                  modalId="modal_cajeros1"
-                  inputWidths={{ first: "109px", second: "300px" }}
-                  descClassName="md:mt-0 w-full"
-                />
+                  <BuscarCat
+                    table="cajeros"
+                    itemData={[]}
+                    fieldsToShow={["numero", "nombre"]}
+                    nameInput={["numero", "nombre"]}
+                    titulo={"Cajero Inicio: "}
+                    setItem={setCajeroIni}
+                    token={session.user.token}
+                    modalId="modal_cajeros1"
+                    inputWidths={{ first: "109px", second: "300px" }}
+                    descClassName="md:mt-0 w-full"
+                  />
                 </div>
               </div>
               <div className="col-span-full md:col-span-full lg:col-span-full">
                 <div className="w-full">
-                <BuscarCat
-                  table="cajeros"
-                  itemData={[]}
-                  fieldsToShow={["numero", "nombre"]}
-                  nameInput={["numero", "nombre"]}
-                  titulo={"Cajero Fin: "}
-                  setItem={setCajeroFin}
-                  token={session.user.token}
-                  modalId="modal_cajeros2"
-                  inputWidths={{ first: "124px", second: "300px" }}
-                  descClassName="md:mt-0 w-full"
-                />
+                  <BuscarCat
+                    table="cajeros"
+                    itemData={[]}
+                    fieldsToShow={["numero", "nombre"]}
+                    nameInput={["numero", "nombre"]}
+                    titulo={"Cajero Fin: "}
+                    setItem={setCajeroFin}
+                    token={session.user.token}
+                    modalId="modal_cajeros2"
+                    inputWidths={{ first: "124px", second: "300px" }}
+                    descClassName="md:mt-0 w-full"
+                  />
                 </div>
               </div>
               <div className="flex flex-row max-[499px]:gap-1 gap-4">
                 <div className="lg:w-fit md:w-fit">
-                <div className="tooltip " data-tip="Tomar Fechas">
-                  <label htmlFor="ch_tomaFechas"
+                  <div className="tooltip " data-tip="Tomar Fechas">
+                    <label htmlFor="ch_tomaFechas"
                       className="label cursor-pointer flex justify-start space-x-2">
                       <input
                        id="ch_tomaFechas"

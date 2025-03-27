@@ -155,7 +155,6 @@ function Rep_Femac_3() {
       };
 
       Enca1(reporte);
-      console.log(body);
       body.forEach((reporte1) => {
         if (reporte1.Nombre_1 === "") return;
 

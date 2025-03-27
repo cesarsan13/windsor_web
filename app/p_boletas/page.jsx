@@ -139,7 +139,6 @@ function P_Boletas() {
     ]);
     
     let calificaciones = [];
-    console.log("data", dataMaterias);
     dataMaterias.map((materia) => {
       for (let bi = 1; bi <= bimestre; bi++) {
         let sumatoria = 0;

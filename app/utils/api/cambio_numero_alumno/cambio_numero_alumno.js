@@ -1,5 +1,4 @@
 export const cambiarIdAlumno = async (token, data) => {
-  console.log(data);
   const res = await fetch(`${process.env.DOMAIN_API}api/students-cambio-id`, {
     method: "PUT",
     body: JSON.stringify({
