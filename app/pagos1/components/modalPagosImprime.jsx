@@ -88,7 +88,9 @@ function ModalPagoImprime({
         };
       });
 
-      await guardarDetallePedido(token, newPagos);
+      console.log("newp", newPagos);
+      const resdp = await guardarDetallePedido(token, newPagos);
+      console.log("rdp", resdp);
       const postNewData = {
         recibo: data.recibo_imprimir || 0,
         alumno: alumnos1.numero || 0,
@@ -145,7 +147,6 @@ function ModalPagoImprime({
       };
       body.push(data);
     }
-
     return body;
   };
 

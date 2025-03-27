@@ -7,7 +7,7 @@ export const getFormasPago = async (token, baja) => {
   let url = "";
   baja
     ? (url = `${process.env.DOMAIN_API}api/tipo_cobro/baja`)
-    : (url = `${process.env.DOMAIN_API}api/tipo_cobro/`);
+    : (url = `${process.env.DOMAIN_API}api/tipo_cobro`);
 
   const res = await fetch(url, {
     headers: {
@@ -48,7 +48,7 @@ export const siguiente = async (token) => {
 export const guardaFormaPAgo = async (token, data, accion) => {
   let url_api = "";
   if (accion === "Alta") {
-    url_api = `${process.env.DOMAIN_API}api/tipo_cobro/`;
+    url_api = `${process.env.DOMAIN_API}api/tipo_cobro`;
     data.baja = "";
   }
   if (accion === "Eliminar" || accion === "Editar") {
@@ -57,7 +57,7 @@ export const guardaFormaPAgo = async (token, data, accion) => {
     } else {
       data.baja = "";
     }
-    url_api = `${process.env.DOMAIN_API}api/tipo_cobro/update/`;
+    url_api = `${process.env.DOMAIN_API}api/tipo_cobro/update`;
   }
 
   const res = await fetch(`${url_api}`, {

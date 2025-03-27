@@ -18,7 +18,6 @@ export const getDetallePedido = async (
       }),
     }
   );
-  
   const resJson = await res.json();
   return resJson.data;
 };
