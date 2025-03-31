@@ -752,7 +752,7 @@ const home = () => {
 };
 
 const handleBusquedaChange = (event) => {
-    event.preventDefault();
+    event.preventDefault;
     setBusqueda((estadoPrevio) => ({
     ...estadoPrevio,
     [event.target.id]: event.target.value,
