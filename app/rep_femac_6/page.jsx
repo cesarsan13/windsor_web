@@ -21,6 +21,7 @@ import Swal from "sweetalert2";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+import ModalFechas from "@/app/components/modalFechas";
 function Rep_Femac_6() {
   const date = new Date();
   const router = useRouter();
@@ -492,41 +493,16 @@ function Rep_Femac_6() {
       </div>
 
       {/* MODAL */}
-      {modalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-lg font-bold mb-4">Seleccionar Rango de Fechas</h2>
-            <div className="flex flex-col gap-4">
-              <label>
-                Fecha Inicial:
-                <input
-                  type="date"
-                  value={tempFechaIni}
-                  onChange={(e) => setTempFechaIni(e.target.value)}
-                  className="border p-2 rounded w-full"
-                />
-              </label>
-              <label>
-                Fecha Final:
-                <input
-                  type="date"
-                  value={tempFechaFin}
-                  onChange={(e) => setTempFechaFin(e.target.value)}
-                  className="border p-2 rounded w-full"
-                />
-              </label>
-            </div>
-            <div className="flex justify-end gap-2 mt-4">
-              <button onClick={handleCloseModal} className="bg-gray-500 text-white px-4 py-2 rounded">
-                Cancelar
-              </button>
-              <button onClick={handleSelectDates} className="bg-blue-500 text-white px-4 py-2 rounded">
-                Seleccionar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+{modalOpen && (
+  <ModalFechas 
+    tempFechaIni={tempFechaIni}
+    setTempFechaIni={setTempFechaIni}
+    tempFechaFin={tempFechaFin}
+    setTempFechaFin={setTempFechaFin}
+    handleSelectDates={handleSelectDates}
+    handleCloseModal={handleCloseModal}
+  />
+)}
     </div>
           <div className="flex flex-row">
             <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
