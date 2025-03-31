@@ -661,7 +661,7 @@ function Pagos_1() {
     const formaPagoFind = formaPago.find((forma) => forma.numero === 1);
     const newData = {
       pago: total || 0,
-      recibo: Number(dataP.con_recibos) === 0 ? 1 : dataP.con_recibos + 1 || 0,
+      recibo: Number(dataP.con_recibos) === 0 ? 1 : Number(dataP.con_recibos) + 1 || 0,
       forma_pago_id: formaPagoFind.numero || 0,
       comentario_ad: data.comentarios || "",
       fecha: fecha || "",

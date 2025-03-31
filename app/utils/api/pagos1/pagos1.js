@@ -2,6 +2,7 @@ import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { calculaDigitoBvba, Elimina_Comas } from "@/app/utils/globalfn";
 import { obtenerFechaYHoraActual } from "@/app/utils/globalfn";
+import { parse } from "path";
 
 export const validarClaveCajero = async (token, data) => {
   let url = `${process.env.DOMAIN_API}api/pagos1/validar-clave-cajero`;
@@ -98,20 +99,11 @@ function formatFecha(fecha) {
 }
 
 export const guardarDetallePedido = async (token, data) => {
-  let url = `${process.env.DOMAIN_API}api/pagos1/guardar-detalle-pedido`;
+  
+  let url = `${process.env.DOMAIN_API}api/pagos1/detalle-pedido-guardar`;
   const res = await fetch(url, {
     method: "POST",
-    body: JSON.stringify({
-      recibo: data.recibo,
-      alumno: data.alumno,
-      fecha: data.fecha,
-      articulo: data.articulo,
-      cantidad: data.cantidad,
-      precio_unitario: data.precio_unitario,
-      descuento: data.descuento,
-      documento: data.documento,
-      total_general: data.total_general,
-    }),
+    body: JSON.stringify(data),
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
@@ -123,7 +115,7 @@ export const guardarDetallePedido = async (token, data) => {
 };
 
 export const guardaEcabYCobrD = async (token, data) => {
-  let url = `${process.env.DOMAIN_API}api/pagos1/guarda-EncabYCobrD`;
+  let url = `${process.env.DOMAIN_API}api/pagos1/encabYCobrD-guardar`;
   const res = await fetch(url, {
     method: "POST",
     body: JSON.stringify({
