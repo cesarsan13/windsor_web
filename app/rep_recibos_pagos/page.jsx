@@ -53,13 +53,11 @@ function RecibosPagos() {
     }
     const fetchData = async () => {
       const { token } = session.user;
-      const [dataA] = await Promise.all([
-        getAlumnos(token, false),
-      ]);
+      const [dataA] = await Promise.all([getAlumnos(token, false)]);
       setAlumnos(dataA);
     };
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   const handleVerClick = async () => {
@@ -270,6 +268,7 @@ function RecibosPagos() {
         pdfData={pdfData}
         PDF={ImprimePDF}
         CerrarView={CerrarView}
+        seeExcel={false}
       />
       <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">
