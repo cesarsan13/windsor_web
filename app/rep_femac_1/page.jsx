@@ -31,8 +31,17 @@ function AlumnosPorClase() {
   const [animateLoading, setAnimateLoading] = useState(false);
   const [permissions, setPermissions] = useState({});
 
+  const [fieldsDisabled, setFieldsDisabled] = useState(false);
+
+
   const handleCheckChange = (event) => {
     setSelectedOption(event.target.value);
+
+    if (event.target.value === "todos") {
+      setFieldsDisabled(true);
+    } else {
+      setFieldsDisabled(false);
+    }
   };
 
   const alumno1V = alumnos1 === undefined ? 0 : alumnos1.numero;
@@ -56,7 +65,7 @@ function AlumnosPorClase() {
     };
     fetchData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, bajas, selectedOption, alumno1V, alumno2V]);
+  }, [status, bajas, selectedOption, alumno1V, alumno2V, selectedOption]);
 
   const ImprimePDF = async () => {
     const configuracion = {
@@ -254,6 +263,7 @@ function AlumnosPorClase() {
           <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4  w-1/2 mx-auto ">
             <div className="flex min-[1920px]:flex-row flex-col min-[1920px]:space-x-4">
               <BuscarCat
+                deshabilitado={selectedOption === "todos"}
                 table="alumnos"
                 fieldsToShow={["numero", "nombre_completo"]}
                 nameInput={["numero", "nombre_completo"]}
@@ -267,6 +277,7 @@ function AlumnosPorClase() {
                 contClassName="flex flex-row md:flex-row justify-start gap-2 sm:flex-row w-full"
               />
               <BuscarCat
+                deshabilitado={selectedOption === "todos"}
                 table="alumnos"
                 fieldsToShow={["numero", "nombre_completo"]}
                 nameInput={["numero", "nombre_completo"]}
