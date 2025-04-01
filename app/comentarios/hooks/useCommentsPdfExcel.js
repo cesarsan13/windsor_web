@@ -80,6 +80,7 @@ export const useCommentsPdfExcel = (
       }
     };
     Enca1(reporte);
+    const alignsIndex = [0];
     const tablaExcel = [
       ["Id", "Comentario 1", "Comentario 2", "Comentario 3", "Generales"],
     ];
@@ -136,7 +137,7 @@ export const useCommentsPdfExcel = (
     setTimeout(async () => {
       const newExcel = new ReporteExcel(configuracion);
       const pdfData = reporte.doc.output("datauristring");
-      const previewExcel = await newExcel.previewExcel(tablaExcel);
+      const previewExcel = await newExcel.previewExcel(tablaExcel, alignsIndex);
       setPdfData(pdfData);
       setPdfPreview(true);
       setExcelPreviewData(previewExcel);

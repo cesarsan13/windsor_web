@@ -103,8 +103,31 @@ export class ReporteExcel {
     }
 
     // Agregar los datos al worksheet
-    this.worksheetData.forEach((row) => {
-      worksheet.addRow(row);
+    this.worksheetData.forEach((row, rowIndex) => {
+      const newRow = worksheet.addRow(row);
+      if (rowIndex === 5) {
+        newRow.eachCell((cell) => {
+          cell.fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb: "030382" },
+          };
+          cell.font = {
+            color: { argb: "FFFFFF" },
+            bold: true,
+          };
+          cell.alignment = {
+            vertical: "middle",
+            horizontal: "center",
+          };
+          cell.border = {
+            top: { style: "thin" },
+            bottom: { style: "thin" },
+            left: { style: "thin" },
+            right: { style: "thin" },
+          };
+        });
+      }
     });
 
     worksheet.getColumn(1).width = 25;
@@ -125,7 +148,7 @@ export class ReporteExcel {
     URL.revokeObjectURL(url);
   }
 
-  async previewExcel(data = []) {
+  async previewExcel(data = [], alignsIndex = [], cellWidthValue = 56) {
     const doc = new jsPDF("landscape", "pt", "a4");
     const { Nombre_Aplicacion, Nombre_Reporte, Nombre_Usuario } =
       this.configuracion.Encabezado;
@@ -163,6 +186,10 @@ export class ReporteExcel {
         textColor: 255,
         halign: "center",
       },
+      columnStyles: alignsIndex.reduce((acc, i) => {
+        acc[i] = { halign: "right", cellWidth: cellWidthValue };
+        return acc;
+      }, {}),
     });
     return doc.output("datauristring");
   }
