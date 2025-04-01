@@ -98,7 +98,7 @@ function AlumnosPorClase() {
   const handleVerClick = async () => {
     setAnimateLoading(true);
     cerrarModalVista();
-    if (alumnos1.numero === undefined) {
+    if (alumnos1.numero === undefined && selectedOption !== "todos") {
       showSwal(
         "Oppss!",
         "Para imprimir, mínimo debe estar seleccionado un Alumno de 'Inicio'",
@@ -288,6 +288,17 @@ function AlumnosPorClase() {
                   <span className="text-black dark:text-white flex items-center gap-3">
                     Ordenar por:
                   </span>
+                  <label className="flex items-center gap-3">
+                  <span className="text-black dark:text-white">Todos</span>
+                    <input
+                      type="radio"
+                      name="ordenar"
+                      value="todos"
+                      onChange={handleCheckChange}
+                      checked={selectedOption === "todos"}
+                      className="radio  checked:text-neutral-600 dark:text-neutral-200"
+                    />
+                  </label>
                   <label className="flex items-center gap-3">
                     <span className="text-black dark:text-white">Nombre</span>
                     <input

@@ -4,24 +4,27 @@ import { calculaDigitoBvba } from "@/app/utils/globalfn";
 import { formatTime, format_Fecha_String } from "@/app/utils/globalfn";
 
 export const getreportAlumn = async (token, baja, tipoOrden, alumnos1, alumnos2) => {
+  const requestData = {
+    baja: baja,
+    tipoOrden: tipoOrden,
+    alumnos1: tipoOrden === 'todos' ? null : alumnos1,  
+    alumnos2: tipoOrden === 'todos' ? null : alumnos2,
+  };
+
   const res = await fetch(`${process.env.DOMAIN_API}api/students/report`, {
     method: "post",
-    body: JSON.stringify({
-      baja: baja,
-      tipoOrden: tipoOrden,
-      alumnos1: alumnos1,
-      alumnos2: alumnos2,
-    }),
+    body: JSON.stringify(requestData),
     headers: new Headers({
       Authorization: "Bearer " + token,
       xescuela: localStorage.getItem("xescuela"),
-      "Content-Type": "application/json"
-    } )
-  })
+      "Content-Type": "application/json",
+    }),
+  });
 
   const resJson = await res.json();
   return resJson.data;
-}
+};
+
 
 const Enca1 = (doc) => {
   if (!doc.tiene_encabezado) {
