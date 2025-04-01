@@ -41,7 +41,7 @@ function Cajeros() {
     reload_page,
     isDisabled,
     errors,
-    inactiveActive
+    inactiveActive,
   } = useCajerosABC();
 
   const {
@@ -53,6 +53,7 @@ function Cajeros() {
     buttonProcess,
     procesarDatos,
     setDataJson,
+    excelPreviewData,
     pdfPreview,
     pdfData,
     animateLoading,
@@ -69,21 +70,15 @@ function Cajeros() {
     setReloadPage,
     setisLoadingButton
   );
-  
-  const { 
-    itemHeaderTable, 
-    itemDataTable, 
-    tableColumns, 
-    tableBody, 
+
+  const {
+    itemHeaderTable,
+    itemDataTable,
+    tableColumns,
+    tableBody,
     modalBody,
-    sinZebra
-  } = useCajerosUI(
-    tableAction, 
-    register, 
-    permissions, 
-    isDisabled, 
-    errors
-  );
+    sinZebra,
+  } = useCajerosUI(tableAction, register, permissions, isDisabled, errors);
 
   if (status === "loading") {
     return (
@@ -92,10 +87,7 @@ function Cajeros() {
   }
   return (
     <>
-      <BarraCarga
-        porcentaje={porcentaje}
-        cerrarTO={cerrarTO}
-      />
+      <BarraCarga porcentaje={porcentaje} cerrarTO={cerrarTO} />
 
       <ModalProcesarDatos
         id_modal={"my_modal_4"}
@@ -124,11 +116,14 @@ function Cajeros() {
       <VistaPrevia
         id={"modalVPCajero"}
         titulo={"Vista Previa de Cajeros"}
+        excelPreviewData={excelPreviewData}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
+        seeExcel={true}
+        seePDF={true}
       />
 
       <div className="container h-[85vh] w-full max-w-[1800px] bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
@@ -145,7 +140,7 @@ function Cajeros() {
                 permiso_alta={permissions.altas}
                 permiso_imprime={permissions.impresion}
                 es_admin={session?.user?.es_admin || false}
-                />
+              />
             </div>
 
             <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 grid grid-flow-col gap-1 justify-around mx-5">

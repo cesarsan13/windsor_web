@@ -13,8 +13,8 @@ import { useFormaPagoABC } from "@/app/formapago/Hooks/useFormaPagoABC";
 import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 
-function FormaPago(){
-  const{
+function FormaPago() {
+  const {
     onSubmitModal,
     Buscar,
     Alta,
@@ -53,12 +53,13 @@ function FormaPago(){
     buttonProcess,
     procesarDatos,
     setDataJson,
+    excelPreviewData,
     pdfPreview,
     pdfData,
     animateLoading,
     porcentaje,
     cerrarTO,
-    dataJson
+    dataJson,
   } = useFormaPagoPdfExcel(
     formaPagosFiltrados,
     session,
@@ -76,14 +77,8 @@ function FormaPago(){
     tableColumns,
     tableBody,
     modalBody,
-    sinZebra
-  } = useFormaPagoUI(
-    tableAction,
-    register,
-    permissions,
-    isDisabled,
-    errors
-  );
+    sinZebra,
+  } = useFormaPagoUI(tableAction, register, permissions, isDisabled, errors);
 
   if (status === "loading") {
     return (
@@ -92,10 +87,7 @@ function FormaPago(){
   }
   return (
     <>
-      <BarraCarga
-        porcentaje={porcentaje}
-        cerrarTO={cerrarTO}
-      />
+      <BarraCarga porcentaje={porcentaje} cerrarTO={cerrarTO} />
 
       <ModalProcesarDatos
         id_modal={"my_modal_4"}
@@ -122,11 +114,14 @@ function FormaPago(){
       <VistaPrevia
         id={"modalVFormaPago"}
         titulo={"Vista Previa de Formas de Pago"}
+        excelPreviewData={excelPreviewData}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
+        seeExcel={true}
+        seePDF={true}
       />
 
       <div className="ccontainer h-[85vh] w-full max-w-[1800px] bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
@@ -141,7 +136,7 @@ function FormaPago(){
                 procesarDatos={procesarDatos}
                 animateLoading={animateLoading}
                 permiso_alta={permissions.altas}
-                permiso_imprime = {permissions.impresion}
+                permiso_imprime={permissions.impresion}
                 es_admin={session?.user?.es_admin || false}
               />
             </div>
@@ -164,7 +159,7 @@ function FormaPago(){
               handleBusquedaChange={handleBusquedaChange}
               busqueda={busqueda}
             />
-             {status === "loading" ||
+            {status === "loading" ||
               (!session ? (
                 <></>
               ) : (
@@ -176,7 +171,7 @@ function FormaPago(){
                   tableBody={tableBody}
                   sinZebra={sinZebra}
                 />
-            ))}
+              ))}
           </div>
         </div>
       </div>
