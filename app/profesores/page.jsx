@@ -41,7 +41,7 @@ function Profesores() {
     reload_page,
     isDisabled,
     errors,
-    inactiveActive
+    inactiveActive,
   } = useProfesoresABC();
 
   const {
@@ -53,6 +53,7 @@ function Profesores() {
     buttonProcess,
     procesarDatos,
     setDataJson,
+    excelPreviewData,
     pdfPreview,
     pdfData,
     animateLoading,
@@ -76,12 +77,12 @@ function Profesores() {
     tableColumns,
     tableBody,
     modalBody,
-    sinZebra
-  } = useProfesoresUI( 
-    tableAction, 
-    register, 
-    permissions, 
-    isDisabled, 
+    sinZebra,
+  } = useProfesoresUI(
+    tableAction,
+    register,
+    permissions,
+    isDisabled,
     errors,
     accion
   );
@@ -93,10 +94,7 @@ function Profesores() {
   }
   return (
     <>
-      <BarraCarga
-        porcentaje={porcentaje}
-        cerrarTO={cerrarTO}
-      />
+      <BarraCarga porcentaje={porcentaje} cerrarTO={cerrarTO} />
 
       <ModalProcesarDatos
         id_modal={"my_modal_profesores"}
@@ -112,7 +110,7 @@ function Profesores() {
         itemDataTable={itemDataTable}
         //clase para mover al tamaño del modal a preferencia (max-w-4xl)
         classModal={"modal-box w-full max-w-4xl h-full bg-base-200"}
-      />  
+      />
 
       <ModalComponent
         accion={accion}
@@ -123,13 +121,16 @@ function Profesores() {
       />
 
       <VistaPrevia
-        pdfPreview={pdfPreview}
-        pdfData={pdfData}
-        PDF={ImprimePDF}
-        Excel={ImprimeExcel}
         id={"modalVPProfesor"}
         titulo={"Vista Previa de Profesores"}
+        pdfPreview={pdfPreview}
+        pdfData={pdfData}
+        excelPreviewData={excelPreviewData}
+        PDF={ImprimePDF}
+        Excel={ImprimeExcel}
         CerrarView={CerrarView}
+        seeExcel={true}
+        seePDF={true}
       />
 
       <div className="container h-[85vh] w-full max-w-[1800px] bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
@@ -141,7 +142,7 @@ function Profesores() {
                 Alta={Alta}
                 home={home}
                 Ver={handleVerClick}
-                procesarDatos ={procesarDatos}
+                procesarDatos={procesarDatos}
                 animateLoading={animateLoading}
                 permiso_alta={permissions.altas}
                 permiso_imprime={permissions.impresion}
@@ -167,20 +168,19 @@ function Profesores() {
               handleBusquedaChange={handleBusquedaChange}
               busqueda={busqueda}
             />
-            { status === "loading" ||
-              (
-                !session ? (
-                  <></>
-                ) : (
-                  <TableComponent
-                    data={profesoresFiltrados}  
-                    session={session}
-                    isLoading={isLoading}
-                    tableColumns={tableColumns}
-                    tableBody={tableBody}
-                    sinZebra={sinZebra}
-                  />
-                ))}
+            {status === "loading" ||
+              (!session ? (
+                <></>
+              ) : (
+                <TableComponent
+                  data={profesoresFiltrados}
+                  session={session}
+                  isLoading={isLoading}
+                  tableColumns={tableColumns}
+                  tableBody={tableBody}
+                  sinZebra={sinZebra}
+                />
+              ))}
           </div>
         </div>
       </div>

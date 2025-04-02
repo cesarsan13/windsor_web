@@ -53,6 +53,7 @@ function Productos() {
     buttonProcess,
     procesarDatos,
     setDataJson,
+    excelPreviewData,
     pdfPreview,
     pdfData,
     animateLoading,
@@ -70,8 +71,21 @@ function Productos() {
     setisLoadingButton
   );
 
-  const { itemHeaderTable, itemDataTable, tableColumns, tableBody, modalBody, sinZebra } =
-    useProductosUI(tableAction, register, permissions, isDisabled, errors, accion);
+  const {
+    itemHeaderTable,
+    itemDataTable,
+    tableColumns,
+    tableBody,
+    modalBody,
+    sinZebra,
+  } = useProductosUI(
+    tableAction,
+    register,
+    permissions,
+    isDisabled,
+    errors,
+    accion
+  );
   if (status === "loading" && !session) {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -104,11 +118,14 @@ function Productos() {
       <VistaPrevia
         id={"modalVProducto"}
         titulo={"Vista Previa de Productos"}
+        excelPreviewData={excelPreviewData}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={imprimirPDF}
         Excel={imprimirEXCEL}
         CerrarView={CerrarView}
+        seeExcel={true}
+        seePDF={true}
       />
       <div className="container h-[85vh] w-full max-w-[1800px] bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">

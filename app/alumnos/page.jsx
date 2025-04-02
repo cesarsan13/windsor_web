@@ -10,9 +10,8 @@ import BarraCarga from "@/app/components/BarraCarga";
 import { useAlumnosABC } from "@/app/alumnos/hooks/useAlumnosABC";
 import { useAlumnosPdfExcel } from "@/app/alumnos/hooks/useAlumnosPdfExcel";
 import { useAlumnosUI } from "@/app/alumnos/hooks/useAlumnosUI";
-import "jspdf-autotable"
-import "@react-pdf-viewer/core/lib/styles/index.css"
-
+import "jspdf-autotable";
+import "@react-pdf-viewer/core/lib/styles/index.css";
 
 function Alumnos() {
   const {
@@ -54,6 +53,7 @@ function Alumnos() {
     buttonProcess,
     procesarDatos,
     setDataJson,
+    excelPreviewData,
     pdfPreview,
     pdfData,
     animateLoading,
@@ -71,8 +71,14 @@ function Alumnos() {
     setisLoadingButton
   );
 
-const { itemHeaderTable, itemDataTable, tableColumns, tableBody, modalBody, sinZebra} =
-  useAlumnosUI(tableAction, register, permissions, isDisabled, errors);
+  const {
+    itemHeaderTable,
+    itemDataTable,
+    tableColumns,
+    tableBody,
+    modalBody,
+    sinZebra,
+  } = useAlumnosUI(tableAction, register, permissions, isDisabled, errors);
   if (status === "loading" && !session) {
     return (
       <div className="container skeleton w-full max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -81,7 +87,7 @@ const { itemHeaderTable, itemDataTable, tableColumns, tableBody, modalBody, sinZ
   return (
     <>
       <BarraCarga porcentaje={porcentaje} cerrarTO={cerrarTO} />
-      
+
       <ModalProcesarDatos
         id_modal={"my_modal_4"}
         session={session}
@@ -108,11 +114,14 @@ const { itemHeaderTable, itemDataTable, tableColumns, tableBody, modalBody, sinZ
       <VistaPrevia
         id="modalVPAlumno"
         titulo="Vista Previa de Alumnos"
+        excelPreviewData={excelPreviewData}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={imprimePDF}
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
+        seeExcel={true}
+        seePDF={true}
       />
       <div className="container h-[85vh] w-full max-w-[1800px] bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">

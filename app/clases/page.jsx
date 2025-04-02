@@ -14,81 +14,74 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import { useState } from "react";
 
 function Clases() {
-    const {
-      onSubmitModal,
-      Buscar,
-      Alta,
-      home,
-      setBajas,
-      limpiarBusqueda,
-      handleBusquedaChange,
-      fetchClasesStatus,
-      setReloadPage,
-      setisLoadingButton,
-      tableAction,
-      register,
-      setGrado,
-      setMateria,
-      setProfesor,
-      control,
-      status,
-      session,
-      isLoadingButton,
-      isLoading,
-      accion,
-      permissions,
-      active,
-      inactive,
-      busqueda,
-      clasesFiltrados,
-      titulo,
-      reload_page,
-      isDisabled,
-      errors,
-      inactiveActive,
-      clase,
-      contador,
-      isDisabledBusca,
-      vGrado, 
-      vMateria, 
-      vProfesor,
-    } = useClasesABC();
+  const {
+    onSubmitModal,
+    Buscar,
+    Alta,
+    home,
+    setBajas,
+    limpiarBusqueda,
+    handleBusquedaChange,
+    fetchClasesStatus,
+    setReloadPage,
+    setisLoadingButton,
+    tableAction,
+    register,
+    setGrado,
+    setMateria,
+    setProfesor,
+    control,
+    status,
+    session,
+    isLoadingButton,
+    isLoading,
+    accion,
+    permissions,
+    active,
+    inactive,
+    busqueda,
+    clasesFiltrados,
+    titulo,
+    reload_page,
+    isDisabled,
+    errors,
+    inactiveActive,
+    clase,
+    contador,
+    isDisabledBusca,
+    vGrado,
+    vMateria,
+    vProfesor,
+  } = useClasesABC();
 
-    const {
-      handleVerClick,
-      CerrarView,
-      ImprimePDF,
-      ImprimeExcel,
-      pdfPreview,
-      pdfData,
-      animateLoading,
-    } = useClasesPdfExcel(
-      clasesFiltrados,
-      session,
-    );
+  const {
+    handleVerClick,
+    CerrarView,
+    ImprimePDF,
+    ImprimeExcel,
+    excelPreviewData,
+    pdfPreview,
+    pdfData,
+    animateLoading,
+  } = useClasesPdfExcel(clasesFiltrados, session);
 
-    const {
-      tableColumns,
-      tableBody,
-      modalBody,
-      sinZebra
-    } = useClasesUI(
-      tableAction,
-      register,
-      setGrado,
-      permissions,
-      isDisabled,
-      isDisabledBusca,
-      errors,
-      accion,
-      contador,
-      clase,
-      setMateria,
-      setProfesor,
-      vGrado, 
-      vMateria, 
-      vProfesor,
-    );
+  const { tableColumns, tableBody, modalBody, sinZebra } = useClasesUI(
+    tableAction,
+    register,
+    setGrado,
+    permissions,
+    isDisabled,
+    isDisabledBusca,
+    errors,
+    accion,
+    contador,
+    clase,
+    setMateria,
+    setProfesor,
+    vGrado,
+    vMateria,
+    vProfesor
+  );
 
   if (status === "loading") {
     return (
@@ -107,11 +100,14 @@ function Clases() {
       <VistaPrevia
         id="modalVPClase"
         titulo={"Vista PRevia de Clases"}
+        excelPreviewData={excelPreviewData}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
+        seeExcel={true}
+        seePDF={true}
       />
       <div className="container h-[85vh] w-full max-w-[1800px] bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">

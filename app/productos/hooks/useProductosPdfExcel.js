@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import {
   Imprimir,
   ImprimirExcel,
@@ -25,6 +26,7 @@ export const useProductosPdfExcel = (
   const [porcentaje, setPorcentaje] = useState(0);
   const [cerrarTO, setCerrarTO] = useState(false);
   const [dataJson, setDataJson] = useState([]);
+  const [excelPreviewData, setExcelPreviewData] = useState([]);
 
   const showModalVista = (show) => {
     show
@@ -73,6 +75,21 @@ export const useProductosPdfExcel = (
     };
     const reporte = new ReportePDF(configuracion, "Landscape");
     Enca1(reporte);
+    const alignsIndex = [0, 2, 4, 6, 7];
+    const tablaExcel = [
+      [
+        "Numero",
+        "Descripcion",
+        "Costo",
+        "Frecuencia",
+        "Recargo",
+        "Aplicacion",
+        "IVA",
+        "Condicion",
+        "Cambio Precio",
+        "Referencia",
+      ],
+    ];
     const { body } = configuracion;
     body.forEach((producto) => {
       reporte.ImpPosX(producto.numero.toString(), 24, reporte.tw_ren, 0, "R");
@@ -110,15 +127,30 @@ export const useProductosPdfExcel = (
       const cam_precio = producto.cam_precio ? "Si" : "No";
       reporte.ImpPosX(cam_precio.toString(), 215, reporte.tw_ren, 0, "L");
       reporte.ImpPosX(producto.ref.toString(), 250, reporte.tw_ren, 0, "L");
+      tablaExcel.push([
+        producto.numero,
+        producto.descripcion.toString(),
+        producto.costo,
+        producto.frecuencia.toString(),
+        producto.por_recargo,
+        producto.aplicacion.toString(),
+        producto.iva,
+        producto.cond_1,
+        cam_precio.toString(),
+        producto.ref.toString(),
+      ]);
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRenH) {
         reporte.pageBreakH();
         Enca1(reporte);
       }
     });
-    setTimeout(() => {
+    setTimeout(async () => {
+      const newExcel = new ReporteExcel(configuracion);
       const pdfData = reporte.doc.output("datauristring");
+      const previewExcel = await newExcel.previewExcel(tablaExcel, alignsIndex);
       setPdfData(pdfData);
+      setExcelPreviewData(previewExcel);
       setPdfPreview(true);
       showModalVista(true);
       setAnimateLoading(false);
@@ -278,6 +310,7 @@ export const useProductosPdfExcel = (
     buttonProcess,
     procesarDatos,
     setDataJson,
+    excelPreviewData,
     pdfPreview,
     pdfData,
     animateLoading,

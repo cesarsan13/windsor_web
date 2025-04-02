@@ -51,3 +51,18 @@ body {
   padding-top: 1px !important;
   padding-bottom: 1px !important;
 }
+
+.react-datepicker__month-container {
+  width: 235px;
+  height: 260px;
+}
+
+.react-datepicker__day--selected {
+  background-color: transparent !important;
+  color: black !important; 
+}
+
+.react-datepicker__day--keyboard-selected {
+  background-color: #007bff !important; 
+  color: black !important;
+}

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import {
   ImprimirPDF,
-  ImprimirExcel, 
+  ImprimirExcel,
   storeBatchComentarios,
 } from "@/app/utils/api/comentarios/comentarios";
 import { chunkArray, validateString } from "@/app/utils/globalfn";
@@ -25,6 +26,7 @@ export const useCommentsPdfExcel = (
   const [porcentaje, setPorcentaje] = useState(0);
   const [cerrarTO, setCerrarTO] = useState(false);
   const [dataJson, setDataJson] = useState([]);
+  const [excelPreviewData, setExcelPreviewData] = useState([]);
   const MAX_LENGTHS = {
     comentario_1: 50,
     comentario_2: 50,
@@ -55,7 +57,6 @@ export const useCommentsPdfExcel = (
       },
       body: formaComentariosFiltrados,
     };
-
     const orientacion = "Landscape";
     const reporte = new ReportePDF(configuracion, orientacion);
     const { body } = configuracion;
@@ -79,6 +80,10 @@ export const useCommentsPdfExcel = (
       }
     };
     Enca1(reporte);
+    const alignsIndex = [0];
+    const tablaExcel = [
+      ["Id", "Comentario 1", "Comentario 2", "Comentario 3", "Generales"],
+    ];
     body.forEach((comentarios) => {
       reporte.ImpPosX(
         comentarios.numero.toString(),
@@ -115,16 +120,27 @@ export const useCommentsPdfExcel = (
           ? "No"
           : "No valido";
       reporte.ImpPosX(resultado.toString(), 270, reporte.tw_ren, 0, "L");
+      tablaExcel.push([
+        comentarios.numero.toString(),
+        comentarios.comentario_1.toString(),
+        comentarios.comentario_2.toString(),
+        comentarios.comentario_3.toString(),
+        resultado,
+      ]);
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRenH) {
         reporte.pageBreakH();
         Enca1(reporte);
       }
     });
-    setTimeout(() => {
+
+    setTimeout(async () => {
+      const newExcel = new ReporteExcel(configuracion);
       const pdfData = reporte.doc.output("datauristring");
+      const previewExcel = await newExcel.previewExcel(tablaExcel, alignsIndex);
       setPdfData(pdfData);
       setPdfPreview(true);
+      setExcelPreviewData(previewExcel);
       showModalVista(true);
       setAnimateLoading(false);
     }, 500);
@@ -269,6 +285,7 @@ export const useCommentsPdfExcel = (
     buttonProcess,
     procesarDatos,
     setDataJson,
+    excelPreviewData,
     pdfPreview,
     pdfData,
     animateLoading,

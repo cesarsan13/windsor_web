@@ -18,7 +18,10 @@ import {
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import Swal from "sweetalert2";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
+import ModalFechas from "@/app/components/modalFechas";
 function Rep_Femac_6() {
   const date = new Date();
   const router = useRouter();
@@ -32,6 +35,15 @@ function Rep_Femac_6() {
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [permissions, setPermissions] = useState({});
+  const [modalOpen, setModalOpen] = useState(false);
+  const [tempFechaIni, setTempFechaIni] = useState("");
+  const [tempFechaFin, setTempFechaFin] = useState("");
+
+  useEffect(() => {
+    setFechaIni(getPrimerDiaDelMes());
+    setFechaFin(getUltimoDiaDelMes());
+  }, []);
+
 
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
@@ -47,10 +59,24 @@ function Rep_Femac_6() {
       .split("T")[0];
   };
 
-  useEffect(() => {
-    setFechaIni(getPrimerDiaDelMes());
-    setFechaFin(getUltimoDiaDelMes());
-  }, []);
+  const handleOpenModal = () => {
+    setTempFechaIni(fechaIni);
+    setTempFechaFin(fechaFin);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => setModalOpen(false);
+
+  const handleSelectDates = () => {
+    setFechaIni(tempFechaIni);
+    setFechaFin(tempFechaFin);
+    setModalOpen(false);
+  };
+
+  // useEffect(() => {
+  //   setFechaIni(getPrimerDiaDelMes());
+  //   setFechaFin(getUltimoDiaDelMes());
+  // }, []);
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
@@ -444,32 +470,40 @@ function Rep_Femac_6() {
         </div>
         <div className="w-full py-3 flex flex-col gap-y-4">
           {/* Fila del formulario de la pagina */}
-          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
-            <div className="flex flex-row max-[499px]:gap-1 gap-4">
-              <div className="lg:w-fit md:w-fit">
-                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full">
-                  Fecha Ini.
-                  <input
-                    type="date"
-                    value={fechaIni}
-                    onChange={(e) => setFechaIni(e.target.value)}
-                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
-                  />
-                </label>
-              </div>
-              <div className="lg:w-fit md:w-fit">
-                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-fit">
-                  Fecha Fin
-                  <input
-                    type="date"
-                    value={fechaFin}
-                    onChange={(e) => setFechaFin(e.target.value)}
-                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
-                  />
-                </label>
-              </div>
-            </div>
-          </div>
+          <div className="flex flex-col items-center p-4">
+      <div className="flex items-center gap-4">
+        <input
+          type="date"
+          value={fechaIni}
+          onChange={(e) => setFechaIni(e.target.value)}
+          className="border p-2 rounded"
+        />
+        <button
+          onClick={handleOpenModal}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          📅
+        </button>
+        <input
+          type="date"
+          value={fechaFin}
+          onChange={(e) => setFechaFin(e.target.value)}
+          className="border p-2 rounded"
+        />
+      </div>
+
+      {/* MODAL */}
+{modalOpen && (
+  <ModalFechas 
+    tempFechaIni={tempFechaIni}
+    setTempFechaIni={setTempFechaIni}
+    tempFechaFin={tempFechaFin}
+    setTempFechaFin={setTempFechaFin}
+    handleSelectDates={handleSelectDates}
+    handleCloseModal={handleCloseModal}
+  />
+)}
+    </div>
           <div className="flex flex-row">
             <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
               <div className="col-span-full md:col-span-full lg:col-span-full">

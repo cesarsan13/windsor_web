@@ -41,7 +41,7 @@ function Asignaturas() {
     reload_page,
     isDisabled,
     errors,
-    inactiveActive
+    inactiveActive,
   } = useAsignaturasABC();
 
   const {
@@ -53,12 +53,13 @@ function Asignaturas() {
     buttonProcess,
     procesarDatos,
     setDataJson,
+    excelPreviewData,
     pdfPreview,
     pdfData,
     animateLoading,
     porcentaje,
     cerrarTO,
-    dataJson
+    dataJson,
   } = useAsignaturasPdfExcel(
     asignaturasFiltrados,
     session,
@@ -76,14 +77,8 @@ function Asignaturas() {
     tableColumns,
     tableBody,
     modalBody,
-    sinZebra
-  } = useAsignaturasUI(
-    tableAction,
-    register,
-    permissions,
-    isDisabled,
-    errors
-  );
+    sinZebra,
+  } = useAsignaturasUI(tableAction, register, permissions, isDisabled, errors);
 
   if (status === "loading") {
     return (
@@ -92,10 +87,7 @@ function Asignaturas() {
   }
   return (
     <>
-      <BarraCarga 
-        porcentaje={porcentaje}
-        cerrarTO={cerrarTO}
-      />
+      <BarraCarga porcentaje={porcentaje} cerrarTO={cerrarTO} />
       <ModalProcesarDatos
         id_modal={"my_modal_4"}
         session={session}
@@ -110,7 +102,7 @@ function Asignaturas() {
         itemDataTable={itemDataTable}
         //clase para mover al tamaño del modal a preferencia (max-w-4xl)
         classModal={"modal-box w-full max-w-4xl h-full bg-base-200"}
-      />  
+      />
 
       <ModalComponent
         accion={accion}
@@ -125,9 +117,12 @@ function Asignaturas() {
         titulo={"Vista Previa de Asignaturas"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
+        excelPreviewData={excelPreviewData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
+        seeExcel={true}
+        seePDF={true}
       />
       <div className="container h-[85vh] w-full max-w-[1800px] bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
         <div className="flex flex-col justify-start p-3">

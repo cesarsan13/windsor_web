@@ -1,8 +1,7 @@
 import * as ExcelJS from "exceljs";
-import {
-  formatTime,
-  format_Fecha_String,
-} from "@/app/utils/globalfn";
+import { formatTime, format_Fecha_String } from "@/app/utils/globalfn";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 export class ReporteExcel {
   constructor(configuracion) {
@@ -104,8 +103,31 @@ export class ReporteExcel {
     }
 
     // Agregar los datos al worksheet
-    this.worksheetData.forEach((row) => {
-      worksheet.addRow(row);
+    this.worksheetData.forEach((row, rowIndex) => {
+      const newRow = worksheet.addRow(row);
+      if (rowIndex === 5) {
+        newRow.eachCell((cell) => {
+          cell.fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb: "030382" },
+          };
+          cell.font = {
+            color: { argb: "FFFFFF" },
+            bold: true,
+          };
+          cell.alignment = {
+            vertical: "middle",
+            horizontal: "center",
+          };
+          cell.border = {
+            top: { style: "thin" },
+            bottom: { style: "thin" },
+            left: { style: "thin" },
+            right: { style: "thin" },
+          };
+        });
+      }
     });
 
     worksheet.getColumn(1).width = 25;
@@ -124,6 +146,52 @@ export class ReporteExcel {
     anchor.click();
     document.body.removeChild(anchor);
     URL.revokeObjectURL(url);
+  }
+
+  async previewExcel(data = [], alignsIndex = [], cellWidthValue = 56) {
+    const doc = new jsPDF("landscape", "pt", "a4");
+    const { Nombre_Aplicacion, Nombre_Reporte, Nombre_Usuario } =
+      this.configuracion.Encabezado;
+    const date = new Date();
+    const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+    const time = date.toLocaleTimeString("es-MX", { hour12: false });
+    const logoUrl = "resources/Logo_Interaccion.png";
+    try {
+      doc.addImage(logoUrl, "PNG", 40, 8, 100, 100);
+    } catch (err) {
+      console.warn("No se pudo cargar el logo del Excel preview: ", err);
+    }
+    doc.setFontSize(12);
+    doc.text(Nombre_Aplicacion || "", 130, 40);
+    doc.text(Nombre_Reporte || "", 130, 55);
+    doc.text(`Usuario: ${Nombre_Usuario}`, 130, 70);
+    doc.text(`Fecha: ${todayDate}`, 700, 40);
+    doc.text(`Hora: ${time}`, 700, 55);
+    doc.text("Hoja: 1", 700, 70);
+    const headers = data[0];
+    const body = data.slice(1);
+    autoTable(doc, {
+      head: [headers],
+      body: body,
+      startY: 100,
+      theme: "grid",
+      styles: {
+        fontSize: 9,
+        halign: "left",
+      },
+      headStyles: {
+        fillColor: [2, 2, 129],
+        textColor: 255,
+        halign: "center",
+      },
+      columnStyles: alignsIndex.reduce((acc, i) => {
+        acc[i] = { halign: "right", cellWidth: cellWidthValue };
+        return acc;
+      }, {}),
+    });
+    return doc.output("datauristring");
   }
 
   setCondition(conditionColumn, conditionFunction) {

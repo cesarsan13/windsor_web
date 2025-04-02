@@ -49,10 +49,11 @@ function Comentarios() {
     CerrarView,
     ImprimePDF,
     ImprimeExcel,
-    handleFileChange, 
+    handleFileChange,
     buttonProcess,
     procesarDatos,
     setDataJson,
+    excelPreviewData,
     pdfPreview,
     pdfData,
     animateLoading,
@@ -70,21 +71,20 @@ function Comentarios() {
     setisLoadingButton
   );
 
-  const { 
-    itemHeaderTable, 
-    itemDataTable, 
-    tableColumns, 
-    tableBody, 
+  const {
+    itemHeaderTable,
+    itemDataTable,
+    tableColumns,
+    tableBody,
     modalBody,
-    sinZebra 
-  } =
-    useCommentsUI(
-      tableAction, 
-      register, 
-      permissions, 
-      isDisabled, 
-      errors,
-      accion
+    sinZebra,
+  } = useCommentsUI(
+    tableAction,
+    register,
+    permissions,
+    isDisabled,
+    errors,
+    accion
   );
 
   if (status === "loading" && !session) {
@@ -121,9 +121,12 @@ function Comentarios() {
         titulo={"Vista Previa de Comentarios"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
+        excelPreviewData={excelPreviewData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
+        seeExcel={true}
+        seePDF={true}
       />
 
       <div className="container h-[85vh] w-full max-w-[1800px] bg-base-200 dark:bg-slate-700 shadow-xl rounded-xl px-3 md:overflow-y-auto lg:overflow-y-hidden">
