@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Inputs from "@/app/pagos1/components/Inputs";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
-import { formatNumber } from "@/app/utils/globalfn";
+
 function ModalRecargos({
     register,
     errors,
@@ -13,7 +13,7 @@ function ModalRecargos({
     btnRecargo,
     handleBlur,
     handleKeyDown,
-    watchPrecargo
+    setPrecargo
 }) {
     const Guardar = (evt) => {
         handleModalClick(evt);
@@ -92,22 +92,22 @@ function ModalRecargos({
                                     </div>
                                     <div className="pl-5">
                                         <Inputs
-                                        key={PRecargo}
-                                           tipoInput={"disabledInput"}
-                                           dataType={"float"}
-                                           name={"recargo"}
-                                           tamañolabel={""}
-                                           className={"w-[100%] text-right"}
-                                           Titulo={" "}
-                                           type={"decimal"}
-                                           requerido={false}
-                                           register={register}
-                                           errors={errors}
-                                           maxLength={8}
-                                           isDisabled={false}
-                                           valueInput={formatNumber(PRecargo)}
-                                           //eventInput={handleBlur}
-                                           //handleKeyDown={handleKeyDown}
+                                            tipoInput={"disabledInputRecargo"}
+                                            dataType={"float"}
+                                            name={"recargo"}
+                                            tamañolabel={""}
+                                            className={"w-[100%] text-right"}
+                                            Titulo={" "}
+                                            type={"text"}
+                                            requerido={false}
+                                            register={register}
+                                            errors={errors}
+                                            maxLength={8}
+                                            isDisabled={false}
+                                            valueInput={PRecargo}
+                                            onChange={(e) => setPrecargo(e.target.value)}
+                                            //eventInput={handleBlur}
+                                            //handleKeyDown={handleKeyDown}
                                         />
                                     </div>
                                 </div>

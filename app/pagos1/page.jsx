@@ -109,7 +109,6 @@ function Pagos_1() {
   });
   const cantidad_producto = watch("cantidad_producto");
   const fecha = watch("fecha");
-  const watchPrecargo = watch("recargo");
 
   const {
     register: registerImpr,
@@ -395,7 +394,7 @@ function Pagos_1() {
 
     let desPr = ar9999.descripcion;
     let prePr = arFind.por_recargo;
-
+    
     if (arFind) {
       recargo = formatNumber(prePr);
     } else {
@@ -406,8 +405,10 @@ function Pagos_1() {
       setDrecargo(desPr);
       setPrecargo(recargo);
       setMuestraRecargos(false);
-      showModal("modal_recargos", true);
-      document.getElementById("recargo").focus();
+      setTimeout(() => {
+        showModal("modal_recargos", true);
+        document.getElementById("recargo").focus();
+      }, 100);
     } else {
       setDrecargo("");
       setPrecargo("");
@@ -987,10 +988,10 @@ function Pagos_1() {
         handleModalClick={handleModalClick}
         dRecargo={dRecargo}
         PRecargo={PRecargo}
+        setPrecargo = {setPrecargo}
         btnRecargo={btnRecargo}
         handleBlur={handleBlur}
         handleKeyDown={handleKeyDown}
-        watchPrecargo={watchPrecargo}
       />
       <ModalParciales
         session={session}
