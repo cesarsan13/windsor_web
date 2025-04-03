@@ -14,18 +14,16 @@ import { useSession } from "next-auth/react";
 import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import { formatNumber } from "@/app/utils/globalfn";
+import { format_Fecha_String, formatNumber } from "@/app/utils/globalfn";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { permissionsComponents } from "@/app/utils/globalfn";
+import ModalFechas from "@/app/components/modalFechas";
 
 function RelaciondeFacturas() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  let [fecha_cobro_ini, setFecha_cobro_ini] = useState("");
-  let [fecha_cobro_fin, setFecha_cobro_fin] = useState("");
   let [factura_ini, setFacturaIni] = useState("");
   let [factura_fin, setFacturaFin] = useState("");
-
   const [tomaFechas, setTomaFechas] = useState(true);
   const [tomaCanceladas, setTomaCanceladas] = useState(false);
   const [pdfPreview, setPdfPreview] = useState(false);
@@ -33,6 +31,12 @@ function RelaciondeFacturas() {
   const [FormaRepRelaciondeFacturas, setFormaRelaciondeFacturas] = useState([]);
   const [animateLoading, setAnimateLoading] = useState(false);
   const [permissions, setPermissions] = useState({});
+  //Modal Fechas
+  let [fecha_cobro_ini, setFecha_cobro_ini] = useState("");
+  let [fecha_cobro_fin, setFecha_cobro_fin] = useState("");
+  const [tempFechaIni, setTempFechaIni] = useState("");
+  const [tempFechaFin, setTempFechaFin] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
 
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
@@ -58,33 +62,34 @@ function RelaciondeFacturas() {
       return;
     }
     const fetchData = async () => {
-      let { token, permissions } = session.user;
+      let { permissions } = session.user;
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const es_admin = session.user.es_admin;
-      const data = await getRelaciondeFacturas(
-        token,
-        tomaFechas,
-        tomaCanceladas,
-        fecha_cobro_ini,
-        fecha_cobro_fin,
-        factura_ini,
-        factura_fin
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menuSeleccionado
       );
-      setFormaRelaciondeFacturas(data);
-      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
-      setPermissions(permisos)
+      setPermissions(permisos);
     };
     fetchData();
-  }, [
-    session,
-    status,
-    tomaFechas,
-    tomaCanceladas,
-    fecha_cobro_ini,
-    fecha_cobro_fin,
-    factura_ini,
-    factura_fin,
-  ]);
+  }, [session, status]);
+
+  const reportData = async () => {
+    const { token } = session.user;
+    const data = await getRelaciondeFacturas(
+      token,
+      tomaFechas,
+      tomaCanceladas,
+      format_Fecha_String(fecha_cobro_ini),
+      format_Fecha_String(fecha_cobro_fin),
+      factura_ini,
+      factura_fin
+    );
+    setFormaRelaciondeFacturas(data);
+    return data;
+  };
 
   const {
     formState: { errors },
@@ -94,16 +99,17 @@ function RelaciondeFacturas() {
     router.push("/");
   };
 
-  const handleVerClick = () => {
+  const handleVerClick = async () => {
     setAnimateLoading(true);
     cerrarModalVista();
+    const dataFact = await reportData();
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte de relación de facturas",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
-      body: FormaRepRelaciondeFacturas,
+      body: dataFact,
     };
 
     const reporte = new ReportePDF(configuracion);
@@ -186,7 +192,11 @@ function RelaciondeFacturas() {
         sub_total = total_importe;
       }
 
-      if (razon_social === "" || razon_social === " " || razon_social === null) {
+      if (
+        razon_social === "" ||
+        razon_social === " " ||
+        razon_social === null
+      ) {
         razon_social_cambio = r_s_nombre;
       } else {
         razon_social_cambio = razon_social;
@@ -299,6 +309,18 @@ function RelaciondeFacturas() {
     ImprimirExcel(configuracion);
   };
 
+  const handleCloseModal = () => setModalOpen(false);
+  const handleSelectDates = () => {
+    setFecha_cobro_ini(tempFechaIni);
+    setFecha_cobro_fin(tempFechaFin);
+    setModalOpen(false);
+  };
+  const handleOpenModal = () => {
+    setTempFechaIni(fecha_cobro_ini);
+    setTempFechaFin(fecha_cobro_fin);
+    setModalOpen(true);
+  };
+
   if (status === "loading") {
     return (
       <div className="container skeleton w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -322,7 +344,12 @@ function RelaciondeFacturas() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading} permiso_imprime={permissions.impresion}/>
+                <Acciones
+                  home={home}
+                  Ver={handleVerClick}
+                  isLoading={animateLoading}
+                  permiso_imprime={permissions.impresion}
+                />
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Relación de Facturas
@@ -333,43 +360,40 @@ function RelaciondeFacturas() {
         <div className="w-full py-3 flex flex-col gap-y-4">
           {/* Fila del formulario de la pagina */}
           <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto space-y-4">
-            <div className="flex flex-row max-[499px]:gap-1 gap-4">
+            <div className="flex flex-row gap-4">
               <div className="lg:w-fit md:w-fit">
-                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full">
-                  Fecha Ini.
-                  <input
-                    name={"fecha_cobro_ini"}
-                    tamañolabel={""}
-                    Titulo={"Fecha Inicial: "}
-                    type={"date"}
-                    errors={errors}
-                    maxLength={15}
-                    isDisabled={false}
-                    value={fecha_cobro_ini}
-                    setValue={setFecha_cobro_ini}
-                    onChange={(e) => setFecha_cobro_ini(e.target.value)}
-                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
-                  />
-                </label>
+                <input
+                  type="date"
+                  value={fecha_cobro_ini}
+                  onChange={(e) => setFecha_cobro_ini(e.target.value)}
+                  className="border p-2 rounded"
+                />
               </div>
+              <button
+                onClick={handleOpenModal}
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                📅
+              </button>
               <div className="lg:w-fit md:w-fit">
-                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-fit">
-                  Fecha Fin
-                  <input
-                    name={"fecha_cobro_fin"}
-                    tamañolabel={""}
-                    Titulo={"Fecha Final: "}
-                    type={"date"}
-                    errors={errors}
-                    maxLength={15}
-                    isDisabled={false}
-                    value={fecha_cobro_fin}
-                    setValue={setFecha_cobro_fin}
-                    onChange={(e) => setFecha_cobro_fin(e.target.value)}
-                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
-                  />
-                </label>
+                <input
+                  type="date"
+                  value={fecha_cobro_fin}
+                  onChange={(e) => setFecha_cobro_fin(e.target.value)}
+                  className="border p-2 rounded"
+                />
               </div>
+
+              {modalOpen && (
+                <ModalFechas
+                  tempFechaIni={tempFechaIni}
+                  setTempFechaIni={setTempFechaIni}
+                  tempFechaFin={tempFechaFin}
+                  setTempFechaFin={setTempFechaFin}
+                  handleSelectDates={handleSelectDates}
+                  handleCloseModal={handleCloseModal}
+                />
+              )}
             </div>
 
             <div className="flex flex-row max-[499px]:gap-1 gap-4">

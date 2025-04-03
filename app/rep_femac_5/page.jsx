@@ -17,12 +17,11 @@ import { showSwal } from "@/app/utils/alerts";
 import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
+import ModalFechas from "@/app/components/modalFechas";
 
 function AltasBajasAlumnos() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  let [fecha_ini, setFecha_ini] = useState("");
-  let [fecha_fin, setFecha_fin] = useState("");
   let [alumnosFiltrados, setAlumnosFiltrados] = useState([]);
   const [selectedOption, setSelectedOption] = useState("nombre");
   const [selectedOptionAB, setSelectedOptionAB] = useState("alta");
@@ -30,7 +29,13 @@ function AltasBajasAlumnos() {
   const [pdfData, setPdfData] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
   const [permissions, setPermissions] = useState({});
-
+  //Modal Fechas
+  let [fecha_ini, setFecha_ini] = useState("");
+  let [fecha_fin, setFecha_fin] = useState("");
+  const [tempFechaIni, setTempFechaIni] = useState("");
+  const [tempFechaFin, setTempFechaFin] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  
   useEffect(() => {
     const fetchData = async () => {
       let { permissions } = session.user;
@@ -48,7 +53,7 @@ function AltasBajasAlumnos() {
       return;
     }
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   const {
@@ -242,6 +247,19 @@ function AltasBajasAlumnos() {
     setPdfData("");
     document.getElementById("modalVRep5").close();
   };
+
+  const handleCloseModal = () => setModalOpen(false);
+  const handleSelectDates = () => {
+    setFecha_ini(tempFechaIni);
+    setFecha_fin(tempFechaFin);
+    setModalOpen(false);
+  };
+  const handleOpenModal = () => {
+    setTempFechaIni(fecha_ini);
+    setTempFechaFin(fecha_fin);
+    setModalOpen(true);
+  };
+
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -278,39 +296,39 @@ function AltasBajasAlumnos() {
           </div>
         </div>
         <div className="w-full py-3 flex flex-col gap-y-4">
-          {/* Fila del formulario de la pagina */}
-          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
-            <div className="flex flex-row max-[499px]:gap-1 gap-4">
-              <Inputs
-                name={"fecha_ini"}
-                tamañolabel={""}
-                Titulo={"Fecha Inicial: "}
-                type={"date"}
-                errors={errors}
-                maxLength={15}
-                isDisabled={false}
-                value={fecha_ini}
-                setValue={setFecha_ini}
-                onChange={(e) => setFecha_ini(e.target.value)}
-                conteClassName="lg:w-fit md:w-fit"
-                labelClassName="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full"
-                inputClassName="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700"
-              />
-              <Inputs
-                name={"fecha_fin"}
-                tamañolabel={""}
-                Titulo={"Fecha Final: "}
-                type={"date"}
-                errors={errors}
-                maxLength={15}
-                isDisabled={false}
-                value={fecha_fin}
-                setValue={setFecha_fin}
-                onChange={(e) => setFecha_fin(e.target.value)}
-                conteClassName="lg:w-fit md:w-fit"
-                labelClassName="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full"
-                inputClassName="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700"
-              />
+          <div className="flex flex-row">
+            <div className="max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto">
+              <div className="flex items-start justify-start gap-4">
+                <input
+                  type="date"
+                  value={fecha_ini}
+                  onChange={(e) => setFecha_ini(e.target.value)}
+                  className="border p-2 rounded"
+                />
+                <button
+                  onClick={handleOpenModal}
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                >
+                  📅
+                </button>
+                <input
+                  type="date"
+                  value={fecha_fin}
+                  onChange={(e) => setFecha_fin(e.target.value)}
+                  className="border p-2 rounded"
+                />
+              </div>
+
+              {modalOpen && (
+                <ModalFechas
+                  tempFechaIni={tempFechaIni}
+                  setTempFechaIni={setTempFechaIni}
+                  tempFechaFin={tempFechaFin}
+                  setTempFechaFin={setTempFechaFin}
+                  handleSelectDates={handleSelectDates}
+                  handleCloseModal={handleCloseModal}
+                />
+              )}
             </div>
           </div>
           <div className="flex flex-row">

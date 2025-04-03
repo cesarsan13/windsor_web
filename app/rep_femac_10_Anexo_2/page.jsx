@@ -4,7 +4,11 @@ import { useRouter } from "next/navigation";
 import Acciones from "@/app/rep_femac_10_Anexo_2/components/Acciones";
 import { calculaDigitoBvba } from "@/app/utils/globalfn";
 import { useForm } from "react-hook-form";
-import { getReporteEstadodeCuenta, ImprimirExcel, ImprimirPDF } from "@/app/utils/api/rep_femac_10_Anexo_2/rep_femac_10_Anexo_2";
+import {
+  getReporteEstadodeCuenta,
+  ImprimirExcel,
+  ImprimirPDF,
+} from "@/app/utils/api/rep_femac_10_Anexo_2/rep_femac_10_Anexo_2";
 import { formatNumber } from "@/app/utils/globalfn";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -15,12 +19,11 @@ import { ReportePDF } from "@/app/utils/ReportesPDF";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { permissionsComponents } from "@/app/utils/globalfn";
 import { showSwal } from "@/app/utils/alerts";
+import ModalFechas from "@/app/components/modalFechas";
 
 function EstadodeCuenta() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  let [fecha_ini, setFecha_ini] = useState("");
-  let [fecha_fin, setFecha_fin] = useState("");
   let [alumno_ini, setAlumnoIni] = useState("");
   let [alumno_fin, setAlumnoFin] = useState("");
   const [tomaFechas, setTomaFechas] = useState(true);
@@ -29,19 +32,25 @@ function EstadodeCuenta() {
   const [FormaRepEstadodeCuenta, setFormaReporteEstadodeCuenta] = useState([]);
   const [animateLoading, setAnimateLoading] = useState(false);
   const [permissions, setPermissions] = useState({});
+  //Modal Fechas
+  let [fecha_ini, setFecha_ini] = useState("");
+  let [fecha_fin, setFecha_fin] = useState("");
+  const [tempFechaIni, setTempFechaIni] = useState("");
+  const [tempFechaFin, setTempFechaFin] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
 
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
     return new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1)
       .toISOString()
-      .split('T')[0];
+      .split("T")[0];
   };
 
   const getUltimoDiaDelMes = () => {
     const fechaActual = new Date();
     return new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0)
       .toISOString()
-      .split('T')[0];
+      .split("T")[0];
   };
 
   useEffect(() => {
@@ -57,7 +66,12 @@ function EstadodeCuenta() {
       let { permissions } = session.user;
       const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
       const es_admin = session.user.es_admin;
-      const permisos = permissionsComponents(es_admin, permissions, session.user.id, menuSeleccionado);
+      const permisos = permissionsComponents(
+        es_admin,
+        permissions,
+        session.user.id,
+        menuSeleccionado
+      );
       setPermissions(permisos);
     };
     fetchData();
@@ -123,26 +137,32 @@ function EstadodeCuenta() {
           if (tomaFechas === true) {
             if (fecha_fin == "") {
               doc.ImpPosX(`Reporte del ${fecha_ini} `, 15, doc.tw_ren, 0, "L"),
-              doc.nextRow(5);
+                doc.nextRow(5);
             } else {
-              doc.ImpPosX(`Reporte del ${fecha_ini} al ${fecha_fin}`, 15, doc.tw_ren, 0, "L"),
-              doc.nextRow(5);
+              doc.ImpPosX(
+                `Reporte del ${fecha_ini} al ${fecha_fin}`,
+                15,
+                doc.tw_ren,
+                0,
+                "L"
+              ),
+                doc.nextRow(5);
             }
           }
           doc.nextRow(5);
           doc.ImpPosX("No.", 15, doc.tw_ren, 0, "L"),
-          doc.ImpPosX("Nombre", 30, doc.tw_ren, 0, "L"),
-          doc.ImpPosX("Cursa", 100, doc.tw_ren, 0, "L"),
-          doc.ImpPosX("Fecha Nac", 135, doc.tw_ren, 0, "L"),
-          doc.ImpPosX("Fecha Insc", 155, doc.tw_ren, 0, "L"),
-          doc.nextRow(5);
+            doc.ImpPosX("Nombre", 30, doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Cursa", 100, doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Fecha Nac", 135, doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Fecha Insc", 155, doc.tw_ren, 0, "L"),
+            doc.nextRow(5);
           doc.ImpPosX("Documento", 15, doc.tw_ren, 0, "L"),
-          doc.ImpPosX("producto", 35, doc.tw_ren, 0, "L"),
-          doc.ImpPosX("Descripcion", 53, doc.tw_ren, 0, "L"),
-          doc.ImpPosX("Fecha P", 130, doc.tw_ren, 0, "L"),
-          doc.ImpPosX("Importe", 165, doc.tw_ren, 0, "L"),
-          doc.ImpPosX("Recibo", 185, doc.tw_ren, 0, "L"),
-          doc.nextRow(4);
+            doc.ImpPosX("producto", 35, doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Descripcion", 53, doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Fecha P", 130, doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Importe", 165, doc.tw_ren, 0, "L"),
+            doc.ImpPosX("Recibo", 185, doc.tw_ren, 0, "L"),
+            doc.nextRow(4);
           doc.printLineV();
           doc.nextRow(4);
           doc.tiene_encabezado = true;
@@ -156,7 +176,15 @@ function EstadodeCuenta() {
       let total_general = 0;
 
       const Cambia_Alumno = (doc, total_importe) => {
-        doc.ImpPosX(`TOTAL: ${total_importe !=0 ? formatNumber(total_importe) : "0.0"}` || "", 170, doc.tw_ren, 0, "R");
+        doc.ImpPosX(
+          `TOTAL: ${
+            total_importe != 0 ? formatNumber(total_importe) : "0.0"
+          }` || "",
+          170,
+          doc.tw_ren,
+          0,
+          "R"
+        );
         doc.nextRow(8);
       };
 
@@ -183,11 +211,41 @@ function EstadodeCuenta() {
         }
 
         if (reporte2.id_al !== alumno_Ant && reporte2.id_al != null) {
-          reporte.ImpPosX(reporte2.id_al + "-" + calculaDigitoBvba(reporte2.id_al.toString()), 15, reporte.tw_ren, 0, "L");
-          reporte.ImpPosX(reporte2.nom_al.toString(), 30, reporte.tw_ren, 0, "L");
-          reporte.ImpPosX(reporte2.horario_nom.toString(), 100, reporte.tw_ren, 0, "L");
-          reporte.ImpPosX(reporte2.fecha_nac_al.toString(), 135, reporte.tw_ren, 0, "L");
-          reporte.ImpPosX(reporte2.fecha_ins_al.toString(), 155, reporte.tw_ren, 0, "L");
+          reporte.ImpPosX(
+            reporte2.id_al + "-" + calculaDigitoBvba(reporte2.id_al.toString()),
+            15,
+            reporte.tw_ren,
+            0,
+            "L"
+          );
+          reporte.ImpPosX(
+            reporte2.nom_al.toString(),
+            30,
+            reporte.tw_ren,
+            0,
+            "L"
+          );
+          reporte.ImpPosX(
+            reporte2.horario_nom.toString(),
+            100,
+            reporte.tw_ren,
+            0,
+            "L"
+          );
+          reporte.ImpPosX(
+            reporte2.fecha_nac_al.toString(),
+            135,
+            reporte.tw_ren,
+            0,
+            "L"
+          );
+          reporte.ImpPosX(
+            reporte2.fecha_ins_al.toString(),
+            155,
+            reporte.tw_ren,
+            0,
+            "L"
+          );
           Enca1(reporte);
           if (reporte.tw_ren >= reporte.tw_endRen) {
             reporte.pageBreak();
@@ -195,12 +253,42 @@ function EstadodeCuenta() {
           }
         }
         reporte.ImpPosX(documento, 33, reporte.tw_ren, 0, "R");
-        reporte.ImpPosX(reporte2.articulo != null ? reporte2.articulo.toString() : " ", 49, reporte.tw_ren, 0, "R");
-        reporte.ImpPosX(reporte2.descripcion != null ? reporte2.descripcion.toString() : " ", 53, reporte.tw_ren, 0, "L");
+        reporte.ImpPosX(
+          reporte2.articulo != null ? reporte2.articulo.toString() : " ",
+          49,
+          reporte.tw_ren,
+          0,
+          "R"
+        );
+        reporte.ImpPosX(
+          reporte2.descripcion != null ? reporte2.descripcion.toString() : " ",
+          53,
+          reporte.tw_ren,
+          0,
+          "L"
+        );
 
-        reporte.ImpPosX(reporte2.fecha != null ? reporte2.fecha.toString() : " ", 130, reporte.tw_ren, 0, "L");
-        reporte.ImpPosX(formatNumber(reporte2.importe), 165, reporte.tw_ren, 0, "R");
-        reporte.ImpPosX(reporte2.recibo != null ? reporte2.recibo.toString() : " ", 195, reporte.tw_ren, 0, "R");
+        reporte.ImpPosX(
+          reporte2.fecha != null ? reporte2.fecha.toString() : " ",
+          130,
+          reporte.tw_ren,
+          0,
+          "L"
+        );
+        reporte.ImpPosX(
+          formatNumber(reporte2.importe),
+          165,
+          reporte.tw_ren,
+          0,
+          "R"
+        );
+        reporte.ImpPosX(
+          reporte2.recibo != null ? reporte2.recibo.toString() : " ",
+          195,
+          reporte.tw_ren,
+          0,
+          "R"
+        );
 
         Enca1(reporte);
         if (reporte.tw_ren >= reporte.tw_endRen) {
@@ -212,7 +300,15 @@ function EstadodeCuenta() {
         alumno_Ant = reporte2.id_al;
       });
       Cambia_Alumno(reporte, total_importe);
-      reporte.ImpPosX(`TOTAL IMPORTE: ${total_general != 0 ? formatNumber(total_general) : "0.0"}` || "", 135, reporte.tw_ren, 0, "L");
+      reporte.ImpPosX(
+        `TOTAL IMPORTE: ${
+          total_general != 0 ? formatNumber(total_general) : "0.0"
+        }` || "",
+        135,
+        reporte.tw_ren,
+        0,
+        "L"
+      );
       setTimeout(() => {
         const pdfData = reporte.doc.output("datauristring");
         setPdfData(pdfData);
@@ -250,12 +346,7 @@ function EstadodeCuenta() {
       },
       body: FormaRepEstadodeCuenta,
     };
-    ImprimirPDF(
-      configuracion,
-      fecha_ini,
-      fecha_fin,
-      tomaFechas
-    );
+    ImprimirPDF(configuracion, fecha_ini, fecha_fin, tomaFechas);
   };
 
   const ImprimeExcel = async () => {
@@ -290,19 +381,26 @@ function EstadodeCuenta() {
         { header: "Documento", dataKey: "numero_doc" },
         { header: "Producto", dataKey: "articulo" },
         { header: "Descripcion", dataKey: "descripcion" },
-        
+
         { header: "Fecha P", dataKey: "fecha" },
         { header: "Importe", dataKey: "importe" },
-        { header: "Recibo", dataKey: "recibo" }
+        { header: "Recibo", dataKey: "recibo" },
       ],
       nombre: `Reporte Estado de Cuenta del dia ${fecha_ini} al ${fecha_fin}`,
     };
-    ImprimirExcel(
-      configuracion,
-      fecha_ini,
-      fecha_fin,
-      tomaFechas
-    );
+    ImprimirExcel(configuracion, fecha_ini, fecha_fin, tomaFechas);
+  };
+
+  const handleCloseModal = () => setModalOpen(false);
+  const handleSelectDates = () => {
+    setFecha_ini(tempFechaIni);
+    setFecha_fin(tempFechaFin);
+    setModalOpen(false);
+  };
+  const handleOpenModal = () => {
+    setTempFechaIni(fecha_ini);
+    setTempFechaFin(fecha_fin);
+    setModalOpen(true);
   };
 
   if (status === "loading") {
@@ -327,7 +425,12 @@ function EstadodeCuenta() {
           <div className="flex flex-col justify-start p-3 max-[600px]:p-0">
             <div className="flex flex-wrap items-start md:items-center mx-auto">
               <div className="order-2 md:order-1 flex justify-between w-full md:w-auto mb-0">
-                <Acciones home={home} Ver={handleVerClick} isLoading={animateLoading} permiso_imprime={permissions.impresion}/>
+                <Acciones
+                  home={home}
+                  Ver={handleVerClick}
+                  isLoading={animateLoading}
+                  permiso_imprime={permissions.impresion}
+                />
               </div>
               <h1 className="order-1 md:order-2 text-4xl font-xthin text-black dark:text-white mb-5 md:mb-0 mx-5">
                 Relación Estado de Cuenta
@@ -337,51 +440,45 @@ function EstadodeCuenta() {
         </div>
         <div className="w-full py-3 flex flex-col gap-y-4">
           {/* Fila del formulario de la pagina */}
-          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto space-y-4">
-            <div className="flex flex-row max-[499px]:gap-1 gap-4">
-              <div className="lg:w-fit md:w-fit">
-                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full">
-                  Fecha Ini.
-                  <input
-                    name={"fecha_ini"}
-                    tamañolabel={""}
-                    Titulo={"Fecha Inicial: "}
-                    type={"date"}
-                    errors={errors}
-                    maxLength={15}
-                    isDisabled={false}
-                    value={fecha_ini}
-                    setValue={setFecha_ini}
-                    onChange={(e) => setFecha_ini(e.target.value)}
-                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
-                  />
-                </label>
-              </div>
-              <div className="lg:w-fit md:w-fit">
-                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-fit">
-                  Fecha Fin
-                  <input
-                    name={"fecha_fin"}
-                    tamañolabel={""}
-                    Titulo={"Fecha Final: "}
-                    type={"date"}
-                    errors={errors}
-                    maxLength={15}
-                    isDisabled={false}
-                    value={fecha_fin}
-                    setValue={setFecha_fin}
-                    onChange={(e) => setFecha_fin(e.target.value)}
-                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
-                  />
-                </label>
-              </div>
-            </div>
-            
-          </div>
           <div className="flex flex-row">
             <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
               <div className="col-span-full md:col-span-full lg:col-span-full">
-                <div className="w-full">
+                <div className="flex flex-row w-full">
+                  <div className="max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 pl-4">
+                    <div className="flex items-center justify-start gap-4 pb-4">
+                      <input
+                        type="date"
+                        value={fecha_ini}
+                        onChange={(e) => setFecha_ini(e.target.value)}
+                        className="border p-2 rounded"
+                      />
+                      <button
+                        onClick={handleOpenModal}
+                        className="bg-blue-500 text-white px-4 py-2 rounded"
+                      >
+                        📅
+                      </button>
+                      <input
+                        type="date"
+                        value={fecha_fin}
+                        onChange={(e) => setFecha_fin(e.target.value)}
+                        className="border p-2 rounded"
+                      />
+                    </div>
+
+                    {modalOpen && (
+                      <ModalFechas
+                        tempFechaIni={tempFechaIni}
+                        setTempFechaIni={setTempFechaIni}
+                        tempFechaFin={tempFechaFin}
+                        setTempFechaFin={setTempFechaFin}
+                        handleSelectDates={handleSelectDates}
+                        handleCloseModal={handleCloseModal}
+                      />
+                    )}
+                  </div>
+                </div>
+                <div className="w-full pl-4">
                   <BuscarCat
                     table="alumnos"
                     itemData={[]}
@@ -397,7 +494,7 @@ function EstadodeCuenta() {
                 </div>
               </div>
               <div className="col-span-full md:col-span-full lg:col-span-full">
-                <div className="w-full">
+                <div className="w-full pl-4 p-4">
                   <BuscarCat
                     table="alumnos"
                     itemData={[]}
@@ -415,8 +512,10 @@ function EstadodeCuenta() {
               <div className="flex flex-row max-[499px]:gap-1 gap-4">
                 <div className="lg:w-fit md:w-fit">
                   <div className="tooltip " data-tip="Tomar Fechas">
-                    <label htmlFor="ch_tomaFechas"
-                      className="label cursor-pointer flex justify-start space-x-2">
+                    <label
+                      htmlFor="ch_tomaFechas"
+                      className="label cursor-pointer flex justify-start space-x-2"
+                    >
                       <input
                         id="ch_tomaFechas"
                         type="checkbox"
