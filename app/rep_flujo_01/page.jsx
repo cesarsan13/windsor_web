@@ -17,19 +17,24 @@ import {
 } from "@/app/utils/api/rep_flujo_01/rep_flujo_01";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
+import ModalFechas from "@/app/components/modalFechas";
 
 function Rep_Flujo_01() {
   const date = new Date();
   const router = useRouter();
   const { data: session, status } = useSession();
-  let [fecha_ini, setFecha_ini] = useState(date.toISOString().split("T")[0]); 
-  let [fecha_fin, setFecha_fin] = useState(date.toISOString().split("T")[0]); 
   const [selectedOption, setSelectedOption] = useState("sin_deudores");
   const [dataDocumentoCobranza, setDataDocumentoCobranza] = useState([]);
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [permissions, setPermissions] = useState({});
   const [animateLoading, setAnimateLoading] = useState(false);
+  //Modal Fechas
+  let [fecha_ini, setFecha_ini] = useState(date.toISOString().split("T")[0]);
+  let [fecha_fin, setFecha_fin] = useState(date.toISOString().split("T")[0]);
+  const [tempFechaIni, setTempFechaIni] = useState("");
+  const [tempFechaFin, setTempFechaFin] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
   const {
     formState: { errors },
   } = useForm({});
@@ -49,10 +54,9 @@ function Rep_Flujo_01() {
         menu_seleccionado
       );
       setPermissions(permisos);
-
     };
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, fecha_ini, fecha_fin]);
 
   if (status === "loading") {
@@ -312,6 +316,19 @@ function Rep_Flujo_01() {
     setPdfData("");
     document.getElementById("modalVPRepFlujo01").close();
   };
+
+  const handleCloseModal = () => setModalOpen(false);
+  const handleSelectDates = () => {
+    setFecha_ini(tempFechaIni);
+    setFecha_fin(tempFechaFin);
+    setModalOpen(false);
+  };
+  const handleOpenModal = () => {
+    setTempFechaIni(fecha_ini);
+    setTempFechaFin(fecha_fin);
+    setModalOpen(true);
+  };
+
   return (
     <>
       <VistaPrevia
@@ -343,36 +360,25 @@ function Rep_Flujo_01() {
           </div>
         </div>
         <div className="w-full py-3 flex flex-col gap-y-4">
-          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
-            <div className="flex flex-row max-[300px]:gap-1 gap-4 justify-center">
-              <Inputs
-                name={"fecha_ini"}
-                tamañolabel={""}
-                Titulo={"Fecha Inicial: "}
-                type={"date"}
-                errors={errors}
-                maxLength={11}
-                isDisabled={false}
-                setValue={setFecha_ini}
+          <div className="w-full flex justify-center">
+            <div className="flex items-center gap-4">
+              <input
+                type="date"
                 value={fecha_ini}
-                conteClassName="lg:w-fit md:w-fit"
-                labelClassName="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full"
-                inputClassName="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700"
+                onChange={(e) => setFecha_ini(e.target.value)}
+                className="border p-2 rounded"
               />
-
-              <Inputs
-                name={"fecha_fin"}
-                tamañolabel={""}
-                Titulo={"Fecha Final: "}
-                type={"date"}
-                errors={errors}
-                maxLength={11}
-                isDisabled={false}
-                setValue={setFecha_fin}
+              <button
+                onClick={handleOpenModal}
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                📅
+              </button>
+              <input
+                type="date"
                 value={fecha_fin}
-                conteClassName="lg:w-fit md:w-fit"
-                labelClassName="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full"
-                inputClassName="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700"
+                onChange={(e) => setFecha_fin(e.target.value)}
+                className="border p-2 rounded"
               />
             </div>
           </div>

@@ -16,12 +16,11 @@ import BuscarCat from "@/app/components/BuscarCat";
 import "jspdf-autotable";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { permissionsComponents } from "@/app/utils/globalfn";
+import ModalFechas from "@/app/components/modalFechas";
 
 function RelacionDeRecivos() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  let [fecha_ini, setFecha_ini] = useState("");
-  let [fecha_fin, setFecha_fin] = useState("");
   let [recibo_ini, setRecibeIni] = useState("");
   let [recibo_fin, setRecibeFin] = useState("");
   let [factura_ini, setFacturaIni] = useState("");
@@ -34,6 +33,12 @@ function RelacionDeRecivos() {
   const [pdfData, setPdfData] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
   const [permissions, setPermissions] = useState({});
+  //Modal Fechas
+  let [fecha_ini, setFecha_ini] = useState("");
+  let [fecha_fin, setFecha_fin] = useState("");
+  const [tempFechaIni, setTempFechaIni] = useState("");
+  const [tempFechaFin, setTempFechaFin] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
 
   const {
     formState: { errors },
@@ -56,7 +61,7 @@ function RelacionDeRecivos() {
       return;
     }
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   const getPrimerDiaDelMes = () => {
@@ -174,6 +179,18 @@ function RelacionDeRecivos() {
     document.getElementById("modalVPRepFemac8Anexo1").close();
   };
 
+  const handleCloseModal = () => setModalOpen(false);
+  const handleSelectDates = () => {
+    setFecha_ini(tempFechaIni);
+    setFecha_fin(tempFechaFin);
+    setModalOpen(false);
+  };
+  const handleOpenModal = () => {
+    setTempFechaIni(fecha_ini);
+    setTempFechaFin(fecha_fin);
+    setModalOpen(true);
+  };
+
   if (status === "loading") {
     return (
       <div className="container skeleton w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -212,43 +229,40 @@ function RelacionDeRecivos() {
         <div className="w-full py-3 flex flex-col gap-y-4">
           {/* Fila del formulario de la pagina */}
           <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto space-y-4">
-            <div className="flex flex-row max-[499px]:gap-1 gap-4">
+            <div className="flex flex-row gap-4">
               <div className="lg:w-fit md:w-fit">
-                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full">
-                  Fecha Ini.
-                  <input
-                    name={"fecha_ini"}
-                    tamañolabel={""}
-                    Titulo={"Fecha Inicial: "}
-                    type={"date"}
-                    errors={errors}
-                    maxLength={15}
-                    isDisabled={false}
-                    value={fecha_ini}
-                    setValue={setFecha_ini}
-                    onChange={(e) => setFecha_ini(e.target.value)}
-                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
-                  />
-                </label>
+                <input
+                  type="date"
+                  value={fecha_ini}
+                  onChange={(e) => setFecha_ini(e.target.value)}
+                  className="border p-2 rounded"
+                />
               </div>
+              <button
+                onClick={handleOpenModal}
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                📅
+              </button>
               <div className="lg:w-fit md:w-fit">
-                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-fit">
-                  Fecha Fin
-                  <input
-                    name={"fecha_fin"}
-                    tamañolabel={""}
-                    Titulo={"Fecha Final: "}
-                    type={"date"}
-                    errors={errors}
-                    maxLength={15}
-                    isDisabled={false}
-                    value={fecha_fin}
-                    setValue={setFecha_fin}
-                    onChange={(e) => setFecha_fin(e.target.value)}
-                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
-                  />
-                </label>
+                <input
+                  type="date"
+                  value={fecha_fin}
+                  onChange={(e) => setFecha_fin(e.target.value)}
+                  className="border p-2 rounded"
+                />
               </div>
+
+              {modalOpen && (
+                <ModalFechas
+                  tempFechaIni={tempFechaIni}
+                  setTempFechaIni={setTempFechaIni}
+                  tempFechaFin={tempFechaFin}
+                  setTempFechaFin={setTempFechaFin}
+                  handleSelectDates={handleSelectDates}
+                  handleCloseModal={handleCloseModal}
+                />
+              )}
             </div>
             <div className="flex flex-row max-[499px]:gap-1 gap-4">
               <div className="lg:w-fit md:w-fit">
@@ -345,28 +359,30 @@ function RelacionDeRecivos() {
                   />
                 </div>
               </div>
-              <div className="flex flex-row max-[499px]:gap-1 gap-4">
-                <div className="lg:w-fit md:w-fit">
-                  <div className="tooltip " data-tip="Tomar Fechas">
-                    <label
-                      htmlFor="ch_tomaFechas"
-                      className="label cursor-pointer flex justify-start space-x-2"
-                    >
-                      <input
-                        id="ch_tomaFechas"
-                        type="checkbox"
-                        className="checkbox checkbox-md"
-                        defaultChecked={true}
-                        onClick={(evt) => setTomaFechas(evt.target.checked)}
-                      />
-                      <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden  text-neutral-600 dark:text-neutral-200"></span>
-                      <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
-                        Toma Fechas
-                      </span>
-                    </label>
+              {!modalOpen && (
+                <div className="flex flex-row max-[499px]:gap-1 gap-4">
+                  <div className="lg:w-fit md:w-fit">
+                    <div className="tooltip" data-tip="Tomar Fechas">
+                      <label
+                        htmlFor="ch_tomaFechas"
+                        className="label cursor-pointer flex justify-start space-x-2"
+                      >
+                        <input
+                          id="ch_tomaFechas"
+                          type="checkbox"
+                          className="checkbox checkbox-md"
+                          defaultChecked={true}
+                          onClick={(evt) => setTomaFechas(evt.target.checked)}
+                        />
+                        <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
+                        <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
+                          Toma Fechas
+                        </span>
+                      </label>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

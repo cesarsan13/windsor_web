@@ -14,19 +14,24 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import "jspdf-autotable";
 import VistaPrevia from "@/app/components/VistaPrevia";
+import ModalFechas from "@/app/components/modalFechas";
 
 function AltasBajasAlumnos() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const date = new Date();
   const dateStr = formatDate(date);
-  let [fecha_ini, setFecha_ini] = useState(dateStr.replace(/\//g, "-"));
-  let [fecha_fin, setFecha_fin] = useState(dateStr.replace(/\//g, "-"));
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
   const [isLoading, setisLoading] = useState(false);
   const [animateLoading, setAnimateLoading] = useState(false);
   const [permissions, setPermissions] = useState({});
+  //Modal Fechas
+  let [fecha_ini, setFecha_ini] = useState(dateStr.replace(/\//g, "-"));
+  let [fecha_fin, setFecha_fin] = useState(dateStr.replace(/\//g, "-"));
+  const [tempFechaIni, setTempFechaIni] = useState("");
+  const [tempFechaFin, setTempFechaFin] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
 
   const {
     formState: { errors },
@@ -51,16 +56,21 @@ function AltasBajasAlumnos() {
     setFecha_fin(getUltimoDiaDelMes());
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (status === "loading" || !session) {
       return;
     }
-    let {permissions}=session.user
-    const es_admin = session.user.es_admin
+    let { permissions } = session.user;
+    const es_admin = session.user.es_admin;
     const menuSeleccionado = Number(localStorage.getItem("puntoMenu"));
-    const permisos = permissionsComponents(es_admin,permissions,session.user.id,menuSeleccionado)
-    setPermissions(permisos)
-  },[session,status])
+    const permisos = permissionsComponents(
+      es_admin,
+      permissions,
+      session.user.id,
+      menuSeleccionado
+    );
+    setPermissions(permisos);
+  }, [session, status]);
 
   const handleVerClick = async () => {
     setisLoading(true);
@@ -157,6 +167,18 @@ function AltasBajasAlumnos() {
     document.getElementById("modalVPRepInsc").close();
   };
 
+  const handleCloseModal = () => setModalOpen(false);
+  const handleSelectDates = () => {
+    setFecha_ini(tempFechaIni);
+    setFecha_fin(tempFechaFin);
+    setModalOpen(false);
+  };
+  const handleOpenModal = () => {
+    setTempFechaIni(fecha_ini);
+    setTempFechaFin(fecha_fin);
+    setModalOpen(true);
+  };
+
   if (status === "loading") {
     return (
       <div className="container skeleton    w-full  max-w-screen-xl  shadow-xl rounded-xl "></div>
@@ -194,45 +216,37 @@ function AltasBajasAlumnos() {
         </div>
         <div className="w-full py-3 flex flex-col gap-y-4">
           {/* Fila del formulario de la pagina */}
-          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
-            <div className="flex flex-row max-[499px]:gap-1 gap-4">
-              <div className="lg:w-fit md:w-fit">
-                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full">
-                  Fecha Ini.
-                  <input
-                    name={"fecha_ini"}
-                    tamañolabel={""}
-                    Titulo={"Fecha Inicial: "}
-                    type={"date"}
-                    errors={errors}
-                    maxLength={11}
-                    isDisabled={false}
-                    setValue={setFecha_ini}
-                    value={fecha_ini}
-                    onChange={(e) => setFecha_ini(e.target.value)}
-                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
-                  />
-                </label>
-              </div>
-              <div className="lg:w-fit md:w-fit">
-                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-fit">
-                  Fecha Fin
-                  <input
-                    name={"fecha_fin"}
-                    tamañolabel={""}
-                    Titulo={"Fecha Final: "}
-                    type={"date"}
-                    errors={errors}
-                    maxLength={11}
-                    isDisabled={false}
-                    setValue={setFecha_fin}
-                    value={fecha_fin}
-                    onChange={(e) => setFecha_fin(e.target.value)}
-                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
-                  />
-                </label>
-              </div>
+          <div className="w-full flex justify-center">
+            <div className="flex items-center gap-4">
+              <input
+                type="date"
+                value={fecha_ini}
+                onChange={(e) => setFecha_ini(e.target.value)}
+                className="border p-2 rounded"
+              />
+              <button
+                onClick={handleOpenModal}
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                📅
+              </button>
+              <input
+                type="date"
+                value={fecha_fin}
+                onChange={(e) => setFecha_fin(e.target.value)}
+                className="border p-2 rounded"
+              />
             </div>
+            {modalOpen && (
+              <ModalFechas
+                tempFechaIni={tempFechaIni}
+                setTempFechaIni={setTempFechaIni}
+                tempFechaFin={tempFechaFin}
+                setTempFechaFin={setTempFechaFin}
+                handleSelectDates={handleSelectDates}
+                handleCloseModal={handleCloseModal}
+              />
+            )}
           </div>
         </div>
       </div>

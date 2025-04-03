@@ -22,13 +22,12 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { useEffect } from "react";
 import { showSwal } from "@/app/utils/alerts";
+import ModalFechas from "@/app/components/modalFechas";
 
 function RepFemac12Anexo() {
   const date = new Date();
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [fecha1, setFecha1] = useState("");
-  const [fecha2, setFecha2] = useState("");
   const [producto1, setProducto1] = useState({});
   const [producto2, setProducto2] = useState({});
   const [sOrdenar, ssetordenar] = useState("nombre");
@@ -37,6 +36,12 @@ function RepFemac12Anexo() {
   const [isLoading, setisLoading] = useState(false);
   const [animateLoading, setAnimateLoading] = useState(false);
   const [permissions, setPermissions] = useState({});
+  //Modal Fechas
+  const [fecha1, setFecha1] = useState("");
+  const [fecha2, setFecha2] = useState("");
+  const [tempFechaIni, setTempFechaIni] = useState("");
+  const [tempFechaFin, setTempFechaFin] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
 
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
@@ -66,7 +71,7 @@ function RepFemac12Anexo() {
       menuSeleccionado
     );
     setPermissions(permisos);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   useEffect(() => {
@@ -235,18 +240,56 @@ function RepFemac12Anexo() {
             tot_art = 0;
           }
           if (trabRep.articulo !== Art_Ant) {
-            reporte.ImpPosX((trabRep.articulo ?? "").toString(), 24, reporte.tw_ren, 0, "R");
-            reporte.ImpPosX((trabRep.descripcion ?? "").toString(), 43, reporte.tw_ren, 0, "L");
+            reporte.ImpPosX(
+              (trabRep.articulo ?? "").toString(),
+              24,
+              reporte.tw_ren,
+              0,
+              "R"
+            );
+            reporte.ImpPosX(
+              (trabRep.descripcion ?? "").toString(),
+              43,
+              reporte.tw_ren,
+              0,
+              "L"
+            );
             Enca1(reporte);
             if (reporte.tw_ren >= reporte.tw_endRen) {
               reporte.pageBreak();
               Enca1(reporte);
             }
           }
-          reporte.ImpPosX( (trabRep.alumno ?? "").toString() + "-" + calculaDigitoBvba((trabRep.alumno ?? "").toString()), 24, reporte.tw_ren, 0, "R");
-          reporte.ImpPosX( (trabRep.nombre ?? "").toString(), 38, reporte.tw_ren, 0, "L");
-          reporte.ImpPosX( formatNumber(trabRep.importe ?? 0), 138, reporte.tw_ren, 0, "R");
-          reporte.ImpPosX((trabRep.fecha ?? "").toString(), 168, reporte.tw_ren, 0, "L");
+          reporte.ImpPosX(
+            (trabRep.alumno ?? "").toString() +
+              "-" +
+              calculaDigitoBvba((trabRep.alumno ?? "").toString()),
+            24,
+            reporte.tw_ren,
+            0,
+            "R"
+          );
+          reporte.ImpPosX(
+            (trabRep.nombre ?? "").toString(),
+            38,
+            reporte.tw_ren,
+            0,
+            "L"
+          );
+          reporte.ImpPosX(
+            formatNumber(trabRep.importe ?? 0),
+            138,
+            reporte.tw_ren,
+            0,
+            "R"
+          );
+          reporte.ImpPosX(
+            (trabRep.fecha ?? "").toString(),
+            168,
+            reporte.tw_ren,
+            0,
+            "L"
+          );
           Enca1(reporte);
           if (reporte.tw_ren >= reporte.tw_endRen) {
             reporte.pageBreak();
@@ -258,7 +301,13 @@ function RepFemac12Anexo() {
         });
         Cambia_Articulo(reporte, tot_art);
         reporte.ImpPosX("TOTAL GENERAL: ", 98, reporte.tw_ren, 0, "L");
-        reporte.ImpPosX( formatNumber(total_general), 148, reporte.tw_ren, 0, "R");
+        reporte.ImpPosX(
+          formatNumber(total_general),
+          148,
+          reporte.tw_ren,
+          0,
+          "R"
+        );
         setTimeout(() => {
           const pdfData = reporte.doc.output("datauristring");
           setPdfData(pdfData);
@@ -267,9 +316,7 @@ function RepFemac12Anexo() {
           setAnimateLoading(false);
         }, 500);
       }
-    } catch (e) {
-
-    }
+    } catch (e) {}
   };
 
   const showModalVista = (show) => {
@@ -289,6 +336,19 @@ function RepFemac12Anexo() {
     setPdfData("");
     document.getElementById("modalVPRepFemac12Anexo4").close();
   };
+
+  const handleCloseModal = () => setModalOpen(false);
+  const handleSelectDates = () => {
+    setFecha1(tempFechaIni);
+    setFecha2(tempFechaFin);
+    setModalOpen(false);
+  };
+  const handleOpenModal = () => {
+    setTempFechaIni(fecha1);
+    setTempFechaFin(fecha2);
+    setModalOpen(true);
+  };
+
   return (
     <>
       <VistaPrevia
@@ -323,35 +383,46 @@ function RepFemac12Anexo() {
         <div className="w-full py-3 flex flex-col gap-y-4">
           {/* Fila del formulario de la pagina */}
           <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto space-y-4">
-            <div className="flex flex-row max-[499px]:gap-1 gap-4">
-              <div className="lg:w-fit md:w-fit">
-                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-full">
-                  Fecha Ini.
+            <div className="flex flex-row w-full">
+              <div className="max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 pl-4">
+                <div className="flex items-center justify-start gap-4">
                   <input
                     type="date"
                     value={fecha1}
                     onChange={(e) => setFecha1(e.target.value)}
-                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
+                    className="border p-2 rounded"
                   />
-                </label>
-              </div>
-              <div className="lg:w-fit md:w-fit">
-                <label className="input input-bordered input-md text-black dark:text-white flex items-center max-[430px]:gap-1 gap-3 w-auto lg:w-fit md:w-fit">
-                  Fecha Fin
+                  <button
+                    onClick={handleOpenModal}
+                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                  >
+                    📅
+                  </button>
                   <input
                     type="date"
                     value={fecha2}
                     onChange={(e) => setFecha2(e.target.value)}
-                    className="rounded block grow text-black max-[500px]:w-[100px] w-auto dark:text-white border-b-2 border-slate-300 dark:border-slate-700 "
+                    className="border p-2 rounded"
                   />
-                </label>
+                </div>
+
+                {modalOpen && (
+                  <ModalFechas
+                    tempFechaIni={tempFechaIni}
+                    setTempFechaIni={setTempFechaIni}
+                    tempFechaFin={tempFechaFin}
+                    setTempFechaFin={setTempFechaFin}
+                    handleSelectDates={handleSelectDates}
+                    handleCloseModal={handleCloseModal}
+                  />
+                )}
               </div>
             </div>
           </div>
           <div className="flex flex-row">
             <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
               <div className="col-span-full md:col-span-full lg:col-span-full">
-                <div className="w-full">
+                <div className="w-full pl-4">
                   <BuscarCat
                     table={"productos"}
                     nameInput={["producto1", "producto_desc1"]}
@@ -366,7 +437,7 @@ function RepFemac12Anexo() {
                 </div>
               </div>
               <div className="col-span-full md:col-span-full lg:col-span-full">
-                <div className="w-full">
+                <div className="w-full pl-4">
                   <BuscarCat
                     table={"productos"}
                     nameInput={["producto2", "producto_desc2"]}
