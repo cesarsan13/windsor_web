@@ -63,6 +63,7 @@ function Pagos_1() {
   const [muestraDocumento, setMuestraDocumento] = useState(false);
   const [isLoadingButton, setisLoadingButton] = useState(false);
   const [dRecargo, setDrecargo] = useState("");
+  const [PRecargo, setPrecargo] = useState("");
   const [selectedTable, setSelectedTable] = useState({});
   const [cargado, setCargado] = useState(false);
   const [docFiltrados, setdDocFiltrados] = useState([]);
@@ -108,6 +109,7 @@ function Pagos_1() {
   });
   const cantidad_producto = watch("cantidad_producto");
   const fecha = watch("fecha");
+  const watchPrecargo = watch("recargo");
 
   const {
     register: registerImpr,
@@ -251,6 +253,7 @@ function Pagos_1() {
     setColorInput("");
     setPrecioBase("");
     setDrecargo("");
+    setPrecargo("");
     setdDocFiltrados([]);
     setValidar(false);
     setCargado(false);
@@ -273,7 +276,7 @@ function Pagos_1() {
       clave_acceso: "",
       monto_parcial: 0,
       clave_acceso: "",
-      recargo: 0,
+      //recargo: 0,
     });
     resetImpr({
       pago: formaPagoPage.pago,
@@ -365,31 +368,49 @@ function Pagos_1() {
 
   const Recargos = async () => {
     setMuestraRecargos(true);
+
     let recargo = 0;
-    let prod = productos1.numero;
+    let prod = selectedTable.numero_producto;
     let alumnoInvalido = alumnos1.numero;
     if (!alumnoInvalido) {
       showSwal("Oppss!", "Alumno invalido", "error");
       setMuestraRecargos(false);
       return;
     }
+    let validar = selectedTable.numero_producto;
+    if (!validar) {
+      await showSwalAndWait(
+        "¡Error!",
+        "No hay ningún artículo seleccionado. Asegúrate de haberlo elegido en la tabla.",
+        "error"
+      );
+      setMuestraRecargos(false);
+      return;
+    }
+
     const [arFind, ar9999] = await Promise.all([
       BuscaArticulo(prod),
       BuscaArticulo(9999),
     ]);
+
     let desPr = ar9999.descripcion;
+    let prePr = arFind.por_recargo;
+
     if (arFind) {
-      recargo = formatNumber(arFind.por_recargo);
+      recargo = formatNumber(prePr);
     } else {
       recargo = formatNumber(0);
     }
+
     if (desPr) {
       setDrecargo(desPr);
+      setPrecargo(recargo);
       setMuestraRecargos(false);
       showModal("modal_recargos", true);
       document.getElementById("recargo").focus();
     } else {
       setDrecargo("");
+      setPrecargo("");
       setMuestraRecargos(false);
       showModal("modal_recargos", false);
     }
@@ -965,9 +986,11 @@ function Pagos_1() {
         errors={errors}
         handleModalClick={handleModalClick}
         dRecargo={dRecargo}
+        PRecargo={PRecargo}
         btnRecargo={btnRecargo}
         handleBlur={handleBlur}
         handleKeyDown={handleKeyDown}
+        watchPrecargo={watchPrecargo}
       />
       <ModalParciales
         session={session}

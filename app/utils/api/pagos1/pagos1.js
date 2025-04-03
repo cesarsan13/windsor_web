@@ -99,7 +99,6 @@ function formatFecha(fecha) {
 }
 
 export const guardarDetallePedido = async (token, data) => {
-  
   let url = `${process.env.DOMAIN_API}api/pagos1/detalle-pedido-guardar`;
   const res = await fetch(url, {
     method: "POST",
@@ -361,7 +360,6 @@ export const ImprimirExcel = (configuracion) => {
 };
 
 export const storeBatchDetallePedido = async (token, data) => {
-
   let url = `${process.env.DOMAIN_API}api/pagos1/guardar-detalle-pedido`;
   const res = await fetch(url, {
     method: "POST",

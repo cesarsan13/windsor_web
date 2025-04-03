@@ -1,16 +1,19 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Inputs from "@/app/pagos1/components/Inputs";
 import Image from "next/image";
 import iconos from "@/app/utils/iconos";
+import { formatNumber } from "@/app/utils/globalfn";
 function ModalRecargos({
     register,
     errors,
     handleModalClick,
     dRecargo,
+    PRecargo,
     btnRecargo,
     handleBlur,
     handleKeyDown,
+    watchPrecargo
 }) {
     const Guardar = (evt) => {
         handleModalClick(evt);
@@ -87,22 +90,24 @@ function ModalRecargos({
                                             valueInput={dRecargo}
                                         />
                                     </div>
-                                    <div className="w-full lg:w-auto pb-2 lg:pb-0 mt-0 mb-0 flex pl-5">
+                                    <div className="pl-5">
                                         <Inputs
-                                            tipoInput={"formatNumber"}
-                                            dataType={"float"}
-                                            name={"recargo"}
-                                            tamañolabel={""}
-                                            className={"rounded-l block grow text-right"}
-                                            Titulo={" "}
-                                            type={"text"}
-                                            requerido={false}
-                                            register={register}
-                                            errors={errors}
-                                            maxLength={8}
-                                            isDisabled={false}
-                                            handleBlur={handleBlur}
-                                            handleKeyDown={handleKeyDown}
+                                        key={PRecargo}
+                                           tipoInput={"disabledInput"}
+                                           dataType={"float"}
+                                           name={"recargo"}
+                                           tamañolabel={""}
+                                           className={"w-[100%] text-right"}
+                                           Titulo={" "}
+                                           type={"decimal"}
+                                           requerido={false}
+                                           register={register}
+                                           errors={errors}
+                                           maxLength={8}
+                                           isDisabled={false}
+                                           valueInput={formatNumber(PRecargo)}
+                                           //eventInput={handleBlur}
+                                           //handleKeyDown={handleKeyDown}
                                         />
                                     </div>
                                 </div>
