@@ -18,8 +18,7 @@ import {
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import Swal from "sweetalert2";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+
 
 import ModalFechas from "@/app/components/modalFechas";
 function Rep_Femac_6() {
