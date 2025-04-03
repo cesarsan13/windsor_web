@@ -360,7 +360,6 @@ export const ImprimirExcel = (configuracion) => {
 };
 
 export const storeBatchDetallePedido = async (token, data) => {
-
   let url = `${process.env.DOMAIN_API}api/pagos1/guardar-detalle-pedido`;
   const res = await fetch(url, {
     method: "POST",
@@ -372,6 +371,5 @@ export const storeBatchDetallePedido = async (token, data) => {
     }),
   });
   const resJson = await res.json();
-  console.log("resjson", resJson);
   return resJson.data;
 };

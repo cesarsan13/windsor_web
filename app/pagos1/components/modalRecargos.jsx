@@ -92,6 +92,7 @@ function ModalRecargos({
                                     </div>
                                     <div className="pl-5">
                                         <Inputs
+                                        key={PRecargo}
                                            tipoInput={"disabledInput"}
                                            dataType={"float"}
                                            name={"recargo"}
