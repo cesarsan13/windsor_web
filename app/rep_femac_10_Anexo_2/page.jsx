@@ -38,6 +38,7 @@ function EstadodeCuenta() {
   const [tempFechaIni, setTempFechaIni] = useState("");
   const [tempFechaFin, setTempFechaFin] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedAllAlumnos, setSelectedAllAlumnos] = useState(false);
 
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
@@ -97,7 +98,7 @@ function EstadodeCuenta() {
     setAnimateLoading(true);
     cerrarModalVista();
 
-    if (alumno_ini.numero === undefined) {
+    if (alumno_ini.numero === undefined && selectedAllAlumnos === false) {
       showSwal(
         "Oppss!",
         "Para imprimir, mínimo debe estar seleccionado un Alumno de 'Inicio'",
@@ -109,10 +110,13 @@ function EstadodeCuenta() {
         setAnimateLoading(false);
       }, 500);
     } else {
+      const fechaIniFormateada = fecha_ini ? fecha_ini.replace(/-/g, "/") : 0;
+      const fechaFinFormateada = fecha_fin ? fecha_fin.replace(/-/g, "/") : 0;
       const data = await getReporteEstadodeCuenta(
         session.user.token,
-        fecha_ini,
-        fecha_fin,
+        selectedAllAlumnos,
+        fechaIniFormateada,
+        fechaFinFormateada,
         alumno_ini.numero,
         alumno_fin.numero,
         tomaFechas
@@ -277,7 +281,7 @@ function EstadodeCuenta() {
         );
         reporte.ImpPosX(
           formatNumber(reporte2.importe),
-          165,
+          176,
           reporte.tw_ren,
           0,
           "R"
@@ -480,6 +484,7 @@ function EstadodeCuenta() {
                 </div>
                 <div className="w-full pl-4">
                   <BuscarCat
+                    deshabilitado={selectedAllAlumnos === true}
                     table="alumnos"
                     itemData={[]}
                     fieldsToShow={["numero", "nombre_completo"]}
@@ -496,6 +501,7 @@ function EstadodeCuenta() {
               <div className="col-span-full md:col-span-full lg:col-span-full">
                 <div className="w-full pl-4 p-4">
                   <BuscarCat
+                    deshabilitado={selectedAllAlumnos === true}
                     table="alumnos"
                     itemData={[]}
                     fieldsToShow={["numero", "nombre_completo"]}
@@ -529,6 +535,23 @@ function EstadodeCuenta() {
                       </span>
                     </label>
                   </div>
+                  <div className="tooltip" data-tip="Toma todos los Alumnos">
+                      <label
+                        htmlFor="ch_SelectedAllAlumnos"
+                        className="label cursor-pointer flex justify-start space-x-2"
+                      >
+                        <input
+                          id="ch_selectedAllAlumnos"
+                          type="checkbox"
+                          className="checkbox checkbox-md"
+                          defaultChecked={false}
+                          onClick={(evt) => setSelectedAllAlumnos(evt.target.checked)}
+                        />
+                        <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
+                          Toma todos los Alumnos
+                        </span>
+                      </label>
+                    </div>
                 </div>
               </div>
             </div>

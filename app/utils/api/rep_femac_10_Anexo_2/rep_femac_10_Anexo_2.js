@@ -2,13 +2,14 @@ import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { calculaDigitoBvba, format_Fecha_String, formatTime, formatNumber } from "@/app/utils/globalfn";
 
-export const getReporteEstadodeCuenta = async (token, fecha_ini, fecha_fin, alumno_ini, alumno_fin, tomaFechas) => {
+export const getReporteEstadodeCuenta = async (token, fecha_ini, fecha_fin, alumno_ini, alumno_fin, tomaFechas, selectedAllAlumnos) => {
   const res = await fetch (`${process.env.DOMAIN_API}api/reportes/rep_femac_10_anexo_2`,{
     method: "post",
     body: JSON.stringify({
       tomafecha: tomaFechas,
-      fecha_cobro_ini: format_Fecha_String(fecha_ini),
-      fecha_cobro_fin: format_Fecha_String(fecha_fin),
+      selectedAllAlumnos: selectedAllAlumnos,
+      fecha_cobro_ini: fecha_ini,
+      fecha_cobro_fin: fecha_fin,
       alumno_ini: alumno_ini,
       alumno_fin: alumno_fin
     }),
@@ -119,7 +120,7 @@ export const ImprimirPDF = (configuracion, fecha_ini, fecha_fin, tomaFechas) =>{
       newPDF.ImpPosX(reporte2.articulo != null ? reporte2.articulo.toString() : " ", 49, newPDF.tw_ren, 0, "R");
       newPDF.ImpPosX(reporte2.descripcion != null ? reporte2.descripcion.toString() : " ", 53, newPDF.tw_ren, 0, "L");
       newPDF.ImpPosX(reporte2.fecha != null ? reporte2.fecha.toString() : " ", 130, newPDF.tw_ren, 0, "L");
-      newPDF.ImpPosX(formatNumber(reporte2.importe), 165, newPDF.tw_ren, 0, "R");
+      newPDF.ImpPosX(formatNumber(reporte2.importe), 176, newPDF.tw_ren, 0, "R");
       newPDF.ImpPosX(reporte2.recibo != null ? reporte2.recibo.toString() : " ", 195, newPDF.tw_ren, 0, "R");
 
       Enca1(newPDF,F_fecha_ini, F_fecha_fin, tomaFechas);
