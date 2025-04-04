@@ -330,7 +330,7 @@ function RelacionDeRecivos() {
           <div className="flex flex-row">
             <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
               <div className="col-span-full md:col-span-full lg:col-span-full">
-                <div className="w-full">
+                <div className="w-full p-1">
                   <BuscarCat
                     deshabilitado={selectedAllAlumnos === true}
                     table="alumnos"
@@ -341,13 +341,13 @@ function RelacionDeRecivos() {
                     setItem={setAlumnoIni}
                     token={session.user.token}
                     modalId="modal_alumnos1"
-                    inputWidths={{ first: "100px", second: "300px" }}
+                    inputWidths={{ first: "109px", second: "300px" }}
                     descClassName="md:mt-0 w-full"
                   />
                 </div>
               </div>
               <div className="col-span-full md:col-span-full lg:col-span-full">
-                <div className="w-full">
+                <div className="w-full p-1">
                   <BuscarCat
                     deshabilitado={selectedAllAlumnos === true}
                     table="alumnos"
@@ -358,7 +358,7 @@ function RelacionDeRecivos() {
                     setItem={setAlumnoFin}
                     token={session.user.token}
                     modalId="modal_alumnos2"
-                    inputWidths={{ first: "100px", second: "300px" }}
+                    inputWidths={{ first: "109px", second: "300px" }}
                     descClassName="md:mt-0 w-full"
                   />
                 </div>
