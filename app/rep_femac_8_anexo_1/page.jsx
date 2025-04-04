@@ -39,6 +39,7 @@ function RelacionDeRecivos() {
   const [tempFechaIni, setTempFechaIni] = useState("");
   const [tempFechaFin, setTempFechaFin] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedAllAlumnos, setSelectedAllAlumnos] = useState(false);
 
   const {
     formState: { errors },
@@ -91,6 +92,7 @@ function RelacionDeRecivos() {
     data = await getRelaciondeRecibos(
       token,
       tomaFechas,
+      selectedAllAlumnos,
       fechaIniFormateada,
       fechaFinFormateada,
       factura_ini,
@@ -330,6 +332,7 @@ function RelacionDeRecivos() {
               <div className="col-span-full md:col-span-full lg:col-span-full">
                 <div className="w-full">
                   <BuscarCat
+                    deshabilitado={selectedAllAlumnos === true}
                     table="alumnos"
                     itemData={[]}
                     fieldsToShow={["numero", "nombre_completo"]}
@@ -346,6 +349,7 @@ function RelacionDeRecivos() {
               <div className="col-span-full md:col-span-full lg:col-span-full">
                 <div className="w-full">
                   <BuscarCat
+                    deshabilitado={selectedAllAlumnos === true}
                     table="alumnos"
                     itemData={[]}
                     fieldsToShow={["numero", "nombre_completo"]}
@@ -362,7 +366,7 @@ function RelacionDeRecivos() {
               {!modalOpen && (
                 <div className="flex flex-row max-[499px]:gap-1 gap-4">
                   <div className="lg:w-fit md:w-fit">
-                    <div className="tooltip" data-tip="Tomar Fechas">
+                  <div className="tooltip" data-tip="Tomar Fechas">
                       <label
                         htmlFor="ch_tomaFechas"
                         className="label cursor-pointer flex justify-start space-x-2"
@@ -380,6 +384,24 @@ function RelacionDeRecivos() {
                         </span>
                       </label>
                     </div>
+                    <div className="tooltip" data-tip="Toma todos los Alumnos">
+                      <label
+                        htmlFor="ch_SelectedAllAlumnos"
+                        className="label cursor-pointer flex justify-start space-x-2"
+                      >
+                        <input
+                          id="ch_selectedAllAlumnos"
+                          type="checkbox"
+                          className="checkbox checkbox-md"
+                          defaultChecked={false}
+                          onClick={(evt) => setSelectedAllAlumnos(evt.target.checked)}
+                        />
+                        <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
+                          Toma todos los Alumnos
+                        </span>
+                      </label>
+                    </div>
+                    
                   </div>
                 </div>
               )}

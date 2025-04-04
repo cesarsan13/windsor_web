@@ -5,6 +5,7 @@ import { formatTime, formatNumber, format_Fecha_String } from "@/app/utils/globa
 export const getRelaciondeRecibos = async (
   token,
   tomaFecha,
+  selectedAllAlumnos,
   fecha_ini,
   fecha_fin,
   factura_ini,
@@ -19,6 +20,7 @@ export const getRelaciondeRecibos = async (
     method: "post",
     body: JSON.stringify({
       tomaFecha: tomaFecha,
+      selectedAllAlumnos: selectedAllAlumnos,
       fecha_ini: fecha_ini,
       fecha_fin: fecha_fin,
       factura_ini: factura_ini,
