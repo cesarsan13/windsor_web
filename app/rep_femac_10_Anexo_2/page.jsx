@@ -517,41 +517,50 @@ function EstadodeCuenta() {
               </div>
               <div className="flex flex-row max-[499px]:gap-1 gap-4">
                 <div className="lg:w-fit md:w-fit">
-                  <div className="tooltip " data-tip="Tomar Fechas">
-                    <label
-                      htmlFor="ch_tomaFechas"
-                      className="label cursor-pointer flex justify-start space-x-2"
-                    >
-                      <input
-                        id="ch_tomaFechas"
-                        type="checkbox"
-                        className="checkbox checkbox-md"
-                        defaultChecked={true}
-                        onClick={(evt) => setTomaFechas(evt.target.checked)}
-                      />
-                      <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden  text-neutral-600 dark:text-neutral-200"></span>
-                      <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
-                        Toma Fechas
-                      </span>
-                    </label>
-                  </div>
-                  <div className="tooltip" data-tip="Toma todos los Alumnos">
-                      <label
-                        htmlFor="ch_SelectedAllAlumnos"
-                        className="label cursor-pointer flex justify-start space-x-2"
+                  {!modalOpen && (
+                    <>
+                      <div className="tooltip " data-tip="Tomar Fechas">
+                        <label
+                          htmlFor="ch_tomaFechas"
+                          className="label cursor-pointer flex justify-start space-x-2"
+                        >
+                          <input
+                            id="ch_tomaFechas"
+                            type="checkbox"
+                            className="checkbox checkbox-md"
+                            defaultChecked={true}
+                            onClick={(evt) => setTomaFechas(evt.target.checked)}
+                          />
+                          <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden  text-neutral-600 dark:text-neutral-200"></span>
+                          <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
+                            Toma Fechas
+                          </span>
+                        </label>
+                      </div>
+                      <div
+                        className="tooltip"
+                        data-tip="Toma todos los Alumnos"
                       >
-                        <input
-                          id="ch_selectedAllAlumnos"
-                          type="checkbox"
-                          className="checkbox checkbox-md"
-                          defaultChecked={false}
-                          onClick={(evt) => setSelectedAllAlumnos(evt.target.checked)}
-                        />
-                        <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
-                          Toma todos los Alumnos
-                        </span>
-                      </label>
-                    </div>
+                        <label
+                          htmlFor="ch_SelectedAllAlumnos"
+                          className="label cursor-pointer flex justify-start space-x-2"
+                        >
+                          <input
+                            id="ch_selectedAllAlumnos"
+                            type="checkbox"
+                            className="checkbox checkbox-md"
+                            defaultChecked={false}
+                            onClick={(evt) =>
+                              setSelectedAllAlumnos(evt.target.checked)
+                            }
+                          />
+                          <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
+                            Toma todos los Alumnos
+                          </span>
+                        </label>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
