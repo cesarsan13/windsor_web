@@ -430,46 +430,55 @@ function RelaciondeFacturas() {
           <div className="flex flex-row">
             <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
               <div className="flex flex-row max-[499px]:gap-1 gap-4">
-                <div className="lg:w-fit md:w-fit">
-                  <div className="tooltip " data-tip="Tomar Fechas">
-                    <label
-                      htmlFor="ch_tomaFechas"
-                      className="label cursor-pointer flex justify-start space-x-2"
-                    >
-                      <input
-                        id="ch_tomaFechas"
-                        type="checkbox"
-                        className="checkbox checkbox-md"
-                        defaultChecked={true}
-                        onClick={(evt) => setTomaFechas(evt.target.checked)}
-                      />
-                      <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden  text-neutral-600 dark:text-neutral-200"></span>
-                      <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
-                        Toma Fechas
-                      </span>
-                    </label>
-                  </div>
-                </div>
-                <div className="lg:w-fit md:w-fit">
-                  <div className="tooltip" data-tip="Tomar Facturas Canceladas">
-                    <label
-                      htmlFor="ch_tomaCanceladas"
-                      className="label cursor-pointer flex justify-start space-x-2"
-                    >
-                      <input
-                        id="ch_tomaCanceladas"
-                        type="checkbox"
-                        className="checkbox checkbox-md"
-                        defaultChecked={false}
-                        onClick={(evt) => setTomaCanceladas(evt.target.checked)}
-                      />
-                      <span className="fa-regular fa-file-lines block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
-                      <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
-                        Toma Facturas Canceladas
-                      </span>
-                    </label>
-                  </div>
-                </div>
+                {!modalOpen && (
+                  <>
+                    <div className="lg:w-fit md:w-fit">
+                      <div className="tooltip " data-tip="Tomar Fechas">
+                        <label
+                          htmlFor="ch_tomaFechas"
+                          className="label cursor-pointer flex justify-start space-x-2"
+                        >
+                          <input
+                            id="ch_tomaFechas"
+                            type="checkbox"
+                            className="checkbox checkbox-md"
+                            defaultChecked={true}
+                            onClick={(evt) => setTomaFechas(evt.target.checked)}
+                          />
+                          <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden  text-neutral-600 dark:text-neutral-200"></span>
+                          <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
+                            Toma Fechas
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                    <div className="lg:w-fit md:w-fit">
+                      <div
+                        className="tooltip"
+                        data-tip="Tomar Facturas Canceladas"
+                      >
+                        <label
+                          htmlFor="ch_tomaCanceladas"
+                          className="label cursor-pointer flex justify-start space-x-2"
+                        >
+                          <input
+                            id="ch_tomaCanceladas"
+                            type="checkbox"
+                            className="checkbox checkbox-md"
+                            defaultChecked={false}
+                            onClick={(evt) =>
+                              setTomaCanceladas(evt.target.checked)
+                            }
+                          />
+                          <span className="fa-regular fa-file-lines block sm:hidden md:hidden lg:hidden xl:hidden text-neutral-600 dark:text-neutral-200"></span>
+                          <span className="label-text font-bold hidden sm:block text-neutral-600 dark:text-neutral-200">
+                            Toma Facturas Canceladas
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

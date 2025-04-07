@@ -381,7 +381,7 @@ function Rep_Flujo_01() {
                 className="border p-2 rounded"
               />
             </div>
-            {modalOpen && (
+            {modalOpen && ( 
               <ModalFechas
                 tempFechaIni={tempFechaIni}
                 setTempFechaIni={setTempFechaIni}
