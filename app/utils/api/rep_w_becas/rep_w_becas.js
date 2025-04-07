@@ -3,7 +3,7 @@ import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { formatTime, format_Fecha_String } from "@/app/utils/globalfn";
 
 
-export const getBecas = async (token, alumno1, alumno2, orden) => {
+export const getBecas = async (token, alumno1, alumno2, orden, selectedAllAlumnos) => {
   alumno1 = (alumno1 === undefined || Object.keys(alumno1).length === 0) ? '' : alumno1;
   alumno2 = (alumno2 === undefined || Object.keys(alumno2).length === 0) ? '' : alumno2;
     const res = await fetch (`${process.env.DOMAIN_API}api/reportes/rep_becas`,{
@@ -12,6 +12,7 @@ export const getBecas = async (token, alumno1, alumno2, orden) => {
         alumno1: alumno1.numero,
         alumno2: alumno2.numero,
         orden: orden,
+        selectedAllAlumnos: selectedAllAlumnos,
       }),
       headers: {
         Authorization: "Bearer " + token,
@@ -55,8 +56,8 @@ export const getBecas = async (token, alumno1, alumno2, orden) => {
       newPDF.ImpPosX(horarios.numero.toString(),15, newPDF.tw_ren);
       newPDF.ImpPosX(horarios.alumno.toString(),25, newPDF.tw_ren);
       newPDF.ImpPosX(horarios.grado.toString(),115, newPDF.tw_ren);
-      newPDF.ImpPosX(horarios.colegiatura.toString().substring(0,4),160, newPDF.tw_ren);
-      newPDF.ImpPosX(horarios.descuento.toString().substring(4,2),190, newPDF.tw_ren);
+      newPDF.ImpPosX(horarios.colegiatura.toString(),160, newPDF.tw_ren);
+      newPDF.ImpPosX(horarios.descuento.toString(),190, newPDF.tw_ren);
       newPDF.ImpPosX(horarios.costo_final.toString(),210, newPDF.tw_ren);
 
       Enca1(newPDF);
