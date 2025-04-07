@@ -4,13 +4,14 @@ import { calculaDigitoBvba, formatTime, format_Fecha_String, formatNumber } from
 
 export const getDetallePedido = async (
   token,
+  selectedAllProductos,
   fecha1,
   fecha2,
   articulo,
-  artFin
+  //artFin
 ) => {
   const res = await fetch(
-    `${process.env.DOMAIN_API}api/cobranzaProducto/${fecha1}/${fecha2}/${articulo}/${artFin}`,
+    `${process.env.DOMAIN_API}api/cobranzaProducto/${fecha1}/${fecha2}/${selectedAllProductos}/${articulo}`, ///${artFin}
     {
       headers: new Headers({
         Authorization: `Bearer ${token}`,
