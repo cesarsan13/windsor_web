@@ -381,6 +381,16 @@ function Rep_Flujo_01() {
                 className="border p-2 rounded"
               />
             </div>
+            {modalOpen && (
+              <ModalFechas
+                tempFechaIni={tempFechaIni}
+                setTempFechaIni={setTempFechaIni}
+                tempFechaFin={tempFechaFin}
+                setTempFechaFin={setTempFechaFin}
+                handleSelectDates={handleSelectDates}
+                handleCloseModal={handleCloseModal}
+              />
+            )}
           </div>
           <div className="flex flex-row ">
             <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
