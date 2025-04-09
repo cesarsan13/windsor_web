@@ -381,6 +381,13 @@ function CobranzaPorAlumno() {
       columns: [
         { header: "No.", dataKey: "id_al" },
         { header: "Nombre", dataKey: "nom_al" },
+        { header: "", dataKey: "" },
+        { header: "", dataKey: "" },
+        { header: "", dataKey: "" },
+        { header: "", dataKey: "" },
+        { header: "", dataKey: "" },
+        { header: "", dataKey: "" },
+        { header: "", dataKey: "" },
       ],
       columns2: [
         { header: "Producto", dataKey: "articulo" },

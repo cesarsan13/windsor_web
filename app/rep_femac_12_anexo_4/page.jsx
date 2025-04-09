@@ -102,9 +102,11 @@ function RepFemac12Anexo() {
       },
     };
     const { token } = session.user;
+
     ImprimirPDF(
       configuracion,
       token,
+      selectedAllProductos,
       fecha1,
       fecha2,
       producto1.numero,
@@ -124,6 +126,8 @@ function RepFemac12Anexo() {
       columns: [
         { header: "Producto", dataKey: "articulo" },
         { header: "Descripcion", dataKey: "descripcion" },
+        { header: "", dataKey: "" },
+        { header: "", dataKey: "" },
       ],
       columns2: [
         { header: "Alumno", dataKey: "alumno" },
@@ -134,9 +138,11 @@ function RepFemac12Anexo() {
       nombre: "Reporte de Cobranza por Producto",
     };
     const { token } = session.user;
+
     ImprimirExcel(
       configuracion,
       token,
+      selectedAllProductos,
       fecha1,
       fecha2,
       producto1.numero,
@@ -194,7 +200,7 @@ function RepFemac12Anexo() {
           }
         };
         const Cambia_Articulo = (doc, Total_Art) => {
-          doc.ImpPosX("TOTAL: ", 98, doc.tw_ren, 0, "L");
+          doc.ImpPosX("TOTAL: ", 95, doc.tw_ren, 0, "L");
           doc.ImpPosX(formatNumber(Total_Art), 138, doc.tw_ren, 0, "R");
           doc.nextRow(4);
         };
@@ -307,10 +313,10 @@ function RepFemac12Anexo() {
           Art_Ant = trabRep.articulo;
         });
         Cambia_Articulo(reporte, tot_art);
-        reporte.ImpPosX("TOTAL GENERAL: ", 98, reporte.tw_ren, 0, "L");
+        reporte.ImpPosX("TOTAL GENERAL: ", 95, reporte.tw_ren, 0, "L");
         reporte.ImpPosX(
           formatNumber(total_general),
-          148,
+          145,
           reporte.tw_ren,
           0,
           "R"

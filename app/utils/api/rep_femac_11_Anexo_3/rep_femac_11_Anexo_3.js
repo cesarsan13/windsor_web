@@ -187,7 +187,7 @@ export const ImprimirExcel = (configuracion) =>{
     } else {
       tipoPago2 = imp.desc_Tipo_Pago_2;
     }
-    if (imp.id_al !== alumno_Ant && imp.id_al != null) {
+    if (imp.id_al !== alumno_Ant && imp.id_al !== "") {
       data1.push({
         articulo: imp.id_al+"-"+ calculaDigitoBvba(imp.id_al.toString()),
         descripcion: imp.nom_al,

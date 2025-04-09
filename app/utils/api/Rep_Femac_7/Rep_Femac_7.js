@@ -128,22 +128,22 @@ export const Imprimir = async (
       newPDF.ImpPosX(alu_Act.toString(), 26, newPDF.tw_ren, 0, "R");
       const data = alumnos.find((alu) => alu.numero === alu_Act);
       nombre = data.nombre;
-      newPDF.ImpPosX(nombre, 28, newPDF.tw_ren, 0, "L");
-      newPDF.ImpPosX(doc.producto, 122, newPDF.tw_ren, 0, "R");
-      newPDF.ImpPosX(doc.descripcion, 128, newPDF.tw_ren, 0, "L");
-      newPDF.ImpPosX(doc.fecha, 208, newPDF.tw_ren, 0, "L");
+      newPDF.ImpPosX(nombre.toString(), 28, newPDF.tw_ren, 0, "L");
+      newPDF.ImpPosX(doc.producto.toString(), 122, newPDF.tw_ren, 0, "R");
+      newPDF.ImpPosX(doc.descripcion.toString(), 128, newPDF.tw_ren, 0, "L");
+      newPDF.ImpPosX(doc.fecha.toString(), 208, newPDF.tw_ren, 0, "L");
       saldo = doc.importe - doc.importe * (doc.descuento / 100);
       saldoTotal += saldo;
       total_General += saldo;
-      newPDF.ImpPosX(saldo.toFixed(2), 243, newPDF.tw_ren, 0, "R");
+      newPDF.ImpPosX(saldo.toFixed(2).toString(), 243, newPDF.tw_ren, 0, "R");
 
       const isLastRecordForAlumno =
         index === documentos.length - 1 ||
         documentos[index + 1].alumno !== alu_Act;
 
       if (isLastRecordForAlumno) {
-        newPDF.ImpPosX(saldoTotal.toFixed(2), 264, newPDF.tw_ren, 0, "R");
-        newPDF.ImpPosX(data.telefono1, 268, newPDF.tw_ren, 0, "L");
+        newPDF.ImpPosX(saldoTotal.toFixed(2).toString(), 264, newPDF.tw_ren, 0, "R");
+        newPDF.ImpPosX(data.telefono1.toString(), 268, newPDF.tw_ren, 0, "L");
         saldoTotal = 0;
         newPDF.nextRow(5);
       }

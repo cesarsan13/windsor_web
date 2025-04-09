@@ -24,14 +24,21 @@ export const ImprimirExcel = (configuracion)=>{
     const {columns} = configuracion
     const {body} = configuracion
     const {nombre}=configuracion
+
+    const cambios = body.map(item => ({
+      ...item,
+      Año_Nac_1: item.Año_Nac_1 === "" ? "" : item.Año_Nac_1.substring(0, 4),
+      Mes_Nac_1: item.Mes_Nac_1 === "" ? "" : item.Mes_Nac_1.substring(5, 7),
+    }))
+
     newExcel.setColumnas(columns);
-    newExcel.addData(body);
+    newExcel.addData(cambios);
     const date = new Date();
   const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
     .toString()
     .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
   const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
   const timeStr = formatTime(date).replace(/:/g, "");
-  newExcel.guardaReporte(`${nombre}${dateStr}${timeStr}`);
+  newExcel.guardaReporte(`${nombre}_${dateStr}_${timeStr}`);
   }
 

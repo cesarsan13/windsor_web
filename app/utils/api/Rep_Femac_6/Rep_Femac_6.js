@@ -43,8 +43,8 @@ export const ImprimirExcel = (configuracion, cajero) => {
       precio_unitario: tot_ant,
     });
     productos.push({
-      articulo: "Total Productos",
-      descripcion: "",
+      articulo: "",
+      descripcion: "Total Productos",
       precio_unitario: total_productos,
     });
     productos.push({
@@ -105,14 +105,14 @@ export const ImprimirExcel = (configuracion, cajero) => {
       total_tipo_pago = total_tipo_pago + Number(Tw_Pago[Tw_count][1]);
     }
     tipo_pago.push({
-      tipo_pago: "Total Tipo Pago",
-      descripcion: "",
+      tipo_pago: "",
+      descripcion: "Total Tipo Pago",
       importe: total_tipo_pago,
     });
     tipo_pago.push({
       tipo_pago: "",
       descripcion: "",
-      importe: 0.0,
+      importe: "",
     });
     newExcel.setColumnas(columns2);
     newExcel.addData(tipo_pago);
@@ -121,17 +121,17 @@ export const ImprimirExcel = (configuracion, cajero) => {
     tipo_pago.push({
       tipo_pago: "",
       descripcion: "",
-      importe: 0.0,
+      importe: "",
     });
     tipo_pago.push({
-      tipo_pago: "Total Tipo Pago",
-      descripcion: "",
+      tipo_pago: "",
+      descripcion: "Total Tipo Pago",
       importe: 0.0,
     });
     tipo_pago.push({
       tipo_pago: "",
       descripcion: "",
-      importe: 0.0,
+      importe: "",
     });
     newExcel.setColumnas(columns2);
     newExcel.addData(tipo_pago);
@@ -163,8 +163,8 @@ export const ImprimirExcel = (configuracion, cajero) => {
       importe: tot_cajero,
     });
     cajeros.push({
-      cajero: "Total Cajeros",
-      descripcion: "",
+      cajero: "",
+      descripcion: "Total Cajeros",
       importe: total_cajero,
     });
     newExcel.setColumnas(columns3);
@@ -177,8 +177,8 @@ export const ImprimirExcel = (configuracion, cajero) => {
       importe: 0.0,
     });
     cajeros.push({
-      cajero: "Total Cajeros",
-      descripcion: "",
+      cajero: "",
+      descripcion: "Total Cajeros",
       importe: 0,
     });
     cajeros.push({

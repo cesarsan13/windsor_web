@@ -288,7 +288,7 @@ function Rep_Flujo_01() {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: `Reporte Adeudos Pendientes  al ${fecha_ini}`,
-        Nombre_Usuario: `Usuario: ${session.user.name}`,
+        Nombre_Usuario: `${session.user.name}`,
       },
       body: dataDocumentoCobranza,
       columns: [

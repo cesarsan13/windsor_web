@@ -15,7 +15,7 @@ import "jspdf-autotable";
 import BuscarCat from "@/app/components/BuscarCat";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { showSwal } from "@/app/utils/alerts";
-import { permissionsComponents } from "@/app/utils/globalfn";
+import { permissionsComponents, formatNumber } from "@/app/utils/globalfn";
 
 function RepBecas() {
   const router = useRouter();
@@ -81,7 +81,7 @@ function RepBecas() {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte de Becas",
-        Nombre_Usuario: `Usuario: ${session.user.name}`,
+        Nombre_Usuario: `${session.user.name}`,
       },
       body: formaBecas,
       columns: [
@@ -149,16 +149,16 @@ function RepBecas() {
           reporte.tw_ren
         );
         reporte.ImpPosX(
-          reporte1.colegiatura.toString(),
+          formatNumber(reporte1.colegiatura).toString(),
           160,
           reporte.tw_ren
         );
         reporte.ImpPosX(
-          reporte1.descuento.toString(),
+          formatNumber(reporte1.descuento).toString(),
           190,
           reporte.tw_ren
         );
-        reporte.ImpPosX(reporte1.costo_final.toString(), 210, reporte.tw_ren);
+        reporte.ImpPosX(formatNumber(reporte1.costo_final).toString(), 210, reporte.tw_ren);
         Enca1(reporte);
         if (reporte.tw_ren >= reporte.tw_endRenH) {
           reporte.pageBreakH();
@@ -246,7 +246,7 @@ function RepBecas() {
                 />
               </div>
                 <div className="lg:w-fit md:w-fit">
-                  <div className="tooltip" data-tip="Toma todos los Productos">
+                  <div className="tooltip" data-tip="Toma todos los Alumnos">
                     <label
                       htmlFor="ch_SelectedAllProductos"
                       className="label cursor-pointer flex justify-start space-x-2"
@@ -259,7 +259,7 @@ function RepBecas() {
                         onClick={(evt) => setSelectedAllAlumnos(evt.target.checked)}
                       />
                       <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
-                        Toma todos los Productos
+                        Toma todos los Alumnos
                       </span>
                     </label>
                   </div>

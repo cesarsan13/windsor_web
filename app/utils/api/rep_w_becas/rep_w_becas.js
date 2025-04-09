@@ -1,6 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
-import { formatTime, format_Fecha_String } from "@/app/utils/globalfn";
+import { formatTime, format_Fecha_String, formatNumber } from "@/app/utils/globalfn";
 
 
 export const getBecas = async (token, alumno1, alumno2, orden, selectedAllAlumnos) => {
@@ -52,13 +52,12 @@ export const getBecas = async (token, alumno1, alumno2, orden, selectedAllAlumno
     const { body } = configuracion;
     Enca1(newPDF);
     body.forEach((horarios) => {
-
       newPDF.ImpPosX(horarios.numero.toString(),15, newPDF.tw_ren);
       newPDF.ImpPosX(horarios.alumno.toString(),25, newPDF.tw_ren);
-      newPDF.ImpPosX(horarios.grado.toString(),115, newPDF.tw_ren);
-      newPDF.ImpPosX(horarios.colegiatura.toString(),160, newPDF.tw_ren);
-      newPDF.ImpPosX(horarios.descuento.toString(),190, newPDF.tw_ren);
-      newPDF.ImpPosX(horarios.costo_final.toString(),210, newPDF.tw_ren);
+      newPDF.ImpPosX(horarios.grado === null ? "" : horarios.grado.toString() ,115, newPDF.tw_ren);
+      newPDF.ImpPosX(formatNumber(horarios.colegiatura).toString(),160, newPDF.tw_ren);
+      newPDF.ImpPosX(formatNumber(horarios.descuento).toString(),190, newPDF.tw_ren);
+      newPDF.ImpPosX(formatNumber(horarios.costo_final).toString(),210, newPDF.tw_ren);
 
       Enca1(newPDF);
       if (newPDF.tw_ren >= newPDF.tw_endRenH) {
@@ -81,8 +80,16 @@ export const getBecas = async (token, alumno1, alumno2, orden, selectedAllAlumno
     const {columns} = configuracion
     const {body} = configuracion
     const {nombre}=configuracion
+
+    const cambios = body.map(item => ({
+      ...item,
+      colegiatura: formatNumber(item.colegiatura),
+      costo_final: formatNumber(item.costo_final),
+      descuento: formatNumber(item.descuento),
+    }))
+
     newExcel.setColumnas(columns);
-    newExcel.addData(body);
+    newExcel.addData(cambios);
     const date = new Date();
   const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
     .toString()

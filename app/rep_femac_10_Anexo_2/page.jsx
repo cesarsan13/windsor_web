@@ -380,12 +380,12 @@ function EstadodeCuenta() {
         { header: "Cursa", dataKey: "horario_nom" },
         { header: "Fecha Nac", dataKey: "fecha_nac_al" },
         { header: "Fecha Ins", dataKey: "fecha_ins_al" },
+        { header: "", dataKey: "" },
       ],
       columns2: [
         { header: "Documento", dataKey: "numero_doc" },
         { header: "Producto", dataKey: "articulo" },
         { header: "Descripcion", dataKey: "descripcion" },
-
         { header: "Fecha P", dataKey: "fecha" },
         { header: "Importe", dataKey: "importe" },
         { header: "Recibo", dataKey: "recibo" },

@@ -78,7 +78,7 @@ function AlumnosPorClase() {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte de Alumnos por clase",
-        Nombre_Usuario: `Usuario: ${session.user.name}`,
+        Nombre_Usuario: `${session.user.name}`,
       },
       body: FormaRepDosSel,
       columns: [
@@ -227,7 +227,7 @@ function AlumnosPorClase() {
           "R"
         );
         reporte.ImpPosX(
-          reporte1.Mes_Nac_2?.toString().substring(4, 2) ?? "",
+          reporte1.Mes_Nac_2?.toString().substring(5, 7) ?? "",
           266,
           reporte.tw_ren,
           0,

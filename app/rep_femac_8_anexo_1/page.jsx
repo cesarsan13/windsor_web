@@ -123,7 +123,7 @@ function RelacionDeRecivos() {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte Relación de Recibos",
-        Nombre_Usuario: `Usuario: ${session.user.name}`,
+        Nombre_Usuario: ` ${session.user.name}`,
       },
       body: alumnosFiltrados,
       columns: [
