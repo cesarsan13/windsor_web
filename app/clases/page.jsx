@@ -99,7 +99,7 @@ function Clases() {
       />
       <VistaPrevia
         id="modalVPClase"
-        titulo={"Vista PRevia de Clases"}
+        titulo={"Vista Previa de Clases"}
         excelPreviewData={excelPreviewData}
         pdfPreview={pdfPreview}
         pdfData={pdfData}

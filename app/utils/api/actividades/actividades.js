@@ -1,5 +1,6 @@
 import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { formatDate, formatTime } from "@/app/utils/globalfn";
 
 export const getActividadSecuencia = async (token, materia) => {
   let url = `${process.env.DOMAIN_API}api/proceso/actividad-secuencia`
@@ -102,7 +103,10 @@ export const ImprimirPDF = (configuracion) => {
       Enca1(newPDF);
     }
   });
-  newPDF.guardaReporte("Actividades");
+  const date = new Date()
+  const dateStr = formatDate(date)
+  const timeStr = formatTime(date)
+  newPDF.guardaReporte(`Actividades_${dateStr.replaceAll("/", "")}_${timeStr.replaceAll(":", "")}`);
 };
 
 const Enca1 = (doc) => {
@@ -128,7 +132,10 @@ export const ImprimirExcel = (configuracion) => {
   const { nombre } = configuracion
   newExcel.setColumnas(columns)
   newExcel.addData(body);
-  newExcel.guardaReporte(nombre)
+  const date = new Date()
+  const dateStr = formatDate(date)
+  const timeStr = formatTime(date)
+  newExcel.guardaReporte(`${nombre}_${dateStr.replaceAll("/", "")}_${timeStr.replaceAll(":", "")}`)
 }
 
 export const getAsignaturas = async (token, baja) => {

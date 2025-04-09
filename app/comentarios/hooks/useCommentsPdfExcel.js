@@ -159,14 +159,19 @@ export const useCommentsPdfExcel = (
   };
 
   const ImprimeExcel = () => {
+    const cambios = formaComentariosFiltrados.map(item => ({
+        ...item,
+        generales: item.generales === "1" ? "Si" : "No"
+      })
+    );
+
     const configuracion = {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte de Comentarios",
         Nombre_Usuario: `Usuario: ${session.user.name}`,
       },
-
-      body: formaComentariosFiltrados,
+      body: cambios,
       columns: [
         { header: "Id", dataKey: "numero" },
         { header: "Comentario 1", dataKey: "comentario_1" },

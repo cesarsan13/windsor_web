@@ -127,7 +127,7 @@ export const useActividadesPdfExcel = (
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte Datos Actividades",
-        Nombre_Usuario: `Usuario: ${session.user.name}`,
+        Nombre_Usuario: `${session.user.name}`,
       },
       body: ActividadesFiltradas,
       columns: [

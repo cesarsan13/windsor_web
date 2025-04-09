@@ -215,7 +215,7 @@ export const ImprimirExcel = (configuracion) => {
       sub_total = total_importe;
     }
 
-    if (razon_social === "" || razon_social === " ") {
+    if (razon_social === "" || razon_social === " " || razon_social === null) {
       razon_social_cambio = r_s_nombre;
     } else {
       razon_social_cambio = razon_social;

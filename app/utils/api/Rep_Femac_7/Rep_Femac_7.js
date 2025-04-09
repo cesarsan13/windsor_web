@@ -273,7 +273,7 @@ export const ImprimirExcel = async (
         producto: doc.producto,
         descripcion: doc.descripcion,
         fecha: doc.fecha,
-        saldo: saldo.toFixed(2),
+        saldo: saldo,
         total: "",
         telefono: "",
       });
@@ -288,8 +288,8 @@ export const ImprimirExcel = async (
           producto: doc.producto,
           descripcion: doc.descripcion,
           fecha: doc.fecha,
-          saldo: saldo.toFixed(2),
-          total: saldoTotal.toFixed(2),
+          saldo: saldo,
+          total: saldoTotal,
           telefono: data.telefono1,
         });
         saldoTotal = 0;
@@ -315,7 +315,7 @@ export const ImprimirExcel = async (
     descripcion: "",
     fecha: "",
     saldo: "Total General",
-    total: total_General.toFixed(2),
+    total: total_General,
     telefono: "",
   });
   const { nombre } = configuracion;

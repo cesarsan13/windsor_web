@@ -196,12 +196,12 @@ export const ImprimirExcel = (configuracion) =>{
       articulo: imp.articulo,
       descripcion: imp.descripcion,
       fecha: imp.fecha,
-      importe: imp.importe,
+      importe: formatNumber(imp.importe),
       recibo: imp.recibo,
     });
 
-    total_importe = total_importe + imp.importe;
-    total_general = total_general + imp.importe;
+    total_importe = formatNumber(total_importe + imp.importe);
+    total_general = formatNumber(total_general + imp.importe);
     alumno_Ant = imp.id_al;
   });
 
