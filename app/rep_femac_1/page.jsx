@@ -17,6 +17,7 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { calculaDigitoBvba, permissionsComponents } from "@/app/utils/globalfn";
 import VistaPrevia from "@/app/components/VistaPrevia";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
 
 function AlumnosPorClase() {
   const router = useRouter();
@@ -30,7 +31,7 @@ function AlumnosPorClase() {
   const [pdfData, setPdfData] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
   const [permissions, setPermissions] = useState({});
-
+  const [excelPreviewData, setExcelPreviewData] = useState([]);
   const [fieldsDisabled, setFieldsDisabled] = useState(false);
 
 
@@ -160,6 +161,12 @@ function AlumnosPorClase() {
       };
 
       Enca1(newPDF);
+
+      const alignsIndex = [0];
+      const tablaExcel = [
+        ["No", "Nombre", "Estatus", "Fecha", "Horario", "Telefono"],
+      ];
+
       body.forEach((alumno) => {
         const numero = calculaDigitoBvba(
           (alumno.numero || "").toString() || ""
@@ -179,6 +186,14 @@ function AlumnosPorClase() {
         newPDF.ImpPosX(fecha_nac, 125, newPDF.tw_ren, 0, "L");
         newPDF.ImpPosX(horario_1_nombre, 147, newPDF.tw_ren, 0, "L");
         newPDF.ImpPosX(telefono, 200, newPDF.tw_ren, 0, "R");
+        tablaExcel.push([
+          `${alumno.numero}-${numero}`,
+          nombre,
+          estatus,
+          fecha_nac,
+          horario_1_nombre,
+          telefono,
+        ]);
         if (alumno.baja === "*") {
           newPDF.tw_ren += 5;
           const fecha_baja = (alumno.fecha_baja || "")
@@ -191,17 +206,24 @@ function AlumnosPorClase() {
             0,
             "L"
           );
+          tablaExcel.push([
+            `Fecha de Baja: ${fecha_baja}`
+          ]);
         }
+
         Enca1(newPDF);
         if (newPDF.tw_ren >= newPDF.tw_endRen) {
           newPDF.pageBreak();
           Enca1(newPDF);
         }
       });
-      setTimeout(() => {
+      setTimeout(async () => {
+        const newExcel = new ReporteExcel(configuracion);
         const pdfData = newPDF.doc.output("datauristring");
+        const previewExcel = await newExcel.previewExcel(tablaExcel, alignsIndex);
         setPdfData(pdfData);
         setPdfPreview(true);
+        setExcelPreviewData(previewExcel);
         showModalVista(true);
         setAnimateLoading(false);
       }, 500);
@@ -235,9 +257,12 @@ function AlumnosPorClase() {
         titulo={"Vista Previa Relacion General de Alumnos"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
+        excelPreviewData={excelPreviewData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
+        seeExcel={true}
+        seePDF={true}
       />
       <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">

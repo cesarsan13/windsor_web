@@ -45,6 +45,7 @@ function Modal_Detalles_Actividades({
                 materiasReg.map(async (mat) => {
                     let index = 0;
                     let M = Number(mat.numero);
+                    let EB = 0;
                     const Actividades = await getActividadesXHorarioXAlumnoXMateriaXBimestre(token, grupo, alumnoData.numero, M, bimestre);
                     const matAct = await getActividadesDetalles(token, M);
                     let dataEncabezadoDetalles = matAct.map(item => ({
@@ -53,7 +54,8 @@ function Modal_Detalles_Actividades({
                     }));
                     let dataCaliAlumnosBodyDetalles = await Promise.all(
                         matAct.map(async (item) => {
-                            const cal = await calcularCalificacionesMat(item.secuencia, Actividades, matAct);
+                            EB = item[`EB${bimestre}`]
+                            const cal = await calcularCalificacionesMat(item.secuencia, EB, Actividades, matAct);
                             return cal;
                         })
                     );
@@ -69,7 +71,7 @@ function Modal_Detalles_Actividades({
         setisLoadingFind(false);
     }; 
 
-    const calcularCalificacionesMat = async (secuencia, Actividades, matAct) => {
+    const calcularCalificacionesMat = async (secuencia, EB, Actividades, matAct) => {
             let sumatoria = 0;
             let evaluaciones = 0;
             const actividades = matAct.filter(act => act.secuencia === secuencia);
@@ -80,11 +82,13 @@ function Modal_Detalles_Actividades({
                 for (const actividad of actividades) {
                     const filtroActividad = Actividades.filter(cal =>
                         cal.actividad === secuencia &&
+                        cal.bimestre === bimestre &&
                         cal.unidad <= actividad[`EB${bimestre}`]
                     );
                     if (filtroActividad.length > 0) {
                         const califSum = filtroActividad.reduce((acc, cal) => acc + Number(cal.calificacion), 0);
-                        sumatoria += RegresaCalificacionRedondeo(califSum / filtroActividad.length, "N");
+                        //sumatoria += RegresaCalificacionRedondeo(califSum / filtroActividad.length, "N");
+                        sumatoria += RegresaCalificacionRedondeo(califSum / EB, "N");
                         evaluaciones++;
                     }
                 }

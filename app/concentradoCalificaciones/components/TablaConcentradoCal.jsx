@@ -62,6 +62,7 @@ function TablaConcentradoCal({
                     sumatoria = 0  
                 } else {
                     actividades.forEach(actividad => {
+                        let EB = actividad[`EB${bimestre}`]
                         const filtroActividad = calificacionesTodosAlumnos.filter(cal => 
                             cal.numero === alumnonumero && 
                             cal.materia === materianumero && 
@@ -70,7 +71,8 @@ function TablaConcentradoCal({
                             cal.unidad <= actividad[`EB${bimestre}`]
                         );
                         const califSum = filtroActividad.reduce((acc, cal) => acc + Number(cal.calificacion), 0);
-                        const calPromedio = RegresaCalificacionRedondeo(califSum / filtroActividad.length, "N");
+                        //const calPromedio = RegresaCalificacionRedondeo(califSum / filtroActividad.length, "N");
+                        const calPromedio = RegresaCalificacionRedondeo(califSum / EB, "N");
                         sumatoria += calPromedio;
                         evaluaciones++; 
                     }); 
