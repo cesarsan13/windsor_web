@@ -60,7 +60,6 @@ function ModalProyectos({
       showSwal("Exito!", res.message, res.alert_icon);
     }
   };
-  const ejecutaSeeders = async () => {};
 
   return (
     <dialog id="modal_proyectos" className="modal">

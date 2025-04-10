@@ -104,8 +104,10 @@ export class ReporteExcel {
 
     // Agregar los datos al worksheet
     this.worksheetData.forEach((row, rowIndex) => {
+      let c2 = this.configuracion.columns2 ? true : false;
       const newRow = worksheet.addRow(row);
-      if (rowIndex === 5) {
+      
+      if (rowIndex === 5 || (c2 === true && rowIndex === 6) ) {
         newRow.eachCell((cell) => {
           cell.fill = {
             type: "pattern",
@@ -130,7 +132,8 @@ export class ReporteExcel {
       }
     });
 
-    worksheet.getColumn(1).width = 25;
+    worksheet.getColumn(1).width = 10;
+    worksheet.spliceColumns(1, 0, [], []);
 
     // Generar el archivo Excel y ofrecerlo para descarga
     const buffer = await workbook.xlsx.writeBuffer();
