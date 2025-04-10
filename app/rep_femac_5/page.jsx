@@ -18,6 +18,7 @@ import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import ModalFechas from "@/app/components/modalFechas";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
 
 function AltasBajasAlumnos() {
   const router = useRouter();
@@ -35,6 +36,7 @@ function AltasBajasAlumnos() {
   const [tempFechaIni, setTempFechaIni] = useState("");
   const [tempFechaFin, setTempFechaFin] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+  const [excelPreviewData, setExcelPreviewData] = useState([]);
   
   useEffect(() => {
     const fetchData = async () => {
@@ -201,6 +203,12 @@ function AltasBajasAlumnos() {
       };
 
       Enca2(newPDF);
+
+      const alignsIndex = [0];
+      const tablaExcel = [
+        ["No", "Nombre", "Dia", "Mes", "Año"],
+      ]
+
       body.forEach((alumno) => {
         const nombre = `${alumno.a_nombre || ""} ${alumno.a_paterno || ""} ${
           alumno.a_materno || ""
@@ -216,16 +224,28 @@ function AltasBajasAlumnos() {
         newPDF.ImpPosX(diaFor, 150, newPDF.tw_ren);
         newPDF.ImpPosX(mesFor, 160, newPDF.tw_ren);
         newPDF.ImpPosX(añoFor, 170, newPDF.tw_ren);
+
+        tablaExcel.push([
+          `${alumno.numero}-${id}`,
+          nombre,
+          diaFor,
+          mesFor,
+          añoFor,
+        ]);
+
         Enca2(newPDF);
         if (newPDF.tw_ren >= newPDF.tw_endRen) {
           newPDF.pageBreak();
           Enca2(newPDF);
         }
       });
-      setTimeout(() => {
+      setTimeout( async() => {
+        const newExcel = new ReporteExcel(configuracion);
         const pdfData = newPDF.doc.output("datauristring");
+        const previewExcel = await newExcel.previewExcel(tablaExcel, alignsIndex);
         setPdfData(pdfData);
         setPdfPreview(true);
+        setExcelPreviewData(previewExcel);
         showModalVista(true);
         setAnimateLoading(false);
       }, 500);
@@ -272,9 +292,12 @@ function AltasBajasAlumnos() {
         titulo={"Vista Previa de Altas y Bajas de Alumnos"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
+        excelPreviewData={excelPreviewData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
+        seeExcel={true}
+        seePDF={true}
       />
       <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">
