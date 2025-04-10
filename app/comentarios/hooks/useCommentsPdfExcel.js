@@ -139,8 +139,8 @@ export const useCommentsPdfExcel = (
       const pdfData = reporte.doc.output("datauristring");
       const previewExcel = await newExcel.previewExcel(tablaExcel, alignsIndex);
       setPdfData(pdfData);
-      setPdfPreview(true);
       setExcelPreviewData(previewExcel);
+      setPdfPreview(true);
       showModalVista(true);
       setAnimateLoading(false);
     }, 500);

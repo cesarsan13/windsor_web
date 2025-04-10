@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import "jspdf-autotable";
 import BuscarCat from "@/app/components/BuscarCat";
 import { showSwal } from "@/app/utils/alerts";
@@ -29,6 +30,7 @@ function AlumnosPorClase() {
   const [horario1, setHorario1] = useState({});
   const [horario2, setHorario2] = useState({});
   const [permissions, setPermissions] = useState({});
+  const [excelPreviewData, setExcelPreviewData] = useState([]);
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -49,7 +51,7 @@ function AlumnosPorClase() {
       setisLoading(false);
     };
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, horario1, horario2, sOrdenar]);
 
   const home = () => {
@@ -162,6 +164,22 @@ function AlumnosPorClase() {
         }
       };
       Enca1(reporte);
+      const alignsIndex = [0, 1, 6];
+      const tablaExcel = [
+        [
+          "No.", // 0
+          "No. 1", // 1
+          "Nombre", // 2
+          "Año", // 3
+          "Mes", // 4
+          "Telefono", // 5
+          "No. 2", // 6
+          "Nombre", // 7
+          "Año", // 8
+          "Mes", // 9
+          "Telefono", // 10
+        ],
+      ];
       body.forEach((reporte1) => {
         reporte.ImpPosX(
           reporte1.Num_Renglon?.toString() ?? "",
@@ -240,15 +258,34 @@ function AlumnosPorClase() {
           0,
           "R"
         );
+        tablaExcel.push([
+          reporte1.Num_Renglon?.toString() ?? "",
+          reporte1.Numero_1?.toString() ?? "",
+          reporte1.Nombre_1?.toString() ?? "",
+          reporte1.Año_Nac_1?.toString().substring(0, 4) ?? "",
+          reporte1.Mes_Nac_1?.toString().substring(5, 7) ?? "",
+          reporte1.Telefono_1?.toString() ?? "",
+          reporte1.Numero_2?.toString() ?? "",
+          reporte1.Nombre_2?.toString() ?? "",
+          reporte1.Año_Nac_2?.toString().substring(0, 4) ?? "",
+          reporte1.Mes_Nac_2?.toString().substring(5, 7) ?? "",
+          reporte1.Telefono_2?.toString() ?? "",
+        ]);
         Enca1(reporte);
         if (reporte.tw_ren >= reporte.tw_endRenH) {
           reporte.pageBreakH();
           Enca1(reporte);
         }
       });
-      setTimeout(() => {
+      setTimeout(async () => {
+        const newExcel = new ReporteExcel(configuracion);
         const pdfData = reporte.doc.output("datauristring");
+        const previewExcel = await newExcel.previewExcel(
+          tablaExcel,
+          alignsIndex
+        );
         setPdfData(pdfData);
+        setExcelPreviewData(previewExcel);
         setPdfPreview(true);
         showModalVista(true);
         setAnimateLoading(false);
@@ -278,9 +315,12 @@ function AlumnosPorClase() {
         titulo={"Vista Previa de Alumnos Por Clase"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
+        excelPreviewData={excelPreviewData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
+        seeExcel={true}
+        seePDF={true}
       />
 
       <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
