@@ -9,6 +9,7 @@ import {
   Cobranza,
   Imprimir,
   ImprimirExcel,
+  generarTablaVistaPrevia,
 } from "@/app/utils/api/Rep_Femac_6/Rep_Femac_6";
 import {
   formatDate,
@@ -18,7 +19,7 @@ import {
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import Swal from "sweetalert2";
-
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
 
 import ModalFechas from "@/app/components/modalFechas";
 function Rep_Femac_6() {
@@ -37,12 +38,38 @@ function Rep_Femac_6() {
   const [modalOpen, setModalOpen] = useState(false);
   const [tempFechaIni, setTempFechaIni] = useState("");
   const [tempFechaFin, setTempFechaFin] = useState("");
+  const [excelPreviewData, setExcelPreviewData] = useState([]);
+  const configuracionExcel = {
+    Encabezado: {
+      Nombre_Aplicacion: "Sistema de Control Escolar",
+      Nombre_Reporte: `Reporte de Cobranza Rango de Fecha del ${fechaIni} al ${fechaFin}`,
+      Nombre_Usuario: `${session?.user?.name}`,
+    },
+    body1: dataCobranza.producto,
+    body2: dataCobranza.tipo_pago,
+    body3: dataCobranza.cajeros,
+    columns1: [
+      { header: "Producto", dataKey: "articulo" },
+      { header: "Descripcion", dataKey: "descripcion" },
+      { header: "Importe", dataKey: "precio_unitario" },
+    ],
+    columns2: [
+      { header: "Tipo Cobro", dataKey: "tipo_pago" },
+      { header: "Descripcion", dataKey: "descripcion" },
+      { header: "Importe", dataKey: "importe" },
+    ],
+    columns3: [
+      { header: "Cajero", dataKey: "cajero" },
+      { header: "Descripcion", dataKey: "descripcion" },
+      { header: "Importe", dataKey: "importe" },
+    ],
+    nombre: "Reporte de Cobranza_",
+  };
 
   useEffect(() => {
     setFechaIni(getPrimerDiaDelMes());
     setFechaFin(getUltimoDiaDelMes());
   }, []);
-
 
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
@@ -99,7 +126,7 @@ function Rep_Femac_6() {
       setPermissions(permisos);
     };
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, cajero, fechaFin, fechaIni]);
 
   if (status === "loading") {
@@ -122,33 +149,7 @@ function Rep_Femac_6() {
     Imprimir(configuracion, cajero.numero);
   };
   const ImprimeExcel = () => {
-    const configuracion = {
-      Encabezado: {
-        Nombre_Aplicacion: "Sistema de Control Escolar",
-        Nombre_Reporte: `Reporte de Cobranza Rango de Fecha del ${fechaIni} al ${fechaFin}`,
-        Nombre_Usuario: `${session.user.name}`,
-      },
-      body1: dataCobranza.producto,
-      body2: dataCobranza.tipo_pago,
-      body3: dataCobranza.cajeros,
-      columns1: [
-        { header: "Producto", dataKey: "articulo" },
-        { header: "Descripcion", dataKey: "descripcion" },
-        { header: "Importe", dataKey: "precio_unitario" },
-      ],
-      columns2: [
-        { header: "Tipo Cobro", dataKey: "tipo_pago" },
-        { header: "Descripcion", dataKey: "descripcion" },
-        { header: "Importe", dataKey: "importe" },
-      ],
-      columns3: [
-        { header: "Cajero", dataKey: "cajero" },
-        { header: "Descripcion", dataKey: "descripcion" },
-        { header: "Importe", dataKey: "importe" },
-      ],
-      nombre: "Reporte de Cobranza_",
-    };
-    ImprimirExcel(configuracion, cajero.numero);
+    ImprimirExcel(configuracionExcel, cajero.numero);
   };
 
   const handleVerClick = () => {
@@ -282,7 +283,6 @@ function Rep_Femac_6() {
             Tw_Pago[Tw_count][2] = tipoPago.descripcion1;
             break;
           }
-
         }
         for (let Tw_count = 0; Tw_count < 20; Tw_count++) {
           if (tipoPago.tipo_pago_2 === 0) break;
@@ -297,7 +297,6 @@ function Rep_Femac_6() {
             Tw_Pago[Tw_count][2] = tipoPago.descripcion2;
             break;
           }
-
         }
       });
       let total_tipo_pago = 0;
@@ -409,33 +408,46 @@ function Rep_Femac_6() {
       reporte.ImpPosX("Total Cajeros", 34, reporte.tw_ren, 0, "L");
       reporte.ImpPosX(formatNumber(total_cajero), 166, reporte.tw_ren, 0, "R");
     }
-    setTimeout(() => {
+    const alignsIndex = [0, 2];
+    const tablaExcel = generarTablaVistaPrevia(
+      configuracionExcel,
+      cajero.numero
+    );
+    setTimeout(async () => {
+      const newExcel = new ReporteExcel(configuracion);
       const pdfData = reporte.doc.output("datauristring");
+      const previewExcel = await newExcel.previewExcel(tablaExcel, alignsIndex);
       setPdfData(pdfData);
+      setExcelPreviewData(previewExcel);
       setPdfPreview(true);
       showModalVista(true);
       setAnimateLoading(false);
     }, 500);
   };
+
   const showModalVista = (show) => {
     show
       ? document.getElementById("modalVRep6").showModal()
       : document.getElementById("modalVRep6").close();
   };
+
   const CerrarView = () => {
     setPdfPreview(false);
     setPdfData("");
     document.getElementById("modalVRep6").close();
   };
+
   const cerrarModalVista = () => {
     setPdfPreview(false);
     setPdfData("");
     document.getElementById("modalVRep6").close();
   };
+
   function roundNumber(value, decimals) {
     const factor = Math.pow(10, decimals);
     return Math.round(value * factor) / factor;
   }
+
   return (
     <>
       <VistaPrevia
@@ -443,11 +455,13 @@ function Rep_Femac_6() {
         titulo={"Vista Previa de Resumen de Cobranza"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
+        excelPreviewData={excelPreviewData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
+        seeExcel={true}
+        seePDF={true}
       />
-
       <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">
           {/* Fila de la cabecera de la pagina */}
@@ -468,43 +482,44 @@ function Rep_Femac_6() {
           </div>
         </div>
         <div className="w-full py-3 flex flex-col gap-y-4">
-          {/* Fila del formulario de la pagina */}
-          <div className="flex flex-col items-center p-4">
-      <div className="flex items-center gap-4">
-        <input
-          type="date"
-          value={fechaIni}
-          onChange={(e) => setFechaIni(e.target.value)}
-          className="border p-2 rounded"
-        />
-        <button
-          onClick={handleOpenModal}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          📅
-        </button>
-        <input
-          type="date"
-          value={fechaFin}
-          onChange={(e) => setFechaFin(e.target.value)}
-          className="border p-2 rounded"
-        />
-      </div>
-
-      {/* MODAL */}
-{modalOpen && (
-  <ModalFechas 
-    tempFechaIni={tempFechaIni}
-    setTempFechaIni={setTempFechaIni}
-    tempFechaFin={tempFechaFin}
-    setTempFechaFin={setTempFechaFin}
-    handleSelectDates={handleSelectDates}
-    handleCloseModal={handleCloseModal}
-  />
-)}
-    </div>
+          <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto space-y-4">
+            <div className="flex flex-row gap-4">
+              <div className="lg:w-fit md:w-fit">
+                <input
+                  type="date"
+                  value={fechaIni}
+                  onChange={(e) => setFechaIni(e.target.value)}
+                  className="border p-2 rounded"
+                />
+              </div>
+              <button
+                onClick={handleOpenModal}
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                📅
+              </button>
+              <div className="lg:w-fit md:w-fit">
+                <input
+                  type="date"
+                  value={fechaFin}
+                  onChange={(e) => setFechaFin(e.target.value)}
+                  className="border p-2 rounded"
+                />
+              </div>
+              {modalOpen && (
+                <ModalFechas
+                  tempFechaIni={tempFechaIni}
+                  setTempFechaIni={setTempFechaIni}
+                  tempFechaFin={tempFechaFin}
+                  setTempFechaFin={setTempFechaFin}
+                  handleSelectDates={handleSelectDates}
+                  handleCloseModal={handleCloseModal}
+                />
+              )}
+            </div>
+          </div>
           <div className="flex flex-row">
-            <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1920px]:w-1/4 w-1/2 mx-auto ">
+            <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
               <div className="col-span-full md:col-span-full lg:col-span-full">
                 <div className="w-full">
                   <BuscarCat
