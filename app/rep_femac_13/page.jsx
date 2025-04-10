@@ -14,6 +14,7 @@ import { ReportePDF } from "@/app/utils/ReportesPDF";
 import BuscarCat from "@/app/components/BuscarCat";
 import { formatDate, permissionsComponents, formatTime } from "@/app/utils/globalfn";
 import { showSwal } from "@/app/utils/alerts";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
 
 function Rep_Femac_13() {
   const router = useRouter();
@@ -28,7 +29,9 @@ function Rep_Femac_13() {
   const [sOrdenar, ssetordenar] = useState("nombre");
   const [animateLoading, setAnimateLoading] = useState(false);
   const [permissions, setPermissions] = useState({});
+  const [excelPreviewData, setExcelPreviewData] = useState([]);
   const timeStr = formatTime(date).replace(/:/g, "");
+
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
@@ -117,6 +120,12 @@ function Rep_Femac_13() {
       };
 
       Enca1(reporte);
+
+      const alignsIndex = [0];
+      const tablaExcel = [
+        ["No.", "No. A", "Nombre", "Año", "Mes", "OBSERVACIONES" ],
+      ];
+
       body.forEach((reporte1) => {
         reporte.ImpPosX(
           reporte1.Num_Renglon?.toString() ?? "",
@@ -160,6 +169,15 @@ function Rep_Femac_13() {
           0,
           "L"
         );
+
+        tablaExcel.push([
+          reporte1.Num_Renglon?.toString() ?? "",
+          reporte1.Numero_1?.toString() ?? "",
+          reporte1.Nombre_1?.toString() ?? "",
+          reporte1.Año_Nac_1?.toString().substring(0, 4) ?? "",
+          reporte1.Mes_Nac_1?.toString().substring(5, 7) ?? "",
+          reporte1.Observaciones?.toString() ?? "",
+        ]);
         Enca1(reporte);
         if (reporte.tw_ren >= reporte.tw_endRen) {
           reporte.pageBreak();
@@ -167,10 +185,13 @@ function Rep_Femac_13() {
         }
       });
 
-      setTimeout(() => {
+      setTimeout(async () => {
+        const newExcel = new ReporteExcel(configuracion);
         const pdfData = reporte.doc.output("datauristring");
+        const previewExcel = await newExcel.previewExcel(tablaExcel, alignsIndex);
         setPdfData(pdfData);
         setPdfPreview(true);
+        setExcelPreviewData(previewExcel);
         showModalVista(true);
         setAnimateLoading(false);
       }, 500);
@@ -325,9 +346,12 @@ function Rep_Femac_13() {
         titulo={"Vista Previa de Alumnos por Clase Semanal"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
+        excelPreviewData={excelPreviewData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
+        seeExcel={true}
+        seePDF={true}
       />
       <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">
