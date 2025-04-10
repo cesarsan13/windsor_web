@@ -109,12 +109,12 @@ export const useProfesoresPdfExcel = (
         "Nombre",
         "Dirección",
         "Colonia",
+        "Ciudad",
+        "Estado",
+        "C.P.",
+        "Celular",
         "Telefono1",
         "Telefono2",
-        "Celular",
-        "Estado",
-        "Ciudad",
-        "C.P.",
       ],
     ];
     body.forEach((profesores) => {
@@ -184,12 +184,12 @@ export const useProfesoresPdfExcel = (
         profesores.nombre_completo.toString(),
         profesores.direccion.toString(),
         profesores.colonia.toString(),
+        profesores.ciudad.toString(),
+        profesores.estado.toString(),
+        profesores.cp.toString(),
+        profesores.celular.toString(),
         profesores.telefono_1.toString(),
         profesores.telefono_2.toString(),
-        profesores.celular.toString(),
-        profesores.estado.toString(),
-        profesores.ciudad.toString(),
-        profesores.cp.toString(),
       ]);
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRenH) {
@@ -226,7 +226,7 @@ export const useProfesoresPdfExcel = (
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte de Profesores",
-        Nombre_Usuario: `Usuario: ${session.user.name}`,
+        Nombre_Usuario: `${session.user.name}`,
       },
       body: profesoresFiltrados,
       columns: [
@@ -234,12 +234,12 @@ export const useProfesoresPdfExcel = (
         { header: "Nombre", dataKey: "nombre_completo" },
         { header: "Dirección", dataKey: "direccion" },
         { header: "Colonia", dataKey: "colonia" },
-        { header: "Telefono1", dataKey: "telefono_1" },
-        { header: "Telefono2", dataKey: "telefono_2" },
         { header: "Ciudad", dataKey: "ciudad" },
         { header: "Estado", dataKey: "estado" },
-        { header: "Celular", dataKey: "celular" },
         { header: "C.P.", dataKey: "cp" },
+        { header: "Celular", dataKey: "celular" },
+        { header: "Telefono1", dataKey: "telefono_1" },
+        { header: "Telefono2", dataKey: "telefono_2" },
       ],
       nombre: "Profesores_",
     };

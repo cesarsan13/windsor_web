@@ -108,5 +108,5 @@ export const ImprimirExcel = (configuracion) => {
     .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
   const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
   const timeStr = formatTime(date).replace(/:/g, "");
-  newExcel.guardaReporte(`${nombre}${dateStr}${timeStr}`);
+  newExcel.guardaReporte(`${nombre}_${dateStr}${timeStr}`);
 };

@@ -12,7 +12,7 @@ import "jspdf-autotable";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import BuscarCat from "@/app/components/BuscarCat";
-import { formatDate, permissionsComponents } from "@/app/utils/globalfn";
+import { formatDate, permissionsComponents, formatTime } from "@/app/utils/globalfn";
 import { showSwal } from "@/app/utils/alerts";
 
 function Rep_Femac_13() {
@@ -28,7 +28,7 @@ function Rep_Femac_13() {
   const [sOrdenar, ssetordenar] = useState("nombre");
   const [animateLoading, setAnimateLoading] = useState(false);
   const [permissions, setPermissions] = useState({});
-
+  const timeStr = formatTime(date).replace(/:/g, "");
   useEffect(() => {
     if (status === "loading" || !session) {
       return;
@@ -147,7 +147,7 @@ function Rep_Femac_13() {
           "R"
         );
         reporte.ImpPosX(
-          reporte1.Mes_Nac_1?.toString().substring(4, 2) ?? "",
+          reporte1.Mes_Nac_1?.toString().substring(5, 7) ?? "",
           138,
           reporte.tw_ren,
           0,
@@ -265,7 +265,7 @@ function Rep_Femac_13() {
         "R"
       );
       reporte.ImpPosX(
-        reporte1.Mes_Nac_1?.toString().substring(4, 2) ?? "",
+        reporte1.Mes_Nac_1?.toString().substring(5, 7) ?? "",
         138,
         reporte.tw_ren,
         0,
@@ -284,7 +284,7 @@ function Rep_Femac_13() {
         Enca1(reporte);
       }
     });
-    reporte.guardaReporte("RepAlumSem");
+    reporte.guardaReporte(`RepAlumSem_${dateStr}_${timeStr}`);
   };
 
   const ImprimeExcel = () => {

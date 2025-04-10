@@ -326,7 +326,7 @@ export const ImprimirExcel = (configuracion) => {
     nombre: "",
     horario: "",
     fecha_inscripcion: `Total Alumnos:`,
-    det_inscripcion: `${alumnos || "0"}`,
+    det_inscripcion: alumnos || 0,
   });
   newExcel.setColumnas(columns);
   newExcel.addData(newBody);

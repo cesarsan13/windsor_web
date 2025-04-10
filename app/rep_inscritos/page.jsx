@@ -126,7 +126,7 @@ function AltasBajasAlumnos() {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte Relación de Recibos",
-        Nombre_Usuario: `Usuario: ${session.user.name}`,
+        Nombre_Usuario: `${session.user.name}`,
       },
       bodyAlumnos: res.data_alumnos,
       bodyDetalles: res.data_detalle,

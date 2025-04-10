@@ -80,7 +80,7 @@ function ModalPagoImprime({
             recibo: data.recibo_imprimir || 0,
             alumno: pago.alumno || 0,
             fecha: fecha_page || "",
-            articulo: parseInt(pago.numero_producto) || 0,
+            articulo: pago.numero_producto || 0,
             cantidad: pago.cantidad_producto || 0,
             precio_unitario: pagoUnitF || 0,
             descuento: pago.descuento || 0,

@@ -30,8 +30,7 @@ function CobranzaPorAlumno() {
   const [tomaFechas, setTomaFechas] = useState(true);
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
-  const [FormaRepCobranzaporAlumno, setFormaReporteCobranzaporAlumno] =
-    useState([]);
+  const [FormaRepCobranzaporAlumno, setFormaReporteCobranzaporAlumno] = useState([]);
   const [animateLoading, setAnimateLoading] = useState(false);
   const [permissions, setPermissions] = useState({});
   //Modal Fechas
@@ -40,6 +39,7 @@ function CobranzaPorAlumno() {
   const [tempFechaIni, setTempFechaIni] = useState("");
   const [tempFechaFin, setTempFechaFin] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedAllAlumnos, setSelectedAllAlumnos] = useState(false);
 
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
@@ -100,7 +100,7 @@ function CobranzaPorAlumno() {
   const handleVerClick = async () => {
     setAnimateLoading(true);
     cerrarModalVista();
-    if (cajero_ini.numero === undefined) {
+    if (cajero_ini.numero === undefined && selectedAllAlumnos === false) {
       showSwal(
         "Oppss!",
         "Para imprimir, mínimo debe estar seleccionado un Cajero de 'Inicio'",
@@ -113,15 +113,18 @@ function CobranzaPorAlumno() {
         document.getElementById("modalVPRepFemac11Anexo3").close();
       }, 500);
     } else {
+      const fechaIniFormateada = fecha_ini ? fecha_ini.replace(/-/g, "/") : 0;
+      const fechaFinFormateada = fecha_fin ? fecha_fin.replace(/-/g, "/") : 0;
       const data = await getReporteCobranzaporAlumno(
         session.user.token,
-        fecha_ini,
-        fecha_fin,
+        fechaIniFormateada,
+        fechaFinFormateada,
         alumno_ini.numero,
         alumno_fin.numero,
         cajero_ini.numero,
         cajero_fin.numero,
-        tomaFechas
+        tomaFechas,
+        selectedAllAlumnos
       );
       setFormaReporteCobranzaporAlumno(data);
 
@@ -378,6 +381,13 @@ function CobranzaPorAlumno() {
       columns: [
         { header: "No.", dataKey: "id_al" },
         { header: "Nombre", dataKey: "nom_al" },
+        { header: "", dataKey: "" },
+        { header: "", dataKey: "" },
+        { header: "", dataKey: "" },
+        { header: "", dataKey: "" },
+        { header: "", dataKey: "" },
+        { header: "", dataKey: "" },
+        { header: "", dataKey: "" },
       ],
       columns2: [
         { header: "Producto", dataKey: "articulo" },
@@ -497,39 +507,8 @@ function CobranzaPorAlumno() {
           </div>
           <div className="flex flex-row">
             <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
-              <div className="col-span-full md:col-span-full lg:col-span-full">
-                <div className="w-full pl-4">
-                  <BuscarCat
-                    table="alumnos"
-                    itemData={[]}
-                    fieldsToShow={["numero", "nombre_completo"]}
-                    nameInput={["numero", "nombre_completo"]}
-                    titulo={"Alumno Inicio: "}
-                    setItem={setAlumnoIni}
-                    token={session.user.token}
-                    modalId="modal_alumnos1"
-                    inputWidths={{ first: "100px", second: "300px" }}
-                    descClassName="md:mt-0 w-full"
-                  />
-                </div>
-              </div>
-              <div className="col-span-full md:col-span-full lg:col-span-full">
-                <div className="w-full pl-4">
-                  <BuscarCat
-                    table="alumnos"
-                    itemData={[]}
-                    fieldsToShow={["numero", "nombre_completo"]}
-                    nameInput={["numero", "nombre_completo"]}
-                    titulo={"Alumno Fin: "}
-                    setItem={setAlumnoFin}
-                    token={session.user.token}
-                    modalId="modal_alumnos2"
-                    descClassName="md:mt-0 w-full"
-                  />
-                </div>
-              </div>
-              <div className="col-span-full md:col-span-full lg:col-span-full">
-                <div className="w-full pl-4">
+            <div className="col-span-full md:col-span-full lg:col-span-full">
+                <div className="w-full pl-4 p-1">
                   <BuscarCat
                     table="cajeros"
                     itemData={[]}
@@ -545,7 +524,7 @@ function CobranzaPorAlumno() {
                 </div>
               </div>
               <div className="col-span-full md:col-span-full lg:col-span-full">
-                <div className="w-full pl-4">
+                <div className="w-full pl-4 p-1">
                   <BuscarCat
                     table="cajeros"
                     itemData={[]}
@@ -555,8 +534,42 @@ function CobranzaPorAlumno() {
                     setItem={setCajeroFin}
                     token={session.user.token}
                     modalId="modal_cajeros2"
-                    inputWidths={{ first: "124px", second: "300px" }}
+                    inputWidths={{ first: "109px", second: "300px" }}
                     descClassName="md:mt-0 w-full"
+                  />
+                </div>
+              </div>
+              <div className="col-span-full md:col-span-full lg:col-span-full">
+                <div className="w-full pl-4 p-1">
+                  <BuscarCat
+                    deshabilitado={selectedAllAlumnos === true}
+                    table="alumnos"
+                    itemData={[]}
+                    fieldsToShow={["numero", "nombre_completo"]}
+                    nameInput={["numero", "nombre_completo"]}
+                    titulo={"Alumno Inicio: "}
+                    setItem={setAlumnoIni}
+                    token={session.user.token}
+                    modalId="modal_alumnos1"
+                    inputWidths={{ first: "109px", second: "300px" }}
+                    descClassName="md:mt-0 w-full"
+                  />
+                </div>
+              </div>
+              <div className="col-span-full md:col-span-full lg:col-span-full">
+                <div className="w-full pl-4 p-1">
+                  <BuscarCat
+                    deshabilitado={selectedAllAlumnos === true}
+                    table="alumnos"
+                    itemData={[]}
+                    fieldsToShow={["numero", "nombre_completo"]}
+                    nameInput={["numero", "nombre_completo"]}
+                    titulo={"Alumno Fin: "}
+                    setItem={setAlumnoFin}
+                    token={session.user.token}
+                    modalId="modal_alumnos2"
+                    descClassName="md:mt-0 w-full"
+                    inputWidths={{ first: "109px", second: "300px" }}
                   />
                 </div>
               </div>
@@ -577,6 +590,23 @@ function CobranzaPorAlumno() {
                       <span className="fa-regular fa-calendar block sm:hidden md:hidden lg:hidden xl:hidden  text-neutral-600 dark:text-neutral-200"></span>
                       <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
                         Toma Fechas
+                      </span>
+                    </label>
+                  </div>
+                  <div className="tooltip" data-tip="Toma todos los Alumnos">
+                    <label
+                      htmlFor="ch_SelectedAllAlumnos"
+                      className="label cursor-pointer flex justify-start space-x-2"
+                    >
+                      <input
+                        id="ch_selectedAllAlumnos"
+                        type="checkbox"
+                        className="checkbox checkbox-md"
+                        defaultChecked={false}
+                        onClick={(evt) => setSelectedAllAlumnos(evt.target.checked)}
+                      />
+                      <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
+                        Toma todos los Alumnos
                       </span>
                     </label>
                   </div>

@@ -29,7 +29,7 @@ function RepFemac12Anexo() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [producto1, setProducto1] = useState({});
-  const [producto2, setProducto2] = useState({});
+  //const [producto2, setProducto2] = useState({});
   const [sOrdenar, ssetordenar] = useState("nombre");
   const [pdfPreview, setPdfPreview] = useState(false);
   const [pdfData, setPdfData] = useState("");
@@ -42,6 +42,7 @@ function RepFemac12Anexo() {
   const [tempFechaIni, setTempFechaIni] = useState("");
   const [tempFechaFin, setTempFechaFin] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedAllProductos, setSelectedAllProductos] = useState(false);
 
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
@@ -101,13 +102,15 @@ function RepFemac12Anexo() {
       },
     };
     const { token } = session.user;
+
     ImprimirPDF(
       configuracion,
       token,
+      selectedAllProductos,
       fecha1,
       fecha2,
       producto1.numero,
-      producto2.numero,
+      //producto2.numero,
       sOrdenar
     );
     setisLoading(false);
@@ -123,6 +126,8 @@ function RepFemac12Anexo() {
       columns: [
         { header: "Producto", dataKey: "articulo" },
         { header: "Descripcion", dataKey: "descripcion" },
+        { header: "", dataKey: "" },
+        { header: "", dataKey: "" },
       ],
       columns2: [
         { header: "Alumno", dataKey: "alumno" },
@@ -133,13 +138,15 @@ function RepFemac12Anexo() {
       nombre: "Reporte de Cobranza por Producto",
     };
     const { token } = session.user;
+
     ImprimirExcel(
       configuracion,
       token,
+      selectedAllProductos,
       fecha1,
       fecha2,
       producto1.numero,
-      producto2.numero,
+      //producto2.numero,
       sOrdenar
     );
     setisLoading(false);
@@ -150,7 +157,7 @@ function RepFemac12Anexo() {
       setisLoading(true);
       setAnimateLoading(true);
       cerrarModalVista();
-      if (producto1.numero === undefined && producto2.numero === undefined) {
+      if (producto1.numero === undefined && selectedAllProductos === false) { //producto2.numero === undefined &&
         showSwal(
           "Oppss!",
           "Para imprimir, debes de seleccionar los productos.",
@@ -193,19 +200,25 @@ function RepFemac12Anexo() {
           }
         };
         const Cambia_Articulo = (doc, Total_Art) => {
-          doc.ImpPosX("TOTAL: ", 98, doc.tw_ren, 0, "L");
+          doc.ImpPosX("TOTAL: ", 95, doc.tw_ren, 0, "L");
           doc.ImpPosX(formatNumber(Total_Art), 138, doc.tw_ren, 0, "R");
           doc.nextRow(4);
         };
         Enca1(reporte);
-        let articulo = producto1.numero === undefined ? "" : producto1.numero;
-        let artFin = producto2.numero === undefined ? "" : producto2.numero;
+
+        let articulo = 0;
+        let artFin = 0;
+
+          articulo = producto1.numero === undefined ? "0" : producto1.numero;
+          //artFin = producto2.numero === undefined ? "0" : producto2.numero;
+
         const data = await getDetallePedido(
           token,
+          selectedAllProductos,
           fecha1,
           fecha2,
           articulo,
-          artFin
+          //artFin
         );
         let alu_Ant;
         let alumno;
@@ -220,7 +233,7 @@ function RepFemac12Anexo() {
             const datos = {
               recibo: dato.recibo,
               fecha: dato.fecha,
-              articulo: parseInt(dato.articulo),
+              articulo: dato.articulo,
               documento: dato.documento,
               alumno: dato.alumno,
               nombre: alumno,
@@ -300,10 +313,10 @@ function RepFemac12Anexo() {
           Art_Ant = trabRep.articulo;
         });
         Cambia_Articulo(reporte, tot_art);
-        reporte.ImpPosX("TOTAL GENERAL: ", 98, reporte.tw_ren, 0, "L");
+        reporte.ImpPosX("TOTAL GENERAL: ", 95, reporte.tw_ren, 0, "L");
         reporte.ImpPosX(
           formatNumber(total_general),
-          148,
+          145,
           reporte.tw_ren,
           0,
           "R"
@@ -422,8 +435,9 @@ function RepFemac12Anexo() {
           <div className="flex flex-row">
             <div className=" max-[600px]:w-full max-[768px]:w-full max-[972px]:w-3/4 min-[1300px]:w-1/3 min-[1920px]:w-1/4 w-1/2 mx-auto ">
               <div className="col-span-full md:col-span-full lg:col-span-full">
-                <div className="w-full pl-4">
+                <div className="w-full p-1 pl-4">
                   <BuscarCat
+                    deshabilitado={selectedAllProductos === true}
                     table={"productos"}
                     nameInput={["producto1", "producto_desc1"]}
                     fieldsToShow={["numero", "descripcion"]}
@@ -431,14 +445,15 @@ function RepFemac12Anexo() {
                     setItem={setProducto1}
                     token={session.user.token}
                     modalId={"modal_producto1"}
-                    inputWidths={{ first: "100px", second: "300px" }}
+                    inputWidths={{ first: "109px", second: "300px" }}
                     descClassName="md:mt-0 w-full"
                   />
                 </div>
               </div>
-              <div className="col-span-full md:col-span-full lg:col-span-full">
-                <div className="w-full pl-4">
+              {/*<div className="col-span-full md:col-span-full lg:col-span-full">
+                <div className="w-full p-1 pl-4">
                   <BuscarCat
+                    deshabilitado={selectedAllProductos === true}
                     table={"productos"}
                     nameInput={["producto2", "producto_desc2"]}
                     fieldsToShow={["numero", "descripcion"]}
@@ -446,11 +461,11 @@ function RepFemac12Anexo() {
                     setItem={setProducto2}
                     token={session.user.token}
                     modalId={"modal_producto2"}
-                    inputWidths={{ first: "100px", second: "300px" }}
+                    inputWidths={{ first: "109px", second: "300px" }}
                     descClassName="md:mt-0 w-full"
                   />
                 </div>
-              </div>
+              </div> */}
               <div className="flex flex-row max-[499px]:gap-1 gap-4">
                 <div className="lg:w-fit md:w-fit">
                   <label
@@ -484,6 +499,27 @@ function RepFemac12Anexo() {
                       />
                     </label>
                   </label>
+                </div>
+              </div>
+              <div className="flex flex-row max-[499px]:gap-1 gap-4">
+                <div className="lg:w-fit md:w-fit pl-4">
+                  <div className="tooltip" data-tip="Toma todos los Productos">
+                    <label
+                      htmlFor="ch_SelectedAllProductos"
+                      className="label cursor-pointer flex justify-start space-x-2"
+                    >
+                      <input
+                        id="ch_selectedAllProductos"
+                        type="checkbox"
+                        className="checkbox checkbox-md"
+                        defaultChecked={false}
+                        onClick={(evt) => setSelectedAllProductos(evt.target.checked)}
+                      />
+                      <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
+                        Toma todos los Productos
+                      </span>
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>

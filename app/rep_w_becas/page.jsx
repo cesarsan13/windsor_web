@@ -15,7 +15,7 @@ import "jspdf-autotable";
 import BuscarCat from "@/app/components/BuscarCat";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { showSwal } from "@/app/utils/alerts";
-import { permissionsComponents } from "@/app/utils/globalfn";
+import { permissionsComponents, formatNumber } from "@/app/utils/globalfn";
 
 function RepBecas() {
   const router = useRouter();
@@ -30,6 +30,7 @@ function RepBecas() {
   const [horario2, setHorario2] = useState({});
   const [animateLoading, setAnimateLoading] = useState(false);
   const [permissions, setPermissions] = useState({});
+  const [selectedAllAlumnos, setSelectedAllAlumnos] = useState(false);
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -48,13 +49,13 @@ function RepBecas() {
         menuSeleccionado
       );
       setPermissions(permisos);
-      const data = await getBecas(token, horario1, horario2, sOrdenar);
+      const data = await getBecas(token, horario1, horario2, sOrdenar, selectedAllAlumnos);
       setFormaBecas(data.data);
       setisLoading(false);
     };
     fetchData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, horario1, horario2, sOrdenar]);
+  }, [status, horario1, horario2, sOrdenar, selectedAllAlumnos]);
   const home = () => {
     router.push("/");
   };
@@ -80,7 +81,7 @@ function RepBecas() {
       Encabezado: {
         Nombre_Aplicacion: "Sistema de Control Escolar",
         Nombre_Reporte: "Reporte de Becas",
-        Nombre_Usuario: `Usuario: ${session.user.name}`,
+        Nombre_Usuario: `${session.user.name}`,
       },
       body: formaBecas,
       columns: [
@@ -101,7 +102,7 @@ function RepBecas() {
 
   const handleVerClick = () => {
     setAnimateLoading(true);
-    if (horario1.numero === undefined && horario2.numero == undefined) {
+    if (horario1.numero === undefined && horario2.numero == undefined && selectedAllAlumnos === false) {
       showSwal(
         "Oppss!",
         "Para imprimir, mínimo debe estar seleccionado un Alumno",
@@ -148,16 +149,16 @@ function RepBecas() {
           reporte.tw_ren
         );
         reporte.ImpPosX(
-          reporte1.colegiatura.toString().substring(0, 4),
+          formatNumber(reporte1.colegiatura).toString(),
           160,
           reporte.tw_ren
         );
         reporte.ImpPosX(
-          reporte1.descuento.toString().substring(4, 2),
+          formatNumber(reporte1.descuento).toString(),
           190,
           reporte.tw_ren
         );
-        reporte.ImpPosX(reporte1.costo_final.toString(), 210, reporte.tw_ren);
+        reporte.ImpPosX(formatNumber(reporte1.costo_final).toString(), 210, reporte.tw_ren);
         Enca1(reporte);
         if (reporte.tw_ren >= reporte.tw_endRenH) {
           reporte.pageBreakH();
@@ -222,6 +223,7 @@ function RepBecas() {
             <div className="flex flex-col max-[499px]:gap-1 gap-4">
               <div className="lg:w-fit md:w-fit">
                 <BuscarCat
+                  deshabilitado={selectedAllAlumnos === true}
                   table="alumnos"
                   token={session.user.token}
                   nameInput={["numero", "nombre"]}
@@ -233,6 +235,7 @@ function RepBecas() {
               </div>
               <div className="">
                 <BuscarCat
+                  deshabilitado={selectedAllAlumnos === true}
                   table="alumnos"
                   token={session.user.token}
                   nameInput={["numero_2", "nombre_2"]}
@@ -242,6 +245,25 @@ function RepBecas() {
                   titulo={"Alumno 2"}
                 />
               </div>
+                <div className="lg:w-fit md:w-fit">
+                  <div className="tooltip" data-tip="Toma todos los Alumnos">
+                    <label
+                      htmlFor="ch_SelectedAllProductos"
+                      className="label cursor-pointer flex justify-start space-x-2"
+                    >
+                      <input
+                        id="ch_selectedAllProductos"
+                        type="checkbox"
+                        className="checkbox checkbox-md"
+                        defaultChecked={false}
+                        onClick={(evt) => setSelectedAllAlumnos(evt.target.checked)}
+                      />
+                      <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
+                        Toma todos los Alumnos
+                      </span>
+                    </label>
+                  </div>
+                </div>
             </div>
           </div>
         </div>

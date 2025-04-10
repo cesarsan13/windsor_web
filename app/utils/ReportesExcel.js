@@ -53,7 +53,7 @@ export class ReporteExcel {
         if (col.dataKey === this.conditionColumn && this.condition) {
           return this.condition(row[col.dataKey]) ? "Si" : "No";
         }
-        return row[col.dataKey] || "";
+        return row[col.dataKey] ;
       });
       this.addRow(rowData);
     });

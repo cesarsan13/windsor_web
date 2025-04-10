@@ -148,7 +148,7 @@ export const Imprimir = (configuracion) => {
   const dateStr = format_Fecha_String(todayDate).replace(/\//g, "");
   const timeStr = formatTime(date).replace(/:/g, "");
 
-newPDF.guardaReporte(`Altas_Bajas_Alumnos_${dateStr}${timeStr}`);
+newPDF.guardaReporte(`Reporte_Relación_Recibos_${dateStr}${timeStr}`);
 };
 
 export const ImprimirExcel = (configuracion) => {

@@ -4,13 +4,14 @@ import { calculaDigitoBvba, formatTime, format_Fecha_String, formatNumber } from
 
 export const getDetallePedido = async (
   token,
+  selectedAllProductos,
   fecha1,
   fecha2,
   articulo,
-  artFin
+  //artFin
 ) => {
   const res = await fetch(
-    `${process.env.DOMAIN_API}api/cobranzaProducto/${fecha1}/${fecha2}/${articulo}/${artFin}`,
+    `${process.env.DOMAIN_API}api/cobranzaProducto/${fecha1}/${fecha2}/${selectedAllProductos}/${articulo}`, ///${artFin}
     {
       headers: new Headers({
         Authorization: `Bearer ${token}`,
@@ -65,17 +66,18 @@ export const insertTrabRepCobr = async (token, data) => {
 export const ImprimirPDF = async (
   configuracion,
   token,
+  selectedAllProductos,
   fecha1,
   fecha2,
   articulo,
-  artFin,
+  //artFin,
   orden
 ) => {
   const newPDF = new ReportePDF(configuracion);
   Enca1(newPDF);
-  articulo = articulo === undefined ? "" : articulo;
-  artFin = artFin === undefined ? "" : artFin;
-  const data = await getDetallePedido(token, fecha1, fecha2, articulo, artFin);
+  articulo = articulo === undefined ? "0" : articulo;
+  //artFin = artFin === undefined ? "" : artFin;
+  const data = await getDetallePedido(token, selectedAllProductos, fecha1, fecha2, articulo ); //artFin
   let alu_Ant;
   let alumno;
   for (const dato of data) {
@@ -88,7 +90,7 @@ export const ImprimirPDF = async (
     const datos = {
       recibo: dato.recibo,
       fecha: dato.fecha,
-      articulo: Number(dato.articulo),
+      articulo: dato.articulo,
       documento: dato.documento,
       alumno: dato.alumno,
       nombre: alumno,
@@ -129,8 +131,8 @@ export const ImprimirPDF = async (
     Art_Ant = trabRep.articulo;
   });
   Cambia_Articulo(newPDF, tot_art);
-  newPDF.ImpPosX("TOTAL General", 98, newPDF.tw_ren,0,"L");
-  newPDF.ImpPosX(formatNumber(total_general), 138, newPDF.tw_ren,0,"R");
+  newPDF.ImpPosX("TOTAL GENERAL ", 95, newPDF.tw_ren,0,"L");
+  newPDF.ImpPosX(formatNumber(total_general), 145, newPDF.tw_ren,0,"R");
   const date = new Date();
   const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
     .toString()
@@ -169,6 +171,7 @@ const Enca1 = (doc) => {
 export const ImprimirExcel = async (
   configuracion,
   token,
+  selectedAllProductos,
   fecha1,
   fecha2,
   articulo,
@@ -176,9 +179,9 @@ export const ImprimirExcel = async (
   orden
 ) => {
   const newExcel = new ReporteExcel(configuracion);
-  articulo = articulo === undefined ? "" : articulo;
-  artFin = artFin === undefined ? "" : artFin;
-  const data = await getDetallePedido(token, fecha1, fecha2, articulo, artFin);
+  articulo = articulo === undefined ? "0" : articulo;
+  //artFin = artFin === undefined ? "" : artFin;
+  const data = await getDetallePedido(token, selectedAllProductos, fecha1, fecha2, articulo); //artFin
   let alu_Ant;
   let alumno;
   for (const dato of data) {
@@ -238,7 +241,7 @@ export const ImprimirExcel = async (
   Cambia_Articulo_Excel(tot_art, data1);
   data1.push({
     alumno: "",
-    nombre: "Total General",
+    nombre: "TOTAL GENERAL",
     importe: formatNumber(total_general),
     fecha: "",
   });

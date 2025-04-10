@@ -196,7 +196,7 @@ export const ImprimirExcel = (configuracion) =>{
       articulo: imp.articulo,
       descripcion: imp.descripcion,
       fecha: imp.fecha,
-      importe: imp.importe,
+      importe: formatNumber(imp.importe),
       recibo: imp.recibo,
     });
 
@@ -211,7 +211,7 @@ export const ImprimirExcel = (configuracion) =>{
     descripcion: "",
     numero_doc: "",
     fecha: "TOTAL GENERAL",
-    importe: total_general,
+    importe: formatNumber(total_general),
     recibo: "",
   });
   newExcel.addData(data1);
@@ -232,7 +232,7 @@ const Cambia_Alumno_Excel = (total_importe, data) => {
     descripcion: "",
     numero_doc: "",
     fecha: "TOTAL",
-    importe: total_importe,
+    importe: formatNumber(total_importe),
     recibo: "",
   });
 

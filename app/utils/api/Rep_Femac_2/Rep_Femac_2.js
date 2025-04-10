@@ -59,12 +59,12 @@ export const ImprimirPDF = (configuracion) => {
     newPDF.ImpPosX(horarios.Numero_1?.toString() ?? "", 27, newPDF.tw_ren, 0, "R");
     newPDF.ImpPosX(horarios.Nombre_1?.toString() ?? "", 45, newPDF.tw_ren, 35, "L");
     newPDF.ImpPosX(horarios.Año_Nac_1?.toString().substring(0, 4) ?? "", 128, newPDF.tw_ren, 0, "R");
-    newPDF.ImpPosX(horarios.Mes_Nac_1?.toString().substring(4, 2) ?? "", 137, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(horarios.Mes_Nac_1?.toString().substring(5, 7) ?? "", 137, newPDF.tw_ren, 0, "R");
     newPDF.ImpPosX(horarios.Telefono_1?.toString() ?? "", 158, newPDF.tw_ren, 0, "R");
     newPDF.ImpPosX(horarios.Numero_2?.toString() ?? "", 173, newPDF.tw_ren, 0, "R");
     newPDF.ImpPosX(horarios.Nombre_2?.toString() ?? "", 176, newPDF.tw_ren, 35, "L");
     newPDF.ImpPosX(horarios.Año_Nac_2?.toString().substring(0, 4) ?? "", 259, newPDF.tw_ren, 0, "R");
-    newPDF.ImpPosX(horarios.Mes_Nac_2?.toString().substring(4, 2) ?? "", 266, newPDF.tw_ren, 0, "R");
+    newPDF.ImpPosX(horarios.Mes_Nac_2?.toString().substring(5, 7) ?? "", 266, newPDF.tw_ren, 0, "R");
     newPDF.ImpPosX(horarios.Telefono_2?.toString() ?? "", 289, newPDF.tw_ren, 0, "R");
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRenH) {
@@ -87,8 +87,17 @@ export const ImprimirExcel = (configuracion) => {
   const { columns } = configuracion
   const { body } = configuracion
   const { nombre } = configuracion
+
+  const cambios = body.map(item => ({
+    ...item,
+    Año_Nac_1: item.Año_Nac_1 === "" ? "" : item.Año_Nac_1.substring(0, 4),
+    Año_Nac_2: item.Año_Nac_2 === "" ? "" : item.Año_Nac_2.substring(0, 4),
+    Mes_Nac_1: item.Mes_Nac_1 === "" ? "" : item.Mes_Nac_1.substring(5, 7),
+    Mes_Nac_2: item.Mes_Nac_2 === "" ? "" : item.Mes_Nac_2.substring(5, 7),
+  }))
+
   newExcel.setColumnas(columns);
-  newExcel.addData(body);
+  newExcel.addData(cambios);
   const date = new Date();
   const todayDate = `${date.getFullYear()}-${(date.getMonth() + 1)
     .toString()
