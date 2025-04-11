@@ -2,7 +2,7 @@ import { ReporteExcel } from "@/app/utils/ReportesExcel";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import { calculaDigitoBvba, format_Fecha_String, formatTime, formatNumber } from "@/app/utils/globalfn";
 
-export const getReporteCobranzaporAlumno = async (token, fecha_ini, fecha_fin, alumno_ini, alumno_fin, cajero_ini, cajero_fin, tomaFechas, selectedAllAlumnos) => {
+export const getReporteCobranzaporAlumno = async (token, fecha_ini, fecha_fin, alumno_ini, alumno_fin, cajero_ini, cajero_fin, tomaFechas, selectedAllAlumnos, selectedAllCajeros) => {
   const res = await fetch (`${process.env.DOMAIN_API}api/reportes/rep_femac_11_anexo_3`,{
     method: "post",
     body: JSON.stringify({
@@ -14,6 +14,7 @@ export const getReporteCobranzaporAlumno = async (token, fecha_ini, fecha_fin, a
       cajero_ini: cajero_ini,
       cajero_fin: cajero_fin,
       selectedAllAlumnos: selectedAllAlumnos,
+      selectedAllCajeros: selectedAllCajeros,
     }),
     headers: new Headers({
       Authorization: "Bearer " + token,

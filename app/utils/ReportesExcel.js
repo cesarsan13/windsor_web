@@ -175,13 +175,15 @@ export class ReporteExcel {
     doc.text("Hoja: 1", 700, 70);
     
     let headers = []; 
+    let body = 0;
     if(DobleHeader !== undefined && DobleHeader === true){
       headers =[data[0], data[1]];
+      body = data.slice(2);
     } else{
       headers =[data[0]];
+      body = data.slice(1);
     }
 
-    const body = data.slice(1);
     autoTable(doc, {
       head:headers,
       body: body,

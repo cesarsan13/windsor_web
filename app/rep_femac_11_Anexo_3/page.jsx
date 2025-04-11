@@ -19,6 +19,7 @@ import { ReportePDF } from "@/app/utils/ReportesPDF";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { permissionsComponents } from "@/app/utils/globalfn";
 import ModalFechas from "@/app/components/modalFechas";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
 
 function CobranzaPorAlumno() {
   const router = useRouter();
@@ -40,6 +41,8 @@ function CobranzaPorAlumno() {
   const [tempFechaFin, setTempFechaFin] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedAllAlumnos, setSelectedAllAlumnos] = useState(false);
+  const [selectedAllCajeros, setSelectedAllCajeros] = useState(false);
+  const [excelPreviewData, setExcelPreviewData] = useState([]);
 
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
@@ -100,10 +103,22 @@ function CobranzaPorAlumno() {
   const handleVerClick = async () => {
     setAnimateLoading(true);
     cerrarModalVista();
-    if (cajero_ini.numero === undefined && selectedAllAlumnos === false) {
+    if (cajero_ini === '' && selectedAllCajeros === false ){
       showSwal(
         "Oppss!",
         "Para imprimir, mínimo debe estar seleccionado un Cajero de 'Inicio'",
+        "error"
+      );
+      setTimeout(() => {
+        setPdfPreview(false);
+        setPdfData("");
+        setAnimateLoading(false);
+        document.getElementById("modalVPRepFemac11Anexo3").close();
+      }, 500);
+    } else if (alumno_ini === '' && selectedAllAlumnos === false) {
+      showSwal(
+        "Oppss!",
+        "Para imprimir, mínimo debe estar seleccionado un Alumno de 'Inicio'",
         "error"
       );
       setTimeout(() => {
@@ -124,7 +139,8 @@ function CobranzaPorAlumno() {
         cajero_ini.numero,
         cajero_fin.numero,
         tomaFechas,
-        selectedAllAlumnos
+        selectedAllAlumnos,
+        selectedAllCajeros
       );
       setFormaReporteCobranzaporAlumno(data);
 
@@ -160,34 +176,46 @@ function CobranzaPorAlumno() {
                 doc.nextRow(5);
             }
           }
-          if (cajero_fin.numero === undefined) {
+          if (selectedAllCajeros === true) {
             doc.ImpPosX(
-              `Cajero seleccionado: ${cajero_ini.numero} `,
+              `Cajeros seleccionados: Todos`,
               15,
               doc.tw_ren
             ),
               doc.nextRow(10);
           } else {
-            doc.ImpPosX(
-              `Cajeros seleccionado de ${cajero_ini.numero} al ${cajero_fin.numero}`,
-              15,
-              doc.tw_ren
-            ),
+            
+            if(cajero_fin === '' || cajero_fin.numero === undefined)
+            {
+              doc.ImpPosX(
+                `Cajero seleccionado: ${cajero_ini.nombre} `,
+                15,
+                doc.tw_ren
+              ),
               doc.nextRow(10);
+            } else {
+              doc.ImpPosX(
+                `Cajeros seleccionado de ${cajero_ini.numero} al ${cajero_fin.numero}`,
+                15,
+                doc.tw_ren
+              ),
+                doc.nextRow(10);
+            }
           }
+
           doc.ImpPosX("No.", 15, doc.tw_ren),
-            doc.ImpPosX("Nombre", 40, doc.tw_ren),
-            doc.nextRow(5);
+          doc.ImpPosX("Nombre", 40, doc.tw_ren),
+          doc.nextRow(5);
           doc.ImpPosX("Producto", 15, doc.tw_ren),
-            doc.ImpPosX("Descripcion", 30, doc.tw_ren),
-            doc.ImpPosX("Documento", 70, doc.tw_ren),
-            doc.ImpPosX("Fecha P", 90, doc.tw_ren),
-            doc.ImpPosX("Importe", 110, doc.tw_ren),
-            doc.ImpPosX("Recibo", 130, doc.tw_ren),
-            doc.ImpPosX("Pago 1", 143, doc.tw_ren),
-            doc.ImpPosX("Pago 2", 163, doc.tw_ren),
-            doc.ImpPosX("Cajero", 183, doc.tw_ren),
-            doc.nextRow(4);
+          doc.ImpPosX("Descripcion", 30, doc.tw_ren),
+          doc.ImpPosX("Documento", 70, doc.tw_ren),
+          doc.ImpPosX("Fecha P", 90, doc.tw_ren),
+          doc.ImpPosX("Importe", 110, doc.tw_ren),
+          doc.ImpPosX("Recibo", 130, doc.tw_ren),
+          doc.ImpPosX("Pago 1", 143, doc.tw_ren),
+          doc.ImpPosX("Pago 2", 163, doc.tw_ren),
+          doc.ImpPosX("Cajero", 183, doc.tw_ren),
+          doc.nextRow(4);
           doc.printLineV();
           doc.nextRow(4);
           doc.tiene_encabezado = true;
@@ -201,6 +229,17 @@ function CobranzaPorAlumno() {
       let total_general = 0;
 
       const Cambia_Alumno = (doc, total_importe) => {
+        tablaExcel.push([
+          "",
+          "",
+          "",
+          "TOTAL",
+          formatNumber(total_importe) || "",
+          "",
+          "",
+          "",
+          "",
+        ]);
         doc.ImpPosX(
           `TOTAL: ${formatNumber(total_importe)}` || "",
           122,
@@ -209,9 +248,27 @@ function CobranzaPorAlumno() {
           "R"
         );
         doc.nextRow(8);
+        tablaExcel.push([
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+        ]);
       };
 
       Enca1(reporte);
+
+      const alignsIndex = [0];
+      const tablaExcel = [
+        ["No.", "Nombre", "", "", "", "", "", "", ""],
+        ["Producto", "Descripcion", "Documento", "Fecha P", "Importe", "Recibo", "Pago 1", "Pago 2", "Cajero"],
+      ];
+
       body.forEach((reporte2) => {
         reporte.setFontSize(9);
         let tipoPago2 = " ";
@@ -240,6 +297,19 @@ function CobranzaPorAlumno() {
             "R"
           );
           reporte.ImpPosX(reporte2.nom_al.toString(), 40, reporte.tw_ren);
+
+          tablaExcel.push([
+            reporte2.id_al + "-" + calculaDigitoBvba(reporte2.id_al.toString()),
+            reporte2.nom_al.toString(),
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+          ],);
+
           Enca1(reporte);
           if (reporte.tw_ren >= reporte.tw_endRen) {
             reporte.pageBreak();
@@ -293,6 +363,18 @@ function CobranzaPorAlumno() {
         reporte.ImpPosX(tipoPago2.toString(), 163, reporte.tw_ren, 0, "L");
         reporte.ImpPosX(nombre.toString(), 183, reporte.tw_ren, 0, "L");
 
+        tablaExcel.push([
+          reporte2.articulo.toString(),
+          reporte2.descripcion.toString(),
+          reporte2.numero_doc.toString(),
+          reporte2.fecha.toString(),
+          formatNumber(reporte2.importe),
+          reporte2.recibo.toString(),
+          reporte2.desc_Tipo_Pago_1.toString(),
+          tipoPago2.toString(),
+          nombre.toString(),
+        ],);
+
         Enca1(reporte);
         if (reporte.tw_ren >= reporte.tw_endRen) {
           reporte.pageBreak();
@@ -304,6 +386,18 @@ function CobranzaPorAlumno() {
       });
       Cambia_Alumno(reporte, total_importe);
 
+      tablaExcel.push([
+        "",
+        "",
+        "",
+        "TOTAL GENERAL:",
+        formatNumber(total_general) || "",
+        "",
+        "",
+        "",
+        "",
+      ]);
+
       reporte.ImpPosX(
         `TOTAL IMPORTE: ${formatNumber(total_general)}` || "",
         122,
@@ -311,10 +405,14 @@ function CobranzaPorAlumno() {
         0,
         "R"
       );
-      setTimeout(() => {
+      setTimeout( async() => {
+        const DobleHeader = true;
+        const newExcel = new ReporteExcel(configuracion);
         const pdfData = reporte.doc.output("datauristring");
+        const previewExcel = await newExcel.previewExcel( tablaExcel, alignsIndex, DobleHeader);
         setPdfData(pdfData);
         setPdfPreview(true);
+        setExcelPreviewData(previewExcel);
         showModalVista(true);
         setAnimateLoading(false);
       }, 500);
@@ -443,9 +541,12 @@ function CobranzaPorAlumno() {
         titulo={"Vista Previa de Cobranza por Alumno"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
+        excelPreviewData={excelPreviewData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
+        seeExcel={true}
+        seePDF={true}
       />
       <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">
@@ -510,6 +611,7 @@ function CobranzaPorAlumno() {
             <div className="col-span-full md:col-span-full lg:col-span-full">
                 <div className="w-full pl-4 p-1">
                   <BuscarCat
+                    deshabilitado={selectedAllCajeros === true}
                     table="cajeros"
                     itemData={[]}
                     fieldsToShow={["numero", "nombre"]}
@@ -526,6 +628,7 @@ function CobranzaPorAlumno() {
               <div className="col-span-full md:col-span-full lg:col-span-full">
                 <div className="w-full pl-4 p-1">
                   <BuscarCat
+                    deshabilitado={selectedAllCajeros === true}
                     table="cajeros"
                     itemData={[]}
                     fieldsToShow={["numero", "nombre"]}
@@ -607,6 +710,23 @@ function CobranzaPorAlumno() {
                       />
                       <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
                         Toma todos los Alumnos
+                      </span>
+                    </label>
+                  </div>
+                  <div className="tooltip" data-tip="Toma todos los Cajeros">
+                    <label
+                      htmlFor="ch_SelectedAllCajeros"
+                      className="label cursor-pointer flex justify-start space-x-2"
+                    >
+                      <input
+                        id="ch_selectedAllCajeros"
+                        type="checkbox"
+                        className="checkbox checkbox-md"
+                        defaultChecked={false}
+                        onClick={(evt) => setSelectedAllCajeros(evt.target.checked)}
+                      />
+                      <span className="label-text font-bold md:block hidden text-neutral-600 dark:text-neutral-200">
+                        Toma todos los Cajeros
                       </span>
                     </label>
                   </div>
