@@ -17,6 +17,7 @@ import "jspdf-autotable";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { permissionsComponents } from "@/app/utils/globalfn";
 import ModalFechas from "@/app/components/modalFechas";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
 
 function RelacionDeRecivos() {
   const router = useRouter();
@@ -40,6 +41,7 @@ function RelacionDeRecivos() {
   const [tempFechaFin, setTempFechaFin] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedAllAlumnos, setSelectedAllAlumnos] = useState(false);
+  const [excelPreviewData, setExcelPreviewData] = useState([]);
 
   const {
     formState: { errors },
@@ -156,9 +158,12 @@ function RelacionDeRecivos() {
       body: alumnosFiltrados,
     };
     setTimeout(async () => {
-      const pdfData = await verImprimir(configuracion);
+      const newExcel = new ReporteExcel(configuracion);
+      const { pdfData,tablaExcel, alignsIndex } = await verImprimir(configuracion);
+      const previewExcel = await newExcel.previewExcel(tablaExcel, alignsIndex);
       setPdfData(pdfData);
       setPdfPreview(true);
+      setExcelPreviewData(previewExcel)
       showModalVista(true);
       setAnimateLoading(false);
     }, 500);
@@ -205,9 +210,12 @@ function RelacionDeRecivos() {
         titulo={"Vista Previa Relacion de Recibos"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
+        excelPreviewData={excelPreviewData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
+        seeExcel={true}
+        seePDF={true}
       />
       <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">

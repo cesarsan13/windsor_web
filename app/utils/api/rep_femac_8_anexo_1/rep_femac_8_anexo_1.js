@@ -65,6 +65,9 @@ export const verImprimir = async (configuracion) => {
   const { body } = configuracion;
   Enca1(newPDF);
   let total = 0;
+  const alignsIndex = [0];
+  const tablaExcel = [["Recibo", "Factura", "Fecha P", "No.", "Nombre Alumno", "Total Rec."],];
+
   body.forEach((rec) => {
     const recibo = (rec.recibo || "").toString();
     const factura = (rec.numero_factura || "").toString();
@@ -80,11 +83,26 @@ export const verImprimir = async (configuracion) => {
     newPDF.ImpPosX(fecha, 43, newPDF.tw_ren, 0, "L");
     newPDF.ImpPosX(idAl, 71, newPDF.tw_ren, 0, "R");
     newPDF.ImpPosX(nombre, 75, newPDF.tw_ren, 0, "L");
+
+    const filait = [];
+
     if (importe_total === 0) {
+      filait.push([`CANCELADO`,]);
       newPDF.ImpPosX(`CANCELADO`, 170, newPDF.tw_ren, 0, "L");
     } else {
+      filait.push([formatNumber(importe_total),]);
       newPDF.ImpPosX(formatNumber(importe_total), 192, newPDF.tw_ren, 0, "R");
     }
+
+    tablaExcel.push([
+      recibo, 
+      factura,
+      fecha, 
+      idAl, 
+      nombre, 
+      filait,
+    ]);
+
     Enca1(newPDF);
     if (newPDF.tw_ren >= newPDF.tw_endRen) {
       newPDF.pageBreak();
@@ -99,8 +117,9 @@ export const verImprimir = async (configuracion) => {
     0,
     "R"
   );
+  tablaExcel.push([ "", "", "", "", "Total:", formatNumber(total) || ""]);
   const pdfData = newPDF.doc.output("datauristring");
-  return pdfData;
+  return {pdfData, tablaExcel, alignsIndex};
 };
 
 export const Imprimir = (configuracion) => {
