@@ -18,6 +18,7 @@ import { format_Fecha_String, formatNumber } from "@/app/utils/globalfn";
 import VistaPrevia from "@/app/components/VistaPrevia";
 import { permissionsComponents } from "@/app/utils/globalfn";
 import ModalFechas from "@/app/components/modalFechas";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
 
 function RelaciondeFacturas() {
   const router = useRouter();
@@ -31,6 +32,7 @@ function RelaciondeFacturas() {
   const [FormaRepRelaciondeFacturas, setFormaRelaciondeFacturas] = useState([]);
   const [animateLoading, setAnimateLoading] = useState(false);
   const [permissions, setPermissions] = useState({});
+  const [excelPreviewData, setExcelPreviewData] = useState([]);
   //Modal Fechas
   let [fecha_cobro_ini, setFecha_cobro_ini] = useState("");
   let [fecha_cobro_fin, setFecha_cobro_fin] = useState("");
@@ -146,13 +148,13 @@ function RelaciondeFacturas() {
         }
 
         doc.ImpPosX("Factura", 15, doc.tw_ren, 0, "L"),
-          doc.ImpPosX("Recibo", 30, doc.tw_ren, 0, "L"),
-          doc.ImpPosX("Fecha P", 45, doc.tw_ren, 0, "L"),
-          doc.ImpPosX("Nombre", 68, doc.tw_ren, 0, "L"),
-          doc.ImpPosX("Subtotal", 145, doc.tw_ren, 0, "L"),
-          doc.ImpPosX("I.V.A", 167, doc.tw_ren, 0, "L"),
-          doc.ImpPosX("Total", 180, doc.tw_ren, 0, "L"),
-          doc.nextRow(4);
+        doc.ImpPosX("Recibo", 30, doc.tw_ren, 0, "L"),
+        doc.ImpPosX("Fecha P", 45, doc.tw_ren, 0, "L"),
+        doc.ImpPosX("Nombre", 68, doc.tw_ren, 0, "L"),
+        doc.ImpPosX("Subtotal", 145, doc.tw_ren, 0, "L"),
+        doc.ImpPosX("I.V.A", 167, doc.tw_ren, 0, "L"),
+        doc.ImpPosX("Total", 180, doc.tw_ren, 0, "L"),
+        doc.nextRow(4);
         doc.printLineV();
         doc.nextRow(4);
         doc.tiene_encabezado = true;
@@ -163,6 +165,12 @@ function RelaciondeFacturas() {
     };
 
     let total_general = 0;
+    const alignsIndex = [0];
+      const tablaExcel = [
+        ["Factura", "Recibo", "Fecha P", "Nombre", "Subtotal", "I.V.A", "Total"],
+        
+    ];
+
 
     Enca1(reporte);
     body.forEach((imp) => {
@@ -201,6 +209,9 @@ function RelaciondeFacturas() {
       } else {
         razon_social_cambio = razon_social;
       }
+      if(razon_social === "null"){
+        razon_social_cambio = "Cancelado";
+      }
       reporte.ImpPosX(noFac.toString(), 25, reporte.tw_ren, 0, "R");
       reporte.ImpPosX(recibo.toString(), 40, reporte.tw_ren, 0, "R");
       reporte.ImpPosX(fecha, 45, reporte.tw_ren, 0, "L");
@@ -208,6 +219,18 @@ function RelaciondeFacturas() {
       reporte.ImpPosX(formatNumber(total_importe), 157, reporte.tw_ren, 0, "R");
       reporte.ImpPosX(`${ivaimp} %`.toString(), 175, reporte.tw_ren, 0, "R");
       reporte.ImpPosX(formatNumber(sub_total), 198, reporte.tw_ren, 0, "R");
+
+      tablaExcel.push([
+        noFac.toString(),
+        recibo.toString(),
+        fecha,
+        razon_social_cambio,
+        formatNumber(total_importe),
+        `${ivaimp} %`.toString(),
+        formatNumber(sub_total),
+      ]);
+
+
 
       Enca1(reporte);
       if (reporte.tw_ren >= reporte.tw_endRen) {
@@ -224,11 +247,23 @@ function RelaciondeFacturas() {
       0,
       "R"
     );
+    tablaExcel.push([
+      "",
+      "",
+      "",
+      "",
+      "",
+      "TOTAL IMPORTE:",
+      formatNumber(total_general) || "",
+    ]);
 
-    setTimeout(() => {
+    setTimeout( async () => {
+      const newExcel = new ReporteExcel(configuracion);
       const pdfData = reporte.doc.output("datauristring");
+      const previewExcel = await newExcel.previewExcel(tablaExcel, alignsIndex);
       setPdfData(pdfData);
       setPdfPreview(true);
+      setExcelPreviewData(previewExcel);
       showModalVista(true);
       setAnimateLoading(false);
     }, 500);
@@ -333,9 +368,12 @@ function RelaciondeFacturas() {
         titulo={"Vista Previa Relacion de Facturas"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
+        excelPreviewData={excelPreviewData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
+        seeExcel={true}
+        seePDF={true}
       />
 
       <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">

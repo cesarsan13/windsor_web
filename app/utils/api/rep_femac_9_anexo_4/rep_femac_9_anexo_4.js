@@ -140,6 +140,11 @@ export const ImprimirPDF = (
     } else {
       razon_social_cambio = razon_social;
     }
+
+    if(razon_social === "null"){
+      razon_social_cambio = "Cancelado";
+    }
+
     newPDF.ImpPosX(noFac.toString(), 25, newPDF.tw_ren, 0, "R");
     newPDF.ImpPosX(recibo.toString(), 40, newPDF.tw_ren, 0, "R");
     newPDF.ImpPosX(fecha, 45, newPDF.tw_ren, 0, "L");
@@ -219,6 +224,10 @@ export const ImprimirExcel = (configuracion) => {
       razon_social_cambio = r_s_nombre;
     } else {
       razon_social_cambio = razon_social;
+    }
+
+    if(razon_social === "null"){
+      razon_social_cambio = "Cancelado";
     }
 
     newBody.push({
