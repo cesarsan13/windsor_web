@@ -151,7 +151,7 @@ export class ReporteExcel {
     URL.revokeObjectURL(url);
   }
 
-  async previewExcel(data = [], alignsIndex = [], cellWidthValue = 56) {
+  async previewExcel(data = [], alignsIndex = [], DobleHeader, cellWidthValue = 56 ) {
     const doc = new jsPDF("landscape", "pt", "a4");
     const { Nombre_Aplicacion, Nombre_Reporte, Nombre_Usuario } =
       this.configuracion.Encabezado;
@@ -173,10 +173,17 @@ export class ReporteExcel {
     doc.text(`Fecha: ${todayDate}`, 700, 40);
     doc.text(`Hora: ${time}`, 700, 55);
     doc.text("Hoja: 1", 700, 70);
-    const headers = data[0];
+    
+    let headers = []; 
+    if(DobleHeader !== undefined && DobleHeader === true){
+      headers =[data[0], data[1]];
+    } else{
+      headers =[data[0]];
+    }
+
     const body = data.slice(1);
     autoTable(doc, {
-      head: [headers],
+      head:headers,
       body: body,
       startY: 100,
       theme: "grid",

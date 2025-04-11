@@ -20,6 +20,7 @@ import VistaPrevia from "@/app/components/VistaPrevia";
 import { permissionsComponents } from "@/app/utils/globalfn";
 import { showSwal } from "@/app/utils/alerts";
 import ModalFechas from "@/app/components/modalFechas";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
 
 function EstadodeCuenta() {
   const router = useRouter();
@@ -39,6 +40,7 @@ function EstadodeCuenta() {
   const [tempFechaFin, setTempFechaFin] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedAllAlumnos, setSelectedAllAlumnos] = useState(false);
+  const [excelPreviewData, setExcelPreviewData] = useState([]);
 
   const getPrimerDiaDelMes = () => {
     const fechaActual = new Date();
@@ -155,18 +157,18 @@ function EstadodeCuenta() {
           }
           doc.nextRow(5);
           doc.ImpPosX("No.", 15, doc.tw_ren, 0, "L"),
-            doc.ImpPosX("Nombre", 30, doc.tw_ren, 0, "L"),
-            doc.ImpPosX("Cursa", 100, doc.tw_ren, 0, "L"),
-            doc.ImpPosX("Fecha Nac", 135, doc.tw_ren, 0, "L"),
-            doc.ImpPosX("Fecha Insc", 155, doc.tw_ren, 0, "L"),
-            doc.nextRow(5);
+          doc.ImpPosX("Nombre", 30, doc.tw_ren, 0, "L"),
+          doc.ImpPosX("Cursa", 100, doc.tw_ren, 0, "L"),
+          doc.ImpPosX("Fecha Nac", 135, doc.tw_ren, 0, "L"),
+          doc.ImpPosX("Fecha Insc", 155, doc.tw_ren, 0, "L"),
+          doc.nextRow(5);
           doc.ImpPosX("Documento", 15, doc.tw_ren, 0, "L"),
-            doc.ImpPosX("producto", 35, doc.tw_ren, 0, "L"),
-            doc.ImpPosX("Descripcion", 53, doc.tw_ren, 0, "L"),
-            doc.ImpPosX("Fecha P", 130, doc.tw_ren, 0, "L"),
-            doc.ImpPosX("Importe", 165, doc.tw_ren, 0, "L"),
-            doc.ImpPosX("Recibo", 185, doc.tw_ren, 0, "L"),
-            doc.nextRow(4);
+          doc.ImpPosX("producto", 35, doc.tw_ren, 0, "L"),
+          doc.ImpPosX("Descripcion", 53, doc.tw_ren, 0, "L"),
+          doc.ImpPosX("Fecha P", 130, doc.tw_ren, 0, "L"),
+          doc.ImpPosX("Importe", 165, doc.tw_ren, 0, "L"),
+          doc.ImpPosX("Recibo", 185, doc.tw_ren, 0, "L"),
+          doc.nextRow(4);
           doc.printLineV();
           doc.nextRow(4);
           doc.tiene_encabezado = true;
@@ -180,6 +182,14 @@ function EstadodeCuenta() {
       let total_general = 0;
 
       const Cambia_Alumno = (doc, total_importe) => {
+        tablaExcel.push([
+          "",
+          "",
+          "",
+          "TOTAL",
+          total_importe != 0 ? formatNumber(total_importe) : "0.0",
+          "",
+        ]);
         doc.ImpPosX(
           `TOTAL: ${
             total_importe != 0 ? formatNumber(total_importe) : "0.0"
@@ -190,9 +200,24 @@ function EstadodeCuenta() {
           "R"
         );
         doc.nextRow(8);
+        tablaExcel.push([
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+        ]);
       };
 
       Enca1(reporte);
+
+      const alignsIndex = [0];
+      const tablaExcel = [
+        ["No.", "Nombre", "Cursa", "Fecha Nac", "Fecha Insc",""],
+        ["Documento", "producto", "Descripcion", "Fecha P", "Importe", "Recibo",],
+      ];
+
       body.forEach((reporte2) => {
         let tipoPago2 = " ";
         let documento = "0";
@@ -250,6 +275,14 @@ function EstadodeCuenta() {
             0,
             "L"
           );
+          tablaExcel.push([
+            reporte2.id_al + "-" + calculaDigitoBvba(reporte2.id_al.toString()),
+            reporte2.nom_al.toString(),
+            reporte2.horario_nom.toString(),
+            reporte2.fecha_nac_al.toString(),
+            reporte2.fecha_ins_al.toString(),
+            "",
+          ]);
           Enca1(reporte);
           if (reporte.tw_ren >= reporte.tw_endRen) {
             reporte.pageBreak();
@@ -293,6 +326,14 @@ function EstadodeCuenta() {
           0,
           "R"
         );
+        tablaExcel.push([
+          documento,
+          reporte2.articulo != null ? reporte2.articulo.toString() : " ",
+          reporte2.descripcion != null ? reporte2.descripcion.toString() : " ",
+          reporte2.fecha != null ? reporte2.fecha.toString() : " ",
+          formatNumber(reporte2.importe),
+          reporte2.recibo != null ? reporte2.recibo.toString() : " ",
+        ]);
 
         Enca1(reporte);
         if (reporte.tw_ren >= reporte.tw_endRen) {
@@ -304,6 +345,14 @@ function EstadodeCuenta() {
         alumno_Ant = reporte2.id_al;
       });
       Cambia_Alumno(reporte, total_importe);
+      tablaExcel.push([
+        "",
+        "",
+        "",
+        "TOTAL IMPORTE:",
+        total_general != 0 ? formatNumber(total_general) : "0.0",
+        "",
+      ]);
       reporte.ImpPosX(
         `TOTAL IMPORTE: ${
           total_general != 0 ? formatNumber(total_general) : "0.0"
@@ -313,10 +362,14 @@ function EstadodeCuenta() {
         0,
         "L"
       );
-      setTimeout(() => {
+      setTimeout(async () => {
+        const DobleHeader = true;
+        const newExcel = new ReporteExcel(configuracion);
         const pdfData = reporte.doc.output("datauristring");
+        const previewExcel = await newExcel.previewExcel( tablaExcel, alignsIndex, DobleHeader);
         setPdfData(pdfData);
         setPdfPreview(true);
+        setExcelPreviewData(previewExcel);
         showModalVista(true);
         setAnimateLoading(false);
       }, 500);
@@ -419,9 +472,12 @@ function EstadodeCuenta() {
         titulo={"Vista Previa de Relacion Estado de Cuenta"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
+        excelPreviewData={excelPreviewData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
+        seeExcel={true}
+        seePDF={true}
       />
       <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">
