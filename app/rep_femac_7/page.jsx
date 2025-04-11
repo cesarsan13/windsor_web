@@ -13,6 +13,7 @@ import { useSession } from "next-auth/react";
 import { ReportePDF } from "@/app/utils/ReportesPDF";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import VistaPrevia from "@/app/components/VistaPrevia";
+import { ReporteExcel } from "@/app/utils/ReportesExcel";
 
 function Repo_Femac_7() {
   const date = new Date();
@@ -27,6 +28,7 @@ function Repo_Femac_7() {
   const [pdfData, setPdfData] = useState("");
   const [animateLoading, setAnimateLoading] = useState(false);
   const [permissions, setPermissions] = useState({});
+  const [excelPreviewData, setExcelPreviewData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -125,6 +127,12 @@ function Repo_Femac_7() {
       }
     };
     Enca1(reporte);
+
+    const alignsIndex = [0];
+      const tablaExcel = [
+        ["Alumno", "Nombre", "Producto", "Descripcion", "Fecha", "Saldo", "Total", "Telefono"],
+      ];
+
     const { token } = session.user;
     if (grupoAlumno) {
       const data = await grupo_cobranza(token);
@@ -182,6 +190,9 @@ function Repo_Femac_7() {
       alu_Act = doc.alumno;
       if (grupoAlumno) {
         if (grupo_act !== grupo_ant) {
+          tablaExcel.push([
+            "Grupo " + grupo_act,
+          ]);
           reporte.ImpPosX("Grupo " + grupo_act, 14, reporte.tw_ren);
           reporte.nextRow(4);
         }
@@ -213,16 +224,31 @@ function Repo_Femac_7() {
         total_General += saldo;
         reporte.ImpPosX(saldo.toFixed(2).toString(), 243, reporte.tw_ren, 0, "R");
 
+
         const isLastRecordForAlumno =
           index === documentos.length - 1 ||
           documentos[index + 1].alumno !== alu_Act;
 
+        const filast = [];
+        const filat = [];
         if (isLastRecordForAlumno) {
           reporte.ImpPosX( saldoTotal.toFixed(2).toString(), 264, reporte.tw_ren, 0, "R");
           reporte.ImpPosX( data.telefono1?.toString() ?? "", 268, reporte.tw_ren, 0, "L");
+          filast.push([saldoTotal.toFixed(2).toString()]);
+          filat.push([data.telefono1?.toString() ?? ""]);
           saldoTotal = 0;
           reporte.nextRow(5);
         }
+        tablaExcel.push([
+          alu_Act.toString(),
+          nombre.toString(),
+          doc.producto.toString(),
+          doc.descripcion.toString(),
+          doc.fecha.toString(),
+          saldo.toFixed(2).toString(),
+          filast,
+          filat
+        ]);
 
         Enca1(reporte);
         if (reporte.tw_ren >= reporte.tw_endRenH) {
@@ -235,10 +261,23 @@ function Repo_Femac_7() {
     });
     reporte.ImpPosX("Total General", 208, reporte.tw_ren);
     reporte.ImpPosX(total_General.toFixed(2).toString(), 248, reporte.tw_ren);
-    setTimeout(() => {
+
+    tablaExcel.push([
+      "",
+      "",
+      "",
+      "",
+      "",
+      "Total General",
+      total_General.toFixed(2).toString(),
+    ]);
+    setTimeout( async () => {
+      const newExcel = new ReporteExcel(configuracion);
       const pdfData = reporte.doc.output("datauristring");
+      const previewExcel = await newExcel.previewExcel(tablaExcel, alignsIndex);
       setPdfData(pdfData);
       setPdfPreview(true);
+      setExcelPreviewData(previewExcel);
       showModalVista(true);
       setAnimateLoading(false);
     }, 500);
@@ -266,9 +305,12 @@ function Repo_Femac_7() {
         titulo={"Vista Previa de Adeudos Pendientes"}
         pdfPreview={pdfPreview}
         pdfData={pdfData}
+        excelPreviewData={excelPreviewData}
         PDF={ImprimePDF}
         Excel={ImprimeExcel}
         CerrarView={CerrarView}
+        seeExcel={true}
+        seePDF={true}
       />
       <div className="flex flex-col justify-start items-start bg-base-200 shadow-xl rounded-xl dark:bg-slate-700 h-full max-[420px]:w-full w-11/12">
         <div className="w-full py-3">
